@@ -14949,7 +14949,11 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     const label = isGcWin ? 'GC ' : (isStage ? 'stage ' : '');
     const icon = isWorldsOrOlympics(r.nome_gara) ? '🌈 ' : (isGcWin ? '🏆 ' : '');
     const countPrefix = g.count > 1 ? `<span class="pcs-top-result-count">${g.count}×</span> ` : '';
-    const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(g.key)}</a>` : `<a href="${esc(r.url)}">${esc(g.key)}</a>`) : esc(g.key || '');
+    // "GC "/"stage " già lo dicono — non ripetere anche "— Classifica
+    // Generale"/"— Tappe" nel nome (restano nella chiave SOLO per tenere i
+    // due gruppi distinti, vedi _raceGroupKey).
+    const displayName = g.key.replace(/\s*[—-]\s*(Classifica Generale|Tappe)\s*$/i, '').trim();
+    const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(displayName)}</a>` : `<a href="${esc(r.url)}">${esc(displayName)}</a>`) : esc(displayName || '');
     const yearsLabel = g.years.map(y => `'${esc(y.slice(-2))}`).join(', ');
     return `<div class="pcs-top-result-row">${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
   }).join('');
