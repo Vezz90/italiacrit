@@ -22756,6 +22756,32 @@ function doSearch(q, dropdown) {
       if (merged.length !== results.length || d.results?.length) renderDropdown(merged);
     }).catch(() => {});
   }
+
+  // Arricchisci con gare "storiche" (ciclismo.info, 2007-2025) — la ricerca
+  // gare cercava finora SOLO tra quelle native 2026 (getRacesIndex, da
+  // globalData.resultsRaw), quindi una gara importata da ciclismo.info non
+  // usciva mai, nemmeno scrivendone il nome per intero (segnalato
+  // dall'utente). Una voce per nome-base (stesso raggruppamento già usato
+  // per le gare native, _raceBaseName) — se il nome-base coincide con una
+  // gara nativa già trovata, arricchisce quella riga invece di duplicarla.
+  if (q.trim().length >= 2) {
+    fetch(`${API_BASE}/ciclismo-results/search-races?q=${encodeURIComponent(q.trim())}`).then(r => r.json()).then(d => {
+      const seenBase = new Set();
+      const garaResults = [];
+      for (const ev of (d.results || [])) {
+        const base = _raceBaseName(ev.nome_gara);
+        if (!base || seenBase.has(base)) continue;
+        seenBase.add(base);
+        const already = results.find(r => r.type === 'gara' && r.display === base);
+        const sub = [ev.regione, ev.stagione].filter(Boolean).join(' · ');
+        if (already) { if (!already.sub) already.sub = sub; continue; }
+        const cid = _ciclismoGaraId(ev.gara_ciclismo_url);
+        if (!cid) continue;
+        garaResults.push({ type: 'gara', id: 'CIC_' + cid, display: base, sub });
+      }
+      if (garaResults.length) renderDropdown([...results, ...garaResults]);
+    }).catch(() => {});
+  }
 }
 
 window.goTo = (hash) => { window.location.hash = hash; };

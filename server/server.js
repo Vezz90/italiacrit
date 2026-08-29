@@ -4411,6 +4411,27 @@ function ciclismoGaraId(url) {
 // Elenco gare ciclismo.info per una stagione — raggruppate per gara (stesso
 // gara_ciclismo_url), usato dalla pagina Risultati per gli anni storici
 // (fino al 2007) non coperti dai dati nativi FCI.
+// Ricerca gare storiche ciclismo.info per la barra di ricerca del sito —
+// prima cercava SOLO tra le gare native 2026 (getRacesIndex lato client,
+// costruito da globalData.resultsRaw), quindi una gara importata da
+// ciclismo.info non usciva mai in ricerca, nemmeno scrivendone il nome per
+// intero (segnalato dall'utente). Filtro grezzo per sottostringa qui, il
+// client applica _raceBaseName per raggruppare le edizioni in una voce
+// sola per gara (stesso approccio già usato per le gare native).
+app.get('/api/ciclismo-results/search-races', async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim();
+    if (q.length < 2) return res.json({ results: [] });
+    const { data, error } = await supabase.from('ciclismo_results')
+      .select('nome_gara, stagione, gara_ciclismo_url, regione, data')
+      .ilike('nome_gara', `%${q}%`)
+      .order('stagione', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    res.json({ results: data || [] });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Storia di una gara attraverso gli anni ("albo d'oro") — collega le
 // edizioni storiche ciclismo.info tra loro E con l'eventuale edizione
 // nativa 2026 tramite il nome base della gara (stesso normalizzatore già
