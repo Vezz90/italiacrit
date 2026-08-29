@@ -15398,6 +15398,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
   const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
   if (!rows.length) return;
+  const italiaRows = rows.slice(); // solo ciclismo.info, prima del merge PCS sotto — per il riepilogo "ITALIA"
 
   // Risultati importati a mano da PCS per una di queste gare (bottone
   // "Importa PCS" sulla pagina gara storica) — senza questo, un
@@ -15427,17 +15428,20 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // già presente da ciclismo.info (stessa data) non viene duplicata: si
   // aggiungono solo le gare che ciclismo.info non ha affatto per quest'anno.
   const pcsExtra = (window._pcsStoricoCache[atletaId] || {})[anno] || [];
+  const addedRows = []; // solo le righe aggiunte da PCS, per il riepilogo "ALTRI RISULTATI" separato (vedi sotto)
   if (pcsExtra.length) {
     const haveDates = new Set(rows.map(r => r.data));
     for (const r of pcsExtra) {
       if (!r.data || haveDates.has(r.data)) continue;
       haveDates.add(r.data);
-      rows.push({
+      const added = {
         data: r.data, posizione: r.posizione, nome_gara: r.gara_name,
         gara_ciclismo_url: null, regione: null, luogo: null,
         team: rows[0]?.team, categoria: rows[0]?.categoria, stagione: anno,
         punti_stagione: null, _pcsUrl: r.pcs_url, _country: r.country,
-      });
+      };
+      rows.push(added);
+      addedRows.push(added);
     }
     rows.sort((a, b) => (b.data || '').localeCompare(a.data || ''));
   }
@@ -15506,8 +15510,12 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     }
   }
 
-  // Riepilogo podi
-  const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
+  // Riepilogo podi — ITALIA (solo ciclismo.info) separato da ALTRI RISULTATI
+  // (solo le gare aggiunte da PCS sopra), stesso schema a due blocchi già
+  // usato per la stagione nativa 2026 — prima veniva mostrato un totale
+  // unico che mischiava le due fonti, diverso dalla presentazione nativa
+  // (richiesta esplicita dell'utente dopo aver confrontato le due viste).
+  const { p1, p2, p3, pout } = _ciclismoYearStats(italiaRows);
   const label = document.getElementById('atleta-stats-italia-label');
   if (label) label.textContent = 'ITALIA';
   const bar = document.getElementById('atleta-stats-italia-bar');
@@ -15517,6 +15525,22 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${p3}</span><span class="athlete-stat-label">3° Posto</span></div>
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
   `;
+  const esteroStatsForYear = document.getElementById('atleta-stats-estero');
+  if (esteroStatsForYear) {
+    if (addedRows.length) {
+      const { p1: ep1, p2: ep2, p3: ep3, pout: epout } = _ciclismoYearStats(addedRows);
+      const ebar = esteroStatsForYear.querySelector('.athlete-stats-bar');
+      if (ebar) ebar.innerHTML = `
+        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${ep1}</span><span class="athlete-stat-label">1° Posto</span></div>
+        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--silver)">${ep2}</span><span class="athlete-stat-label">2° Posto</span></div>
+        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${ep3}</span><span class="athlete-stat-label">3° Posto</span></div>
+        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${epout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
+      `;
+      esteroStatsForYear.style.display = '';
+    } else {
+      esteroStatsForYear.style.display = 'none';
+    }
+  }
 
   // Titolo sezione + nota + tabella — STESSE colonne/classi della tabella
   // nativa (DATA/POS/GARA/MOLT/KM/MEDIA/PTS) per coerenza visiva, ma senza
@@ -15558,8 +15582,10 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // mostrando media/risultati PCS di un anno diverso da quello scelto.
   const nativoMedia = document.getElementById('atleta-media-nativo');
   if (nativoMedia) nativoMedia.style.display = 'none';
-  const esteroGroup = document.getElementById('atleta-stats-estero');
-  if (esteroGroup) esteroGroup.style.display = 'none';
+  // atleta-stats-estero ("ALTRI RISULTATI") NON va più nascosto qui
+  // incondizionatamente: è già stato mostrato/nascosto sopra in base a
+  // addedRows (le gare extra da PCS per quest'anno) — nasconderlo sempre
+  // cancellava il lavoro appena fatto.
   // Confronto "stagione precedente" (widget sempre riferito alla stagione
   // nativa, es. 2026 vs 2025 nativo) — non ha senso mentre si guarda uno
   // storico ciclismo.info, e restava visibile "vuoto"/fuori contesto.
