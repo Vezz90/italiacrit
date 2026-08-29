@@ -4475,7 +4475,15 @@ app.get('/api/ciclismo-results/race-history', async (req, res) => {
 function _parseRelatedEditionUrls(html, seedUrl) {
   const marker = html.indexOf('Edizioni precedenti o Gare correlate');
   if (marker === -1) return [];
-  const block = html.slice(marker, marker + 80000);
+  // Fermarsi alla chiusura della tabella, non a una finestra di caratteri
+  // fissa: con una finestra larga (80000, per stare larghi su pagine con
+  // tabella grande) su una pagina più corta del previsto si finiva oltre la
+  // tabella, dentro sezioni della pagina con link ad ALTRE gare (footer,
+  // "notizie correlate") — inquinando l'albo d'oro con gare senza nessuna
+  // relazione reale (bug osservato: "GRAN PREMIO ANPI…" comparso nello
+  // storico del Giro del Belvedere).
+  const tableEnd = html.indexOf('</table>', marker);
+  const block = html.slice(marker, tableEnd === -1 ? marker + 80000 : tableEnd);
   let origin;
   try { origin = new URL(seedUrl).origin; } catch { return []; }
   const hrefRe = /href="([^"]+\.htm)"/gi;
