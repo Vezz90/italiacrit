@@ -4462,6 +4462,105 @@ app.get('/api/ciclismo-results/race-history', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Estrae gli URL delle "edizioni precedenti / gare correlate" dal blocco che
+// ciclismo.info stampa in fondo a ogni pagina gara — un elenco CURATO da
+// loro stessi (non indovinato per somiglianza di nome). Risolve alla radice
+// il problema del confronto per nome-base: lo stesso Giro del Belvedere è
+// stato chiamato in modi diversi negli anni ("…DI VILLA DI CORDIGNANO",
+// "GIRO BELVEDERE" invece di "GIRO DEL BELVEDERE" ecc.) e un confronto
+// testuale non li collegava mai — segnalato dall'utente (Modolo, vincitore
+// 2009, mancava dall'albo d'oro). Qui non serve interpretare quel testo:
+// basta l'elenco di URL, i dati veri (podio, anno) restano quelli già
+// strutturati in ciclismo_results.
+function _parseRelatedEditionUrls(html, seedUrl) {
+  const marker = html.indexOf('Edizioni precedenti o Gare correlate');
+  if (marker === -1) return [];
+  const block = html.slice(marker, marker + 80000);
+  let origin;
+  try { origin = new URL(seedUrl).origin; } catch { return []; }
+  const hrefRe = /href="([^"]+\.htm)"/gi;
+  const urls = new Set();
+  let m;
+  while ((m = hrefRe.exec(block))) {
+    let href = m[1];
+    if (href.startsWith('/')) href = origin + href;
+    else if (!/^https?:/i.test(href)) continue;
+    if (href === seedUrl) continue;
+    urls.add(href);
+  }
+  return [...urls];
+}
+
+// Albo d'oro "vero": invece di raggruppare per nome-base (fragile, vedi
+// sopra), usa il collegamento autoritativo di ciclismo.info tra le edizioni
+// e recupera il podio (già strutturato) di ognuna dai nostri dati.
+// ?url= URL ciclismo.info dell'edizione più recente conosciuta (seed) —
+// preferito perché il blocco "edizioni precedenti" di ciclismo.info guarda
+// solo indietro nel tempo, quindi partire dall'edizione più recente dà la
+// catena più lunga possibile in un colpo solo.
+// ?q= alternativa: nome (base) da cui trovare da soli l'edizione più recente.
+app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
+  try {
+    let seedUrl = String(req.query.url || '').trim();
+    const q = String(req.query.q || '').trim();
+    if (!seedUrl && q.length >= 3) {
+      const { data } = await supabase.from('ciclismo_results')
+        .select('gara_ciclismo_url')
+        .ilike('nome_gara', `%${q}%`)
+        .order('stagione', { ascending: false })
+        .limit(1);
+      seedUrl = data?.[0]?.gara_ciclismo_url || '';
+    }
+    if (!seedUrl) return res.json({ editions: [], relatedCount: 0 });
+
+    const CACHE_MS = 30 * 24 * 60 * 60 * 1000; // 30 giorni — uno storico non cambia
+    let relatedUrls = null;
+    const { data: cached } = await supabase.from('ciclismo_race_relations')
+      .select('related_urls, scraped_at').eq('seed_url', seedUrl).maybeSingle();
+    if (cached && (Date.now() - new Date(cached.scraped_at).getTime()) < CACHE_MS) {
+      relatedUrls = cached.related_urls || [];
+    } else {
+      try {
+        const html = await fetch(seedUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } })
+          .then(r => r.ok ? r.text() : null);
+        relatedUrls = html ? _parseRelatedEditionUrls(html, seedUrl) : (cached?.related_urls || []);
+        await supabase.from('ciclismo_race_relations').upsert(
+          { seed_url: seedUrl, related_urls: relatedUrls, scraped_at: new Date().toISOString() },
+          { onConflict: 'seed_url' }
+        );
+      } catch { relatedUrls = cached?.related_urls || []; }
+    }
+
+    // Match per ID numerico della gara, non per URL esatto: lo slug che
+    // ciclismo.info stampa nel blocco "edizioni correlate" a volte differisce
+    // da quello salvato nel nostro DB per la stessa gara (es. "elite-under23"
+    // con trattino nel blocco correlato contro "elite_under23" con underscore
+    // nell'URL scrapato) — solo il numero-gara incorporato nell'URL resta
+    // stabile tra le due forme.
+    const _raceIdFromUrl = u => { const m = String(u || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_/); return m ? m[1] : null; };
+    const wantedIds = [...new Set([seedUrl, ...relatedUrls].map(_raceIdFromUrl).filter(Boolean))];
+    if (!wantedIds.length) return res.json({ editions: [], relatedCount: 0 });
+    const orExpr = wantedIds.map(id => `gara_ciclismo_url.ilike.%_${id}_%`).join(',');
+    const { data: rows, error } = await supabase.from('ciclismo_results')
+      .select('stagione, nome_gara, data, posizione, gara_ciclismo_url, atleta_id, ciclismo_id, team')
+      .or(orExpr)
+      .lte('posizione', 3)
+      .order('stagione', { ascending: false });
+    if (error) throw error;
+    const rowsArr = rows || [];
+    const ids = [...new Set(rowsArr.map(r => r.ciclismo_id).filter(Boolean))];
+    let nomeById = new Map();
+    if (ids.length) {
+      const { data: ath } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ids);
+      nomeById = new Map((ath || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    }
+    res.json({
+      editions: rowsArr.map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || null })),
+      relatedCount: wantedIds.length,
+    });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/ciclismo-results/races', async (req, res) => {
   const anno = req.query.anno;
   if (!anno) return res.status(400).json({ error: 'anno mancante' });

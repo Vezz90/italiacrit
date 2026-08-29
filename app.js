@@ -13714,15 +13714,21 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
     }
   }
 
+  // Collegamento storico: NON più per uguaglianza di nome-base (fragile — i
+  // nomi ciclismo.info cambiano negli anni, es. "GIRO DEL BELVEDERE" diventa
+  // "…DI VILLA DI CORDIGNANO" a seconda dell'anno, e un confronto testuale
+  // perdeva edizioni vere — segnalato dall'utente: Modolo, vincitore 2009,
+  // mancava). L'endpoint /albo-doro usa invece il blocco "Edizioni
+  // precedenti o Gare correlate" che ciclismo.info stampa in fondo a ogni
+  // pagina gara — un elenco curato DA LORO, non indovinato da noi.
   const baseName = _raceBaseName(opts.nomeGara || '');
   if (baseName && baseName.length >= 3) {
     try {
-      const resp = await apiCall(`/ciclismo-results/race-history?q=${encodeURIComponent(baseName)}`);
+      const resp = await apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(baseName)}`);
+      const nativeYears = new Set(editions.map(e => String(e.year)));
       const byEdition = {};
       for (const r of (resp?.editions || [])) {
-        // Il filtro lato server è solo un ILIKE grezzo (sottostringa) — il
-        // confronto vero, esatto, è questo: stesso nome-base normalizzato.
-        if (_raceBaseName(r.nome_gara) !== baseName) continue;
+        if (nativeYears.has(String(r.stagione))) continue; // già coperta dai dati nativi sopra
         const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
         (byEdition[ek] = byEdition[ek] || []).push(r);
       }
@@ -13808,31 +13814,9 @@ async function renderGaraStoria(baseName) {
 
   const editions = [];
 
-  // Storico ciclismo.info
-  try {
-    const resp = await apiCall(`/ciclismo-results/race-history?q=${encodeURIComponent(baseName)}`);
-    const byEdition = {};
-    for (const r of (resp?.editions || [])) {
-      if (_raceBaseName(r.nome_gara) !== baseName) continue;
-      const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
-      (byEdition[ek] = byEdition[ek] || []).push(r);
-    }
-    for (const [ek, rows] of Object.entries(byEdition)) {
-      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
-      const [url, stagione] = ek.split('|');
-      const cid = _ciclismoGaraId(url);
-      if (!cid) continue;
-      editions.push({
-        year: stagione, gara_id: 'CIC_' + cid, historic: true, nome: rows[0]?.nome_gara || '',
-        podio: rows.slice(0, 3).map(r => {
-          const parts = (r.nome_completo || '').trim().split(/\s+/);
-          return { posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team || '', atleta_id: r.atleta_id || null };
-        }),
-      });
-    }
-  } catch { /* storico opzionale */ }
-
-  // Edizioni native (2026 e altri anni con dati strutturati, se presenti)
+  // Edizioni native (2026 e altri anni con dati strutturati, se presenti) —
+  // prima, così lo storico ciclismo.info sotto sa quali anni sono già
+  // coperti e non li duplica.
   await loadSeasonsIndex();
   for (const y of _availableSeasonYears()) {
     let res;
@@ -13851,6 +13835,36 @@ async function renderGaraStoria(baseName) {
     }
   }
 
+  // Storico ciclismo.info — collegamento autoritativo via /albo-doro (blocco
+  // "Edizioni precedenti o Gare correlate" curato da ciclismo.info stesso),
+  // non più per uguaglianza di nome-base: i nomi cambiano negli anni per la
+  // stessa gara e un confronto testuale perdeva edizioni vere (es. Modolo,
+  // vincitore 2009 del Giro del Belvedere, mancava — segnalato dall'utente).
+  try {
+    const resp = await apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(baseName)}`);
+    const nativeYears = new Set(editions.map(e => String(e.year)));
+    const byEdition = {};
+    for (const r of (resp?.editions || [])) {
+      if (nativeYears.has(String(r.stagione))) continue;
+      const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+      (byEdition[ek] = byEdition[ek] || []).push(r);
+    }
+    for (const [ek, rows] of Object.entries(byEdition)) {
+      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+      const [url, stagione] = ek.split('|');
+      const cid = _ciclismoGaraId(url);
+      if (!cid) continue;
+      editions.push({
+        year: stagione, gara_id: 'CIC_' + cid, historic: true, nome: rows[0]?.nome_gara || '',
+        href: _ciclismoGaraHref(url, rows[0]?.nome_gara, stagione),
+        podio: rows.slice(0, 3).map(r => {
+          const parts = (r.nome_completo || '').trim().split(/\s+/);
+          return { posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team || '', atleta_id: r.atleta_id || null };
+        }),
+      });
+    }
+  } catch { /* storico opzionale */ }
+
   editions.sort((a, b) => String(b.year).localeCompare(String(a.year)));
   if (!editions.length) return renderNotFound();
 
@@ -13858,7 +13872,7 @@ async function renderGaraStoria(baseName) {
   const rowsHtml = editions.map(e => `
     <div class="card" style="padding:14px 18px;margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-        <a href="#/gara/${esc(e.gara_id)}" style="font-family:var(--font-heading);font-weight:800;font-size:1.05rem;color:var(--text-primary);text-decoration:none">${esc(e.year)} — ${esc(e.nome)}</a>
+        <a href="${esc(e.href || ('#/gara/' + e.gara_id))}" style="font-family:var(--font-heading);font-weight:800;font-size:1.05rem;color:var(--text-primary);text-decoration:none">${esc(e.year)} — ${esc(e.nome)}</a>
         <span style="font-size:.7rem;color:var(--text-muted)">${e.historic ? 'storico' : 'nativo'}</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
