@@ -14864,16 +14864,46 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const dedupedMerged = [...seen.values()];
 
   // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una
-  // priorità di visualizzazione): 1) podio (entro il 3°) al Campionato
-  // Italiano, 2) vittorie "semplici", 3) podio al Campionato Regionale,
-  // 4) tutti gli altri piazzamenti — a parità, la posizione migliore vince.
+  // priorità di visualizzazione). Prima trattava OGNI vittoria allo stesso
+  // modo (tier unico per "posizione 1"), quindi a parità vinceva solo la
+  // più recente — un Mondiale o un Grande Giro vinti anni fa restavano
+  // sepolti sotto tappe minori vinte di recente (segnalato dall'utente su
+  // Pogačar: Vuelta/Giro/Mondiali/Lombardia non comparivano in alto).
+  // PCS scrive già la classificazione della gara dentro il nome stesso
+  // (es. "(2.UWT)", "(1.HC)") — estratta qui via regex, nessun nuovo
+  // scraping necessario — combinata col riconoscimento per nome dei
+  // traguardi storicamente più prestigiosi (Grandi Giri, Monumenti,
+  // Mondiali, Olimpiadi), che la sola classe PCS non distingue da
+  // qualunque altra gara WorldTour.
   const isCampIt = nome => /campionato\s+italiano/i.test(nome || '');
   const isCampReg = nome => /campionato\s+regionale/i.test(nome || '');
+  const isWorldsOrOlympics = nome => /world championship|olympic games/i.test(nome || '');
+  const isGrandTour = nome => /tour de france|giro d.?italia|vuelta a españa|la vuelta ciclista/i.test(nome || '');
+  const isMonument = nome => /milano-?sanremo|ronde van vlaanderen|tour of flanders|paris-?roubaix|liège-?bastogne-?liège|il lombardia|giro di lombardia/i.test(nome || '');
+  const isGC = nome => /classifica generale/i.test(nome || '');
+  const isStageOrTappa = nome => /\bstage\b|\btappa\b/i.test(nome || '');
+  const pcsClass = nome => (String(nome || '').match(/\(([12]\.(?:UWT|HC|Pro|Ncup|\d)|WC|CC|NC)\)/) || [])[1] || '';
   const tier = r => {
-    if (isCampIt(r.nome_gara) && r.posizione <= 3) return 4;
-    if (r.posizione === 1) return 3;
-    if (isCampReg(r.nome_gara) && r.posizione <= 3) return 2;
-    return 1;
+    const nome = r.nome_gara;
+    const win = r.posizione === 1;
+    if (isCampIt(nome) && r.posizione <= 3) {
+      // Dentro il podio Campionato Italiano, la vittoria vera pesa di più
+      // di un 2°/3° posto — altrimenti un Campionato Italiano vinto e uno
+      // solo "podiato" finivano allo stesso livello.
+      return win ? 8 : 4;
+    }
+    if (!win) return isCampReg(nome) && r.posizione <= 3 ? 2 : 1;
+    // Da qui in giù, solo vittorie (posizione 1).
+    if (isWorldsOrOlympics(nome)) return 12;
+    if (isGrandTour(nome) && isGC(nome)) return 11;
+    if (isMonument(nome)) return 10;
+    if (isGrandTour(nome) && isStageOrTappa(nome)) return 9;
+    const cls = pcsClass(nome);
+    if (cls === 'WC' || cls === 'CC') return 8;
+    if (/^[12]\.UWT$/.test(cls)) return 7;
+    if (/^[12]\.HC$/.test(cls) || /^[12]\.Pro$/.test(cls)) return 6;
+    if (cls === 'NC') return 5;
+    return 3; // altre vittorie senza classe riconosciuta (es. ciclismo.info)
   };
   // Raggruppa vittorie ripetute della STESSA gara (es. 5 Tour de France
   // vinti su anni diversi) in una riga sola con "×5" — richiesta esplicita
