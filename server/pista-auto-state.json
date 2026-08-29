@@ -18,8 +18,10 @@
   "180261": {
     "nome": "39° NOTTURNA    24° TROFEO COMBERLATO ARDUINO A.M.",
     "data": "27 Agosto 2026",
-    "status": "pending",
-    "lastChecked": "2026-08-27T05:00:38.599Z"
+    "status": "imported",
+    "lastChecked": "2026-08-29T05:00:38.586Z",
+    "written": 0,
+    "review": []
   },
   "180449": {
     "nome": "NOTTURNA DELL'ASSUNTA",
@@ -43,14 +45,27 @@
   "180454": {
     "nome": "45° TROFEO CITTA' DI PORDENONE - MEMORIAL DEMETRIO MORAS",
     "data": "27 Agosto 2026",
-    "status": "pending",
-    "lastChecked": "2026-08-27T05:00:39.167Z"
+    "status": "imported",
+    "lastChecked": "2026-08-29T05:00:42.923Z",
+    "written": 4,
+    "review": [
+      {
+        "garaId": "45_TROFEO_CITTA_DI_PORDENONE_MEMORIAL_DEMETRIO_MORAS_2026-08-27_AL_M",
+        "posizione": 5,
+        "cognome": "RODRIGUES DOS SANTOS VICENTE",
+        "nome": "JUNIOR",
+        "team": "A.S.D. SACILESE",
+        "categoria": "AL_M",
+        "reason": "nome ambiguo (split incerto)",
+        "teamNoto": "A.S.D. SACILESE"
+      }
+    ]
   },
   "180551": {
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:37.466Z"
+    "lastChecked": "2026-08-29T05:00:37.447Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -64,7 +79,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:36.899Z"
+    "lastChecked": "2026-08-29T05:00:36.884Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -78,7 +93,7 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:35.766Z"
+    "lastChecked": "2026-08-29T05:00:35.748Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
@@ -92,7 +107,7 @@
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:35.198Z"
+    "lastChecked": "2026-08-29T05:00:35.185Z"
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -143,7 +158,7 @@
     "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
     "data": "25 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:36.333Z"
+    "lastChecked": "2026-08-29T05:00:36.325Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -157,7 +172,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:34.635Z"
+    "lastChecked": "2026-08-29T05:00:34.613Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -171,6 +186,6 @@
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
     "data": "27 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-27T05:00:38.040Z"
+    "lastChecked": "2026-08-29T05:00:38.016Z"
   }
 }
