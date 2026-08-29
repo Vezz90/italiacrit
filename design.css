@@ -12107,6 +12107,7 @@ main.page:has(.itc-dash) {
 .pcs-top-result-name a, .pcs-team-name a { color: var(--text-primary); text-decoration: none; }
 .pcs-top-result-name a:hover, .pcs-team-name a:hover { text-decoration: underline; }
 .pcs-top-result-year { color: var(--text-muted); font-size: 0.76rem; }
+.pcs-top-result-count { color: var(--accent); font-weight: 700; font-size: 0.76rem; }
 .pcs-team-year { color: var(--text-muted); font-weight: 700; width: 38px; flex-shrink: 0; }
 .pcs-team-cat { color: var(--text-muted); font-size: 0.76rem; }
 @media (max-width: 640px) {

@@ -14875,14 +14875,37 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (isCampReg(r.nome_gara) && r.posizione <= 3) return 2;
     return 1;
   };
-  const top10 = dedupedMerged.slice()
-    .sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''))
+  // Raggruppa vittorie ripetute della STESSA gara (es. 5 Tour de France
+  // vinti su anni diversi) in una riga sola con "×5" — richiesta esplicita
+  // dell'utente: prima ogni vittoria occupava un posto separato tra i
+  // primi 10, affollando la lista con la stessa impresa ripetuta invece di
+  // lasciare spazio a risultati diversi. Le tappe di uno stesso grande giro
+  // si raggruppano insieme ("Tour de France — Tappe ×N"), la Classifica
+  // Generale resta un gruppo a sé (è un traguardo diverso dalla singola
+  // tappa) — le corse in linea (senza "— Stage/Tappa N") restano invariate.
+  const _raceGroupKey = nome => String(nome || '').replace(/\s*[—-]\s*(Stage|Tappa)\s*\d+.*$/i, ' — Tappe').trim();
+  const groups = new Map();
+  for (const r of dedupedMerged) {
+    const key = _raceGroupKey(r.nome_gara);
+    let g = groups.get(key);
+    if (!g) { g = { key, rows: [] }; groups.set(key, g); }
+    g.rows.push(r);
+  }
+  for (const g of groups.values()) {
+    g.rows.sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''));
+    g.best = g.rows[0];
+    g.count = g.rows.length;
+  }
+  const top10 = [...groups.values()]
+    .sort((a, b) => tier(b.best) - tier(a.best) || a.best.posizione - b.best.posizione || (b.best.data || '').localeCompare(a.best.data || ''))
     .slice(0, 10);
-  const topResultsHtml = top10.map(r => {
+  const topResultsHtml = top10.map(g => {
+    const r = g.best;
     const isStage = /\bstage\b|\btappa\b/i.test(r.nome_gara || '');
     const posLabel = `${r.posizione}°${isStage ? ' tappa' : ''} `;
-    const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : `<a href="${esc(r.url)}">${esc(r.nome_gara)}</a>`) : esc(r.nome_gara || '');
-    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
+    const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(g.key)}</a>` : `<a href="${esc(r.url)}">${esc(g.key)}</a>`) : esc(g.key || '');
+    const countBadge = g.count > 1 ? ` <span class="pcs-top-result-count">×${g.count}</span>` : '';
+    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}${countBadge}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
   }).join('');
 
   // Teams per anno — priorità delle fonti: ciclismo.info (dato reale già
