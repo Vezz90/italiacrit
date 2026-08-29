@@ -13612,12 +13612,30 @@ const _CAT_NOISE_WORDS = new Set([
   'ANNO','ALLIEVI','ALLIEVE','JUNIORES','JUNIOR','ELITE','UNDER','U23','U-23','UNDER23','GARA',
   'UNICA','PROVA','VALIDA','CAMPIONATO','REGIONALE','OPEN','MASCHILI','FEMMINILI'
 ]);
+// Stesso nome-base, ma varianti reali usate da ciclismo.info in anni diversi
+// per la STESSA gara (segnalato dall'utente: Modolo aveva vinto il "Giro del
+// Belvedere" 2009 ma non compariva nell'albo d'oro — il nome usato quell'anno
+// era "…DI VILLA DI CORDIGNANO", non collegato al nome-base "GIRO DEL
+// BELVEDERE" usato dal 2016 in poi/nativo 2026). Whack-a-mole per forza:
+// migliaia di nomi storici cambiano negli anni per capriccio di chi li
+// inseriva, un match automatico "fuzzy" rischierebbe di unire gare diverse
+// per errore — meglio poche voci curate a mano quando segnalate.
+const _RACE_BASE_ALIASES = new Map([
+  ['GIRO DEL BELVEDERE DI VILLA DI CORDIGNANO', 'GIRO DEL BELVEDERE'],
+  ['GIRO BELVEDERE DI VILLA DI CORDIGNANO', 'GIRO DEL BELVEDERE'],
+  ['GIRO DEL BELVEDERE DI VILLA CORDIGNANO', 'GIRO DEL BELVEDERE'],
+  ['GIRO DI BELVEDERE DI VILLA DI CORDIGNANO', 'GIRO DEL BELVEDERE'],
+  ['GIRO BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
+  ['GIRO DEL BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
+  ['GIRO DI BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
+]);
 function _raceBaseName(nome) {
   let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ');
   s = s.replace(/^\s*\d+\s*[°^ª]?\s*/, ''); // numero di edizione iniziale
   let toks = s.split(/\s+/).filter(Boolean);
   while (toks.length > 1 && _CAT_NOISE_WORDS.has(toks[toks.length - 1])) toks.pop();
-  return toks.join(' ').trim();
+  const base = toks.join(' ').trim();
+  return _RACE_BASE_ALIASES.get(base) || base;
 }
 
 // Apre l'edizione di una gara di un altro anno: passa alla stagione giusta
