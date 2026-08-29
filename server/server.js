@@ -4548,7 +4548,12 @@ app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
     const _raceIdFromUrl = u => { const m = String(u || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_/); return m ? m[1] : null; };
     const wantedIds = [...new Set([seedUrl, ...relatedUrls].map(_raceIdFromUrl).filter(Boolean))];
     if (!wantedIds.length) return res.json({ editions: [], relatedCount: 0 });
-    const orExpr = wantedIds.map(id => `gara_ciclismo_url.ilike.%_${id}_%`).join(',');
+    // "_" in un pattern ILIKE è un WILDCARD (un carattere qualsiasi), non un
+    // underscore letterale: senza escape, "%_2332_%" può matchare l'id 2332
+    // incorporato per puro caso dentro l'URL di una gara TOTALMENTE diversa
+    // (bug reale osservato: gare estranee comparse nello storico del Giro
+    // del Belvedere). "\_" lo rende letterale.
+    const orExpr = wantedIds.map(id => `gara_ciclismo_url.ilike.%\\_${id}\\_%`).join(',');
     const { data: rows, error } = await supabase.from('ciclismo_results')
       .select('stagione, nome_gara, data, posizione, gara_ciclismo_url, atleta_id, ciclismo_id, team')
       .or(orExpr)
