@@ -1,126 +1,102 @@
 {
-  "totalAtleti": 16855,
-  "generatedAt": "2026-08-29T08:56:37.695Z",
+  "totalAtleti": 14194,
+  "generatedAt": "2026-08-29T23:39:50.891Z",
   "breakdown": [
     {
-      "year": 2007,
-      "count": 367,
-      "startIndex": 1,
-      "endIndex": 367
-    },
-    {
-      "year": 2008,
-      "count": 251,
-      "startIndex": 368,
-      "endIndex": 618
-    },
-    {
-      "year": 2009,
-      "count": 583,
-      "startIndex": 619,
-      "endIndex": 1201
-    },
-    {
-      "year": 2010,
-      "count": 942,
-      "startIndex": 1202,
-      "endIndex": 2143
-    },
-    {
       "year": 2011,
-      "count": 1186,
-      "startIndex": 2144,
-      "endIndex": 3329
+      "count": 642,
+      "startIndex": 1,
+      "endIndex": 642
     },
     {
       "year": 2012,
-      "count": 1100,
-      "startIndex": 3330,
-      "endIndex": 4429
+      "count": 1103,
+      "startIndex": 643,
+      "endIndex": 1745
     },
     {
       "year": 2013,
-      "count": 965,
-      "startIndex": 4430,
-      "endIndex": 5394
+      "count": 963,
+      "startIndex": 1746,
+      "endIndex": 2708
     },
     {
       "year": 2014,
-      "count": 960,
-      "startIndex": 5395,
-      "endIndex": 6354
+      "count": 966,
+      "startIndex": 2709,
+      "endIndex": 3674
     },
     {
       "year": 2015,
-      "count": 922,
-      "startIndex": 6355,
-      "endIndex": 7276
+      "count": 924,
+      "startIndex": 3675,
+      "endIndex": 4598
     },
     {
       "year": 2016,
-      "count": 910,
-      "startIndex": 7277,
-      "endIndex": 8186
+      "count": 915,
+      "startIndex": 4599,
+      "endIndex": 5513
     },
     {
       "year": 2017,
-      "count": 946,
-      "startIndex": 8187,
-      "endIndex": 9132
+      "count": 950,
+      "startIndex": 5514,
+      "endIndex": 6463
     },
     {
       "year": 2018,
       "count": 949,
-      "startIndex": 9133,
-      "endIndex": 10081
+      "startIndex": 6464,
+      "endIndex": 7412
     },
     {
       "year": 2019,
-      "count": 1113,
-      "startIndex": 10082,
-      "endIndex": 11194
+      "count": 1116,
+      "startIndex": 7413,
+      "endIndex": 8528
     },
     {
       "year": 2020,
-      "count": 332,
-      "startIndex": 11195,
-      "endIndex": 11526
+      "count": 333,
+      "startIndex": 8529,
+      "endIndex": 8861
     },
     {
       "year": 2021,
-      "count": 713,
-      "startIndex": 11527,
-      "endIndex": 12239
+      "count": 714,
+      "startIndex": 8862,
+      "endIndex": 9575
     },
     {
       "year": 2022,
       "count": 801,
-      "startIndex": 12240,
-      "endIndex": 13040
+      "startIndex": 9576,
+      "endIndex": 10376
     },
     {
       "year": 2023,
       "count": 789,
-      "startIndex": 13041,
-      "endIndex": 13829
+      "startIndex": 10377,
+      "endIndex": 11165
     },
     {
       "year": 2024,
-      "count": 773,
-      "startIndex": 13830,
-      "endIndex": 14602
+      "count": 774,
+      "startIndex": 11166,
+      "endIndex": 11939
     },
     {
       "year": 2025,
       "count": 853,
-      "startIndex": 14603,
-      "endIndex": 15455
+      "startIndex": 11940,
+      "endIndex": 12792
     },
     {
       "year": 2026,
-      "count": 1400,
-      "startIndex": 15456,
-      "endIndex": 16855
+      "count": 1402,
+      "startIndex": 12793,
+      "endIndex": 14194
     }
   ]
 }

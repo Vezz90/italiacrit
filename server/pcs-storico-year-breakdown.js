@@ -68,6 +68,21 @@ async function main() {
     for (const r of data) done.add(r.entity_id);
     if (data.length < PAGE) break;
   }
+  // "non trovato su PCS" confermato — esito definitivo, escluso anche lui
+  // da --skip-complete nello scraper reale (vedi pcs-athlete-import-storico.js).
+  // Mancava qui: gli indici calcolati non corrispondevano più a quelli del
+  // log reale, mostrando sempre "2007" come anno corrente anche a scraper
+  // ben oltre quell'anno — segnalato dall'utente ("perché vedo sempre il
+  // 2007?").
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('entity_overrides').select('entity_id')
+      .eq('entity_type', 'atleta').eq('field', 'pcs_not_found')
+      .order('id').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) done.add(r.entity_id);
+    if (data.length < PAGE) break;
+  }
   for (const id of done) lastYearByAtleta.delete(id);
 
   const sorted = [...lastYearByAtleta.values()].sort((a, b) => b - a);
