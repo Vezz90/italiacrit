@@ -14894,7 +14894,13 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   for (const g of groups.values()) {
     g.rows.sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''));
     g.best = g.rows[0];
-    g.count = g.rows.length;
+    // Il conteggio "×N" deve riflettere quante volte è stata ripetuta la
+    // STESSA impresa (es. quante vittorie), non ogni partecipazione alla
+    // gara — altrimenti "Tour de France — Tappe" mostrava ×143 contando
+    // anche gli arrivi fuori podio nelle tappe corse senza vincerle (bug
+    // reale trovato dal vivo su Pogačar appena pubblicato). Conta solo le
+    // righe che eguagliano il livello (tier) e la posizione del migliore.
+    g.count = g.rows.filter(r => r.posizione === g.best.posizione && tier(r) === tier(g.best)).length;
   }
   const top10 = [...groups.values()]
     .sort((a, b) => tier(b.best) - tier(a.best) || a.best.posizione - b.best.posizione || (b.best.data || '').localeCompare(a.best.data || ''))
