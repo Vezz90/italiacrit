@@ -3926,6 +3926,8 @@ function route() {
   if (m_atleta) return renderAtleta(m_atleta[1]);
   const m_team = match('/team/:id');
   if (m_team) return renderTeam(m_team[1]);
+  const m_garaStoria = match('/gara-storia/:base');
+  if (m_garaStoria) return renderGaraStoria(decodeURIComponent(m_garaStoria[1]));
   const m_gara = match('/gara/:id');
   if (m_gara) {
     // Gare storiche importate da ciclismo.info: id con prefisso CIC_, pagina
@@ -13607,7 +13609,7 @@ function raceSeriesKey(garaId) {
 // le varie categorie/edizioni si possono raggruppare in un'unica pagina.
 const _CAT_NOISE_WORDS = new Set([
   'DONNE','UOMINI','MASCHILE','FEMMINILE','ESORDIENTI','ESORDIENTE','PRIMO','SECONDO',
-  'ANNO','ALLIEVI','ALLIEVE','JUNIORES','JUNIOR','ELITE','UNDER','U23','U-23','GARA',
+  'ANNO','ALLIEVI','ALLIEVE','JUNIORES','JUNIOR','ELITE','UNDER','U23','U-23','UNDER23','GARA',
   'UNICA','PROVA','VALIDA','CAMPIONATO','REGIONALE','OPEN','MASCHILI','FEMMINILI'
 ]);
 function _raceBaseName(nome) {
@@ -13632,39 +13634,92 @@ window.openRaceEdition = async (garaId, year) => {
 // Costruisce e inietta l'albo d'oro (tutte le edizioni della stessa gara
 // attraverso gli anni) nella pagina gara. Lazy: carica le altre stagioni solo
 // se esistono, così con una sola stagione non rallenta nulla.
-async function _injectRaceAlboDoro(garaId) {
+//
+// Prima leggeva SOLO data/seasons/{anno}/results_raw.json — che esiste solo
+// per il 2026 (unico anno con dati nativi strutturati), quindi l'albo
+// d'oro era di fatto sempre vuoto: niente da collegare. Le edizioni
+// 2007-2025 vivono in un sistema completamente diverso (ciclismo_results
+// su Supabase) — richiesta esplicita dell'utente di collegarle comunque,
+// riusando lo stesso normalizzatore di nome già scritto per le gare native
+// (_raceBaseName/raceSeriesKey) applicato anche ai nomi ciclismo.info
+// (che hanno lo stesso pattern "numero edizione + nome", es. "62 COPPA
+// CICOGNA" → "COPPA CICOGNA", uguale su ogni anno).
+//
+// opts.nomeGara: nome della gara CORRENTE, usato per derivare il nome-base
+// da cercare anche nello storico ciclismo.info — necessario perché una
+// pagina storica (garaId = "CIC_<id>") non ha un raceSeriesKey nativo da
+// cui partire.
+async function _injectRaceAlboDoro(garaId, opts = {}) {
   const el = document.getElementById('race-albo-doro');
   if (!el) return;
   await loadSeasonsIndex();
   const years = _availableSeasonYears();
-  const key = raceSeriesKey(garaId);
+  const isHistoricPage = String(garaId).startsWith('CIC_');
+  const key = isHistoricPage ? null : raceSeriesKey(garaId);
   const editions = [];
-  for (const y of years) {
-    let res;
-    try { res = await loadSeasonResults(y); } catch { continue; }
-    const byGara = {};
-    for (const r of (res || [])) {
-      if (!r.gara_id || raceSeriesKey(r.gara_id) !== key) continue;
-      (byGara[r.gara_id] = byGara[r.gara_id] || []).push(r);
-    }
-    for (const [gid, rows] of Object.entries(byGara)) {
-      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
-      const w = rows[0] || {};
-      editions.push({ year: y, gara_id: gid, data: w.data || '', nome: w.nome_gara || gid,
-        winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' } });
+
+  if (key) {
+    for (const y of years) {
+      let res;
+      try { res = await loadSeasonResults(y); } catch { continue; }
+      const byGara = {};
+      for (const r of (res || [])) {
+        if (!r.gara_id || raceSeriesKey(r.gara_id) !== key) continue;
+        (byGara[r.gara_id] = byGara[r.gara_id] || []).push(r);
+      }
+      for (const [gid, rows] of Object.entries(byGara)) {
+        rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+        const w = rows[0] || {};
+        editions.push({ year: y, gara_id: gid, data: w.data || '', nome: w.nome_gara || gid, historic: false,
+          winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' } });
+      }
     }
   }
+
+  const baseName = _raceBaseName(opts.nomeGara || '');
+  if (baseName && baseName.length >= 3) {
+    try {
+      const resp = await apiCall(`/ciclismo-results/race-history?q=${encodeURIComponent(baseName)}`);
+      const byEdition = {};
+      for (const r of (resp?.editions || [])) {
+        // Il filtro lato server è solo un ILIKE grezzo (sottostringa) — il
+        // confronto vero, esatto, è questo: stesso nome-base normalizzato.
+        if (_raceBaseName(r.nome_gara) !== baseName) continue;
+        const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+        (byEdition[ek] = byEdition[ek] || []).push(r);
+      }
+      for (const [ek, rows] of Object.entries(byEdition)) {
+        rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+        const w = rows[0] || {};
+        const [url, stagione] = ek.split('|');
+        const cid = _ciclismoGaraId(url);
+        if (!cid) continue;
+        const nomeParts = (w.nome_completo || '').trim().split(/\s+/);
+        editions.push({ year: stagione, gara_id: 'CIC_' + cid, data: w.data || '', nome: w.nome_gara || '', historic: true,
+          winner: { cognome: nomeParts[0] || '', nome: nomeParts.slice(1).join(' '), team: w.team || '', atleta_id: w.atleta_id || '' } });
+      }
+    } catch { /* storico opzionale, non bloccare l'albo nativo */ }
+  }
+
   editions.sort((a, b) => String(b.year).localeCompare(String(a.year)) || (b.data || '').localeCompare(a.data || ''));
   if (editions.length <= 1) { el.innerHTML = ''; return; } // niente albo per una sola edizione
 
+  const storiaLink = baseName
+    ? `<a href="#/gara-storia/${encodeURIComponent(baseName)}" style="font-size:.76rem;color:var(--accent,#e8001d);font-weight:700;text-decoration:none">Storico completo (podi) →</a>`
+    : '';
+
   el.innerHTML = `
-    <div class="section-header" style="margin-top:24px">
+    <div class="section-header" style="margin-top:24px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
       <span class="section-title">🏆 ALBO D'ORO — EDIZIONI</span><span class="section-line"></span>
+      ${storiaLink}
     </div>
     <div style="display:flex;flex-direction:column;gap:6px">
       ${editions.map(e => {
-        const cur = e.gara_id === garaId && String(e.year) === _loadedSeasonYear();
-        return `<div onclick="window.openRaceEdition('${esc(e.gara_id)}','${e.year}')"
+        const cur = e.gara_id === garaId && (e.historic || String(e.year) === _loadedSeasonYear());
+        const onclick = e.historic
+          ? `window.goTo('#/gara/${esc(e.gara_id)}')`
+          : `window.openRaceEdition('${esc(e.gara_id)}','${e.year}')`;
+        return `<div onclick="${onclick}"
           style="display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
           <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
           <span style="font-size:1rem">🥇</span>
@@ -13677,6 +13732,88 @@ async function _injectRaceAlboDoro(garaId) {
       }).join('')}
     </div>`;
 }
+// Pagina "storico gara": tutte le edizioni trovate (native 2026 + storiche
+// ciclismo.info 2007-2025) per lo stesso nome-base, con SOLO il podio
+// (1°-3°) di ciascuna — lettura veloce, richiesta esplicita dell'utente
+// ("primi tre nomi veloci da poter vedere"), niente classifica completa.
+async function renderGaraStoria(baseName) {
+  if (!baseName) return renderNotFound();
+  setPageMeta(`Storico — ${baseName}`, 'Tutte le edizioni attraverso gli anni');
+
+  const editions = [];
+
+  // Storico ciclismo.info
+  try {
+    const resp = await apiCall(`/ciclismo-results/race-history?q=${encodeURIComponent(baseName)}`);
+    const byEdition = {};
+    for (const r of (resp?.editions || [])) {
+      if (_raceBaseName(r.nome_gara) !== baseName) continue;
+      const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+      (byEdition[ek] = byEdition[ek] || []).push(r);
+    }
+    for (const [ek, rows] of Object.entries(byEdition)) {
+      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+      const [url, stagione] = ek.split('|');
+      const cid = _ciclismoGaraId(url);
+      if (!cid) continue;
+      editions.push({
+        year: stagione, gara_id: 'CIC_' + cid, historic: true, nome: rows[0]?.nome_gara || '',
+        podio: rows.slice(0, 3).map(r => {
+          const parts = (r.nome_completo || '').trim().split(/\s+/);
+          return { posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team || '', atleta_id: r.atleta_id || null };
+        }),
+      });
+    }
+  } catch { /* storico opzionale */ }
+
+  // Edizioni native (2026 e altri anni con dati strutturati, se presenti)
+  await loadSeasonsIndex();
+  for (const y of _availableSeasonYears()) {
+    let res;
+    try { res = await loadSeasonResults(y); } catch { continue; }
+    const byGara = {};
+    for (const r of (res || [])) {
+      if (!r.gara_id || _raceBaseName(r.nome_gara) !== baseName) continue;
+      (byGara[r.gara_id] = byGara[r.gara_id] || []).push(r);
+    }
+    for (const [gid, rows] of Object.entries(byGara)) {
+      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+      editions.push({
+        year: y, gara_id: gid, historic: false, nome: rows[0]?.nome_gara || gid,
+        podio: rows.slice(0, 3).map(r => ({ posizione: r.posizione, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', atleta_id: r.atleta_id || null })),
+      });
+    }
+  }
+
+  editions.sort((a, b) => String(b.year).localeCompare(String(a.year)));
+  if (!editions.length) return renderNotFound();
+
+  const medal = p => p === 1 ? '🥇' : p === 2 ? '🥈' : p === 3 ? '🥉' : `${p}°`;
+  const rowsHtml = editions.map(e => `
+    <div class="card" style="padding:14px 18px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <a href="#/gara/${esc(e.gara_id)}" style="font-family:var(--font-heading);font-weight:800;font-size:1.05rem;color:var(--text-primary);text-decoration:none">${esc(e.year)} — ${esc(e.nome)}</a>
+        <span style="font-size:.7rem;color:var(--text-muted)">${e.historic ? 'storico' : 'nativo'}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${e.podio.map(p => `
+          <div style="display:flex;align-items:center;gap:8px;font-size:.86rem">
+            <span style="min-width:22px">${medal(p.posizione)}</span>
+            ${p.atleta_id ? `<a href="#/atleta/${esc(p.atleta_id)}" style="font-weight:700;color:var(--text-primary);text-decoration:none">${esc(p.cognome)} ${esc(p.nome)}</a>` : `<span style="font-weight:700">${esc(p.cognome)} ${esc(p.nome)}</span>`}
+            <span style="color:var(--text-muted)">${esc(p.team)}</span>
+          </div>`).join('') || '<div style="color:var(--text-muted);font-size:.82rem">Podio non disponibile</div>'}
+      </div>
+    </div>`).join('');
+
+  setPage(`
+    <div class="race-header">
+      <div class="race-name-display">${esc(baseName)}</div>
+      <div class="race-meta-row"><span>${editions.length} edizioni trovate</span></div>
+    </div>
+    <div style="margin-top:20px">${rowsHtml}</div>
+  `);
+}
+
 function _availableSeasonYears() {
   const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
   const set = new Set([...(idx.seasons || []).map(String)]);
@@ -15421,8 +15558,10 @@ async function renderGaraStorica(ciclismoGaraId) {
       </table>
     </div>
     <div id="gara-pcs-ext"></div>
+    <div id="race-albo-doro" style="margin-top:8px"></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
+  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara });
 
   // (I risultati PCS sono già stati uniti a "rows" più sopra, per riempire
   // eventuali buchi nel podio — niente chiamata separata a _loadGaraPcsExt,
@@ -19738,7 +19877,7 @@ async function renderGara(gara_id) {
 
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
   window._lastGaraResults = results;
-  _injectRaceAlboDoro(primaryGaraId);
+  _injectRaceAlboDoro(primaryGaraId, { nomeGara: name });
   _loadGaraComments(primaryGaraId);
   _loadGaraPcsExt(primaryGaraId, results);
 

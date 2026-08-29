@@ -4411,6 +4411,36 @@ function ciclismoGaraId(url) {
 // Elenco gare ciclismo.info per una stagione — raggruppate per gara (stesso
 // gara_ciclismo_url), usato dalla pagina Risultati per gli anni storici
 // (fino al 2007) non coperti dai dati nativi FCI.
+// Storia di una gara attraverso gli anni ("albo d'oro") — collega le
+// edizioni storiche ciclismo.info tra loro E con l'eventuale edizione
+// nativa 2026 tramite il nome base della gara (stesso normalizzatore già
+// usato lato client per l'edizione nativa, _raceBaseName/raceSeriesKey —
+// qui solo un filtro grezzo per nome, l'uguaglianza esatta la fa il
+// client dopo aver normalizzato). Ritorna il podio (1°-3°) di ogni
+// edizione trovata, non l'intera classifica — pagina pensata per una
+// lettura veloce "chi ha vinto quale anno".
+app.get('/api/ciclismo-results/race-history', async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim();
+    if (q.length < 3) return res.json({ editions: [] });
+    const { data, error } = await supabase.from('ciclismo_results')
+      .select('stagione, categoria, nome_gara, data, posizione, gara_ciclismo_url, regione, luogo, atleta_id, ciclismo_id, team')
+      .ilike('nome_gara', `%${q}%`)
+      .lte('posizione', 3)
+      .order('stagione', { ascending: false })
+      .limit(3000);
+    if (error) throw error;
+    const rows = data || [];
+    const ids = [...new Set(rows.map(r => r.ciclismo_id).filter(Boolean))];
+    let nomeById = new Map();
+    if (ids.length) {
+      const { data: ath } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ids);
+      nomeById = new Map((ath || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    }
+    res.json({ editions: rows.map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || null })) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/ciclismo-results/races', async (req, res) => {
   const anno = req.query.anno;
   if (!anno) return res.status(400).json({ error: 'anno mancante' });
