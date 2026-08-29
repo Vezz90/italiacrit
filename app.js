@@ -13649,6 +13649,25 @@ window.openRaceEdition = async (garaId, year) => {
 // da cercare anche nello storico ciclismo.info — necessario perché una
 // pagina storica (garaId = "CIC_<id>") non ha un raceSeriesKey nativo da
 // cui partire.
+// Tab "Risultati" / "Albo d'oro" in cima alla pagina gara — prima l'albo
+// d'oro stava sotto alla classifica intera (anche 100+ righe), quindi non si
+// vedeva mai senza scrollare parecchio (segnalato dall'utente). Ora un tab
+// visibile subito sotto l'intestazione fa comparire il pannello sul posto,
+// senza scroll.
+window._switchGaraTab = (tab) => {
+  const res = document.getElementById('gara-results-panel');
+  const albo = document.getElementById('race-albo-doro');
+  const bR = document.getElementById('tab-risultati'), bA = document.getElementById('tab-albo');
+  if (!res || !albo) return;
+  if (tab === 'albo') {
+    res.style.display = 'none'; albo.style.display = 'block';
+    bA?.classList.add('active-cat'); bR?.classList.remove('active-cat');
+  } else {
+    res.style.display = ''; albo.style.display = 'none';
+    bR?.classList.add('active-cat'); bA?.classList.remove('active-cat');
+  }
+};
+
 async function _injectRaceAlboDoro(garaId, opts = {}) {
   const el = document.getElementById('race-albo-doro');
   if (!el) return;
@@ -13671,7 +13690,8 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
         rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
         const w = rows[0] || {};
         editions.push({ year: y, gara_id: gid, data: w.data || '', nome: w.nome_gara || gid, historic: false,
-          winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' } });
+          winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' },
+          podio: rows.slice(0, 3).map(r => ({ posizione: r.posizione, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', atleta_id: r.atleta_id || null })) });
       }
     }
   }
@@ -13695,39 +13715,67 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
         const cid = _ciclismoGaraId(url);
         if (!cid) continue;
         const nomeParts = (w.nome_completo || '').trim().split(/\s+/);
+        // Link interno con slug leggibile (nome+anno), non solo "CIC_<id>" —
+        // segnalato dall'utente cliccando un'edizione dall'albo d'oro.
         editions.push({ year: stagione, gara_id: 'CIC_' + cid, data: w.data || '', nome: w.nome_gara || '', historic: true,
-          winner: { cognome: nomeParts[0] || '', nome: nomeParts.slice(1).join(' '), team: w.team || '', atleta_id: w.atleta_id || '' } });
+          href: _ciclismoGaraHref(url, w.nome_gara, stagione),
+          winner: { cognome: nomeParts[0] || '', nome: nomeParts.slice(1).join(' '), team: w.team || '', atleta_id: w.atleta_id || '' },
+          podio: rows.slice(0, 3).map(r => {
+            const p = (r.nome_completo || '').trim().split(/\s+/);
+            return { posizione: r.posizione, cognome: p[0] || '', nome: p.slice(1).join(' '), team: r.team || '', atleta_id: r.atleta_id || null };
+          }) });
       }
     } catch { /* storico opzionale, non bloccare l'albo nativo */ }
   }
 
   editions.sort((a, b) => String(b.year).localeCompare(String(a.year)) || (b.data || '').localeCompare(a.data || ''));
-  if (editions.length <= 1) { el.innerHTML = ''; return; } // niente albo per una sola edizione
+  // Il tab "Albo d'oro" in cima (vedi _switchGaraTab) esiste sempre nel
+  // markup ma va nascosto quando non c'è nulla da collegare (una sola
+  // edizione) — senza questa riga l'utente vedrebbe un tab cliccabile
+  // che porta a un pannello vuoto.
+  const tabBtn = document.getElementById('tab-albo');
+  if (editions.length <= 1) {
+    el.innerHTML = '';
+    if (tabBtn) tabBtn.style.display = 'none';
+    return;
+  }
+  if (tabBtn) tabBtn.style.display = '';
+
+  const medal = p => p === 1 ? '🥇' : p === 2 ? '🥈' : p === 3 ? '🥉' : `${p}°`;
 
   const storiaLink = baseName
     ? `<a href="#/gara-storia/${encodeURIComponent(baseName)}" style="font-size:.76rem;color:var(--accent,#e8001d);font-weight:700;text-decoration:none">Storico completo (podi) →</a>`
     : '';
 
   el.innerHTML = `
-    <div class="section-header" style="margin-top:24px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+    <div class="section-header" style="margin-top:8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
       <span class="section-title">🏆 ALBO D'ORO — EDIZIONI</span><span class="section-line"></span>
       ${storiaLink}
     </div>
-    <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;flex-direction:column;gap:8px">
       ${editions.map(e => {
         const cur = e.gara_id === garaId && (e.historic || String(e.year) === _loadedSeasonYear());
+        // Link storico interno con slug leggibile (nome+anno) invece del solo
+        // "CIC_<id>" — segnalato dall'utente cliccando un'edizione dell'albo.
         const onclick = e.historic
-          ? `window.goTo('#/gara/${esc(e.gara_id)}')`
+          ? `window.goTo('${esc(e.href || ('#/gara/' + e.gara_id))}')`
           : `window.openRaceEdition('${esc(e.gara_id)}','${e.year}')`;
+        const podio = (e.podio && e.podio.length ? e.podio : [{ posizione: 1, ...e.winner }]);
         return `<div onclick="${onclick}"
-          style="display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
-          <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
-          <span style="font-size:1rem">🥇</span>
-          <span style="flex:1;min-width:0">
-            <span style="font-weight:700">${esc(e.winner.cognome)} ${esc(e.winner.nome)}</span>
-            <span style="color:var(--text-muted);font-size:.82rem;margin-left:6px">${esc(e.winner.team)}</span>
-          </span>
-          ${cur ? '<span style="font-size:.7rem;color:var(--accent,#e8001d);font-weight:700">QUESTA</span>' : '<span style="color:var(--text-muted)">→</span>'}
+          style="padding:10px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
+            <span style="flex:1"></span>
+            ${cur ? '<span style="font-size:.7rem;color:var(--accent,#e8001d);font-weight:700">QUESTA</span>' : '<span style="color:var(--text-muted);font-size:.8rem">→</span>'}
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            ${podio.map(p => `
+              <div style="display:flex;align-items:center;gap:8px;font-size:.86rem">
+                <span style="min-width:20px">${medal(p.posizione)}</span>
+                <span style="font-weight:700">${esc(p.cognome)} ${esc(p.nome)}</span>
+                <span style="color:var(--text-muted);font-size:.82rem">${esc(p.team)}</span>
+              </div>`).join('')}
+          </div>
         </div>`;
       }).join('')}
     </div>`;
@@ -15544,21 +15592,27 @@ async function renderGaraStorica(ciclismoGaraId) {
       <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
       ${adminBtnsHtml}
     </div>
-    ${mediaSectionHtml}
-    <div class="section-header" style="margin-top:20px">
-      <span class="section-title">ORDINE DI ARRIVO</span>
-      <span class="section-line"></span>
+    <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
+      <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
+      <button id="tab-albo" class="tab-btn" style="display:none" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro</button>
     </div>
-    <div class="results-table-wrap">
-      <table class="results-table">
-        <thead><tr>
-          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}<th class="td-hide-mobile">TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
-        </tr></thead>
-        <tbody id="main-results-tbody">${rowsHtml}</tbody>
-      </table>
+    <div id="gara-results-panel">
+      ${mediaSectionHtml}
+      <div class="section-header" style="margin-top:20px">
+        <span class="section-title">ORDINE DI ARRIVO</span>
+        <span class="section-line"></span>
+      </div>
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead><tr>
+            <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}<th class="td-hide-mobile">TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
+          </tr></thead>
+          <tbody id="main-results-tbody">${rowsHtml}</tbody>
+        </table>
+      </div>
+      <div id="gara-pcs-ext"></div>
     </div>
-    <div id="gara-pcs-ext"></div>
-    <div id="race-albo-doro" style="margin-top:8px"></div>
+    <div id="race-albo-doro" style="margin-top:8px;display:none"></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
   _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara });
@@ -19809,21 +19863,27 @@ async function renderGara(gara_id) {
         ${_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
       </div>
     ${_catTabsHtml}
-    ${racePhotosHtml}
-    ${extraVideosHtml}
-    ${siRaceIntelHtml}
-    <div id="gara-media-gallery"></div>
-    <div id="gara-narrative-box"></div>
-    <div class="results-table-wrap">
-      <table class="results-table">
-        <thead><tr>
-          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
-        </tr></thead>
-        <tbody id="main-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
-      </table>
+    <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
+      <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
+      <button id="tab-albo" class="tab-btn" style="display:none" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro</button>
     </div>
-    <div id="gara-pcs-ext"></div>
-    <div id="race-albo-doro" style="margin-top:8px"></div>
+    <div id="gara-results-panel">
+      ${racePhotosHtml}
+      ${extraVideosHtml}
+      ${siRaceIntelHtml}
+      <div id="gara-media-gallery"></div>
+      <div id="gara-narrative-box"></div>
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead><tr>
+            <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
+          </tr></thead>
+          <tbody id="main-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div id="gara-pcs-ext"></div>
+    </div>
+    <div id="race-albo-doro" style="margin-top:8px;display:none"></div>
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
