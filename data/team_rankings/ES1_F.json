@@ -2,14 +2,26 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 417,
+    "punti": 429,
     "vittorie": 8,
     "p1": 8,
     "p2": 10,
-    "p3": 6,
-    "pout": 28,
-    "n_atleti": 6,
+    "p3": 7,
+    "pout": 29,
+    "n_atleti": 7,
     "pos": 1
+  },
+  {
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 378,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 10,
+    "p3": 4,
+    "pout": 25,
+    "n_atleti": 5,
+    "pos": 2
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -21,18 +33,6 @@
     "p3": 4,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 2
-  },
-  {
-    "team_id": "GS_CAPANNORI",
-    "team_nome": "GS CAPANNORI",
-    "punti": 360,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 9,
-    "p3": 4,
-    "pout": 23,
-    "n_atleti": 5,
     "pos": 3
   },
   {
@@ -50,9 +50,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 255,
-    "vittorie": 9,
-    "p1": 9,
+    "punti": 270,
+    "vittorie": 10,
+    "p1": 10,
     "p2": 2,
     "p3": 2,
     "pout": 15,
@@ -74,12 +74,12 @@
   {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
-    "punti": 201,
+    "punti": 205,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 27,
+    "pout": 28,
     "n_atleti": 2,
     "pos": 7
   },
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 62,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 20
+  },
+  {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
     "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
     "punti": 59,
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 4,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -249,18 +261,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 21
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 54,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 3,
     "pos": 22
   },
   {
@@ -326,14 +326,26 @@
   {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
-    "punti": 32,
+    "punti": 38,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 1,
     "pos": 28
+  },
+  {
+    "team_id": "U_S_C_S_I_RUBANO",
+    "team_nome": "U.S. C.S.I. RUBANO",
+    "punti": 32,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 29
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI",
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "EMILIA_ROMAGNA",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -381,18 +393,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 32
-  },
-  {
-    "team_id": "U_S_C_S_I_RUBANO",
-    "team_nome": "U.S. C.S.I. RUBANO",
-    "punti": 29,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
     "pos": 33
   },
   {

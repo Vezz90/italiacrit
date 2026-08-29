@@ -5,12 +5,12 @@
     "nome": "CARLOTTA",
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 286,
+    "punti": 296,
     "vittorie": 13,
-    "gare": 21,
+    "gare": 22,
     "p1": 13,
     "p2": 3,
-    "p3": 3,
+    "p3": 4,
     "pout": 2,
     "pos": 1,
     "trend": 0
@@ -21,13 +21,13 @@
     "nome": "ALESSANDRA",
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 264,
+    "punti": 267,
     "vittorie": 6,
-    "gare": 25,
+    "gare": 26,
     "p1": 6,
     "p2": 5,
     "p3": 5,
-    "pout": 9,
+    "pout": 10,
     "pos": 2,
     "trend": 0
   },
@@ -53,10 +53,10 @@
     "nome": "MYA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 202,
-    "vittorie": 7,
-    "gare": 17,
-    "p1": 7,
+    "punti": 217,
+    "vittorie": 8,
+    "gare": 18,
+    "p1": 8,
     "p2": 6,
     "p3": 0,
     "pout": 4,
@@ -69,13 +69,13 @@
     "nome": "MARGHERITA",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 165,
+    "punti": 173,
     "vittorie": 2,
-    "gare": 17,
+    "gare": 18,
     "p1": 2,
     "p2": 4,
     "p3": 3,
-    "pout": 8,
+    "pout": 9,
     "pos": 5,
     "trend": 0
   },
@@ -128,6 +128,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "GUIDOLIN_GIORGIA",
+    "cognome": "GUIDOLIN",
+    "nome": "GIORGIA",
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 137,
+    "vittorie": 0,
+    "gare": 21,
+    "p1": 0,
+    "p2": 3,
+    "p3": 3,
+    "pout": 15,
+    "pos": 9,
+    "trend": 1
+  },
+  {
     "atleta_id": "MARRONE_MATILDE",
     "cognome": "MARRONE",
     "nome": "MATILDE",
@@ -140,24 +156,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 9,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GUIDOLIN_GIORGIA",
-    "cognome": "GUIDOLIN",
-    "nome": "GIORGIA",
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 125,
-    "vittorie": 0,
-    "gare": 20,
-    "p1": 0,
-    "p2": 2,
-    "p3": 3,
-    "pout": 15,
     "pos": 10,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "DELOGU_GIULIA",
@@ -181,13 +181,13 @@
     "nome": "GIULIA",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 89,
+    "punti": 95,
     "vittorie": 2,
-    "gare": 12,
+    "gare": 13,
     "p1": 2,
     "p2": 2,
     "p3": 0,
-    "pout": 8,
+    "pout": 9,
     "pos": 12,
     "trend": 0
   },
@@ -229,13 +229,13 @@
     "nome": "GAIA",
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 71,
+    "punti": 72,
     "vittorie": 0,
-    "gare": 13,
+    "gare": 14,
     "p1": 0,
     "p2": 2,
     "p3": 0,
-    "pout": 11,
+    "pout": 12,
     "pos": 15,
     "trend": 0
   },
@@ -320,6 +320,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "LONGO_BORGHINI_MARTA_ELIZABETH",
+    "cognome": "LONGO",
+    "nome": "BORGHINI MARTA ELIZABETH",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 56,
+    "vittorie": 1,
+    "gare": 10,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 9,
+    "pos": 21,
+    "trend": 1
+  },
+  {
     "atleta_id": "CONSOLI_FRANCESCA",
     "cognome": "CONSOLI",
     "nome": "FRANCESCA",
@@ -332,24 +348,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 10,
-    "pos": 21,
-    "trend": 0
-  },
-  {
-    "atleta_id": "LONGO_BORGHINI_MARTA_ELIZABETH",
-    "cognome": "LONGO",
-    "nome": "BORGHINI MARTA ELIZABETH",
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 52,
-    "vittorie": 1,
-    "gare": 9,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
     "pos": 22,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CRESTANI_ELISA",
@@ -464,6 +464,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "RAMPON_SOFIA",
+    "cognome": "RAMPON",
+    "nome": "SOFIA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 40,
+    "vittorie": 0,
+    "gare": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 6,
+    "pos": 30,
+    "trend": 2
+  },
+  {
     "atleta_id": "CERETTI_ALICE",
     "cognome": "CERETTI",
     "nome": "ALICE",
@@ -476,8 +492,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 3,
-    "pos": 30,
-    "trend": 0
+    "pos": 31,
+    "trend": -1
   },
   {
     "atleta_id": "BARONE_MAELA",
@@ -492,24 +508,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 31,
-    "trend": 0
-  },
-  {
-    "atleta_id": "RAMPON_SOFIA",
-    "cognome": "RAMPON",
-    "nome": "SOFIA",
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 35,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 5,
     "pos": 32,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PELLEGRINI_LETIZIA",
@@ -656,6 +656,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BORGATO_NOEMI",
+    "cognome": "BORGATO",
+    "nome": "NOEMI",
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 23,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "pos": 42,
+    "trend": 2
+  },
+  {
     "atleta_id": "PESSINA_ELENA",
     "cognome": "PESSINA",
     "nome": "ELENA",
@@ -668,8 +684,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "BULDORINI_ISABEL",
@@ -684,24 +700,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 43,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BORGATO_NOEMI",
-    "cognome": "BORGATO",
-    "nome": "NOEMI",
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 21,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 2,
     "pos": 44,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PLAINO_MELISSA",
