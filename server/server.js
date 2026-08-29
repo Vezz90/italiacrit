@@ -4528,15 +4528,24 @@ app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
     if (cached && (Date.now() - new Date(cached.scraped_at).getTime()) < CACHE_MS) {
       relatedUrls = cached.related_urls || [];
     } else {
-      try {
-        const html = await fetch(seedUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } })
-          .then(r => r.ok ? r.text() : null);
-        relatedUrls = html ? _parseRelatedEditionUrls(html, seedUrl) : (cached?.related_urls || []);
-        await supabase.from('ciclismo_race_relations').upsert(
-          { seed_url: seedUrl, related_urls: relatedUrls, scraped_at: new Date().toISOString() },
-          { onConflict: 'seed_url' }
-        );
-      } catch { relatedUrls = cached?.related_urls || []; }
+      // Cache assente/scaduta: NON si aspetta il fetch live a ciclismo.info
+      // (poteva richiedere diversi secondi, rendendo la pagina gara lentissima
+      // ad aprirsi — segnalato dall'utente, "un'eternità"). Si risponde SUBITO
+      // con quel che c'è (il fallback per sottostringa sotto copre comunque la
+      // maggior parte dei casi), e si aggiorna la cache in background: il
+      // prossimo visitatore della stessa gara troverà il collegamento
+      // preciso già pronto, senza dover aspettare lui la prima volta.
+      relatedUrls = cached?.related_urls || [];
+      fetch(seedUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } })
+        .then(r => r.ok ? r.text() : null)
+        .then(html => {
+          const urls = html ? _parseRelatedEditionUrls(html, seedUrl) : [];
+          return supabase.from('ciclismo_race_relations').upsert(
+            { seed_url: seedUrl, related_urls: urls, scraped_at: new Date().toISOString() },
+            { onConflict: 'seed_url' }
+          );
+        })
+        .catch(() => {}); // best-effort, non deve far fallire la richiesta corrente
     }
 
     // Match per ID numerico della gara, non per URL esatto: lo slug che
