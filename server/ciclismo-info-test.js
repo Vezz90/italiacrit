@@ -97,8 +97,16 @@ function parseAthletePage(html, sourceUrl) {
   }
 
   // Piazzamenti: ogni blocco "data - regione ... luogo ... <a href=race>nome gara</a>"
+  // Tra "gara" e "di Km." ciclismo.info mette un descrittore di tipo gara che
+  // varia: vuoto, "Linea", "In Linea", "A Tappe", "Cronometro Individuale"
+  // ecc. — il regex accettava solo vuoto o "Linea", scartando silenziosamente
+  // ogni riga con un descrittore diverso (bug reale osservato dal vivo:
+  // vittoria di Appollonio Davide alla Firenze-Empoli 2009, "gara In Linea di
+  // Km. 134,000", mai importata pur essendo sulla sua pagina — segnalato
+  // dall'utente). [^<]*? (non avido, si ferma al primo "di Km." successivo)
+  // copre qualunque descrittore invece di elencarli uno per uno.
   const rows = [];
-  const rowRe = /<b>(\d{4}-\d{2}-\d{2})\s*-\s*([^<]*?)<\/b><\/font>\s*<font[^>]*><b>\s*-?\s*([^<]*?)<\/b><\/font><br>\s*<font[^>]*><b>(?:<a href="([^"]+)"[^>]*>)?\s*([^<]*?)(?:<\/a>)?\s*-\s*gara\s*(?:Linea\s*)?di\s*Km\.\s*([\d,]*)/g;
+  const rowRe = /<b>(\d{4}-\d{2}-\d{2})\s*-\s*([^<]*?)<\/b><\/font>\s*<font[^>]*><b>\s*-?\s*([^<]*?)<\/b><\/font><br>\s*<font[^>]*><b>(?:<a href="([^"]+)"[^>]*>)?\s*([^<]*?)(?:<\/a>)?\s*-\s*gara\s*[^<]*?di\s*Km\.\s*([\d,]*)/g;
   let m;
   while ((m = rowRe.exec(html))) {
     rows.push({
