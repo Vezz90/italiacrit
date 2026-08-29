@@ -148,15 +148,14 @@ async function gotoPcsPage(page, url, opts = {}) {
 // facili da riconoscere come bot, quindi resta un minimo di jitter anche
 // centrando la media sui 40s indicati.
 async function humanDelay(index = 0) {
-  // 13-17s testato per ore con 0 "sfida non superata" (anche con 3 scraper
-  // concorrenti) — richiesta dell'utente di andare il più veloce possibile
-  // ora che gira UN SOLO scraper (meno carico aggregato verso PCS): abbassato
-  // ulteriormente a 8-11s (media ~9.5s). Le sfide anti-bot non bloccano lo
-  // script (vengono rilevate e ritentate — vedi isChallengePage/
-  // gotoPcsPage), quindi il rischio reale non è un crash ma un tasso di
-  // sfide più alto che vanificherebbe il guadagno: da monitorare via "sfida
-  // non superata" nel log, pronto a tornare indietro se sale troppo.
-  const base = 8000 + Math.random() * 3000; // 8-11s, media ~9.5s
+  // 8-11s testato su 245 tentativi, 0 "sfida non superata" — richiesta
+  // dell'utente di puntare a ~10 atleti/min. Abbassato a 5-7s (media ~6s).
+  // Le sfide anti-bot non bloccano lo script (vengono rilevate e ritentate
+  // — vedi isChallengePage/gotoPcsPage), quindi il rischio reale non è un
+  // crash ma un tasso di sfide più alto che vanificherebbe il guadagno: da
+  // monitorare via "sfida non superata" nel log, pronto a tornare indietro
+  // se sale troppo.
+  const base = 5000 + Math.random() * 2000; // 5-7s, media ~6s
   await sleep(base);
 }
 
