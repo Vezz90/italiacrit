@@ -4238,18 +4238,40 @@ app.get('/api/pcs-team-history/:atletaId', async (req, res) => {
 app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   // Senza ?season, ritorna TUTTE le stagioni — usato dal widget "Top
   // results/Teams" stile PCS, che aggrega l'intera carriera, non solo
-  // l'anno in corso (a differenza delle altre chiamate a questo endpoint).
+  // l'anno in corso (a differenza delle altre chiamate a questo endpoint),
+  // E dalle pillole STAGIONE del profilo atleta per sapere quali anni PCS
+  // ha in più rispetto a ciclismo.info (vedi _loadCiclismoStorico/
+  // setAtletaCiclismoYear in app.js). Il limite di 500 (ordinati dal più
+  // recente) tagliava fuori gli anni più vecchi per una carriera lunga —
+  // es. Kwiatkowski, ~1200 risultati in 20 stagioni: il 2007 non arrivava
+  // mai al frontend, pur essendo nel database (segnalato dall'utente).
+  // PostgREST impone comunque un tetto di 1000 righe per chiamata anche
+  // quando si chiede un .limit() più alto (stesso limite già incontrato
+  // altrove in questo progetto) — un .limit(5000) da solo restava a 1000
+  // righe reali, che per un professionista prolifico (Kwiatkowski, oltre
+  // 1000 risultati in carriera) tagliava comunque fuori gli anni più
+  // vecchi. Pagina davvero quando non c'è un filtro stagione.
   try {
-    let q = supabase
-      .from('pcs_results')
-      .select('gara_name, data, posizione, distacco, pcs_race_slug, pcs_url, gara_id, country, season')
-      .eq('atleta_id', req.params.atletaId)
-      .order('data', { ascending: false })
-      .limit(500);
-    if (req.query.season) q = q.eq('season', parseInt(req.query.season));
-    const { data, error } = await q;
-    if (error) throw error;
-    res.json(data || []);
+    const select = 'gara_name, data, posizione, distacco, pcs_race_slug, pcs_url, gara_id, country, season';
+    if (req.query.season) {
+      const { data, error } = await supabase.from('pcs_results').select(select)
+        .eq('atleta_id', req.params.atletaId).eq('season', parseInt(req.query.season))
+        .order('data', { ascending: false });
+      if (error) throw error;
+      return res.json(data || []);
+    }
+    const rows = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await supabase.from('pcs_results').select(select)
+        .eq('atleta_id', req.params.atletaId).order('data', { ascending: false })
+        .range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!data || !data.length) break;
+      rows.push(...data);
+      if (data.length < PAGE) break;
+    }
+    res.json(rows);
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
