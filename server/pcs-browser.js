@@ -148,14 +148,25 @@ async function gotoPcsPage(page, url, opts = {}) {
 // facili da riconoscere come bot, quindi resta un minimo di jitter anche
 // centrando la media sui 40s indicati.
 async function humanDelay(index = 0) {
-  // 8-11s testato su 245 tentativi, 0 "sfida non superata" — richiesta
-  // dell'utente di puntare a ~10 atleti/min. Abbassato a 5-7s (media ~6s).
-  // Le sfide anti-bot non bloccano lo script (vengono rilevate e ritentate
-  // — vedi isChallengePage/gotoPcsPage), quindi il rischio reale non è un
-  // crash ma un tasso di sfide più alto che vanificherebbe il guadagno: da
-  // monitorare via "sfida non superata" nel log, pronto a tornare indietro
-  // se sale troppo.
-  const base = 5000 + Math.random() * 2000; // 5-7s, media ~6s
+  // 8-11s testato su 245 tentativi, 0 "sfida non superata". Poi 5-7s, 0
+  // sfide su altri 2389. Abbassato ancora a 3-4s — richiesta dell'utente
+  // ("lo scraper va lento, 1.6/min, possiamo accelerarlo essendo l'unico
+  // attivo?"), giustificato dallo storico di 0 sfide e dal fatto che è
+  // l'unico scraper in corsa (fingerprint complessivo più basso di quando
+  // ne giravano 3 insieme). Le sfide anti-bot non bloccano lo script
+  // (vengono rilevate e ritentate — vedi isChallengePage/gotoPcsPage),
+  // quindi il rischio reale non è un crash ma un tasso di sfide più alto
+  // che vanificherebbe il guadagno: da monitorare via "sfida non superata"
+  // nel log, pronto a tornare indietro se sale.
+  //
+  // NOTA: il vero collo di bottiglia del ritmo osservato (1.6/min, molto
+  // sotto quanto un delay di pochi secondi da solo spiegherebbe) sono gli
+  // atleti con nome composto/straniero che fanno fallire molte varianti di
+  // slug in sequenza (fino a 7-8 pagine caricate prima di arrendersi) — ogni
+  // tentativo NON ha un suo delay dedicato (solo questo, una volta per
+  // atleta), quindi è tempo di caricamento pagina reale, non artificiale.
+  // Ridurre questo delay aiuta ma non risolve quel caso.
+  const base = 3000 + Math.random() * 1000; // 3-4s, media ~3.5s
   await sleep(base);
 }
 
