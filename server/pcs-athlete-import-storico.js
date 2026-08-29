@@ -51,6 +51,22 @@ const SKIP_COMPLETE = args.includes('--skip-complete');
 // lista storica: si punta solo a chi ha bisogno del refetch.
 const FIX_EMPTY_TEAMHISTORY = args.includes('--fix-empty-teamhistory');
 
+// Un singolo blip di rete verso Supabase durante il caricamento iniziale
+// (le scansioni a pagine di loadAtletiStorici/--skip-complete/
+// --fix-empty-teamhistory, PRIMA che parta il vero e proprio giro sugli
+// atleti) faceva morire l'intero processo con un unhandled rejection,
+// senza nessuna riga di progresso nel log — sembrava "fermo" quando in
+// realtà era già morto da minuti (successo dal vivo, segnalato
+// dall'utente). Ritenta con backoff invece di lasciar cadere tutto.
+async function withRetry(fn, attempts = 4) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try { return await fn(); }
+    catch (e) { lastErr = e; if (i < attempts - 1) await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i))); }
+  }
+  throw lastErr;
+}
+
 function normalizeStr(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
@@ -311,11 +327,11 @@ async function loadAtletiStorici(sb) {
   const rows = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_results')
+    const { data, error } = await withRetry(() => sb.from('ciclismo_results')
       .select('atleta_id, ciclismo_id, stagione')
       .not('atleta_id', 'is', null)
       .order('id')
-      .range(from, from + PAGE - 1);
+      .range(from, from + PAGE - 1));
     if (error) throw error;
     if (!data || !data.length) break;
     rows.push(...data);
@@ -343,7 +359,7 @@ async function loadAtletiStorici(sb) {
   // atleta_id (nome_completo unico, split alla bell'e meglio).
   const manualByAtleta = new Map();
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('manual_athletes').select('atleta_id, cognome, nome').order('atleta_id').range(from, from + PAGE - 1);
+    const { data, error } = await withRetry(() => sb.from('manual_athletes').select('atleta_id, cognome, nome').order('atleta_id').range(from, from + PAGE - 1));
     if (error) throw error;
     if (!data || !data.length) break;
     for (const a of data) manualByAtleta.set(a.atleta_id, a);
@@ -351,7 +367,7 @@ async function loadAtletiStorici(sb) {
   }
   const nomeCompletoByAtleta = new Map();
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_athletes').select('atleta_id, nome_completo').not('atleta_id', 'is', null).order('ciclismo_id').range(from, from + PAGE - 1);
+    const { data, error } = await withRetry(() => sb.from('ciclismo_athletes').select('atleta_id, nome_completo').not('atleta_id', 'is', null).order('ciclismo_id').range(from, from + PAGE - 1));
     if (error) throw error;
     if (!data || !data.length) break;
     for (const a of data) if (!nomeCompletoByAtleta.has(a.atleta_id)) nomeCompletoByAtleta.set(a.atleta_id, a.nome_completo);
@@ -403,10 +419,10 @@ async function loadAtletiStorici(sb) {
     const done = new Set();
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('entity_overrides').select('entity_id')
+      const { data, error } = await withRetry(() => sb.from('entity_overrides').select('entity_id')
         .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null)
-        .order('id').range(from, from + PAGE - 1);
-      if (error) break;
+        .order('id').range(from, from + PAGE - 1));
+      if (error) throw error;
       if (!data || !data.length) break;
       for (const r of data) done.add(r.entity_id);
       if (data.length < PAGE) break;
@@ -422,9 +438,9 @@ async function loadAtletiStorici(sb) {
     const slugByAtleta = new Map();
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('entity_overrides').select('entity_id, new_value')
+      const { data, error } = await withRetry(() => sb.from('entity_overrides').select('entity_id, new_value')
         .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null)
-        .order('id').range(from, from + PAGE - 1);
+        .order('id').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
       for (const r of data) slugByAtleta.set(r.entity_id, r.new_value);
@@ -432,7 +448,7 @@ async function loadAtletiStorici(sb) {
     }
     const haveTeamHistory = new Set();
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('pcs_team_history').select('atleta_id').order('atleta_id').range(from, from + PAGE - 1);
+      const { data, error } = await withRetry(() => sb.from('pcs_team_history').select('atleta_id').order('atleta_id').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
       for (const r of data) haveTeamHistory.add(r.atleta_id);
@@ -612,4 +628,9 @@ async function loadAtletiStorici(sb) {
   console.log(`❓ Non trovati su PCS:   ${notFound}`);
   console.log(`⏳ Sfide non superate:   ${challengeFails} (rilanciare lo script per riprovarli)`);
   console.log(`❌ Errori:               ${errors}`);
-})();
+// Senza .catch() qui, un errore non gestito (es. un blip di rete verso
+// Supabase sopravvissuto anche al retry) uccideva il processo con un
+// "UnhandledPromiseRejection" praticamente muto — il log restava fermo
+// all'intestazione, sembrava "in corso" ma era morto da minuti, scoperto
+// solo controllando il dashboard (segnalato dall'utente).
+})().catch(e => { console.error('\nERRORE FATALE:', e?.message || e, '\n', e?.stack || ''); process.exit(1); });
