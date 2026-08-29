@@ -4408,6 +4408,19 @@ function ciclismoGaraId(url) {
   return m ? m[1] : null;
 }
 
+// Pattern ILIKE tollerante alla punteggiatura: il client normalizza sempre i
+// nomi-base togliendo apostrofi/trattini/virgole (_raceBaseName, "CITTA' DI
+// BRESCIA" -> "CITTA DI BRESCIA") prima di mandarli come ?q=, ma nome_gara
+// nel DB li mantiene — un ILIKE '%CITTA DI BRESCIA%' letterale non trova mai
+// "CITTA' DI BRESCIA" (l'apostrofo in mezzo spezza la sottostringa). Bug
+// reale: OGNI gara con un apostrofo nel nome (comune in italiano — "Città'",
+// "Sant'Anna" ecc.) restava senza albo d'oro. '%' tra le parole invece di uno
+// letterale tollera qualunque punteggiatura/spaziatura in mezzo.
+function _ilikeWordsPattern(q) {
+  const words = String(q || '').trim().split(/\s+/).filter(Boolean);
+  return words.length ? `%${words.join('%')}%` : '%%';
+}
+
 // Elenco gare ciclismo.info per una stagione — raggruppate per gara (stesso
 // gara_ciclismo_url), usato dalla pagina Risultati per gli anni storici
 // (fino al 2007) non coperti dai dati nativi FCI.
@@ -4424,7 +4437,7 @@ app.get('/api/ciclismo-results/search-races', async (req, res) => {
     if (q.length < 2) return res.json({ results: [] });
     const { data, error } = await supabase.from('ciclismo_results')
       .select('nome_gara, stagione, gara_ciclismo_url, regione, data')
-      .ilike('nome_gara', `%${q}%`)
+      .ilike('nome_gara', _ilikeWordsPattern(q))
       .order('stagione', { ascending: false })
       .limit(500);
     if (error) throw error;
@@ -4446,7 +4459,7 @@ app.get('/api/ciclismo-results/race-history', async (req, res) => {
     if (q.length < 3) return res.json({ editions: [] });
     const { data, error } = await supabase.from('ciclismo_results')
       .select('stagione, categoria, nome_gara, data, posizione, gara_ciclismo_url, regione, luogo, atleta_id, ciclismo_id, team')
-      .ilike('nome_gara', `%${q}%`)
+      .ilike('nome_gara', _ilikeWordsPattern(q))
       .lte('posizione', 3)
       .order('stagione', { ascending: false })
       .limit(3000);
@@ -4514,7 +4527,7 @@ app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
     if (!seedUrl && q.length >= 3) {
       const { data } = await supabase.from('ciclismo_results')
         .select('gara_ciclismo_url')
-        .ilike('nome_gara', `%${q}%`)
+        .ilike('nome_gara', _ilikeWordsPattern(q))
         .order('stagione', { ascending: false })
         .limit(1);
       seedUrl = data?.[0]?.gara_ciclismo_url || '';
@@ -4581,7 +4594,7 @@ app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
     if (wantedIds.length <= 1 && q.length >= 3) {
       const { data: broadRows } = await supabase.from('ciclismo_results')
         .select('stagione, nome_gara, data, posizione, gara_ciclismo_url, atleta_id, ciclismo_id, team')
-        .ilike('nome_gara', `%${q}%`)
+        .ilike('nome_gara', _ilikeWordsPattern(q))
         .lte('posizione', 3)
         .order('stagione', { ascending: false })
         .limit(3000);
