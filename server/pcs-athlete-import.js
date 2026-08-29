@@ -284,7 +284,12 @@ async function extractProfileAndResults(page, season) {
   const teamHistory = await page.evaluate(() => {
     const out = [];
     for (const a of document.querySelectorAll('a[href]')) {
-      if ((a.parentElement?.className || '').trim() !== 'name') continue;
+      // classList.contains invece del confronto esatto su className: una
+      // pagina con la classe combinata (es. "name selected") faceva fallire
+      // il match esatto e restituiva una cronologia squadre VUOTA per un
+      // atleta che su PCS ce l'ha davvero (bug gemello trovato in
+      // pcs-athlete-import-storico.js, stessa estrazione duplicata qui).
+      if (!a.parentElement?.classList?.contains('name')) continue;
       const href = (a.getAttribute('href') || '').replace(/^\/+/, '');
       const m = href.match(/^team\/([a-z0-9-]+)-(\d{4})$/);
       if (!m) continue;

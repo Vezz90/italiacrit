@@ -43,6 +43,13 @@ const args      = process.argv.slice(2);
 const LIMIT     = parseInt((args.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '') || null;
 const SINGLE_ID = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const SKIP_COMPLETE = args.includes('--skip-complete');
+// Ri-processa SOLO gli atleti già marcati completi (pcs_slug impostato) ma
+// con cronologia squadre vuota — il bug del selettore CSS esatto (vedi
+// extractProfileAndResults) l'aveva lasciata vuota per 3.231 persone anche
+// quando PCS la mostra davvero (scoperto su Pinazzi Mattia, segnalato
+// dall'utente come sistemico). Con questo flag non si riparte dall'intera
+// lista storica: si punta solo a chi ha bisogno del refetch.
+const FIX_EMPTY_TEAMHISTORY = args.includes('--fix-empty-teamhistory');
 
 function normalizeStr(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -151,7 +158,13 @@ async function extractProfileAndResults(page, season) {
   const teamHistory = await page.evaluate(() => {
     const out = [];
     for (const a of document.querySelectorAll('a[href]')) {
-      if ((a.parentElement?.className || '').trim() !== 'name') continue;
+      // classList.contains invece del confronto esatto su className: una
+      // pagina con la classe combinata (es. "name selected", "name active")
+      // faceva fallire il match esatto e restituiva una cronologia squadre
+      // VUOTA per un atleta che su PCS ce l'ha davvero — bug reale trovato
+      // dal vivo su Pinazzi Mattia, poi confermato su 3.231 atleti già
+      // processati con la stessa cronologia vuota.
+      if (!a.parentElement?.classList?.contains('name')) continue;
       const href = (a.getAttribute('href') || '').replace(/^\/+/, '');
       const m = href.match(/^team\/([a-z0-9-]+)-(\d{4})$/);
       if (!m) continue;
@@ -402,6 +415,51 @@ async function loadAtletiStorici(sb) {
     console.log(`Dopo --skip-complete: ${athletes.length} da processare\n`);
   }
 
+  if (FIX_EMPTY_TEAMHISTORY) {
+    // Chi ha già un pcs_slug (quindi --skip-complete lo salterebbe) ma
+    // zero righe in pcs_team_history — il bug del selettore CSS esatto
+    // gliel'ha lasciata vuota anche quando PCS la mostra davvero.
+    const slugByAtleta = new Map();
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await sb.from('entity_overrides').select('entity_id, new_value')
+        .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null)
+        .order('id').range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!data || !data.length) break;
+      for (const r of data) slugByAtleta.set(r.entity_id, r.new_value);
+      if (data.length < PAGE) break;
+    }
+    const haveTeamHistory = new Set();
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await sb.from('pcs_team_history').select('atleta_id').order('atleta_id').range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!data || !data.length) break;
+      for (const r of data) haveTeamHistory.add(r.atleta_id);
+      if (data.length < PAGE) break;
+    }
+    const targetIds = new Set([...slugByAtleta.keys()].filter(id => !haveTeamHistory.has(id)));
+    // athletes (da loadAtletiStorici) copre solo chi ha ciclismo_results —
+    // un atleta col bug potrebbe non esserci più se la sua unica riga
+    // storica è stata nel frattempo assorbita altrove; costruisci comunque
+    // le voci mancanti dal solo pcs_slug così il fix li raggiunge tutti.
+    const byId = new Map(athletes.map(a => [a.atleta_id, a]));
+    athletes = [...targetIds].map(id => ({
+      ...(byId.get(id) || {
+        atleta_id: id,
+        cognome: id.split('_')[0] || id,
+        nome: id.split('_').slice(1).join(' ') || id,
+        lastYear: new Date().getFullYear(),
+        ciclismoYears: [],
+      }),
+      // Slug PCS già confermato in un giro precedente — usarlo direttamente
+      // invece di ri-indovinarlo da cognome/nome evita ricerche inutili E
+      // il rischio di finire su un omonimo diverso da quello già confermato.
+      knownSlug: slugByAtleta.get(id),
+    }));
+    console.log(`Dopo --fix-empty-teamhistory: ${athletes.length} da ri-processare\n`);
+  }
+
   if (LIMIT) athletes = athletes.slice(0, LIMIT);
   if (!athletes.length) { console.log('Niente da fare.'); process.exit(0); }
 
@@ -429,7 +487,7 @@ async function loadAtletiStorici(sb) {
     const ath = athletes[i];
     const season = ath.lastYear || new Date().getFullYear();
     const candidates = pcsAthleteSlugCandidates(ath.cognome, ath.nome);
-    let slug = candidates[0];
+    let slug = ath.knownSlug || candidates[0];
     process.stdout.write(`(${i + 1}/${athletes.length}) ${ath.cognome} ${ath.nome} [${slug}] … `);
 
     let nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}/${season}`, { onLog: msg => process.stdout.write('\n' + msg) });

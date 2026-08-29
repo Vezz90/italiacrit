@@ -153,7 +153,12 @@ async function main() {
     for (const r of recs) {
       let placed = false;
       for (const c of clusters) {
-        const conflict = r.firstYear > c.lastYear && r.minRank < c.maxRank - 1;
+        // Soglia allargata da "almeno 2 livelli" a "almeno 1" — scoperto dal
+        // vivo su Righi Simone (Juniores 2007 poi Allievi, UN solo livello
+        // sotto, nel 2009: impossibile lo stesso modo, la categoria non
+        // torna mai indietro dopo un salto ad anni di distanza) — la soglia
+        // precedente lo lasciava passare come "stessa persona".
+        const conflict = r.firstYear > c.lastYear && r.minRank < c.maxRank;
         if (!conflict) {
           c.ids.push(r.id);
           c.firstYear = Math.min(c.firstYear, r.firstYear);

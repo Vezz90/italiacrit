@@ -97,7 +97,9 @@ async function checkAndSplitAtleta(sb, atletaId) {
   for (const r of recs) {
     let placed = false;
     for (const c of clusters) {
-      const conflict = r.firstYear > c.lastYear && r.minRank < c.maxRank - 1;
+      // Soglia allargata da "almeno 2 livelli" a "almeno 1" — vedi
+      // split-namesake-athletes.js (stesso fix, scoperto su Righi Simone).
+      const conflict = r.firstYear > c.lastYear && r.minRank < c.maxRank;
       if (!conflict) {
         c.ids.push(r.id);
         c.firstYear = Math.min(c.firstYear, r.firstYear);
