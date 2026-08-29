@@ -13628,7 +13628,21 @@ const _RACE_BASE_ALIASES = new Map([
   ['GIRO BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
   ['GIRO DEL BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
   ['GIRO DI BELVEDERE DI VILLA DI CORDIGNANO UNDER23', 'GIRO DEL BELVEDERE'],
+  // Segnalato dall'utente con l'albo d'oro ufficiale del club (PDF) alla
+  // mano: mancavano 2008/2009 ("COPPA LINARI", senza "PIETRO") e 2011
+  // ("COPPA PIERO LINARI", refuso di una lettera — "Piero" non "Pietro").
+  ['COPPA LINARI', 'COPPA PIETRO LINARI'],
+  ['COPPA PIERO LINARI', 'COPPA PIETRO LINARI'],
 ]);
+// Lookup inverso: dato il nome-base CANONICO, quali varianti storiche
+// cercare anche lato server — il fallback per sottostringa lì non conosce
+// gli alias sopra (vive solo lato client), quindi senza questo il server
+// cercherebbe solo il nome canonico e perderebbe di nuovo le stesse righe.
+function _raceBaseAliasSources(canonical) {
+  const out = [];
+  for (const [k, v] of _RACE_BASE_ALIASES) if (v === canonical) out.push(k);
+  return out;
+}
 function _raceBaseName(nome) {
   let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ');
   s = s.replace(/^\s*\d+\s*[°^ª]?\s*/, ''); // numero di edizione iniziale
@@ -13736,13 +13750,21 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
   const baseName = _raceBaseName(opts.nomeGara || '');
   if (baseName && baseName.length >= 3) {
     try {
-      const resp = await apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(baseName)}`);
+      // Interroga anche le varianti storiche note (vedi _RACE_BASE_ALIASES) —
+      // il fallback per sottostringa lato server cerca solo il termine
+      // passato, quindi senza questo perderebbe di nuovo le edizioni con un
+      // nome diverso (segnalato dall'utente con l'albo d'oro ufficiale del
+      // club alla mano: Coppa Linari 2008/2009/2011 mancanti).
+      const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
+      const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
       const nativeYears = new Set(editions.map(e => String(e.year)));
       const byEdition = {};
-      for (const r of (resp?.editions || [])) {
-        if (nativeYears.has(String(r.stagione))) continue; // già coperta dai dati nativi sopra
-        const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
-        (byEdition[ek] = byEdition[ek] || []).push(r);
+      for (const resp of responses) {
+        for (const r of (resp?.editions || [])) {
+          if (nativeYears.has(String(r.stagione))) continue; // già coperta dai dati nativi sopra
+          const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+          (byEdition[ek] = byEdition[ek] || []).push(r);
+        }
       }
       for (const [ek, rows] of Object.entries(byEdition)) {
         rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
@@ -13855,13 +13877,17 @@ async function renderGaraStoria(baseName) {
   // stessa gara e un confronto testuale perdeva edizioni vere (es. Modolo,
   // vincitore 2009 del Giro del Belvedere, mancava — segnalato dall'utente).
   try {
-    const resp = await apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(baseName)}`);
+    // Varianti storiche note — vedi nota gemella in _injectRaceAlboDoro.
+    const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
+    const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
     const nativeYears = new Set(editions.map(e => String(e.year)));
     const byEdition = {};
-    for (const r of (resp?.editions || [])) {
-      if (nativeYears.has(String(r.stagione))) continue;
-      const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
-      (byEdition[ek] = byEdition[ek] || []).push(r);
+    for (const resp of responses) {
+      for (const r of (resp?.editions || [])) {
+        if (nativeYears.has(String(r.stagione))) continue;
+        const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+        (byEdition[ek] = byEdition[ek] || []).push(r);
+      }
     }
     for (const [ek, rows] of Object.entries(byEdition)) {
       rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
