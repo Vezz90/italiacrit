@@ -554,10 +554,12 @@ async function loadAtletiStorici(sb) {
       // Non blocca comunque: se in futuro PCS aprisse un profilo per questa
       // persona, --fix-empty-teamhistory (o un nuovo flag dedicato) può
       // sempre ripartire da questo elenco a parte.
-      await sb.from('entity_overrides').upsert(
-        { entity_type: 'atleta', entity_id: ath.atleta_id, field: 'pcs_not_found', new_value: '1', edited_by: null },
-        { onConflict: 'entity_type,entity_id,field' }
-      ).catch(() => {});
+      try {
+        await sb.from('entity_overrides').upsert(
+          { entity_type: 'atleta', entity_id: ath.atleta_id, field: 'pcs_not_found', new_value: '1', edited_by: null },
+          { onConflict: 'entity_type,entity_id,field' }
+        );
+      } catch {}
       await humanDelay(i); continue;
     }
 
