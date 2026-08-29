@@ -51,6 +51,12 @@ const RACES = [
     stagione: '2012', categoria: 'JUNIORES', data: '2012-08-18', regione: 'TOSCANA', luogo: 'Borgo a Buggiano (PT)',
     nome_gara: '51 COPPA PIETRO LINARI',
   },
+  // Il Gran Premio Industria Commercio Artigianato Carnaghese 2017 (46a
+  // edizione) NON manca per un bug: è stata sospesa e poi annullata a
+  // gara in corso ("È stato sospeso e poi annullato il 46° Gran Premio..."
+  // — articolo ciclismo.info del 2017). Correttamente assente dal DB.
+  // Verificato anche il 2022: nessuna traccia nemmeno nell'indice annuale
+  // ciclismo.info della categoria, stessa conclusione.
 ];
 
 async function main() {
@@ -116,7 +122,13 @@ async function main() {
           const nomeParts = String(nomeCompleto || '').trim().split(/\s+/);
           const cognome = nomeParts[0] || nomeCompleto;
           const nomeP = nomeParts.slice(1).join(' ') || '-';
-          const categoria = 'JUN_M';
+          // Categoria del PROFILO atleta (non della gara) — dedotta dalla
+          // categoria della gara corrente, non più sempre "JUN_M": la
+          // Carnaghese è ELITE_UNDER23, un profilo creato con la categoria
+          // sbagliata finirebbe nella scheda "Juniores" invece che
+          // "Elite/U23".
+          const CAT_MAP = { ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M' };
+          const categoria = CAT_MAP[sample.categoria] || 'JUN_M';
           const team = row.team || null;
           const team_id = team
             ? (teamIdByName.get(team.trim().toUpperCase())
