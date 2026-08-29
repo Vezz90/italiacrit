@@ -34,12 +34,18 @@ const LOGS = {
     file: path.join(__dirname, 'pcs_fix_teamhistory.log'),
     re: /\((\d+)\/(\d+)\)/g,
   },
+  ciclismoRefill: {
+    label: 'ciclismo.info — recupero piazzamenti persi (bug parser)',
+    file: path.join(__dirname, 'ciclismo_refill_missed.log'),
+    // Righe tipo: [7600/52394] pagine ok, righe upsertate finora: 56295, ...
+    re: /\[(\d+)\/(\d+)\]/g,
+  },
 };
 
 // Storico dei campioni (in memoria, si resetta se il dashboard riparte) per
 // calcolare una velocità media e stimare il tempo restante.
-const history = { pcsStorico: [], fillGaps: [], fixTeamHistory: [] };
-const lastTotal = { pcsStorico: null, fillGaps: null, fixTeamHistory: null };
+const history = { pcsStorico: [], fillGaps: [], fixTeamHistory: [], ciclismoRefill: [] };
+const lastTotal = { pcsStorico: null, fillGaps: null, fixTeamHistory: null, ciclismoRefill: null };
 const MAX_HISTORY = 30;
 
 function readProgress(key, cfg) {
