@@ -18,30 +18,28 @@ const PORT = 4545;
 // — se in una sessione futura il task cambia id, basta aggiornare questo
 // percorso qui sotto.
 const LOGS = {
-  risultati: {
-    label: 'Risultati (colmatura buchi)',
-    file: path.join(__dirname, 'gara_scraper_resume.log'),
-    // Righe tipo: (2822/17348) 62 COPPA SAN SABINO [2013]: +4 posizioni recuperate
-    re: /\((\d+)\/(\d+)\)/g,
-  },
-  rematch: {
-    label: 'Ri-abbinamento foto al vincitore',
-    file: path.join(__dirname, 'rematch_gara_photos.log'),
-    // Righe tipo: ... 8600/9309 gare | cambiate: 3683 | già corrette: 4856 | ...
-    re: /\.\.\.\s*(\d+)\/(\d+) gare/g,
-  },
   pcsStorico: {
-    label: 'Profili PCS storici (2007-2025)',
+    label: 'PCS storico — principale (2007→oggi)',
     file: path.join(__dirname, 'pcs_storico_full.log'),
     // Righe tipo: (123/16214) COGNOME Nome [slug] … ✓ ...
+    re: /\((\d+)\/(\d+)\)/g,
+  },
+  fillGaps: {
+    label: 'PCS storico — colma buchi (anni mancanti)',
+    file: path.join(__dirname, 'pcs_fillgaps.log'),
+    re: /\((\d+)\/(\d+)\)/g,
+  },
+  fixTeamHistory: {
+    label: 'PCS storico — squadre vuote (bug selettore)',
+    file: path.join(__dirname, 'pcs_fix_teamhistory.log'),
     re: /\((\d+)\/(\d+)\)/g,
   },
 };
 
 // Storico dei campioni (in memoria, si resetta se il dashboard riparte) per
 // calcolare una velocità media e stimare il tempo restante.
-const history = { risultati: [], rematch: [], pcsStorico: [] };
-const lastTotal = { risultati: null, rematch: null, pcsStorico: null };
+const history = { pcsStorico: [], fillGaps: [], fixTeamHistory: [] };
+const lastTotal = { pcsStorico: null, fillGaps: null, fixTeamHistory: null };
 const MAX_HISTORY = 30;
 
 function readProgress(key, cfg) {
