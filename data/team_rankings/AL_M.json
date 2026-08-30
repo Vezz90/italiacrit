@@ -2,12 +2,12 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 790,
-    "vittorie": 20,
-    "p1": 20,
+    "punti": 810,
+    "vittorie": 21,
+    "p1": 21,
     "p2": 12,
     "p3": 4,
-    "pout": 43,
+    "pout": 44,
     "n_atleti": 9,
     "pos": 1
   },
@@ -26,12 +26,12 @@
   {
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
     "team_nome": "POOL CANTU' - SOVICO - GB TEAM",
-    "punti": 529,
+    "punti": 537,
     "vittorie": 9,
     "p1": 9,
     "p2": 9,
     "p3": 7,
-    "pout": 29,
+    "pout": 30,
     "n_atleti": 7,
     "pos": 3
   },
@@ -134,11 +134,11 @@
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 424,
+    "punti": 434,
     "vittorie": 6,
     "p1": 6,
     "p2": 7,
-    "p3": 6,
+    "p3": 7,
     "pout": 38,
     "n_atleti": 7,
     "pos": 12
@@ -146,12 +146,12 @@
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "team_nome": "FERALPI MONTECLARENSE ASD",
-    "punti": 401,
+    "punti": 422,
     "vittorie": 7,
     "p1": 7,
-    "p2": 6,
+    "p2": 7,
     "p3": 6,
-    "pout": 39,
+    "pout": 41,
     "n_atleti": 8,
     "pos": 13
   },
@@ -290,12 +290,12 @@
   {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
-    "punti": 258,
+    "punti": 262,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 7,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 7,
     "pos": 25
   },
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "PEDALE_BREMBILLESE",
+    "team_nome": "PEDALE BREMBILLESE",
+    "punti": 76,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 20,
+    "n_atleti": 3,
+    "pos": 58
+  },
+  {
     "team_id": "SESTU_BIKE_A_S_D",
     "team_nome": "SESTU BIKE A.S.D.",
     "punti": 76,
@@ -693,7 +705,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "SS_AQUILA",
@@ -705,18 +717,6 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 59
-  },
-  {
-    "team_id": "PEDALE_BREMBILLESE",
-    "team_nome": "PEDALE BREMBILLESE",
-    "punti": 75,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 19,
-    "n_atleti": 3,
     "pos": 60
   },
   {
@@ -852,6 +852,18 @@
     "pos": 71
   },
   {
+    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
+    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
+    "punti": 56,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 3,
+    "pos": 72
+  },
+  {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
     "team_nome": "MEBLO JOGI PRO-CONCRETE",
     "punti": 56,
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "V_C_BASSANO_1892",
@@ -873,7 +885,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
@@ -885,18 +897,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 74
-  },
-  {
-    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
-    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
-    "punti": 54,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 3,
     "pos": 75
   },
   {

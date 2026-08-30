@@ -2576,22 +2576,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "COMACCHIO_CLAUDIA",
-    "cognome": "COMACCHIO",
-    "nome": "CLAUDIA",
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 1,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 162,
-    "trend": 0
-  },
-  {
     "atleta_id": "BORTOLI_VIRGINIA",
     "cognome": "BORTOLI",
     "nome": "VIRGINIA",
@@ -2604,8 +2588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 163,
-    "trend": 0
+    "pos": 162,
+    "trend": 1
   },
   {
     "atleta_id": "CESCA_BEATRICE",
@@ -2620,7 +2604,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 164,
-    "trend": 0
+    "pos": 163,
+    "trend": 1
   }
 ]

@@ -2,23 +2,23 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 598,
+    "punti": 604,
     "vittorie": 13,
     "p1": 13,
     "p2": 7,
     "p3": 6,
-    "pout": 29,
+    "pout": 30,
     "n_atleti": 8,
     "pos": 1
   },
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 504,
+    "punti": 526,
     "vittorie": 9,
     "p1": 9,
-    "p2": 10,
-    "p3": 5,
+    "p2": 11,
+    "p3": 6,
     "pout": 24,
     "n_atleti": 7,
     "pos": 2
@@ -26,21 +26,21 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 358,
+    "punti": 368,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
     "p3": 5,
-    "pout": 41,
+    "pout": 43,
     "n_atleti": 7,
     "pos": 3
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 298,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 313,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 3,
     "p3": 6,
     "pout": 20,
@@ -50,12 +50,12 @@
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 234,
+    "punti": 237,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
     "p3": 2,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 8,
     "pos": 5
   },
@@ -73,25 +73,25 @@
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "team_nome": "BRESCIA - F. MAGNI FLANDRES LOVE",
-    "punti": 212,
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 217,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 7,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 7,
     "pos": 7
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 211,
+    "punti": 212,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 1,
-    "pout": 29,
+    "pout": 30,
     "n_atleti": 6,
     "pos": 8
   },
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 21
+  },
+  {
     "team_id": "POLISH_CYCLING_FEDERATION",
     "team_nome": "POLISH CYCLING FEDERATION",
     "punti": 4,
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "S_C_V_BIKE_CADORAGO_ASD",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "GIFU_DAIICHI_HIGH_SCHOOL",
@@ -273,7 +285,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "FRANCIA",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
@@ -297,6 +309,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 26
   }
 ]
