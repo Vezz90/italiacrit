@@ -4451,7 +4451,24 @@ app.get('/api/ciclismo-media/atleta/:atletaId', async (req, res) => {
       .order('data', { ascending: false })
       .limit(500);
     if (error) throw error;
-    res.json({ media: data || [] });
+    // Foto caricate a mano (race_photos, tabella separata da
+    // ciclismo_gara_media) taggate a questo atleta — vedi commento su
+    // queries.getRacePhotosForAthlete. Richiede DATABASE_URL (non
+    // disponibile in locale): se manca, fallisce silenziosamente e la
+    // risposta resta comunque quella di ciclismo_gara_media da sola,
+    // come prima di questa aggiunta.
+    let racePhotos = [];
+    try { racePhotos = await queries.getRacePhotosForAthlete(req.params.atletaId); } catch {}
+    const merged = [
+      ...(data || []),
+      ...racePhotos.map(p => ({
+        stagione: p.stagione || '', categoria: p.categoria || '', team: '',
+        nome_gara: p.nome_gara || p.caption || '', caption: p.caption || p.photographer || '',
+        photo_url: '/photos/' + p.filename, data: p.data || null,
+        gara_ciclismo_url: p.gara_ciclismo_url || '', posizione: p.posizione || null,
+      })),
+    ];
+    res.json({ media: merged });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

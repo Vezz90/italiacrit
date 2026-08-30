@@ -781,6 +781,35 @@ const queries = {
          JOIN users u ON rp.user_id = u.id
          WHERE rp.status = 'pending' ORDER BY rp.created_at DESC`),
 
+  // Foto caricate a mano su una gara (race_photos, es. dal pannello admin)
+  // taggate a un atleta — vivono in una tabella SEPARATA da
+  // ciclismo_gara_media, quindi il profilo atleta (che leggeva solo
+  // quest'ultima) non le mostrava mai anche quando erano presenti e
+  // correttamente taggate sulla pagina della gara stessa (segnalato
+  // dall'utente: "c'è una foto ma non appare nel profilo del corridore").
+  // atleta_ids è una stringa CSV ("ID1,ID2") — match sicuro sui confini
+  // di token con le virgole aggiunte a inizio/fine invece di un LIKE
+  // semplice, che darebbe falsi positivi se un id è sottostringa di un
+  // altro. Il JOIN recupera nome/data/stagione/posizione della gara dallo
+  // stesso numero ciclismo.info incorporato in gara_id (CIC_<numero>),
+  // filtrando sul risultato di QUESTO atleta per una posizione corretta.
+  getRacePhotosForAthlete: (atletaId) =>
+    all(`SELECT rp.id, rp.filename, rp.caption, rp.photographer, rp.gara_id, rp.created_at,
+                cr.nome_gara, cr.data, cr.stagione, cr.categoria, cr.gara_ciclismo_url, cr.posizione
+         FROM race_photos rp
+         LEFT JOIN LATERAL (
+           SELECT nome_gara, data, stagione, categoria, gara_ciclismo_url, posizione
+           FROM ciclismo_results
+           WHERE rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\'
+             AND atleta_id = $1
+             AND gara_ciclismo_url ~ ('_' || substring(rp.gara_id from 5) || '_[0-9]{4}_[0-9]{2}_[0-9]{2}_')
+           LIMIT 1
+         ) cr ON true
+         WHERE rp.status = 'approved'
+           AND (',' || rp.atleta_ids || ',') LIKE ('%,' || $1 || ',%')
+         ORDER BY rp.created_at DESC`,
+      [atletaId]),
+
   approveRacePhoto: (id) =>
     run(`UPDATE race_photos SET status = 'approved' WHERE id = $1`, [id]),
 
