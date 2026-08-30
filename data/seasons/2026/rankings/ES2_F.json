@@ -125,7 +125,7 @@
     "p3": 3,
     "pout": 16,
     "pos": 8,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "ZUCCOTTI_EMMA",
@@ -141,7 +141,7 @@
     "p3": 1,
     "pout": 14,
     "pos": 9,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MARRONE_MATILDE",
@@ -173,7 +173,7 @@
     "p3": 0,
     "pout": 9,
     "pos": 11,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "DELOGU_GIULIA",
@@ -189,7 +189,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 12,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CLEMENTE_GINEVRA",
@@ -253,7 +253,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 16,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "ANDREOLI_ALICE",
@@ -269,7 +269,7 @@
     "p3": 1,
     "pout": 8,
     "pos": 17,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SELLA_ANNA",
@@ -301,7 +301,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 19,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "FERRARI_LUCREZIA",
@@ -429,7 +429,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 27,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "FACCENDA_ELISA",
@@ -445,7 +445,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 28,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PAVIN_LAVINIA_MARIA_GIOVANNA",
@@ -461,7 +461,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 29,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CARLINO_LETIZIA",
@@ -477,7 +477,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 30,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CERETTI_ALICE",
@@ -573,7 +573,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 36,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "DASOLI_EMMA",
@@ -589,7 +589,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 37,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CETTOLIN_GIOIA",
@@ -605,7 +605,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 38,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "D_APOLLONIO_ALESSIA",
