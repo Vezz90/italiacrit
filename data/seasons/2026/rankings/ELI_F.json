@@ -2589,7 +2589,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 162,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "CESCA_BEATRICE",
@@ -2605,6 +2605,6 @@
     "p3": 0,
     "pout": 1,
     "pos": 163,
-    "trend": 1
+    "trend": 0
   }
 ]
