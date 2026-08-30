@@ -2426,6 +2426,112 @@ app.post('/api/admin/race-photos/fix-captions', requireAdmin, async (req, res) =
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
+// ── Statistiche aggregate reali per la nuova homepage-dashboard (locale,
+// non ancora collegata al sito in produzione — vedi richiesta utente
+// "riprogetta la homepage, solo in locale"). Numeri veri dal DB storico
+// (ciclismo_results, 2007-2026), non inventati. Cache in memoria 10 minuti:
+// sono query di aggregazione su ~300k righe, non ha senso rifarle a ogni
+// caricamento della home.
+let _statsOverviewCache = null, _statsOverviewCacheAt = 0;
+const STATS_CACHE_MS = 10 * 60 * 1000;
+app.get('/api/stats/overview', async (req, res) => {
+  try {
+    if (_statsOverviewCache && (Date.now() - _statsOverviewCacheAt) < STATS_CACHE_MS) {
+      return res.json(_statsOverviewCache);
+    }
+
+    // COUNT(*) diretto — supportato nativamente da PostgREST, veloce.
+    const { count: risultatiStorici } = await supabase.from('ciclismo_results')
+      .select('*', { count: 'exact', head: true });
+
+    // COUNT(DISTINCT ...) NON è disponibile via PostgREST/supabase-js senza
+    // una funzione RPC lato DB (e rawQuery/pg diretto richiede DATABASE_URL,
+    // non impostato in locale — solo SUPABASE_SECRET) — si pagina leggendo
+    // solo le 3 colonne che servono e si deduplica lato Node. Una sola
+    // passata per tutte e tre insieme (non tre passate separate). Su ~296k
+    // righe, qualche secondo: accettabile con la cache di 10 minuti sopra,
+    // per una dashboard locale di anteprima non ancora in produzione.
+    const atletiSet = new Set(), gareSet = new Set(), stagioniSet = new Set();
+    {
+      const PAGE = 1000;
+      for (let from = 0; ; from += PAGE) {
+        const { data, error } = await supabase.from('ciclismo_results')
+          .select('atleta_id, gara_ciclismo_url, stagione')
+          .order('id').range(from, from + PAGE - 1);
+        if (error) throw error;
+        if (!data || !data.length) break;
+        for (const r of data) {
+          if (r.atleta_id) atletiSet.add(r.atleta_id);
+          if (r.gara_ciclismo_url) gareSet.add(r.gara_ciclismo_url);
+          if (r.stagione) stagioniSet.add(r.stagione);
+        }
+        if (data.length < PAGE) break;
+      }
+    }
+    const stagioniOrdinate = [...stagioniSet].sort();
+
+    // "Oggi X anni fa" — un vincitore storico lo stesso giorno/mese di oggi,
+    // in un anno passato. Filtro lato client sul giorno/mese (niente
+    // funzione SQL disponibile via PostgREST per questo confronto).
+    const oggiMMDD = new Date().toISOString().slice(5, 10);
+    const annoCorrente = new Date().getFullYear();
+    let oggiAnniFa = null;
+    {
+      const { data } = await supabase.from('ciclismo_results')
+        .select('data, stagione, nome_gara, gara_ciclismo_url, ciclismo_id')
+        .eq('posizione', 1)
+        .lt('stagione', String(annoCorrente))
+        .not('data', 'is', null)
+        .order('stagione', { ascending: false })
+        .limit(2000); // pesca ampio, poi filtra per giorno/mese lato client
+      const match = (data || []).find(r => (r.data || '').slice(5, 10) === oggiMMDD);
+      if (match) {
+        let nomeCompleto = null;
+        if (match.ciclismo_id) {
+          const { data: ath } = await supabase.from('ciclismo_athletes')
+            .select('nome_completo').eq('ciclismo_id', match.ciclismo_id).maybeSingle();
+          nomeCompleto = ath?.nome_completo || null;
+        }
+        oggiAnniFa = { ...match, nome_completo: nomeCompleto, anni_fa: annoCorrente - parseInt(match.stagione, 10) };
+      }
+    }
+
+    // Gara più antica nel database (prima stagione coperta).
+    let garaPiuAntica = null;
+    if (stagioniOrdinate.length) {
+      const { data, error } = await supabase.from('ciclismo_results')
+        .select('nome_gara, stagione, gara_ciclismo_url, data')
+        .eq('stagione', stagioniOrdinate[0])
+        .order('data', { ascending: true })
+        .limit(1);
+      if (error) console.error('[stats/overview] garaPiuAntica:', error.message);
+      garaPiuAntica = data?.[0] || null;
+    }
+
+    const out = {
+      generatedAt: new Date().toISOString(),
+      storico: {
+        atleti_storici: atletiSet.size,
+        risultati_storici: risultatiStorici || 0,
+        gare_storiche: gareSet.size,
+        stagioni_storiche: stagioniOrdinate.length,
+        prima_stagione: stagioniOrdinate[0] || null,
+        ultima_stagione: stagioniOrdinate[stagioniOrdinate.length - 1] || null,
+      },
+      archivio: {
+        oggiAnniFa,
+        garaPiuAntica,
+      },
+    };
+    _statsOverviewCache = out;
+    _statsOverviewCacheAt = Date.now();
+    res.json(out);
+  } catch (e) {
+    console.error('[stats/overview]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ── Cron esterno (keepalive GitHub Actions) ────────────────────────────────────
 // Risponde subito (tiene Render sveglio) e lancia le sync in background.
 // Così le sync girano anche se l'setInterval interno si è fermato per uno sleep.
