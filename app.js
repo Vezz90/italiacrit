@@ -3811,7 +3811,11 @@ function route() {
     return hash.replace('#', '').match(re);
   };
 
-  if (match('/')) return renderHome();
+  // PROVA LOCALE (non deployata): nuova home-dashboard al posto del vecchio
+  // flusso Uomo/Donna→Categoria. #/entra riapre il vecchio flusso invariato,
+  // per un confronto immediato o un rollback senza toccare altro codice.
+  if (match('/')) return renderHomeDashboard();
+  if (match('/entra')) return renderHome();
   // Classifica con categoria+vista+ordinamento encoded nell'URL, es.
   // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
   // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
@@ -7126,7 +7130,459 @@ async function renderNews() {
   }
 }
 
-// ── HOME — Cinematic entry (M/F + categoria) ──────────────────────
+// ══════════════════════════════════════════════════════════════════
+// ── HOME DASHBOARD (v2, LOCALE) ──────────────────────────────────────
+// Prova locale richiesta dall'utente: sostituisce il flusso obbligato
+// Uomo/Donna → Categoria con una vera dashboard, dati reali, filtri
+// INTERNI (non barriere d'ingresso). Non deployata: vive solo in questo
+// file locale, mai committata — la vecchia home (showCinematicEntry)
+// resta intatta e raggiungibile su #/entra, per reversibilità totale.
+//
+// Riuso deliberato di funzioni GIÀ esistenti in questo file (niente
+// duplicazione di logica):
+//   - computeRankSnapshot / computeTeamRanking → classifica, movers
+//   - siFormRivalryFinder                      → rivalità della settimana
+//   - getAthleteBadges                         → badge "IN FORMA" ecc.
+//   - loadRanking / catLabel / getRankingFileCode / esc → invariati
+// Il "Rider of the Moment" e i "Movers" di renderHubBars() sono invece
+// chiusure interne a quella funzione (non richiamabili da qui): la
+// stessa logica è riscritta sotto in forma standalone e modulare,
+// parametrizzata sulla categoria scelta — vedi _hdFormScore/_hdMovers.
+// ══════════════════════════════════════════════════════════════════
+
+// Stato dei filtri interni (persistito solo in memoria per la sessione
+// del browser — cambiare filtro non è una navigazione, è un re-render).
+let _hdGender = 'M';
+let _hdCatCode = 'ELI_M';
+const _HD_CATS = [
+  { code: 'ELI_M', label: 'Elite/U23' }, { code: 'JUN_M', label: 'Juniores' },
+  { code: 'AL_M',  label: 'Allievi' },   { code: 'ES2_M', label: 'Esordienti' },
+];
+const _HD_CATS_F = [
+  { code: 'ELI_F', label: 'Elite/U23' }, { code: 'JUN_F', label: 'Juniores' },
+  { code: 'AL_F',  label: 'Allieve' },   { code: 'ES2_F', label: 'Esordienti' },
+];
+
+// Cache in-memoria per non rifare il fetch di /api/stats/overview (query
+// pesante, ~296k righe, già cachata 10 min lato server) ogni volta che
+// l'utente cambia genere/categoria — quei numeri non dipendono dal filtro.
+let _hdStatsPromise = null;
+function _hdLoadStats() {
+  if (!_hdStatsPromise) _hdStatsPromise = fetch(`${API_BASE}/stats/overview`).then(r => r.json()).catch(() => null);
+  return _hdStatsPromise;
+}
+
+function _hdCutDate(fromDate, days) {
+  const d = new Date(fromDate || new Date());
+  d.setDate(d.getDate() - days);
+  return d.toISOString().split('T')[0];
+}
+// Data relativa a granularità giornaliera — i risultati hanno solo la DATA
+// gara (non un timestamp di pubblicazione reale), quindi "2 min fa" del
+// mockup non è un dato che esiste: si mostra "oggi/ieri/N giorni fa",
+// onesto rispetto a cosa il database contiene davvero.
+function _hdRelDay(dateStr) {
+  if (!dateStr) return '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dateStr + 'T00:00:00');
+  const days = Math.round((today - d) / 86400000);
+  if (days === 0) return 'oggi';
+  if (days === 1) return 'ieri';
+  if (days > 1 && days < 30) return `${days} giorni fa`;
+  if (days < 0 && days > -7) return `tra ${-days} giorni`;
+  return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+}
+
+// ── Form Score — "Rider of the Moment" calcolato, non scelto a mano ──
+// 40% punti ultimi 14gg, 30% trend (punti seconda metà finestra 30gg vs
+// prima metà), 20% vittorie ultimi 14gg, 10% streak piazzamenti a punti
+// consecutivi — pesi come richiesti esplicitamente, normalizzati 0-100
+// contro il massimo osservato nella stessa categoria/finestra (non contro
+// soglie fisse: così la scala si adatta a categorie con volumi diversi).
+function _hdFormScore(resSet, catCode, lastDate) {
+  const cut14 = _hdCutDate(lastDate, 14), cut30 = _hdCutDate(lastDate, 30);
+  const byAth = {};
+  for (const r of resSet) {
+    if (getRankingFileCode(r) !== catCode || !r.atleta_id || !r.data || r.data < cut30) continue;
+    (byAth[r.atleta_id] = byAth[r.atleta_id] || { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, races: [] }).races.push(r);
+  }
+  const candidates = [];
+  for (const a of Object.values(byAth)) {
+    a.races.sort((x, y) => (y.data || '').localeCompare(x.data || ''));
+    const races14 = a.races.filter(r => r.data >= cut14);
+    if (!races14.length) continue;
+    const pts14 = races14.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    const wins14 = races14.filter(r => r.posizione === 1).length;
+    const podi14 = races14.filter(r => r.posizione <= 3).length;
+    const ptsPrevHalf = a.races.filter(r => r.data < cut14).reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    const trend = pts14 - ptsPrevHalf; // positivo = in crescita
+    let streak = 0; for (const r of a.races) { if ((r.punti_effettivi || 0) > 0) streak++; else break; }
+    candidates.push({ ...a, pts14, wins14, podi14, streak, trend });
+  }
+  if (!candidates.length) return null;
+  const maxPts = Math.max(1, ...candidates.map(c => c.pts14));
+  const maxTrend = Math.max(1, ...candidates.map(c => Math.max(0, c.trend)));
+  const maxWins = Math.max(1, ...candidates.map(c => c.wins14));
+  const maxStreak = Math.max(1, ...candidates.map(c => c.streak));
+  for (const c of candidates) {
+    c.formScore = Math.round(100 * (
+      0.40 * (c.pts14 / maxPts) +
+      0.30 * (Math.max(0, c.trend) / maxTrend) +
+      0.20 * (c.wins14 / maxWins) +
+      0.10 * (c.streak / maxStreak)
+    ));
+  }
+  candidates.sort((a, b) => b.formScore - a.formScore || b.pts14 - a.pts14);
+  return candidates[0];
+}
+
+// ── Movers — stessa idea di renderHubBars (snapshot classifica ora vs
+// prima), qui semplificata: finestra fissa a 7 giorni (la card si chiama
+// "della settimana"), non la ricerca a finestre crescenti dell'originale.
+function _hdMovers(resSet, catCode, lastDate) {
+  const snapNow = computeRankSnapshot(resSet, catCode, null);
+  const snapBefore = computeRankSnapshot(resSet, catCode, _hdCutDate(lastDate, 7));
+  const nameLookup = {};
+  for (const r of resSet) if (r.atleta_id && !nameLookup[r.atleta_id]) nameLookup[r.atleta_id] = { cognome: r.cognome || '', nome: r.nome || '', team: r.team || '' };
+  const list = [];
+  for (const [aid, posNow] of Object.entries(snapNow)) {
+    const posOld = snapBefore[aid];
+    if (!posOld) continue;
+    const gain = posOld - posNow;
+    if (gain === 0) continue;
+    list.push({ atleta_id: aid, ...nameLookup[aid], pos: posNow, gain });
+  }
+  return {
+    up: list.filter(m => m.gain >= 1).sort((a, b) => b.gain - a.gain).slice(0, 3),
+    dn: list.filter(m => m.gain <= -1).sort((a, b) => a.gain - b.gain).slice(0, 3),
+  };
+}
+
+function _hdMedalIcon(pos) { return pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}°`; }
+
+// ── HOME DASHBOARD — render principale ────────────────────────────
+async function renderHomeDashboard() {
+  if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
+  // Skeleton immediato (richiesto: niente pagina bianca in attesa dei dati)
+  setPage(`
+    <div class="hd-wrap">
+      <div class="hd-skel-hero"></div>
+      <div class="hd-skel-row"></div>
+      <div class="hd-skel-grid">
+        <div class="hd-skel-card"></div><div class="hd-skel-card"></div><div class="hd-skel-card"></div>
+      </div>
+    </div>`);
+  const myRenderId = (window._hdRenderId = (window._hdRenderId || 0) + 1);
+  try {
+    await _hdRenderReal(myRenderId);
+  } catch (e) {
+    console.error('[renderHomeDashboard]', e);
+    if (myRenderId === window._hdRenderId) {
+      setPage(`<div class="pg-header"><h1 class="pg-title">Errore nel caricamento della dashboard</h1>
+        <p style="color:var(--text-muted);margin-top:8px">${esc(e.message || '')}</p></div>`);
+    }
+  }
+}
+
+async function _hdRenderReal(myRenderId) {
+  const { resultsRaw, calendar, teams } = globalData;
+  const gender = _hdGender, catCode = _hdCatCode;
+  const cats = gender === 'F' ? _HD_CATS_F : _HD_CATS;
+
+  const hubRes = resultsRaw.filter(r => r.genere === gender && getRankingFileCode(r) === catCode);
+  const lastDate = hubRes.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '') || resultsRaw.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '');
+
+  const [stats, ranking] = await Promise.all([_hdLoadStats(), loadRanking(catCode)]);
+  if (myRenderId !== window._hdRenderId) return; // l'utente ha già cambiato filtro/pagina, scarta
+
+  // ── Contatori reali (hero) ──────────────────────────────────────
+  const atletiNativi = Object.keys(globalData.athletes || {}).length;
+  const teamNativi   = Object.keys(teams || {}).length;
+  const s = stats?.storico || {};
+  const heroStats = [
+    { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: '2007–oggi' },
+    { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
+    { val: (s.gare_storiche || 0).toLocaleString('it-IT'), lbl: 'GARE', sub: '2007–oggi' },
+    { val: (s.risultati_storici || 0).toLocaleString('it-IT'), lbl: 'RISULTATI', sub: 'in archivio' },
+    { val: (s.stagioni_storiche || 0).toLocaleString('it-IT'), lbl: 'STAGIONI', sub: `dal ${s.prima_stagione || '2007'}` },
+  ];
+
+  // ── Live bar: gare di oggi, ultimo risultato, prossime gare ──────
+  const todayStr = new Date().toISOString().split('T')[0];
+  const gareOggi = (calendar || []).filter(g => g.data === todayStr);
+  const in7gg = _hdCutDate(todayStr, -7); // _hdCutDate sottrae "days": -7 = +7gg avanti
+  const prossime7 = (calendar || []).filter(g => g.data > todayStr && g.data <= in7gg)
+    .sort((a, b) => a.data.localeCompare(b.data));
+  const vincitoriRecenti = resultsRaw.filter(r => r.posizione === 1 && r.data).sort((a, b) => b.data.localeCompare(a.data));
+  const ultimoRisultato = vincitoriRecenti[0] || null;
+
+  // ── Classifica generale (top5, filtrata) ─────────────────────────
+  const top5 = ranking.slice(0, 5);
+
+  // ── Rider of the Moment (Form Score) ─────────────────────────────
+  const fireAth = _hdFormScore(hubRes, catCode, lastDate);
+  let fireAthPhoto = null;
+  if (fireAth) {
+    try { const ov = await getEntityOverrides('atleta', fireAth.atleta_id); if (ov.photo_url) fireAthPhoto = `${MEDIA_BASE}${ov.photo_url}`; } catch {}
+  }
+  if (myRenderId !== window._hdRenderId) return;
+  const fireRankEntry = ranking.find(r => r.atleta_id === fireAth?.atleta_id);
+  const fireBadges = fireAth ? getAthleteBadges(fireAth.atleta_id, resultsRaw, catCode, fireRankEntry ? { pos: ranking.indexOf(fireRankEntry) + 1 } : null) : [];
+
+  // ── Movers della settimana ────────────────────────────────────────
+  const movers = _hdMovers(hubRes, catCode, lastDate);
+
+  // ── Rivalità della settimana (funzione esistente, invariata) ─────
+  const rivalry = siFormRivalryFinder(hubRes, catCode, ranking, lastDate);
+
+  // ── Ultimi risultati (5, tutte le categorie) ──────────────────────
+  const ultimiRisultati = [];
+  { const seenGara = new Set();
+    for (const r of vincitoriRecenti) {
+      if (seenGara.has(r.gara_id)) continue;
+      seenGara.add(r.gara_id);
+      ultimiRisultati.push(r);
+      if (ultimiRisultati.length >= 5) break;
+    }
+  }
+
+  // ── Prossime gare (5, tutte le categorie) ─────────────────────────
+  const prossimeGare = prossime7.slice(0, 5);
+
+  setPage(_hdBuildHtml({
+    heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
+    gender, catCode, cats, top5, fireAth, fireAthPhoto, fireBadges, fireRankEntry,
+    movers, rivalry, ultimiRisultati, prossimeGare, stats,
+  }));
+  _hdWireEvents();
+}
+
+function _hdBuildHtml(d) {
+  const catLabelShort = c => (({ ELI_M:'Elite/U23', JUN_M:'Juniores', AL_M:'Allievi', ES2_M:'Esordienti',
+                                  ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti' })[c] || c);
+  const heroHtml = `
+    <div class="hd-hero">
+      <div class="hd-hero-text">
+        <div class="hd-hero-eyebrow">ITALIA CYCLING STATS</div>
+        <h1 class="hd-hero-title">Il ciclismo italiano<br><span>in numeri</span></h1>
+        <p class="hd-hero-sub">Il database del ciclismo agonistico italiano. Risultati, classifiche, storico, statistiche e molto altro.</p>
+      </div>
+      <div class="hd-hero-stats">
+        ${d.heroStats.map(s => `<div class="hd-stat"><div class="hd-stat-val">${esc(s.val)}</div><div class="hd-stat-lbl">${esc(s.lbl)}</div><div class="hd-stat-sub">${esc(s.sub)}</div></div>`).join('')}
+      </div>
+    </div>`;
+
+  const liveHtml = `
+    <div class="hd-live">
+      <div class="hd-live-item">
+        <span class="hd-live-dot ${d.gareOggi.length ? 'hd-live-dot--on' : ''}"></span>
+        <div><div class="hd-live-lbl">LIVE — GARE DI OGGI</div><div class="hd-live-val">${d.gareOggi.length} in svolgimento</div></div>
+      </div>
+      <div class="hd-live-item">
+        <div><div class="hd-live-lbl">ULTIMO RISULTATO</div>
+        ${d.ultimoRisultato ? `<div class="hd-live-val"><a href="#/gara/${encodeURIComponent(d.ultimoRisultato.gara_id)}">${esc(d.ultimoRisultato.nome_gara || '')}</a> — <a href="#/atleta/${encodeURIComponent(d.ultimoRisultato.atleta_id)}">${esc(d.ultimoRisultato.cognome)} ${esc(d.ultimoRisultato.nome)}</a> <span class="hd-live-rel">${_hdRelDay(d.ultimoRisultato.data)}</span></div>`
+          : '<div class="hd-live-val">—</div>'}</div>
+      </div>
+      <div class="hd-live-item">
+        <div><div class="hd-live-lbl">PROSSIME GARE</div><div class="hd-live-val">${d.prossimeCount} nei prossimi 7 giorni</div></div>
+        <a href="#/calendario" class="hd-live-link">Calendario →</a>
+      </div>
+    </div>`;
+
+  const filterBar = `
+    <div class="hd-filterbar">
+      <div class="hd-gender-toggle">
+        <button class="hd-gtbtn ${d.gender==='M'?'active':''}" data-hd-gender="M">Uomini</button>
+        <button class="hd-gtbtn ${d.gender==='F'?'active':''}" data-hd-gender="F">Donne</button>
+      </div>
+      <div class="hd-cat-toggle">
+        ${d.cats.map(c => `<button class="hd-ctbtn ${c.code===d.catCode?'active':''}" data-hd-cat="${c.code}">${esc(c.label)}</button>`).join('')}
+      </div>
+    </div>`;
+
+  const classificaHtml = `
+    <div class="card hd-card">
+      <div class="hd-card-title">CLASSIFICA GENERALE</div>
+      <div class="hd-rank-list">
+        ${d.top5.length ? d.top5.map((r, i) => `
+          <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-rank-row">
+            <span class="hd-rank-pos">${i+1}</span>
+            <span class="hd-rank-name">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-rank-team">${esc(r.team_attuale||r.team||'')}</span></span>
+            <span class="hd-rank-pts">${r.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
+          </a>`).join('') : '<div class="hd-empty">Nessun dato per questa categoria</div>'}
+      </div>
+      <a href="#/classifica/${encodeURIComponent(d.catCode)}" class="hd-card-cta">Vedi classifica completa →</a>
+    </div>`;
+
+  const fireHtml = `
+    <div class="card hd-card hd-fire-card">
+      <div class="hd-card-title">⚡ RIDER OF THE MOMENT</div>
+      ${d.fireAth ? `
+        <div class="itc-fire hd-fire" style="--hub-color:var(--accent,#e8001d)">
+          ${d.fireAthPhoto
+            ? `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${esc(d.fireAthPhoto)}')"></div>`
+            : `<div class="itc-fire-bg itc-fire-bg--neutral"><div class="itc-fire-watermark">${esc((d.fireAth.cognome||'').toUpperCase())}</div></div>`}
+          <div class="itc-fire-overlay"></div>
+          <div class="itc-fire-content">
+            <div class="itc-fire-eyebrow">${catLabelShort(d.catCode)} · Form Score ${d.fireAth.formScore}/100</div>
+            <h2 class="itc-fire-name">${esc(d.fireAth.cognome)}<br><span class="itc-fire-firstname">${esc(d.fireAth.nome)}</span></h2>
+            <div class="itc-fire-team">${esc(d.fireAth.team||'')}</div>
+            ${d.fireBadges.length ? `<div class="itc-badges">${d.fireBadges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
+            <div class="itc-fire-stats">
+              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.pts14}</span><span class="itc-fire-lbl">punti 14gg</span></div>
+              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.wins14}</span><span class="itc-fire-lbl">vittorie</span></div>
+              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.podi14}</span><span class="itc-fire-lbl">podi</span></div>
+            </div>
+            <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="itc-fire-cta-primary">Scheda atleta →</a>
+          </div>
+        </div>` : `<div class="hd-empty">Nessuna attività recente in questa categoria</div>`}
+    </div>`;
+
+  const moversHtml = `
+    <div class="card hd-card">
+      <div class="hd-card-title">MOVERS DELLA SETTIMANA</div>
+      <div class="hd-movers-group">
+        <div class="hd-movers-lbl hd-movers-lbl--up">MAGGIORI SALITE</div>
+        ${d.movers.up.length ? d.movers.up.map(m => `
+          <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
+            <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
+            <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
+            <span class="hd-mover-gain hd-mover-gain--up">+${m.gain}</span>
+          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+      </div>
+      <div class="hd-movers-group">
+        <div class="hd-movers-lbl hd-movers-lbl--dn">MAGGIORI DISCESE</div>
+        ${d.movers.dn.length ? d.movers.dn.map(m => `
+          <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
+            <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
+            <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
+            <span class="hd-mover-gain hd-mover-gain--dn">${m.gain}</span>
+          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+      </div>
+      <div class="hd-movers-note">Variazione rispetto a 7 giorni fa, calcolata dallo storico reale della classifica.</div>
+    </div>`;
+
+  const rivalryHtml = d.rivalry ? `
+    <div class="card hd-card hd-rivalry-card">
+      <div class="hd-card-title">⚔ RIVALITÀ DELLA SETTIMANA</div>
+      <div class="hd-rivalry-body">
+        <a href="#/atleta/${encodeURIComponent(d.rivalry.aId)}" class="hd-rivalry-side">
+          <div class="hd-rivalry-name">${esc(d.rivalry.aCog)}</div>
+          <div class="hd-rivalry-team">${esc(d.rivalry.aTeam)}</div>
+          <div class="hd-rivalry-pts">${d.rivalry.aPts} pt</div>
+        </a>
+        <div class="hd-rivalry-vs">VS</div>
+        <a href="#/atleta/${encodeURIComponent(d.rivalry.bId)}" class="hd-rivalry-side">
+          <div class="hd-rivalry-name">${esc(d.rivalry.bCog)}</div>
+          <div class="hd-rivalry-team">${esc(d.rivalry.bTeam)}</div>
+          <div class="hd-rivalry-pts">${d.rivalry.bPts} pt</div>
+        </a>
+      </div>
+      <div class="hd-rivalry-meta">
+        ${d.rivalry.directMeets ? `${d.rivalry.directMeets} scontri diretti negli ultimi 30gg — ${d.rivalry.aWinsVs}-${d.rivalry.bWinsVs}` : `−${d.rivalry.ptsGap} pt di distacco in classifica`}
+      </div>
+      <button class="hd-card-cta hd-card-cta--btn" onclick="window.location.hash='#/comparatore'">Vedi confronto →</button>
+    </div>` : '';
+
+  const ultimiHtml = `
+    <div class="card hd-card hd-wide">
+      <div class="hd-card-title">ULTIMI RISULTATI</div>
+      <div class="hd-list">
+        ${d.ultimiRisultati.length ? d.ultimiRisultati.map(r => `
+          <div class="hd-list-row">
+            <span class="hd-list-date">${_hdRelDay(r.data)}</span>
+            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}</a>
+            <span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span>
+            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}</a>
+            <span class="hd-list-team">${esc(r.team||'')}</span>
+          </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
+      </div>
+      <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
+    </div>`;
+
+  const prossimeHtml = `
+    <div class="card hd-card hd-wide">
+      <div class="hd-card-title">PROSSIME GARE</div>
+      <div class="hd-list">
+        ${d.prossimeGare.length ? d.prossimeGare.map(g => `
+          <div class="hd-list-row">
+            <span class="hd-list-date">${_hdRelDay(g.data)}</span>
+            <span class="hd-list-main">${esc(g.nome||'')}</span>
+            <span class="hd-list-cat">${esc(g.categoria||'')}</span>
+            <span class="hd-list-team">${esc(g.luogo||g.regione||'')}</span>
+          </div>`).join('') : '<div class="hd-empty">Nessuna gara nei prossimi 7 giorni</div>'}
+      </div>
+      <a href="#/calendario" class="hd-card-cta">Vedi calendario →</a>
+    </div>`;
+
+  const arch = d.stats?.archivio || {};
+  const archCards = [];
+  if (arch.oggiAnniFa) {
+    archCards.push(`<div class="hd-arch-card">
+      <div class="hd-arch-eyebrow">OGGI ${arch.oggiAnniFa.anni_fa} ANN${arch.oggiAnniFa.anni_fa===1?'O':'I'} FA</div>
+      <div class="hd-arch-body">${esc(arch.oggiAnniFa.nome_completo||'Un corridore')} vinceva <em>${esc(arch.oggiAnniFa.nome_gara||'')}</em></div>
+    </div>`);
+  }
+  if (arch.garaPiuAntica) {
+    archCards.push(`<div class="hd-arch-card">
+      <div class="hd-arch-eyebrow">LA GARA PIÙ ANTICA</div>
+      <div class="hd-arch-body">${esc(arch.garaPiuAntica.nome_gara||'')} — ${esc(arch.garaPiuAntica.stagione)}, la prima gara nel nostro database</div>
+    </div>`);
+  }
+  archCards.push(`<div class="hd-arch-card">
+    <div class="hd-arch-eyebrow">ALBO D'ORO</div>
+    <div class="hd-arch-body">Tutti i vincitori di ogni gara, edizione per edizione — <a href="#/albo">esplora l'albo d'oro →</a></div>
+  </div>`);
+  archCards.push(`<div class="hd-arch-card">
+    <div class="hd-arch-eyebrow">${(d.stats?.storico?.stagioni_storiche)||20} STAGIONI DI STORIA</div>
+    <div class="hd-arch-body">Dal ${d.stats?.storico?.prima_stagione||'2007'} a oggi, ${(d.stats?.storico?.risultati_storici||0).toLocaleString('it-IT')} risultati raccolti</div>
+  </div>`);
+  const archiveHtml = `
+    <div class="hd-section">
+      <div class="hd-section-title">DALL'ARCHIVIO</div>
+      <div class="hd-arch-grid">${archCards.join('')}</div>
+    </div>`;
+
+  const quickLinks = [
+    { href:'#/atleti', icon:'👤', title:'ATLETI', sub:'Esplora tutti gli atleti' },
+    { href:'#/team', icon:'🚴', title:'TEAM', sub:'Tutte le squadre' },
+    { href:'#/gare', icon:'🏁', title:'GARE', sub:'Tutti i risultati e le edizioni' },
+    { href:'#/statistiche', icon:'📊', title:'STATISTICHE', sub:'Numeri, record e analisi' },
+    { href:'#/comparatore', icon:'⚖', title:'COMPARATORE', sub:'Confronta atleti e team' },
+    { href:'#/media', icon:'📷', title:'MEDIA', sub:'Foto, video e highlights' },
+  ];
+  const quickHtml = `
+    <div class="hd-quicklinks">
+      ${quickLinks.map(q => `<a href="${q.href}" class="hd-quicklink"><span class="hd-ql-icon">${q.icon}</span><span class="hd-ql-title">${q.title}</span><span class="hd-ql-sub">${esc(q.sub)}</span></a>`).join('')}
+    </div>`;
+
+  return `<div class="hd-wrap">
+    ${heroHtml}
+    ${liveHtml}
+    ${filterBar}
+    <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
+    ${rivalryHtml}
+    <div class="hd-grid-2">${ultimiHtml}${prossimeHtml}</div>
+    ${archiveHtml}
+    ${quickHtml}
+  </div>`;
+}
+
+function _hdWireEvents() {
+  document.querySelectorAll('[data-hd-gender]').forEach(btn => {
+    btn.onclick = () => {
+      _hdGender = btn.dataset.hdGender;
+      _hdCatCode = (_hdGender === 'F' ? _HD_CATS_F : _HD_CATS)[0].code;
+      renderHomeDashboard();
+    };
+  });
+  document.querySelectorAll('[data-hd-cat]').forEach(btn => {
+    btn.onclick = () => { _hdCatCode = btn.dataset.hdCat; renderHomeDashboard(); };
+  });
+}
+
+// ── HOME — Cinematic entry (M/F + categoria) — vecchio flusso, ancora
+// raggiungibile su #/entra per confronto/rollback immediato ──────────
 function renderHome() {
   showCinematicEntry(false);
 }
