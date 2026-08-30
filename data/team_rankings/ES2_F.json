@@ -2,24 +2,24 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 418,
+    "punti": 433,
     "vittorie": 11,
     "p1": 11,
     "p2": 7,
-    "p3": 2,
-    "pout": 28,
+    "p3": 3,
+    "pout": 29,
     "n_atleti": 5,
     "pos": 1
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 395,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 413,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 6,
     "p3": 7,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 2,
     "pos": 2
   },
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 137,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 15,
+    "n_atleti": 3,
+    "pos": 9
+  },
+  {
     "team_id": "A_S_D_PROBIKE_ERICE",
     "team_nome": "A.S.D. PROBIKE ERICE",
     "punti": 135,
@@ -105,29 +117,17 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 127,
+    "punti": 133,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 2,
-    "pout": 15,
-    "n_atleti": 3,
-    "pos": 10
-  },
-  {
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 125,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 3,
     "pos": 11
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 78,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 16
+  },
+  {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
     "punti": 77,
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -201,7 +213,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 72,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 2,
+    "pos": 19
   },
   {
     "team_id": "GAZZANIGHESE_ASD",
@@ -213,30 +237,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 70,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 19
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 68,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 2,
     "pos": 20
   },
   {
@@ -290,12 +290,12 @@
   {
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
-    "punti": 33,
+    "punti": 35,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 3,
     "pos": 25
   },
@@ -600,6 +600,18 @@
     "pos": 50
   },
   {
+    "team_id": "S_S_STELLA_ALPINA_RENAZZO",
+    "team_nome": "S.S. STELLA ALPINA RENAZZO",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 51
+  },
+  {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
     "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
     "punti": 1,
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "SAMABIKE",
@@ -621,6 +633,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   }
 ]

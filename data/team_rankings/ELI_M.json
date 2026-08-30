@@ -2,21 +2,21 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1166,
+    "punti": 1196,
     "vittorie": 12,
     "p1": 12,
     "p2": 14,
-    "p3": 6,
-    "pout": 37,
+    "p3": 7,
+    "pout": 38,
     "n_atleti": 13,
     "pos": 1
   },
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 950,
-    "vittorie": 11,
-    "p1": 11,
+    "punti": 980,
+    "vittorie": 12,
+    "p1": 12,
     "p2": 4,
     "p3": 4,
     "pout": 46,
@@ -74,12 +74,12 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 548,
+    "punti": 560,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
     "p3": 4,
-    "pout": 34,
+    "pout": 36,
     "n_atleti": 13,
     "pos": 7
   },
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "ASD_SWATT_CLUB",
+    "team_nome": "ASD SWATT CLUB",
+    "punti": 230,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 6,
+    "pos": 20
+  },
+  {
     "team_id": "SOLUTION_TECH_NIPPO_RALI",
     "team_nome": "SOLUTION TECH NIPPO RALI",
     "punti": 228,
@@ -237,30 +249,18 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 7,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
-    "punti": 213,
+    "punti": 225,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 3,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 5,
-    "pos": 21
-  },
-  {
-    "team_id": "ASD_SWATT_CLUB",
-    "team_nome": "ASD SWATT CLUB",
-    "punti": 206,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 2,
-    "pout": 7,
-    "n_atleti": 6,
     "pos": 22
   },
   {
@@ -636,6 +636,18 @@
     "pos": 53
   },
   {
+    "team_id": "ZAPPI_RACING_TEAM",
+    "team_nome": "ZAPPI RACING TEAM",
+    "punti": 38,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 54
+  },
+  {
     "team_id": "MENTECORPO_TEAM",
     "team_nome": "MENTECORPO TEAM",
     "punti": 35,
@@ -645,7 +657,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "U_C_MONACO",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "LOKOMOTIV_MANAS",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "METEC_SOLARWATT_P_B_MANTEL",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "PRO_GI_T_CYCLING_TEAM",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "NAZIONALE_PARALIMPICA",
@@ -717,7 +729,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -741,18 +753,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 62
-  },
-  {
-    "team_id": "ZAPPI_RACING_TEAM",
-    "team_nome": "ZAPPI RACING TEAM",
-    "punti": 20,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 63
   },
   {
@@ -912,6 +912,18 @@
     "pos": 76
   },
   {
+    "team_id": "U_S_VERTEMATESE_A_S_D",
+    "team_nome": "U.S. VERTEMATESE A.S.D.",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 77
+  },
+  {
     "team_id": "ITALIA",
     "team_nome": "ITALIA",
     "punti": 6,
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "VELOCE_CLUB_ISOLANO",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "CAJA_RURAL_ALEA",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "TEAM_MAZZOLA_P_G_C_U23",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "TEAM_GAIAPLAST_BIBANESE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "DU_ACADEMY",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -1029,6 +1041,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   }
 ]
