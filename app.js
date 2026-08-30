@@ -7269,6 +7269,12 @@ function _hdRelDay(dateStr) {
   if (days < 0 && days > -7) return `tra ${-days} giorni`;
   return new Date(dateStr).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
 }
+// Data reale compatta ("30 ago") invece di "ieri"/"5 giorni fa" — richiesto
+// esplicitamente per "Ultimi Risultati" (poco chiaro su mobile).
+function _hdShortDate(dateStr) {
+  if (!dateStr) return '';
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+}
 
 // ── Form Score — "Rider of the Moment" calcolato, non scelto a mano ──
 // 40% punti ultimi 14gg, 30% trend (punti seconda metà finestra 30gg vs

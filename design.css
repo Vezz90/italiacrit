@@ -12393,21 +12393,23 @@ main.page:has(.itc-dash) {
 .hd-wide { grid-column: auto; }
 .hd-list { display: flex; flex-direction: column; }
 .hd-list-row { display: grid; align-items: center; gap: 4px 8px; padding: 8px 6px; border-radius: var(--r-sm); min-height: 48px; }
-.hd-list-row--result { grid-template-columns: 20px 46px 1fr 30px auto auto; }
+/* Ultimi Risultati: data reale · titolo gara · avatar+nome+team — via
+   libera da trofeo/data-relativa/punti (segnalato: "da telefono è brutta e
+   non si capisce"), struttura minima e leggibile su ogni larghezza. */
+.hd-list-row--result { grid-template-columns: 44px 1fr auto; }
 .hd-list-row--race { grid-template-columns: 64px 1fr auto; }
-.hd-list-pts { font-family: var(--font-heading); font-weight: 800; font-size: .74rem; color: var(--yellow-race, #F59E0B);
-  background: rgba(245,158,11,.14); border: 1px solid rgba(245,158,11,.3); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
 .hd-list-row:hover { background: var(--bg-elevated); }
-.hd-list-trophy { text-align: center; font-size: .82rem; opacity: .85; }
 .hd-list-date { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
+.hd-list-winner-block { display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; }
+.hd-list-winner-id { display: flex; flex-direction: column; min-width: 0; text-align: left; }
+.hd-list-winner-name { font-size: .82rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+.hd-list-winner-block:hover .hd-list-winner-name { color: var(--hd-blue); }
 .hd-list-main { font-weight: 700; font-size: .86rem; color: var(--text-primary); text-decoration: none; display: flex; flex-direction: column; min-width: 0; }
 .hd-list-main:hover { color: var(--hd-blue); }
 /* Nomi gara molto lunghi (frequenti) non devono far esplodere l'altezza
    della riga, specie su mobile: 2 righe poi ellissi. */
 .hd-list-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.25; }
 .hd-list-cat { font-size: .66rem; font-weight: 700; color: var(--text-muted); margin-top: 1px; }
-.hd-list-winner { font-size: .82rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; display: flex; flex-direction: column; text-align: right; }
-.hd-list-winner:hover { color: var(--hd-blue); }
 .hd-list-team { font-size: .68rem; color: var(--text-muted); font-weight: 500; }
 .hd-cat-badge { font-size: .66rem; font-weight: 700; color: var(--hd-blue); background: rgba(var(--hd-blue-rgb),.12); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
 
@@ -12445,23 +12447,18 @@ main.page:has(.itc-dash) {
   .hd-hero-stats { gap: 8px; }
   .hd-stat { flex: 1 1 100px; padding: 10px 12px; }
   .hd-stat-val { font-size: 1.1rem; }
-  /* Ultimi Risultati su mobile: 3 righe esplicite (trofeo+data / titolo gara
-     / avatar+vincitore+punti) invece di forzare tutto nella griglia a 6
-     colonne pensata per desktop — segnalato: avatar "staccato" dal nome,
-     riga troppo alta. */
+  /* Ultimi Risultati su mobile: 3 righe esplicite (data / titolo gara /
+     avatar+nome+team) — segnalato: "da telefono è brutta e non si capisce
+     una sega". Data sopra al titolo invece che a fianco. */
   .hd-list-row--result {
-    grid-template-columns: 26px 1fr auto;
-    grid-template-areas: "trophy date date" "title title title" "avatar winner pts";
-    row-gap: 6px;
+    grid-template-columns: 1fr;
+    grid-template-areas: "date" "title" "winner";
+    row-gap: 4px;
+    align-items: start;
   }
-  .hd-list-row--result .hd-list-trophy { grid-area: trophy; }
-  .hd-list-row--result .hd-list-date   { grid-area: date; justify-self: start; }
-  .hd-list-row--result .hd-list-main   { grid-area: title; }
-  .hd-list-row--result .hd-avatar      { grid-area: avatar; }
-  .hd-list-row--result .hd-list-winner {
-    grid-area: winner; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; flex-wrap: wrap;
-  }
-  .hd-list-row--result .hd-list-pts    { grid-area: pts; align-self: center; }
+  .hd-list-row--result .hd-list-date        { grid-area: date; }
+  .hd-list-row--result .hd-list-main        { grid-area: title; }
+  .hd-list-row--result .hd-list-winner-block{ grid-area: winner; margin-top: 2px; }
   .hd-list-row--race { grid-template-columns: 50px 1fr; }
   .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
   .hd-rivalry-body { gap: 14px; }
