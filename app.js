@@ -7167,8 +7167,15 @@ const _HD_CATS_F = [
 // pesante, ~296k righe, già cachata 10 min lato server) ogni volta che
 // l'utente cambia genere/categoria — quei numeri non dipendono dal filtro.
 let _hdStatsPromise = null;
+let _hdStatsCache = null; // ultimo risultato risolto — riusato SUBITO (sincrono) sui render successivi
 function _hdLoadStats() {
-  if (!_hdStatsPromise) _hdStatsPromise = fetch(`${API_BASE}/stats/overview`).then(r => r.json()).catch(() => null);
+  if (!_hdStatsPromise) {
+    _hdStatsPromise = fetch(`${API_BASE}/stats/overview`).then(r => r.json()).catch(() => null);
+    _hdStatsPromise.then(s => {
+      if (s && !s.error) _hdStatsCache = s;
+      else _hdStatsPromise = null; // fallito (es. statement timeout server sotto carico) → riprova al prossimo render
+    });
+  }
   return _hdStatsPromise;
 }
 
@@ -7292,8 +7299,24 @@ async function _hdRenderReal(myRenderId) {
   const hubRes = resultsRaw.filter(r => r.genere === gender && getRankingFileCode(r) === catCode);
   const lastDate = hubRes.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '') || resultsRaw.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '');
 
-  const [stats, ranking] = await Promise.all([_hdLoadStats(), loadRanking(catCode)]);
+  // /api/stats/overview aggrega ~296k righe storiche: la prima volta (cache
+  // server scaduta) può richiedere fino a ~100s, e sotto carico dei job
+  // periodici del server può anche fallire (statement timeout) — NON va
+  // bloccata l'intera dashboard su questa singola richiesta lenta. Se un
+  // valore è già in cache (sessione precedente/altro filtro) si usa subito,
+  // sincrono; altrimenti si mostrano placeholder e si aggiorna il DOM in
+  // modo asincrono non appena la risposta arriva — vedi _hdApplyStats.
+  const stats = _hdStatsCache;
+  const ranking = await loadRanking(catCode);
   if (myRenderId !== window._hdRenderId) return; // l'utente ha già cambiato filtro/pagina, scarta
+  // NB: se stats non è ancora in cache, il fetch (non bloccante) viene
+  // avviato più sotto, DOPO il setPage finale — prima che quel DOM esista
+  // (gli elementi #hd-hero-stats/#hd-archive non sono ancora nella pagina
+  // finché setPage non è stato chiamato) la risposta arriverebbe troppo
+  // presto e _hdApplyStats non troverebbe nulla da aggiornare: il fetch
+  // veloce (cache server calda) batteva sistematicamente il resto della
+  // funzione (foto profilo, ecc.), patchando un DOM che il setPage finale
+  // sovrascriveva subito dopo, azzerando l'aggiornamento in silenzio.
 
   // ── Contatori reali (hero) ──────────────────────────────────────
   const atletiNativi = Object.keys(globalData.athletes || {}).length;
@@ -7302,9 +7325,9 @@ async function _hdRenderReal(myRenderId) {
   const heroStats = [
     { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: '2007–oggi' },
     { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
-    { val: (s.gare_storiche || 0).toLocaleString('it-IT'), lbl: 'GARE', sub: '2007–oggi' },
-    { val: (s.risultati_storici || 0).toLocaleString('it-IT'), lbl: 'RISULTATI', sub: 'in archivio' },
-    { val: (s.stagioni_storiche || 0).toLocaleString('it-IT'), lbl: 'STAGIONI', sub: `dal ${s.prima_stagione || '2007'}` },
+    { val: s.gare_storiche != null ? s.gare_storiche.toLocaleString('it-IT') : '…', lbl: 'GARE', sub: '2007–oggi' },
+    { val: s.risultati_storici != null ? s.risultati_storici.toLocaleString('it-IT') : '…', lbl: 'RISULTATI', sub: 'in archivio' },
+    { val: s.stagioni_storiche != null ? s.stagioni_storiche.toLocaleString('it-IT') : '…', lbl: 'STAGIONI', sub: `dal ${s.prima_stagione || '2007'}` },
   ];
 
   // ── Live bar: gare di oggi, ultimo risultato, prossime gare ──────
@@ -7349,17 +7372,170 @@ async function _hdRenderReal(myRenderId) {
   // ── Prossime gare (5, tutte le categorie) ─────────────────────────
   const prossimeGare = prossime7.slice(0, 5);
 
+  // ── Foto reali dei corridori coinvolti (classifica, movers, rivalità,
+  // ultimi risultati) — stesso meccanismo di fireAthPhoto (entity_overrides
+  // + fallback statico entity_socials.json), in blocco con Promise.all così
+  // non aggiunge round-trip seriali. Nessuna foto finta: chi non ha una
+  // foto caricata mostra un avatar con le iniziali (vedi _hdAvatar).
+  const photoIds = new Set();
+  top5.forEach(r => photoIds.add(r.atleta_id));
+  movers.up.forEach(m => photoIds.add(m.atleta_id));
+  movers.dn.forEach(m => photoIds.add(m.atleta_id));
+  if (rivalry) { photoIds.add(rivalry.aId); photoIds.add(rivalry.bId); }
+  ultimiRisultati.forEach(r => photoIds.add(r.atleta_id));
+  const photoMap = {};
+  await Promise.all([...photoIds].filter(Boolean).map(async id => {
+    try { const ov = await getEntityOverrides('atleta', id); if (ov.photo_url) photoMap[id] = mediaUrl(ov.photo_url); } catch {}
+  }));
+  if (myRenderId !== window._hdRenderId) return;
+
+  // ── Andamento punti del Rider of the Moment — serie reale (non finta):
+  // punteggio cumulato gara per gara, ultime risultati a punti nella
+  // finestra 30gg usata da _hdFormScore. Se l'atleta ha troppi pochi
+  // risultati per un grafico leggibile, il widget lo omette (nessun dato
+  // inventato per riempire il grafico).
+  let fireSpark = null;
+  if (fireAth) {
+    const cronologici = hubRes
+      .filter(r => r.atleta_id === fireAth.atleta_id && r.data >= _hdCutDate(lastDate, 30) && (r.punti_effettivi || 0) > 0)
+      .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+    if (cronologici.length >= 2) {
+      let cum = 0;
+      fireSpark = cronologici.map(r => { cum += (r.punti_effettivi || 0); return { data: r.data, val: cum }; });
+    }
+  }
+
   setPage(_hdBuildHtml({
     heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
-    gender, catCode, cats, top5, fireAth, fireAthPhoto, fireBadges, fireRankEntry,
-    movers, rivalry, ultimiRisultati, prossimeGare, stats,
+    gender, catCode, cats, top5, fireAth, fireAthPhoto, fireBadges, fireRankEntry, fireSpark,
+    movers, rivalry, ultimiRisultati, prossimeGare, stats, photoMap,
   }));
   _hdWireEvents();
+
+  // Fetch non bloccante di /api/stats/overview, avviato ORA che il DOM
+  // reale esiste già (vedi commento più sopra) — se non era già in cache,
+  // patcha hero counters + "Dall'Archivio" appena la risposta arriva,
+  // senza toccare il resto della dashboard già renderizzata.
+  if (!stats) {
+    _hdLoadStats().then(s => { if (s && !s.error && myRenderId === window._hdRenderId) _hdApplyStats(s); });
+  }
+}
+
+// ── Avatar reale (foto o iniziali) — usato da classifica/movers/rivalità/
+// ultimi risultati. `size` è una classe modificatore CSS (sm/md/lg).
+function _hdInitials(cognome, nome) {
+  const c = (cognome || '').trim()[0] || '';
+  const n = (nome || '').trim()[0] || '';
+  return (c + n).toUpperCase() || '?';
+}
+function _hdAvatar(id, cognome, nome, photoMap, size) {
+  const url = photoMap && photoMap[id];
+  const cls = `hd-avatar hd-avatar--${size || 'md'}`;
+  return url
+    ? `<span class="${cls}" style="background-image:url('${esc(url)}')"></span>`
+    : `<span class="${cls} hd-avatar--fallback">${esc(_hdInitials(cognome, nome))}</span>`;
+}
+// ── Sparkline SVG minimale per l'andamento punti del Rider of the Moment ──
+function _hdSparklineSvg(points) {
+  if (!points || points.length < 2) return '';
+  const w = 220, h = 56, pad = 4;
+  const vals = points.map(p => p.val);
+  const min = Math.min(...vals), max = Math.max(...vals, min + 1);
+  const step = (w - pad * 2) / (points.length - 1);
+  const xy = points.map((p, i) => [pad + i * step, h - pad - ((p.val - min) / (max - min)) * (h - pad * 2)]);
+  const path = xy.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const last = xy[xy.length - 1];
+  return `<svg class="hd-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <path d="${path}" class="hd-spark-line" fill="none"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" class="hd-spark-dot"/>
+  </svg>`;
+}
+
+// ── "Dall'Archivio" — separata da _hdBuildHtml così può essere rigenerata
+// da sola quando /api/stats/overview arriva DOPO il primo render (vedi
+// _hdApplyStats). Finché stats non è pronto, oggiAnniFa/garaPiuAntica/
+// stagioni mostrano un placeholder "…" (non un numero finto tipo "20").
+function _hdArchiveCards(stats) {
+  const arch = stats?.archivio || {};
+  const st = stats?.storico || {};
+  const archCards = [];
+  if (stats && arch.oggiAnniFa) {
+    archCards.push(`<div class="hd-arch-card">
+      <div class="hd-arch-eyebrow">OGGI ${arch.oggiAnniFa.anni_fa} ANN${arch.oggiAnniFa.anni_fa===1?'O':'I'} FA</div>
+      <div class="hd-arch-body">${esc(arch.oggiAnniFa.nome_completo||'Un corridore')} vinceva <em>${esc(arch.oggiAnniFa.nome_gara||'')}</em></div>
+    </div>`);
+  } else if (!stats) {
+    archCards.push(`<div class="hd-arch-card"><div class="hd-arch-eyebrow">OGGI NEL PASSATO</div><div class="hd-arch-body hd-arch-loading">Caricamento…</div></div>`);
+  }
+  if (stats && arch.garaPiuAntica) {
+    archCards.push(`<div class="hd-arch-card">
+      <div class="hd-arch-eyebrow">LA GARA PIÙ ANTICA</div>
+      <div class="hd-arch-body">${esc(arch.garaPiuAntica.nome_gara||'')} — ${esc(arch.garaPiuAntica.stagione)}, la prima gara nel nostro database</div>
+    </div>`);
+  } else if (!stats) {
+    archCards.push(`<div class="hd-arch-card"><div class="hd-arch-eyebrow">LA GARA PIÙ ANTICA</div><div class="hd-arch-body hd-arch-loading">Caricamento…</div></div>`);
+  }
+  archCards.push(`<div class="hd-arch-card">
+    <div class="hd-arch-eyebrow">ALBO D'ORO</div>
+    <div class="hd-arch-body">Tutti i vincitori di ogni gara, edizione per edizione — <a href="#/albo">esplora l'albo d'oro →</a></div>
+  </div>`);
+  archCards.push(`<div class="hd-arch-card">
+    <div class="hd-arch-eyebrow">${st.stagioni_storiche != null ? st.stagioni_storiche + ' STAGIONI DI STORIA' : 'STAGIONI DI STORIA'}</div>
+    <div class="hd-arch-body">${st.risultati_storici != null ? `Dal ${st.prima_stagione||'2007'} a oggi, ${st.risultati_storici.toLocaleString('it-IT')} risultati raccolti` : 'Caricamento…'}</div>
+  </div>`);
+  return archCards.join('');
+}
+function _hdArchiveHtml(stats) {
+  return `
+    <div class="hd-section">
+      <div class="hd-section-title">DALL'ARCHIVIO</div>
+      <div class="hd-arch-grid" id="hd-archive">${_hdArchiveCards(stats)}</div>
+    </div>`;
+}
+
+// ── Applica /api/stats/overview al DOM già renderizzato, quando arriva
+// DOPO il primo paint della dashboard (vedi commento in _hdRenderReal:
+// la richiesta è lenta/pesante e non deve bloccare il resto della pagina).
+// Aggiorna solo i due blocchi che dipendono da stats — hero counters e
+// "Dall'Archivio" — senza toccare il resto (classifica/fire/movers/ecc.
+// restano quelli già mostrati, non vengono ricalcolati).
+function _hdApplyStats(stats) {
+  const heroEl = document.getElementById('hd-hero-stats');
+  if (heroEl) {
+    const s = stats?.storico || {};
+    const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
+    const atletiNativi = Object.keys(globalData.athletes || {}).length;
+    const teamNativi = Object.keys(globalData.teams || {}).length;
+    const heroStats = [
+      { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: '2007–oggi' },
+      { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
+      { val: (s.gare_storiche||0).toLocaleString('it-IT'), lbl: 'GARE', sub: '2007–oggi' },
+      { val: (s.risultati_storici||0).toLocaleString('it-IT'), lbl: 'RISULTATI', sub: 'in archivio' },
+      { val: (s.stagioni_storiche||0).toLocaleString('it-IT'), lbl: 'STAGIONI', sub: `dal ${s.prima_stagione||'2007'}` },
+    ];
+    heroEl.innerHTML = heroStats.map(st => `<div class="hd-stat"><span class="hd-stat-icon">${heroIcons[st.lbl]||'●'}</span><div><div class="hd-stat-val">${esc(st.val)}</div><div class="hd-stat-lbl">${esc(st.lbl)}</div><div class="hd-stat-sub">${esc(st.sub)}</div></div></div>`).join('');
+  }
+  const archEl = document.getElementById('hd-archive');
+  if (archEl) archEl.innerHTML = _hdArchiveCards(stats);
+}
+
+// Colore badge categoria in "Prossime gare" — solo estetico, non tocca la
+// logica: prova a indovinare la famiglia (Elite/Juniores/Allievi/Esordienti)
+// dal testo della categoria del calendario per un colpo d'occhio rapido,
+// stile "pillola colorata" come nel mockup di riferimento.
+function _hdCatBadgeStyle(catLabel) {
+  const s = (catLabel || '').toUpperCase();
+  let c = '#2563EB'; // default: blu ICS (Elite/U23)
+  if (s.includes('JUNIOR')) c = '#10B981';
+  else if (s.includes('ALLIEV')) c = '#F59E0B';
+  else if (s.includes('ESORDIENT')) c = '#8B5CF6';
+  return `color:${c};background:${c}1F`;
 }
 
 function _hdBuildHtml(d) {
   const catLabelShort = c => (({ ELI_M:'Elite/U23', JUN_M:'Juniores', AL_M:'Allievi', ES2_M:'Esordienti',
                                   ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti' })[c] || c);
+  const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
   const heroHtml = `
     <div class="hd-hero">
       <div class="hd-hero-text">
@@ -7367,8 +7543,8 @@ function _hdBuildHtml(d) {
         <h1 class="hd-hero-title">Il ciclismo italiano<br><span>in numeri</span></h1>
         <p class="hd-hero-sub">Il database del ciclismo agonistico italiano. Risultati, classifiche, storico, statistiche e molto altro.</p>
       </div>
-      <div class="hd-hero-stats">
-        ${d.heroStats.map(s => `<div class="hd-stat"><div class="hd-stat-val">${esc(s.val)}</div><div class="hd-stat-lbl">${esc(s.lbl)}</div><div class="hd-stat-sub">${esc(s.sub)}</div></div>`).join('')}
+      <div class="hd-hero-stats" id="hd-hero-stats">
+        ${d.heroStats.map(s => `<div class="hd-stat"><span class="hd-stat-icon">${heroIcons[s.lbl]||'●'}</span><div><div class="hd-stat-val">${esc(s.val)}</div><div class="hd-stat-lbl">${esc(s.lbl)}</div><div class="hd-stat-sub">${esc(s.sub)}</div></div></div>`).join('')}
       </div>
     </div>`;
 
@@ -7407,6 +7583,7 @@ function _hdBuildHtml(d) {
         ${d.top5.length ? d.top5.map((r, i) => `
           <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-rank-row">
             <span class="hd-rank-pos">${i+1}</span>
+            ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
             <span class="hd-rank-name">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-rank-team">${esc(r.team_attuale||r.team||'')}</span></span>
             <span class="hd-rank-pts">${r.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
           </a>`).join('') : '<div class="hd-empty">Nessun dato per questa categoria</div>'}
@@ -7418,7 +7595,7 @@ function _hdBuildHtml(d) {
     <div class="card hd-card hd-fire-card">
       <div class="hd-card-title">⚡ RIDER OF THE MOMENT</div>
       ${d.fireAth ? `
-        <div class="itc-fire hd-fire" style="--hub-color:var(--accent,#e8001d)">
+        <div class="itc-fire hd-fire" style="--hub-color:#2563EB">
           ${d.fireAthPhoto
             ? `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${esc(d.fireAthPhoto)}')"></div>`
             : `<div class="itc-fire-bg itc-fire-bg--neutral"><div class="itc-fire-watermark">${esc((d.fireAth.cognome||'').toUpperCase())}</div></div>`}
@@ -7429,11 +7606,12 @@ function _hdBuildHtml(d) {
             <div class="itc-fire-team">${esc(d.fireAth.team||'')}</div>
             ${d.fireBadges.length ? `<div class="itc-badges">${d.fireBadges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
             <div class="itc-fire-stats">
-              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.pts14}</span><span class="itc-fire-lbl">punti 14gg</span></div>
-              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.wins14}</span><span class="itc-fire-lbl">vittorie</span></div>
-              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.podi14}</span><span class="itc-fire-lbl">podi</span></div>
+              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.streak}</span><span class="itc-fire-lbl">risultati consecutivi</span></div>
+              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.wins14}</span><span class="itc-fire-lbl">vittorie ultime 2 sett.</span></div>
+              <div class="itc-fire-stat"><span class="itc-fire-val">+${d.fireAth.pts14}</span><span class="itc-fire-lbl">punti ultime 2 sett.</span></div>
             </div>
-            <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="itc-fire-cta-primary">Scheda atleta →</a>
+            ${d.fireSpark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(d.fireSpark)}</div>` : ''}
+            <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="itc-fire-cta-primary">Vedi profilo →</a>
           </div>
         </div>` : `<div class="hd-empty">Nessuna attività recente in questa categoria</div>`}
     </div>`;
@@ -7446,6 +7624,7 @@ function _hdBuildHtml(d) {
         ${d.movers.up.length ? d.movers.up.map(m => `
           <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
             <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
+            ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
             <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
             <span class="hd-mover-gain hd-mover-gain--up">+${m.gain}</span>
           </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
@@ -7455,6 +7634,7 @@ function _hdBuildHtml(d) {
         ${d.movers.dn.length ? d.movers.dn.map(m => `
           <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
             <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
+            ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
             <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
             <span class="hd-mover-gain hd-mover-gain--dn">${m.gain}</span>
           </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
@@ -7462,25 +7642,38 @@ function _hdBuildHtml(d) {
       <div class="hd-movers-note">Variazione rispetto a 7 giorni fa, calcolata dallo storico reale della classifica.</div>
     </div>`;
 
+  const rivDraws = d.rivalry ? Math.max(0, d.rivalry.directMeets - d.rivalry.aWinsVs - d.rivalry.bWinsVs) : 0;
+  const rivTotal = d.rivalry ? Math.max(1, d.rivalry.aWinsVs + rivDraws + d.rivalry.bWinsVs) : 1;
   const rivalryHtml = d.rivalry ? `
     <div class="card hd-card hd-rivalry-card">
       <div class="hd-card-title">⚔ RIVALITÀ DELLA SETTIMANA</div>
       <div class="hd-rivalry-body">
         <a href="#/atleta/${encodeURIComponent(d.rivalry.aId)}" class="hd-rivalry-side">
-          <div class="hd-rivalry-name">${esc(d.rivalry.aCog)}</div>
+          ${_hdAvatar(d.rivalry.aId, d.rivalry.aCog, d.rivalry.aNom, d.photoMap, 'lg')}
+          <div class="hd-rivalry-name">${esc(d.rivalry.aCog)}<br>${esc(d.rivalry.aNom)}</div>
           <div class="hd-rivalry-team">${esc(d.rivalry.aTeam)}</div>
           <div class="hd-rivalry-pts">${d.rivalry.aPts} pt</div>
         </a>
         <div class="hd-rivalry-vs">VS</div>
         <a href="#/atleta/${encodeURIComponent(d.rivalry.bId)}" class="hd-rivalry-side">
-          <div class="hd-rivalry-name">${esc(d.rivalry.bCog)}</div>
+          ${_hdAvatar(d.rivalry.bId, d.rivalry.bCog, d.rivalry.bNom, d.photoMap, 'lg')}
+          <div class="hd-rivalry-name">${esc(d.rivalry.bCog)}<br>${esc(d.rivalry.bNom)}</div>
           <div class="hd-rivalry-team">${esc(d.rivalry.bTeam)}</div>
           <div class="hd-rivalry-pts">${d.rivalry.bPts} pt</div>
         </a>
       </div>
       <div class="hd-rivalry-meta">
-        ${d.rivalry.directMeets ? `${d.rivalry.directMeets} scontri diretti negli ultimi 30gg — ${d.rivalry.aWinsVs}-${d.rivalry.bWinsVs}` : `−${d.rivalry.ptsGap} pt di distacco in classifica`}
+        ${d.rivalry.directMeets ? `${d.rivalry.directMeets} scontri diretti negli ultimi 30gg` : `−${d.rivalry.ptsGap} pt di distacco in classifica`}
       </div>
+      ${d.rivalry.directMeets ? `
+      <div class="hd-rivalry-bar">
+        <span class="hd-rivalry-bar-a" style="width:${(d.rivalry.aWinsVs/rivTotal*100).toFixed(1)}%"></span>
+        <span class="hd-rivalry-bar-d" style="width:${(rivDraws/rivTotal*100).toFixed(1)}%"></span>
+        <span class="hd-rivalry-bar-b" style="width:${(d.rivalry.bWinsVs/rivTotal*100).toFixed(1)}%"></span>
+      </div>
+      <div class="hd-rivalry-bar-lbl">
+        <span>${d.rivalry.aWinsVs} vittorie</span><span>${rivDraws} altri piazzamenti</span><span>${d.rivalry.bWinsVs} vittorie</span>
+      </div>` : ''}
       <button class="hd-card-cta hd-card-cta--btn" onclick="window.location.hash='#/comparatore'">Vedi confronto →</button>
     </div>` : '';
 
@@ -7489,12 +7682,12 @@ function _hdBuildHtml(d) {
       <div class="hd-card-title">ULTIMI RISULTATI</div>
       <div class="hd-list">
         ${d.ultimiRisultati.length ? d.ultimiRisultati.map(r => `
-          <div class="hd-list-row">
+          <div class="hd-list-row hd-list-row--result">
+            <span class="hd-list-trophy">🏆</span>
             <span class="hd-list-date">${_hdRelDay(r.data)}</span>
-            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}</a>
-            <span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span>
-            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}</a>
-            <span class="hd-list-team">${esc(r.team||'')}</span>
+            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}<span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
+            ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
+            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-list-team">${esc(r.team||'')}</span></a>
           </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
       </div>
       <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
@@ -7505,43 +7698,16 @@ function _hdBuildHtml(d) {
       <div class="hd-card-title">PROSSIME GARE</div>
       <div class="hd-list">
         ${d.prossimeGare.length ? d.prossimeGare.map(g => `
-          <div class="hd-list-row">
+          <div class="hd-list-row hd-list-row--race">
             <span class="hd-list-date">${_hdRelDay(g.data)}</span>
-            <span class="hd-list-main">${esc(g.nome||'')}</span>
-            <span class="hd-list-cat">${esc(g.categoria||'')}</span>
-            <span class="hd-list-team">${esc(g.luogo||g.regione||'')}</span>
+            <a href="#/gara/${encodeURIComponent(g.id||'')}" class="hd-list-main">${esc(g.nome||'')}<span class="hd-list-team">${esc(g.luogo||g.regione||'')}</span></a>
+            <span class="hd-cat-badge" style="${_hdCatBadgeStyle(g.categoria)}">${esc(g.categoria||'')}</span>
           </div>`).join('') : '<div class="hd-empty">Nessuna gara nei prossimi 7 giorni</div>'}
       </div>
       <a href="#/calendario" class="hd-card-cta">Vedi calendario →</a>
     </div>`;
 
-  const arch = d.stats?.archivio || {};
-  const archCards = [];
-  if (arch.oggiAnniFa) {
-    archCards.push(`<div class="hd-arch-card">
-      <div class="hd-arch-eyebrow">OGGI ${arch.oggiAnniFa.anni_fa} ANN${arch.oggiAnniFa.anni_fa===1?'O':'I'} FA</div>
-      <div class="hd-arch-body">${esc(arch.oggiAnniFa.nome_completo||'Un corridore')} vinceva <em>${esc(arch.oggiAnniFa.nome_gara||'')}</em></div>
-    </div>`);
-  }
-  if (arch.garaPiuAntica) {
-    archCards.push(`<div class="hd-arch-card">
-      <div class="hd-arch-eyebrow">LA GARA PIÙ ANTICA</div>
-      <div class="hd-arch-body">${esc(arch.garaPiuAntica.nome_gara||'')} — ${esc(arch.garaPiuAntica.stagione)}, la prima gara nel nostro database</div>
-    </div>`);
-  }
-  archCards.push(`<div class="hd-arch-card">
-    <div class="hd-arch-eyebrow">ALBO D'ORO</div>
-    <div class="hd-arch-body">Tutti i vincitori di ogni gara, edizione per edizione — <a href="#/albo">esplora l'albo d'oro →</a></div>
-  </div>`);
-  archCards.push(`<div class="hd-arch-card">
-    <div class="hd-arch-eyebrow">${(d.stats?.storico?.stagioni_storiche)||20} STAGIONI DI STORIA</div>
-    <div class="hd-arch-body">Dal ${d.stats?.storico?.prima_stagione||'2007'} a oggi, ${(d.stats?.storico?.risultati_storici||0).toLocaleString('it-IT')} risultati raccolti</div>
-  </div>`);
-  const archiveHtml = `
-    <div class="hd-section">
-      <div class="hd-section-title">DALL'ARCHIVIO</div>
-      <div class="hd-arch-grid">${archCards.join('')}</div>
-    </div>`;
+  const archiveHtml = _hdArchiveHtml(d.stats);
 
   const quickLinks = [
     { href:'#/atleti', icon:'👤', title:'ATLETI', sub:'Esplora tutti gli atleti' },

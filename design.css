@@ -12122,8 +12122,10 @@ main.page:has(.itc-dash) {
 /* ════════════════════════════════════════════════════════════════
    HOME DASHBOARD (v2, PROVA LOCALE) — vedi renderHomeDashboard() in
    app.js. Non collegata al sito in produzione. Riusa var(--*) esistenti
-   (dark/light gestiti automaticamente, nessuna nuova palette). */
-.hd-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 60px; }
+   per sfondi/testi/bordi (dark/light gestiti automaticamente); l'accento
+   è blu ("blu ICS", su richiesta esplicita, invece del --red-hot usato
+   nel resto del sito) per aderire al mockup di riferimento fornito. */
+.hd-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 60px; --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8; }
 
 /* Skeleton di caricamento */
 .hd-skel-hero, .hd-skel-row, .hd-skel-card {
@@ -12137,17 +12139,23 @@ main.page:has(.itc-dash) {
 @keyframes hd-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 @media (max-width: 900px) { .hd-skel-grid { grid-template-columns: 1fr; } }
 
-/* Hero */
-.hd-hero { padding: 28px 0 20px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px; }
-.hd-hero-eyebrow { font-size: .74rem; font-weight: 800; letter-spacing: .08em; color: var(--red-hot); margin-bottom: 6px; }
-.hd-hero-title { font-family: var(--font-heading); font-size: 2.1rem; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-wrap: balance; }
-.hd-hero-title span { color: var(--red-hot); }
-.hd-hero-sub { color: var(--text-secondary); font-size: .94rem; max-width: 560px; margin: 0 0 20px; line-height: 1.5; }
+/* Hero — banda scura con accento blu, come nel mockup di riferimento.
+   Niente foto di sfondo: non esiste un asset reale (foto gara) libero da
+   usare qui — vedi nota nel report finale — quindi si usa un gradiente
+   blu/antracite invece di un'immagine finta o placeholder generico. */
+.hd-hero { padding: 32px 28px; border-radius: var(--r-lg); margin-bottom: 20px;
+  background: radial-gradient(120% 160% at 100% 0%, rgba(37,99,235,.35), transparent 60%), linear-gradient(160deg, #0B1220 0%, #131B2E 55%, #0B1220 100%);
+  border: 1px solid rgba(255,255,255,.06); }
+.hd-hero-eyebrow { font-size: .74rem; font-weight: 800; letter-spacing: .08em; color: #7CA6FF; margin-bottom: 6px; }
+.hd-hero-title { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-wrap: balance; color: #F4F7FF; }
+.hd-hero-title span { color: var(--hd-blue); }
+.hd-hero-sub { color: #A7B3CC; font-size: .94rem; max-width: 560px; margin: 0 0 22px; line-height: 1.5; }
 .hd-hero-stats { display: flex; flex-wrap: wrap; gap: 12px; }
-.hd-stat { flex: 1 1 140px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 14px 16px; }
-.hd-stat-val { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
-.hd-stat-lbl { font-size: .68rem; font-weight: 700; letter-spacing: .05em; color: var(--text-muted); margin-top: 2px; }
-.hd-stat-sub { font-size: .68rem; color: var(--text-muted); opacity: .7; margin-top: 1px; }
+.hd-stat { flex: 1 1 140px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 14px 16px; backdrop-filter: blur(2px); }
+.hd-stat-icon { flex-shrink: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(37,99,235,.22); font-size: 1rem; }
+.hd-stat-val { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #F4F7FF; }
+.hd-stat-lbl { font-size: .66rem; font-weight: 700; letter-spacing: .05em; color: #8FA0C2; margin-top: 2px; }
+.hd-stat-sub { font-size: .66rem; color: #647089; margin-top: 1px; }
 
 /* Live bar */
 .hd-live { display: flex; flex-wrap: wrap; gap: 0; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); margin-bottom: 20px; overflow: hidden; }
@@ -12159,23 +12167,23 @@ main.page:has(.itc-dash) {
 .hd-live-lbl { font-size: .66rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); }
 .hd-live-val { font-size: .86rem; font-weight: 600; margin-top: 2px; }
 .hd-live-val a { color: var(--text-primary); text-decoration: none; }
-.hd-live-val a:hover { color: var(--red-hot); }
+.hd-live-val a:hover { color: var(--hd-blue); }
 .hd-live-rel { color: var(--text-muted); font-weight: 500; font-size: .78rem; }
-.hd-live-link { font-size: .78rem; font-weight: 700; color: var(--red-hot); text-decoration: none; white-space: nowrap; }
+.hd-live-link { font-size: .78rem; font-weight: 700; color: var(--hd-blue); text-decoration: none; white-space: nowrap; }
 
 /* Filter bar — selettori INTERNI (non barriera d'ingresso) */
 .hd-filterbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
 .hd-gender-toggle, .hd-cat-toggle { display: flex; gap: 4px; background: var(--bg-elevated); border-radius: 999px; padding: 3px; }
 .hd-gtbtn, .hd-ctbtn { border: none; background: transparent; color: var(--text-secondary); font-size: .8rem; font-weight: 700;
   padding: 8px 16px; border-radius: 999px; cursor: pointer; min-height: 36px; transition: background .15s, color .15s; }
-.hd-gtbtn.active, .hd-ctbtn.active { background: var(--red-hot); color: #fff; }
+.hd-gtbtn.active, .hd-ctbtn.active { background: var(--hd-blue); color: #fff; }
 .hd-gtbtn:not(.active):hover, .hd-ctbtn:not(.active):hover { color: var(--text-primary); }
 
 /* Card comune */
 .hd-card { padding: 18px 20px; display: flex; flex-direction: column; }
 .hd-card-title { font-size: .74rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 14px; }
 .hd-card-cta { display: block; text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle);
-  font-size: .82rem; font-weight: 700; color: var(--red-hot); text-decoration: none; }
+  font-size: .82rem; font-weight: 700; color: var(--hd-blue); text-decoration: none; }
 .hd-card-cta--btn { width: 100%; background: none; border: none; border-top: 1px solid var(--border-subtle); cursor: pointer; font-family: inherit; }
 .hd-empty { color: var(--text-muted); font-size: .84rem; padding: 20px 0; text-align: center; }
 .hd-empty--sm { padding: 10px 0; font-size: .78rem; }
@@ -12184,20 +12192,32 @@ main.page:has(.itc-dash) {
 .hd-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 @media (max-width: 980px) { .hd-grid-3 { grid-template-columns: 1fr; } .hd-grid-2 { grid-template-columns: 1fr; } }
 
+/* Avatar reale (foto o iniziali) — usato in classifica/movers/rivalità/liste */
+.hd-avatar { flex-shrink: 0; border-radius: 50%; background-size: cover; background-position: center; background-color: var(--bg-elevated);
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
+.hd-avatar--sm { width: 30px; height: 30px; font-size: .62rem; }
+.hd-avatar--md { width: 40px; height: 40px; font-size: .72rem; }
+.hd-avatar--lg { width: 76px; height: 76px; font-size: 1.1rem; border: 3px solid rgba(37,99,235,.35); }
+.hd-avatar--fallback { background-image: none; background: linear-gradient(135deg, var(--hd-blue), var(--hd-blue-dim)); }
+
 /* Classifica generale */
 .hd-rank-list { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-.hd-rank-row { display: flex; align-items: center; gap: 12px; padding: 9px 6px; border-radius: var(--r-sm); text-decoration: none; color: inherit; min-height: 44px; }
+.hd-rank-row { display: flex; align-items: center; gap: 10px; padding: 8px 6px; border-radius: var(--r-sm); text-decoration: none; color: inherit; min-height: 48px; }
 .hd-rank-row:hover { background: var(--bg-elevated); }
-.hd-rank-pos { width: 22px; text-align: center; font-family: var(--font-heading); font-weight: 800; color: var(--text-muted); font-size: .86rem; }
+.hd-rank-pos { width: 18px; text-align: center; font-family: var(--font-heading); font-weight: 800; color: var(--text-muted); font-size: .86rem; }
 .hd-rank-name { flex: 1; font-weight: 700; font-size: .88rem; color: var(--text-primary); display: flex; flex-direction: column; min-width: 0; }
 .hd-rank-team { font-weight: 500; font-size: .72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hd-rank-pts { font-family: var(--font-heading); font-weight: 800; font-size: .9rem; color: var(--red-hot); white-space: nowrap; }
+.hd-rank-pts { font-family: var(--font-heading); font-weight: 800; font-size: .9rem; color: var(--hd-blue); white-space: nowrap; }
 .hd-rank-ptslbl { font-size: .66rem; font-weight: 600; color: var(--text-muted); margin-left: 2px; }
 
-/* Rider of the Moment — riusa .itc-fire già esistente/stilato altrove */
+/* Rider of the Moment — riusa .itc-fire già esistente/stilato altrove;
+   --hub-color è impostato in linea a var(--hd-blue) da app.js. */
 .hd-fire-card { padding: 0; overflow: hidden; }
 .hd-fire-card .hd-card-title { padding: 16px 20px 0; }
 .hd-fire { min-height: 380px; margin-top: 12px; border-radius: 0; }
+.hd-spark-wrap { margin: 10px 0 4px; opacity: .95; }
+.hd-spark-line { stroke: #7CA6FF; stroke-width: 2; }
+.hd-spark-dot { fill: #7CA6FF; }
 
 /* Movers */
 .hd-movers-group { margin-bottom: 12px; }
@@ -12217,27 +12237,38 @@ main.page:has(.itc-dash) {
 
 /* Rivalità */
 .hd-rivalry-card { max-width: 100%; }
-.hd-rivalry-body { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 8px 0 14px; flex-wrap: wrap; }
-.hd-rivalry-side { text-decoration: none; color: inherit; text-align: center; min-width: 140px; padding: 10px; border-radius: var(--r-sm); }
+.hd-rivalry-body { display: flex; align-items: center; justify-content: center; gap: 28px; padding: 8px 0 14px; flex-wrap: wrap; }
+.hd-rivalry-side { text-decoration: none; color: inherit; text-align: center; min-width: 140px; padding: 10px; border-radius: var(--r-sm); display: flex; flex-direction: column; align-items: center; }
 .hd-rivalry-side:hover { background: var(--bg-elevated); }
-.hd-rivalry-name { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; }
-.hd-rivalry-team { font-size: .76rem; color: var(--text-muted); margin: 2px 0 6px; }
-.hd-rivalry-pts { font-weight: 700; color: var(--red-hot); font-size: .84rem; }
-.hd-rivalry-vs { font-family: var(--font-heading); font-weight: 900; font-size: 1rem; color: var(--text-muted); }
-.hd-rivalry-meta { text-align: center; font-size: .78rem; color: var(--text-secondary); padding-bottom: 6px; }
+.hd-rivalry-side .hd-avatar { margin-bottom: 8px; }
+.hd-rivalry-name { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; line-height: 1.2; }
+.hd-rivalry-team { font-size: .76rem; color: var(--text-muted); margin: 4px 0 6px; }
+.hd-rivalry-pts { font-weight: 700; color: var(--hd-blue); font-size: .84rem; }
+.hd-rivalry-vs { font-family: var(--font-heading); font-weight: 900; font-size: .9rem; color: var(--text-muted);
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hd-rivalry-meta { text-align: center; font-size: .78rem; color: var(--text-secondary); padding-bottom: 10px; }
+.hd-rivalry-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--bg-elevated); }
+.hd-rivalry-bar-a { background: var(--hd-blue); }
+.hd-rivalry-bar-d { background: var(--text-muted); opacity: .35; }
+.hd-rivalry-bar-b { background: var(--yellow-race, #F59E0B); }
+.hd-rivalry-bar-lbl { display: flex; justify-content: space-between; font-size: .68rem; color: var(--text-muted); margin-top: 6px; padding-bottom: 8px; }
 
 /* Liste (Ultimi risultati / Prossime gare) */
 .hd-wide { grid-column: auto; }
 .hd-list { display: flex; flex-direction: column; }
-.hd-list-row { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 4px 12px; padding: 10px 6px; border-radius: var(--r-sm); min-height: 44px; }
+.hd-list-row { display: grid; align-items: center; gap: 4px 8px; padding: 8px 6px; border-radius: var(--r-sm); min-height: 48px; }
+.hd-list-row--result { grid-template-columns: 20px 46px 1fr 30px auto; }
+.hd-list-row--race { grid-template-columns: 64px 1fr auto; }
 .hd-list-row:hover { background: var(--bg-elevated); }
-.hd-list-date { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
-.hd-list-main { font-weight: 700; font-size: .86rem; color: var(--text-primary); text-decoration: none; grid-column: 2; }
-.hd-list-main:hover { color: var(--red-hot); }
-.hd-list-cat { font-size: .68rem; font-weight: 700; color: var(--text-muted); background: var(--bg-elevated); padding: 2px 8px; border-radius: 999px; grid-row: 1; grid-column: 3; justify-self: end; }
-.hd-list-winner { grid-column: 2; font-size: .78rem; color: var(--text-secondary); text-decoration: none; }
-.hd-list-winner:hover { color: var(--red-hot); }
-.hd-list-team { grid-column: 3; font-size: .72rem; color: var(--text-muted); justify-self: end; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+.hd-list-trophy { text-align: center; font-size: .82rem; opacity: .85; }
+.hd-list-date { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
+.hd-list-main { font-weight: 700; font-size: .86rem; color: var(--text-primary); text-decoration: none; display: flex; flex-direction: column; min-width: 0; }
+.hd-list-main:hover { color: var(--hd-blue); }
+.hd-list-cat { font-size: .66rem; font-weight: 700; color: var(--text-muted); margin-top: 1px; }
+.hd-list-winner { font-size: .82rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; display: flex; flex-direction: column; text-align: right; }
+.hd-list-winner:hover { color: var(--hd-blue); }
+.hd-list-team { font-size: .68rem; color: var(--text-muted); font-weight: 500; }
+.hd-cat-badge { font-size: .66rem; font-weight: 700; color: var(--hd-blue); background: rgba(37,99,235,.12); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
 
 /* Dall'archivio */
 .hd-section { margin: 28px 0 20px; }
@@ -12245,11 +12276,12 @@ main.page:has(.itc-dash) {
 .hd-arch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 @media (max-width: 980px) { .hd-arch-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .hd-arch-grid { grid-template-columns: 1fr; } }
-.hd-arch-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 16px; }
-.hd-arch-eyebrow { font-size: .66rem; font-weight: 800; letter-spacing: .05em; color: var(--yellow-race, #F59E0B); margin-bottom: 8px; }
+.hd-arch-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 16px; border-top: 3px solid var(--hd-blue); }
+.hd-arch-eyebrow { display: inline-block; font-size: .62rem; font-weight: 800; letter-spacing: .05em; color: #fff; background: var(--hd-blue); padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
 .hd-arch-body { font-size: .82rem; line-height: 1.4; color: var(--text-secondary); }
-.hd-arch-body a { color: var(--red-hot); text-decoration: none; font-weight: 700; }
+.hd-arch-body a { color: var(--hd-blue); text-decoration: none; font-weight: 700; }
 .hd-arch-body em { color: var(--text-primary); font-style: normal; font-weight: 700; }
+.hd-arch-body.hd-arch-loading { color: var(--text-muted); font-style: italic; }
 
 /* Accessi rapidi */
 .hd-quicklinks { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
@@ -12257,16 +12289,20 @@ main.page:has(.itc-dash) {
 @media (max-width: 560px) { .hd-quicklinks { grid-template-columns: repeat(2, 1fr); } }
 .hd-quicklink { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 16px 12px;
   text-align: center; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 44px; }
-.hd-quicklink:hover { border-color: var(--red-hot); }
+.hd-quicklink:hover { border-color: var(--hd-blue); }
 .hd-ql-icon { font-size: 1.3rem; }
 .hd-ql-title { font-size: .74rem; font-weight: 800; letter-spacing: .04em; }
 .hd-ql-sub { font-size: .68rem; color: var(--text-muted); }
 
 @media (max-width: 640px) {
-  .hd-hero-title { font-size: 1.6rem; }
+  .hd-hero { padding: 22px 18px; }
+  .hd-hero-title { font-size: 1.5rem; }
   .hd-hero-stats { gap: 8px; }
   .hd-stat { flex: 1 1 100px; padding: 10px 12px; }
-  .hd-stat-val { font-size: 1.15rem; }
-  .hd-list-row { grid-template-columns: 1fr; }
-  .hd-list-cat, .hd-list-team { justify-self: start; }
+  .hd-stat-val { font-size: 1.1rem; }
+  .hd-list-row--result { grid-template-columns: 20px 44px 1fr 30px; }
+  .hd-list-winner { grid-column: 1 / -1; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; }
+  .hd-list-row--race { grid-template-columns: 50px 1fr; }
+  .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
+  .hd-rivalry-body { gap: 14px; }
 }
