@@ -7445,33 +7445,28 @@ async function _hdRenderReal(myRenderId) {
   const top5 = rankingMain.slice(0, 5);
   const top5Dual = rankingDual ? rankingDual.slice(0, 5) : null;
 
-  // ── Rider of the Moment (Form Score) ─────────────────────────────
-  const fireAth = _hdFormScore(hubRes, catCodes, lastDate);
-  let fireAthPhoto = null;
-  if (fireAth) {
-    try { const ov = await getEntityOverrides('atleta', fireAth.atleta_id); if (ov.photo_url) fireAthPhoto = `${MEDIA_BASE}${ov.photo_url}`; } catch {}
-  }
-  if (myRenderId !== window._hdRenderId) return;
-  const fireRankEntry = ranking.find(r => r.atleta_id === fireAth?.atleta_id);
-  const fireCatCode = fireRankEntry ? (rankingDual && rankingDual.includes(fireRankEntry) ? dualCode : catCode) : catCode;
-  const fireBadges = fireAth ? getAthleteBadges(fireAth.atleta_id, resultsRaw, fireCatCode, fireRankEntry ? { pos: ranking.indexOf(fireRankEntry) + 1 } : null) : [];
+  // ── Rider of the Moment / Movers / Rivalità — per gli Esordienti (dual)
+  // si calcolano SEPARATAMENTE per 1° e 2° anno (richiesto esplicitamente:
+  // "uno per il primo e uno per il secondo anno"), non più un unico
+  // calcolo sul gruppo combinato. Per le categorie normali (dualCode nullo)
+  // il comportamento è identico a prima: un solo blocco su catCode.
+  const hubResMain = hubRes.filter(r => getRankingFileCode(r) === catCode);
+  const hubResDual = dualCode ? hubRes.filter(r => getRankingFileCode(r) === dualCode) : [];
 
-  // ── Movers della settimana ────────────────────────────────────────
-  const movers = _hdMovers(hubRes, catCodes, lastDate);
+  const fireMain = _hdFormScore(hubResMain, catCode, lastDate);
+  const fireDual = dualCode ? _hdFormScore(hubResDual, dualCode, lastDate) : null;
+  const fireRankEntryMain = fireMain ? rankingMain.find(r => r.atleta_id === fireMain.atleta_id) : null;
+  const fireBadgesMain = fireMain ? getAthleteBadges(fireMain.atleta_id, resultsRaw, catCode, fireRankEntryMain ? { pos: rankingMain.indexOf(fireRankEntryMain) + 1 } : null) : [];
+  const fireRankEntryDual = fireDual ? (rankingDual || []).find(r => r.atleta_id === fireDual.atleta_id) : null;
+  const fireBadgesDual = fireDual ? getAthleteBadges(fireDual.atleta_id, resultsRaw, dualCode, fireRankEntryDual ? { pos: (rankingDual||[]).indexOf(fireRankEntryDual) + 1 } : null) : [];
 
-  // ── Rivalità della settimana (funzione esistente, invariata) — per gli
-  // Esordienti si valuta separatamente 1° e 2° anno (siFormRivalryFinder
-  // lavora su UN codice alla volta) e si tiene la coppia con più scontri
-  // diretti recenti, altrimenti quella con il distacco minore.
-  let rivalry = siFormRivalryFinder(hubRes, catCode, rankingMain, lastDate);
-  if (dualCode) {
-    const rivalryDual = siFormRivalryFinder(hubRes, dualCode, rankingDual, lastDate);
-    if (rivalryDual && (!rivalry
-      || (rivalryDual.directMeets || 0) > (rivalry.directMeets || 0)
-      || ((rivalryDual.directMeets || 0) === (rivalry.directMeets || 0) && rivalryDual.ptsGap < rivalry.ptsGap))) {
-      rivalry = rivalryDual;
-    }
-  }
+  const moversMain = _hdMovers(hubResMain, catCode, lastDate);
+  const moversDual = dualCode ? _hdMovers(hubResDual, dualCode, lastDate) : { up: [], dn: [] };
+
+  // Rivalità della settimana (funzione esistente, invariata) — una per
+  // ciascun anno negli Esordienti, invece di sceglierne solo una.
+  const rivalryMain = siFormRivalryFinder(hubResMain, catCode, rankingMain, lastDate);
+  const rivalryDual = dualCode ? siFormRivalryFinder(hubResDual, dualCode, rankingDual, lastDate) : null;
 
   // ── Ultimi risultati (5, SOLO categoria/genere selezionati) ──────────
   const ultimiRisultati = [];
@@ -7495,9 +7490,14 @@ async function _hdRenderReal(myRenderId) {
   const photoIds = new Set();
   top5.forEach(r => photoIds.add(r.atleta_id));
   if (top5Dual) top5Dual.forEach(r => photoIds.add(r.atleta_id));
-  movers.up.forEach(m => photoIds.add(m.atleta_id));
-  movers.dn.forEach(m => photoIds.add(m.atleta_id));
-  if (rivalry) { photoIds.add(rivalry.aId); photoIds.add(rivalry.bId); }
+  if (fireMain) photoIds.add(fireMain.atleta_id);
+  if (fireDual) photoIds.add(fireDual.atleta_id);
+  moversMain.up.forEach(m => photoIds.add(m.atleta_id));
+  moversMain.dn.forEach(m => photoIds.add(m.atleta_id));
+  moversDual.up.forEach(m => photoIds.add(m.atleta_id));
+  moversDual.dn.forEach(m => photoIds.add(m.atleta_id));
+  if (rivalryMain) { photoIds.add(rivalryMain.aId); photoIds.add(rivalryMain.bId); }
+  if (rivalryDual) { photoIds.add(rivalryDual.aId); photoIds.add(rivalryDual.bId); }
   ultimiRisultati.forEach(r => photoIds.add(r.atleta_id));
   const photoMap = {};
   await Promise.all([...photoIds].filter(Boolean).map(async id => {
@@ -7505,26 +7505,29 @@ async function _hdRenderReal(myRenderId) {
   }));
   if (myRenderId !== window._hdRenderId) return;
 
-  // ── Andamento punti del Rider of the Moment — serie reale (non finta):
-  // punteggio cumulato gara per gara, ultime risultati a punti nella
+  // ── Andamento punti del/dei Rider of the Moment — serie reale (non
+  // finta): punteggio cumulato gara per gara, risultati a punti nella
   // finestra 30gg usata da _hdFormScore. Se l'atleta ha troppi pochi
   // risultati per un grafico leggibile, il widget lo omette (nessun dato
   // inventato per riempire il grafico).
-  let fireSpark = null;
-  if (fireAth) {
-    const cronologici = hubRes
-      .filter(r => r.atleta_id === fireAth.atleta_id && r.data >= _hdCutDate(lastDate, 30) && (r.punti_effettivi || 0) > 0)
+  const _hdSparkFor = (fireAthObj, hubResSubset) => {
+    if (!fireAthObj) return null;
+    const cronologici = hubResSubset
+      .filter(r => r.atleta_id === fireAthObj.atleta_id && r.data >= _hdCutDate(lastDate, 30) && (r.punti_effettivi || 0) > 0)
       .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
-    if (cronologici.length >= 2) {
-      let cum = 0;
-      fireSpark = cronologici.map(r => { cum += (r.punti_effettivi || 0); return { data: r.data, val: cum }; });
-    }
-  }
+    if (cronologici.length < 2) return null;
+    let cum = 0;
+    return cronologici.map(r => { cum += (r.punti_effettivi || 0); return { data: r.data, val: cum }; });
+  };
+  const fireSparkMain = _hdSparkFor(fireMain, hubResMain);
+  const fireSparkDual = _hdSparkFor(fireDual, hubResDual);
 
   setPage(_hdBuildHtml({
     heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
-    gender, catCode, cats, top5, top5Dual, dualCode, fireAth, fireAthPhoto, fireBadges, fireRankEntry, fireSpark,
-    movers, rivalry, ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
+    gender, catCode, dualCode, cats, top5, top5Dual,
+    fireMain, fireBadgesMain, fireSparkMain, fireDual, fireBadgesDual, fireSparkDual,
+    moversMain, moversDual, rivalryMain, rivalryDual,
+    ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
   }));
   _hdWireEvents();
 
@@ -7672,8 +7675,8 @@ function _hdCatBadgeStyle(catLabel) {
 }
 
 function _hdBuildHtml(d) {
-  const catLabelShort = c => (({ ELI_M:'Elite/U23', JUN_M:'Juniores', AL_M:'Allievi', ES2_M:'Esordienti',
-                                  ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti' })[c] || c);
+  const catLabelShort = c => (({ ELI_M:'Elite/U23', JUN_M:'Juniores', AL_M:'Allievi', ES2_M:'Esordienti 2° anno', ES1_M:'Esordienti 1° anno',
+                                  ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti 2° anno', ES1_F:'Esordienti 1° anno' })[c] || c);
   const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
   const heroHtml = `
     <div class="hd-hero" id="hd-hero-bg" style="${d.heroPh ? `background-image:url('${esc(d.heroPh)}')` : ''}">
@@ -7725,7 +7728,7 @@ function _hdBuildHtml(d) {
           <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-rank-row">
             <span class="hd-rank-pos">${i+1}</span>
             ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
-            <span class="hd-rank-name">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-rank-team">${esc(r.team_attuale||r.team||'')}</span></span>
+            <span class="hd-rank-name">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-rank-team">${esc(r.team_nome||r.team_attuale||r.team||'')}</span></span>
             <span class="hd-rank-pts">${r.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
           </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun dato</div>';
   // Esordienti: 1° e 2° anno mostrati come due mini-classifiche distinte
@@ -7741,91 +7744,117 @@ function _hdBuildHtml(d) {
       <a href="#/classifica/${encodeURIComponent(d.catCode)}" class="hd-card-cta">Vedi classifica completa →</a>
     </div>`;
 
+  // Esordienti (d.dualCode presente): un blocco per il 2° anno (catCode) e
+  // uno per il 1° anno (dualCode), invece di un unico calcolo sul gruppo
+  // combinato — richiesto esplicitamente per Rider of the Moment, Movers e
+  // Rivalità. Per le altre categorie (dualCode nullo) resta un solo blocco.
+  const _hdSubLbl = txt => d.dualCode ? `<div class="hd-rank-sublbl">${esc(txt)}</div>` : '';
+
+  const _hdFireBlock = (fireAth, badges, spark, catCodeLbl, subLbl) => !fireAth ? '' : `
+    ${_hdSubLbl(subLbl)}
+    <div class="hd-fire2">
+      <div class="hd-fire2-head">
+        ${_hdAvatar(fireAth.atleta_id, fireAth.cognome, fireAth.nome, d.photoMap, 'xl')}
+        <div class="hd-fire2-id">
+          <div class="hd-fire2-name">${esc(fireAth.cognome)} ${esc(fireAth.nome)}</div>
+          <div class="hd-fire2-team">${esc(fireAth.team||'')}</div>
+          ${badges.length ? `<div class="itc-badges">${badges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+      <div class="hd-fire2-eyebrow">${catLabelShort(catCodeLbl)} · Form Score ${fireAth.formScore}/100</div>
+      <div class="hd-fire2-stats">
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">${fireAth.streak}</span><span class="hd-fire2-lbl">risultati consecutivi</span></div>
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">${fireAth.wins14}</span><span class="hd-fire2-lbl">vittorie ultime 2 sett.</span></div>
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">+${fireAth.pts14}</span><span class="hd-fire2-lbl">punti ultime 2 sett.</span></div>
+      </div>
+      ${spark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(spark)}</div>` : ''}
+      <a href="#/atleta/${encodeURIComponent(fireAth.atleta_id)}" class="hd-fire2-cta">Vedi profilo →</a>
+    </div>`;
+  const fireBlocks = [
+    _hdFireBlock(d.fireMain, d.fireBadgesMain, d.fireSparkMain, d.catCode, '2° ANNO'),
+    d.dualCode ? _hdFireBlock(d.fireDual, d.fireBadgesDual, d.fireSparkDual, d.dualCode, '1° ANNO') : '',
+  ].join('');
   const fireHtml = `
     <div class="card hd-card hd-fire-card">
       <div class="hd-card-title">⚡ RIDER OF THE MOMENT</div>
-      ${d.fireAth ? `
-        <div class="hd-fire2">
-          <div class="hd-fire2-head">
-            ${_hdAvatar(d.fireAth.atleta_id, d.fireAth.cognome, d.fireAth.nome, { [d.fireAth.atleta_id]: d.fireAthPhoto }, 'xl')}
-            <div class="hd-fire2-id">
-              <div class="hd-fire2-name">${esc(d.fireAth.cognome)} ${esc(d.fireAth.nome)}</div>
-              <div class="hd-fire2-team">${esc(d.fireAth.team||'')}</div>
-              ${d.fireBadges.length ? `<div class="itc-badges">${d.fireBadges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
-            </div>
-          </div>
-          <div class="hd-fire2-eyebrow">${catLabelShort(d.catCode)} · Form Score ${d.fireAth.formScore}/100</div>
-          <div class="hd-fire2-stats">
-            <div class="hd-fire2-stat"><span class="hd-fire2-val">${d.fireAth.streak}</span><span class="hd-fire2-lbl">risultati consecutivi</span></div>
-            <div class="hd-fire2-stat"><span class="hd-fire2-val">${d.fireAth.wins14}</span><span class="hd-fire2-lbl">vittorie ultime 2 sett.</span></div>
-            <div class="hd-fire2-stat"><span class="hd-fire2-val">+${d.fireAth.pts14}</span><span class="hd-fire2-lbl">punti ultime 2 sett.</span></div>
-          </div>
-          ${d.fireSpark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(d.fireSpark)}</div>` : ''}
-          <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="hd-fire2-cta">Vedi profilo →</a>
-        </div>` : `<div class="hd-empty">Nessuna attività recente in questa categoria</div>`}
+      ${fireBlocks || '<div class="hd-empty">Nessuna attività recente in questa categoria</div>'}
     </div>`;
 
+  const _hdMoversBlock = (movers, subLbl) => `
+    ${_hdSubLbl(subLbl)}
+    <div class="hd-movers-group">
+      <div class="hd-movers-lbl hd-movers-lbl--up">MAGGIORI SALITE</div>
+      ${movers.up.length ? movers.up.map((m, i) => `
+        <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
+          <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
+          <span class="hd-mover-rank">${i+1}</span>
+          ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
+          <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
+          <span class="hd-mover-gain hd-mover-gain--up">${m.pos+m.gain}° → ${m.pos}°</span>
+        </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+    </div>
+    <div class="hd-movers-group">
+      <div class="hd-movers-lbl hd-movers-lbl--dn">MAGGIORI DISCESE</div>
+      ${movers.dn.length ? movers.dn.map((m, i) => `
+        <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
+          <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
+          <span class="hd-mover-rank">${i+1}</span>
+          ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
+          <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
+          <span class="hd-mover-gain hd-mover-gain--dn">${m.pos+m.gain}° → ${m.pos}°</span>
+        </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+    </div>`;
   const moversHtml = `
     <div class="card hd-card">
       <div class="hd-card-title">MOVERS DELLA SETTIMANA</div>
-      <div class="hd-movers-group">
-        <div class="hd-movers-lbl hd-movers-lbl--up">MAGGIORI SALITE</div>
-        ${d.movers.up.length ? d.movers.up.map((m, i) => `
-          <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
-            <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
-            <span class="hd-mover-rank">${i+1}</span>
-            ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
-            <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
-            <span class="hd-mover-gain hd-mover-gain--up">+${m.gain}</span>
-          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
-      </div>
-      <div class="hd-movers-group">
-        <div class="hd-movers-lbl hd-movers-lbl--dn">MAGGIORI DISCESE</div>
-        ${d.movers.dn.length ? d.movers.dn.map((m, i) => `
-          <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
-            <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
-            <span class="hd-mover-rank">${i+1}</span>
-            ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
-            <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
-            <span class="hd-mover-gain hd-mover-gain--dn">${m.gain}</span>
-          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
-      </div>
+      ${_hdMoversBlock(d.moversMain, '2° ANNO')}
+      ${d.dualCode ? _hdMoversBlock(d.moversDual, '1° ANNO') : ''}
       <div class="hd-movers-note">Variazione rispetto a 7 giorni fa, calcolata dallo storico reale della classifica.</div>
     </div>`;
 
-  const rivDraws = d.rivalry ? Math.max(0, d.rivalry.directMeets - d.rivalry.aWinsVs - d.rivalry.bWinsVs) : 0;
-  const rivTotal = d.rivalry ? Math.max(1, d.rivalry.aWinsVs + rivDraws + d.rivalry.bWinsVs) : 1;
-  const rivalryHtml = d.rivalry ? `
+  const _hdRivalryBlock = (rivalry, subLbl, catCodeForLink) => {
+    if (!rivalry) return '';
+    const rivDraws = Math.max(0, rivalry.directMeets - rivalry.aWinsVs - rivalry.bWinsVs);
+    const rivTotal = Math.max(1, rivalry.aWinsVs + rivDraws + rivalry.bWinsVs);
+    return `
+    ${_hdSubLbl(subLbl)}
+    <div class="hd-rivalry-body">
+      <a href="#/atleta/${encodeURIComponent(rivalry.aId)}" class="hd-rivalry-side">
+        ${_hdAvatar(rivalry.aId, rivalry.aCog, rivalry.aNom, d.photoMap, 'lg')}
+        <div class="hd-rivalry-name">${esc(rivalry.aCog)}<br>${esc(rivalry.aNom)}</div>
+        <div class="hd-rivalry-team">${esc(rivalry.aTeam)}</div>
+      </a>
+      <div class="hd-rivalry-vs">VS</div>
+      <a href="#/atleta/${encodeURIComponent(rivalry.bId)}" class="hd-rivalry-side">
+        ${_hdAvatar(rivalry.bId, rivalry.bCog, rivalry.bNom, d.photoMap, 'lg')}
+        <div class="hd-rivalry-name">${esc(rivalry.bCog)}<br>${esc(rivalry.bNom)}</div>
+        <div class="hd-rivalry-team">${esc(rivalry.bTeam)}</div>
+      </a>
+    </div>
+    <div class="hd-rivalry-meta">
+      ${rivalry.directMeets
+        ? `<div class="hd-rivalry-meta-big">${rivalry.directMeets} VOLT${rivalry.directMeets===1?'A':'E'}</div><div class="hd-rivalry-meta-sub">si sono affrontati nel ${new Date().getFullYear()}</div>`
+        : `<div class="hd-rivalry-meta-sub">−${rivalry.ptsGap} pt di distacco in classifica</div>`}
+    </div>
+    ${rivalry.directMeets ? `
+    <div class="hd-rivalry-bar">
+      <span class="hd-rivalry-bar-a" style="width:${(rivalry.aWinsVs/rivTotal*100).toFixed(1)}%"></span>
+      <span class="hd-rivalry-bar-d" style="width:${(rivDraws/rivTotal*100).toFixed(1)}%"></span>
+      <span class="hd-rivalry-bar-b" style="width:${(rivalry.bWinsVs/rivTotal*100).toFixed(1)}%"></span>
+    </div>
+    <div class="hd-rivalry-bar-lbl">
+      <span>${rivalry.aWinsVs} vittorie</span><span>${rivDraws} altri piazzamenti</span><span>${rivalry.bWinsVs} vittorie</span>
+    </div>` : ''}
+    <a class="hd-card-cta hd-card-cta--btn" href="#/comparatore?a=${encodeURIComponent(rivalry.aId)}&b=${encodeURIComponent(rivalry.bId)}&g=${encodeURIComponent(d.gender)}&cat=${encodeURIComponent(catCodeForLink)}&mode=atleta">Vedi confronto →</a>`;
+  };
+  const rivalryBlocks = [
+    _hdRivalryBlock(d.rivalryMain, '2° ANNO', d.catCode),
+    d.dualCode ? _hdRivalryBlock(d.rivalryDual, '1° ANNO', d.dualCode) : '',
+  ].join('');
+  const rivalryHtml = rivalryBlocks ? `
     <div class="card hd-card hd-rivalry-card">
       <div class="hd-card-title">⚔ RIVALITÀ DELLA SETTIMANA</div>
-      <div class="hd-rivalry-body">
-        <a href="#/atleta/${encodeURIComponent(d.rivalry.aId)}" class="hd-rivalry-side">
-          ${_hdAvatar(d.rivalry.aId, d.rivalry.aCog, d.rivalry.aNom, d.photoMap, 'lg')}
-          <div class="hd-rivalry-name">${esc(d.rivalry.aCog)}<br>${esc(d.rivalry.aNom)}</div>
-          <div class="hd-rivalry-team">${esc(d.rivalry.aTeam)}</div>
-        </a>
-        <div class="hd-rivalry-vs">VS</div>
-        <a href="#/atleta/${encodeURIComponent(d.rivalry.bId)}" class="hd-rivalry-side">
-          ${_hdAvatar(d.rivalry.bId, d.rivalry.bCog, d.rivalry.bNom, d.photoMap, 'lg')}
-          <div class="hd-rivalry-name">${esc(d.rivalry.bCog)}<br>${esc(d.rivalry.bNom)}</div>
-          <div class="hd-rivalry-team">${esc(d.rivalry.bTeam)}</div>
-        </a>
-      </div>
-      <div class="hd-rivalry-meta">
-        ${d.rivalry.directMeets
-          ? `<div class="hd-rivalry-meta-big">${d.rivalry.directMeets} VOLT${d.rivalry.directMeets===1?'A':'E'}</div><div class="hd-rivalry-meta-sub">si sono affrontati nel ${new Date().getFullYear()}</div>`
-          : `<div class="hd-rivalry-meta-sub">−${d.rivalry.ptsGap} pt di distacco in classifica</div>`}
-      </div>
-      ${d.rivalry.directMeets ? `
-      <div class="hd-rivalry-bar">
-        <span class="hd-rivalry-bar-a" style="width:${(d.rivalry.aWinsVs/rivTotal*100).toFixed(1)}%"></span>
-        <span class="hd-rivalry-bar-d" style="width:${(rivDraws/rivTotal*100).toFixed(1)}%"></span>
-        <span class="hd-rivalry-bar-b" style="width:${(d.rivalry.bWinsVs/rivTotal*100).toFixed(1)}%"></span>
-      </div>
-      <div class="hd-rivalry-bar-lbl">
-        <span>${d.rivalry.aWinsVs} vittorie</span><span>${rivDraws} altri piazzamenti</span><span>${d.rivalry.bWinsVs} vittorie</span>
-      </div>` : ''}
-      <button class="hd-card-cta hd-card-cta--btn" onclick="window.location.hash='#/comparatore'">Vedi confronto →</button>
+      ${rivalryBlocks}
     </div>` : '';
 
   const ultimiHtml = `
@@ -23354,7 +23383,14 @@ async function renderComparatore() {
   };
 
   // ── URL param deep-link (condivisione sfida) ──────────────────
-  const hashParams = new URLSearchParams(location.hash.replace(/^[^?]*\??/, ''));
+  // route() converte SEMPRE l'hash in URL "pulito" (history.replaceState)
+  // prima che una pagina abbia la possibilità di leggerlo — la querystring
+  // finisce quindi in location.search, non più in location.hash (bug
+  // preesistente: questa lettura leggeva solo location.hash, che a questo
+  // punto è già vuoto, quindi il link "Vedi confronto" non precompilava
+  // mai nulla). Si legge da location.search, con l'hash come fallback per
+  // eventuali link vecchi ancora nel formato #/comparatore?a=...).
+  const hashParams = new URLSearchParams(location.search || location.hash.replace(/^[^?]*\??/, ''));
   if (hashParams.get('a') && !compA) {
     compA = hashParams.get('a');
     compB = hashParams.get('b') || '';
