@@ -13783,10 +13783,21 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
       const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
       const nativeYears = new Set(editions.map(e => String(e.year)));
       const byEdition = {};
+      // Più termini di ricerca (nome combinato + eventuali pezzi spezzati da
+      // _raceSubNames) possono trovare la STESSA riga — es. un anno in cui
+      // "Trofeo Vertova" e "Memorial Merelli" erano ancora un'unica gara con
+      // nome combinato, che matcha entrambi i termini. Senza deduplicare per
+      // atleta+posizione, quella riga veniva pushata due volte e il podio
+      // mostrava lo stesso vincitore ripetuto al posto del 2°/3° reali —
+      // segnalato dall'utente ("vedo due anni identici").
+      const seenRow = new Set();
       for (const resp of responses) {
         for (const r of (resp?.editions || [])) {
           if (nativeYears.has(String(r.stagione))) continue; // già coperta dai dati nativi sopra
           const ek = `${r.gara_ciclismo_url}|${r.stagione}`;
+          const rowKey = `${ek}|${r.ciclismo_id || r.nome_completo}|${r.posizione}`;
+          if (seenRow.has(rowKey)) continue;
+          seenRow.add(rowKey);
           (byEdition[ek] = byEdition[ek] || []).push(r);
         }
       }
