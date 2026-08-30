@@ -598,6 +598,27 @@ async function getSavedSlugs(sb) {
   return map;
 }
 
+// Atleti con ALMENO una riga di storicità squadra già salvata — usato da
+// --skip-complete per NON considerare "completo" chi ha già foto+risultati
+// ma non ha mai avuto teamHistory estratta con successo (es. per un bug di
+// estrazione poi risolto, o una pagina caricata prima che PCS mostrasse la
+// squadra): senza questo, quegli atleti restavano scartati per sempre dai
+// giri settimanali successivi (bug reale osservato: Bettiol e altri ~3500
+// atleti con foto+risultati regolari ma 0 righe in pcs_team_history).
+async function getAthletesWithTeamHistory(sb) {
+  const ids = new Set();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('pcs_team_history')
+      .select('atleta_id').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) ids.add(r.atleta_id);
+    if (data.length < PAGE) break;
+  }
+  return ids;
+}
+
 async function getAthletesWithResults(sb, season) {
   // Paginato come getPhantomAthletes: pcs_results ha già oltre 27000 righe
   // (molti risultati per atleta), un limit(5000) fisso ne perdeva la
@@ -775,16 +796,43 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     }
     if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma né nel roster`); process.exit(1); }
   } else if (IDS_FILE) {
-    // Lista mirata (es. profili trovati a mano e confermati via pcs-link-found.py)
+    // Lista mirata (es. profili trovati a mano e confermati via pcs-link-found.py,
+    // oppure atleti da riprocessare per un campo mancante come team history)
     const entries = JSON.parse(fs.readFileSync(IDS_FILE, 'utf8'));
     idsFileSlugs = new Map();
     const phantoms = await getPhantomAthletes(sb, SEASON, fciAll);
+    // Fallback su manual-athletes (source ciclismo_info): molti professionisti
+    // (es. Bettiol) non sono nei ranking FCI dell'anno corrente né tra i
+    // "fantasma" di quest'anno — senza questo fallback (già usato nel giro
+    // normale, vedi "addedCiclismo" sopra) --ids-file li scartava in silenzio
+    // anche quando avevano già uno slug PCS noto pronto da riusare.
+    let manualAthletes = null;
+    async function getManualAthlete(id) {
+      if (manualAthletes === null) {
+        manualAthletes = new Map();
+        try {
+          const r = await fetch('https://italiacrit.onrender.com/api/data/manual-athletes');
+          if (r.ok) {
+            const data = await r.json();
+            for (const bucket of Object.values(data || {})) {
+              for (const a of (bucket.atleti || [])) {
+                if (a.atleta_id) manualAthletes.set(a.atleta_id, { atleta_id: a.atleta_id, cognome: a.cognome || a.atleta_id, nome: a.nome || '' });
+              }
+            }
+          }
+        } catch {}
+      }
+      return manualAthletes.get(id) || null;
+    }
+    let skipped = 0;
     for (const e of entries) {
-      const a = fciAll.get(e.atleta_id) || phantoms.get(e.atleta_id);
-      if (!a) { console.log(`[ids-file] ${e.atleta_id} non trovato né in FCI né tra i fantasma, salto`); continue; }
+      let a = fciAll.get(e.atleta_id) || phantoms.get(e.atleta_id);
+      if (!a) a = await getManualAthlete(e.atleta_id);
+      if (!a) { skipped++; continue; }
       athMap.set(e.atleta_id, a);
       if (e.slug) idsFileSlugs.set(e.atleta_id, e.slug);
     }
+    if (skipped) console.log(`[ids-file] ${skipped} non trovati né in FCI né tra i fantasma né in manual-athletes, saltati`);
     console.log(`${athMap.size} atleti da --ids-file=${IDS_FILE}`);
   } else {
     for (const [id, a] of fciAll) athMap.set(id, a);
@@ -872,6 +920,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   const SKIP_COMPLETE = args.includes('--skip-complete');
   const withPhoto   = FORCE ? new Set() : await getExistingPhotoIds(sb);
   const withResults = (FORCE || !SKIP_COMPLETE) ? new Set() : await getAthletesWithResults(sb, SEASON);
+  const withTeam    = (FORCE || !SKIP_COMPLETE) ? new Set() : await getAthletesWithTeamHistory(sb);
   const savedSlugs   = await getSavedSlugs(sb);
   for (const [id, slug] of rosterPcsSlugs) if (!savedSlugs.has(id)) savedSlugs.set(id, slug);
   // Copre anche --atleta-id=X quando l'unico modo per trovarlo è stato il
@@ -881,7 +930,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   let toProcess = idsFileSlugs
     ? athletes // --ids-file: sono conferme manuali, si riprocessano sempre
     : SKIP_COMPLETE
-      ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id)))
+      ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id) && withTeam.has(a.atleta_id)))
       : athletes;
   if (LIMIT) toProcess = toProcess.slice(0, LIMIT);
 
