@@ -22808,6 +22808,47 @@ window.compAcFilter = (side, query) => {
     if (match) vis++;
   });
   list.style.display = vis > 0 ? 'block' : 'none';
+
+  // Atleti "storici" (ciclismo.info, mai nel roster nativo athletes.json) —
+  // segnalato esplicitamente: "il comparatore non prende i nomi dei
+  // corridori storici". Stesso endpoint già usato dalla ricerca globale
+  // (/api/search-storico), aggiunto qui in coda in modo asincrono così
+  // diventano selezionabili anche nel comparatore. NB: il confronto userà
+  // comunque solo i risultati storici disponibili per quell'atleta (vedi
+  // renderComparatore) — dati completi al 100% come i nativi non sono
+  // ancora garantiti per ogni fonte storica (es. anni coperti solo da PCS).
+  if (compMode === 'atleta' && q.length >= 2) {
+    const reqId = (window._compAcStoricoReq = (window._compAcStoricoReq || 0) + 1);
+    fetch(`${API_BASE}/search-storico?q=${encodeURIComponent(q)}`).then(r => r.json()).then(d => {
+      if (reqId !== window._compAcStoricoReq) return; // l'utente ha già digitato altro
+      const list2 = document.getElementById(`comp-ac-list-${side}`);
+      if (!list2) return;
+      const existingIds = new Set([...list2.querySelectorAll('.comp-ac-item')].map(el => el.dataset.id));
+      let added = 0;
+      for (const a of (d.results || [])) {
+        if (existingIds.has(a.atleta_id)) continue;
+        existingIds.add(a.atleta_id);
+        const [cognome, ...restoNome] = (a.nome_completo || '').trim().split(/\s+/);
+        const nome = restoNome.join(' ');
+        const label = `${cognome||''} ${nome||''}`.trim();
+        const sub = [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean).join(' · ');
+        const el = document.createElement('div');
+        el.className = 'comp-ac-item';
+        el.dataset.id = a.atleta_id;
+        el.dataset.label = label;
+        el.setAttribute('onclick', `window.compAcPick('${side}',this)`);
+        el.innerHTML = `<span class="comp-ac-name">${esc(label)}</span>${sub ? `<span class="comp-ac-sub">${esc(sub)}</span>` : ''}`;
+        list2.appendChild(el);
+        added++;
+        // Nome/team non nel roster nativo (athletes.json) — servono per
+        // mostrare comunque un messaggio con il nome invece di un generico
+        // "dati non disponibili" quando questo atleta viene selezionato.
+        window._compHistoricalNames = window._compHistoricalNames || {};
+        window._compHistoricalNames[a.atleta_id] = { cognome: cognome || '', nome: nome || '', team: a.team || '' };
+      }
+      if (added) list2.style.display = 'block';
+    }).catch(() => {});
+  }
 };
 
 window.compAcOpen = (side) => {
@@ -23206,7 +23247,20 @@ async function renderComparatore() {
       </div>`;
 
     const aD=athletes[compA], bD=athletes[compB];
-    if (!aD||!bD) return '<div class="comp-empty">Dati non disponibili</div>';
+    if (!aD||!bD) {
+      // Atleta "storico" (ciclismo.info) selezionabile dalla ricerca ma non
+      // ancora nel roster nativo usato per il resto del confronto — i dati
+      // storici hanno un formato diverso (niente punti per singola gara,
+      // niente genere) e collegarli qui rischierebbe numeri sbagliati:
+      // meglio dirlo chiaramente che inventare un confronto. Vedi anche
+      // window._compHistoricalNames per il nome da mostrare.
+      const missing = !aD ? compA : compB;
+      const hist = window._compHistoricalNames?.[missing];
+      const label = hist ? `${hist.cognome} ${hist.nome}`.trim() : missing;
+      return `<div class="comp-empty">
+        <strong>${esc(label)}</strong> è un atleta storico (ciclismo.info): la ricerca lo trova, ma il confronto statistico completo con questi dati non è ancora supportato — formato diverso da quello degli atleti della stagione in corso.
+      </div>`;
+    }
     const aRes=resultsRaw.filter(r=>r.atleta_id===compA&&catFilter(r));
     const bRes=resultsRaw.filter(r=>r.atleta_id===compB&&catFilter(r));
     const sA=calcStats(aRes), sB=calcStats(bRes);
@@ -23666,10 +23720,19 @@ function renderNotFound() {
 }
 
 // ── SEARCH GLOBALE ────────────────────────────────────────────
+// Chiude i dropdown E svuota le barre di ricerca — richiesto esplicitamente:
+// dopo aver scelto un risultato (atleta/gara), il testo restava lì anche
+// quando si apriva subito dopo un altro passaggio (es. selezione edizione
+// di una gara), risultando confuso ("deve andare via dalla barra appena
+// apre la selezione").
 window.closeAllSearchDropdowns = () => {
   ['search-results-dropdown','drawer-search-dropdown','m-search-dropdown'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
+  });
+  ['nav-search','drawer-search','m-search'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
   });
 };
 
@@ -23684,6 +23747,13 @@ function bindSearch(inputId, dropdownId) {
   });
   input.addEventListener('blur', () => {
     setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+  });
+  // Invio → apre il risultato più rilevante (il primo della lista, ora
+  // ordinata per vicinanza alla query) invece di non fare nulla.
+  input.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const first = dropdown.querySelector('.search-result-item[onclick]');
+    if (first) { e.preventDefault(); first.click(); }
   });
 }
 
@@ -23743,14 +23813,32 @@ function doSearch(q, dropdown) {
     });
   }
 
-  // Cerca atleti (fuzzy)
+  // Cerca atleti (fuzzy) — RILEVANZA: prima raccoglie tutti i match, poi li
+  // ordina per vicinanza alla query invece di prendere i primi 6 nell'ordine
+  // (casuale) dell'oggetto athletes. Segnalato esplicitamente: scrivendo un
+  // cognome a metà o per intero, il risultato più vicino deve comparire
+  // per primo. Punteggio più basso = più rilevante.
+  const _athScore = (cognome, nome) => {
+    const cog = (cognome||'').toLowerCase(), nomeL = (nome||'').toLowerCase();
+    const full = `${cog} ${nomeL}`;
+    if (cog === ql) return 0;                 // cognome esatto
+    if (full === ql) return 1;                 // nome completo esatto
+    if (cog.startsWith(ql)) return 2;           // cognome inizia con la query
+    if (nomeL.startsWith(ql)) return 3;         // nome inizia con la query
+    if (full.startsWith(ql)) return 4;
+    if (cog.includes(ql)) return 5;             // query dentro il cognome
+    if (full.includes(ql)) return 6;            // query dentro nome+cognome
+    return 9;                                   // solo fuzzy (troncamento ultima lettera)
+  };
+  const athMatches = [];
   for (const [id, a] of Object.entries(athletes)) {
     const name = `${a.cognome||''} ${a.nome||''}`.toLowerCase();
     if (fuzzyIncludes(name, ql)) {
-      results.push({ type: 'atleta', id, display: `${a.cognome} ${a.nome}`, sub: a.team_attuale||'' });
+      athMatches.push({ type: 'atleta', id, display: `${a.cognome} ${a.nome}`, sub: a.team_attuale||'', _score: _athScore(a.cognome, a.nome) });
     }
-    if (results.length >= 6) break;
   }
+  athMatches.sort((a, b) => a._score - b._score || a.display.localeCompare(b.display));
+  results.push(...athMatches.slice(0, 6));
 
   // Cerca team
   for (const [id, t] of Object.entries(teams)) {
@@ -24152,6 +24240,15 @@ function initMobileMenu() {
       drawer.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
     });
+  });
+
+  // Chiudi il drawer cliccando fuori (richiesto esplicitamente) — ignora i
+  // click sull'hamburger stesso, che ha già il suo toggle sopra.
+  document.addEventListener('click', e => {
+    if (!drawer.classList.contains('open')) return;
+    if (drawer.contains(e.target) || hamburger.contains(e.target)) return;
+    drawer.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
   });
 }
 
