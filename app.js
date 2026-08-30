@@ -5225,7 +5225,11 @@ function updateNavContextChip() {
     chip.id = 'ctx-chip';
     var navbar = document.getElementById('navbar');
     var badge  = document.getElementById('badge-live');
-    if (navbar && badge) navbar.insertBefore(chip, badge);
+    // badge-live ora vive dentro #navbar-row1 (navbar a due righe), non più
+    // come figlio diretto di #navbar: insertBefore va chiamato sul VERO
+    // genitore di badge, non su #navbar (altrimenti "not a child of this
+    // node" — badge non è più figlio diretto di #navbar).
+    if (badge && badge.parentNode) badge.parentNode.insertBefore(chip, badge);
     else if (navbar) navbar.appendChild(chip);
   }
   if (activeHub) {
@@ -7347,6 +7351,26 @@ async function _hdRenderReal(myRenderId) {
   const hubRes = resultsRaw.filter(r => r.genere === gender && catCodes.includes(getRankingFileCode(r)));
   const lastDate = hubRes.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '') || resultsRaw.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '');
 
+  // ── Foto reali (caricate sulle gare) per l'hero — STESSO meccanismo già
+  // usato in renderHubBars(): fetch, filtro per categoria selezionata,
+  // shuffle, crossfade a rotazione. "Deve essere ancora così" (richiesto
+  // esplicitamente) — non è un gradiente/placeholder, sono le foto vere.
+  let hdAllPhotos = [];
+  try {
+    const [d1, d2] = await Promise.all([
+      fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({photos:[]})),
+      fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({photos:[]})),
+    ]);
+    const rawP = [];
+    (d1.photos||[]).forEach(p => { if (p.filename) rawP.push({ url:`${PHOTOS_BASE}/photos/${p.filename}`, gara_id:p.gara_id||'' }); });
+    (d2.photos||[]).forEach(p => { if (p.url) rawP.push({ url:p.url, gara_id:p.gara_id||'' }); });
+    const catP = rawP.filter(p => catCodes.some(c => p.gara_id.includes(c)));
+    hdAllPhotos = catP.length >= 3 ? catP : rawP;
+    for (let i = hdAllPhotos.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [hdAllPhotos[i],hdAllPhotos[j]]=[hdAllPhotos[j],hdAllPhotos[i]]; }
+  } catch {}
+  if (myRenderId !== window._hdRenderId) return;
+  const heroPh = hdAllPhotos[0]?.url || null;
+
   // /api/stats/overview aggrega ~296k righe storiche: la prima volta (cache
   // server scaduta) può richiedere fino a ~100s, e sotto carico dei job
   // periodici del server può anche fallire (statement timeout) — NON va
@@ -7500,9 +7524,31 @@ async function _hdRenderReal(myRenderId) {
   setPage(_hdBuildHtml({
     heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
     gender, catCode, cats, top5, top5Dual, dualCode, fireAth, fireAthPhoto, fireBadges, fireRankEntry, fireSpark,
-    movers, rivalry, ultimiRisultati, prossimeGare, stats, photoMap,
+    movers, rivalry, ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
   }));
   _hdWireEvents();
+
+  // ── Hero slideshow — stesso identico meccanismo di renderHubBars():
+  // crossfade tra le foto reali della categoria selezionata ogni 6s.
+  // L'intervallo si ferma da solo al prossimo hashchange (cambio pagina)
+  // o al prossimo render di questa stessa dashboard (cambio filtro).
+  if (window._hdHeroTimer) { clearInterval(window._hdHeroTimer); window._hdHeroTimer = null; }
+  if (hdAllPhotos.length > 1) {
+    const heroEl = document.getElementById('hd-hero-bg');
+    const bg2    = heroEl?.querySelector('.hd-hero-bg2');
+    if (heroEl && bg2) {
+      let idx = 1;
+      const slide = () => {
+        if (!document.contains(heroEl) || myRenderId !== window._hdRenderId) { clearInterval(window._hdHeroTimer); return; }
+        const next = hdAllPhotos[idx % hdAllPhotos.length].url;
+        bg2.style.backgroundImage = `url('${next}')`;
+        bg2.classList.add('active');
+        setTimeout(() => { heroEl.style.backgroundImage = `url('${next}')`; bg2.classList.remove('active'); idx++; }, 1400);
+      };
+      window._hdHeroTimer = setInterval(slide, 6000);
+      window.addEventListener('hashchange', () => clearInterval(window._hdHeroTimer), { once: true });
+    }
+  }
 
   // Fetch non bloccante di /api/stats/overview, avviato ORA che il DOM
   // reale esiste già (vedi commento più sopra) — se non era già in cache,
@@ -7579,9 +7625,10 @@ function _hdArchiveCards(stats) {
 }
 function _hdArchiveHtml(stats) {
   return `
-    <div class="hd-section">
-      <div class="hd-section-title">DALL'ARCHIVIO</div>
+    <div class="card hd-card hd-wide">
+      <div class="hd-card-title">DALL'ARCHIVIO</div>
       <div class="hd-arch-grid" id="hd-archive">${_hdArchiveCards(stats)}</div>
+      <a href="#/albo" class="hd-card-cta">Esplora l'albo d'oro →</a>
     </div>`;
 }
 
@@ -7629,7 +7676,9 @@ function _hdBuildHtml(d) {
                                   ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti' })[c] || c);
   const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
   const heroHtml = `
-    <div class="hd-hero">
+    <div class="hd-hero" id="hd-hero-bg" style="${d.heroPh ? `background-image:url('${esc(d.heroPh)}')` : ''}">
+      <div class="hd-hero-bg2"></div>
+      <div class="hd-hero-overlay"></div>
       <div class="hd-hero-inner">
         <div class="hd-hero-text">
           <div class="hd-hero-eyebrow">ITALIA CYCLING STATS</div>
@@ -7700,24 +7749,23 @@ function _hdBuildHtml(d) {
     <div class="card hd-card hd-fire-card">
       <div class="hd-card-title">⚡ RIDER OF THE MOMENT</div>
       ${d.fireAth ? `
-        <div class="itc-fire hd-fire" style="--hub-color:#2563EB">
-          ${d.fireAthPhoto
-            ? `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${esc(d.fireAthPhoto)}')"></div>`
-            : `<div class="itc-fire-bg itc-fire-bg--neutral"><div class="itc-fire-watermark">${esc((d.fireAth.cognome||'').toUpperCase())}</div></div>`}
-          <div class="itc-fire-overlay"></div>
-          <div class="itc-fire-content">
-            <div class="itc-fire-eyebrow">${catLabelShort(d.catCode)} · Form Score ${d.fireAth.formScore}/100</div>
-            <h2 class="itc-fire-name">${esc(d.fireAth.cognome)}<br><span class="itc-fire-firstname">${esc(d.fireAth.nome)}</span></h2>
-            <div class="itc-fire-team">${esc(d.fireAth.team||'')}</div>
-            ${d.fireBadges.length ? `<div class="itc-badges">${d.fireBadges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
-            <div class="itc-fire-stats">
-              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.streak}</span><span class="itc-fire-lbl">risultati consecutivi</span></div>
-              <div class="itc-fire-stat"><span class="itc-fire-val">${d.fireAth.wins14}</span><span class="itc-fire-lbl">vittorie ultime 2 sett.</span></div>
-              <div class="itc-fire-stat"><span class="itc-fire-val">+${d.fireAth.pts14}</span><span class="itc-fire-lbl">punti ultime 2 sett.</span></div>
+        <div class="hd-fire2">
+          <div class="hd-fire2-head">
+            ${_hdAvatar(d.fireAth.atleta_id, d.fireAth.cognome, d.fireAth.nome, { [d.fireAth.atleta_id]: d.fireAthPhoto }, 'xl')}
+            <div class="hd-fire2-id">
+              <div class="hd-fire2-name">${esc(d.fireAth.cognome)} ${esc(d.fireAth.nome)}</div>
+              <div class="hd-fire2-team">${esc(d.fireAth.team||'')}</div>
+              ${d.fireBadges.length ? `<div class="itc-badges">${d.fireBadges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${esc(b.label)}</span>`).join('')}</div>` : ''}
             </div>
-            ${d.fireSpark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(d.fireSpark)}</div>` : ''}
-            <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="itc-fire-cta-primary">Vedi profilo →</a>
           </div>
+          <div class="hd-fire2-eyebrow">${catLabelShort(d.catCode)} · Form Score ${d.fireAth.formScore}/100</div>
+          <div class="hd-fire2-stats">
+            <div class="hd-fire2-stat"><span class="hd-fire2-val">${d.fireAth.streak}</span><span class="hd-fire2-lbl">risultati consecutivi</span></div>
+            <div class="hd-fire2-stat"><span class="hd-fire2-val">${d.fireAth.wins14}</span><span class="hd-fire2-lbl">vittorie ultime 2 sett.</span></div>
+            <div class="hd-fire2-stat"><span class="hd-fire2-val">+${d.fireAth.pts14}</span><span class="hd-fire2-lbl">punti ultime 2 sett.</span></div>
+          </div>
+          ${d.fireSpark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(d.fireSpark)}</div>` : ''}
+          <a href="#/atleta/${encodeURIComponent(d.fireAth.atleta_id)}" class="hd-fire2-cta">Vedi profilo →</a>
         </div>` : `<div class="hd-empty">Nessuna attività recente in questa categoria</div>`}
     </div>`;
 
@@ -7726,9 +7774,10 @@ function _hdBuildHtml(d) {
       <div class="hd-card-title">MOVERS DELLA SETTIMANA</div>
       <div class="hd-movers-group">
         <div class="hd-movers-lbl hd-movers-lbl--up">MAGGIORI SALITE</div>
-        ${d.movers.up.length ? d.movers.up.map(m => `
+        ${d.movers.up.length ? d.movers.up.map((m, i) => `
           <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
             <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
+            <span class="hd-mover-rank">${i+1}</span>
             ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
             <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
             <span class="hd-mover-gain hd-mover-gain--up">+${m.gain}</span>
@@ -7736,9 +7785,10 @@ function _hdBuildHtml(d) {
       </div>
       <div class="hd-movers-group">
         <div class="hd-movers-lbl hd-movers-lbl--dn">MAGGIORI DISCESE</div>
-        ${d.movers.dn.length ? d.movers.dn.map(m => `
+        ${d.movers.dn.length ? d.movers.dn.map((m, i) => `
           <a href="#/atleta/${encodeURIComponent(m.atleta_id)}" class="hd-mover-row">
             <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
+            <span class="hd-mover-rank">${i+1}</span>
             ${_hdAvatar(m.atleta_id, m.cognome, m.nome, d.photoMap, 'sm')}
             <span class="hd-mover-name">${esc(m.cognome)} ${esc(m.nome)}<span class="hd-rank-team">${esc(m.team||'')}</span></span>
             <span class="hd-mover-gain hd-mover-gain--dn">${m.gain}</span>
@@ -7757,18 +7807,18 @@ function _hdBuildHtml(d) {
           ${_hdAvatar(d.rivalry.aId, d.rivalry.aCog, d.rivalry.aNom, d.photoMap, 'lg')}
           <div class="hd-rivalry-name">${esc(d.rivalry.aCog)}<br>${esc(d.rivalry.aNom)}</div>
           <div class="hd-rivalry-team">${esc(d.rivalry.aTeam)}</div>
-          <div class="hd-rivalry-pts">${d.rivalry.aPts} pt</div>
         </a>
         <div class="hd-rivalry-vs">VS</div>
         <a href="#/atleta/${encodeURIComponent(d.rivalry.bId)}" class="hd-rivalry-side">
           ${_hdAvatar(d.rivalry.bId, d.rivalry.bCog, d.rivalry.bNom, d.photoMap, 'lg')}
           <div class="hd-rivalry-name">${esc(d.rivalry.bCog)}<br>${esc(d.rivalry.bNom)}</div>
           <div class="hd-rivalry-team">${esc(d.rivalry.bTeam)}</div>
-          <div class="hd-rivalry-pts">${d.rivalry.bPts} pt</div>
         </a>
       </div>
       <div class="hd-rivalry-meta">
-        ${d.rivalry.directMeets ? `${d.rivalry.directMeets} scontri diretti negli ultimi 30gg` : `−${d.rivalry.ptsGap} pt di distacco in classifica`}
+        ${d.rivalry.directMeets
+          ? `<div class="hd-rivalry-meta-big">${d.rivalry.directMeets} VOLT${d.rivalry.directMeets===1?'A':'E'}</div><div class="hd-rivalry-meta-sub">si sono affrontati nel ${new Date().getFullYear()}</div>`
+          : `<div class="hd-rivalry-meta-sub">−${d.rivalry.ptsGap} pt di distacco in classifica</div>`}
       </div>
       ${d.rivalry.directMeets ? `
       <div class="hd-rivalry-bar">
@@ -7793,7 +7843,7 @@ function _hdBuildHtml(d) {
             <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}<span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
             ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
             <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-list-team">${esc(r.team||'')}</span></a>
-            <span class="hd-list-pts">${r.punti_effettivi||0}<span class="hd-list-chev">›</span></span>
+            <span class="hd-list-pts">${r.punti_effettivi||0} pt</span>
           </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
       </div>
       <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
@@ -7838,9 +7888,8 @@ function _hdBuildHtml(d) {
       ${liveHtml}
       ${filterBar}
       <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
-      ${rivalryHtml}
-      <div class="hd-grid-2">${ultimiHtml}${prossimeHtml}</div>
-      ${archiveHtml}
+      <div class="hd-grid-2">${rivalryHtml}${ultimiHtml}</div>
+      <div class="hd-grid-2">${prossimeHtml}${archiveHtml}</div>
       ${quickHtml}
     </div>
   </div>`;

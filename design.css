@@ -12213,14 +12213,22 @@ main.page:has(.itc-dash) {
 @keyframes hd-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 @media (max-width: 900px) { .hd-skel-grid { grid-template-columns: 1fr; } }
 
-/* Hero — banner scuro edge-to-edge sotto la navbar, come nel mockup.
-   Niente foto di sfondo: non esiste un asset reale (foto gara) libero da
-   usare qui — vedi nota nel report finale — quindi si usa un gradiente
-   blu/antracite invece di un'immagine finta o placeholder generico. */
-.hd-hero { padding: 36px 24px 32px;
-  background: radial-gradient(120% 220% at 100% 0%, rgba(37,99,235,.35), transparent 60%), linear-gradient(160deg, #0A0E18 0%, #121A2E 55%, #0A0E18 100%);
+/* Hero — banner scuro edge-to-edge sotto la navbar, come nel mockup, con
+   foto reali (caricate sulle gare) che ruotano in base alla categoria
+   selezionata — stesso identico meccanismo già usato in .itc-dash-hero
+   (vedi renderHubBars): fetch /api/race-photos + /api/xpix-photos,
+   filtrate per categoria, crossfade ogni 6s tramite .hd-hero-bg2. Overlay
+   scuro/blu sopra la foto per leggibilità del testo. */
+.hd-hero { position: relative; padding: 36px 24px 32px; overflow: hidden;
+  background: #0A0E18 center / cover no-repeat;
   border-bottom: 1px solid rgba(255,255,255,.06); }
-.hd-hero-inner { max-width: 1760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: space-between; }
+.hd-hero-bg2 { position: absolute; inset: 0; z-index: 0; background: #0A0E18 center / cover no-repeat;
+  opacity: 0; transition: opacity 1.4s ease; pointer-events: none; }
+.hd-hero-bg2.active { opacity: 1; }
+.hd-hero-overlay { position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(120% 220% at 100% 0%, rgba(37,99,235,.45), transparent 60%),
+    linear-gradient(160deg, rgba(10,14,24,.94) 0%, rgba(18,26,46,.90) 55%, rgba(10,14,24,.96) 100%); }
+.hd-hero-inner { position: relative; z-index: 2; max-width: 1760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: space-between; }
 .hd-hero-text { flex: 1 1 420px; }
 .hd-hero-eyebrow { font-size: .74rem; font-weight: 800; letter-spacing: .08em; color: #7CA6FF; margin-bottom: 6px; }
 .hd-hero-title { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-wrap: balance; color: #F4F7FF; }
@@ -12281,6 +12289,7 @@ main.page:has(.itc-dash) {
 .hd-avatar--sm { width: 30px; height: 30px; font-size: .62rem; }
 .hd-avatar--md { width: 40px; height: 40px; font-size: .72rem; }
 .hd-avatar--lg { width: 76px; height: 76px; font-size: 1.1rem; border: 3px solid rgba(37,99,235,.35); }
+.hd-avatar--xl { width: 84px; height: 84px; font-size: 1.3rem; border: 3px solid rgba(37,99,235,.35); }
 .hd-avatar--fallback { background-image: none; background: linear-gradient(135deg, var(--hd-blue), var(--hd-blue-dim)); }
 
 /* Classifica generale */
@@ -12295,25 +12304,36 @@ main.page:has(.itc-dash) {
 .hd-rank-sublbl { font-size: .64rem; font-weight: 800; letter-spacing: .05em; color: var(--hd-blue); margin: 10px 6px 2px; }
 .hd-rank-sublbl:first-child { margin-top: 0; }
 
-/* Rider of the Moment — riusa .itc-fire già esistente/stilato altrove;
-   --hub-color è impostato in linea a var(--hd-blue) da app.js. */
-.hd-fire-card { padding: 0; overflow: hidden; }
-.hd-fire-card .hd-card-title { padding: 16px 20px 0; }
-.hd-fire { min-height: 380px; margin-top: 12px; border-radius: 0; }
-.hd-spark-wrap { margin: 10px 0 4px; opacity: .95; }
-.hd-spark-line { stroke: #7CA6FF; stroke-width: 2; }
-.hd-spark-dot { fill: #7CA6FF; }
+/* Rider of the Moment — card compatta con avatar circolare + testo affiancato,
+   come nel mockup di riferimento (non più il grande banner "ritratto"
+   riusato da .itc-fire, che aveva un layout diverso). */
+.hd-fire-card { display: flex; flex-direction: column; }
+.hd-fire2 { display: flex; flex-direction: column; flex: 1; margin-top: 10px; }
+.hd-fire2-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+.hd-fire2-id { min-width: 0; padding-top: 2px; }
+.hd-fire2-name { font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; line-height: 1.2; color: var(--text-primary); }
+.hd-fire2-team { font-size: .8rem; color: var(--text-muted); margin-top: 2px; }
+.hd-fire2-eyebrow { font-size: .68rem; font-weight: 800; letter-spacing: .06em; color: var(--hd-blue); margin-bottom: 12px; text-transform: uppercase; }
+.hd-fire2-stats { display: flex; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
+.hd-fire2-stat { display: flex; flex-direction: column; }
+.hd-fire2-val { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.hd-fire2-lbl { font-size: .64rem; color: var(--text-muted); margin-top: 1px; }
+.hd-fire2-cta { margin-top: auto; padding-top: 10px; font-size: .84rem; font-weight: 700; color: var(--hd-blue); text-decoration: none; }
+.hd-spark-wrap { margin: 4px 0 14px; opacity: .95; }
+.hd-spark-line { stroke: var(--green); stroke-width: 2; }
+.hd-spark-dot { fill: var(--green); }
 
 /* Movers */
 .hd-movers-group { margin-bottom: 12px; }
 .hd-movers-lbl { font-size: .68rem; font-weight: 800; letter-spacing: .05em; margin-bottom: 6px; }
 .hd-movers-lbl--up { color: var(--green); }
 .hd-movers-lbl--dn { color: var(--danger, #EF4444); }
-.hd-mover-row { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: var(--r-sm); text-decoration: none; color: inherit; min-height: 40px; }
+.hd-mover-row { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: var(--r-sm); text-decoration: none; color: inherit; min-height: 44px; }
 .hd-mover-row:hover { background: var(--bg-elevated); }
-.hd-mover-arrow { width: 16px; text-align: center; font-weight: 900; }
+.hd-mover-arrow { width: 14px; text-align: center; font-weight: 900; }
 .hd-mover-arrow--up { color: var(--green); }
 .hd-mover-arrow--dn { color: var(--danger, #EF4444); }
+.hd-mover-rank { width: 14px; text-align: center; font-family: var(--font-heading); font-weight: 800; font-size: .8rem; color: var(--text-muted); }
 .hd-mover-name { flex: 1; font-size: .84rem; font-weight: 600; display: flex; flex-direction: column; min-width: 0; }
 .hd-mover-gain { font-weight: 800; font-size: .84rem; font-variant-numeric: tabular-nums; }
 .hd-mover-gain--up { color: var(--green); }
@@ -12331,7 +12351,9 @@ main.page:has(.itc-dash) {
 .hd-rivalry-pts { font-weight: 700; color: var(--hd-blue); font-size: .84rem; }
 .hd-rivalry-vs { font-family: var(--font-heading); font-weight: 900; font-size: .9rem; color: var(--text-muted);
   width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.hd-rivalry-meta { text-align: center; font-size: .78rem; color: var(--text-secondary); padding-bottom: 10px; }
+.hd-rivalry-meta { text-align: center; padding-bottom: 10px; }
+.hd-rivalry-meta-big { font-family: var(--font-heading); font-weight: 900; font-size: 1.1rem; letter-spacing: .02em; color: var(--text-primary); }
+.hd-rivalry-meta-sub { font-size: .78rem; color: var(--text-secondary); margin-top: 2px; }
 .hd-rivalry-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--bg-elevated); }
 .hd-rivalry-bar-a { background: var(--hd-blue); }
 .hd-rivalry-bar-d { background: var(--text-muted); opacity: .35; }
@@ -12344,8 +12366,8 @@ main.page:has(.itc-dash) {
 .hd-list-row { display: grid; align-items: center; gap: 4px 8px; padding: 8px 6px; border-radius: var(--r-sm); min-height: 48px; }
 .hd-list-row--result { grid-template-columns: 20px 46px 1fr 30px auto auto; }
 .hd-list-row--race { grid-template-columns: 64px 1fr auto; }
-.hd-list-pts { display: flex; align-items: center; gap: 2px; font-family: var(--font-heading); font-weight: 800; font-size: .84rem; color: var(--hd-blue); white-space: nowrap; }
-.hd-list-chev { color: var(--text-muted); font-size: 1rem; font-weight: 400; }
+.hd-list-pts { font-family: var(--font-heading); font-weight: 800; font-size: .74rem; color: var(--yellow-race, #F59E0B);
+  background: rgba(245,158,11,.14); border: 1px solid rgba(245,158,11,.3); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
 .hd-list-row:hover { background: var(--bg-elevated); }
 .hd-list-trophy { text-align: center; font-size: .82rem; opacity: .85; }
 .hd-list-date { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
@@ -12360,10 +12382,11 @@ main.page:has(.itc-dash) {
 /* Dall'archivio */
 .hd-section { margin: 28px 0 20px; }
 .hd-section-title { font-size: .8rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 12px; }
-.hd-arch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-@media (max-width: 980px) { .hd-arch-grid { grid-template-columns: repeat(2, 1fr); } }
+/* Dall'Archivio ora è una card affiancata a Prossime Gare (hd-grid-2), non
+   più una sezione a piena larghezza: 2 colonne interne invece di 4. */
+.hd-arch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; align-content: start; }
 @media (max-width: 560px) { .hd-arch-grid { grid-template-columns: 1fr; } }
-.hd-arch-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 16px; border-top: 3px solid var(--hd-blue); }
+.hd-arch-card { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 12px; border-top: 3px solid var(--hd-blue); }
 .hd-arch-eyebrow { display: inline-block; font-size: .62rem; font-weight: 800; letter-spacing: .05em; color: #fff; background: var(--hd-blue); padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
 .hd-arch-body { font-size: .82rem; line-height: 1.4; color: var(--text-secondary); }
 .hd-arch-body a { color: var(--hd-blue); text-decoration: none; font-weight: 700; }
@@ -12392,7 +12415,6 @@ main.page:has(.itc-dash) {
   .hd-stat-val { font-size: 1.1rem; }
   .hd-list-row--result { grid-template-columns: 20px 44px 1fr 30px auto; }
   .hd-list-winner { grid-column: 1 / span 3; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; margin-top: 2px; }
-  .hd-list-chev { display: none; }
   .hd-list-row--race { grid-template-columns: 50px 1fr; }
   .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
   .hd-rivalry-body { gap: 14px; }

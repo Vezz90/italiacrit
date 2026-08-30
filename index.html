@@ -66,7 +66,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=22" />
-  <link rel="stylesheet" href="design.css?v=142" />
+  <link rel="stylesheet" href="design.css?v=146" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -141,35 +141,15 @@
     <div class="nav-links" role="list">
       <a href="#/" class="nav-link" id="nav-home" role="listitem" onclick="window.goHome(event)">Home</a>
       <a href="#/risultati" class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
-
-      <!-- Classifiche ▾ -->
-      <div class="nav-group" id="navg-classifiche" role="listitem">
-        <button class="nav-link nav-group-btn" id="nav-class-btn" aria-haspopup="true" aria-expanded="false">
-          Classifiche <span class="nav-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div class="nav-group-panel" role="menu">
-          <a href="#/classifica" class="nav-group-item" id="nav-class"   role="menuitem">Classifica</a>
-          <a href="#/albo"       class="nav-group-item" id="nav-albo"    role="menuitem">Albo d'Oro</a>
-          <a href="#/atleti"     class="nav-group-item" id="nav-atleti"  role="menuitem">Atleti</a>
-          <a href="#/team"       class="nav-group-item" id="nav-team"    role="menuitem">Team</a>
-          <a href="#/gare"       class="nav-group-item" id="nav-gare"    role="menuitem">Gare</a>
-        </div>
-      </div>
-
+      <a href="#/classifica" class="nav-link" id="nav-class"   role="listitem">Classifica</a>
+      <a href="#/albo"       class="nav-link" id="nav-albo"    role="listitem">Albo d'Oro</a>
+      <a href="#/atleti"     class="nav-link" id="nav-atleti"  role="listitem">Atleti</a>
+      <a href="#/team"       class="nav-link" id="nav-team"    role="listitem">Team</a>
+      <a href="#/gare"       class="nav-link" id="nav-gare"    role="listitem">Gare</a>
       <a href="#/calendario" class="nav-link" id="nav-cal" role="listitem">Calendario</a>
+      <a href="#/statistiche"  class="nav-link" id="nav-stats" role="listitem">Statistiche</a>
+      <a href="#/comparatore"  class="nav-link" id="nav-comp"  role="listitem">Comparatore</a>
       <a href="#/media" class="nav-link" id="nav-media" role="listitem">Media</a>
-
-      <!-- Analisi ▾ -->
-      <div class="nav-group" id="navg-analisi" role="listitem">
-        <button class="nav-link nav-group-btn" id="nav-analisi-btn" aria-haspopup="true" aria-expanded="false">
-          Analisi <span class="nav-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div class="nav-group-panel" role="menu">
-          <a href="#/statistiche"  class="nav-group-item" id="nav-stats" role="menuitem">Statistiche</a>
-          <a href="#/comparatore"  class="nav-group-item" id="nav-comp"  role="menuitem">Comparatore</a>
-        </div>
-      </div>
-
       <a href="#/messaggi" class="nav-link" id="nav-msg" role="listitem" style="display:none">Messaggi</a>
     </div>
   </div>
@@ -245,6 +225,6 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=741" defer></script>
+<script src="app.js?v=747" defer></script>
 </body>
 </html>
