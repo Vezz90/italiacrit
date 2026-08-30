@@ -717,7 +717,19 @@ async function upsertResults(sb, rows) {
 
 async function upsertTeamHistory(sb, atletaId, teamHistory) {
   if (!teamHistory?.length) return;
-  const rows = teamHistory.map(t => ({
+  // Dedup per stagione: PCS a volte elenca due link team/{slug}-{anno} per lo
+  // STESSO anno (es. trasferimento a stagione in corso, o doppia voce nel
+  // menu carriera) — la chiave di conflitto dell'upsert è (atleta_id,season),
+  // quindi due righe con la stessa stagione nello stesso batch fanno fallire
+  // l'INTERO upsert con "ON CONFLICT DO UPDATE command cannot affect row a
+  // second time" (comportamento noto di Postgres), perdendo TUTTE le
+  // stagioni dell'atleta invece che solo quella duplicata — bug reale
+  // osservato su 262 atleti nel primo backfill di massa (incluso Bettiol).
+  // Tiene l'ULTIMA occorrenza di ogni stagione (teamHistory è nell'ordine del
+  // DOM, la voce più recente della carriera per quell'anno vince).
+  const bySeason = new Map();
+  for (const t of teamHistory) bySeason.set(t.season, t);
+  const rows = [...bySeason.values()].map(t => ({
     atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, updated_at: new Date().toISOString(),
   }));
   const { error } = await sb.from('pcs_team_history').upsert(rows, { onConflict: 'atleta_id,season' });
