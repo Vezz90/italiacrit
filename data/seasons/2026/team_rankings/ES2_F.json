@@ -2,12 +2,12 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 417,
+    "punti": 418,
     "vittorie": 11,
     "p1": 11,
     "p2": 7,
     "p3": 2,
-    "pout": 27,
+    "pout": 28,
     "n_atleti": 5,
     "pos": 1
   },
@@ -26,9 +26,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 364,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 379,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 5,
     "p3": 7,
     "pout": 28,
@@ -38,11 +38,11 @@
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 266,
+    "punti": 276,
     "vittorie": 12,
     "p1": 12,
     "p2": 3,
-    "p3": 4,
+    "p3": 5,
     "pout": 2,
     "n_atleti": 1,
     "pos": 4
@@ -50,48 +50,48 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 256,
+    "punti": 270,
     "vittorie": 4,
     "p1": 4,
-    "p2": 6,
+    "p2": 7,
     "p3": 3,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 3,
     "pos": 5
   },
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 146,
+    "punti": 154,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 3,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 2,
     "pos": 6
   },
   {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
-    "punti": 146,
+    "punti": 149,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 5,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 6,
     "pos": 7
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 138,
+    "punti": 143,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 1,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 4,
     "pos": 8
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 100,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 2,
+    "pout": 17,
+    "n_atleti": 4,
+    "pos": 12
+  },
+  {
     "team_id": "G_C_NOVENTANA",
     "team_nome": "G.C. NOVENTANA",
     "punti": 98,
@@ -141,18 +153,6 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 96,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 16,
-    "n_atleti": 4,
     "pos": 13
   },
   {
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "GAZZANIGHESE_ASD",
+    "team_nome": "GAZZANIGHESE ASD",
+    "punti": 71,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 18
+  },
+  {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "punti": 70,
@@ -213,7 +225,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -225,18 +237,6 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 19
-  },
-  {
-    "team_id": "GAZZANIGHESE_ASD",
-    "team_nome": "GAZZANIGHESE ASD",
-    "punti": 65,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 20
   },
   {

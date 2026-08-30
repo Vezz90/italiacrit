@@ -50,13 +50,13 @@
   {
     "team_id": "CANYON_SRAM_ZONDACRYPTO",
     "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 302,
+    "punti": 322,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 5,
-    "pout": 6,
-    "n_atleti": 5,
+    "pout": 8,
+    "n_atleti": 6,
     "pos": 5
   },
   {
@@ -84,6 +84,54 @@
     "pos": 7
   },
   {
+    "team_id": "LIV_ALULA_JAYCO",
+    "team_nome": "LIV-ALULA JAYCO",
+    "punti": 181,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 8
+  },
+  {
+    "team_id": "FENIX_PREMIER_TECH",
+    "team_nome": "FENIX-PREMIER TECH",
+    "punti": 172,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 11,
+    "n_atleti": 5,
+    "pos": 9
+  },
+  {
+    "team_id": "COFIDIS_WOMEN_TEAM",
+    "team_nome": "COFIDIS WOMEN TEAM",
+    "punti": 170,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 4,
+    "pos": 10
+  },
+  {
+    "team_id": "VOLKERWESSELS_CYCLING_TEAM",
+    "team_nome": "VOLKERWESSELS CYCLING TEAM",
+    "punti": 170,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 11
+  },
+  {
     "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
     "punti": 163,
@@ -93,7 +141,7 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 8
+    "pos": 12
   },
   {
     "team_id": "VINI_FANTINI_BEPINK",
@@ -105,7 +153,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 8,
-    "pos": 9
+    "pos": 13
   },
   {
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
@@ -117,7 +165,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 10
+    "pos": 14
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE",
@@ -129,43 +177,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 11
-  },
-  {
-    "team_id": "LIV_ALULA_JAYCO",
-    "team_nome": "LIV-ALULA JAYCO",
-    "punti": 141,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
-    "pos": 12
-  },
-  {
-    "team_id": "FENIX_PREMIER_TECH",
-    "team_nome": "FENIX-PREMIER TECH",
-    "punti": 136,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 5,
-    "pos": 13
-  },
-  {
-    "team_id": "VOLKERWESSELS_CYCLING_TEAM",
-    "team_nome": "VOLKERWESSELS CYCLING TEAM",
-    "punti": 126,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 5,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 6,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
@@ -189,19 +201,31 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "NEXETIS_TEAM",
     "team_nome": "NEXETIS TEAM",
-    "punti": 107,
+    "punti": 111,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 2,
-    "pout": 1,
+    "pout": 2,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
+  },
+  {
+    "team_id": "AROMITALIA_VAIANO",
+    "team_nome": "AROMITALIA VAIANO",
+    "punti": 108,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 6,
+    "pos": 19
   },
   {
     "team_id": "TOYOTA_VALENCIA_SAV",
@@ -213,19 +237,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "AROMITALIA_VAIANO",
-    "team_nome": "AROMITALIA VAIANO",
-    "punti": 102,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 6,
-    "n_atleti": 6,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "HUMAN_POWERED_HEALTH",
@@ -237,18 +249,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 20
-  },
-  {
-    "team_id": "COFIDIS_WOMEN_TEAM",
-    "team_nome": "COFIDIS WOMEN TEAM",
-    "punti": 86,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 4,
     "pos": 21
   },
   {
@@ -264,6 +264,18 @@
     "pos": 22
   },
   {
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 79,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 23
+  },
+  {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
     "team_nome": "MOVISTAR TEAM ACADEMY",
     "punti": 78,
@@ -273,18 +285,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 23
-  },
-  {
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 73,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 5,
-    "n_atleti": 4,
     "pos": 24
   },
   {
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "ENEICAT_BE_CALL",
+    "team_nome": "ENEICAT - BE CALL",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 34
+  },
+  {
     "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
     "team_nome": "ST MICHEL-PREFERENCE HOME-AUBER93",
     "punti": 27,
@@ -405,7 +417,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
+  },
+  {
+    "team_id": "STATI_UNITI",
+    "team_nome": "STATI UNITI",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 36
   },
   {
     "team_id": "CARBONBIKE_GIORDANA_SOFRE_BY_GEN_Z",
@@ -417,7 +441,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 37
   },
   {
     "team_id": "LOTTO_INTERNARCHE_LADIES",
@@ -429,7 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 38
   },
   {
     "team_id": "TEAM_PICNIC_POSTNL",
@@ -441,19 +465,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 37
-  },
-  {
-    "team_id": "STATI_UNITI",
-    "team_nome": "STATI UNITI",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "FIAMME_ORO",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "BMX_CLUB_SARRIANS",
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -489,24 +501,12 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "HANDSLING_ALBA_DEVELOPMENT_ROAD_TEAM",
     "team_nome": "HANDSLING ALBA DEVELOPMENT ROAD TEAM",
     "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 42
-  },
-  {
-    "team_id": "ENEICAT_BE_CALL",
-    "team_nome": "ENEICAT - BE CALL",
-    "punti": 10,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,

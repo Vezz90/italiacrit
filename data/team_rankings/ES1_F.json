@@ -2,11 +2,11 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 429,
+    "punti": 439,
     "vittorie": 8,
     "p1": 8,
     "p2": 10,
-    "p3": 7,
+    "p3": 8,
     "pout": 29,
     "n_atleti": 7,
     "pos": 1
@@ -14,12 +14,12 @@
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 378,
+    "punti": 391,
     "vittorie": 7,
     "p1": 7,
     "p2": 10,
     "p3": 4,
-    "pout": 25,
+    "pout": 28,
     "n_atleti": 5,
     "pos": 2
   },
@@ -50,9 +50,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 270,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 285,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 2,
     "p3": 2,
     "pout": 15,
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 77,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 1,
+    "pos": 18
+  },
+  {
     "team_id": "VELO_CLUB_SARROCH",
     "team_nome": "VELO CLUB SARROCH",
     "punti": 72,
@@ -213,29 +225,17 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 71,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 1,
     "pos": 19
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 62,
+    "punti": 65,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 13,
+    "pout": 14,
     "n_atleti": 3,
     "pos": 20
   },
@@ -266,14 +266,26 @@
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 51,
+    "punti": 53,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 2,
     "pos": 23
+  },
+  {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 50,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 1,
+    "pos": 24
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -285,7 +297,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "TOSCANA",
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "LOMBARDIA",
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -321,29 +333,17 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 27
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 38,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 1,
     "pos": 28
   },
   {
     "team_id": "U_S_C_S_I_RUBANO",
     "team_nome": "U.S. C.S.I. RUBANO",
-    "punti": 32,
+    "punti": 37,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 1,
     "pos": 29
   },

@@ -38,12 +38,12 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 481,
+    "punti": 495,
     "vittorie": 9,
     "p1": 9,
     "p2": 8,
-    "p3": 8,
-    "pout": 32,
+    "p3": 9,
+    "pout": 33,
     "n_atleti": 5,
     "pos": 4
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "G_S_PREALPINO_A_S_D",
+    "team_nome": "G.S. PREALPINO A.S.D.",
+    "punti": 283,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 1,
+    "p3": 5,
+    "pout": 24,
+    "n_atleti": 4,
+    "pos": 16
+  },
+  {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 275,
@@ -189,18 +201,6 @@
     "p3": 4,
     "pout": 21,
     "n_atleti": 5,
-    "pos": 16
-  },
-  {
-    "team_id": "G_S_PREALPINO_A_S_D",
-    "team_nome": "G.S. PREALPINO A.S.D.",
-    "punti": 268,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 1,
-    "p3": 5,
-    "pout": 24,
-    "n_atleti": 4,
     "pos": 17
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 230,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 6,
+    "p3": 4,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 20
+  },
+  {
     "team_id": "VC_CREMONESE",
     "team_nome": "VC CREMONESE",
     "punti": 226,
@@ -237,7 +249,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -249,18 +261,6 @@
     "p3": 1,
     "pout": 18,
     "n_atleti": 4,
-    "pos": 21
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 212,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 5,
-    "p3": 4,
-    "pout": 13,
-    "n_atleti": 3,
     "pos": 22
   },
   {
@@ -278,12 +278,12 @@
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "team_nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti": 190,
+    "punti": 198,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 6,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 3,
     "pos": 24
   },
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
+    "team_nome": "S.C. BRUGHERIO SPORTIVA ASD",
+    "punti": 111,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 22,
+    "n_atleti": 2,
+    "pos": 46
+  },
+  {
     "team_id": "I_CINGHIALI_EVO",
     "team_nome": "I CINGHIALI EVO",
     "punti": 111,
@@ -549,7 +561,7 @@
     "p3": 4,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "DUEPPI_CYCLING_PROJECT",
@@ -561,7 +573,7 @@
     "p3": 5,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -573,18 +585,6 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 48
-  },
-  {
-    "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
-    "team_nome": "S.C. BRUGHERIO SPORTIVA ASD",
-    "punti": 106,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 21,
-    "n_atleti": 2,
     "pos": 49
   },
   {
@@ -936,6 +936,18 @@
     "pos": 78
   },
   {
+    "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
+    "team_nome": "G.S. CERNUSCHESE TINO GADDA A.S.D.",
+    "punti": 49,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 79
+  },
+  {
     "team_id": "S_C_TORRILE_PR",
     "team_nome": "S.C. TORRILE PR",
     "punti": 48,
@@ -944,18 +956,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 11,
-    "n_atleti": 2,
-    "pos": 79
-  },
-  {
-    "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
-    "team_nome": "G.S. CERNUSCHESE TINO GADDA A.S.D.",
-    "punti": 47,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
     "n_atleti": 2,
     "pos": 80
   },
@@ -984,6 +984,18 @@
     "pos": 82
   },
   {
+    "team_id": "U_C_SANGIULIANESE",
+    "team_nome": "U.C. SANGIULIANESE",
+    "punti": 43,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 83
+  },
+  {
     "team_id": "VC_SAN_VENDEMIANO",
     "team_nome": "VC SAN VENDEMIANO",
     "punti": 43,
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "TEAM_SERIO",
@@ -1017,7 +1029,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -1028,18 +1040,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 7,
-    "n_atleti": 2,
-    "pos": 86
-  },
-  {
-    "team_id": "U_C_SANGIULIANESE",
-    "team_nome": "U.C. SANGIULIANESE",
-    "punti": 40,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
     "n_atleti": 2,
     "pos": 87
   },
@@ -1452,6 +1452,18 @@
     "pos": 121
   },
   {
+    "team_id": "US_CARBONATE_ASD",
+    "team_nome": "US CARBONATE ASD",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 122
+  },
+  {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
     "team_nome": "G.S. ALTO ADIGE - SUDTIROLPOST",
     "punti": 12,
@@ -1461,7 +1473,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 122
+    "pos": 123
   },
   {
     "team_id": "GIALETO_CICLISMO",
@@ -1473,7 +1485,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 123
+    "pos": 124
   },
   {
     "team_id": "ASD_LE_FRECCE_DELL_ETNA",
@@ -1485,7 +1497,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 124
+    "pos": 125
   },
   {
     "team_id": "S_C_FONTANAFREDDA",
@@ -1496,18 +1508,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "n_atleti": 2,
-    "pos": 125
-  },
-  {
-    "team_id": "US_CARBONATE_ASD",
-    "team_nome": "US CARBONATE ASD",
-    "punti": 11,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
     "n_atleti": 2,
     "pos": 126
   },
