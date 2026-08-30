@@ -12287,8 +12287,16 @@ main.page:has(.itc-dash) {
 /* .card (classe generica del sito) qui non porta sfondo/bordo propri — le
    card della dashboard risultavano scatole invisibili, senza alcuna
    divisione visiva tra loro: bug reale, non solo "poco visibile". */
-.hd-card { padding: 18px 20px; display: flex; flex-direction: column;
+.hd-card { padding: 18px 20px; display: flex; flex-direction: column; min-width: 0;
   background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
+/* Le celle di una grid CSS non si restringono sotto la larghezza minima del
+   loro CONTENUTO per default (min-width:auto implicito) — se un testo/riga
+   interna non può accorciarsi, tutta la colonna (e quindi hd-wrap/body)
+   viene spinta più larga dello schermo: scroll orizzontale su mobile,
+   card "tagliate" a destra. min-width:0 sui figli diretti della grid
+   permette invece a flex/testo interni di restringersi/andare a capo come
+   dovrebbero. */
+.hd-grid-3 > *, .hd-grid-2 > * { min-width: 0; }
 .hd-card-title { font-size: .74rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 14px; }
 .hd-card-cta { display: block; text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle);
   font-size: .82rem; font-weight: 700; color: var(--hd-blue); text-decoration: none; }
