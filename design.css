@@ -12199,10 +12199,16 @@ main.page:has(.itc-dash) {
 .hd-wrap {
   --bg-primary:   #0A0E18; --bg-secondary: #0F1526; --bg-card: #121826; --bg-elevated: #1A2236;
   --text-primary: #F4F7FF; --text-secondary: #A7B3CC; --text-muted: #6B7690;
-  --border-subtle: rgba(255,255,255,.14); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8;
+  --border-subtle: rgba(255,255,255,.14); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8; --hd-blue-rgb: 37,99,235;
   width: 100%; background: var(--bg-primary); color: var(--text-primary);
   padding-bottom: 60px;
 }
+/* Donne: accento magenta invece di blu, per distinguere a colpo d'occhio
+   dalla vista Uomini (richiesto esplicitamente) — un solo punto di
+   ridefinizione: tutto il resto della dashboard usa già var(--hd-blue)/
+   var(--hd-blue-rgb), quindi il cambio si propaga automaticamente
+   ovunque (pulsanti, punti, avatar, badge, classifica...). */
+.hd-wrap.hd-gender-f { --hd-blue: #DB2777; --hd-blue-dim: #BE185D; --hd-blue-rgb: 219,39,119; }
 /* Contenitore centrato per il contenuto (non per l'hero, che è full-bleed
    come nel mockup) — larghezza generosa ma non infinita sui monitor
    ultra-wide, stesso padding laterale della navbar per un bordo allineato. */
@@ -12250,7 +12256,7 @@ main.page:has(.itc-dash) {
 .hd-hero-sub { color: #A7B3CC; font-size: .94rem; max-width: 560px; margin: 0; line-height: 1.5; }
 .hd-hero-stats { display: flex; flex-wrap: wrap; gap: 12px; }
 .hd-stat { flex: 1 1 140px; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 9px 12px; backdrop-filter: blur(2px); }
-.hd-stat-icon { flex-shrink: 0; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(37,99,235,.22); font-size: .8rem; }
+.hd-stat-icon { flex-shrink: 0; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(var(--hd-blue-rgb),.22); font-size: .8rem; }
 .hd-stat-val { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #F4F7FF; line-height: 1.15; }
 .hd-stat-lbl { font-size: .66rem; font-weight: 700; letter-spacing: .05em; color: #8FA0C2; margin-top: 2px; }
 .hd-stat-sub { font-size: .66rem; color: #647089; margin-top: 1px; }
@@ -12303,8 +12309,8 @@ main.page:has(.itc-dash) {
   display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
 .hd-avatar--sm { width: 30px; height: 30px; font-size: .62rem; }
 .hd-avatar--md { width: 40px; height: 40px; font-size: .72rem; }
-.hd-avatar--lg { width: 76px; height: 76px; font-size: 1.1rem; border: 3px solid rgba(37,99,235,.35); }
-.hd-avatar--xl { width: 84px; height: 84px; font-size: 1.3rem; border: 3px solid rgba(37,99,235,.35); }
+.hd-avatar--lg { width: 76px; height: 76px; font-size: 1.1rem; border: 3px solid rgba(var(--hd-blue-rgb),.35); }
+.hd-avatar--xl { width: 84px; height: 84px; font-size: 1.3rem; border: 3px solid rgba(var(--hd-blue-rgb),.35); }
 .hd-avatar--fallback { background-image: none; background: linear-gradient(135deg, var(--hd-blue), var(--hd-blue-dim)); }
 
 /* Classifica generale */
@@ -12388,11 +12394,14 @@ main.page:has(.itc-dash) {
 .hd-list-date { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
 .hd-list-main { font-weight: 700; font-size: .86rem; color: var(--text-primary); text-decoration: none; display: flex; flex-direction: column; min-width: 0; }
 .hd-list-main:hover { color: var(--hd-blue); }
+/* Nomi gara molto lunghi (frequenti) non devono far esplodere l'altezza
+   della riga, specie su mobile: 2 righe poi ellissi. */
+.hd-list-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.25; }
 .hd-list-cat { font-size: .66rem; font-weight: 700; color: var(--text-muted); margin-top: 1px; }
 .hd-list-winner { font-size: .82rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; display: flex; flex-direction: column; text-align: right; }
 .hd-list-winner:hover { color: var(--hd-blue); }
 .hd-list-team { font-size: .68rem; color: var(--text-muted); font-weight: 500; }
-.hd-cat-badge { font-size: .66rem; font-weight: 700; color: var(--hd-blue); background: rgba(37,99,235,.12); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.hd-cat-badge { font-size: .66rem; font-weight: 700; color: var(--hd-blue); background: rgba(var(--hd-blue-rgb),.12); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
 
 /* Dall'archivio */
 .hd-section { margin: 28px 0 20px; }
@@ -12428,8 +12437,23 @@ main.page:has(.itc-dash) {
   .hd-hero-stats { gap: 8px; }
   .hd-stat { flex: 1 1 100px; padding: 10px 12px; }
   .hd-stat-val { font-size: 1.1rem; }
-  .hd-list-row--result { grid-template-columns: 20px 44px 1fr 30px auto; }
-  .hd-list-winner { grid-column: 1 / span 3; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; margin-top: 2px; }
+  /* Ultimi Risultati su mobile: 3 righe esplicite (trofeo+data / titolo gara
+     / avatar+vincitore+punti) invece di forzare tutto nella griglia a 6
+     colonne pensata per desktop — segnalato: avatar "staccato" dal nome,
+     riga troppo alta. */
+  .hd-list-row--result {
+    grid-template-columns: 26px 1fr auto;
+    grid-template-areas: "trophy date date" "title title title" "avatar winner pts";
+    row-gap: 6px;
+  }
+  .hd-list-row--result .hd-list-trophy { grid-area: trophy; }
+  .hd-list-row--result .hd-list-date   { grid-area: date; justify-self: start; }
+  .hd-list-row--result .hd-list-main   { grid-area: title; }
+  .hd-list-row--result .hd-avatar      { grid-area: avatar; }
+  .hd-list-row--result .hd-list-winner {
+    grid-area: winner; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; flex-wrap: wrap;
+  }
+  .hd-list-row--result .hd-list-pts    { grid-area: pts; align-self: center; }
   .hd-list-row--race { grid-template-columns: 50px 1fr; }
   .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
   .hd-rivalry-body { gap: 14px; }

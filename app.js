@@ -239,12 +239,20 @@ const _ovCache = {};
 // Fallback statico (committato nel repo) per dati come i social ufficiali.
 // Le modifiche da backend/admin hanno comunque la precedenza.
 let _staticSocials = null;
+let _staticSocialsPromise = null; // "single-flight": senza questo, N chiamate
+// concorrenti a getEntityOverrides (es. tutti gli avatar della home) partivano
+// con N fetch identici in parallelo dello stesso file — il controllo su
+// _staticSocials da solo non basta perché resta null finché il PRIMO fetch
+// non è finito, quindi ogni chiamata concorrente lo trovava ancora vuoto.
+// Segnalato: "va ancora più lento di prima" — con più avatar per pagina
+// (Esordienti doppi, movers, rivalità...) l'effetto si amplificava.
 async function _loadStaticSocials() {
   if (_staticSocials) return _staticSocials;
-  try {
-    _staticSocials = await fetch('data/entity_socials.json').then(r => r.ok ? r.json() : {});
-  } catch { _staticSocials = {}; }
-  return _staticSocials;
+  if (!_staticSocialsPromise) {
+    _staticSocialsPromise = fetch('data/entity_socials.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    _staticSocialsPromise.then(v => { _staticSocials = v; });
+  }
+  return _staticSocialsPromise;
 }
 async function getEntityOverrides(type, id) {
   const key = `${type}:${id}`;
@@ -7213,6 +7221,34 @@ function _hdLoadStats() {
   return _hdStatsPromise;
 }
 
+// Foto reali delle gare (race-photos + xpix-photos) — scaricate UNA volta
+// sola per sessione e riusate per ogni cambio filtro (solo il filtro per
+// categoria, in memoria, cambia): prima ripartiva da zero ad ogni switch,
+// una delle cause della lentezza segnalata esplicitamente.
+let _hdRawPhotosPromise = null;
+let _hdRawPhotosCache = null;
+function _hdLoadRawPhotos() {
+  if (!_hdRawPhotosPromise) {
+    _hdRawPhotosPromise = Promise.all([
+      fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({photos:[]})),
+      fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({photos:[]})),
+    ]).then(([d1, d2]) => {
+      const rawP = [];
+      (d1.photos||[]).forEach(p => { if (p.filename) rawP.push({ url:`${PHOTOS_BASE}/photos/${p.filename}`, gara_id:p.gara_id||'' }); });
+      (d2.photos||[]).forEach(p => { if (p.url) rawP.push({ url:p.url, gara_id:p.gara_id||'' }); });
+      return rawP;
+    }).catch(() => []);
+    _hdRawPhotosPromise.then(arr => { _hdRawPhotosCache = arr; });
+  }
+  return _hdRawPhotosPromise;
+}
+function _hdPickPhotosForCat(rawList, catCodes) {
+  const catP = rawList.filter(p => catCodes.some(c => p.gara_id.includes(c)));
+  const picked = [...(catP.length >= 3 ? catP : rawList)];
+  for (let i = picked.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [picked[i],picked[j]]=[picked[j],picked[i]]; }
+  return picked;
+}
+
 function _hdCutDate(fromDate, days) {
   const d = new Date(fromDate || new Date());
   d.setDate(d.getDate() - days);
@@ -7351,24 +7387,15 @@ async function _hdRenderReal(myRenderId) {
   const hubRes = resultsRaw.filter(r => r.genere === gender && catCodes.includes(getRankingFileCode(r)));
   const lastDate = hubRes.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '') || resultsRaw.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '');
 
-  // ── Foto reali (caricate sulle gare) per l'hero — STESSO meccanismo già
-  // usato in renderHubBars(): fetch, filtro per categoria selezionata,
-  // shuffle, crossfade a rotazione. "Deve essere ancora così" (richiesto
-  // esplicitamente) — non è un gradiente/placeholder, sono le foto vere.
-  let hdAllPhotos = [];
-  try {
-    const [d1, d2] = await Promise.all([
-      fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({photos:[]})),
-      fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({photos:[]})),
-    ]);
-    const rawP = [];
-    (d1.photos||[]).forEach(p => { if (p.filename) rawP.push({ url:`${PHOTOS_BASE}/photos/${p.filename}`, gara_id:p.gara_id||'' }); });
-    (d2.photos||[]).forEach(p => { if (p.url) rawP.push({ url:p.url, gara_id:p.gara_id||'' }); });
-    const catP = rawP.filter(p => catCodes.some(c => p.gara_id.includes(c)));
-    hdAllPhotos = catP.length >= 3 ? catP : rawP;
-    for (let i = hdAllPhotos.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [hdAllPhotos[i],hdAllPhotos[j]]=[hdAllPhotos[j],hdAllPhotos[i]]; }
-  } catch {}
-  if (myRenderId !== window._hdRenderId) return;
+  // ── Foto reali (caricate sulle gare) per l'hero — NON bloccante: prima
+  // questo fetch girava per intero PRIMA di mostrare qualunque cosa, ad
+  // ogni singolo cambio filtro ("il sito è lentissimo, anche quando
+  // switcho categoria", segnalato esplicitamente). Se la lista grezza è
+  // già in cache (già scaricata questa sessione, vedi _hdLoadRawPhotos) si
+  // filtra subito, a costo zero; altrimenti l'hero parte col gradiente e
+  // la foto viene "iniettata" appena pronta (vedi dopo il setPage finale),
+  // senza far aspettare il resto della pagina.
+  const hdAllPhotos = _hdRawPhotosCache ? _hdPickPhotosForCat(_hdRawPhotosCache, catCodes) : [];
   const heroPh = hdAllPhotos[0]?.url || null;
 
   // /api/stats/overview aggrega ~296k righe storiche: la prima volta (cache
@@ -7483,10 +7510,14 @@ async function _hdRenderReal(myRenderId) {
   const prossimeGare = prossime7.slice(0, 5);
 
   // ── Foto reali dei corridori coinvolti (classifica, movers, rivalità,
-  // ultimi risultati) — stesso meccanismo di fireAthPhoto (entity_overrides
-  // + fallback statico entity_socials.json), in blocco con Promise.all così
-  // non aggiunge round-trip seriali. Nessuna foto finta: chi non ha una
-  // foto caricata mostra un avatar con le iniziali (vedi _hdAvatar).
+  // ultimi risultati) — NON bloccante (segnalato: "il sito è lentissimo"):
+  // prima si aspettava un giro di rete per OGNI atleta coinvolto (anche
+  // 20+) prima di mostrare qualunque cosa. Ora si usa subito quel che è
+  // già in cache (getEntityOverrides cachea per atleta, _ovCache — quindi
+  // istantaneo per chi si è già visto in questa sessione) e per gli altri
+  // si mostrano le iniziali, "iniettando" la foto vera appena arriva (vedi
+  // dopo il setPage finale, _hdPatchAvatarPhotos) senza bloccare nulla.
+  // Nessuna foto finta: chi non ha una foto caricata resta con le iniziali.
   const photoIds = new Set();
   top5.forEach(r => photoIds.add(r.atleta_id));
   if (top5Dual) top5Dual.forEach(r => photoIds.add(r.atleta_id));
@@ -7500,10 +7531,13 @@ async function _hdRenderReal(myRenderId) {
   if (rivalryDual) { photoIds.add(rivalryDual.aId); photoIds.add(rivalryDual.bId); }
   ultimiRisultati.forEach(r => photoIds.add(r.atleta_id));
   const photoMap = {};
-  await Promise.all([...photoIds].filter(Boolean).map(async id => {
-    try { const ov = await getEntityOverrides('atleta', id); if (ov.photo_url) photoMap[id] = mediaUrl(ov.photo_url); } catch {}
-  }));
-  if (myRenderId !== window._hdRenderId) return;
+  const photoIdsPending = [];
+  for (const id of photoIds) {
+    if (!id) continue;
+    const cached = _ovCache['atleta:' + id];
+    if (cached) { if (cached.photo_url) photoMap[id] = mediaUrl(cached.photo_url); }
+    else photoIdsPending.push(id);
+  }
 
   // ── Andamento punti del/dei Rider of the Moment — serie reale (non
   // finta): punteggio cumulato gara per gara, risultati a punti nella
@@ -7536,21 +7570,50 @@ async function _hdRenderReal(myRenderId) {
   // L'intervallo si ferma da solo al prossimo hashchange (cambio pagina)
   // o al prossimo render di questa stessa dashboard (cambio filtro).
   if (window._hdHeroTimer) { clearInterval(window._hdHeroTimer); window._hdHeroTimer = null; }
-  if (hdAllPhotos.length > 1) {
+  const _hdStartSlideshow = photos => {
+    if (photos.length <= 1) return;
     const heroEl = document.getElementById('hd-hero-bg');
     const bg2    = heroEl?.querySelector('.hd-hero-bg2');
-    if (heroEl && bg2) {
-      let idx = 1;
-      const slide = () => {
-        if (!document.contains(heroEl) || myRenderId !== window._hdRenderId) { clearInterval(window._hdHeroTimer); return; }
-        const next = hdAllPhotos[idx % hdAllPhotos.length].url;
-        bg2.style.backgroundImage = `url('${next}')`;
-        bg2.classList.add('active');
-        setTimeout(() => { heroEl.style.backgroundImage = `url('${next}')`; bg2.classList.remove('active'); idx++; }, 1400);
-      };
-      window._hdHeroTimer = setInterval(slide, 6000);
-      window.addEventListener('hashchange', () => clearInterval(window._hdHeroTimer), { once: true });
-    }
+    if (!heroEl || !bg2) return;
+    let idx = 1;
+    const slide = () => {
+      if (!document.contains(heroEl) || myRenderId !== window._hdRenderId) { clearInterval(window._hdHeroTimer); return; }
+      const next = photos[idx % photos.length].url;
+      bg2.style.backgroundImage = `url('${next}')`;
+      bg2.classList.add('active');
+      setTimeout(() => { heroEl.style.backgroundImage = `url('${next}')`; bg2.classList.remove('active'); idx++; }, 1400);
+    };
+    window._hdHeroTimer = setInterval(slide, 6000);
+    window.addEventListener('hashchange', () => clearInterval(window._hdHeroTimer), { once: true });
+  };
+  if (_hdRawPhotosCache) {
+    _hdStartSlideshow(hdAllPhotos);
+  } else {
+    // Prima volta in questa sessione: la lista foto non era ancora pronta
+    // al momento del render (niente attesa, l'hero è partito col
+    // gradiente) — appena arriva, si inietta la foto e parte lo slideshow.
+    _hdLoadRawPhotos().then(raw => {
+      if (myRenderId !== window._hdRenderId) return;
+      const photos = _hdPickPhotosForCat(raw, catCodes);
+      if (!photos.length) return;
+      const heroEl = document.getElementById('hd-hero-bg');
+      if (heroEl) heroEl.style.backgroundImage = `url('${photos[0].url}')`;
+      _hdStartSlideshow(photos);
+    });
+  }
+
+  // Foto profilo non ancora in cache al momento del render (vedi sopra):
+  // arrivano in background e vengono iniettate negli avatar già in pagina
+  // senza bloccare né ri-renderizzare nulla.
+  if (photoIdsPending.length) {
+    Promise.all(photoIdsPending.map(async id => {
+      try { const ov = await getEntityOverrides('atleta', id); if (ov.photo_url) return [id, mediaUrl(ov.photo_url)]; } catch {}
+      return null;
+    })).then(pairs => {
+      if (myRenderId !== window._hdRenderId) return;
+      const patch = Object.fromEntries(pairs.filter(Boolean));
+      if (Object.keys(patch).length) _hdPatchAvatarPhotos(patch);
+    });
   }
 
   // Fetch non bloccante di /api/stats/overview, avviato ORA che il DOM
@@ -7572,9 +7635,26 @@ function _hdInitials(cognome, nome) {
 function _hdAvatar(id, cognome, nome, photoMap, size) {
   const url = photoMap && photoMap[id];
   const cls = `hd-avatar hd-avatar--${size || 'md'}`;
+  // data-hd-aid: usato per "iniettare" la foto dopo il primo paint quando
+  // non era ancora pronta (vedi _hdPatchAvatarPhotos) — il fetch delle foto
+  // profilo non deve più bloccare il render (era una delle cause della
+  // lentezza segnalata, specie al cambio categoria).
   return url
-    ? `<span class="${cls}" style="background-image:url('${esc(url)}')"></span>`
-    : `<span class="${cls} hd-avatar--fallback">${esc(_hdInitials(cognome, nome))}</span>`;
+    ? `<span class="${cls}" data-hd-aid="${esc(id||'')}" style="background-image:url('${esc(url)}')"></span>`
+    : `<span class="${cls} hd-avatar--fallback" data-hd-aid="${esc(id||'')}">${esc(_hdInitials(cognome, nome))}</span>`;
+}
+// Applica le foto profilo arrivate DOPO il primo paint (fetch non bloccante)
+// a tutti gli avatar già in pagina con lo stesso atleta — può comparire più
+// volte (classifica, movers, rivalità, ultimi risultati).
+function _hdPatchAvatarPhotos(photoMap) {
+  for (const [id, url] of Object.entries(photoMap)) {
+    if (!url) continue;
+    document.querySelectorAll(`[data-hd-aid="${CSS.escape(id)}"]`).forEach(el => {
+      el.style.backgroundImage = `url('${url}')`;
+      el.classList.remove('hd-avatar--fallback');
+      el.textContent = '';
+    });
+  }
 }
 // ── Sparkline SVG minimale per l'andamento punti del Rider of the Moment ──
 function _hdSparklineSvg(points) {
@@ -7865,7 +7945,7 @@ function _hdBuildHtml(d) {
           <div class="hd-list-row hd-list-row--result">
             <span class="hd-list-trophy">🏆</span>
             <span class="hd-list-date">${_hdRelDay(r.data)}</span>
-            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}<span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
+            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main"><span class="hd-list-title">${esc(r.nome_gara||'')}</span><span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
             ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
             <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-list-team">${esc(r.team||'')}</span></a>
             <span class="hd-list-pts">${r.punti_effettivi||0} pt</span>
@@ -7881,7 +7961,7 @@ function _hdBuildHtml(d) {
         ${d.prossimeGare.length ? d.prossimeGare.map(g => `
           <div class="hd-list-row hd-list-row--race">
             <span class="hd-list-date">${_hdRelDay(g.data)}</span>
-            <a href="#/gara/${encodeURIComponent(g.id||'')}" class="hd-list-main">${esc(g.nome||'')}<span class="hd-list-team">${esc(g.luogo||g.regione||'')}</span></a>
+            <a href="#/gara/${encodeURIComponent(g.id||'')}" class="hd-list-main"><span class="hd-list-title">${esc(g.nome||'')}</span><span class="hd-list-team">${esc(g.luogo||g.regione||'')}</span></a>
             <span class="hd-cat-badge" style="${_hdCatBadgeStyle(g.categoria)}">${esc(g.categoria||'')}</span>
           </div>`).join('') : '<div class="hd-empty">Nessuna gara nei prossimi 7 giorni</div>'}
       </div>
@@ -7907,7 +7987,7 @@ function _hdBuildHtml(d) {
       ${quickLinks.map(q => `<a href="${q.href}" class="hd-quicklink"><span class="hd-ql-icon">${q.icon}</span><span class="hd-ql-title">${q.title}</span><span class="hd-ql-sub">${esc(q.sub)}</span></a>`).join('')}
     </div>`;
 
-  return `<div class="hd-wrap">
+  return `<div class="hd-wrap${d.gender==='F' ? ' hd-gender-f' : ''}">
     ${heroHtml}
     <div class="hd-inner">
       ${liveHtml}
