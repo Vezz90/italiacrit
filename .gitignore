@@ -32,3 +32,5 @@ data/team_rankings/
 !data/extra_roster.json
 server/norton-root.pem
 ~$*.xlsx
+server/team-history-*.json
+server/team-history-*.log
