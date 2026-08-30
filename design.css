@@ -12121,34 +12121,66 @@ main.page:has(.itc-dash) {
 
 /* ════════════════════════════════════════════════════════════════
    HOME DASHBOARD (v2, PROVA LOCALE) — vedi renderHomeDashboard() in
-   app.js. Non collegata al sito in produzione. Riusa var(--*) esistenti
-   per sfondi/testi/bordi (dark/light gestiti automaticamente); l'accento
-   è blu ("blu ICS", su richiesta esplicita, invece del --red-hot usato
-   nel resto del sito) per aderire al mockup di riferimento fornito. */
-.hd-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 60px; --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8; }
+   app.js. Non collegata al sito in produzione. A differenza del resto del
+   sito (che segue il toggle chiaro/scuro dell'utente), questa home è
+   SEMPRE scura ed edge-to-edge, per aderire fedelmente al mockup fornito
+   (dashboard sportiva in stile Sofascore/FirstCycling) — i token qui
+   sotto sono LOCALI a .hd-wrap (ridefiniscono le stesse var(--*) del
+   sito) e si propagano automaticamente a tutte le regole .hd-* esistenti
+   che le usano già, senza dover riscrivere ogni singola regola colore.
+   L'accento è blu ("blu ICS", richiesto esplicitamente) invece del
+   --red-hot usato nel resto del sito. */
+/* .page (style.css) impone padding:32px 24px + max-width:1200px centrato —
+   corretto per le pagine normali, ma è esattamente la causa del "riquadro
+   scuro fluttuante su sfondo chiaro, non a tutta larghezza" segnalato:
+   va neutralizzato SOLO quando la pagina è questa dashboard (nessun'altra
+   pagina del sito è affetta). #app gestisce già lo spazio per la navbar
+   fissa (padding-top), quindi va lasciato invariato. */
+.page:has(> .hd-wrap) { padding: 0; max-width: none; }
+
+.hd-wrap {
+  --bg-primary:   #0A0E18; --bg-secondary: #0F1526; --bg-card: #121826; --bg-elevated: #1A2236;
+  --text-primary: #F4F7FF; --text-secondary: #A7B3CC; --text-muted: #6B7690;
+  --border-subtle: rgba(255,255,255,.08); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8;
+  width: 100%; background: var(--bg-primary); color: var(--text-primary);
+  padding-bottom: 60px;
+}
+/* Contenitore centrato per il contenuto (non per l'hero, che è full-bleed
+   come nel mockup) — larghezza generosa ma non infinita sui monitor
+   ultra-wide, stesso padding laterale della navbar per un bordo allineato. */
+.hd-inner { max-width: 1760px; margin: 0 auto; padding: 0 24px; }
 
 /* Skeleton di caricamento */
 .hd-skel-hero, .hd-skel-row, .hd-skel-card {
   background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-card) 50%, var(--bg-elevated) 75%);
   background-size: 200% 100%; animation: hd-shimmer 1.4s ease-in-out infinite; border-radius: var(--r-md);
 }
-.hd-skel-hero { height: 180px; margin-bottom: 16px; }
-.hd-skel-row { height: 64px; margin-bottom: 16px; }
+.hd-skel-hero { height: 220px; }
+.hd-skel-row { height: 64px; margin: 16px 0; }
 .hd-skel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .hd-skel-card { height: 320px; }
 @keyframes hd-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 @media (max-width: 900px) { .hd-skel-grid { grid-template-columns: 1fr; } }
 
-/* Hero — banda scura con accento blu, come nel mockup di riferimento.
+/* Hero — banner scuro edge-to-edge sotto la navbar, come nel mockup.
    Niente foto di sfondo: non esiste un asset reale (foto gara) libero da
    usare qui — vedi nota nel report finale — quindi si usa un gradiente
    blu/antracite invece di un'immagine finta o placeholder generico. */
-.hd-hero { padding: 32px 28px; border-radius: var(--r-lg); margin-bottom: 20px;
-  background: radial-gradient(120% 160% at 100% 0%, rgba(37,99,235,.35), transparent 60%), linear-gradient(160deg, #0B1220 0%, #131B2E 55%, #0B1220 100%);
-  border: 1px solid rgba(255,255,255,.06); }
+.hd-hero { padding: 36px 24px 32px;
+  background: radial-gradient(120% 220% at 100% 0%, rgba(37,99,235,.35), transparent 60%), linear-gradient(160deg, #0A0E18 0%, #121A2E 55%, #0A0E18 100%);
+  border-bottom: 1px solid rgba(255,255,255,.06); }
+.hd-hero-inner { max-width: 1760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: space-between; }
+.hd-hero-text { flex: 1 1 420px; }
 .hd-hero-eyebrow { font-size: .74rem; font-weight: 800; letter-spacing: .08em; color: #7CA6FF; margin-bottom: 6px; }
 .hd-hero-title { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-wrap: balance; color: #F4F7FF; }
 .hd-hero-title span { color: var(--hd-blue); }
+.hd-hero-cta { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.hd-hero-btn { font-size: .84rem; font-weight: 700; padding: 11px 22px; border-radius: var(--r-md); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.hd-hero-btn--primary { background: var(--hd-blue); color: #fff; }
+.hd-hero-btn--primary:hover { background: var(--hd-blue-dim); }
+.hd-hero-btn--ghost { border: 1px solid rgba(255,255,255,.22); color: #F4F7FF; }
+.hd-hero-btn--ghost:hover { border-color: #fff; }
+.hd-hero-stats-wrap { flex: 1 1 420px; }
 .hd-hero-sub { color: #A7B3CC; font-size: .94rem; max-width: 560px; margin: 0 0 22px; line-height: 1.5; }
 .hd-hero-stats { display: flex; flex-wrap: wrap; gap: 12px; }
 .hd-stat { flex: 1 1 140px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 14px 16px; backdrop-filter: blur(2px); }
@@ -12209,6 +12241,8 @@ main.page:has(.itc-dash) {
 .hd-rank-team { font-weight: 500; font-size: .72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hd-rank-pts { font-family: var(--font-heading); font-weight: 800; font-size: .9rem; color: var(--hd-blue); white-space: nowrap; }
 .hd-rank-ptslbl { font-size: .66rem; font-weight: 600; color: var(--text-muted); margin-left: 2px; }
+.hd-rank-sublbl { font-size: .64rem; font-weight: 800; letter-spacing: .05em; color: var(--hd-blue); margin: 10px 6px 2px; }
+.hd-rank-sublbl:first-child { margin-top: 0; }
 
 /* Rider of the Moment — riusa .itc-fire già esistente/stilato altrove;
    --hub-color è impostato in linea a var(--hd-blue) da app.js. */
@@ -12257,8 +12291,10 @@ main.page:has(.itc-dash) {
 .hd-wide { grid-column: auto; }
 .hd-list { display: flex; flex-direction: column; }
 .hd-list-row { display: grid; align-items: center; gap: 4px 8px; padding: 8px 6px; border-radius: var(--r-sm); min-height: 48px; }
-.hd-list-row--result { grid-template-columns: 20px 46px 1fr 30px auto; }
+.hd-list-row--result { grid-template-columns: 20px 46px 1fr 30px auto auto; }
 .hd-list-row--race { grid-template-columns: 64px 1fr auto; }
+.hd-list-pts { display: flex; align-items: center; gap: 2px; font-family: var(--font-heading); font-weight: 800; font-size: .84rem; color: var(--hd-blue); white-space: nowrap; }
+.hd-list-chev { color: var(--text-muted); font-size: 1rem; font-weight: 400; }
 .hd-list-row:hover { background: var(--bg-elevated); }
 .hd-list-trophy { text-align: center; font-size: .82rem; opacity: .85; }
 .hd-list-date { font-size: .7rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
@@ -12295,13 +12331,17 @@ main.page:has(.itc-dash) {
 .hd-ql-sub { font-size: .68rem; color: var(--text-muted); }
 
 @media (max-width: 640px) {
-  .hd-hero { padding: 22px 18px; }
+  .hd-inner { padding: 0 12px; }
+  .hd-hero { padding: 20px 12px 24px; }
   .hd-hero-title { font-size: 1.5rem; }
+  .hd-hero-cta { width: 100%; }
+  .hd-hero-btn { flex: 1 1 auto; justify-content: center; }
   .hd-hero-stats { gap: 8px; }
   .hd-stat { flex: 1 1 100px; padding: 10px 12px; }
   .hd-stat-val { font-size: 1.1rem; }
-  .hd-list-row--result { grid-template-columns: 20px 44px 1fr 30px; }
-  .hd-list-winner { grid-column: 1 / -1; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; }
+  .hd-list-row--result { grid-template-columns: 20px 44px 1fr 30px auto; }
+  .hd-list-winner { grid-column: 1 / span 3; text-align: left; flex-direction: row; gap: 6px; align-items: baseline; margin-top: 2px; }
+  .hd-list-chev { display: none; }
   .hd-list-row--race { grid-template-columns: 50px 1fr; }
   .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
   .hd-rivalry-body { gap: 14px; }

@@ -7154,13 +7154,25 @@ async function renderNews() {
 // del browser — cambiare filtro non è una navigazione, è un re-render).
 let _hdGender = 'M';
 let _hdCatCode = 'ELI_M';
+// `codes`: tutti i codici-classifica coperti dal filtro — un solo elemento
+// per le categorie normali, DUE per Esordienti (1° e 2° anno insieme, come
+// richiesto esplicitamente: "riferimenti sia dei primi che dei secondi
+// anni"). Stessa convenzione già usata da HUB_CONFIG['esordienti-m/f'].
+// `catFilter`: stessa convenzione di HUB_CONFIG (vedi hub esistenti) per
+// riconoscere la categoria dentro il testo libero di calendar.json
+// (es. "Juniores / Allievi / Esordienti 1° Anno") — riusata identica qui
+// per filtrare live-bar/prossime gare sulla categoria selezionata.
 const _HD_CATS = [
-  { code: 'ELI_M', label: 'Elite/U23' }, { code: 'JUN_M', label: 'Juniores' },
-  { code: 'AL_M',  label: 'Allievi' },   { code: 'ES2_M', label: 'Esordienti' },
+  { code: 'ELI_M', label: 'Elite/U23', codes: ['ELI_M'], catFilter: 'Elite' },
+  { code: 'JUN_M', label: 'Juniores',  codes: ['JUN_M'], catFilter: 'Junior' },
+  { code: 'AL_M',  label: 'Allievi',   codes: ['AL_M'], catFilter: 'Alliev' },
+  { code: 'ES2_M', label: 'Esordienti', codes: ['ES2_M', 'ES1_M'], catFilter: 'Esordient' },
 ];
 const _HD_CATS_F = [
-  { code: 'ELI_F', label: 'Elite/U23' }, { code: 'JUN_F', label: 'Juniores' },
-  { code: 'AL_F',  label: 'Allieve' },   { code: 'ES2_F', label: 'Esordienti' },
+  { code: 'ELI_F', label: 'Elite/U23', codes: ['ELI_F'], catFilter: 'Elite' },
+  { code: 'JUN_F', label: 'Juniores',  codes: ['JUN_F'], catFilter: 'Junior' },
+  { code: 'AL_F',  label: 'Allieve',   codes: ['AL_F'], catFilter: 'Alliev' },
+  { code: 'ES2_F', label: 'Esordienti', codes: ['ES2_F', 'ES1_F'], catFilter: 'Esordient' },
 ];
 
 // Cache in-memoria per non rifare il fetch di /api/stats/overview (query
@@ -7207,10 +7219,11 @@ function _hdRelDay(dateStr) {
 // contro il massimo osservato nella stessa categoria/finestra (non contro
 // soglie fisse: così la scala si adatta a categorie con volumi diversi).
 function _hdFormScore(resSet, catCode, lastDate) {
+  const codes = Array.isArray(catCode) ? catCode : [catCode]; // Esordienti: 1°+2° anno insieme
   const cut14 = _hdCutDate(lastDate, 14), cut30 = _hdCutDate(lastDate, 30);
   const byAth = {};
   for (const r of resSet) {
-    if (getRankingFileCode(r) !== catCode || !r.atleta_id || !r.data || r.data < cut30) continue;
+    if (!codes.includes(getRankingFileCode(r)) || !r.atleta_id || !r.data || r.data < cut30) continue;
     (byAth[r.atleta_id] = byAth[r.atleta_id] || { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, races: [] }).races.push(r);
   }
   const candidates = [];
@@ -7246,18 +7259,26 @@ function _hdFormScore(resSet, catCode, lastDate) {
 // ── Movers — stessa idea di renderHubBars (snapshot classifica ora vs
 // prima), qui semplificata: finestra fissa a 7 giorni (la card si chiama
 // "della settimana"), non la ricerca a finestre crescenti dell'originale.
+// catCode può essere una stringa o un array — per gli Esordienti la home
+// mostra 1° e 2° anno insieme (richiesto esplicitamente), quindi qui si
+// itera su ciascun codice e si uniscono i risultati. computeRankSnapshot
+// (esistente, condivisa con le pagine hub) accetta un solo codice alla
+// volta: non viene toccata, viene solo richiamata più volte.
 function _hdMovers(resSet, catCode, lastDate) {
-  const snapNow = computeRankSnapshot(resSet, catCode, null);
-  const snapBefore = computeRankSnapshot(resSet, catCode, _hdCutDate(lastDate, 7));
+  const codes = Array.isArray(catCode) ? catCode : [catCode];
   const nameLookup = {};
   for (const r of resSet) if (r.atleta_id && !nameLookup[r.atleta_id]) nameLookup[r.atleta_id] = { cognome: r.cognome || '', nome: r.nome || '', team: r.team || '' };
   const list = [];
-  for (const [aid, posNow] of Object.entries(snapNow)) {
-    const posOld = snapBefore[aid];
-    if (!posOld) continue;
-    const gain = posOld - posNow;
-    if (gain === 0) continue;
-    list.push({ atleta_id: aid, ...nameLookup[aid], pos: posNow, gain });
+  for (const code of codes) {
+    const snapNow = computeRankSnapshot(resSet, code, null);
+    const snapBefore = computeRankSnapshot(resSet, code, _hdCutDate(lastDate, 7));
+    for (const [aid, posNow] of Object.entries(snapNow)) {
+      const posOld = snapBefore[aid];
+      if (!posOld) continue;
+      const gain = posOld - posNow;
+      if (gain === 0) continue;
+      list.push({ atleta_id: aid, ...nameLookup[aid], pos: posNow, gain });
+    }
   }
   return {
     up: list.filter(m => m.gain >= 1).sort((a, b) => b.gain - a.gain).slice(0, 3),
@@ -7274,9 +7295,11 @@ async function renderHomeDashboard() {
   setPage(`
     <div class="hd-wrap">
       <div class="hd-skel-hero"></div>
-      <div class="hd-skel-row"></div>
-      <div class="hd-skel-grid">
-        <div class="hd-skel-card"></div><div class="hd-skel-card"></div><div class="hd-skel-card"></div>
+      <div class="hd-inner">
+        <div class="hd-skel-row"></div>
+        <div class="hd-skel-grid">
+          <div class="hd-skel-card"></div><div class="hd-skel-card"></div><div class="hd-skel-card"></div>
+        </div>
       </div>
     </div>`);
   const myRenderId = (window._hdRenderId = (window._hdRenderId || 0) + 1);
@@ -7295,8 +7318,15 @@ async function _hdRenderReal(myRenderId) {
   const { resultsRaw, calendar, teams } = globalData;
   const gender = _hdGender, catCode = _hdCatCode;
   const cats = gender === 'F' ? _HD_CATS_F : _HD_CATS;
+  const catEntry = cats.find(c => c.code === catCode) || cats[0];
+  // Esordienti: `codes` ha 2 elementi (1° e 2° anno) — tutto il resto della
+  // funzione lavora su questo array così i due anni sono SEMPRE inclusi
+  // insieme, come richiesto esplicitamente ("riferimenti sia dei primi
+  // che dei secondi anni"), invece di mostrare solo ES2 come prima.
+  const catCodes = catEntry.codes;
+  const dualCode = catCodes.length > 1 ? catCodes[1] : null; // es. ES1_M
 
-  const hubRes = resultsRaw.filter(r => r.genere === gender && getRankingFileCode(r) === catCode);
+  const hubRes = resultsRaw.filter(r => r.genere === gender && catCodes.includes(getRankingFileCode(r)));
   const lastDate = hubRes.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '') || resultsRaw.reduce((mx, r) => (r.data || '') > mx ? r.data : mx, '');
 
   // /api/stats/overview aggrega ~296k righe storiche: la prima volta (cache
@@ -7307,7 +7337,14 @@ async function _hdRenderReal(myRenderId) {
   // sincrono; altrimenti si mostrano placeholder e si aggiorna il DOM in
   // modo asincrono non appena la risposta arriva — vedi _hdApplyStats.
   const stats = _hdStatsCache;
-  const ranking = await loadRanking(catCode);
+  const rankingMain = await loadRanking(catCode);
+  const rankingDual = dualCode ? await loadRanking(dualCode) : null;
+  // Classifica combinata (1°+2° anno insieme) riordinata per punti — usata
+  // per i widget che vogliono UNA classifica sola (form score/badge/rivalità
+  // di fallback); la card "Classifica Generale" mostra invece le due liste
+  // separate (vedi rankingDual/top5Dual in _hdBuildHtml) per rispettare la
+  // richiesta di avere i riferimenti di entrambi gli anni ben distinti.
+  const ranking = rankingDual ? [...rankingMain, ...rankingDual].sort((a, b) => (b.punti || 0) - (a.punti || 0)) : rankingMain;
   if (myRenderId !== window._hdRenderId) return; // l'utente ha già cambiato filtro/pagina, scarta
   // NB: se stats non è ancora in cache, il fetch (non bloccante) viene
   // avviato più sotto, DOPO il setPage finale — prima che quel DOM esista
@@ -7330,35 +7367,71 @@ async function _hdRenderReal(myRenderId) {
     { val: s.stagioni_storiche != null ? s.stagioni_storiche.toLocaleString('it-IT') : '…', lbl: 'STAGIONI', sub: `dal ${s.prima_stagione || '2007'}` },
   ];
 
-  // ── Live bar: gare di oggi, ultimo risultato, prossime gare ──────
+  // ── Live bar / ultimi risultati / prossime gare — SOLO la categoria e il
+  // genere selezionati nella home (richiesto esplicitamente: prima erano
+  // uguali per tutti i filtri). I risultati usano hubRes, già filtrato con
+  // precisione da getRankingFileCode; il calendario invece porta solo un
+  // campo `categoria` testuale libero (es. "Juniores / Allievi / Esordienti
+  // 1° Anno") senza codice classifica — si riusa perciò lo stesso match
+  // testuale (catFilter, case-insensitive substring + genere se presente)
+  // già impiegato dalle pagine hub esistenti (vedi HUB_CONFIG/catFilter),
+  // per restare coerenti col resto del sito invece di inventare un secondo
+  // criterio di match.
+  const catFilterTxt = (catEntry.catFilter || '').toLowerCase();
+  const calMatchesCat = g => {
+    if (g.genere && g.genere !== gender) return false;
+    const catTxt = (g.categoria || '').toLowerCase();
+    if (catFilterTxt && !catTxt.includes(catFilterTxt)) return false;
+    // calendar.json spesso non ha un campo `genere` esplicito: quando manca,
+    // il testo della categoria a volte lo indica comunque ("Donne
+    // Esordienti") — meglio escluderlo esplicitamente piuttosto che
+    // lasciarlo trapelare nel filtro del genere sbagliato.
+    const mentionsDonne = /\bdonn|femminil/.test(catTxt);
+    if (gender === 'M' && mentionsDonne) return false;
+    if (gender === 'F' && !mentionsDonne && /\buomini|maschil/.test(catTxt)) return false;
+    return true;
+  };
   const todayStr = new Date().toISOString().split('T')[0];
-  const gareOggi = (calendar || []).filter(g => g.data === todayStr);
+  const gareOggi = (calendar || []).filter(g => g.data === todayStr && calMatchesCat(g));
   const in7gg = _hdCutDate(todayStr, -7); // _hdCutDate sottrae "days": -7 = +7gg avanti
-  const prossime7 = (calendar || []).filter(g => g.data > todayStr && g.data <= in7gg)
+  const prossime7 = (calendar || []).filter(g => g.data > todayStr && g.data <= in7gg && calMatchesCat(g))
     .sort((a, b) => a.data.localeCompare(b.data));
-  const vincitoriRecenti = resultsRaw.filter(r => r.posizione === 1 && r.data).sort((a, b) => b.data.localeCompare(a.data));
+  const vincitoriRecenti = hubRes.filter(r => r.posizione === 1 && r.data).sort((a, b) => b.data.localeCompare(a.data));
   const ultimoRisultato = vincitoriRecenti[0] || null;
 
   // ── Classifica generale (top5, filtrata) ─────────────────────────
-  const top5 = ranking.slice(0, 5);
+  const top5 = rankingMain.slice(0, 5);
+  const top5Dual = rankingDual ? rankingDual.slice(0, 5) : null;
 
   // ── Rider of the Moment (Form Score) ─────────────────────────────
-  const fireAth = _hdFormScore(hubRes, catCode, lastDate);
+  const fireAth = _hdFormScore(hubRes, catCodes, lastDate);
   let fireAthPhoto = null;
   if (fireAth) {
     try { const ov = await getEntityOverrides('atleta', fireAth.atleta_id); if (ov.photo_url) fireAthPhoto = `${MEDIA_BASE}${ov.photo_url}`; } catch {}
   }
   if (myRenderId !== window._hdRenderId) return;
   const fireRankEntry = ranking.find(r => r.atleta_id === fireAth?.atleta_id);
-  const fireBadges = fireAth ? getAthleteBadges(fireAth.atleta_id, resultsRaw, catCode, fireRankEntry ? { pos: ranking.indexOf(fireRankEntry) + 1 } : null) : [];
+  const fireCatCode = fireRankEntry ? (rankingDual && rankingDual.includes(fireRankEntry) ? dualCode : catCode) : catCode;
+  const fireBadges = fireAth ? getAthleteBadges(fireAth.atleta_id, resultsRaw, fireCatCode, fireRankEntry ? { pos: ranking.indexOf(fireRankEntry) + 1 } : null) : [];
 
   // ── Movers della settimana ────────────────────────────────────────
-  const movers = _hdMovers(hubRes, catCode, lastDate);
+  const movers = _hdMovers(hubRes, catCodes, lastDate);
 
-  // ── Rivalità della settimana (funzione esistente, invariata) ─────
-  const rivalry = siFormRivalryFinder(hubRes, catCode, ranking, lastDate);
+  // ── Rivalità della settimana (funzione esistente, invariata) — per gli
+  // Esordienti si valuta separatamente 1° e 2° anno (siFormRivalryFinder
+  // lavora su UN codice alla volta) e si tiene la coppia con più scontri
+  // diretti recenti, altrimenti quella con il distacco minore.
+  let rivalry = siFormRivalryFinder(hubRes, catCode, rankingMain, lastDate);
+  if (dualCode) {
+    const rivalryDual = siFormRivalryFinder(hubRes, dualCode, rankingDual, lastDate);
+    if (rivalryDual && (!rivalry
+      || (rivalryDual.directMeets || 0) > (rivalry.directMeets || 0)
+      || ((rivalryDual.directMeets || 0) === (rivalry.directMeets || 0) && rivalryDual.ptsGap < rivalry.ptsGap))) {
+      rivalry = rivalryDual;
+    }
+  }
 
-  // ── Ultimi risultati (5, tutte le categorie) ──────────────────────
+  // ── Ultimi risultati (5, SOLO categoria/genere selezionati) ──────────
   const ultimiRisultati = [];
   { const seenGara = new Set();
     for (const r of vincitoriRecenti) {
@@ -7369,7 +7442,7 @@ async function _hdRenderReal(myRenderId) {
     }
   }
 
-  // ── Prossime gare (5, tutte le categorie) ─────────────────────────
+  // ── Prossime gare (5, SOLO categoria/genere selezionati) ─────────────
   const prossimeGare = prossime7.slice(0, 5);
 
   // ── Foto reali dei corridori coinvolti (classifica, movers, rivalità,
@@ -7379,6 +7452,7 @@ async function _hdRenderReal(myRenderId) {
   // foto caricata mostra un avatar con le iniziali (vedi _hdAvatar).
   const photoIds = new Set();
   top5.forEach(r => photoIds.add(r.atleta_id));
+  if (top5Dual) top5Dual.forEach(r => photoIds.add(r.atleta_id));
   movers.up.forEach(m => photoIds.add(m.atleta_id));
   movers.dn.forEach(m => photoIds.add(m.atleta_id));
   if (rivalry) { photoIds.add(rivalry.aId); photoIds.add(rivalry.bId); }
@@ -7407,7 +7481,7 @@ async function _hdRenderReal(myRenderId) {
 
   setPage(_hdBuildHtml({
     heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
-    gender, catCode, cats, top5, fireAth, fireAthPhoto, fireBadges, fireRankEntry, fireSpark,
+    gender, catCode, cats, top5, top5Dual, dualCode, fireAth, fireAthPhoto, fireBadges, fireRankEntry, fireSpark,
     movers, rivalry, ultimiRisultati, prossimeGare, stats, photoMap,
   }));
   _hdWireEvents();
@@ -7538,13 +7612,21 @@ function _hdBuildHtml(d) {
   const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
   const heroHtml = `
     <div class="hd-hero">
-      <div class="hd-hero-text">
-        <div class="hd-hero-eyebrow">ITALIA CYCLING STATS</div>
-        <h1 class="hd-hero-title">Il ciclismo italiano<br><span>in numeri</span></h1>
-        <p class="hd-hero-sub">Il database del ciclismo agonistico italiano. Risultati, classifiche, storico, statistiche e molto altro.</p>
-      </div>
-      <div class="hd-hero-stats" id="hd-hero-stats">
-        ${d.heroStats.map(s => `<div class="hd-stat"><span class="hd-stat-icon">${heroIcons[s.lbl]||'●'}</span><div><div class="hd-stat-val">${esc(s.val)}</div><div class="hd-stat-lbl">${esc(s.lbl)}</div><div class="hd-stat-sub">${esc(s.sub)}</div></div></div>`).join('')}
+      <div class="hd-hero-inner">
+        <div class="hd-hero-text">
+          <div class="hd-hero-eyebrow">ITALIA CYCLING STATS</div>
+          <h1 class="hd-hero-title">Il ciclismo italiano<br><span>in numeri</span></h1>
+          <p class="hd-hero-sub">Il database del ciclismo agonistico italiano. Risultati, classifiche, storico, statistiche e molto altro.</p>
+          <div class="hd-hero-cta">
+            <a href="#/risultati" class="hd-hero-btn hd-hero-btn--primary">Esplora i dati</a>
+            <a href="#/statistiche" class="hd-hero-btn hd-hero-btn--ghost">Scopri di più</a>
+          </div>
+        </div>
+        <div class="hd-hero-stats-wrap">
+          <div class="hd-hero-stats" id="hd-hero-stats">
+            ${d.heroStats.map(s => `<div class="hd-stat"><span class="hd-stat-icon">${heroIcons[s.lbl]||'●'}</span><div><div class="hd-stat-val">${esc(s.val)}</div><div class="hd-stat-lbl">${esc(s.lbl)}</div><div class="hd-stat-sub">${esc(s.sub)}</div></div></div>`).join('')}
+          </div>
+        </div>
       </div>
     </div>`;
 
@@ -7576,17 +7658,22 @@ function _hdBuildHtml(d) {
       </div>
     </div>`;
 
-  const classificaHtml = `
-    <div class="card hd-card">
-      <div class="hd-card-title">CLASSIFICA GENERALE</div>
-      <div class="hd-rank-list">
-        ${d.top5.length ? d.top5.map((r, i) => `
+  const _hdRankRows = list => list.length ? list.map((r, i) => `
           <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-rank-row">
             <span class="hd-rank-pos">${i+1}</span>
             ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
             <span class="hd-rank-name">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-rank-team">${esc(r.team_attuale||r.team||'')}</span></span>
             <span class="hd-rank-pts">${r.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
-          </a>`).join('') : '<div class="hd-empty">Nessun dato per questa categoria</div>'}
+          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun dato</div>';
+  // Esordienti: 1° e 2° anno mostrati come due mini-classifiche distinte
+  // (richiesto esplicitamente), non fusi in un'unica lista.
+  const classificaHtml = `
+    <div class="card hd-card">
+      <div class="hd-card-title">CLASSIFICA GENERALE</div>
+      <div class="hd-rank-list">
+        ${d.top5Dual ? `<div class="hd-rank-sublbl">2° ANNO</div>` : ''}
+        ${_hdRankRows(d.top5)}
+        ${d.top5Dual ? `<div class="hd-rank-sublbl">1° ANNO</div>${_hdRankRows(d.top5Dual)}` : ''}
       </div>
       <a href="#/classifica/${encodeURIComponent(d.catCode)}" class="hd-card-cta">Vedi classifica completa →</a>
     </div>`;
@@ -7688,6 +7775,7 @@ function _hdBuildHtml(d) {
             <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main">${esc(r.nome_gara||'')}<span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
             ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
             <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-list-team">${esc(r.team||'')}</span></a>
+            <span class="hd-list-pts">${r.punti_effettivi||0}<span class="hd-list-chev">›</span></span>
           </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
       </div>
       <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
@@ -7709,10 +7797,14 @@ function _hdBuildHtml(d) {
 
   const archiveHtml = _hdArchiveHtml(d.stats);
 
+  // Sotto-etichetta con conteggio reale dove disponibile (già calcolato in
+  // heroStats — niente nuova richiesta), descrittiva per le voci senza un
+  // singolo numero rappresentativo ovvio.
+  const _hdStatVal = lbl => (d.heroStats.find(s => s.lbl === lbl) || {}).val;
   const quickLinks = [
-    { href:'#/atleti', icon:'👤', title:'ATLETI', sub:'Esplora tutti gli atleti' },
-    { href:'#/team', icon:'🚴', title:'TEAM', sub:'Tutte le squadre' },
-    { href:'#/gare', icon:'🏁', title:'GARE', sub:'Tutti i risultati e le edizioni' },
+    { href:'#/atleti', icon:'👤', title:'ATLETI', sub:_hdStatVal('ATLETI') ? `${_hdStatVal('ATLETI')} profili` : 'Esplora tutti gli atleti' },
+    { href:'#/team', icon:'🚴', title:'TEAM', sub:_hdStatVal('TEAM') ? `${_hdStatVal('TEAM')} squadre` : 'Tutte le squadre' },
+    { href:'#/gare', icon:'🏁', title:'GARE', sub:_hdStatVal('GARE') ? `${_hdStatVal('GARE')} gare` : 'Tutti i risultati e le edizioni' },
     { href:'#/statistiche', icon:'📊', title:'STATISTICHE', sub:'Numeri, record e analisi' },
     { href:'#/comparatore', icon:'⚖', title:'COMPARATORE', sub:'Confronta atleti e team' },
     { href:'#/media', icon:'📷', title:'MEDIA', sub:'Foto, video e highlights' },
@@ -7724,13 +7816,15 @@ function _hdBuildHtml(d) {
 
   return `<div class="hd-wrap">
     ${heroHtml}
-    ${liveHtml}
-    ${filterBar}
-    <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
-    ${rivalryHtml}
-    <div class="hd-grid-2">${ultimiHtml}${prossimeHtml}</div>
-    ${archiveHtml}
-    ${quickHtml}
+    <div class="hd-inner">
+      ${liveHtml}
+      ${filterBar}
+      <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
+      ${rivalryHtml}
+      <div class="hd-grid-2">${ultimiHtml}${prossimeHtml}</div>
+      ${archiveHtml}
+      ${quickHtml}
+    </div>
   </div>`;
 }
 
