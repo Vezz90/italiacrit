@@ -12155,6 +12155,13 @@ main.page:has(.itc-dash) {
   #app { padding-top: 120px; }
   #nav-drawer { top: 120px; }
 }
+/* Selettore categoria in navbar ("TUTTE ▾") — richiesto esplicitamente di
+   toglierlo: con la home-dashboard che filtra Uomini/Donne+categoria al
+   suo interno, il vecchio selettore globale di contesto è ridondante.
+   Si nasconde solo l'elemento in UI: il meccanismo activeHub sotto resta
+   intatto (è condiviso con /risultati, /classifica ecc. per chi arriva
+   già con un contesto da un link salvato) — nessun'altra pagina è toccata. */
+#ctx-chip { display: none !important; }
 @media (min-width: 641px) and (max-width: 1024px) {
   #navbar-row1 { height: 64px; }
   #app { padding-top: 112px; }
@@ -12192,7 +12199,7 @@ main.page:has(.itc-dash) {
 .hd-wrap {
   --bg-primary:   #0A0E18; --bg-secondary: #0F1526; --bg-card: #121826; --bg-elevated: #1A2236;
   --text-primary: #F4F7FF; --text-secondary: #A7B3CC; --text-muted: #6B7690;
-  --border-subtle: rgba(255,255,255,.08); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8;
+  --border-subtle: rgba(255,255,255,.14); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8;
   width: 100%; background: var(--bg-primary); color: var(--text-primary);
   padding-bottom: 60px;
 }
@@ -12226,9 +12233,9 @@ main.page:has(.itc-dash) {
   opacity: 0; transition: opacity 1.4s ease; pointer-events: none; }
 .hd-hero-bg2.active { opacity: 1; }
 .hd-hero-overlay { position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(120% 220% at 100% 0%, rgba(37,99,235,.45), transparent 60%),
-    linear-gradient(160deg, rgba(10,14,24,.94) 0%, rgba(18,26,46,.90) 55%, rgba(10,14,24,.96) 100%); }
-.hd-hero-inner { position: relative; z-index: 2; max-width: 1760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: space-between; }
+  background: linear-gradient(100deg, rgba(4,5,10,.95) 0%, rgba(4,5,10,.8) 45%, rgba(4,5,10,.55) 100%),
+    linear-gradient(to top, rgba(4,5,10,.9) 0%, transparent 55%); }
+.hd-hero-inner { position: relative; z-index: 2; max-width: 1760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 28px; align-items: center; justify-content: space-between; }
 .hd-hero-text { flex: 1 1 420px; }
 .hd-hero-eyebrow { font-size: .74rem; font-weight: 800; letter-spacing: .08em; color: #7CA6FF; margin-bottom: 6px; }
 .hd-hero-title { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-wrap: balance; color: #F4F7FF; }
@@ -12240,11 +12247,11 @@ main.page:has(.itc-dash) {
 .hd-hero-btn--ghost { border: 1px solid rgba(255,255,255,.22); color: #F4F7FF; }
 .hd-hero-btn--ghost:hover { border-color: #fff; }
 .hd-hero-stats-wrap { flex: 1 1 420px; }
-.hd-hero-sub { color: #A7B3CC; font-size: .94rem; max-width: 560px; margin: 0 0 22px; line-height: 1.5; }
+.hd-hero-sub { color: #A7B3CC; font-size: .94rem; max-width: 560px; margin: 0; line-height: 1.5; }
 .hd-hero-stats { display: flex; flex-wrap: wrap; gap: 12px; }
-.hd-stat { flex: 1 1 140px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 14px 16px; backdrop-filter: blur(2px); }
-.hd-stat-icon { flex-shrink: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(37,99,235,.22); font-size: 1rem; }
-.hd-stat-val { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #F4F7FF; }
+.hd-stat { flex: 1 1 140px; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 9px 12px; backdrop-filter: blur(2px); }
+.hd-stat-icon { flex-shrink: 0; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(37,99,235,.22); font-size: .8rem; }
+.hd-stat-val { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #F4F7FF; line-height: 1.15; }
 .hd-stat-lbl { font-size: .66rem; font-weight: 700; letter-spacing: .05em; color: #8FA0C2; margin-top: 2px; }
 .hd-stat-sub { font-size: .66rem; color: #647089; margin-top: 1px; }
 
@@ -12271,7 +12278,11 @@ main.page:has(.itc-dash) {
 .hd-gtbtn:not(.active):hover, .hd-ctbtn:not(.active):hover { color: var(--text-primary); }
 
 /* Card comune */
-.hd-card { padding: 18px 20px; display: flex; flex-direction: column; }
+/* .card (classe generica del sito) qui non porta sfondo/bordo propri — le
+   card della dashboard risultavano scatole invisibili, senza alcuna
+   divisione visiva tra loro: bug reale, non solo "poco visibile". */
+.hd-card { padding: 18px 20px; display: flex; flex-direction: column;
+  background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); }
 .hd-card-title { font-size: .74rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 14px; }
 .hd-card-cta { display: block; text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle);
   font-size: .82rem; font-weight: 700; color: var(--hd-blue); text-decoration: none; }

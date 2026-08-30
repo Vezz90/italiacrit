@@ -3829,11 +3829,11 @@ function route() {
     return hash.replace('#', '').match(re);
   };
 
-  // PROVA LOCALE (non deployata): nuova home-dashboard al posto del vecchio
-  // flusso Uomo/Donna→Categoria. #/entra riapre il vecchio flusso invariato,
-  // per un confronto immediato o un rollback senza toccare altro codice.
+  // Nuova home-dashboard: sostituisce definitivamente il vecchio flusso
+  // Uomo/Donna→Categoria (richiesta esplicita di rimuoverlo, ormai tutto è
+  // raggiungibile/filtrabile dalla home). renderHome()/showCinematicEntry()
+  // restano nel file ma non sono più collegate da nessuna route.
   if (match('/')) return renderHomeDashboard();
-  if (match('/entra')) return renderHome();
   // Classifica con categoria+vista+ordinamento encoded nell'URL, es.
   // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
   // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
@@ -7684,10 +7684,6 @@ function _hdBuildHtml(d) {
           <div class="hd-hero-eyebrow">ITALIA CYCLING STATS</div>
           <h1 class="hd-hero-title">Il ciclismo italiano<br><span>in numeri</span></h1>
           <p class="hd-hero-sub">Il database del ciclismo agonistico italiano. Risultati, classifiche, storico, statistiche e molto altro.</p>
-          <div class="hd-hero-cta">
-            <a href="#/risultati" class="hd-hero-btn hd-hero-btn--primary">Esplora i dati</a>
-            <a href="#/statistiche" class="hd-hero-btn hd-hero-btn--ghost">Scopri di più</a>
-          </div>
         </div>
         <div class="hd-hero-stats-wrap">
           <div class="hd-hero-stats" id="hd-hero-stats">
