@@ -66,7 +66,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=22" />
-  <link rel="stylesheet" href="design.css?v=141" />
+  <link rel="stylesheet" href="design.css?v=142" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -80,87 +80,99 @@
 <!--  NAVBAR                                                    -->
 <!-- ══════════════════════════════════════════════════════════ -->
 <nav id="navbar" role="navigation" aria-label="Navigazione principale">
-  <a href="#/" class="nav-logo" id="nav-logo-link" aria-label="ICS - Italia Cycling Stats - Home">
-    <img src="assets/logo.png?v=3" alt="ICS - Italia Cycling Stats" class="nav-logo-img" />
-  </a>
-  <div class="nav-sep" aria-hidden="true"></div>
+  <!-- RIGA 1 (desktop): logo — ricerca — tema — accedi/registrati.
+       Su mobile (≤640px) diventa invisibile come contenitore (display:contents,
+       vedi design.css) così i suoi figli restano item diretti del flex di
+       #navbar esattamente come prima — nessuna modifica al layout mobile
+       già ottimizzato. -->
+  <div id="navbar-row1">
+    <a href="#/" class="nav-logo" id="nav-logo-link" aria-label="ICS - Italia Cycling Stats - Home">
+      <img src="assets/logo.png?v=3" alt="ICS - Italia Cycling Stats" class="nav-logo-img" />
+    </a>
+    <div class="nav-sep" aria-hidden="true"></div>
 
-  <div class="nav-links" role="list">
-    <a href="#/" class="nav-link" id="nav-home" role="listitem" onclick="window.goHome(event)">Home</a>
-    <a href="#/risultati" class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
-
-    <!-- Classifiche ▾ -->
-    <div class="nav-group" id="navg-classifiche" role="listitem">
-      <button class="nav-link nav-group-btn" id="nav-class-btn" aria-haspopup="true" aria-expanded="false">
-        Classifiche <span class="nav-chevron" aria-hidden="true">▾</span>
-      </button>
-      <div class="nav-group-panel" role="menu">
-        <a href="#/classifica" class="nav-group-item" id="nav-class"   role="menuitem">Classifica</a>
-        <a href="#/albo"       class="nav-group-item" id="nav-albo"    role="menuitem">Albo d'Oro</a>
-        <a href="#/atleti"     class="nav-group-item" id="nav-atleti"  role="menuitem">Atleti</a>
-        <a href="#/team"       class="nav-group-item" id="nav-team"    role="menuitem">Team</a>
-        <a href="#/gare"       class="nav-group-item" id="nav-gare"    role="menuitem">Gare</a>
-      </div>
+    <div class="nav-search-wrap">
+      <svg class="nav-search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        type="search"
+        id="nav-search"
+        placeholder="Cerca atleta, team o gara…"
+        autocomplete="off"
+        aria-label="Cerca atleta, team o gara"
+      />
+      <div id="search-results-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
     </div>
 
-    <a href="#/calendario" class="nav-link" id="nav-cal" role="listitem">Calendario</a>
-    <a href="#/media" class="nav-link" id="nav-media" role="listitem">Media</a>
-
-    <!-- Analisi ▾ -->
-    <div class="nav-group" id="navg-analisi" role="listitem">
-      <button class="nav-link nav-group-btn" id="nav-analisi-btn" aria-haspopup="true" aria-expanded="false">
-        Analisi <span class="nav-chevron" aria-hidden="true">▾</span>
-      </button>
-      <div class="nav-group-panel" role="menu">
-        <a href="#/statistiche"  class="nav-group-item" id="nav-stats" role="menuitem">Statistiche</a>
-        <a href="#/comparatore"  class="nav-group-item" id="nav-comp"  role="menuitem">Comparatore</a>
-      </div>
+    <div class="badge-live" id="badge-live" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span> LIVE
     </div>
 
-    <a href="#/messaggi" class="nav-link" id="nav-msg" role="listitem" style="display:none">Messaggi</a>
-    <a href="#/login"    class="nav-link" id="nav-login" role="listitem">Login</a>
+    <button class="notif-bell" id="msg-bell" aria-label="Messaggi" style="display:none" onclick="window.location.hash='#/messaggi'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="notif-badge" id="msg-badge" style="display:none">0</span>
+    </button>
+    <button class="notif-bell" id="notif-bell" aria-label="Notifiche" style="display:none" onclick="window.toggleNotifPanel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+    </button>
+    <select id="lang-select" class="lang-select" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)" title="Lingua / Language">
+      <option value="it">🇮🇹</option>
+      <option value="en">🇬🇧</option>
+      <option value="es">🇪🇸</option>
+      <option value="fr">🇫🇷</option>
+      <option value="de">🇩🇪</option>
+      <option value="pt">🇵🇹</option>
+      <option value="nl">🇳🇱</option>
+    </select>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
+      <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+    </button>
+    <a href="#/login" class="nav-top-btn nav-top-btn--ghost" id="nav-login">Accedi</a>
+    <a href="#/register" class="nav-top-btn nav-top-btn--primary" id="nav-register">Registrati</a>
+    <button id="nav-hamburger" aria-label="Apri menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
-  <div class="nav-search-wrap">
-    <svg class="nav-search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input
-      type="search"
-      id="nav-search"
-      placeholder="Cerca atleta, team o gara…"
-      autocomplete="off"
-      aria-label="Cerca atleta, team o gara"
-    />
-    <div id="search-results-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
-  </div>
+  <!-- RIGA 2 (desktop): il menu di navigazione esistente, invariato — solo
+       spostato sotto la riga 1 invece di stare affiancato al logo. -->
+  <div id="navbar-row2">
+    <div class="nav-links" role="list">
+      <a href="#/" class="nav-link" id="nav-home" role="listitem" onclick="window.goHome(event)">Home</a>
+      <a href="#/risultati" class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
 
-  <div class="badge-live" id="badge-live" role="status" aria-live="polite">
-    <span class="dot" aria-hidden="true"></span> LIVE
-  </div>
+      <!-- Classifiche ▾ -->
+      <div class="nav-group" id="navg-classifiche" role="listitem">
+        <button class="nav-link nav-group-btn" id="nav-class-btn" aria-haspopup="true" aria-expanded="false">
+          Classifiche <span class="nav-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="nav-group-panel" role="menu">
+          <a href="#/classifica" class="nav-group-item" id="nav-class"   role="menuitem">Classifica</a>
+          <a href="#/albo"       class="nav-group-item" id="nav-albo"    role="menuitem">Albo d'Oro</a>
+          <a href="#/atleti"     class="nav-group-item" id="nav-atleti"  role="menuitem">Atleti</a>
+          <a href="#/team"       class="nav-group-item" id="nav-team"    role="menuitem">Team</a>
+          <a href="#/gare"       class="nav-group-item" id="nav-gare"    role="menuitem">Gare</a>
+        </div>
+      </div>
 
-  <button class="notif-bell" id="msg-bell" aria-label="Messaggi" style="display:none" onclick="window.location.hash='#/messaggi'">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    <span class="notif-badge" id="msg-badge" style="display:none">0</span>
-  </button>
-  <button class="notif-bell" id="notif-bell" aria-label="Notifiche" style="display:none" onclick="window.toggleNotifPanel()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    <span class="notif-badge" id="notif-badge" style="display:none">0</span>
-  </button>
-  <select id="lang-select" class="lang-select" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)" title="Lingua / Language">
-    <option value="it">🇮🇹</option>
-    <option value="en">🇬🇧</option>
-    <option value="es">🇪🇸</option>
-    <option value="fr">🇫🇷</option>
-    <option value="de">🇩🇪</option>
-    <option value="pt">🇵🇹</option>
-    <option value="nl">🇳🇱</option>
-  </select>
-  <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
-    <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-    <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-  </button>
-  <button id="nav-hamburger" aria-label="Apri menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+      <a href="#/calendario" class="nav-link" id="nav-cal" role="listitem">Calendario</a>
+      <a href="#/media" class="nav-link" id="nav-media" role="listitem">Media</a>
+
+      <!-- Analisi ▾ -->
+      <div class="nav-group" id="navg-analisi" role="listitem">
+        <button class="nav-link nav-group-btn" id="nav-analisi-btn" aria-haspopup="true" aria-expanded="false">
+          Analisi <span class="nav-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="nav-group-panel" role="menu">
+          <a href="#/statistiche"  class="nav-group-item" id="nav-stats" role="menuitem">Statistiche</a>
+          <a href="#/comparatore"  class="nav-group-item" id="nav-comp"  role="menuitem">Comparatore</a>
+        </div>
+      </div>
+
+      <a href="#/messaggi" class="nav-link" id="nav-msg" role="listitem" style="display:none">Messaggi</a>
+    </div>
+  </div>
 </nav>
 
 <!-- Barra di ricerca mobile: sotto l'header, prima del contenuto (solo su mobile) -->
@@ -233,6 +245,6 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=739" defer></script>
+<script src="app.js?v=741" defer></script>
 </body>
 </html>

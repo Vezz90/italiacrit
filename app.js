@@ -645,6 +645,7 @@ async function _adminUserReq(userId, opts) {
 function updateNavLoginState() {
   const user = authUser();
   const link = document.getElementById('nav-login');
+  const registerLink = document.getElementById('nav-register');
   const drawerLink = document.getElementById('drawer-login');
   const bell    = document.getElementById('notif-bell');
   const msgBell = document.getElementById('msg-bell');
@@ -653,6 +654,9 @@ function updateNavLoginState() {
   if (user) {
     const label = user.display_name?.split(' ')[0] || 'Profilo';
     if (link)       { link.textContent = label; link.href = '#/profilo'; link.id = 'nav-login'; }
+    // "Registrati" non ha senso per chi è già loggato — via solo su
+    // desktop (su mobile è già display:none via CSS, indipendentemente).
+    if (registerLink) registerLink.style.display = 'none';
     if (drawerLink) { drawerLink.textContent = label; drawerLink.href = '#/profilo'; }
     if (bell)    bell.style.display = 'flex';
     if (msgBell) msgBell.style.display = 'flex';
@@ -664,7 +668,8 @@ function updateNavLoginState() {
     startNotifPolling();
     startMsgPolling();
   } else {
-    if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
+    if (link)       { link.textContent = 'Accedi'; link.href = '#/login'; }
+    if (registerLink) registerLink.style.display = '';
     if (drawerLink) { drawerLink.textContent = 'Login / Profilo'; drawerLink.href = '#/login'; }
     if (bell)    bell.style.display = 'none';
     if (msgBell) msgBell.style.display = 'none';
@@ -3140,10 +3145,23 @@ function slug(s) {
 }
 
 // ── THEME LOGIC ───────────────────────────────────────────────
+// Il pulsante era presente in pagina ma tenuto SEMPRE nascosto e senza
+// alcun listener di click (tema forzato a light-mode) — richiesto ora
+// esplicitamente nella nuova riga 1 della navbar ("Chiaro/scuro"), quindi
+// viene riattivato con la logica minima necessaria: preferenza salvata in
+// localStorage, default invariato (light) per chi non ha mai scelto.
 function initTheme() {
-  document.body.classList.add('light-mode');
+  let saved = null;
+  try { saved = localStorage.getItem('ics_theme'); } catch {}
+  if (saved === 'dark') document.body.classList.remove('light-mode');
+  else document.body.classList.add('light-mode');
   const btn = document.getElementById('theme-toggle');
-  if (btn) btn.style.display = 'none';
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-mode');
+      try { localStorage.setItem('ics_theme', isLight ? 'light' : 'dark'); } catch {}
+    });
+  }
 }
 
 // ── ROUTER ────────────────────────────────────────────────────

@@ -12120,6 +12120,57 @@ main.page:has(.itc-dash) {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ════════════════════════════════════════════════════════════════
+   NAVBAR A DUE RIGHE (desktop) — Riga 1: logo/ricerca/tema/accedi-
+   registrati, Riga 2: il menu esistente, invariato — come da mockup di
+   riferimento fornito. Il markup (#navbar-row1/#navbar-row2, vedi
+   index.html) esiste SEMPRE; su mobile diventa "invisibile" come
+   contenitore (display:contents) così i suoi figli tornano ad essere
+   item diretti del flex di #navbar esattamente come prima di questa
+   modifica — il layout mobile già ottimizzato resta intoccato. */
+@media (min-width: 641px) {
+  #navbar { flex-direction: column; height: auto; padding: 0; align-items: stretch; }
+  #navbar-row1 {
+    display: flex; align-items: center; gap: 0;
+    height: 72px; padding: 0 24px;
+  }
+  #navbar-row1 .nav-logo-img { height: 44px; }
+  #navbar-row1 .nav-search-wrap { flex: 1; display: flex; justify-content: center; margin-left: 0; }
+  #navbar-row1 #nav-search { width: 100%; max-width: 460px; }
+  #navbar-row1 #nav-search:focus { width: 100%; }
+  #navbar-row2 {
+    display: flex; align-items: center;
+    height: 48px; padding: 0 24px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+  #navbar-row2 .nav-links { flex: 1; }
+  .nav-top-btn {
+    font-family: var(--font-heading); font-size: .82rem; font-weight: 700;
+    padding: 8px 18px; border-radius: 6px; margin-left: 10px; white-space: nowrap;
+    min-height: 36px; display: inline-flex; align-items: center;
+  }
+  .nav-top-btn--ghost { color: #f0f0f0; border: 1px solid rgba(255,255,255,.22); }
+  .nav-top-btn--ghost:hover, .nav-top-btn--ghost.active { border-color: var(--red-hot); background: rgba(255,255,255,.06); }
+  .nav-top-btn--primary { background: var(--red-hot); color: #fff; }
+  .nav-top-btn--primary:hover { background: var(--red-deep); }
+  #app { padding-top: 120px; }
+  #nav-drawer { top: 120px; }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  #navbar-row1 { height: 64px; }
+  #app { padding-top: 112px; }
+  #nav-drawer { top: 112px; }
+}
+@media (max-width: 640px) {
+  /* Sui breakpoint mobile i due wrapper "scompaiono" come contenitori:
+     stessa identica struttura piatta di prima, nessuna regola mobile
+     esistente va toccata. */
+  #navbar-row1, #navbar-row2 { display: contents; }
+  /* I bottoni Accedi/Registrati restano riservati al desktop: su mobile
+     l'accesso resta nel drawer (#drawer-login), come già era. */
+  #nav-login, #nav-register { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════════
    HOME DASHBOARD (v2, PROVA LOCALE) — vedi renderHomeDashboard() in
    app.js. Non collegata al sito in produzione. A differenza del resto del
    sito (che segue il toggle chiaro/scuro dell'utente), questa home è
