@@ -13859,10 +13859,19 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
           ? `window.goTo('${esc(e.href || ('#/gara/' + e.gara_id))}')`
           : `window.openRaceEdition('${esc(e.gara_id)}','${e.year}')`;
         const podio = (e.podio && e.podio.length ? e.podio : [{ posizione: 1, ...e.winner }]);
+        // Nome della gara accanto all'anno quando due edizioni con lo stesso
+        // anno arrivano da gare DIVERSE incollate nel nome calendario (es.
+        // Trofeo Comune di Vertova + Memorial Merelli, stesso giorno, albo
+        // d'oro proprio di ciascuna) — senza questa etichetta le due righe
+        // sembravano un doppione invece di due gare distinte, segnalato
+        // dall'utente ("vedo sempre albi d'oro doppi con nomi diversi").
+        const editionBase = _raceBaseName(e.nome || '');
+        const raceLabel = (editionBase && editionBase !== baseName) ? editionBase : '';
         return `<div onclick="${onclick}"
           style="padding:10px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
             <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
+            ${raceLabel ? `<span style="font-size:.74rem;color:var(--text-muted);font-weight:600">${esc(raceLabel)}</span>` : ''}
             <span style="flex:1"></span>
             ${cur ? '<span style="font-size:.7rem;color:var(--accent,#e8001d);font-weight:700">QUESTA</span>' : '<span style="color:var(--text-muted);font-size:.8rem">→</span>'}
           </div>
