@@ -13652,6 +13652,30 @@ function _raceBaseName(nome) {
   return _RACE_BASE_ALIASES.get(base) || base;
 }
 
+// Alcuni nomi calendario sono DUE gare incollate in una stringa sola, ognuna
+// con la propria numerazione — non solo quella iniziale, che _raceBaseName
+// già toglie (es. "28 TROFEO COMUNE DI VERTOVA 23 MEMORIAL MERELLI": la 28ª
+// edizione del Trofeo Vertova disputata insieme alla 23ª del Memorial
+// Merelli, due gare storicamente distinte con un proprio albo d'oro
+// ciascuna). Il confronto per nome-base intero non trova mai nessuna delle
+// due, perché nessuna storica si chiama così per intero — segnalato
+// dall'utente proprio su questo caso, con l'intuizione giusta: "se una gara
+// ha un numero di edizione davanti bisogna trovare il nesso con le altre".
+// Si spezza sui numeri "in mezzo" alla stringa (non quello iniziale, già
+// tolto) e si prova ogni pezzo come nome-base a sé.
+function _raceSubNames(nomeRaw) {
+  let s = String(nomeRaw || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ');
+  s = s.replace(/^\s*\d+\s*[°^ª]?\s*/, '');
+  const parts = s.split(/\s+\d{1,3}\s*[°^ª]?\s+/).map(p => p.trim()).filter(p => p.length >= 4);
+  if (parts.length < 2) return [];
+  return parts.map(p => {
+    let toks = p.split(/\s+/).filter(Boolean);
+    while (toks.length > 1 && _CAT_NOISE_WORDS.has(toks[toks.length - 1])) toks.pop();
+    const base = toks.join(' ').trim();
+    return _RACE_BASE_ALIASES.get(base) || base;
+  }).filter(p => p.length >= 4);
+}
+
 // Apre l'edizione di una gara di un altro anno: passa alla stagione giusta
 // (riusa il selettore globale) e naviga alla pagina di quell'edizione.
 window.openRaceEdition = async (garaId, year) => {
@@ -13755,7 +13779,7 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
       // passato, quindi senza questo perderebbe di nuovo le edizioni con un
       // nome diverso (segnalato dall'utente con l'albo d'oro ufficiale del
       // club alla mano: Coppa Linari 2008/2009/2011 mancanti).
-      const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
+      const queryTerms = [baseName, ..._raceBaseAliasSources(baseName), ..._raceSubNames(opts.nomeGara || '')];
       const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
       const nativeYears = new Set(editions.map(e => String(e.year)));
       const byEdition = {};
