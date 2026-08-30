@@ -7943,12 +7943,12 @@ function _hdBuildHtml(d) {
       <div class="hd-list">
         ${d.ultimiRisultati.length ? d.ultimiRisultati.map(r => `
           <div class="hd-list-row hd-list-row--result">
-            <span class="hd-list-trophy">🏆</span>
-            <span class="hd-list-date">${_hdRelDay(r.data)}</span>
+            <span class="hd-list-date">${_hdShortDate(r.data)}</span>
             <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main"><span class="hd-list-title">${esc(r.nome_gara||'')}</span><span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
-            ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
-            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner">${esc(r.cognome)} ${esc(r.nome)}<span class="hd-list-team">${esc(r.team||'')}</span></a>
-            <span class="hd-list-pts">${r.punti_effettivi||0} pt</span>
+            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner-block">
+              ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
+              <span class="hd-list-winner-id"><span class="hd-list-winner-name">${esc(r.cognome)} ${esc(r.nome)}</span><span class="hd-list-team">${esc(r.team||'')}</span></span>
+            </a>
           </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
       </div>
       <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
