@@ -577,7 +577,7 @@ function _ogSeedPick(arr, seed) {
 // Vittorie e podi di un atleta nella propria categoria/genere fino a (e
 // inclusa) una certa data — usato per raccontare il traguardo raggiunto
 // (es. "5ª vittoria stagionale") invece del solo piazzamento della gara.
-function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
+async function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
   let wins = 0, podiums = 0;
   for (const r of resultsRaw) {
     if (r.atleta_id !== atleta_id || r.genere !== genere) continue;
@@ -586,6 +586,28 @@ function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
     if (pos === 1) wins++;
     if (pos >= 1 && pos <= 3) podiums++;
   }
+  // Aggiunge vittorie/podi PCS (gare estere/UCI seguite solo da PCS, non
+  // dallo scraping FCI/ciclismo.info sopra) — segnalato esplicitamente
+  // dall'utente con un caso concreto (Fedrizzi: 9 riportate, 12 reali,
+  // mancavano proprio queste 3). Le righe PCS di gare ITALIANE sono
+  // "mirror" delle stesse gare già contate sopra (nome gara con "(NAT)",
+  // confermato confrontando le date con quelle native: stesso giorno,
+  // stesso podio) — SOLO quelle SENZA "(NAT)" sono genuinamente
+  // aggiuntive, altrimenti si conterebbe la stessa vittoria due volte.
+  try {
+    const season = Number(String(uptoDate || '').slice(0, 4));
+    if (season) {
+      const { data: pcsRows } = await supabase.from('pcs_results')
+        .select('data, posizione, gara_name')
+        .eq('atleta_id', atleta_id).eq('season', season).lte('data', uptoDate);
+      for (const r of (pcsRows || [])) {
+        if ((r.gara_name || '').includes('(NAT)')) continue; // già contata sopra
+        const pos = Number(r.posizione);
+        if (pos === 1) wins++;
+        if (pos >= 1 && pos <= 3) podiums++;
+      }
+    }
+  } catch { /* PCS opzionale, non bloccare il conteggio nativo */ }
   return { wins, podiums };
 }
 
@@ -645,7 +667,7 @@ function _ogPodiumLine(nome, podiums, seed) {
 // frasi diverse, così non sembra un testo generato da un template fisso.
 // Condivisa tra /og/gara/:id (meta tag per i crawler) e
 // /api/admin/gara-share-text/:id (testo copiabile per il post FB manuale).
-function _buildGaraNarrative(id, cal, resultsRaw) {
+async function _buildGaraNarrative(id, cal, resultsRaw) {
   const results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
@@ -664,7 +686,7 @@ function _buildGaraNarrative(id, cal, resultsRaw) {
     const isTeamResult = !winner.atleta_id;
     const { wins } = isTeamResult
       ? _ogSeasonTallyTeam(resultsRaw || [], winner.team_id, winner.genere, raceDate)
-      : _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
+      : await _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
     const winnerName = isTeamResult ? (winner.team || winner.team_id) : `${winner.cognome} ${winner.nome}`;
     podiumLines.push(_ogWinnerLine(winnerName, wins, id + '_1') + '.');
     winnerTitleTail = _ogSeedPick(wins <= 1 ? [
@@ -683,14 +705,14 @@ function _buildGaraNarrative(id, cal, resultsRaw) {
     const isTeamResult = !second.atleta_id;
     const { podiums } = isTeamResult
       ? _ogSeasonTallyTeam(resultsRaw || [], second.team_id, second.genere, raceDate)
-      : _ogSeasonTally(resultsRaw || [], second.atleta_id, second.genere, raceDate);
+      : await _ogSeasonTally(resultsRaw || [], second.atleta_id, second.genere, raceDate);
     podiumLines.push(_ogPodiumLine(isTeamResult ? (second.team || second.team_id) : `${second.cognome} ${second.nome}`, podiums, id + '_2') + '.');
   }
   if (third?.atleta_id || (third && (third.team_id || third.team))) {
     const isTeamResult = !third.atleta_id;
     const { podiums } = isTeamResult
       ? _ogSeasonTallyTeam(resultsRaw || [], third.team_id, third.genere, raceDate)
-      : _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
+      : await _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
     podiumLines.push(_ogPodiumLine(isTeamResult ? (third.team || third.team_id) : `${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
   }
 
@@ -741,7 +763,7 @@ app.get('/og/gara/:id', async (req, res) => {
   // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
   const cal = (calRaw || []).find(g => g.id === id)
     || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
-  const { results, title, desc } = _buildGaraNarrative(id, cal, resultsRaw);
+  const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw);
   // Inoltra la regolazione manuale foto (se presente in questo stesso URL,
   // vedi window.shareOnFacebook in app.js) all'URL dell'immagine — è questo
   // il campo che Facebook legge davvero per l'anteprima.
@@ -921,7 +943,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   let stagione_vincitore = null;
   let tutti_i_risultati_stagione_vincitore = [];
   if (winner?.atleta_id) {
-    const tally = _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
+    const tally = await _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
     stagione_vincitore = { vittorie_totali_stagione_QUESTA_INCLUSA: tally.wins, podi_totali_stagione_QUESTO_INCLUSO: tally.podiums };
     tutti_i_risultati_stagione_vincitore = (resultsRaw || [])
       .filter(r => r.atleta_id === winner.atleta_id && (r.data || '') <= raceDate)
@@ -1023,7 +1045,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
 
     // Fallback: narrazione deterministica a template, senza chiamata AI
     // (Claude non configurato, o la generazione è fallita).
-    const { raceName, date, luogo, top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
+    const { raceName, date, luogo, top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw);
     const credit = await _photoCreditFor(id).catch(() => null);
     const lines = [
       raceName.toUpperCase(),
@@ -1152,7 +1174,7 @@ app.get('/api/gara-narrative/:id', async (req, res) => {
     // vecchia narrazione a template così la pagina non resta mai vuota.
     _scheduleGaraNarrativeGeneration(id);
     const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
-    const { top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
+    const { top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw);
     const text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
     res.json({ text, top3, podiumText: podiumLines.join(' '), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
