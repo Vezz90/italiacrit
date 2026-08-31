@@ -16605,7 +16605,13 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
     const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
-    const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
+      // onclick oltre all'href: un link nudo #/team/{id} apre sempre la
+    // stagione CORRENTE del team (il router non porta l'anno nell'URL) —
+    // per un team storico ormai fermo da anni quella vista è vuota (0
+    // punti, 0 atleti, nessun risultato): "apre ma non dà nulla",
+    // segnalato dal vivo. window.setTeamYear naviga già alla stagione
+    // giusta (stesso meccanismo delle pillole STAGIONE sulla pagina team).
+    const teamHtml = tid ? `<a href="#/team/${esc(tid)}" onclick="window.setTeamYear('${esc(tid)}','${esc(y)}');return false">${esc(team)}</a>` : esc(team || '');
     const catShort = (categoria || '').replace(/_/g, ' ');
     return `<div class="pcs-team-row"><span class="pcs-team-year">${esc(y)}</span><span class="pcs-team-name">${teamHtml}</span>${catShort ? ` <span class="pcs-team-cat">(${esc(catShort)})</span>` : ''}</div>`;
   }).join('');
@@ -17073,14 +17079,27 @@ function _resolveHistoricalTeamId(teamName) {
   if (!teamName || !globalData?.teams) return null;
   const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   const normId = norm(teamName);
-  if (globalData.teams[normId]) return normId;
-  const words = String(teamName).split(/\s+/).filter(w => w.replace(/[^A-Za-z0-9]/g, '').length >= 4);
-  const anchor = (words.sort((a, b) => b.length - a.length)[0] || '').toUpperCase();
-  if (!anchor) return null;
+  if (globalData.teams[normId]) return normId; // stesso slug — match esatto, sempre affidabile
+  // Fallback fuzzy: richiede che la MAGGIORANZA delle parole significative
+  // coincidano (indice di Jaccard sul più piccolo dei due insiemi), non
+  // basta più condividerne UNA sola come prima — un nome storico che
+  // condivideva anche solo una parola comune (es. il nome della città) con
+  // un team ATTUALE completamente diverso apriva quella pagina sbagliata:
+  // "apre ma non dà nulla" perché quel team non c'entra nulla con l'atleta
+  // né con l'anno storico in questione (segnalato dal vivo).
+  const words = s => new Set(String(s || '').toUpperCase().split(/[^A-Z0-9]+/).filter(w => w.length >= 4));
+  const wTarget = words(teamName);
+  if (!wTarget.size) return null;
+  let best = null, bestScore = 0;
   for (const [tid, t] of Object.entries(globalData.teams)) {
-    if ((t.nome || '').toUpperCase().includes(anchor)) return tid;
+    const wCand = words(t.nome || tid);
+    if (!wCand.size) continue;
+    let common = 0;
+    for (const w of wTarget) if (wCand.has(w)) common++;
+    const ratio = common / Math.min(wTarget.size, wCand.size);
+    if (ratio > bestScore) { bestScore = ratio; best = tid; }
   }
-  return null;
+  return bestScore >= 0.6 ? best : null;
 }
 
 window.setAtletaCiclismoYear = async (atletaId, anno) => {
@@ -17160,7 +17179,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     const pillWrap = document.getElementById('atleta-team-pill-wrap');
     if (pillWrap) {
       pillWrap.innerHTML = resolvedTeamId
-        ? `<a href="#/team/${esc(resolvedTeamId)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)} →</a>`
+        ? `<a href="#/team/${esc(resolvedTeamId)}" onclick="window.setTeamYear('${esc(resolvedTeamId)}','${esc(anno)}');return false" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)} →</a>`
         : `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>`;
     }
     const catBadge = headerTop.querySelector('.badge-cat');
@@ -17169,7 +17188,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const photoWrap = document.getElementById('atleta-team-photo-wrap');
   if (photoWrap) {
     photoWrap.innerHTML = resolvedTeamId
-      ? `<a href="#/team/${esc(resolvedTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(team)}">
+      ? `<a href="#/team/${esc(resolvedTeamId)}" onclick="window.setTeamYear('${esc(resolvedTeamId)}','${esc(anno)}');return false" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(team)}">
           <span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>
           <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(team)}</span>
         </a>`
