@@ -7352,6 +7352,30 @@ function _hdMovers(resSet, catCode, lastDate) {
 
 function _hdMedalIcon(pos) { return pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}°`; }
 
+// Movers TEAM — stessa logica di _hdMovers ma sulle posizioni della
+// classifica squadre (computeTeamRanking, già usata altrove nel sito per la
+// vista Team di /classifica) invece che sui singoli atleti. La home
+// mostrava solo la classifica/i movers dei corridori, mai quelli delle
+// squadre — segnalato esplicitamente ("mancano le classifiche team e i
+// movers team").
+function _hdTeamMovers(resSet, catCode, lastDate) {
+  const now    = computeTeamRanking(resSet, catCode, null);
+  const before = computeTeamRanking(resSet, catCode, _hdCutDate(lastDate, 7));
+  const posOldMap = Object.fromEntries(before.map(t => [t.team_id, t.pos]));
+  const list = [];
+  for (const t of now) {
+    const posOld = posOldMap[t.team_id];
+    if (!posOld) continue;
+    const gain = posOld - t.pos;
+    if (gain === 0) continue;
+    list.push({ team_id: t.team_id, team: t.team, pos: t.pos, gain });
+  }
+  return {
+    up: list.filter(m => m.gain >= 1).sort((a, b) => b.gain - a.gain).slice(0, 3),
+    dn: list.filter(m => m.gain <= -1).sort((a, b) => a.gain - b.gain).slice(0, 3),
+  };
+}
+
 // ── HOME DASHBOARD — render principale ────────────────────────────
 async function renderHomeDashboard() {
   if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
@@ -7496,6 +7520,15 @@ async function _hdRenderReal(myRenderId) {
   const moversMain = _hdMovers(hubResMain, catCode, lastDate);
   const moversDual = dualCode ? _hdMovers(hubResDual, dualCode, lastDate) : { up: [], dn: [] };
 
+  // ── Classifica e movers TEAM — calcolo sempre dinamico da resultsRaw
+  // (computeTeamRanking), non dal file statico team_rankings/*.json: quel
+  // file non riflette i risultati inseriti a mano, stesso motivo per cui la
+  // vecchia vista Team di /classifica non lo usava mai come fonte diretta.
+  const teamTop5     = computeTeamRanking(resultsRaw, catCode).slice(0, 5);
+  const teamTop5Dual = dualCode ? computeTeamRanking(resultsRaw, dualCode).slice(0, 5) : null;
+  const teamMoversMain = _hdTeamMovers(resultsRaw, catCode, lastDate);
+  const teamMoversDual = dualCode ? _hdTeamMovers(resultsRaw, dualCode, lastDate) : { up: [], dn: [] };
+
   // Rivalità della settimana (funzione esistente, invariata) — una per
   // ciascun anno negli Esordienti, invece di sceglierne solo una.
   const rivalryMain = siFormRivalryFinder(hubResMain, catCode, rankingMain, lastDate);
@@ -7567,6 +7600,7 @@ async function _hdRenderReal(myRenderId) {
     gender, catCode, dualCode, cats, top5, top5Dual,
     fireMain, fireBadgesMain, fireSparkMain, fireDual, fireBadgesDual, fireSparkDual,
     moversMain, moversDual, rivalryMain, rivalryDual,
+    teamTop5, teamTop5Dual, teamMoversMain, teamMoversDual,
     ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
   }));
   _hdWireEvents();
@@ -7830,6 +7864,59 @@ function _hdBuildHtml(d) {
       <a href="#/classifica/${encodeURIComponent(d.catCode)}" class="hd-card-cta">Vedi classifica completa →</a>
     </div>`;
 
+  // ── Classifica e Movers TEAM — stessa struttura delle due card atleti
+  // sopra, sui dati squadra (d.teamTop5/teamMoversMain ecc., calcolati in
+  // _hdRenderReal con computeTeamRanking/_hdTeamMovers).
+  const _hdTeamRankRows = list => list.length ? list.map((t, i) => `
+          <a href="#/team/${encodeURIComponent(t.team_id)}" class="hd-rank-row">
+            <span class="hd-rank-pos">${i+1}</span>
+            ${_hdAvatar(t.team_id, (t.team||'').split(' ')[0]||'', (t.team||'').split(' ')[1]||'', {}, 'sm')}
+            <span class="hd-rank-name">${esc(t.team||t.team_id)}<span class="hd-rank-team">${t.riders||0} atlet${t.riders===1?'a':'i'}</span></span>
+            <span class="hd-rank-pts">${t.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
+          </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun dato</div>';
+  const teamClassificaHtml = `
+    <div class="card hd-card">
+      <div class="hd-card-title">CLASSIFICA TEAM</div>
+      <div class="hd-rank-list">
+        ${d.teamTop5Dual ? `<div class="hd-rank-sublbl">2° ANNO</div>` : ''}
+        ${_hdTeamRankRows(d.teamTop5)}
+        ${d.teamTop5Dual ? `<div class="hd-rank-sublbl">1° ANNO</div>${_hdTeamRankRows(d.teamTop5Dual)}` : ''}
+      </div>
+      <a href="#/classifica/${encodeURIComponent(d.catCode)}/team" class="hd-card-cta">Vedi classifica completa →</a>
+    </div>`;
+
+  const _hdTeamMoversBlock = (movers, subLbl) => `
+    ${d.dualCode ? `<div class="hd-rank-sublbl">${esc(subLbl)}</div>` : ''}
+    <div class="hd-movers-group">
+      <div class="hd-movers-lbl hd-movers-lbl--up">MAGGIORI SALITE</div>
+      ${movers.up.length ? movers.up.map((m, i) => `
+        <a href="#/team/${encodeURIComponent(m.team_id)}" class="hd-mover-row">
+          <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
+          <span class="hd-mover-rank">${i+1}</span>
+          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', {}, 'sm')}
+          <span class="hd-mover-name">${esc(m.team||m.team_id)}</span>
+          <span class="hd-mover-gain hd-mover-gain--up">${m.pos+m.gain}° → ${m.pos}°</span>
+        </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+    </div>
+    <div class="hd-movers-group">
+      <div class="hd-movers-lbl hd-movers-lbl--dn">MAGGIORI DISCESE</div>
+      ${movers.dn.length ? movers.dn.map((m, i) => `
+        <a href="#/team/${encodeURIComponent(m.team_id)}" class="hd-mover-row">
+          <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
+          <span class="hd-mover-rank">${i+1}</span>
+          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', {}, 'sm')}
+          <span class="hd-mover-name">${esc(m.team||m.team_id)}</span>
+          <span class="hd-mover-gain hd-mover-gain--dn">${m.pos+m.gain}° → ${m.pos}°</span>
+        </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
+    </div>`;
+  const teamMoversHtml = `
+    <div class="card hd-card">
+      <div class="hd-card-title">MOVERS TEAM DELLA SETTIMANA</div>
+      ${_hdTeamMoversBlock(d.teamMoversMain, '2° ANNO')}
+      ${d.dualCode ? _hdTeamMoversBlock(d.teamMoversDual, '1° ANNO') : ''}
+      <div class="hd-movers-note">Variazione rispetto a 7 giorni fa, calcolata dallo storico reale della classifica.</div>
+    </div>`;
+
   // Esordienti (d.dualCode presente): un blocco per il 2° anno (catCode) e
   // uno per il 1° anno (dualCode), invece di un unico calcolo sul gruppo
   // combinato — richiesto esplicitamente per Rider of the Moment, Movers e
@@ -7999,6 +8086,7 @@ function _hdBuildHtml(d) {
       ${liveHtml}
       ${filterBar}
       <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
+      <div class="hd-grid-2">${teamClassificaHtml}${teamMoversHtml}</div>
       <div class="hd-grid-2">${rivalryHtml}${ultimiHtml}</div>
       <div class="hd-grid-2">${prossimeHtml}${archiveHtml}</div>
       ${quickHtml}
