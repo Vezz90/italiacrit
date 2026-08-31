@@ -27603,6 +27603,13 @@ function _regRoleFieldsHtml(role) {
           <label class="auth-label">Cognome <span style="color:var(--red-hot)">*</span></label>
           <div class="auth-input-wrap"><input type="text" id="reg-lname" class="auth-input" placeholder="es. Rossi" /></div>
         </div>
+        <div class="auth-field">
+          <label class="auth-label">Sesso <span style="color:var(--red-hot)">*</span></label>
+          <div class="auth-input-wrap"><select id="reg-genere" class="auth-input" style="appearance:auto;cursor:pointer">
+            <option value="M">Uomo</option>
+            <option value="F">Donna</option>
+          </select></div>
+        </div>
       </div>
 
       <!-- CAMPI AGGIUNTIVI -->
@@ -27911,6 +27918,11 @@ window.submitRegister = async function(e) {
         last_name:  v('reg-lname') || (atletaId ? '' : finalDisplayName.split(' ')[0]),
         team,
         birth_year: v('reg-birth'),
+        // Bug reale osservato: senza questo campo un atleta creato "a mano"
+        // (non trovato nei dati FCI) finiva SEMPRE genere M lato server
+        // (default), sbagliato per ogni donna che si registra così — es.
+        // "Di Deo Elena" mostrata/categorizzata come maschio.
+        genere: v('reg-genere') || null,
       }}).catch(() => {});
     }
 

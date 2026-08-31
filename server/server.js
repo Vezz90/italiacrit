@@ -1701,10 +1701,28 @@ async function _uniqueManualAthleteId(cognome, nome) {
   return id;
 }
 
+// Categoria FCI dall'anno di nascita (fasce età standard della federazione,
+// stagione = anno solare corrente): senza questo, un atleta auto-registrato
+// senza corrispondenza FCI restava con categoria NULL — invisibile nelle
+// classifiche/liste filtrate per categoria (la home dashboard, "Atleti",
+// ecc. filtrano tutte per codice categoria).
+function _categoriaFromBirthYear(birthYear, genere) {
+  const by = parseInt(birthYear);
+  if (!by || by < 1900 || by > new Date().getFullYear()) return null;
+  const age = new Date().getFullYear() - by;
+  const g = genere === 'F' ? 'F' : 'M';
+  if (age <= 13) return `ES1_${g}`;
+  if (age === 14) return `ES2_${g}`;
+  if (age <= 16) return `AL_${g}`;
+  if (age <= 18) return `JUN_${g}`;
+  return `ELI_${g}`; // Under23/Elite: il sito non li distingue oltre ELI_M/ELI_F
+}
+
 app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
   try {
     if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
-    let { atleta_id, fci_code, first_name, last_name, team, birth_year } = req.body;
+    let { atleta_id, fci_code, first_name, last_name, team, birth_year, genere } = req.body;
+    genere = genere === 'F' ? 'F' : 'M';
 
     const existing = await queries.getAthleteProfile(req.user.id);
     if (existing) return res.status(409).json({ error: 'Profilo già presente' });
@@ -1713,12 +1731,20 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
     // atleta_id vero e proprio (roster manuale, 0 punti finché non compaiono
     // risultati reali) invece di lasciarlo in sospeso in attesa che lo
     // scraper lo trovi da solo — visibile subito, nessuna approvazione admin.
+    // Bug reale corretto qui (osservato su "Di Deo Elena"): senza genere e
+    // categoria espliciti l'atleta finiva con genere M di default (sbagliato
+    // per ogni donna) e categoria NULL (invisibile ovunque si filtri per
+    // categoria); senza risoluzione del nome team in un team_id reale,
+    // restava un'etichetta libera non collegata alla pagina squadra vera.
     let generatedId = false;
     if (!atleta_id && (first_name || last_name)) {
       atleta_id = await _uniqueManualAthleteId(last_name, first_name);
+      const teamMatch = team ? _findExistingTeam(team, _buildTeamIndex(), genere) : null;
       await queries.createManualAthlete({
         atleta_id, cognome: (last_name || '').toUpperCase(), nome: (first_name || '').toUpperCase(),
-        team: team || null, created_by: req.user.id, source: 'self',
+        team_id: teamMatch?.tid || null, team: teamMatch?.nome || team || null,
+        categoria: _categoriaFromBirthYear(birth_year, genere), genere,
+        created_by: req.user.id, source: 'self',
       });
       generatedId = true;
     }
