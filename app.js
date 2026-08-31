@@ -7571,6 +7571,8 @@ async function _hdRenderReal(myRenderId) {
   const teamTop5Dual = dualCode ? computeTeamRanking(resultsRaw, dualCode).slice(0, 5) : null;
   const teamMoversMain = _hdTeamMovers(resultsRaw, catCode, lastDate);
   const teamMoversDual = dualCode ? _hdTeamMovers(resultsRaw, dualCode, lastDate) : { up: [], dn: [] };
+  const fireTeamMain = _hdTeamFormScore(hubResMain, catCode, lastDate);
+  const fireTeamDual = dualCode ? _hdTeamFormScore(hubResDual, dualCode, lastDate) : null;
 
   // Rivalità della settimana (funzione esistente, invariata) — una per
   // ciascun anno negli Esordienti, invece di sceglierne solo una.
@@ -7638,12 +7640,27 @@ async function _hdRenderReal(myRenderId) {
   const fireSparkMain = _hdSparkFor(fireMain, hubResMain);
   const fireSparkDual = _hdSparkFor(fireDual, hubResDual);
 
+  // Stessa serie cumulata di sopra, ma per team_id invece che atleta_id —
+  // usata dalla card "Team of the Moment".
+  const _hdTeamSparkFor = (fireTeamObj, hubResSubset) => {
+    if (!fireTeamObj) return null;
+    const cronologici = hubResSubset
+      .filter(r => r.team_id === fireTeamObj.team_id && r.data >= _hdCutDate(lastDate, 30) && (r.punti_effettivi || 0) > 0)
+      .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+    if (cronologici.length < 2) return null;
+    let cum = 0;
+    return cronologici.map(r => { cum += (r.punti_effettivi || 0); return { data: r.data, val: cum }; });
+  };
+  const fireTeamSparkMain = _hdTeamSparkFor(fireTeamMain, hubResMain);
+  const fireTeamSparkDual = _hdTeamSparkFor(fireTeamDual, hubResDual);
+
   setPage(_hdBuildHtml({
     heroStats, gareOggi, ultimoRisultato, prossimeCount: prossime7.length,
     gender, catCode, dualCode, cats, top5, top5Dual,
     fireMain, fireBadgesMain, fireSparkMain, fireDual, fireBadgesDual, fireSparkDual,
     moversMain, moversDual, rivalryMain, rivalryDual,
     teamTop5, teamTop5Dual, teamMoversMain, teamMoversDual,
+    fireTeamMain, fireTeamDual, fireTeamSparkMain, fireTeamSparkDual,
     ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
   }));
   _hdWireEvents();
@@ -7996,6 +8013,37 @@ function _hdBuildHtml(d) {
       ${fireBlocks || '<div class="hd-empty">Nessuna attività recente in questa categoria</div>'}
     </div>`;
 
+  // ── Team of the Moment — stessa card del Rider of the Moment sopra,
+  // sul team con la forma migliore nelle ultime 2 settimane (d.fireTeamMain
+  // ecc., calcolati in _hdRenderReal con _hdTeamFormScore).
+  const _hdTeamFireBlock = (fireTeam, spark, catCodeLbl, subLbl) => !fireTeam ? '' : `
+    ${_hdSubLbl(subLbl)}
+    <div class="hd-fire2">
+      <div class="hd-fire2-head">
+        ${_hdAvatar(fireTeam.team_id, (fireTeam.team||'').split(' ')[0]||'', (fireTeam.team||'').split(' ')[1]||'', {}, 'xl')}
+        <div class="hd-fire2-id">
+          <div class="hd-fire2-name">${esc(fireTeam.team||fireTeam.team_id)}</div>
+        </div>
+      </div>
+      <div class="hd-fire2-eyebrow">${catLabelShort(catCodeLbl)} · Form Score ${fireTeam.formScore}/100</div>
+      <div class="hd-fire2-stats">
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">${fireTeam.riders14}</span><span class="hd-fire2-lbl">atleti a punti</span></div>
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">${fireTeam.wins14}</span><span class="hd-fire2-lbl">vittorie ultime 2 sett.</span></div>
+        <div class="hd-fire2-stat"><span class="hd-fire2-val">+${fireTeam.pts14}</span><span class="hd-fire2-lbl">punti ultime 2 sett.</span></div>
+      </div>
+      ${spark ? `<div class="hd-spark-wrap">${_hdSparklineSvg(spark)}</div>` : ''}
+      <a href="#/team/${encodeURIComponent(fireTeam.team_id)}" class="hd-fire2-cta">Vedi profilo →</a>
+    </div>`;
+  const fireTeamBlocks = [
+    _hdTeamFireBlock(d.fireTeamMain, d.fireTeamSparkMain, d.catCode, '2° ANNO'),
+    d.dualCode ? _hdTeamFireBlock(d.fireTeamDual, d.fireTeamSparkDual, d.dualCode, '1° ANNO') : '',
+  ].join('');
+  const fireTeamHtml = `
+    <div class="card hd-card hd-fire-card">
+      <div class="hd-card-title">⚡ TEAM OF THE MOMENT</div>
+      ${fireTeamBlocks || '<div class="hd-empty">Nessuna attività recente in questa categoria</div>'}
+    </div>`;
+
   const _hdMoversBlock = (movers, subLbl) => `
     ${_hdSubLbl(subLbl)}
     <div class="hd-movers-group">
@@ -8129,7 +8177,7 @@ function _hdBuildHtml(d) {
       ${liveHtml}
       ${filterBar}
       <div class="hd-grid-3">${classificaHtml}${fireHtml}${moversHtml}</div>
-      <div class="hd-grid-2">${teamClassificaHtml}${teamMoversHtml}</div>
+      <div class="hd-grid-3">${teamClassificaHtml}${fireTeamHtml}${teamMoversHtml}</div>
       <div class="hd-grid-2">${rivalryHtml}${ultimiHtml}</div>
       <div class="hd-grid-2">${prossimeHtml}${archiveHtml}</div>
       ${quickHtml}
