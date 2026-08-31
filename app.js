@@ -15709,6 +15709,67 @@ window.toggleFollow = async function(type, id, spanId) {
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
 };
 
+// ── Storico squadre — collegamenti confermati dal pannello admin (vedi
+// team_lineage): un team_id è generato dal nome, quindi ogni cambio sponsor
+// crea sul sito una squadra "nuova" anche se è lo stesso club. Caricati UNA
+// volta per sessione (sono poche decine di righe) e riusati per costruire
+// la catena completa di nomi passati/futuri di ogni squadra visitata.
+let _teamLineageCache = null, _teamLineagePromise = null;
+async function _loadTeamLineage() {
+  if (_teamLineageCache) return _teamLineageCache;
+  if (!_teamLineagePromise) {
+    _teamLineagePromise = apiCall('/data/team-lineage').then(d => {
+      _teamLineageCache = d?.links || [];
+      return _teamLineageCache;
+    }).catch(() => (_teamLineageCache = []));
+  }
+  return _teamLineagePromise;
+}
+
+// Cammina la catena di collegamenti confermati in entrambe le direzioni a
+// partire da team_id, restituendo l'elenco ordinato per stagione (incluso
+// il team corrente). I collegamenti sono coppie stagione-per-stagione, non
+// serve altro che seguirli finché ce n'è uno.
+function _teamLineageChain(team_id, links, currentNome) {
+  const chain = [{ team_id, nome: currentNome, season: null, current: true }];
+  let cursor = team_id, guard = 0;
+  while (guard++ < 30) {
+    const prev = links.find(l => l.team_id_to === cursor);
+    if (!prev) break;
+    chain.unshift({ team_id: prev.team_id_from, nome: prev.team_from, season: prev.season_from });
+    cursor = prev.team_id_from;
+  }
+  cursor = team_id; guard = 0;
+  while (guard++ < 30) {
+    const next = links.find(l => l.team_id_from === cursor);
+    if (!next) break;
+    chain.push({ team_id: next.team_id_to, nome: next.team_to, season: next.season_to });
+    cursor = next.team_id_to;
+  }
+  return chain;
+}
+
+async function _injectTeamLineageBar(team_id) {
+  const el = document.getElementById('team-lineage-bar');
+  if (!el) return;
+  const links = await _loadTeamLineage();
+  if (!links.length) return;
+  if (!document.getElementById('team-lineage-bar')) return; // pagina cambiata nel frattempo
+  const currentNome = globalData?.teams?.[team_id]?.nome || team_id;
+  const chain = _teamLineageChain(team_id, links, currentNome);
+  if (chain.length < 2) return; // nessuna storia nota per questa squadra
+  el.innerHTML = `
+    <div class="team-lineage-bar">
+      <span class="team-lineage-lbl">STORICO SQUADRA</span>
+      <div class="team-lineage-chips">
+        ${chain.map(c => c.current
+          ? `<span class="team-lineage-chip team-lineage-chip--current">${esc(c.nome)}</span>`
+          : `<a href="#/team/${encodeURIComponent(c.team_id)}" class="team-lineage-chip">${esc(c.nome)}${c.season ? ` <span class="team-lineage-year">(${esc(c.season)})</span>` : ''}</a>`
+        ).join('<span class="team-lineage-arrow">→</span>')}
+      </div>
+    </div>`;
+}
+
 // ── PCS risultati estesi gara — appende righe nella tabella principale con stessa grafica ──
 async function _loadGaraPcsExt(garaId, circuitResults) {
   let data;
@@ -18640,6 +18701,7 @@ async function renderTeam(team_id, opts = {}) {
       <div id="team-native-header-stats">${headerStats}</div>
       <div id="team-stats-estero" style="display:none;margin-top:6px"></div>
     </div>
+    <div id="team-lineage-bar"></div>
     ${profileYearRow('team', team_id, selYear)}
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
@@ -18710,6 +18772,7 @@ async function renderTeam(team_id, opts = {}) {
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
+  _injectTeamLineageBar(team_id);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 

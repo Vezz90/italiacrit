@@ -12475,3 +12475,18 @@ main.page:has(.itc-dash) {
   .hd-cat-badge { grid-column: 1 / -1; justify-self: start; }
   .hd-rivalry-body { gap: 14px; }
 }
+
+/* ── Storico squadra (team-header) — catena di nomi passati/futuri
+   confermati dal pannello admin "Storico Team" (team_lineage). Vedi
+   _injectTeamLineageBar in app.js. ── */
+.team-lineage-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 10px 0 4px; padding: 10px 14px; background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle); border-radius: var(--r-md); }
+.team-lineage-lbl { font-size: .62rem; font-weight: 800; letter-spacing: .06em; color: var(--text-muted); flex-shrink: 0; }
+.team-lineage-chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: .8rem; }
+.team-lineage-chip { color: var(--text-secondary); text-decoration: none; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--border-subtle); white-space: nowrap; transition: border-color .15s, color .15s; }
+.team-lineage-chip:hover { border-color: var(--accent); color: var(--text-primary); }
+.team-lineage-chip--current { font-weight: 700; color: var(--text-primary); background: var(--bg-card); border-color: var(--accent); }
+.team-lineage-year { color: var(--text-muted); font-size: .74rem; }
+.team-lineage-arrow { color: var(--text-muted); font-size: .74rem; }

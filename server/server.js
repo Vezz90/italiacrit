@@ -1820,6 +1820,21 @@ app.get('/api/data/manual-athletes', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Storico squadre confermato (vedi team_lineage / pannello admin "Storico
+// Team") — pubblico, sola lettura: usato dalla pagina team per mostrare la
+// catena di nomi passati. Solo ~80-100 righe attese, cache 10 min così una
+// visita a raffica di pagine team non fa una query per ognuna.
+let _teamLineageCache = null, _teamLineageCacheTs = 0;
+app.get('/api/data/team-lineage', async (req, res) => {
+  try {
+    if (!_teamLineageCache || (Date.now() - _teamLineageCacheTs) > 600000) {
+      _teamLineageCache = await queries.getTeamLineageByStatus('confirmed');
+      _teamLineageCacheTs = Date.now();
+    }
+    res.json({ links: _teamLineageCache });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/profile/link-team', requireAuth, async (req, res) => {
   try {
     if (req.user.role !== 'team') return res.status(403).json({ error: 'Solo per team' });
