@@ -12188,19 +12188,19 @@ main.page:has(.itc-dash) {
    che le usano già, senza dover riscrivere ogni singola regola colore.
    L'accento è blu ("blu ICS", richiesto esplicitamente) invece del
    --red-hot usato nel resto del sito. */
-/* .page (style.css) impone padding:32px 24px + max-width:1200px centrato —
-   corretto per le pagine normali, ma è esattamente la causa del "riquadro
-   scuro fluttuante su sfondo chiaro, non a tutta larghezza" segnalato:
-   va neutralizzato SOLO quando la pagina è questa dashboard (nessun'altra
-   pagina del sito è affetta). #app gestisce già lo spazio per la navbar
-   fissa (padding-top), quindi va lasciato invariato. */
-/* Solo la home è full-bleed (nessun padding/max-width dalla .page generica)
-   — le altre pagine "congrue alla home" (atleta, gara, ...) usano .hd-wrap
-   per gli STESSI colori/accento scuri ma restano dentro il normale
-   contenitore centrato .page, che l'header profilo/gara sfrutta già per il
-   suo "sfondamento" a margini negativi (vedi .athlete-header). Selettore
-   ristretto a .hd-fullbleed invece che a .hd-wrap generico per questo. */
-.page:has(> .hd-wrap.hd-fullbleed) { padding: 0; max-width: none; }
+/* .page (style.css) impone padding:32px 24px — corretto per le pagine
+   normali, ma su QUALUNQUE pagina scura (.hd-wrap) lascia quel padding
+   chiaro/di sfondo intorno al contenuto scuro: "riquadro scuro fluttuante
+   su sfondo chiaro, bordi che non tornano, si vede il bianco" — bug reale
+   riprovato due volte (prima sulla home, poi su atleta/gara). Va sempre
+   neutralizzato per QUALUNQUE .hd-wrap, non solo la home: lo spazio perso
+   viene rimesso da .hd-wrap stesso (padding-bottom already) o da
+   .hd-wrap.pg-inset (32px/24px, IDENTICO al vecchio padding di .page, così
+   i margini negativi di .athlete-header/.race-header — pensati per
+   annullare esattamente quel padding — continuano a funzionare invariati). */
+.page:has(> .hd-wrap) { padding: 0; max-width: none; }
+.hd-wrap.pg-inset { padding: 32px 24px 60px; }
+@media (max-width: 768px) { .hd-wrap.pg-inset { padding: 20px 16px 60px; } }
 
 .hd-wrap {
   --bg-primary:   #0A0E18; --bg-secondary: #0F1526; --bg-card: #121826; --bg-elevated: #1A2236;

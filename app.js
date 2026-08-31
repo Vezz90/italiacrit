@@ -15280,7 +15280,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   });
 
   setPage(`
-    <div class="hd-wrap">
+    <div class="hd-wrap pg-inset">
     ${headerHtml}
     <div id="atleta-pcs-widget"></div>
     ${profileYearRow('atleta', atleta_id, selYear)}
@@ -20252,7 +20252,7 @@ async function renderGara(gara_id) {
         </div>`;
     }
     setPage(`
-      <div class="hd-wrap">
+      <div class="hd-wrap pg-inset">
       <div class="race-header">
         <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--red-hot);margin-bottom:8px;text-transform:uppercase">🏁 Gara in programma · ${esc(dLabel.toUpperCase())}</div>
         <div class="race-name-display">${esc(_displayName)}</div>
@@ -20856,7 +20856,7 @@ async function renderGara(gara_id) {
     ...(results.length ? { performer: results.slice(0, 10).map(r => ({ '@type':'Person', name:`${r.cognome} ${r.nome}`, identifier: r.atleta_id })) } : {}),
   });
   setPage(`
-    <div class="hd-wrap">
+    <div class="hd-wrap pg-inset">
     <div class="race-header">
       <div class="race-name-display">${esc(name)}${tipoPistaTag(tipo)}</div>
       <div class="race-meta-row">
