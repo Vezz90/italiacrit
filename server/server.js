@@ -1751,6 +1751,17 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
         created_by: req.user.id, source: 'self',
       });
       generatedId = true;
+      // Anno di nascita in entity_overrides (stesso meccanismo delle
+      // modifiche admin): manual_athletes non ha una colonna dedicata, e
+      // senza questo la pagina pubblica dell'atleta non mostrava ne' il
+      // "Classe AAAA" ne' aveva alcuna data di nascita da mostrare — bug
+      // reale osservato dopo il fix precedente (Di Deo Elena).
+      if (birth_year) {
+        await queries.setEntityOverride({
+          entity_type: 'atleta', entity_id: atleta_id, field: 'anno_nascita',
+          new_value: String(parseInt(birth_year)), edited_by: req.user.id,
+        }).catch(() => {});
+      }
     }
 
     await queries.createAthleteProfile({
