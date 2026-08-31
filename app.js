@@ -7212,10 +7212,20 @@ let _hdStatsPromise = null;
 let _hdStatsCache = null; // ultimo risultato risolto — riusato SUBITO (sincrono) sui render successivi
 function _hdLoadStats() {
   if (!_hdStatsPromise) {
-    _hdStatsPromise = fetch(`${API_BASE}/stats/overview`).then(r => r.json()).catch(() => null);
-    _hdStatsPromise.then(s => {
-      if (s && !s.error) _hdStatsCache = s;
-      else _hdStatsPromise = null; // fallito (es. statement timeout server sotto carico) → riprova al prossimo render
+    const fetchOnce = () => fetch(`${API_BASE}/stats/overview`).then(r => r.json()).catch(() => null);
+    _hdStatsPromise = fetchOnce().then(s => {
+      if (s && !s.error) { _hdStatsCache = s; return s; }
+      // Primo tentativo fallito: quasi sempre il backend su Render era
+      // "addormentato" per inattività (si risveglia in ~10-15s) — un solo
+      // riprovo automatico dopo l'attesa, invece di lasciare i contatori
+      // hero e "Dall'Archivio" bloccati su "…"/"Caricamento…" per sempre
+      // finché l'utente non cambia filtro per sbaglio (segnalato dal vivo:
+      // schermata restata così, dati corretti ma mai arrivati sullo schermo).
+      return new Promise(resolve => setTimeout(resolve, 12000)).then(fetchOnce).then(s2 => {
+        if (s2 && !s2.error) { _hdStatsCache = s2; return s2; }
+        _hdStatsPromise = null; // ancora fallito → riprova al prossimo render, come prima
+        return null;
+      });
     });
   }
   return _hdStatsPromise;
