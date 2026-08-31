@@ -11221,6 +11221,10 @@ window.adminNav = async function(section) {
               ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Team</span>
                   <span>${linkedAth.team_id ? `<a href="#/team/${esc(String(linkedAth.team_id))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(linkedAth.team_attuale)}</a>` : esc(linkedAth.team_attuale)}</span></div>`
               : (linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Team</span><span style="color:var(--text-muted)">Nessun team collegato</span></div>` : '');
+            const athCatHtml = linked
+              ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Categoria</span>
+                  <span>${linkedAth?.categoria ? esc(catLabel(linkedAth.categoria)) : `<span style="color:var(--text-muted)">Non impostata</span>`}</span></div>`
+              : '';
             // Team collegato (ruolo "team") — nome già salvato al momento del collegamento
             const teamLink = (u.team_links || [])[0];
             const teamHtml = teamLink
@@ -11258,6 +11262,7 @@ window.adminNav = async function(section) {
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ultimo accesso</span><span>${(u.last_login||'—').toString().slice(0,10)}</span></div>
                     ${linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Profilo atleta</span><a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(`${athLink.first_name||''} ${athLink.last_name||''}`.trim() || String(linked))}</a>${athLink.status !== 'active' ? `<span style="color:var(--text-muted)"> (${esc(athLink.status)})</span>` : ''}</div>` : ''}
                     ${athTeamHtml}
+                    ${athCatHtml}
                     ${teamHtml}
                     ${famHtml}
                   </div>
