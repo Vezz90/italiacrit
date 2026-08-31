@@ -12194,12 +12194,24 @@ main.page:has(.itc-dash) {
    va neutralizzato SOLO quando la pagina è questa dashboard (nessun'altra
    pagina del sito è affetta). #app gestisce già lo spazio per la navbar
    fissa (padding-top), quindi va lasciato invariato. */
-.page:has(> .hd-wrap) { padding: 0; max-width: none; }
+/* Solo la home è full-bleed (nessun padding/max-width dalla .page generica)
+   — le altre pagine "congrue alla home" (atleta, gara, ...) usano .hd-wrap
+   per gli STESSI colori/accento scuri ma restano dentro il normale
+   contenitore centrato .page, che l'header profilo/gara sfrutta già per il
+   suo "sfondamento" a margini negativi (vedi .athlete-header). Selettore
+   ristretto a .hd-fullbleed invece che a .hd-wrap generico per questo. */
+.page:has(> .hd-wrap.hd-fullbleed) { padding: 0; max-width: none; }
 
 .hd-wrap {
   --bg-primary:   #0A0E18; --bg-secondary: #0F1526; --bg-card: #121826; --bg-elevated: #1A2236;
   --text-primary: #F4F7FF; --text-secondary: #A7B3CC; --text-muted: #6B7690;
   --border-subtle: rgba(255,255,255,.14); --hd-blue: #2563EB; --hd-blue-dim: #1D4ED8; --hd-blue-rgb: 37,99,235;
+  /* L'accento del resto del sito (--red-hot, arancione) diventa blu ICS
+     ovunque venga usato dentro una pagina .hd-wrap — un solo punto di
+     ridefinizione invece di editare ogni singolo componente che lo usa
+     (badge, bordi, link attivi, ecc.), stessa tecnica già usata sopra per
+     l'accento magenta di Donne. */
+  --red-hot: var(--hd-blue);
   width: 100%; background: var(--bg-primary); color: var(--text-primary);
   padding-bottom: 60px;
 }

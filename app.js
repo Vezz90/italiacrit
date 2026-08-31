@@ -7357,7 +7357,7 @@ async function renderHomeDashboard() {
   if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
   // Skeleton immediato (richiesto: niente pagina bianca in attesa dei dati)
   setPage(`
-    <div class="hd-wrap">
+    <div class="hd-wrap hd-fullbleed">
       <div class="hd-skel-hero"></div>
       <div class="hd-inner">
         <div class="hd-skel-row"></div>
@@ -7993,7 +7993,7 @@ function _hdBuildHtml(d) {
       ${quickLinks.map(q => `<a href="${q.href}" class="hd-quicklink"><span class="hd-ql-icon">${q.icon}</span><span class="hd-ql-title">${q.title}</span><span class="hd-ql-sub">${esc(q.sub)}</span></a>`).join('')}
     </div>`;
 
-  return `<div class="hd-wrap${d.gender==='F' ? ' hd-gender-f' : ''}">
+  return `<div class="hd-wrap hd-fullbleed${d.gender==='F' ? ' hd-gender-f' : ''}">
     ${heroHtml}
     <div class="hd-inner">
       ${liveHtml}
@@ -15280,6 +15280,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   });
 
   setPage(`
+    <div class="hd-wrap">
     ${headerHtml}
     <div id="atleta-pcs-widget"></div>
     ${profileYearRow('atleta', atleta_id, selYear)}
@@ -15309,6 +15310,7 @@ async function renderAtleta(atleta_id, opts = {}) {
         </tr></thead>
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
+    </div>
     </div>
   `);
 
@@ -20250,6 +20252,7 @@ async function renderGara(gara_id) {
         </div>`;
     }
     setPage(`
+      <div class="hd-wrap">
       <div class="race-header">
         <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--red-hot);margin-bottom:8px;text-transform:uppercase">🏁 Gara in programma · ${esc(dLabel.toUpperCase())}</div>
         <div class="race-name-display">${esc(_displayName)}</div>
@@ -20266,6 +20269,7 @@ async function renderGara(gara_id) {
         ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
       </div>
       ${_preRaceDetailsHtml}
+      </div>
       `);
     window._currentGaraId = primaryGaraId;
     return;
@@ -20852,6 +20856,7 @@ async function renderGara(gara_id) {
     ...(results.length ? { performer: results.slice(0, 10).map(r => ({ '@type':'Person', name:`${r.cognome} ${r.nome}`, identifier: r.atleta_id })) } : {}),
   });
   setPage(`
+    <div class="hd-wrap">
     <div class="race-header">
       <div class="race-name-display">${esc(name)}${tipoPistaTag(tipo)}</div>
       <div class="race-meta-row">
@@ -20899,6 +20904,7 @@ async function renderGara(gara_id) {
     <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
+    </div>
   `);
   if (document.getElementById('race-route-box')) window._loadRaceRouteMap(_calId);
 
