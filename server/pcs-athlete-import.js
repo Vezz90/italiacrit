@@ -293,7 +293,14 @@ async function extractProfileAndResults(page, season) {
       const href = (a.getAttribute('href') || '').replace(/^\/+/, '');
       const m = href.match(/^team\/([a-z0-9-]+)-(\d{4})$/);
       if (!m) continue;
-      out.push({ season: parseInt(m[2], 10), name: a.textContent.trim(), slug: href });
+      // Livello squadra (WT/PRT/PT/CT/CLUB/NAT...) — PCS lo mostra tra
+      // parentesi subito dopo il nome, nello stesso elemento .name già letto
+      // qui sopra (nessuna richiesta in più). Distingue in modo affidabile
+      // "quando un corridore passa professionista" — a differenza del solo
+      // ultimo anno con risultati nativi, funziona anche se quell'anno un
+      // corridore ha fatto pochi/zero punti pur essendo già passato pro.
+      const tierMatch = a.parentElement.textContent.match(/\(([A-Z]{2,5})\)/);
+      out.push({ season: parseInt(m[2], 10), name: a.textContent.trim(), slug: href, tier: tierMatch ? tierMatch[1] : null });
     }
     return out;
   }).catch(() => []);
@@ -730,7 +737,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   const bySeason = new Map();
   for (const t of teamHistory) bySeason.set(t.season, t);
   const rows = [...bySeason.values()].map(t => ({
-    atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, updated_at: new Date().toISOString(),
+    atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, tier: t.tier || null, updated_at: new Date().toISOString(),
   }));
   const { error } = await sb.from('pcs_team_history').upsert(rows, { onConflict: 'atleta_id,season' });
   if (error) throw error;

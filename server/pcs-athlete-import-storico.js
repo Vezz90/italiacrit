@@ -184,7 +184,10 @@ async function extractProfileAndResults(page, season) {
       const href = (a.getAttribute('href') || '').replace(/^\/+/, '');
       const m = href.match(/^team\/([a-z0-9-]+)-(\d{4})$/);
       if (!m) continue;
-      out.push({ season: parseInt(m[2], 10), name: a.textContent.trim(), slug: href });
+      // Livello squadra (WT/PRT/PT/CT/CLUB/NAT...) — vedi commento gemello
+      // in pcs-athlete-import.js.
+      const tierMatch = a.parentElement.textContent.match(/\(([A-Z]{2,5})\)/);
+      out.push({ season: parseInt(m[2], 10), name: a.textContent.trim(), slug: href, tier: tierMatch ? tierMatch[1] : null });
     }
     return out;
   }).catch(() => []);
@@ -303,7 +306,14 @@ async function upsertOverrides(sb, entityId, fields) {
 
 async function upsertTeamHistory(sb, atletaId, teamHistory) {
   if (!teamHistory?.length) return;
-  const rows = teamHistory.map(t => ({ atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, updated_at: new Date().toISOString() }));
+  // Dedup per stagione: stesso bug/fix gemello di pcs-athlete-import.js —
+  // due righe con la stessa stagione nello stesso batch fanno fallire
+  // l'INTERO upsert, perdendo tutte le stagioni dell'atleta.
+  const bySeason = new Map();
+  for (const t of teamHistory) bySeason.set(t.season, t);
+  const rows = [...bySeason.values()].map(t => ({
+    atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, tier: t.tier || null, updated_at: new Date().toISOString(),
+  }));
   const { error } = await sb.from('pcs_team_history').upsert(rows, { onConflict: 'atleta_id,season' });
   if (error) throw error;
 }
