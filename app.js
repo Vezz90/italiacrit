@@ -7320,6 +7320,49 @@ function _hdFormScore(resSet, catCode, lastDate) {
   return candidates[0];
 }
 
+// ── Team of the Moment — stessa idea di _hdFormScore sopra ma raggruppata
+// per team_id invece che per atleta_id: mancava dalla home (segnalato
+// esplicitamente, "ci vuole anche il team of moment"), a fianco della
+// Classifica Team e dei Movers Team già aggiunti prima.
+function _hdTeamFormScore(resSet, catCode, lastDate) {
+  const codes = Array.isArray(catCode) ? catCode : [catCode];
+  const cut14 = _hdCutDate(lastDate, 14), cut30 = _hdCutDate(lastDate, 30);
+  const byTeam = {};
+  for (const r of resSet) {
+    if (!codes.includes(getRankingFileCode(r)) || !r.team_id || !r.data || r.data < cut30) continue;
+    if (isSelectionTeamName(r.team)) continue; // niente selezioni regionali/nazionali, come in classifica team
+    (byTeam[r.team_id] = byTeam[r.team_id] || { team_id: r.team_id, team: r.team, races: [] }).races.push(r);
+  }
+  const candidates = [];
+  for (const t of Object.values(byTeam)) {
+    t.races.sort((x, y) => (y.data || '').localeCompare(x.data || ''));
+    const races14 = t.races.filter(r => r.data >= cut14);
+    if (!races14.length) continue;
+    const pts14 = races14.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    const wins14 = races14.filter(r => r.posizione === 1).length;
+    const podi14 = races14.filter(r => r.posizione <= 3).length;
+    const riders14 = new Set(races14.filter(r => (r.punti_effettivi || 0) > 0).map(r => r.atleta_id)).size;
+    const ptsPrevHalf = t.races.filter(r => r.data < cut14).reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    const trend = pts14 - ptsPrevHalf;
+    candidates.push({ ...t, pts14, wins14, podi14, riders14, trend });
+  }
+  if (!candidates.length) return null;
+  const maxPts = Math.max(1, ...candidates.map(c => c.pts14));
+  const maxTrend = Math.max(1, ...candidates.map(c => Math.max(0, c.trend)));
+  const maxWins = Math.max(1, ...candidates.map(c => c.wins14));
+  const maxRiders = Math.max(1, ...candidates.map(c => c.riders14));
+  for (const c of candidates) {
+    c.formScore = Math.round(100 * (
+      0.40 * (c.pts14 / maxPts) +
+      0.30 * (Math.max(0, c.trend) / maxTrend) +
+      0.20 * (c.wins14 / maxWins) +
+      0.10 * (c.riders14 / maxRiders)
+    ));
+  }
+  candidates.sort((a, b) => b.formScore - a.formScore || b.pts14 - a.pts14);
+  return candidates[0];
+}
+
 // ── Movers — stessa idea di renderHubBars (snapshot classifica ora vs
 // prima), qui semplificata: finestra fissa a 7 giorni (la card si chiama
 // "della settimana"), non la ricerca a finestre crescenti dell'originale.
