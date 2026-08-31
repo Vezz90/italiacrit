@@ -65,7 +65,7 @@
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:37.447Z"
+    "lastChecked": "2026-08-31T05:00:37.048Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -79,7 +79,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:36.884Z"
+    "lastChecked": "2026-08-31T05:00:36.489Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -93,7 +93,7 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:35.748Z"
+    "lastChecked": "2026-08-31T05:00:35.335Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
@@ -107,7 +107,7 @@
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:35.185Z"
+    "lastChecked": "2026-08-31T05:00:34.768Z"
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -158,7 +158,7 @@
     "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
     "data": "25 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:36.325Z"
+    "lastChecked": "2026-08-31T05:00:35.914Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -172,7 +172,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:34.613Z"
+    "lastChecked": "2026-08-31T05:00:34.147Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -182,10 +182,16 @@
     "written": 23,
     "review": []
   },
+  "182686": {
+    "nome": "32° TROFEO  CITTA' DI  ORZINUOVI",
+    "data": "31 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-31T05:00:38.766Z"
+  },
   "182813": {
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
     "data": "27 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-29T05:00:38.016Z"
+    "lastChecked": "2026-08-31T05:00:38.202Z"
   }
 }
