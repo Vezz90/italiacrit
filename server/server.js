@@ -1721,7 +1721,7 @@ function _categoriaFromBirthYear(birthYear, genere) {
 app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
   try {
     if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
-    let { atleta_id, fci_code, first_name, last_name, team, birth_year, genere } = req.body;
+    let { atleta_id, fci_code, first_name, last_name, team, team_id, birth_year, genere } = req.body;
     genere = genere === 'F' ? 'F' : 'M';
 
     const existing = await queries.getAthleteProfile(req.user.id);
@@ -1739,10 +1739,14 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
     let generatedId = false;
     if (!atleta_id && (first_name || last_name)) {
       atleta_id = await _uniqueManualAthleteId(last_name, first_name);
-      const teamMatch = team ? _findExistingTeam(team, _buildTeamIndex(), genere) : null;
+      // team_id arriva già risolto se l'utente ha scelto la squadra dalla
+      // lista nel form (stesso widget usato dalla registrazione team) — il
+      // fuzzy-match sul testo libero resta solo come fallback per chi ha
+      // scritto il nome a mano senza selezionarlo dai suggerimenti.
+      const teamMatch = !team_id && team ? _findExistingTeam(team, _buildTeamIndex(), genere) : null;
       await queries.createManualAthlete({
         atleta_id, cognome: (last_name || '').toUpperCase(), nome: (first_name || '').toUpperCase(),
-        team_id: teamMatch?.tid || null, team: teamMatch?.nome || team || null,
+        team_id: team_id || teamMatch?.tid || null, team: teamMatch?.nome || team || null,
         categoria: _categoriaFromBirthYear(birth_year, genere), genere,
         created_by: req.user.id, source: 'self',
       });

@@ -11210,6 +11210,17 @@ window.adminNav = async function(section) {
             if (panel) panel.remove();
             const athLink = (u.athlete_links || [])[0];
             const linked = athLink ? athLink.atleta_id : '';
+            // Team/categoria dell'atleta collegato (ruolo "atleta") — non salvati
+            // in athlete_profiles (solo per il link di messaggistica): si leggono
+            // dal profilo atleta vero e proprio, già in globalData (comprende
+            // anche i profili auto-registrati, vedi manualAthletesRoster). Prima
+            // qui non si vedeva MAI il team di un atleta dal pannello admin —
+            // bisognava aprire la pagina pubblica del profilo per saperlo.
+            const linkedAth = linked ? (globalData?.athletes || {})[linked] : null;
+            const athTeamHtml = linkedAth?.team_attuale
+              ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Team</span>
+                  <span>${linkedAth.team_id ? `<a href="#/team/${esc(String(linkedAth.team_id))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(linkedAth.team_attuale)}</a>` : esc(linkedAth.team_attuale)}</span></div>`
+              : (linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Team</span><span style="color:var(--text-muted)">Nessun team collegato</span></div>` : '');
             // Team collegato (ruolo "team") — nome già salvato al momento del collegamento
             const teamLink = (u.team_links || [])[0];
             const teamHtml = teamLink
@@ -11246,6 +11257,7 @@ window.adminNav = async function(section) {
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Registrato</span><span>${(u.created_at||'—').toString().slice(0,10)}</span></div>
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ultimo accesso</span><span>${(u.last_login||'—').toString().slice(0,10)}</span></div>
                     ${linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Profilo atleta</span><a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(`${athLink.first_name||''} ${athLink.last_name||''}`.trim() || String(linked))}</a>${athLink.status !== 'active' ? `<span style="color:var(--text-muted)"> (${esc(athLink.status)})</span>` : ''}</div>` : ''}
+                    ${athTeamHtml}
                     ${teamHtml}
                     ${famHtml}
                   </div>
@@ -27625,10 +27637,7 @@ function _regRoleFieldsHtml(role) {
         <label class="auth-label">Anno di nascita <span style="color:var(--red-hot)">*</span></label>
         <div class="auth-input-wrap"><input type="text" id="reg-birth" class="auth-input" placeholder="es. 2007" required /></div>
       </div>
-      <div class="auth-field">
-        <label class="auth-label">Team di appartenenza <span style="color:var(--red-hot)">*</span></label>
-        <div class="auth-input-wrap"><input type="text" id="reg-team" class="auth-input" placeholder="es. ASD Ciclistica Fiorentina" required /></div>
-      </div>
+      ${_regTeamSearchHtml()}
     </div>`;
   }
 
@@ -27792,7 +27801,7 @@ window._regSelectAtleta = function(id, label, team) {
   const results = document.getElementById('reg-atleta-results');
   const manualWrap = document.getElementById('reg-manual-name-wrap');
   const nameInput = document.getElementById('reg-name');
-  const teamInput = document.getElementById('reg-team');
+  const teamInput = document.getElementById('reg-team-search');
   if (results) results.style.display = 'none';
   if (id) {
     // Trovato: compila automaticamente
@@ -27911,12 +27920,18 @@ window.submitRegister = async function(e) {
     // Per l'atleta: collega subito il profilo
     if (role === 'atleta') {
       const atletaId = v('reg-atleta-id') || null;
-      const team = v('reg-team');
+      // reg-team-id (stesso widget di ricerca gia' usato per la
+      // registrazione team, ora riusato anche qui): se l'utente ha
+      // selezionato una squadra reale dalla lista, arriva gia' un
+      // team_id vero — niente piu' da indovinare lato server via
+      // fuzzy-match sul solo testo libero (reg-team-search).
+      const teamId   = v('reg-team-id') || null;
+      const team     = v('reg-team-search');
       await apiCall('/profile/link-athlete', { method: 'POST', body: {
         atleta_id:  atletaId,
         first_name: v('reg-fname') || (atletaId ? '' : finalDisplayName.split(' ').slice(1).join(' ')),
         last_name:  v('reg-lname') || (atletaId ? '' : finalDisplayName.split(' ')[0]),
-        team,
+        team, team_id: teamId,
         birth_year: v('reg-birth'),
         // Bug reale osservato: senza questo campo un atleta creato "a mano"
         // (non trovato nei dati FCI) finiva SEMPRE genere M lato server
