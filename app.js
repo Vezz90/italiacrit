@@ -7623,6 +7623,29 @@ async function _hdRenderReal(myRenderId) {
     else photoIdsPending.push(id);
   }
 
+  // ── Loghi dei team coinvolti (classifica, movers, Team of the Moment) —
+  // stessa logica non bloccante delle foto atleti sopra: mancavano del
+  // tutto (fallback iniziali sempre e comunque anche per team con un logo
+  // già caricato — segnalato esplicitamente: "non si vede il logo del
+  // team eppure l'ho caricato").
+  const teamPhotoIds = new Set();
+  teamTop5.forEach(t => teamPhotoIds.add(t.team_id));
+  if (teamTop5Dual) teamTop5Dual.forEach(t => teamPhotoIds.add(t.team_id));
+  if (fireTeamMain) teamPhotoIds.add(fireTeamMain.team_id);
+  if (fireTeamDual) teamPhotoIds.add(fireTeamDual.team_id);
+  teamMoversMain.up.forEach(m => teamPhotoIds.add(m.team_id));
+  teamMoversMain.dn.forEach(m => teamPhotoIds.add(m.team_id));
+  teamMoversDual.up.forEach(m => teamPhotoIds.add(m.team_id));
+  teamMoversDual.dn.forEach(m => teamPhotoIds.add(m.team_id));
+  const teamPhotoMap = {};
+  const teamPhotoIdsPending = [];
+  for (const id of teamPhotoIds) {
+    if (!id) continue;
+    const cached = _ovCache['team:' + id];
+    if (cached) { if (cached.photo_url) teamPhotoMap[id] = mediaUrl(cached.photo_url); }
+    else teamPhotoIdsPending.push(id);
+  }
+
   // ── Andamento punti del/dei Rider of the Moment — serie reale (non
   // finta): punteggio cumulato gara per gara, risultati a punti nella
   // finestra 30gg usata da _hdFormScore. Se l'atleta ha troppi pochi
@@ -7659,7 +7682,7 @@ async function _hdRenderReal(myRenderId) {
     gender, catCode, dualCode, cats, top5, top5Dual,
     fireMain, fireBadgesMain, fireSparkMain, fireDual, fireBadgesDual, fireSparkDual,
     moversMain, moversDual, rivalryMain, rivalryDual,
-    teamTop5, teamTop5Dual, teamMoversMain, teamMoversDual,
+    teamTop5, teamTop5Dual, teamMoversMain, teamMoversDual, teamPhotoMap,
     fireTeamMain, fireTeamDual, fireTeamSparkMain, fireTeamSparkDual,
     ultimiRisultati, prossimeGare, stats, photoMap, heroPh,
   }));
@@ -7708,6 +7731,16 @@ async function _hdRenderReal(myRenderId) {
   if (photoIdsPending.length) {
     Promise.all(photoIdsPending.map(async id => {
       try { const ov = await getEntityOverrides('atleta', id); if (ov.photo_url) return [id, mediaUrl(ov.photo_url)]; } catch {}
+      return null;
+    })).then(pairs => {
+      if (myRenderId !== window._hdRenderId) return;
+      const patch = Object.fromEntries(pairs.filter(Boolean));
+      if (Object.keys(patch).length) _hdPatchAvatarPhotos(patch);
+    });
+  }
+  if (teamPhotoIdsPending.length) {
+    Promise.all(teamPhotoIdsPending.map(async id => {
+      try { const ov = await getEntityOverrides('team', id); if (ov.photo_url) return [id, mediaUrl(ov.photo_url)]; } catch {}
       return null;
     })).then(pairs => {
       if (myRenderId !== window._hdRenderId) return;
@@ -7930,7 +7963,7 @@ function _hdBuildHtml(d) {
   const _hdTeamRankRows = list => list.length ? list.map((t, i) => `
           <a href="#/team/${encodeURIComponent(t.team_id)}" class="hd-rank-row">
             <span class="hd-rank-pos">${i+1}</span>
-            ${_hdAvatar(t.team_id, (t.team||'').split(' ')[0]||'', (t.team||'').split(' ')[1]||'', {}, 'sm')}
+            ${_hdAvatar(t.team_id, (t.team||'').split(' ')[0]||'', (t.team||'').split(' ')[1]||'', d.teamPhotoMap, 'sm')}
             <span class="hd-rank-name">${esc(t.team||t.team_id)}<span class="hd-rank-team">${t.riders||0} atlet${t.riders===1?'a':'i'}</span></span>
             <span class="hd-rank-pts">${t.punti||0}<span class="hd-rank-ptslbl">pt</span></span>
           </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun dato</div>';
@@ -7953,7 +7986,7 @@ function _hdBuildHtml(d) {
         <a href="#/team/${encodeURIComponent(m.team_id)}" class="hd-mover-row">
           <span class="hd-mover-arrow hd-mover-arrow--up">↑</span>
           <span class="hd-mover-rank">${i+1}</span>
-          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', {}, 'sm')}
+          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', d.teamPhotoMap, 'sm')}
           <span class="hd-mover-name">${esc(m.team||m.team_id)}</span>
           <span class="hd-mover-gain hd-mover-gain--up">${m.pos+m.gain}° → ${m.pos}°</span>
         </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
@@ -7964,7 +7997,7 @@ function _hdBuildHtml(d) {
         <a href="#/team/${encodeURIComponent(m.team_id)}" class="hd-mover-row">
           <span class="hd-mover-arrow hd-mover-arrow--dn">↓</span>
           <span class="hd-mover-rank">${i+1}</span>
-          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', {}, 'sm')}
+          ${_hdAvatar(m.team_id, (m.team||'').split(' ')[0]||'', (m.team||'').split(' ')[1]||'', d.teamPhotoMap, 'sm')}
           <span class="hd-mover-name">${esc(m.team||m.team_id)}</span>
           <span class="hd-mover-gain hd-mover-gain--dn">${m.pos+m.gain}° → ${m.pos}°</span>
         </a>`).join('') : '<div class="hd-empty hd-empty--sm">Nessun movimento significativo</div>'}
@@ -8020,7 +8053,7 @@ function _hdBuildHtml(d) {
     ${_hdSubLbl(subLbl)}
     <div class="hd-fire2">
       <div class="hd-fire2-head">
-        ${_hdAvatar(fireTeam.team_id, (fireTeam.team||'').split(' ')[0]||'', (fireTeam.team||'').split(' ')[1]||'', {}, 'xl')}
+        ${_hdAvatar(fireTeam.team_id, (fireTeam.team||'').split(' ')[0]||'', (fireTeam.team||'').split(' ')[1]||'', d.teamPhotoMap, 'xl')}
         <div class="hd-fire2-id">
           <div class="hd-fire2-name">${esc(fireTeam.team||fireTeam.team_id)}</div>
         </div>
