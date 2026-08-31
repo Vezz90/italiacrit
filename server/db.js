@@ -410,6 +410,32 @@ async function migrate() {
       text         TEXT NOT NULL,
       generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
+    // Storico squadre: un team_id è generato dal nome (slug) — cambia ogni
+    // volta che cambia lo sponsor principale, anche se è lo stesso club.
+    // Questa tabella collega team_id di anni diversi che sono probabilmente
+    // la STESSA squadra, rilevati da uno script offline (roster in comune
+    // fra una stagione e la successiva, vedi server/detect-team-lineage.js)
+    // e confermati/rifiutati da un admin prima di essere mostrati sul sito
+    // — mai auto-collegati, il rischio di falsi positivi (corridori passati
+    // in blocco a una squadra rivale, non la stessa squadra rinominata) è
+    // reale, verificato dal vivo sui dati.
+    `CREATE TABLE IF NOT EXISTS team_lineage (
+      id              SERIAL PRIMARY KEY,
+      team_id_from     TEXT NOT NULL,
+      team_from        TEXT NOT NULL,
+      season_from      TEXT NOT NULL,
+      team_id_to       TEXT NOT NULL,
+      team_to          TEXT NOT NULL,
+      season_to        TEXT NOT NULL,
+      common_riders    INTEGER NOT NULL,
+      overlap_ratio    NUMERIC NOT NULL,
+      name_similarity  NUMERIC,
+      status           TEXT NOT NULL DEFAULT 'pending',
+      reviewed_by      INTEGER REFERENCES users(id),
+      reviewed_at      TIMESTAMPTZ,
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(team_id_from, team_id_to, season_from, season_to)
+    )`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -668,6 +694,32 @@ const queries = {
 
   getAllEntityOverrides: () =>
     all(`SELECT * FROM entity_overrides ORDER BY created_at DESC`),
+
+  // Storico squadre — collegamenti team_id anno-per-anno proposti dallo
+  // script offline, in attesa di conferma admin (vedi migrazione team_lineage).
+  insertTeamLineageCandidate: ({ team_id_from, team_from, season_from, team_id_to, team_to, season_to, common_riders, overlap_ratio, name_similarity }) =>
+    run(
+      `INSERT INTO team_lineage (team_id_from, team_from, season_from, team_id_to, team_to, season_to, common_riders, overlap_ratio, name_similarity)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (team_id_from, team_id_to, season_from, season_to) DO UPDATE
+         SET common_riders = $7, overlap_ratio = $8, name_similarity = $9`,
+      [team_id_from, team_from, season_from, team_id_to, team_to, season_to, common_riders, overlap_ratio, name_similarity]
+    ),
+
+  getTeamLineageByStatus: (status) =>
+    all(`SELECT * FROM team_lineage WHERE status = $1 ORDER BY overlap_ratio DESC`, [status]),
+
+  reviewTeamLineage: (id, status, reviewed_by) =>
+    run(`UPDATE team_lineage SET status = $2, reviewed_by = $3, reviewed_at = NOW() WHERE id = $1`, [id, status, reviewed_by]),
+
+  // Catena di collegamenti CONFERMATI per un team_id, in entrambe le
+  // direzioni (indietro verso i nomi precedenti, avanti verso quelli
+  // successivi) — usata per mostrare lo storico completo sulla pagina team.
+  getConfirmedTeamLineageChain: (team_id) =>
+    all(
+      `SELECT * FROM team_lineage WHERE status = 'confirmed' AND (team_id_from = $1 OR team_id_to = $1)`,
+      [team_id]
+    ),
 
   // Gara overrides
   setGaraOverride: ({ gara_id, field, old_value, new_value, edited_by }) =>

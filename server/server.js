@@ -2007,6 +2007,24 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Storico squadre: coda di conferma per i collegamenti anno-per-anno
+// proposti da server/detect-team-lineage.js (vedi migrazione team_lineage
+// in db.js) — mai auto-collegati, un admin conferma/rifiuta ogni proposta.
+app.get('/api/admin/team-lineage', requireAdmin, async (req, res) => {
+  try {
+    const status = ['pending', 'confirmed', 'rejected'].includes(req.query.status) ? req.query.status : 'pending';
+    res.json({ items: await queries.getTeamLineageByStatus(status) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/team-lineage/:id/confirm', requireAdmin, async (req, res) => {
+  try { await queries.reviewTeamLineage(parseInt(req.params.id, 10), 'confirmed', req.user.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/team-lineage/:id/reject', requireAdmin, async (req, res) => {
+  try { await queries.reviewTeamLineage(parseInt(req.params.id, 10), 'rejected', req.user.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 const VALID_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media', 'admin'];
 
 // Cambio ruolo utente (admin)

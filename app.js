@@ -10930,6 +10930,10 @@ async function renderAdmin() {
         <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
           <span class="admin-nav-icon">🏁</span> Gare / Risultati
         </div>
+        <div class="admin-nav-item" data-section="team-lineage" onclick="adminNav('team-lineage')">
+          <span class="admin-nav-icon">🔗</span> Storico Team
+          <span class="admin-nav-badge" id="badge-team-lineage"></span>
+        </div>
         <div class="admin-nav-group">Social & Automazione</div>
         <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
           <span class="admin-nav-icon">📣</span> Coda Social
@@ -11011,7 +11015,7 @@ window.adminNav = async function(section) {
         </div>`;
       // Carica i contatori
       try {
-        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ] = await Promise.all([
+        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ, tlPend] = await Promise.all([
           apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
           apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
           apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
@@ -11019,6 +11023,7 @@ window.adminNav = async function(section) {
           fetch(`${API_BASE}/admin/pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({pending:[]})),
           fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
           apiCall('/admin/social/queue').catch(()=>({queue:[]})),
+          fetch(`${API_BASE}/admin/team-lineage?status=pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({items:[]})),
         ]);
         const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
         const fotoPend    = (photos.photos||[]).length;
@@ -11028,6 +11033,7 @@ window.adminNav = async function(section) {
         const profPend    = (pendProf.pending||[]).length;
         const utentiCount = (usersD.users||[]).length;
         const socialPend  = (socialQ.queue||[]).filter(q=>q.status==='pending').length;
+        const tlPendCount = (tlPend.items||[]).length;
         setPending('ov-foto-pending', fotoPend);
         setPending('ov-xpix', xpixPend);
         setPending('ov-video-pending', vidPend2);
@@ -11043,6 +11049,7 @@ window.adminNav = async function(section) {
         setBadge('badge-yt', ytPend);
         setBadge('badge-profili-pending', profPend);
         setBadge('badge-social', socialPend);
+        setBadge('badge-team-lineage', tlPendCount);
       } catch(e) { /* ignora */ }
       break;
     }
@@ -11602,6 +11609,83 @@ window.adminNav = async function(section) {
           }
         };
         await loadPending();
+      })();
+      break;
+    }
+
+    case 'team-lineage': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🔗 Storico Team</h1>
+          <p class="admin-page-sub">Un team_id è generato dal nome: ogni cambio sponsor crea sul sito una squadra "nuova" anche se è lo stesso club. Questi collegamenti sono proposti confrontando il roster di una stagione con quella successiva (Elite/U23 Uomini) — conferma solo quelli che riconosci come la stessa squadra rinominata.</p>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px" id="tl-tabs">
+          <button class="tab-btn active-cat" data-tl-status="pending" onclick="window._tlLoad('pending')">IN ATTESA</button>
+          <button class="tab-btn" data-tl-status="confirmed" onclick="window._tlLoad('confirmed')">CONFERMATI</button>
+          <button class="tab-btn" data-tl-status="rejected" onclick="window._tlLoad('rejected')">RIFIUTATI</button>
+        </div>
+        <div id="admin-tl-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        window._tlLoad = async (status) => {
+          document.querySelectorAll('#tl-tabs .tab-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.tlStatus === status));
+          const body = document.getElementById('admin-tl-body');
+          if (!body) return;
+          body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
+          try {
+            const d = await fetch(`${API_BASE}/admin/team-lineage?status=${status}`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
+            const items = d.items || [];
+            if (status === 'pending') {
+              const badge = document.getElementById('badge-team-lineage');
+              if (badge) badge.textContent = items.length || '';
+            }
+            if (!items.length) {
+              body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun collegamento in attesa.' : 'Nessun elemento.'}</div>`;
+              return;
+            }
+            body.innerHTML = `
+              <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} collegament${items.length !== 1 ? 'i' : 'o'}</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+              ${items.map(t => `
+                <div id="tl-card-${t.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                  <div style="flex:1;min-width:280px">
+                    <div style="font-weight:700;font-size:.9rem;margin-bottom:4px">
+                      ${esc(t.team_from)} <span style="color:var(--text-muted);font-weight:400">(${esc(t.season_from)})</span>
+                      <span style="margin:0 6px;color:var(--accent)">→</span>
+                      ${esc(t.team_to)} <span style="color:var(--text-muted);font-weight:400">(${esc(t.season_to)})</span>
+                    </div>
+                    <div style="font-size:.78rem;color:var(--text-muted)">
+                      <span style="font-weight:700;color:${t.overlap_ratio>=0.5?'#22c55e':'var(--text-muted)'}">${Math.round(t.overlap_ratio*100)}% roster in comune</span>
+                      <span style="margin-left:10px">${t.common_riders} corridori</span>
+                      ${t.name_similarity!=null ? `<span style="margin-left:10px">Somiglianza nome: ${Math.round(t.name_similarity*100)}%</span>` : ''}
+                    </div>
+                  </div>
+                  ${status === 'pending' ? `
+                  <div style="display:flex;gap:8px">
+                    <button class="btn-approve" onclick="window._tlAction(${t.id},'confirm')" style="padding:7px 16px;font-size:.82rem">✓ Conferma</button>
+                    <button class="btn-reject"  onclick="window._tlAction(${t.id},'reject')"  style="padding:7px 14px;font-size:.82rem">✗ Rifiuta</button>
+                  </div>` : `<div style="font-size:.78rem;color:var(--text-muted)">${status === 'confirmed' ? '✓ confermato' : '✗ rifiutato'}</div>`}
+                </div>
+              `).join('')}
+              </div>`;
+          } catch(e) {
+            body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+          }
+        };
+        window._tlAction = async (id, action) => {
+          const card = document.getElementById(`tl-card-${id}`);
+          if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+          try {
+            const res = await fetch(`${API_BASE}/admin/team-lineage/${id}/${action}`, {
+              method: 'POST', headers: { Authorization: `Bearer ${authToken()}` },
+            });
+            if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+            await window._tlLoad('pending');
+          } catch(e) {
+            if (card) { card.style.opacity = ''; card.style.pointerEvents = ''; }
+            alert('Errore: ' + e.message);
+          }
+        };
+        await window._tlLoad('pending');
       })();
       break;
     }
