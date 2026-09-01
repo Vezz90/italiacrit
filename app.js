@@ -16612,6 +16612,26 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (!t.team || teamsByYear.has(y) || Number(y) > Number(nowYear)) continue;
     teamsByYear.set(y, { team: t.team, categoria: '', pcs: true });
   }
+  // Correggi anche l'header (badge/foto team in alto sul profilo), stessa
+  // causa del bug appena corretto sopra: viene renderizzato PRIMA che
+  // questo widget carichi i dati PCS, quindi parte sempre dal team FCI
+  // "attuale" — per un atleta passato pro quello è stale (l'ultima
+  // squadra dilettanti mai registrata). Se ora sappiamo il team VERO di
+  // quest'anno (da teamsByYear, appena corretto) ed è diverso, aggiorna
+  // l'header di conseguenza invece di lasciarlo con l'informazione vecchia.
+  const nowTeamEntry = teamsByYear.get(nowYear);
+  if (nowTeamEntry && nowTeamEntry.team && nowTeamEntry.team !== currentTeam) {
+    const nowTid = currentTeamId && !nowTeamEntry.pcs ? currentTeamId : _resolveHistoricalTeamId(nowTeamEntry.team);
+    const pillWrap = document.getElementById('atleta-team-pill-wrap');
+    if (pillWrap) {
+      pillWrap.innerHTML = nowTid
+        ? `<a href="#/team/${esc(nowTid)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(nowTeamEntry.team)} →</a>`
+        : `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(nowTeamEntry.team)}</span>`;
+    }
+    const photoWrap = document.getElementById('atleta-team-photo-wrap');
+    if (photoWrap) photoWrap.innerHTML = ''; // nessun logo team affidabile per un team solo-PCS, meglio vuoto che quello sbagliato
+  }
+
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
