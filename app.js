@@ -16652,7 +16652,14 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // PT/CT = professionistico, CLUB = dilettanti) — vedi tier in
   // pcs_team_history, aggiunto apposta. NAT (nazionale) non conta da solo:
   // capita anche a dilettanti/junior convocati in nazionale.
-  const PRO_TIERS = new Set(['WT', 'PRT', 'PT', 'CT']);
+  // 'CT' (Continental Team) escluso di proposito: verificato sui dati reali
+  // (segnalato dall'utente su Lorello Riccardo) che PCS lo usa SIA per vere
+  // squadre continental professionistiche SIA per normali club dilettanti
+  // italiani (es. "S.C. Padovani Polo Cherry Bank", ASD) — non è un segnale
+  // affidabile di "passato prof". Tengono solo i livelli davvero
+  // professionistici: WorldTeam (WT/WTW) e ProTeam (PRT/PRW/PT, + PCT, il
+  // nome usato da PCS per lo stesso livello prima della riforma UCI 2020).
+  const PRO_TIERS = new Set(['WT', 'WTW', 'PRT', 'PRW', 'PT', 'PCT']);
   const proSeasons = teamHistoryRows.filter(t => t.tier && PRO_TIERS.has(t.tier)).map(t => Number(t.season));
   const transitionYear = proSeasons.length ? Math.min(...proSeasons) : null;
   let careerHtml = '';
