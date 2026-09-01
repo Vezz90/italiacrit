@@ -2,7 +2,9 @@
 // Lista degli atleti gia' tracciati (pcs_team_history) ma senza ancora il
 // livello squadra (tier IS NULL) -- vedi commit 07385996. Genera
 // l'ids-file per pcs-athlete-import.js --ids-file=..., stesso schema del
-// backfill team-history gia' fatto in precedenza.
+// backfill team-history gia' fatto in precedenza. Riusabile per ripulire
+// i residui (nuovi atleti importati prima del fix, sfide anti-bot non
+// superate al primo giro, ecc.) senza dover ricostruire lo script da zero.
 const fs = require('fs');
 const path = require('path');
 

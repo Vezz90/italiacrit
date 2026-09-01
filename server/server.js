@@ -4431,7 +4431,7 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
 app.get('/api/pcs-team-history/:atletaId', async (req, res) => {
   try {
     const { data, error } = await supabase.from('pcs_team_history')
-      .select('season, team, team_pcs_slug').eq('atleta_id', req.params.atletaId).order('season', { ascending: false });
+      .select('season, team, team_pcs_slug, tier').eq('atleta_id', req.params.atletaId).order('season', { ascending: false });
     if (error) throw error;
     res.json(data || []);
   } catch (e) { res.status(500).json({ error: e.message }); }

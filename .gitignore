@@ -34,3 +34,5 @@ server/norton-root.pem
 ~$*.xlsx
 server/team-history-*.json
 server/team-history-*.log
+server/tier-backfill-*.json
+server/tier-backfill.log

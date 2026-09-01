@@ -16605,19 +16605,55 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
     const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
-      // onclick oltre all'href: un link nudo #/team/{id} apre sempre la
-    // stagione CORRENTE del team (il router non porta l'anno nell'URL) —
-    // per un team storico ormai fermo da anni quella vista è vuota (0
-    // punti, 0 atleti, nessun risultato): "apre ma non dà nulla",
-    // segnalato dal vivo. window.setTeamYear naviga già alla stagione
-    // giusta (stesso meccanismo delle pillole STAGIONE sulla pagina team).
     const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
     const catShort = (categoria || '').replace(/_/g, ' ');
     return `<div class="pcs-team-row"><span class="pcs-team-year">${esc(y)}</span><span class="pcs-team-name">${teamHtml}</span>${catShort ? ` <span class="pcs-team-cat">(${esc(catShort)})</span>` : ''}</div>`;
   }).join('');
 
+  // ── Carriera Dilettanti/Giovanile vs Professionistica ────────────────
+  // Divisione richiesta esplicitamente, col criterio verificato dal vivo su
+  // Bettiol: non "ultimo anno con punti nel nostro archivio" (un anno di
+  // pochi/nessun risultato romperebbe quel criterio pur essendo già
+  // passato pro), ma il livello squadra che PCS stesso assegna (WT/PRT/
+  // PT/CT = professionistico, CLUB = dilettanti) — vedi tier in
+  // pcs_team_history, aggiunto apposta. NAT (nazionale) non conta da solo:
+  // capita anche a dilettanti/junior convocati in nazionale.
+  const PRO_TIERS = new Set(['WT', 'PRT', 'PT', 'CT']);
+  const proSeasons = teamHistoryRows.filter(t => t.tier && PRO_TIERS.has(t.tier)).map(t => Number(t.season));
+  const transitionYear = proSeasons.length ? Math.min(...proSeasons) : null;
+  let careerHtml = '';
+  if (transitionYear && dedupedMerged.length) {
+    const era = (rows) => {
+      const wins = rows.filter(r => r.posizione === 1).length;
+      const podi = rows.filter(r => r.posizione <= 3).length;
+      return { wins, podi, gare: rows.length };
+    };
+    const amRows  = dedupedMerged.filter(r => Number(r.anno) < transitionYear);
+    const proRows = dedupedMerged.filter(r => Number(r.anno) >= transitionYear);
+    if (amRows.length && proRows.length) { // ha davvero entrambe le fasi, altrimenti la divisione non aggiunge nulla
+      const am = era(amRows), pro = era(proRows);
+      const amYears  = amRows.map(r => Number(r.anno));
+      const proYears = proRows.map(r => Number(r.anno));
+      const block = (label, e, years) => `
+        <div class="pcs-career-block">
+          <div class="pcs-career-label">${esc(label)} <span class="pcs-career-years">(${Math.min(...years)}-${Math.max(...years)})</span></div>
+          <div class="pcs-career-stats">
+            <span><strong>${e.wins}</strong> vittorie</span>
+            <span><strong>${e.podi}</strong> podi</span>
+            <span><strong>${e.gare}</strong> gare</span>
+          </div>
+        </div>`;
+      careerHtml = `
+        <div class="pcs-career-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
+          ${block('CARRIERA DILETTANTI/GIOVANILE', am, amYears)}
+          ${block('CARRIERA PROFESSIONISTICA', pro, proYears)}
+        </div>`;
+    }
+  }
+
   if (!topResultsHtml && !teamsHtml) return;
   el.innerHTML = `
+    ${careerHtml}
     <div class="pcs-widget-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0 8px">
       <div>
         <div class="pcs-widget-title">Top results</div>

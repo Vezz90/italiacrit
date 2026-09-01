@@ -12113,6 +12113,19 @@ main.page:has(.itc-dash) {
 @media (max-width: 640px) {
   .pcs-widget-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
 }
+
+/* ── Carriera Dilettanti/Giovanile vs Professionistica (profilo atleta) ──
+   Divisione al primo anno con team di livello PCS diverso da CLUB (vedi
+   pcs_team_history.tier) — solo per gli atleti che hanno davvero
+   entrambe le fasi. */
+.pcs-career-block { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 12px 16px; }
+.pcs-career-label { font-size: 0.7rem; font-weight: 800; letter-spacing: .03em; color: var(--text-muted); margin-bottom: 8px; }
+.pcs-career-years { font-weight: 500; text-transform: none; letter-spacing: 0; }
+.pcs-career-stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; }
+.pcs-career-stats strong { color: var(--accent); font-size: 1.05rem; }
+@media (max-width: 640px) {
+  .pcs-career-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+}
 /* Tab "Albo d'oro" visibile subito nella pagina gara, con un mini-spinner
    finché i dati non arrivano — prima restava invisibile fino a fine
    caricamento, dando l'impressione che la funzione non ci fosse o fosse
