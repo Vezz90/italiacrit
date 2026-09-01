@@ -23,3 +23,26 @@ jobs:
             echo "::error::Deploy hook fallito (HTTP $code)"
             exit 1
           fi
+
+      # Cloudflare mette in cache app.js/design.css (max-age 1h sull'origin,
+      # ma un edge node sfortunato che fa la prima fetch durante la finestra
+      # di rolling-restart di Render può bloccare contenuto stale per ore,
+      # a prescindere dal bump di ?v=NNN in index.html). Aspettiamo che il
+      # rolling restart di Render finisca, poi svuotiamo la cache della zona
+      # cosi' il prossimo utente prende sempre la versione appena deployata.
+      - name: Attendi il rolling restart di Render
+        run: sleep 90
+
+      - name: Svuota cache Cloudflare
+        run: |
+          code=$(curl -s -o /tmp/purge.json -w "%{http_code}" -X POST \
+            "https://api.cloudflare.com/client/v4/zones/de725bcc6d7f1aaaf217172d16660535/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}')
+          echo "Cloudflare purge_cache risposta HTTP: $code"
+          cat /tmp/purge.json
+          if [ "$code" -ge 300 ]; then
+            echo "::error::Purge cache Cloudflare fallito (HTTP $code)"
+            exit 1
+          fi
