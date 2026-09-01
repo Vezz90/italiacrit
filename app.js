@@ -16563,7 +16563,10 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     const displayName = g.key.replace(/\s*[—-]\s*(Classifica Generale|Tappe)\s*$/i, '').trim();
     const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(displayName)}</a>` : `<a href="${esc(r.url)}">${esc(displayName)}</a>`) : esc(displayName || '');
     const yearsLabel = g.years.map(y => `'${esc(y.slice(-2))}`).join(', ');
-    return `<div class="pcs-top-result-row">${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
+    // Posizione a sinistra del nome — richiesto esplicitamente: senza,
+    // vittorie e podi nella stessa lista erano indistinguibili a colpo
+    // d'occhio (il colore/icona da soli non bastavano a dirlo).
+    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${r.posizione}°</span>${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
   }).join('');
 
   // Teams per anno — priorità delle fonti: ciclismo.info (dato reale già
