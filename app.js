@@ -16645,23 +16645,24 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }).join('');
 
   // ── Carriera Dilettanti/Giovanile vs Professionistica ────────────────
-  // Divisione richiesta esplicitamente, col criterio verificato dal vivo su
-  // Bettiol: non "ultimo anno con punti nel nostro archivio" (un anno di
-  // pochi/nessun risultato romperebbe quel criterio pur essendo già
-  // passato pro), ma il livello squadra che PCS stesso assegna (WT/PRT/
-  // PT/CT = professionistico, CLUB = dilettanti) — vedi tier in
-  // pcs_team_history, aggiunto apposta. NAT (nazionale) non conta da solo:
-  // capita anche a dilettanti/junior convocati in nazionale.
-  // 'CT' (Continental Team) escluso di proposito: verificato sui dati reali
-  // (segnalato dall'utente su Lorello Riccardo) che PCS lo usa SIA per vere
-  // squadre continental professionistiche SIA per normali club dilettanti
-  // italiani (es. "S.C. Padovani Polo Cherry Bank", ASD) — non è un segnale
-  // affidabile di "passato prof". Tengono solo i livelli davvero
-  // professionistici: WorldTeam (WT/WTW) e ProTeam (PRT/PRW/PT, + PCT, il
-  // nome usato da PCS per lo stesso livello prima della riforma UCI 2020).
-  const PRO_TIERS = new Set(['WT', 'WTW', 'PRT', 'PRW', 'PT', 'PCT']);
-  const proSeasons = teamHistoryRows.filter(t => t.tier && PRO_TIERS.has(t.tier)).map(t => Number(t.season));
-  const transitionYear = proSeasons.length ? Math.min(...proSeasons) : null;
+  // Terzo criterio provato, ed è quello giusto (i primi due, "ultimo anno
+  // con punti" e "livello squadra PCS/UCI", si sono rivelati entrambi
+  // inaffidabili — vedi commit precedenti). Richiesto esplicitamente
+  // dall'utente: non conta il livello della SQUADRA (anche una squadra
+  // "UCI Continental" registrata ufficialmente può essere di fatto un club
+  // dilettanti italiano — verificato dal vivo: S.C. Padovani è Continental
+  // UCI vera eppure Lorello Riccardo non è certo un professionista), conta
+  // il livello delle GARE che l'atleta ha davvero corso. PCS scrive già la
+  // classificazione UCI della gara nel nome stesso (es. "(1.UWT)",
+  // "(2.Pro)") — stessa estrazione già usata sopra per i "Top results"
+  // (pcsClass), qui riusata per trovare il primo anno con almeno una gara
+  // di calibro davvero professionistico (UWT/Pro/HC — non 1.1/1.2/2.1/2.2,
+  // corse a cui partecipano regolarmente anche squadre Continental/U23
+  // dilettantistiche). Verificato dal vivo: Bettiol → 2014 (primo anno con
+  // gare UWT), Lorello → nessuna gara di quel livello, mai.
+  const isProRaceClass = cls => /^[12]\.(UWT|HC|Pro)$/.test(cls || '');
+  const proYears = dedupedMerged.filter(r => isProRaceClass(pcsClass(r.nome_gara))).map(r => Number(r.anno)).filter(y => !isNaN(y));
+  const transitionYear = proYears.length ? Math.min(...proYears) : null;
   let careerHtml = '';
   if (transitionYear && dedupedMerged.length) {
     const era = (rows) => {
