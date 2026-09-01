@@ -16587,9 +16587,20 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // pagina atleta, ma non qui — osservato dal vivo su Sensi Matteo, fermo
   // al 2019 ma con 2026 comunque in cima ai Teams).
   const nowYear = String(_loadedSeasonYear());
-  const hasRealResultNowYear = (nativeRisultati || []).some(r => r.data && r.posizione)
-    || (Array.isArray(pcsRows) ? pcsRows : []).some(r => String(r.season || (r.data || '').slice(0, 4)) === nowYear && r.data && r.posizione);
-  if (currentTeam && hasRealResultNowYear) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  // Bug reale trovato dal vivo (Bettiol Alberto, segnalato dall'utente): la
+  // riga sopra bastava un risultato PCS quest'anno (qualunque, anche solo
+  // in giro da professionista) per attribuire l'anno corrente al team FCI
+  // "attuale" — che per un atleta passato pro è in realtà l'ULTIMA squadra
+  // dilettanti mai registrata, mai aggiornata da anni (A.S.MASTROMARCO
+  // DOVER per Bettiol, che nel 2026 corre per XDS Astana Team). Quella riga
+  // sbagliata occupava anche la chiave dell'anno nella mappa, impedendo poi
+  // al loop sotto (che leggerebbe il team PCS vero, "XDS Astana Team", da
+  // teamHistoryRows) di sovrascriverla — quindi "quest'anno" mostrava per
+  // sempre il club dilettanti sbagliato. Ora richiede un risultato NATIVO
+  // vero quest'anno per usare currentTeam; un risultato solo-PCS lascia
+  // l'anno libero per la squadra reale dal team_history PCS più sotto.
+  const hasNativeResultNowYear = (nativeRisultati || []).some(r => r.data && r.posizione);
+  if (currentTeam && hasNativeResultNowYear) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
   // Ultima spiaggia: gli anni che ciclismo.info/ICS non coprono affatto
   // (tipicamente la carriera da professionista) — PCS non conosce la
   // categoria FCI, quindi qui resta vuota.
