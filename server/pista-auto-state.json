@@ -65,7 +65,7 @@
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:40.554Z"
+    "lastChecked": "2026-09-02T05:00:42.882Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -79,7 +79,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:39.984Z"
+    "lastChecked": "2026-09-02T05:00:42.311Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -93,7 +93,7 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:37.691Z"
+    "lastChecked": "2026-09-02T05:00:40.605Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
@@ -107,7 +107,7 @@
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:38.264Z"
+    "lastChecked": "2026-09-02T05:00:40.041Z"
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -158,7 +158,7 @@
     "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
     "data": "25 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:39.401Z"
+    "lastChecked": "2026-09-02T05:00:41.746Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -172,7 +172,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:37.133Z"
+    "lastChecked": "2026-09-02T05:00:39.463Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -186,12 +186,18 @@
     "nome": "32° TROFEO  CITTA' DI  ORZINUOVI",
     "data": "31 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:41.691Z"
+    "lastChecked": "2026-09-02T05:00:44.016Z"
+  },
+  "182802": {
+    "nome": "2° TROFEO SANT'EGIDIO",
+    "data": "2 Settembre 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-02T05:00:44.578Z"
   },
   "182813": {
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
     "data": "27 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-01T05:00:41.125Z"
+    "lastChecked": "2026-09-02T05:00:43.440Z"
   }
 }
