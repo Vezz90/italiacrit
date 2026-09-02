@@ -51,6 +51,14 @@ const SKIP_COMPLETE = args.includes('--skip-complete');
 // lista storica: si punta solo a chi ha bisogno del refetch.
 const FIX_EMPTY_TEAMHISTORY = args.includes('--fix-empty-teamhistory');
 
+// Politica di re-check per i "non trovato" — stessa logica di
+// pcs-athlete-import.js (getNotFoundMap/shouldSkipNotFound), vedi lì per i
+// dettagli: skip permanente per chi è verosimilmente ritirato, altrimenti
+// re-check periodico (non ad ogni giro) per chi è ancora plausibilmente
+// attivo.
+const RETIRED_AFTER_YEARS = 3;
+const RECHECK_AFTER_DAYS  = 90;
+
 // Un singolo blip di rete verso Supabase durante il caricamento iniziale
 // (le scansioni a pagine di loadAtletiStorici/--skip-complete/
 // --fix-empty-teamhistory, PRIMA che parta il vero e proprio giro sugli
@@ -438,19 +446,35 @@ async function loadAtletiStorici(sb) {
       if (data.length < PAGE) break;
     }
     // "non trovato su PCS" confermato in un giro precedente — mai un
-    // pcs_slug (quindi non finisce nel Set sopra), ma un esito comunque
-    // definitivo: senza escluderlo pure lui, ogni riavvio lo ritentava da
-    // capo fin dal 2007 (segnalato dall'utente dopo un riavvio del browser).
+    // pcs_slug (quindi non finisce nel Set sopra), ma senza escluderlo
+    // comunque veniva ritentato da capo ad ogni riavvio, fin dal 2007
+    // (segnalato dall'utente dopo un riavvio del browser). NON è più uno
+    // skip permanente incondizionato però: chi risulta attivo di recente
+    // (ultimo anno noto entro RETIRED_AFTER_YEARS da oggi) può comunque
+    // essere ricontrollato ogni tanto (RECHECK_AFTER_DAYS), perché potrebbe
+    // passare a una squadra Continental/estera in qualunque momento — un
+    // atleta fermo da anni invece non ricomparirà mai dal nulla su PCS
+    // (decisione con l'utente, 2026-09-02).
+    const notFoundMap = new Map();
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await withRetry(() => sb.from('entity_overrides').select('entity_id')
+      const { data, error } = await withRetry(() => sb.from('entity_overrides').select('entity_id, new_value')
         .eq('entity_type', 'atleta').eq('field', 'pcs_not_found')
         .order('id').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
-      for (const r of data) done.add(r.entity_id);
+      for (const r of data) notFoundMap.set(r.entity_id, r.new_value);
       if (data.length < PAGE) break;
     }
-    athletes = athletes.filter(a => !done.has(a.atleta_id));
+    const currentYear = new Date().getFullYear();
+    athletes = athletes.filter(a => {
+      if (done.has(a.atleta_id)) return false;
+      const checkedAt = notFoundMap.get(a.atleta_id);
+      if (!checkedAt) return true; // mai controllato — tienilo
+      if ((currentYear - a.lastYear) > RETIRED_AFTER_YEARS) return false; // verosimilmente ritirato, skip permanente
+      const daysSinceCheck = (Date.now() - new Date(checkedAt).getTime()) / 86400000;
+      if (isNaN(daysSinceCheck)) return false; // valore legacy '1' senza data — già controllato una volta, non insistere
+      return daysSinceCheck >= RECHECK_AFTER_DAYS; // ancora attivo di recente: ricontrolla solo se il check è vecchio
+    });
     console.log(`Dopo --skip-complete: ${athletes.length} da processare\n`);
   }
 
@@ -564,9 +588,11 @@ async function loadAtletiStorici(sb) {
       // Non blocca comunque: se in futuro PCS aprisse un profilo per questa
       // persona, --fix-empty-teamhistory (o un nuovo flag dedicato) può
       // sempre ripartire da questo elenco a parte.
+      // new_value ora è la data ISO dell'ultimo check (non più un flag '1')
+      // per poter misurare quanto è vecchio — vedi filtro --skip-complete sopra.
       try {
         await sb.from('entity_overrides').upsert(
-          { entity_type: 'atleta', entity_id: ath.atleta_id, field: 'pcs_not_found', new_value: '1', edited_by: null },
+          { entity_type: 'atleta', entity_id: ath.atleta_id, field: 'pcs_not_found', new_value: new Date().toISOString(), edited_by: null },
           { onConflict: 'entity_type,entity_id,field' }
         );
       } catch {}
@@ -582,6 +608,13 @@ async function loadAtletiStorici(sb) {
       await relaunchBrowser(); i--; continue;
     }
     const { photo, socials, birthYear, teamHistory, results } = extracted;
+
+    // Trovato: se era marcato "non trovato" in un giro precedente, ripulisci
+    // il marker — non ha più senso una volta che il profilo esiste davvero.
+    try {
+      await sb.from('entity_overrides').delete()
+        .eq('entity_type', 'atleta').eq('entity_id', ath.atleta_id).eq('field', 'pcs_not_found');
+    } catch {}
 
     const fields = { pcs_slug: slug };
     if (photo) {

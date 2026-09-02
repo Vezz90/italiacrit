@@ -626,6 +626,81 @@ async function getAthletesWithTeamHistory(sb) {
   return ids;
 }
 
+// "non trovato su PCS" persistente — senza questo, ogni giro settimanale
+// ri-cercava da capo TUTTI i ~11.900 atleti ciclismo.info mai trovati su
+// PCS (richiedendo giorni invece di un giorno, segnalato dall'utente).
+// Il valore salvato è la data ISO dell'ultimo controllo (non solo un flag),
+// per poter ridare una chance periodica a chi è ancora plausibilmente
+// attivo — vedi shouldSkipNotFound.
+async function getNotFoundMap(sb) {
+  const map = new Map();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('entity_overrides')
+      .select('entity_id, new_value')
+      .eq('entity_type', 'atleta').eq('field', 'pcs_not_found')
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) map.set(r.entity_id, r.new_value);
+    if (data.length < PAGE) break;
+  }
+  return map;
+}
+
+async function setNotFound(sb, entityId) {
+  const { error } = await sb.from('entity_overrides')
+    .upsert({ entity_type: 'atleta', entity_id: entityId, field: 'pcs_not_found', new_value: new Date().toISOString(), edited_by: null },
+      { onConflict: 'entity_type,entity_id,field' });
+  if (error) throw error;
+}
+
+async function clearNotFound(sb, entityId) {
+  const { error } = await sb.from('entity_overrides')
+    .delete().eq('entity_type', 'atleta').eq('entity_id', entityId).eq('field', 'pcs_not_found');
+  if (error) throw error;
+}
+
+// Ultimo anno noto di attività su ciclismo.info per ciascun atleta — usato
+// insieme a getNotFoundMap per decidere chi vale la pena ricontrollare: un
+// atleta fermo da anni (verosimilmente ritirato) non ricomparirà mai dal
+// nulla su PCS, mentre uno attivo di recente potrebbe passare a una
+// squadra Continental/estera in qualunque momento. Stessa query paginata
+// già usata in pcs-athlete-import-storico.js (loadAtletiStorici).
+async function getLastYearMap(sb) {
+  const map = new Map();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('ciclismo_results')
+      .select('atleta_id, stagione')
+      .not('atleta_id', 'is', null)
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) {
+      const y = parseInt(r.stagione, 10);
+      if (!isNaN(y) && (!map.has(r.atleta_id) || y > map.get(r.atleta_id))) map.set(r.atleta_id, y);
+    }
+    if (data.length < PAGE) break;
+  }
+  return map;
+}
+
+// Politica di re-check per i "non trovato": un fermo definitivo per chi è
+// verosimilmente ritirato (ultimo anno noto troppo lontano), altrimenti un
+// re-check periodico (non ad ogni giro) per chi è ancora plausibilmente in
+// attività. Vedi discussione con l'utente 2026-09-02.
+const RETIRED_AFTER_YEARS = 3;   // oltre questa distanza dall'anno corrente, skip permanente
+const RECHECK_AFTER_DAYS  = 90;  // altrimenti, ricontrolla solo se l'ultimo giro è più vecchio di così
+function shouldSkipNotFound(atletaId, { notFoundMap, lastYearMap, fciAll, season }) {
+  const checkedAt = notFoundMap.get(atletaId);
+  if (!checkedAt) return false; // mai controllato prima — controlla sempre
+  const effectiveLastYear = fciAll.has(atletaId) ? season : lastYearMap.get(atletaId);
+  if (effectiveLastYear != null && (season - effectiveLastYear) > RETIRED_AFTER_YEARS) return true;
+  const daysSinceCheck = (Date.now() - new Date(checkedAt).getTime()) / 86400000;
+  return daysSinceCheck < RECHECK_AFTER_DAYS;
+}
+
 async function getAthletesWithResults(sb, season) {
   // Paginato come getPhantomAthletes: pcs_results ha già oltre 27000 righe
   // (molti risultati per atleta), un limit(5000) fisso ne perdeva la
@@ -946,12 +1021,24 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   // roster (vedi ramo SINGLE_ID sopra): l'oggetto atleta porta già pcs_slug.
   for (const a of athletes) if (a.pcs_slug && !savedSlugs.has(a.atleta_id)) savedSlugs.set(a.atleta_id, a.pcs_slug);
 
+  // "non trovato su PCS" persistente (vedi getNotFoundMap/shouldSkipNotFound
+  // sopra) — si applica SEMPRE, non solo con --skip-complete: un atleta mai
+  // trovato non ha comunque foto/risultati/team da "completare", quindi
+  // senza questo filtro esplicito veniva ritentato ad ogni giro per sempre.
+  const notFoundMap = idsFileSlugs ? new Map() : await getNotFoundMap(sb);
+  const lastYearMap = (idsFileSlugs || notFoundMap.size === 0) ? new Map() : await getLastYearMap(sb);
+
   let toProcess = idsFileSlugs
     ? athletes // --ids-file: sono conferme manuali, si riprocessano sempre
-    : SKIP_COMPLETE
-      ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id) && withTeam.has(a.atleta_id)))
-      : athletes;
+    : (SKIP_COMPLETE
+        ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id) && withTeam.has(a.atleta_id)))
+        : athletes
+      ).filter(a => savedSlugs.has(a.atleta_id) || !shouldSkipNotFound(a.atleta_id, { notFoundMap, lastYearMap, fciAll, season: SEASON }));
   if (LIMIT) toProcess = toProcess.slice(0, LIMIT);
+  if (!idsFileSlugs) {
+    const totalSkippedByNotFound = athletes.filter(a => !savedSlugs.has(a.atleta_id) && shouldSkipNotFound(a.atleta_id, { notFoundMap, lastYearMap, fciAll, season: SEASON })).length;
+    if (totalSkippedByNotFound) console.log(`${totalSkippedByNotFound} già cercati e non trovati su PCS di recente (o verosimilmente ritirati) — saltati`);
+  }
 
   if (idsFileSlugs) {
     for (const [id, slug] of idsFileSlugs) savedSlugs.set(id, slug);
@@ -1048,6 +1135,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     if (!nav.ok) {
       process.stdout.write('non trovato su PCS\n');
       notFound++;
+      try { await setNotFound(sb, atletaId); } catch (e) { process.stdout.write(`  ERRORE salvataggio pcs_not_found: ${e.message}\n`); }
       await humanDelay(i);
       continue;
     }
@@ -1063,6 +1151,12 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
       continue;
     }
     const { photo, socials, results, teamHistory } = extracted;
+
+    // Trovato: se era marcato "non trovato" in un giro precedente, ripulisci
+    // il marker — non ha più senso una volta che il profilo esiste davvero.
+    if (notFoundMap.has(atletaId)) {
+      try { await clearNotFound(sb, atletaId); notFoundMap.delete(atletaId); } catch {}
+    }
 
     const fields = { pcs_slug: slug };
     if (photo && !withPhoto.has(atletaId)) {
