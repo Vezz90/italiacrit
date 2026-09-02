@@ -12104,6 +12104,9 @@ main.page:has(.itc-dash) {
   line-height: 1.4;
 }
 .pcs-top-result-pos { color: var(--accent); font-weight: 700; white-space: nowrap; width: 26px; flex-shrink: 0; }
+.pcs-top-result-pos.p1 { color: #D97706; }
+.pcs-top-result-pos.p2 { color: #6B7280; }
+.pcs-top-result-pos.p3 { color: #92400E; }
 .pcs-top-result-name a, .pcs-team-name a { color: var(--text-primary); text-decoration: none; }
 .pcs-top-result-name a:hover, .pcs-team-name a:hover { text-decoration: underline; }
 .pcs-top-result-year { color: var(--text-muted); font-size: 0.76rem; }

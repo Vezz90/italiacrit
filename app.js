@@ -16566,7 +16566,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     // Posizione a sinistra del nome — richiesto esplicitamente: senza,
     // vittorie e podi nella stessa lista erano indistinguibili a colpo
     // d'occhio (il colore/icona da soli non bastavano a dirlo).
-    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${r.posizione}°</span>${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
+    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos ${posClass(r.posizione)}">${r.posizione}°</span>${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
   }).join('');
 
   // Teams per anno — priorità delle fonti: ciclismo.info (dato reale già
