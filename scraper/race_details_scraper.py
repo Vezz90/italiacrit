@@ -324,7 +324,13 @@ def split_stage_races(calendar, details_map):
         cal_id = c['id']
         det = details_map.get(cal_id)
         tappe = det.get('tappe') if det else None
-        if not tappe:
+        # Una sola "Prova" nella sezione PROVE di FCI NON è una gara a tappe
+        # vera — è solo il modo in cui FCI rappresenta anche una gara in
+        # linea di un giorno solo. Dividerla avrebbe comunque creato un
+        # doppione insensato "1ª tappa" + "Classifica Generale" della STESSA
+        # identica gara (segnalato dal vivo dall'utente sul 28° Trofeo San
+        # Rocco, 2026-09-03). Serve almeno 2 prove per essere davvero a tappe.
+        if not tappe or len(tappe) < 2:
             out_calendar.append(c)
             continue
 
