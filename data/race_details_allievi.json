@@ -2917,5 +2917,19 @@
     "location_str": "Piazza Clays, Caselette (TO), Italia",
     "lat": 45.10475,
     "lng": 7.48082
+  },
+  "GRAN_FINALE_ROSA_ULTIMA_PROVA_DEL_TROFEO_ROSA_2026-10-11": {
+    "raceid": "182830",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182830&site=strada_it",
+    "info": [
+      "GRAN FINALE ROSA - ULTIMA PROVA DEL TROFEO ROSA Strada GRAN FINALE ROSA - ULTIMA PROVA DEL TROFEO ROSA ID Gara: 182830 | <br><b>Data:</b> 11/10/2026 INFORMAZIONI GENERALI Localita: BOGOGNO NO <br><b>Provincia:</b> NO <br><b>Categoria:</b> (1.25) Donne Allieve <br><b>Categorie Ammesse:</b> DONNE ALLIEVE <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> LIETTA PAOLA Vice <br><b>Direttore di Corsa:</b> ROCCA MARCO <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> A.S.D. CICLISTICA CASTELLETTESE <br><b>Indirizzo:</b> V.GIOTTO N°5 <br><b>CAP:</b> 28053 Citta: CASTELLETTO SOPRA TICINO <br><b>Provincia:</b> NO <br><b>Telefono:</b> 3407367329 <br><b>Email:</b> CASTELLETTESEBICI@LIBERO.IT ISCRIZIONI <br><b>Luogo:</b> AS DILETTANTISTICA CICLISTICA CASTELLETTESE <br><b>Indirizzo:</b> VIA GIOTTO N° 5, 28053 Castelletto sopra Ticino, NO, NO <br><b>Telefono:</b> 3407367329 <br><b>Email:</b> CASTELLETTESEBICI@LIBERO.IT <br><b>Iscrizioni Dal - Al:</b> 29/07/2026 - RITROVO PROVE 1 - GRAN FINALE ROSA - ULTIMA PROVA DEL TROFEO ROSA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 11/10/2026 <br><b>Descrizione:</b> Partenza : Piazza Dott. Orazio Palumbo, Trasferimento al Km 0 (circa 500 Metri) in Via Roma SP:19. SP.19 fino a Suno DX su SP 18 per Cressa, dx su Via fratelli Ferri, DX su Via Saini, diritti Via Isidoro , diritti Via 4 Novembre, DX su Via Roma SP 19 Arrivo. Circuito di Km 10,500 da ripetersi 6 volte <br><b>Luogo Ritrovo:</b> BOGOGNO <br><b>Indirizzo Ritrovo:</b> PIAZZA MARIA MONTESSORI (palestra Scuole ) <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> PIAZZA DOTT. PALUMBO ORAZIO <br><b>Orario Partenza:</b> 12:15 <br><b>Luogo Arrivo:</b> SP.19 Via Roma ( Bogogno ) <br><b>Orario Arrivo:</b> 14:15 <br><b>Luogo Verifica:</b> 09:00 <br><b>Punto Incontro DS:</b> 10:15 <br><b>Lunghezza KM:</b> Km 63 Servizi: PRONTO SOCCORSO PIU' VICINO: Ospedale SS. Trinità BORGOMANERO <br><b>Indirizzo:</b> Viale Zoppis 10 <br><b>Telefono:</b> 0322 28481 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "BOGOGNO",
+    "indirizzo_ritrovo": "PIAZZA MARIA MONTESSORI (palestra Scuole )",
+    "orario_partenza": "12:15",
+    "km": "Km 63 Servizi: PRONTO SOCCORSO PIU' VICINO: Ospedale SS. Trinità BORGOMANERO",
+    "location_str": "PIAZZA MARIA MONTESSORI (palestra Scuole ), BOGOGNO, Italia",
+    "lat": null,
+    "lng": null
   }
 }

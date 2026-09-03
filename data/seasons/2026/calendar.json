@@ -17362,5 +17362,101 @@
     "regione": "VENETO",
     "categoria": "Elite s.c. e Under 23 tappe",
     "luogo": "VARIE LOCALITA'"
+  },
+  {
+    "id": "GIRO_DELLA_TOSCANA_MEMORIAL_ALFREDO_MARTINI_2026-09-09",
+    "nome": "GIRO DELLA TOSCANA - MEMORIAL ALFREDO MARTINI",
+    "data": "2026-09-09",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "TOSCANA",
+    "categoria": "Classe 1 pro",
+    "luogo": "PONTEDERA"
+  },
+  {
+    "id": "MEMORIAL_MARCO_PANTANI_2026-09-12",
+    "nome": "MEMORIAL MARCO PANTANI",
+    "data": "2026-09-12",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "EMILIA ROMAGNA",
+    "categoria": "Classe 1 pro",
+    "luogo": "CESENA"
+  },
+  {
+    "id": "TROFEO_MATTEOTTI_2026-09-13",
+    "nome": "TROFEO MATTEOTTI",
+    "data": "2026-09-13",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "Classe 1 pro",
+    "luogo": "PESCARA"
+  },
+  {
+    "id": "79_COPPA_AGOSTONI_GIRO_DELLE_BRIANZE_2026-10-04",
+    "nome": "79° COPPA AGOSTONI - GIRO DELLE BRIANZE",
+    "data": "2026-10-04",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LOMBARDIA",
+    "categoria": "Classe 1 pro",
+    "luogo": "LISSONE"
+  },
+  {
+    "id": "COPPA_BERNOCCHI_GP_BANCO_BPM_2026-10-05",
+    "nome": "COPPA BERNOCCHI - GP BANCO BPM",
+    "data": "2026-10-05",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LOMBARDIA",
+    "categoria": "UCI ProSeries",
+    "luogo": "LEGNANO E COMUNI LIMITROFI"
+  },
+  {
+    "id": "105_TRE_VALLI_VARESINE_2026-10-06",
+    "nome": "105^ TRE VALLI VARESINE",
+    "data": "2026-10-06",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LOMBARDIA",
+    "categoria": "UCI ProSeries",
+    "luogo": "BUSTO ARSIZIO-VARESE"
+  },
+  {
+    "id": "GRAN_PIEMONTE_2026-10-08",
+    "nome": "GRAN PIEMONTE",
+    "data": "2026-10-08",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "PIEMONTE",
+    "categoria": "UCI ProSeries",
+    "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "GRAN_FINALE_ROSA_ULTIMA_PROVA_DEL_TROFEO_ROSA_2026-10-11",
+    "nome": "GRAN FINALE ROSA - ULTIMA PROVA DEL TROFEO ROSA",
+    "data": "2026-10-11",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "PIEMONTE",
+    "categoria": "Donne Allieve",
+    "luogo": "BOGOGNO NO"
   }
 ]
