@@ -4246,7 +4246,13 @@ async function _ensureManualAthleteProfile({ atletaId, cognome, nome, teamId, te
   return true;
 }
 
-app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res) => {
+// Corpo condiviso tra l'inserimento admin (pannello gestionale) e quello
+// pubblico via foto ordine d'arrivo (vedi POST /api/gara/:garaId/manual-result
+// più sotto) — stessa identica logica di risoluzione atleta/team/punti,
+// solo endpoint e permessi diversi. edited_by traccia sempre il vero utente
+// che ha inviato la riga (admin o appassionato), utile per capire la fonte
+// in caso di correzioni da fare.
+async function _submitManualResult(req, res) {
   try {
     const garaId = req.params.garaId;
     const { posizione, cognome, nome, team, tempo, km, media,
@@ -4341,6 +4347,84 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     });
     res.json({ ok: true, row });
   } catch (e) { res.status(500).json({ error: e.message }); }
+}
+
+app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, _submitManualResult);
+// Stesso endpoint per chi non è admin ma è loggato — permette agli
+// appassionati di inserire risultati (tipicamente trascritti da una foto
+// dell'ordine d'arrivo ufficiale, vedi /api/gara/:garaId/ocr-arrivo) senza
+// aspettare che passi lo scraper FCI. Richiesta esplicita dell'utente
+// 2026-09-03: "deve essere anche possibile da parte degli appassionati".
+app.post('/api/gara/:garaId/manual-result', requireAuth, _submitManualResult);
+
+// Estrae l'ordine d'arrivo da una foto del foglio ufficiale FCI (richiesta
+// esplicita dell'utente 2026-09-03: molti circoli lo pubblicano/affiggono
+// prima che i risultati arrivino sullo scraper). Ritorna righe grezze
+// {pos, cognome, nome, team, tempo} — la RISOLUZIONE vera e propria
+// (abbinamento all'atleta esistente per categoria/genere, creazione nuovo
+// se non trovato, fuzzy-match del team) resta quella già in uso nel form
+// "Aggiungi risultati" (window._mrBulkSearch/_submitManualResult):
+// qui si legge solo la carta, non si inventa nessuna logica nuova di
+// matching, come chiesto esplicitamente ("fai sempre riferimento al
+// sistema che c'è già").
+app.post('/api/gara/:garaId/ocr-arrivo', requireAuth, async (req, res) => {
+  try {
+    const ai = getAnthropic();
+    if (!ai) return res.status(503).json({ error: 'Estrazione automatica non disponibile al momento' });
+    const { image, media_type } = req.body || {};
+    if (!image) return res.status(400).json({ error: 'immagine mancante' });
+    const mediaType = ['image/jpeg', 'image/png', 'image/webp'].includes(media_type) ? media_type : 'image/jpeg';
+
+    const msg = await ai.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2000,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: image } },
+          { type: 'text', text: `Questa è la foto di un foglio ufficiale "ORDINE D'ARRIVO" della Federazione Ciclistica Italiana, compilato a macchina o a mano dal giudice di gara. Trascrivi SOLO la tabella dei corridori arrivati (le colonne tipiche sono: N°/Dors., UCI Id, Tessera, Naz., Data di nascita, Cognome e Nome, Tempo, Società) in un array JSON, un oggetto per riga, con questi campi:
+- "pos": posizione di arrivo (numero progressivo a sinistra, colonna "N°" — NON il numero di dorsale/pettorale se sono colonne diverse)
+- "cognome": cognome del corridore, tutto maiuscolo
+- "nome": nome del corridore, tutto maiuscolo (se la riga ha un solo campo "Cognome e Nome" unito, separali: il cognome è di solito la/le prima/e parola/e, spesso in grassetto o in maiuscolo pieno rispetto al nome)
+- "team": nome della squadra/società, così come scritto (se troncato dal bordo del foglio o dalla foto, trascrivi comunque quello che si legge, non completarlo a indovinare)
+- "tempo": tempo o distacco della riga, se presente (es. "03:59:21" per il primo, "00:20" per un distacco) — stringa vuota se non leggibile o assente
+
+Regole importanti:
+- Trascrivi ESATTAMENTE quello che è scritto, lettera per lettera — non correggere ortografia, non italianizzare nomi stranieri, non completare parole tagliate.
+- Se un campo è illeggibile o tagliato dal bordo della foto, mettici comunque quello che si vede parzialmente (es. "ROSAR" se il resto è tagliato) — MAI lasciare vuoto un cognome se qualcosa si legge, e MAI inventare le lettere mancanti.
+- Ignora completamente le righe "Seguono i corridori" con solo numeri di dorsale (quelli sono i ritirati/non ancora processati, non hanno un ordine di arrivo).
+- Ignora l'intestazione della tabella e qualunque riga vuota.
+- Se il foglio non è affatto un ordine d'arrivo di ciclismo (foto sbagliata), rispondi con un array vuoto [].
+
+Rispondi SOLO con l'array JSON, niente altro testo prima o dopo, niente markdown.` },
+        ],
+      }],
+    });
+    const text = (msg.content[0]?.text || '').trim();
+    let rows;
+    try {
+      const jsonStr = text.replace(/^```json\s*|\s*```$/g, '').trim();
+      rows = JSON.parse(jsonStr);
+    } catch (e) {
+      console.warn('[ocr-arrivo] risposta non parsabile come JSON:', text.slice(0, 300));
+      return res.status(502).json({ error: 'Non sono riuscito a leggere la tabella dalla foto — riprova con una foto più a fuoco o inserisci a mano' });
+    }
+    if (!Array.isArray(rows)) rows = [];
+    rows = rows
+      .map(r => ({
+        pos: parseInt(r.pos, 10) || 0,
+        cognome: String(r.cognome || '').trim().toUpperCase(),
+        nome: String(r.nome || '').trim().toUpperCase(),
+        team: String(r.team || '').trim().toUpperCase(),
+        tempo: String(r.tempo || '').trim(),
+      }))
+      .filter(r => r.pos > 0 && (r.cognome || r.team))
+      .sort((a, b) => a.pos - b.pos);
+    res.json({ ok: true, rows });
+  } catch (e) {
+    console.warn('[ocr-arrivo] errore:', e.message);
+    res.status(500).json({ error: 'Estrazione fallita: ' + e.message });
+  }
 });
 
 app.delete('/api/admin/manual-result/:id', requireAdmin, async (req, res) => {

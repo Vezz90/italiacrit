@@ -19512,14 +19512,25 @@ window.submitManualResult = async (garaId) => {
 // squadre/posizioni mancanti. La ricerca corridore è filtrata a
 // categoria+genere della gara, così non si rischia di taggare per sbaglio un
 // atleta di un'altra categoria.
-window.openManualResultBulkForm = (garaId) => {
+// prefilledRows (opzionale): righe già estratte da una foto dell'ordine
+// d'arrivo (vedi window.openOcrArrivoUpload) — stesso form, stessa
+// risoluzione atleta/team per categoria+genere, l'utente le rivede e
+// corregge riga per riga esattamente come farebbe scrivendole a mano.
+window.openManualResultBulkForm = (garaId, prefilledRows) => {
   const user = authUser();
-  if (!user || user.role !== 'admin') return;
+  // Aperto a chiunque sia loggato, non solo admin — richiesta esplicita
+  // dell'utente 2026-09-03: gli appassionati devono poter inserire risultati
+  // (tipicamente trascritti da una foto dell'ordine d'arrivo ufficiale).
+  if (!user) { showToast('Accedi per inserire un risultato', 'info'); return; }
   const allRows = (globalData?.resultsRaw || []).filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
   const sample = allRows[0];
   window._mrMeta = _mrDeriveMeta(garaId, sample);
   window._mrBulkGaraId = garaId;
-  if (allRows.length) {
+  if (prefilledRows && prefilledRows.length) {
+    window._mrBulkRows = prefilledRows.map(r => ({
+      pos: r.pos, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', tempo: r.tempo || '', atletaId: null,
+    }));
+  } else if (allRows.length) {
     const byPos = new Map();
     allRows.forEach(r => { if (!byPos.has(r.posizione)) byPos.set(r.posizione, r); });
     window._mrBulkRows = [...byPos.entries()].sort((a, b) => a[0] - b[0]).map(([pos, r]) => ({
@@ -19540,7 +19551,8 @@ window.openManualResultBulkForm = (garaId) => {
         <strong style="font-size:1rem">Aggiungi risultati — ${esc(catLabel(window._mrMeta.categoria) || window._mrMeta.categoria || '')}</strong>
         <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
-      <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.</p>
+      <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.${prefilledRows && prefilledRows.length ? ' <strong style="color:var(--accent)">Righe estratte dalla foto — controlla nomi e team prima di salvare, l\'OCR può sbagliare su scritte poco chiare o tagliate.</strong>' : ''}</p>
+      ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
       <div id="mr-bulk-rows"></div>
       <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
       <div id="mr-bulk-err" style="color:#EF4444;font-size:0.8rem;margin:8px 0;display:none"></div>
@@ -19617,6 +19629,63 @@ window._mrBulkPick = (idx, cognome, nome, team) => {
   window._mrBulkRender();
 };
 
+// Carica una foto dell'ordine d'arrivo ufficiale FCI, la fa leggere a Claude
+// (server-side, vedi POST /gara/:garaId/ocr-arrivo) e apre il form "Aggiungi
+// risultati" già precompilato con le righe estratte — l'utente le rivede,
+// corregge quel che l'OCR ha letto male (nomi/team tagliati dal bordo della
+// foto sono un caso reale, segnalato dall'utente) e salva con lo stesso
+// meccanismo di sempre. Aperto a chiunque sia loggato, non solo admin.
+window.openOcrArrivoUpload = (garaId) => {
+  const user = authUser();
+  if (!user) { showToast('Accedi per inserire un risultato da foto', 'info'); return; }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment'; // su mobile apre la fotocamera per default
+  input.onchange = async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    showToast('📷 Leggo la foto…', 'info');
+    try {
+      const { base64, mediaType } = await _resizeImageForOcr(file);
+      const { rows } = await apiCall(`/gara/${encodeURIComponent(garaId)}/ocr-arrivo`, {
+        method: 'POST', body: { image: base64, media_type: mediaType },
+      });
+      if (!rows || !rows.length) { showToast('Non ho trovato una tabella di arrivo leggibile in questa foto — prova con un\'altra foto o inserisci a mano', 'error'); return; }
+      window.openManualResultBulkForm(garaId, rows);
+      showToast(`✓ ${rows.length} righe estratte — controllale prima di salvare`);
+    } catch (e) { showToast('Errore lettura foto: ' + e.message, 'error'); }
+  };
+  input.click();
+};
+
+// Ridimensiona/comprime lato client prima dell'upload — un file diretto da
+// fotocamera può superare 8-10MB, inutile (e lento) mandarlo intero: Claude
+// legge benissimo il testo anche ridotto a 1600px di lato lungo.
+function _resizeImageForOcr(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const MAX = 1600;
+      let { width, height } = img;
+      if (width > MAX || height > MAX) {
+        const scale = MAX / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      resolve({ base64: dataUrl.split(',')[1], mediaType: 'image/jpeg' });
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Immagine non valida')); };
+    img.src = url;
+  });
+}
+
 window.submitManualResultBulk = async () => {
   const garaId = window._mrBulkGaraId;
   const meta = window._mrMeta || {};
@@ -19636,7 +19705,10 @@ window.submitManualResultBulk = async () => {
   for (const r of rows) {
     btn.textContent = `Salvo… ${ok + fail + 1}/${rows.length}`;
     try {
-      const { row } = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/manual-result`, {
+      // Endpoint pubblico (non /admin/...): funziona identico per un admin o
+      // per un utente qualunque loggato, stessa logica lato server — vedi
+      // _submitManualResult in server.js.
+      const { row } = await apiCall(`/gara/${encodeURIComponent(garaId)}/manual-result`, {
         method: 'POST',
         body: { posizione: r.pos, cognome: r.cognome, nome: r.nome, team: r.team, tempo: r.tempo, ...meta },
       });
@@ -20791,7 +20863,8 @@ async function renderGara(gara_id) {
           ${adminEditBtn('gara', primaryGaraId)}
           ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
           ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-          ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(primaryGaraId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
         </div>
       </div>
       <div class="card" style="padding:20px 24px;margin-top:16px">
@@ -21470,7 +21543,8 @@ async function renderGara(gara_id) {
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-        ${_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(primaryGaraId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
     ${_catTabsHtml}
     <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
