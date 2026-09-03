@@ -129,10 +129,17 @@ async function downloadImage(page, url) {
 }
 
 async function fetchFromFcSearch(page, query, onLog) {
-  const nav = await gotoPcsPage(page, `https://firstcycling.com/search.php?search=${encodeURIComponent(query)}`, {
+  const nav = await gotoPcsPage(page, `https://it.firstcycling.com/search.php?search=${encodeURIComponent(query)}`, {
     readySelector: 'body', onLog,
   });
   if (!nav.ok) return null;
+  // Il banner cookie di consentmanager.net copre la pagina finché non viene
+  // chiuso — senza questo, ogni ricerca "vedeva" solo il banner e mai i
+  // link reali dei risultati (bug reale, trovato dal vivo: 0 risultati su
+  // 6 test, athletes E team). Va chiuso una volta per sessione, ma richiamarlo
+  // ad ogni pagina è innocuo (no-op se già chiuso).
+  await dismissCookieBanner(page);
+  await sleep(400);
   const hrefs = await page.evaluate(() =>
     [...document.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(Boolean)
   ).catch(() => []);
@@ -142,6 +149,7 @@ async function fetchFromFcSearch(page, query, onLog) {
 async function fetchRiderPhotoByProfileUrl(page, url, onLog) {
   const nav = await gotoPcsPage(page, url, { readySelector: 'body', onLog });
   if (!nav.ok) return { notFound: nav.notFound, photo: null };
+  await dismissCookieBanner(page);
   await sleep(600);
   const found = await extractProfileImage(page, 'rider');
   if (!found) return { notFound: false, photo: null, noImageFound: true };
@@ -152,6 +160,7 @@ async function fetchRiderPhotoByProfileUrl(page, url, onLog) {
 async function fetchTeamPhotoByProfileUrl(page, url, onLog) {
   const nav = await gotoPcsPage(page, url, { readySelector: 'body', onLog });
   if (!nav.ok) return { notFound: nav.notFound, photo: null };
+  await dismissCookieBanner(page);
   await sleep(600);
   const found = await extractProfileImage(page, 'team');
   if (!found) return { notFound: false, photo: null, noImageFound: true };
@@ -159,29 +168,31 @@ async function fetchTeamPhotoByProfileUrl(page, url, onLog) {
   return { notFound: false, photo, strategy: found.strategy, imgSrc: found.src };
 }
 
-// Cerca per nome+cognome e sceglie il link /rider.php?riderid=N più
-// plausibile in base al testo del link (non abbiamo un pattern di slug
-// affidabile come per PCS — FirstCycling usa id numerici, non slug testuali
-// — quindi il match è sul TESTO visibile del risultato di ricerca, non sull'URL).
+// Cerca per nome+cognome e sceglie il link /rider.php?r=N più plausibile.
+// Dominio e parametro verificati dal vivo dall'utente (it.firstcycling.com,
+// "r=", non "firstcycling.com"/"riderid=" come nel primo tentativo).
 async function searchFcRider(page, ath, onLog) {
   const hrefs = await fetchFromFcSearch(page, `${ath.nome} ${ath.cognome}`, onLog);
   if (!hrefs) return null;
-  const riderLinks = hrefs.filter(h => /rider\.php\?riderid=\d+/i.test(h));
+  const riderLinks = hrefs.filter(h => /rider\.php\?r=\d+/i.test(h));
   if (!riderLinks.length) return null;
   // Senza testo del link a disposizione qui (solo href), prendi il primo —
   // FirstCycling di norma ordina i risultati per rilevanza. Se in pratica
   // risultasse impreciso, va rivisto per leggere anche il testo/contesto
   // del link (nome mostrato accanto) e fare scoring come pcsAthleteSlug.
-  const m = riderLinks[0].match(/riderid=(\d+)/i);
+  const m = riderLinks[0].match(/[?&]r=(\d+)/i);
   return m ? m[1] : null;
 }
 
 async function searchFcTeam(page, team, onLog) {
   const hrefs = await fetchFromFcSearch(page, team.team_nome, onLog);
   if (!hrefs) return null;
-  const teamLinks = hrefs.filter(h => /team\.php\?team=/i.test(h));
+  // Pattern team.php NON ancora confermato dal vivo (a differenza di
+  // rider.php?r=) — prova sia "team=" (ipotesi originale) sia "t="
+  // (simmetrico a "r=" per i corridori, più probabile viste le altre pagine).
+  const teamLinks = hrefs.filter(h => /team\.php\?(team|t)=/i.test(h));
   if (!teamLinks.length) return null;
-  return teamLinks[0].startsWith('http') ? teamLinks[0] : `https://firstcycling.com/${teamLinks[0].replace(/^\//, '')}`;
+  return teamLinks[0].startsWith('http') ? teamLinks[0] : `https://it.firstcycling.com/${teamLinks[0].replace(/^\//, '')}`;
 }
 
 // ─── Supabase ────────────────────────────────────────────────────────────
@@ -225,10 +236,10 @@ async function getExistingIds(sb, entityType, field) {
 
 // ─── Main ────────────────────────────────────────────────────────────────
 
-let gotoPcsPage, humanDelay, launchBrowser;
+let gotoPcsPage, humanDelay, launchBrowser, dismissCookieBanner;
 
 (async () => {
-  ({ gotoPcsPage, humanDelay, launchBrowser } = require('./pcs-browser'));
+  ({ gotoPcsPage, humanDelay, launchBrowser, dismissCookieBanner } = require('./pcs-browser'));
 
   const { createClient } = require('@supabase/supabase-js');
   const ws = require('ws');
@@ -259,9 +270,10 @@ let gotoPcsPage, humanDelay, launchBrowser;
   //    finestra visibile — vedi commento in cima al file), ma puntato su
   //    FirstCycling fin dall'inizio per i cookie di sessione.
   console.log('Avvio sessione FirstCycling…');
-  const { browser, page } = await launchBrowser('https://firstcycling.com/');
+  const { browser, page } = await launchBrowser('https://it.firstcycling.com/');
   try {
-    await gotoPcsPage(page, 'https://firstcycling.com/', { readySelector: 'body', onLog: m => console.log(m) });
+    await gotoPcsPage(page, 'https://it.firstcycling.com/', { readySelector: 'body', onLog: m => console.log(m) });
+    await dismissCookieBanner(page);
   } catch (e) { console.log(`Avviso FirstCycling: ${e.message}`); }
   console.log('Pronto.\n');
 
@@ -282,10 +294,10 @@ let gotoPcsPage, humanDelay, launchBrowser;
       const riderId = await searchFcRider(page, ath, m => process.stdout.write('\n' + m));
       if (!riderId) { process.stdout.write('non trovato su FirstCycling\n'); notFound++; await humanDelay(i); continue; }
 
-      const result = await fetchRiderPhotoByProfileUrl(page, `https://firstcycling.com/rider.php?riderid=${riderId}`,
+      const result = await fetchRiderPhotoByProfileUrl(page, `https://it.firstcycling.com/rider.php?r=${riderId}`,
         m => process.stdout.write('\n' + m));
       if (result.noImageFound) {
-        process.stdout.write(`profilo trovato ma nessuna immagine plausibile (riderid=${riderId}) — selettore da rivedere\n`);
+        process.stdout.write(`profilo trovato ma nessuna immagine plausibile (r=${riderId}) — selettore da rivedere\n`);
         noImage++; await humanDelay(i); continue;
       }
       if (!result.photo) { process.stdout.write('nessuna foto valida\n'); notFound++; await humanDelay(i); continue; }
