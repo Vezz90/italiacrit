@@ -103,6 +103,69 @@ def geocode_location(query):
     return None, None
 
 
+def _parse_date_ddmmyyyy(s):
+    """'03/09/2026' -> '2026-09-03'. Ritorna None se non riconosciuto."""
+    if not s: return None
+    m = re.search(r'(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})', s)
+    if not m: return None
+    g, mese, a = m.groups()
+    return f"{a}-{mese.zfill(2)}-{g.zfill(2)}"
+
+def _tabella_kv(table):
+    """Estrae {label: value} da una <table class="race-table"><tbody><tr><td class="label">X:</td><td class="value">Y</td></tr>...</tbody></table>."""
+    out = {}
+    for tr in table.find_all('tr'):
+        tds = tr.find_all('td')
+        if len(tds) < 2: continue
+        label = tds[0].get_text(" ", strip=True).rstrip(':').strip()
+        value = tds[1].get_text(" ", strip=True).strip()
+        if label:
+            out[label] = value
+    return out
+
+def extract_stages(soup):
+    """Estrae la sezione 'PROVE' (tappe) della pagina dettaglio-gara, quando
+    presente (gare a tappe) — una <table class="race-table"> per tappa,
+    ognuna con Prova/Data/Tipo/Descrizione/Luogo Ritrovo-Partenza-Arrivo/
+    Orari/Lunghezza KM. Assente per le gare in linea (single-day).
+    Ritorna una lista ordinata per numero di prova, o [] se non è una gara
+    a tappe (o la sezione non è ancora pubblicata da FCI per questa gara).
+    """
+    title = None
+    for div in soup.find_all('div', class_='race-section-title'):
+        if div.get_text(strip=True).upper() == 'PROVE':
+            title = div
+            break
+    if not title: return []
+
+    section = title.find_parent('section') or title.parent
+    stages = []
+    for table in section.find_all('table', class_='race-table'):
+        kv = _tabella_kv(table)
+        numero_raw = kv.get('Prova')
+        try:
+            numero = int(re.search(r'\d+', numero_raw or '').group())
+        except Exception:
+            continue
+        data_iso = _parse_date_ddmmyyyy(kv.get('Data'))
+        if not data_iso: continue
+        stages.append({
+            'numero':            numero,
+            'tipo':              kv.get('Tipo'),
+            'data':              data_iso,
+            'descrizione':       kv.get('Descrizione'),
+            'luogo_ritrovo':     kv.get('Luogo Ritrovo'),
+            'indirizzo_ritrovo': kv.get('Indirizzo Ritrovo'),
+            'orario_ritrovo':    kv.get('Orario Ritrovo'),
+            'luogo_partenza':    kv.get('Luogo Partenza'),
+            'orario_partenza':   kv.get('Orario Partenza'),
+            'luogo_arrivo':      kv.get('Luogo Arrivo'),
+            'orario_arrivo':     kv.get('Orario Arrivo'),
+            'km':                kv.get('Lunghezza KM'),
+        })
+    stages.sort(key=lambda s: s['numero'])
+    return stages
+
 def extract_race_details(raceid):
     url = f"https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid={raceid}&site=strada_it"
     html = fetch_html(url)
@@ -110,6 +173,7 @@ def extract_race_details(raceid):
 
     soup = BeautifulSoup(html, 'html.parser')
     main = soup.find('div', class_='main-content') or soup
+    tappe = extract_stages(soup)
 
     # Raccogliamo i blocchi principali
     testo_completo = []
@@ -193,7 +257,123 @@ def extract_race_details(raceid):
         "orario_partenza":  orario_partenza,
         "km":               km,
         "location_str":     location_str,
+        # Sezione "PROVE" — presente solo per le gare a tappe (vedi
+        # extract_stages). Usata da split_stage_races per dividere la gara
+        # in un documento per tappa + uno per la classifica generale.
+        "tappe": tappe,
     }
+
+def _stage_info_html(parent_nome, stage):
+    """Blocco HTML per la pagina di una singola tappa — stesso stile/label
+    già usato altrove (extract_race_details), così la pagina gara la
+    renderizza senza bisogno di codice frontend dedicato."""
+    labels = [
+        ('Tipo', stage.get('tipo')),
+        ('Data', stage.get('data')),
+        ('Descrizione', stage.get('descrizione')),
+        ('Luogo Ritrovo', stage.get('luogo_ritrovo')),
+        ('Indirizzo Ritrovo', stage.get('indirizzo_ritrovo')),
+        ('Orario Ritrovo', stage.get('orario_ritrovo')),
+        ('Luogo Partenza', stage.get('luogo_partenza')),
+        ('Orario Partenza', stage.get('orario_partenza')),
+        ('Luogo Arrivo', stage.get('luogo_arrivo')),
+        ('Orario Arrivo', stage.get('orario_arrivo')),
+        ('Lunghezza KM', stage.get('km')),
+    ]
+    parts = [f"{parent_nome} — {stage['numero']}ª tappa"]
+    for lbl, val in labels:
+        if val:
+            parts.append(f"<br><b>{lbl}:</b> {val}")
+    return [''.join(parts)]
+
+def _gc_info_html(parent_nome, parent_detail, tappe):
+    prima = tappe[0]['data'] if tappe else None
+    ultima = tappe[-1]['data'] if tappe else None
+    parts = [f"{parent_nome} — Classifica Generale"]
+    if prima and ultima:
+        parts.append(f"<br><b>Copre le tappe dal:</b> {prima} <b>al:</b> {ultima}")
+    parts.append(f"<br><b>Numero di tappe:</b> {len(tappe)}")
+    return [''.join(parts)]
+
+def split_stage_races(calendar, details_map):
+    """Divide ogni gara a tappe (rilevata dalla presenza di 'tappe' nel suo
+    record dettagli) in N documenti separati (uno per tappa, ognuno con la
+    propria data reale) più uno per la Classifica Generale — così l'admin
+    può inserire i risultati di UNA tappa specifica anche prima che lo
+    scraper dei risultati passi, e i risultati scrapati (che riportano la
+    data della singola tappa, non quella d'inizio gara) si abbinano alla
+    tappa giusta invece di finire tutti sprecati sull'unico giorno iniziale.
+
+    La gara combinata originale (l'unico documento con la data della 1a
+    tappa) viene rimossa dal calendario finale — resta solo nella cache
+    details_map (chiave = id originale) per evitare di ri-scaricare la
+    pagina FCI ad ogni giro. Idempotente e ricalcolato da zero ad ogni
+    esecuzione: fci_complete_scraper.py rigenera calendar.json con la gara
+    ancora "unica" ogni 30 minuti, quindi qui si riparte sempre dalla forma
+    base, non da uno stato già diviso in precedenza.
+
+    Applica SOLO alle gare i cui dettagli sono già stati scaricati e
+    contengono 'tappe' (decisione con l'utente 2026-09-03: nessun tentativo
+    di dividere retroattivamente gare passate già scrapate come gara unica).
+    """
+    out_calendar = []
+    out_details = dict(details_map)  # tiene anche gli id base, come cache
+    split_count = 0
+
+    for c in calendar:
+        cal_id = c['id']
+        det = details_map.get(cal_id)
+        tappe = det.get('tappe') if det else None
+        if not tappe:
+            out_calendar.append(c)
+            continue
+
+        split_count += 1
+        base_fields = {k: c.get(k) for k in
+                        ('tipo', 'moltiplicatore', 'campionato_regionale',
+                         'campionato_italiano', 'regione', 'categoria', 'luogo')}
+
+        for stage in tappe:
+            stage_id = f"{cal_id}_TAPPA{stage['numero']}"
+            out_calendar.append({
+                'id': stage_id,
+                'nome': f"{c['nome']} - {stage['numero']}ª tappa",
+                'data': stage['data'],
+                **base_fields,
+            })
+            out_details[stage_id] = {
+                **det,
+                'raceid': det.get('raceid'),
+                'info': _stage_info_html(c['nome'], stage),
+                'luogo_ritrovo': stage.get('luogo_ritrovo') or det.get('luogo_ritrovo'),
+                'indirizzo_ritrovo': stage.get('indirizzo_ritrovo') or det.get('indirizzo_ritrovo'),
+                'orario_partenza': stage.get('orario_partenza') or det.get('orario_partenza'),
+                'km': stage.get('km') or det.get('km'),
+                'tappe': [],  # una singola tappa non è a sua volta una gara a tappe
+                # Posizione geografica ricalcolata al prossimo giro di
+                # geocoding (lat/lng assenti finché non serve il fallback
+                # sul luogo_ritrovo di QUESTA tappa, diverso da quello della
+                # gara madre — vedi geocode_location più sotto).
+                'lat': None, 'lng': None, 'location_str': None,
+            }
+
+        gc_id = f"{cal_id}_GC"
+        ultima_data = tappe[-1]['data']
+        out_calendar.append({
+            'id': gc_id,
+            'nome': f"{c['nome']} - Classifica Generale",
+            'data': ultima_data,
+            **{**base_fields, 'moltiplicatore': (base_fields.get('moltiplicatore') or 1) + 1},
+        })
+        out_details[gc_id] = {
+            **det,
+            'info': _gc_info_html(c['nome'], det, tappe),
+            'tappe': [],
+        }
+
+    if split_count:
+        print(f"  {split_count} gare a tappe divise in documenti separati (tappe + classifica generale)")
+    return out_calendar, out_details
 
 def scrape_all_details():
     if not CALENDAR_FILE.exists():
@@ -307,10 +487,24 @@ def scrape_all_details():
                         details_map[cal_id]["lat"] = None
                         details_map[cal_id]["lng"] = None
     finally:
-        # Salva sempre — anche se interrotto da timeout
+        # Salva sempre — anche se interrotto da timeout — la forma NON
+        # ancora divisa: è la cache usata per evitare di riscaricare la
+        # pagina FCI ad ogni giro (vedi "existing.get('info')" sopra), deve
+        # restare indicizzata per id ORIGINALE per continuare a fare match.
         with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
             json.dump(details_map, f, indent=2, ensure_ascii=False)
         print(f"Salvati dettagli per {len(details_map)} gare in {DETAILS_FILE}")
+
+    # ── Divide le gare a tappe in documenti separati ──────────────────
+    # Ricalcolato da zero ogni volta (vedi split_stage_races) — da qui in
+    # poi 'calendar'/'details_map' sono la forma FINALE, con le tappe già
+    # separate, usata per calendar.json/race_details*.json pubblicati.
+    calendar, details_map = split_stage_races(calendar, details_map)
+    with open(CALENDAR_FILE, 'w', encoding='utf-8') as f:
+        json.dump(calendar, f, indent=2, ensure_ascii=False)
+    with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(details_map, f, indent=2, ensure_ascii=False)
+    print(f"Calendario finale (post-divisione tappe): {len(calendar)} gare in {CALENDAR_FILE}")
 
     # Salva file per categoria (subset del principale)
     cat_key_map = {
