@@ -12912,8 +12912,14 @@ window.ytPickGara = (id, garaId) => {
   _ytItemGaraMap[id] = garaId;
   const sr = document.getElementById('ytq-search-' + id);
   if (sr) sr.style.display = 'none';
-  // Aggiorna il select per mostrare la selezione
-  const sel = document.querySelector(`#ytq-${id} select`);
+  // Aggiorna il select per mostrare la selezione — DEVE essere quello della
+  // gara (ytq-gara-sel-), non il primo <select> del contenitore: quello è
+  // il tipo contenuto (Video di una gara/Presentazione/...), che finiva
+  // "sporcato" con l'id/nome della gara al posto di 'gara' — ytApprove()
+  // legge quel valore per decidere se includere gara_ids nella richiesta,
+  // quindi con questo bug la gara scelta da "Cerca altra gara" non veniva
+  // MAI inviata al server ("gara_id obbligatorio", segnalato dall'utente).
+  const sel = document.getElementById('ytq-gara-sel-' + id);
   if (sel) {
     // Rimuovi opzioni extra e aggiungi quella selezionata se non c'è
     const existing = [...sel.options].find(o => o.value === garaId);
