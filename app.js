@@ -20808,6 +20808,14 @@ async function renderGara(gara_id) {
       </div>
       `);
     window._currentGaraId = primaryGaraId;
+    // Definisce window.openRacePhotoUpload/openVideoSubmit — SENZA questo i
+    // due pulsanti sopra restavano finte porte: le funzioni vengono
+    // assegnate a window solo dentro _initGaraMediaModals(), chiamata più
+    // sotto nel ramo "gara con risultati" di questa stessa funzione (mai
+    // raggiunto qui, il ramo gara futura fa return prima) — quindi al primo
+    // arrivo diretto su una pagina gara futura restavano undefined
+    // ("window.openRacePhotoUpload is not a function", segnalato dall'utente).
+    _initGaraMediaModals();
 
     // Foto/video già presenti (es. una diretta collegata prima che ci
     // fossero risultati) — caricati DOPO il primo paint per non bloccare
