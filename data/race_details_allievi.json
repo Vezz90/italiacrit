@@ -3638,8 +3638,8 @@
         "km": "82"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.67143,
+    "lng": 9.1802
   },
   "9_MEMORIAL_PIERO_FORCONI_2026-10-11": {
     "raceid": "182618",
@@ -3698,8 +3698,8 @@
         "km": "Km 63"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66251,
+    "lng": 8.53438
   },
   "54_CIRCUITO_DI_MANZOLINO_2026-09-27": {
     "raceid": "179451",
@@ -3878,7 +3878,7 @@
         "km": "Km 63"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66251,
+    "lng": 8.53438
   }
 }
