@@ -1,0 +1,106 @@
+{
+  "https://it.firstcycling.com/rider.php?r=261661": {
+    "url": "https://it.firstcycling.com/rider.php?r=261661",
+    "htmlLen": 28621,
+    "links": [
+      {
+        "href": "https://www.cloudflare.com?utm_source=challenge&utm_campaign=m",
+        "text": "Cloudflare"
+      },
+      {
+        "href": "https://www.cloudflare.com/it-it/privacypolicy/",
+        "text": "Privacy"
+      }
+    ]
+  },
+  "Fedrizzi Brandon Davide": {
+    "url": "https://it.firstcycling.com/search.php?search=Fedrizzi%20Brandon%20Davide",
+    "htmlLen": 82848,
+    "links": [
+      {
+        "href": "#",
+        "text": "766 terze parti"
+      },
+      {
+        "href": "#",
+        "text": "Impostazioni"
+      },
+      {
+        "href": "#",
+        "text": "Akkoord, ik ben 24+"
+      },
+      {
+        "href": "#",
+        "text": "Akkoord, ik ben onder 24"
+      },
+      {
+        "href": "#",
+        "text": "Accetta tutto"
+      },
+      {
+        "href": "#",
+        "text": "Salva ed esci"
+      },
+      {
+        "href": "https://www.consentmanager.net/it/cookie-banner/?utm_source=cmplogo2A&utm_medium=banner&utm_campaign=cmplogo2A&utm_term=136872&utm_content=it.firstcycling.com",
+        "text": "consentmanager.net"
+      },
+      {
+        "href": "index.php",
+        "text": "FIRSTCYCLING"
+      },
+      {
+        "href": "index.php",
+        "text": "Strada"
+      },
+      {
+        "href": "cyclocross.php",
+        "text": "Ciclocross"
+      },
+      {
+        "href": "gravel.php",
+        "text": "Gravel"
+      },
+      {
+        "href": "mountainbike.php",
+        "text": "MTB"
+      },
+      {
+        "href": "track.php",
+        "text": "Pista"
+      },
+      {
+        "href": "transfers.php",
+        "text": "Trasferimenti"
+      },
+      {
+        "href": "fantasy.php",
+        "text": "Fantaciclismo"
+      },
+      {
+        "href": "languages.php",
+        "text": ""
+      },
+      {
+        "href": "signUp.php",
+        "text": ""
+      },
+      {
+        "href": "#search",
+        "text": ""
+      },
+      {
+        "href": "mailto:info@firstcycling.com",
+        "text": "Contact"
+      },
+      {
+        "href": "https://www.twitter.com/firstcycling",
+        "text": "FirstCycling"
+      },
+      {
+        "href": "privacypolicy.php",
+        "text": "Informativa sulla privacy"
+      }
+    ]
+  }
+}

@@ -40,9 +40,14 @@ async function isChallengePage(page) {
   if (page.isClosed()) return false;
   return withTimeout(page.evaluate(() => {
     if (document.querySelector('iframe[src*="challenges.cloudflare.com"]')) return true;
-    if (document.querySelector('#challenge-running, .cf-turnstile, #cf-challenge-running')) return true;
+    if (document.querySelector('#challenge-running, .cf-turnstile, #cf-challenge-running, #challenge-error-text')) return true;
     const bodyText = (document.body?.innerText || '').toLowerCase();
     if (/verify you are human|checking your browser|attendere\.\.\.|please wait while we/.test(bodyText)) return true;
+    // Stessa sfida, ma servita in italiano (osservato su it.firstcycling.com
+    // — il rilevamento sopra è tutto in inglese e non la vedeva, lo script
+    // pensava di aver caricato la pagina vera e continuava a vuoto).
+    if (/esecuzione della verifica di sicurezza|ci siamo quasi|stiamo verificando che tu non sia un robot|verifica del sito web/.test(bodyText)) return true;
+    if (document.title.trim() === 'Ci siamo quasi…') return true;
     return false;
   }), 8000, 'isChallengePage').catch(() => false);
 }
@@ -269,4 +274,22 @@ async function launchBrowser(warmupUrl) {
   return { browser, context, page };
 }
 
-module.exports = { launchPcsBrowser, launchBrowser, gotoPcsPage, humanDelay, isChallengePage, sleep, withTimeout };
+// Banner cookie di consentmanager.net (osservato su it.firstcycling.com):
+// copre/blocca il contenuto reale della pagina finché non viene chiuso — un
+// primo giro su FirstCycling trovava "0 risultati" ovunque perché ogni
+// pagina caricava dietro al banner, mai dismesso. #cmpbntyestxt è l'id
+// standard del pulsante "Accetta tutto" di consentmanager.net (non
+// specifico di questo sito — utile per qualunque altro scraper che lo
+// incontri). Innocuo se il banner non c'è (il selettore semplicemente non
+// trova nulla).
+async function dismissCookieBanner(page) {
+  try {
+    await withTimeout(page.evaluate(() => {
+      const btn = document.getElementById('cmpbntyestxt') ||
+        [...document.querySelectorAll('button, a')].find(el => /accetta tutto|accept all/i.test((el.textContent || '').trim()));
+      if (btn) btn.click();
+    }), 3000, 'dismissCookieBanner').catch(() => {});
+  } catch {}
+}
+
+module.exports = { launchPcsBrowser, launchBrowser, gotoPcsPage, humanDelay, isChallengePage, dismissCookieBanner, sleep, withTimeout };
