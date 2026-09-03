@@ -25262,8 +25262,27 @@ async function renderRisultati() {
     ev.campionato_italiano = firstRes?.campionato_italiano || false;
   }
 
-  let races = Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
-  
+  // Gare di OGGI ancora senza nessun risultato — mostrate come card
+  // "in attesa" (senza podio, con link/pulsante alla pagina gara per
+  // aggiungere risultati o guardarci una diretta) invece di restare
+  // invisibili qui finché non passa lo scraper. Richiesta esplicita
+  // dell'utente 2026-09-03: farsi trovare da chi cerca risultati proprio
+  // il giorno della gara, senza dover passare dal Calendario ("troppo
+  // macchinoso"). SOLO oggi, non tutte le gare future — altrimenti la lista
+  // Risultati si riempirebbe di gare lontane senza nulla da vedere.
+  const _risTodayIso = new Date().toISOString().slice(0, 10);
+  const _hasResultsToday = new Set(Object.values(eventMap).map(ev => toCalId(ev.id)));
+  const pendingToday = (calendar || [])
+    .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id))
+    .map(g => ({
+      id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
+      regione: g.regione, mult: g.moltiplicatore || 1,
+      campionato_regionale: !!g.campionato_regionale, campionato_italiano: !!g.campionato_italiano,
+      byCategory: {}, _pending: true, _categoriaLabel: g.categoria || '',
+    }));
+
+  let races = [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''))];
+
   // Extract all regions, filtering out category false positives
   const badRegions = ['JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
   const allRegions = [...new Set(races.map(r => r.regione).filter(Boolean))].filter(r => !badRegions.includes(r.toUpperCase())).sort();
@@ -25412,6 +25431,27 @@ async function renderRisultati() {
   // Always: rebuild only the cards area
   if (cardsEl) {
     cardsEl.innerHTML = visibleRaces.map(race => {
+      // Card "in attesa" per una gara di oggi senza ancora risultati — vedi
+      // pendingToday sopra. Nessun podio da mostrare, solo un invito a
+      // entrare nella pagina gara (che ha già Aggiungi risultati/Da foto
+      // ordine d'arrivo/Aggiungi Video per chiunque sia loggato).
+      if (race._pending) {
+        return `
+        <div class="hero-band ris-card">
+          <div class="ris-card-body">
+            <span class="ris-importance-badge" style="background:var(--red-hot)">🏁 OGGI</span>
+            <div class="hero-race-name"><a href="/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+            <div class="hero-race-meta" style="margin-bottom:14px;">
+              <span>${fmtDate(race.data)}</span>
+              ${race.regione ? `<span class="ris-region-tag">${esc(race.regione)}</span>` : ''}
+              ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
+            </div>
+            <div class="hero-divider" style="margin-bottom:12px;"></div>
+            <div style="color:var(--text-muted);font-size:.85rem;margin-bottom:14px">${race._categoriaLabel ? esc(race._categoriaLabel) + ' — ' : ''}Risultati non ancora disponibili. Sei in gara o hai una foto dell'ordine d'arrivo?</div>
+            <a href="/gara/${esc(race.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;display:block">VAI ALLA GARA &rarr;</a>
+          </div>
+        </div>`;
+      }
       const mult = race.mult || 1;
       const categories = Object.entries(race.byCategory || {});
 
