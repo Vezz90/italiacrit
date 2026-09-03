@@ -215,6 +215,31 @@ async function sendPushToUser(userId, { title, body, url }) {
   return { sent };
 }
 
+// Notifica SOLO gli admin — usata quando un appassionato (non admin) inserisce
+// risultati a mano/da foto ordine d'arrivo (vedi POST /gara/:garaId/manual-
+// result-notify sotto), così l'admin sa che è successo e può ricontrollare.
+// Richiesta esplicita dell'utente 2026-09-03.
+async function sendPushToAdmins({ title, body, url }) {
+  if (!webpush || !VAPID_PUBLIC || !VAPID_PRIVATE) return { sent: 0 };
+  let sent = 0;
+  try {
+    const subs = await rawQuery(
+      `SELECT ps.* FROM push_subscriptions ps JOIN users u ON u.id = ps.user_id WHERE u.role = 'admin'`
+    ).then(r => r.rows);
+    const payload = JSON.stringify({ title, body, url: url || '/' });
+    await Promise.all(subs.map(async s => {
+      try {
+        await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload);
+        sent++;
+      } catch (err) {
+        if (err.statusCode === 410 || err.statusCode === 404)
+          await rawQuery(`DELETE FROM push_subscriptions WHERE endpoint=$1`, [s.endpoint]).catch(() => {});
+      }
+    }));
+  } catch (e) { console.warn('[push] sendToAdmins:', e.message); }
+  return { sent };
+}
+
 // Notifica gli atleti appena taggati in una foto (esclude chi si auto-tagga).
 async function notifyPhotoTag(photo, addedIds, taggerUserId) {
   for (const aid of (addedIds || [])) {
@@ -4356,6 +4381,24 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, _submitManualRes
 // aspettare che passi lo scraper FCI. Richiesta esplicita dell'utente
 // 2026-09-03: "deve essere anche possibile da parte degli appassionati".
 app.post('/api/gara/:garaId/manual-result', requireAuth, _submitManualResult);
+
+// Chiamato UNA VOLTA dal client dopo un invio massivo di risultati (bulk
+// form), non per ogni riga — altrimenti una foto con 40 corridori manderebbe
+// 40 notifiche identiche. Notifica gli admin solo se chi ha inserito NON è
+// admin (un admin non ha bisogno di essere avvisato delle proprie azioni).
+app.post('/api/gara/:garaId/manual-result-notify', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role === 'admin') return res.json({ ok: true, skipped: true });
+    const { nome_gara, count, source } = req.body || {};
+    const who = req.user.display_name || req.user.email || 'un utente';
+    const r = await sendPushToAdmins({
+      title: '📋 Nuovo inserimento risultati',
+      body: `${who} ha inserito ${count || ''} risultat${count === 1 ? 'o' : 'i'} per "${nome_gara || req.params.garaId}"${source === 'ocr' ? ' (da foto ordine d\'arrivo)' : ''}`,
+      url: `/#/gara/${req.params.garaId}`,
+    });
+    res.json({ ok: true, ...r });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
 // Estrae l'ordine d'arrivo da una foto del foglio ufficiale FCI (richiesta
 // esplicita dell'utente 2026-09-03: molti circoli lo pubblicano/affiggono

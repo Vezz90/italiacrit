@@ -19526,6 +19526,7 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
   const sample = allRows[0];
   window._mrMeta = _mrDeriveMeta(garaId, sample);
   window._mrBulkGaraId = garaId;
+  window._mrBulkFromOcr = !!(prefilledRows && prefilledRows.length);
   if (prefilledRows && prefilledRows.length) {
     window._mrBulkRows = prefilledRows.map(r => ({
       pos: r.pos, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', tempo: r.tempo || '', atletaId: null,
@@ -19718,6 +19719,17 @@ window.submitManualResultBulk = async () => {
   }
   document.getElementById('modal-overlay')?.remove();
   showToast(fail ? `✓ ${ok} salvati, ${fail} falliti` : `✓ ${ok} risultati aggiunti`, fail ? 'error' : undefined);
+  // Una notifica sola per l'intero invio (non una per riga) — l'admin viene
+  // avvisato solo se chi ha inserito NON è admin (il server lo verifica di
+  // nuovo comunque, questo è solo per non chiamarlo a vuoto). Richiesta
+  // esplicita dell'utente 2026-09-03, soprattutto per gli inserimenti da
+  // foto ordine d'arrivo.
+  if (ok > 0 && authUser()?.role !== 'admin') {
+    apiCall(`/gara/${encodeURIComponent(garaId)}/manual-result-notify`, {
+      method: 'POST',
+      body: { nome_gara: meta.nome_gara || garaId, count: ok, source: window._mrBulkFromOcr ? 'ocr' : 'manual' },
+    }).catch(() => {});
+  }
   if (window._currentGaraId) _rerenderCurrentGaraPage();
 };
 
