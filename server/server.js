@@ -6452,7 +6452,10 @@ async function autoYoutubeSync() {
       await sendPushToAll({
         title: '🎥 Nuovi video disponibili',
         body: `${r.added} nuovi video di gare sono stati trovati`,
-        url: '/#/risultati',
+        // Punta direttamente alla coda di revisione video (Admin → Video
+        // YouTube), non a /#/risultati — prima il click sulla notifica non
+        // portava mai alla pagina giusta (segnalato dall'utente).
+        url: '/#/admin?tab=video-yt',
       });
     }
   } catch (e) { console.warn('[yt-auto] Errore:', e.message); }

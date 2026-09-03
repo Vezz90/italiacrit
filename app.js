@@ -10961,6 +10961,19 @@ async function renderAdmin() {
     </div>
   `);
 
+  // Deep-link da notifica push (es. "🎥 Nuovi video disponibili" → apre
+  // direttamente la coda invece della dashboard generica) — location.hash
+  // tipo "#/admin?tab=video-yt". Senza questo, adminNav ignorava sempre
+  // qualsiasi query string e apriva sempre 'overview' (segnalato
+  // dall'utente: click sulla notifica non porta alla pagina giusta).
+  const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
+    'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage',
+    'social-queue','scraper'];
+  const hashQuery = (window.location.hash.split('?')[1] || '');
+  const tabParam = new URLSearchParams(hashQuery).get('tab');
+  if (tabParam && ADMIN_SECTIONS.includes(tabParam)) _adminSection = tabParam;
+
   // Carica la sezione di default
   adminNav(_adminSection);
 }
@@ -12951,6 +12964,7 @@ window.ytApprove = async (id) => {
   if (!item) return;
   const isLive = document.getElementById('ytq-live-' + id)?.checked || false;
   const body = { title: item.title, channel: item.channel_name, is_live: isLive };
+  let confirmLabel = '';
   if (tipo === 'gara') {
     const garaId = _ytItemGaraMap[id]
       || document.getElementById('ytq-gara-sel-' + id)?.value
@@ -12958,15 +12972,22 @@ window.ytApprove = async (id) => {
     if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
     // Se esordienti e checkbox "entrambi gli anni" attivo → pubblica su ES1+ES2
     const bothCb = document.getElementById('ytq-both-cb-' + id);
-    body.gara_ids = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+    const targetIds = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+    body.gara_ids = targetIds;
+    // Nome/e gara reale/i per il toast di conferma — prima diceva solo
+    // "Video pubblicato!" senza dire dove, difficile verificare al volo di
+    // aver scelto la gara giusta (segnalato dall'utente).
+    const names = targetIds.map(gid => _ytAllRaceCandidates().find(r => r.gara_id === gid)?.nome_gara).filter(Boolean);
+    confirmLabel = names.length ? names.join(' + ') : garaId;
   } else {
     body.tipo = tipo; // presentazione | programma_tv → bucket virtuale, nessuna gara
+    confirmLabel = tipo === 'presentazione' ? 'Presentazione' : tipo === 'programma_tv' ? 'Programma TV' : 'Altro (nessuna gara collegata)';
   }
   try {
     await apiCall(`/admin/youtube/queue/${id}/approve`, { method: 'POST', body });
     document.getElementById('ytq-' + id)?.remove();
     item.status = 'approved';
-    showToast('✓ Video pubblicato!');
+    showToast(`✓ "${item.title}" pubblicato su: ${confirmLabel}`);
     await refreshVideos();
     loadAdminAllVideos();
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
