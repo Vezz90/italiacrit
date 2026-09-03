@@ -10301,8 +10301,8 @@
     "orario_partenza": "13:15",
     "km": "189,400 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GIRO DELLA TOSCANA - MEMORIAL ALFREDO MARTINI Strada GIRO DELLA TOSCANA - MEMORIAL ALFREDO MARTINI ID Gara: 181047 | Data: 09/09/2026 INFORMAZIONI GENERALI Localita: Pontedera",
     "location_str": "Piazza Billeri, Pontedera, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 43.66423,
+    "lng": 10.64419
   },
   "MEMORIAL_MARCO_PANTANI_2026-09-12": {
     "raceid": "180707",
@@ -10315,8 +10315,8 @@
     "orario_partenza": "11:45",
     "km": "192,500 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara MEMORIAL MARCO PANTANI Strada MEMORIAL MARCO PANTANI ID Gara: 180707 | Data: 12/09/2026 INFORMAZIONI GENERALI Localita: CESENA",
     "location_str": "Piazzale Roma, Riccione, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.00329,
+    "lng": 12.66168
   },
   "TROFEO_MATTEOTTI_2026-09-13": {
     "raceid": "181054",
@@ -10329,8 +10329,8 @@
     "orario_partenza": "12:30",
     "km": null,
     "location_str": "PIAZZA DELLA RINASCITA, PESCARA, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 42.47252,
+    "lng": 14.20948
   },
   "79_COPPA_AGOSTONI_GIRO_DELLE_BRIANZE_2026-10-04": {
     "raceid": "180719",
@@ -10343,8 +10343,8 @@
     "orario_partenza": "13:00",
     "km": "166.7 Servizi: Controllo Anti-Doping: L’eventuale controllo anti doping avrà luogo presso il Museo d’ arte Contemporanea – viale Elisa Ancona 6 Lissone – (400mt dopo l’ arrivo lato destro) Conferenza stampa: organizzata presso Museo d’ arte Contemporanea – viale Elisa Ancona 6 Lissone – (400mt dopo l’ arrivo lato destro) AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 79° COPPA AGOSTONI - GIRO DELLE BRIANZE Strada 79° COPPA AGOSTONI - GIRO DELLE BRIANZE ID Gara: 180719 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: LISSONE",
     "location_str": "Via Bottego 15 presso Stabilimento CLEAF, Lissone, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.61077,
+    "lng": 9.24084
   },
   "COPPA_BERNOCCHI_GP_BANCO_BPM_2026-10-05": {
     "raceid": "180720",
@@ -10357,8 +10357,8 @@
     "orario_partenza": "12:30",
     "km": "178,14 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara COPPA BERNOCCHI - GP BANCO BPM Strada COPPA BERNOCCHI - GP BANCO BPM ID Gara: 180720 | Data: 05/10/2026 INFORMAZIONI GENERALI Localita: LEGNANO e comuni limitrofi",
     "location_str": "Largo Tosi, Legnano, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.59582,
+    "lng": 8.91918
   },
   "105_TRE_VALLI_VARESINE_2026-10-06": {
     "raceid": "180721",
