@@ -559,36 +559,6 @@
       "103° CIRCUITO DI CESA - TROFEO S. LUCIA Strada 103° CIRCUITO DI CESA - TROFEO S. LUCIA ID Gara: 178986 | <br><b>Data:</b> 01/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> Marciano della Chiana <br><b>Provincia:</b> AR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> G.S. CESA A.S.D. <br><b>Indirizzo:</b> VIA CASSIA 45 <br><b>CAP:</b> 52047 <br><b>Città:</b> MARCIANO DELLA CHIANA <br><b>Provincia:</b> AR <br><b>Telefono:</b> 3387208580 <br><b>Email:</b> INFO@GSCESA.COM ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
   },
-  "48_GIRO_NAZIONALE_DEL_VALDARNO_2026-09-07_TAPPA1": {
-    "raceid": "178987",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178987&site=strada_it",
-    "info": [
-      "48° GIRO NAZIONALE DEL VALDARNO — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-07<br><b>Descrizione:</b> Partenza Uff.sa P.za M. Ficino-PARTENZA UFFICIALE-P.za Santa Lucia-Incisa-La Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino-Ponte Arno-Rotatoria Cristal-Rotatoria Rismauto-La Massa Incisa-Via delle Fornaci-(Percorso da ripetere 2 Volte) indi la Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino Ponte Arno-Rotatoria Cristal- Rotatoria Decathon a sx-Rotatoria Hotel Toscana a sx-Via Del Ponterosso-Via del Giglio-Corso V. Veneto-Corso Matteotti-P.za M.Ficino(1°passaggio sull’arrivo)indi Corso Mazzini-Via San Romolo-Via Del Puglia-Via G.Galilei-Ponterosso a dx-Via N.Pistelli-Via Di Norcenni-Stecco-huCamping Girasole-Bivio S.Andrea-S.Martino-Bivio Brollo-Pian Delle Macchie-Gagliana Variantina a dx.-Rotatoria Cerviano-Via N.Pistelli-a sx.Bivio Via N. Copernico-SP 69 a dx-Via di Ponterosso-Via Maestro da Figline-Via Del Giglio-Corso V.Veneto-Corso<br><b>Luogo Ritrovo:</b> 50063 FIGLINE VALDARNO<br><b>Indirizzo Ritrovo:</b> CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7<br><b>Orario Ritrovo:</b> 08:30<br><b>Luogo Partenza:</b> PIAZZA MARSILIO FICINO FIGLINE ORE 12,45<br><b>Orario Partenza:</b> 12:45<br><b>Luogo Arrivo:</b> PIAZZA MARSILIO FICINO FIGLINE VALDARNO<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 172"
-    ],
-    "luogo_ritrovo": "50063 FIGLINE VALDARNO",
-    "indirizzo_ritrovo": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7",
-    "orario_partenza": "12:45",
-    "km": "172",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "48_GIRO_NAZIONALE_DEL_VALDARNO_2026-09-07_GC": {
-    "raceid": "178987",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178987&site=strada_it",
-    "info": [
-      "48° GIRO NAZIONALE DEL VALDARNO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-07 <b>al:</b> 2026-09-07<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "50063 FIGLINE VALDARNO",
-    "indirizzo_ritrovo": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7",
-    "orario_partenza": "12:45",
-    "km": "172 Servizi: -RESPONSABILITA'-LA SOCIETà ORGANIZZATRICE G.S.FIGLINE BIKE DECLINA PER SE E PER I PROPRI TESSERATI, SOCI E VOLONTARI OGNI RESPONSABILITA' PER QUANTO POSSA ACCADERE AI PARTECIPANTI ALLA MANIFESTAZIONE, A TERZI, A COSE E ANIMALI PRIMA ,DURANTE E DOPO LO SVOLGIMENTO DELLA MANIFESTAZIONE O PER CAUSE AD ESSA INERENTI. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 48° GIRO NAZIONALE DEL VALDARNO Strada 48° GIRO NAZIONALE DEL VALDARNO ID Gara: 178987 | Data: 07/09/2026 INFORMAZIONI GENERALI Localita: FIGLINE E INCISA VALDANO - FIRENZE",
-    "location_str": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7, 50063 FIGLINE VALDARNO, Italia",
-    "tappe": [],
-    "lat": 43.62216,
-    "lng": 11.46427
-  },
   "34_GIRO_DEL_VENETO_2026-09-09": {
     "raceid": "180200",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
@@ -596,162 +566,12 @@
       "34° GIRO DEL VENETO Strada 34° GIRO DEL VENETO ID Gara: 180200 | <br><b>Data:</b> 09/09/2026 - 12/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> VARIE LOCALITA' <br><b>Provincia:</b> VI <br><b>Categoria:</b> (2.12) Elite s.c. e Under 23 tappe <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> A tappe <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> ORGANIZZAZIONE EVENTI SPORTIVI A.S.D. <br><b>Indirizzo:</b> VIA DANIELE MANIN 32 <br><b>CAP:</b> 36061 <br><b>Città:</b> BASSANO DEL GRAPPA <br><b>Provincia:</b> VI <br><b>Telefono:</b> 3396754034 <br><b>Email:</b> oes.eventisportivi@gmail.com ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
   },
-  "91_TARGA_LIBERO_FERRARIO_2026-09-13_TAPPA1": {
-    "raceid": "178988",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178988&site=strada_it",
-    "info": [
-      "91° TARGA LIBERO FERRARIO — 1ª tappa<br><b>Data:</b> 2026-09-13<br><b>Descrizione:</b> Percorso: Circuito extra cittadino Interamente pianeggiante. Si ricorda che gli spartitraffico e le rotatorie saranno affrontate secondo il normale senso di marcia, solo in caso di segnalazione preventiva ci sarà il cambio di senso di marcia. Lungo il circuito non vige il blocco della circolazione ma la sospensione temporanea della circolazione; si raccomanda quindi di prestare la massima attenzione durante lo svolgimento della manifestazione\r\nGiro da 20,100 km da ripetere 7 volte\r\nTrasferimento da Piazza Maggiolini al Km 0, incrocio SP109 via Gabriele D'Annunzio di Km 3,800\r\nRiunione Tecnica in via San Giuseppe 1 ore 10.30<br><b>Luogo Ritrovo:</b> PARABIAGO<br><b>Indirizzo Ritrovo:</b> PIAZZA MAGGIOLINI ANG.S.ANTONIO<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> PARABIAGO VIA CARSO<br><b>Orario Partenza:</b> 12:00<br><b>Luogo Arrivo:</b> PARABIAGO PIAZZA MAGGIOLINI<br><b>Lunghezza KM:</b> 158.300"
-    ],
-    "luogo_ritrovo": "PARABIAGO",
-    "indirizzo_ritrovo": "PIAZZA MAGGIOLINI ANG.S.ANTONIO",
-    "orario_partenza": "12:00",
-    "km": "158.300",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "91_TARGA_LIBERO_FERRARIO_2026-09-13_GC": {
-    "raceid": "178988",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178988&site=strada_it",
-    "info": [
-      "91° TARGA LIBERO FERRARIO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-13 <b>al:</b> 2026-09-13<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "PARABIAGO",
-    "indirizzo_ritrovo": "PIAZZA MAGGIOLINI ANG.S.ANTONIO",
-    "orario_partenza": "12:00",
-    "km": "158.300 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 91° TARGA LIBERO FERRARIO Strada 91° TARGA LIBERO FERRARIO ID Gara: 178988 | Data: 13/09/2026 INFORMAZIONI GENERALI Localita: PARABIAGO",
-    "location_str": "PIAZZA MAGGIOLINI ANG.S.ANTONIO, PARABIAGO, Italia",
-    "tappe": [],
-    "lat": 45.55864,
-    "lng": 8.94798
-  },
   "108_GIRO_DEL_CASENTINO_2026-09-13": {
     "raceid": "178989",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178989&site=strada_it",
     "info": [
       "108° GIRO DEL CASENTINO Strada 108° GIRO DEL CASENTINO ID Gara: 178989 | <br><b>Data:</b> 13/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> Località Corsalone <br><b>Provincia:</b> AR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> A.S.D. U.C. ARETINA 1907 <br><b>Indirizzo:</b> STRADA COMUNALE DI AGAZZI 125 <br><b>CAP:</b> 52100 <br><b>Città:</b> AREZZO <br><b>Provincia:</b> AR <br><b>Telefono:</b> 3928833958 <br><b>Email:</b> UCARETINA@UC-ARETINA1907.COM ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
-  },
-  "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_TAPPA1": {
-    "raceid": "178990",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178990&site=strada_it",
-    "info": [
-      "85^ COPPA CIUFFENNA - 98^ COPPA ANTICA — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-15<br><b>Descrizione:</b> PARTENZA PIAZZA MATTEOTTI , BIVIO CASALINI, GANGHERETO, ROTONDA TERRANUOVA BRACCIOLINI, PENNA, LORO CIUFFENNA, CIRCUITO DI KM 14,900 DA RIPETERE 11 VOLTE .<br><b>Luogo Ritrovo:</b> LORO CIUFFENNA<br><b>Indirizzo Ritrovo:</b> COMUNE PIAZZA MATTEOTTI<br><b>Orario Ritrovo:</b> 08:30<br><b>Luogo Partenza:</b> PIAZZA MATTEOTTI LORO CIUFFENNA<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> VIALE ALCIDE DE GASPERI LORO CIUFFENNA<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 163.900"
-    ],
-    "luogo_ritrovo": "LORO CIUFFENNA",
-    "indirizzo_ritrovo": "COMUNE PIAZZA MATTEOTTI",
-    "orario_partenza": "13:00",
-    "km": "163.900",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_GC": {
-    "raceid": "178990",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178990&site=strada_it",
-    "info": [
-      "85^ COPPA CIUFFENNA - 98^ COPPA ANTICA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-15 <b>al:</b> 2026-09-15<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "LORO CIUFFENNA",
-    "indirizzo_ritrovo": "COMUNE PIAZZA MATTEOTTI",
-    "orario_partenza": "13:00",
-    "km": "163.900 Servizi: PER INFORMAZIONI CONTATTARE IL SIG. GAMBINI LUCIANO CEL.3397961905 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA Strada 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA ID Gara: 178990 | Data: 15/09/2026 INFORMAZIONI GENERALI Localita: LORO CIUFENNA",
-    "location_str": "COMUNE PIAZZA MATTEOTTI, LORO CIUFFENNA, Italia",
-    "tappe": [],
-    "lat": 43.59324,
-    "lng": 11.63153
-  },
-  "1_G_P_SKA_IMMOBILIARE_SRL_1_MEMORIAL_KEVIN_BONALDO_2026-09-19_TAPPA1": {
-    "raceid": "178991",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178991&site=strada_it",
-    "info": [
-      "1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-19<br><b>Descrizione:</b> Percorso ondulato di 161km, che prevede un circuito iniziale pianeggiate di 13,4km da ripetersi per 3 volte con 3 traguardi volanti a punteggio sotto l'arco d'arrivo, a seguire percorso in linea di 61km caratterizzato da 2 GPM, indi altro circuito da 21km da percorrere due volte e che prevede altri 2 GPM, a seguire tratto in linea di 18 km fino all'arrivo. Classifica GPM a punteggio.<br><b>Luogo Ritrovo:</b> 31037 Ramon di Loria (TV)  c/o SKA IMMOBILIARE<br><b>Indirizzo Ritrovo:</b> via Giorgione, 17<br><b>Orario Ritrovo:</b> 11:00<br><b>Luogo Partenza:</b> km 0 VIA ASOLANA SP 20 FRONTE AUTO ART<br><b>Orario Partenza:</b> 14:00<br><b>Luogo Arrivo:</b> Via Catellana SP 20 Loria<br><b>Orario Arrivo:</b> 18:15<br><b>Lunghezza KM:</b> 160,570"
-    ],
-    "luogo_ritrovo": "31037 Ramon di Loria (TV)  c/o SKA IMMOBILIARE",
-    "indirizzo_ritrovo": "via Giorgione, 17",
-    "orario_partenza": "14:00",
-    "km": "160,570",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "1_G_P_SKA_IMMOBILIARE_SRL_1_MEMORIAL_KEVIN_BONALDO_2026-09-19_GC": {
-    "raceid": "178991",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178991&site=strada_it",
-    "info": [
-      "1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-19 <b>al:</b> 2026-09-19<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "31037 Ramon di Loria (TV) c/o SKA IMMOBILIARE",
-    "indirizzo_ritrovo": "via Giorgione, 17",
-    "orario_partenza": "14:00",
-    "km": "160,570 Servizi: Presentazione squadre di fronte all’azienda SKA Immobiliare srl dalle ore 12.10 termine 30 minuti prima della partenza. Partenza ufficiosa ore 13.40 da via Castellana SP 20 intersezione con via Giorgione fronte stabilimento CERANTOLA S.P.A, trasferimento di 1.360 km e passaggio presso il cimitero per un saluto a Kevin proseguo del trasferimento per altri 1.160 km per raggiungere il km 0. Partenza ufficiale ore 14.00 al KM 0 con piede a terra in via Asolana SP 20 fronte stabilimento AUTO ART AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO Strada 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO ID Gara: 178991 | Data: 19/09/2026 INFORMAZIONI GENERALI Localita: LORIA",
-    "location_str": "via Giorgione, 17, 31037 Ramon di Loria (TV) c/o SKA IMMOBILIARE, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "59_PICCOLA_SANREMO_2026-09-20_TAPPA1": {
-    "raceid": "178992",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178992&site=strada_it",
-    "info": [
-      "59^ PICCOLA SANREMO — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-20<br><b>Descrizione:</b> SOVIZZO (trasf. 2,9 km). MONTECCHIO MAGG.RE (Via Lombardi - p/o Villa Cordellina Lombardi - VIA UFFICIALE) - San Daniele - SOVIZZO. \r\nIndi: SOVIZZO - CREAZZO - ALTAVILLA VIC.NA - SR11 - Tavernelle - SP120 - MONTECCHIO MAGGIORE - San Daniele - SOVIZZO (TV - circuito di km 7,200 da ripetere per 9 v.). \r\nIndi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - SP35 dir (Via Roma) - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a sx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 12,2 da ripetere per 4 v.).\r\nIndi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - Via Valdiezza (loc. Prà Della Punta) -  Montemezzo (loc. Castello - GPM) - Via Righi - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a dx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 16,5 da ripetere per 2 v.).<br><b>Luogo Ritrovo:</b> SOVIZZO<br><b>Indirizzo Ritrovo:</b> ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3<br><b>Orario Ritrovo:</b> 08:30<br><b>Luogo Partenza:</b> MONTECCHIO MAGG. (Via Lombardi - Villa Cordellina)<br><b>Orario Partenza:</b> 13:30<br><b>Luogo Arrivo:</b> SOVIZZO (Viale degli Alpini)<br><b>Orario Arrivo:</b> 17:15<br><b>Lunghezza KM:</b> 149.800"
-    ],
-    "luogo_ritrovo": "SOVIZZO",
-    "indirizzo_ritrovo": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3",
-    "orario_partenza": "13:30",
-    "km": "149.800",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "59_PICCOLA_SANREMO_2026-09-20_GC": {
-    "raceid": "178992",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178992&site=strada_it",
-    "info": [
-      "59^ PICCOLA SANREMO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-20 <b>al:</b> 2026-09-20<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "SOVIZZO",
-    "indirizzo_ritrovo": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3",
-    "orario_partenza": "13:30",
-    "km": "149.800 Servizi: Tutta la documentazione della gara è disponibile su www.piccolasanremo.com AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 59^ PICCOLA SANREMO Strada 59^ PICCOLA SANREMO ID Gara: 178992 | Data: 20/09/2026 INFORMAZIONI GENERALI Localita: SOVIZZO - VICENZA",
-    "location_str": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3, SOVIZZO, Italia",
-    "tappe": [],
-    "lat": 45.55569,
-    "lng": 11.43199
-  },
-  "90_COPPA_COLLECCHIO_2026-09-22_TAPPA1": {
-    "raceid": "178993",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178993&site=strada_it",
-    "info": [
-      "90^ COPPA COLLECCHIO — 1ª tappa<br><b>Data:</b> 2026-09-22<br><b>Descrizione:</b> Collecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo,\r\nTalignano, Pontescodogna, Collecchio - 7 giri\r\nindi\r\nCollecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo, Via Capanna (GPM), Talignano, Pontescodogna, Collecchio - 3 giri<br><b>Luogo Ritrovo:</b> 43034 - Collecchio - PR<br><b>Indirizzo Ritrovo:</b> via Paveri 1 Collecchio (PR) -sede gruppo sportivo<br><b>Orario Ritrovo:</b> 08:45<br><b>Luogo Partenza:</b> Collecchio viale libertà 3 - fronte Municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> Collecchio viale libertà 3 - fronte Municipio<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 137,90"
-    ],
-    "luogo_ritrovo": "43034 - Collecchio - PR",
-    "indirizzo_ritrovo": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo",
-    "orario_partenza": "13:00",
-    "km": "137,90",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "90_COPPA_COLLECCHIO_2026-09-22_GC": {
-    "raceid": "178993",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178993&site=strada_it",
-    "info": [
-      "90^ COPPA COLLECCHIO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-22 <b>al:</b> 2026-09-22<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "43034 - Collecchio - PR",
-    "indirizzo_ritrovo": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo",
-    "orario_partenza": "13:00",
-    "km": "137,90 Servizi: Si prega le società di indicare un codice IBAN su cui verranno effttuati i versamenti dei premi conquistati AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 90^ COPPA COLLECCHIO Strada 90^ COPPA COLLECCHIO ID Gara: 178993 | Data: 22/09/2026 INFORMAZIONI GENERALI Localita: COLLECCHIO",
-    "location_str": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo, 43034 - Collecchio - PR, Italia",
-    "tappe": [],
-    "lat": 44.75182,
-    "lng": 10.21918
   },
   "4_COSTA_DEI_TRULLI_GIRO_DI_PUGLIA_CHALLENGE_2026-09-25": {
     "raceid": "178994",
@@ -774,36 +594,6 @@
       "66^ COPPA MESSAPICA - GIRO DI PUGLIA CHALLENGE Strada 66^ COPPA MESSAPICA - GIRO DI PUGLIA CHALLENGE ID Gara: 178996 | <br><b>Data:</b> 26/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> CEGLIE MESSAPICA <br><b>Provincia:</b> BR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> ASS. SPORT. DILETT. ORAZIO LORUSSO <br><b>Indirizzo:</b> VIA OSPEDALE VECCHIO 7 <br><b>CAP:</b> 72013 <br><b>Città:</b> CEGLIE MESSAPICA <br><b>Provincia:</b> BR <br><b>Telefono:</b> 3333349199 <br><b>Email:</b> DIREZIONE@COPPAMESSAPICA.IT ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
   },
-  "44_PICCOLO_GIRO_DELL_EMILIA_2026-09-27_TAPPA1": {
-    "raceid": "178997",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178997&site=strada_it",
-    "info": [
-      "44° PICCOLO GIRO DELL'EMILIA — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-27<br><b>Descrizione:</b> Trasferimento di k. 5 fino a km. 0  -  Casalecchio di Reno, Sasso Marconi, Marzabotto, Pian di Venola, Ca' Bortolani (GPM), Savigno, Zappolino, Stiore, Monteveglio, Zappolino, Stiore, Muffa, Crespellano, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Via L. da Vinci, Via Montevecchio, Via L. da Vinci, Via Montevecchio, Ponte Ronca, Zola Predosa, Via Risorgimento.<br><b>Luogo Ritrovo:</b> Zola Predosa (Bo)<br><b>Indirizzo Ritrovo:</b> Piazza della Repubblica (Municipio)<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> Zola Predosa, Via Risorgimento, trasf. al km. 0<br><b>Orario Partenza:</b> 13:30<br><b>Luogo Arrivo:</b> Zola Predosa<br><b>Orario Arrivo:</b> 17:10<br><b>Lunghezza KM:</b> 152,6"
-    ],
-    "luogo_ritrovo": "Zola Predosa (Bo)",
-    "indirizzo_ritrovo": "Piazza della Repubblica (Municipio)",
-    "orario_partenza": "13:30",
-    "km": "152,6",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "44_PICCOLO_GIRO_DELL_EMILIA_2026-09-27_GC": {
-    "raceid": "178997",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178997&site=strada_it",
-    "info": [
-      "44° PICCOLO GIRO DELL'EMILIA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-27 <b>al:</b> 2026-09-27<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Zola Predosa (Bo)",
-    "indirizzo_ritrovo": "Piazza della Repubblica (Municipio)",
-    "orario_partenza": "13:30",
-    "km": "152,6 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 44° PICCOLO GIRO DELL'EMILIA Strada 44° PICCOLO GIRO DELL'EMILIA ID Gara: 178997 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: Zola Predosa (Bo)",
-    "location_str": "Piazza della Repubblica (Municipio), Zola Predosa (Bo), Italia",
-    "tappe": [],
-    "lat": 44.48967,
-    "lng": 11.21831
-  },
   "76_TARGA_CROCIFISSO_GIRO_DI_PUGLIA_CHALLENGE_2026-09-27": {
     "raceid": "178998",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178998&site=strada_it",
@@ -825,252 +615,12 @@
       "- Strada - ID Gara: 181420 | <br><b>Data:</b> 05/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> Cepagatti <br><b>Provincia:</b> PE <br><b>Categoria:</b> (1.21 ) Juniores <br><b>Categorie Ammesse:</b> Juniores <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> CAMPIONATO REGIONALE <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> A.S.D CICLISTICO CEPAGATTI <br><b>Indirizzo:</b> VIA VENTIGNANO 59 <br><b>CAP:</b> 65012 <br><b>Città:</b> CEPAGATTI <br><b>Provincia:</b> PE <br><b>Telefono:</b> 085 974204 <br><b>Email:</b> DANILO19851004@GMAIL.COM ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
   },
-  "29_TROFEO_S_S_ADDOLORATA_2026-09-06_TAPPA1": {
-    "raceid": "181999",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181999&site=strada_it",
-    "info": [
-      "29° TROFEO S.S. ADDOLORATA — 1ª tappa<br><b>Data:</b> 2026-09-06<br><b>Descrizione:</b> Partenza ufficiale Montecosaro via della Vittoria, indi (SP 74) SP10 Morrovalle, via 1° Maggio, borgo pintura, via Collodi, contrada Conicchio, contrada Castellano, strada Molinello, via della stazione, viale della vittoria. Circuito di KM 16,500 da ripetere 7 volte. Ultimo giro deviazione in via del Pietrone, via Martiri della libertà Ungherese, arrivo in piazza Trieste.<br><b>Luogo Ritrovo:</b> locale vicino piazza Trieste<br><b>Indirizzo Ritrovo:</b> Montecosaro<br><b>Orario Ritrovo:</b> 10:30<br><b>Luogo Partenza:</b> via della Vittoria, Montecosaro<br><b>Orario Partenza:</b> 14:30<br><b>Luogo Arrivo:</b> piazza Trieste, Montecosaro<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 115"
-    ],
-    "luogo_ritrovo": "locale vicino piazza Trieste",
-    "indirizzo_ritrovo": "Montecosaro",
-    "orario_partenza": "14:30",
-    "km": "115",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "29_TROFEO_S_S_ADDOLORATA_2026-09-06_GC": {
-    "raceid": "181999",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181999&site=strada_it",
-    "info": [
-      "29° TROFEO S.S. ADDOLORATA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-06 <b>al:</b> 2026-09-06<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "locale vicino piazza Trieste",
-    "indirizzo_ritrovo": "Montecosaro",
-    "orario_partenza": "14:30",
-    "km": "115 Servizi: Premiazioni presso arrivo Controllo medico - presso locale difronte al comune di Montecosaro Sala giuria arrivo - locale comune di Montecosaro AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 29° TROFEO S.S. ADDOLORATA Strada 29° TROFEO S.S. ADDOLORATA ID Gara: 181999 | Data: 06/09/2026 INFORMAZIONI GENERALI Localita: MONTECOSARO",
-    "location_str": "Montecosaro, locale vicino piazza Trieste, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "63_G_P_SAN_LUIGI_2026-09-08_TAPPA1": {
-    "raceid": "179371",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179371&site=strada_it",
-    "info": [
-      "63° G.P. SAN LUIGI — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-08<br><b>Descrizione:</b> Sona, via Marconi, via Roma, San Quirico, Bosco, San Giorgio in Salici, Valle, via Discesa Chiesa, Sona di Km 9.600 da ripetere 8 volte, INDI Sona, via Marconi, via Roma, San Quirico, Valle, via Discesa Chiesa di Km 4.800 da ripetere 9 volte<br><b>Luogo Ritrovo:</b> Sona<br><b>Indirizzo Ritrovo:</b> Piazza Roma<br><b>Orario Ritrovo:</b> 12:30<br><b>Luogo Partenza:</b> Sona<br><b>Orario Partenza:</b> 14:30<br><b>Luogo Arrivo:</b> Sona<br><b>Orario Arrivo:</b> 17:15<br><b>Lunghezza KM:</b> 120"
-    ],
-    "luogo_ritrovo": "Sona",
-    "indirizzo_ritrovo": "Piazza Roma",
-    "orario_partenza": "14:30",
-    "km": "120",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "63_G_P_SAN_LUIGI_2026-09-08_GC": {
-    "raceid": "179371",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179371&site=strada_it",
-    "info": [
-      "63° G.P. SAN LUIGI — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-08 <b>al:</b> 2026-09-08<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Sona",
-    "indirizzo_ritrovo": "Piazza Roma",
-    "orario_partenza": "14:30",
-    "km": "120 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 63° G.P. SAN LUIGI Strada 63° G.P. SAN LUIGI ID Gara: 179371 | Data: 08/09/2026 INFORMAZIONI GENERALI Localita: Sona",
-    "location_str": "Piazza Roma, Sona, Italia",
-    "tappe": [],
-    "lat": 45.43395,
-    "lng": 10.83295
-  },
-  "72_COPPA_COMUNE_DI_LIVRAGA_2026-09-08_TAPPA1": {
-    "raceid": "181633",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181633&site=strada_it",
-    "info": [
-      "72° COPPA COMUNE DI LIVRAGA — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-08<br><b>Descrizione:</b> VIA ROMA, S.P.107, VIA VENERE, VIA TURATI, VIA VITTADINI, VIA GARIBALDI, VIA CAIROLI, FRAZ. CA' DE MAZZI, FRAZ. BARAZZINA, BORGHETTO LODIGIANO, VIA NENNI, VIA CAVALLOTTI, VIA TAVAZZI, VIA CASE BRAGLIA, VIA COPPI, S.P. 125, S.P. 207, VIA RISORGIMENTO, ARRIVO.<br><b>Luogo Ritrovo:</b> LIVRAGA (LO)<br><b>Indirizzo Ritrovo:</b> VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI)<br><b>Orario Ritrovo:</b> 12:00<br><b>Luogo Partenza:</b> LIVRAGA, VIA RISORGIMENTO<br><b>Orario Partenza:</b> 14:00<br><b>Luogo Arrivo:</b> LIVRAGA, VIA RISORGIMENTO<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 119,7"
-    ],
-    "luogo_ritrovo": "LIVRAGA (LO)",
-    "indirizzo_ritrovo": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI)",
-    "orario_partenza": "14:00",
-    "km": "119,7",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "72_COPPA_COMUNE_DI_LIVRAGA_2026-09-08_GC": {
-    "raceid": "181633",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181633&site=strada_it",
-    "info": [
-      "72° COPPA COMUNE DI LIVRAGA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-08 <b>al:</b> 2026-09-08<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "LIVRAGA (LO)",
-    "indirizzo_ritrovo": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI)",
-    "orario_partenza": "14:00",
-    "km": "119,7 Servizi: MASSIMO CORRIDORI ISCRITTI 200 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 72° COPPA COMUNE DI LIVRAGA Strada 72° COPPA COMUNE DI LIVRAGA ID Gara: 181633 | Data: 08/09/2026 INFORMAZIONI GENERALI Localita: LIVRAGA",
-    "location_str": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI), LIVRAGA (LO), Italia",
-    "tappe": [],
-    "lat": 45.18743,
-    "lng": 9.54685
-  },
-  "TROFEO_PRATI_STABILI_2026-09-12_TAPPA1": {
-    "raceid": "181635",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
-    "info": [
-      "Trofeo Prati Stabili — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO \r\nVOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - \r\nLOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI \r\n8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE<br><b>Luogo Ritrovo:</b> MARMIROLO<br><b>Indirizzo Ritrovo:</b> AREA FESTE - VIA DI VITTORIO<br><b>Orario Ritrovo:</b> 12:00<br><b>Luogo Partenza:</b> MARMIROLO - VIA DI VITTORIO<br><b>Orario Partenza:</b> 14:30<br><b>Luogo Arrivo:</b> MARMIROLO - VIA DI VITTORIO<br><b>Lunghezza KM:</b> 137"
-    ],
-    "luogo_ritrovo": "MARMIROLO",
-    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
-    "orario_partenza": "14:30",
-    "km": "137",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "TROFEO_PRATI_STABILI_2026-09-12_GC": {
-    "raceid": "181635",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
-    "info": [
-      "Trofeo Prati Stabili — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-12 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "MARMIROLO",
-    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
-    "orario_partenza": "14:30",
-    "km": "137 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | Data: 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO",
-    "location_str": "AREA FESTE - VIA DI VITTORIO, MARMIROLO, Italia",
-    "tappe": [],
-    "lat": 45.22056,
-    "lng": 10.75639
-  },
   "71_G_P_CICLISTICO_DI_SANNAZZARO_2026-09-23": {
     "raceid": "181708",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181708&site=strada_it",
     "info": [
       "71° G.P. Ciclistico di Sannazzaro Strada 71° G.P. Ciclistico di Sannazzaro ID Gara: 181708 | <br><b>Data:</b> 23/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> SANNAZZARO DEI BURGUNDI <br><b>Provincia:</b> PV <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER23 <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> G.C. SANNAZZARO A.S.DILETTANTISTICA <br><b>Indirizzo:</b> VIA FORNACI N° 36 <br><b>CAP:</b> 27039 <br><b>Città:</b> SANNAZZARO DE' BURGONDI <br><b>Provincia:</b> PV <br><b>Telefono:</b> 0382996500 <br><b>Email:</b> GCSANNAZZARO@GMAIL.COM ISCRIZIONI <br><b>Indirizzo:</b> , ,"
     ]
-  },
-  "CRONO_FESTA_DELL_UVA_JUNIORES_DONNE_JUNIOR_DONNE_UNDER_23_DONNE_ELITE_2026-09-26_TAPPA1": {
-    "raceid": "181729",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181729&site=strada_it",
-    "info": [
-      "CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR -  DONNE UNDER 23 - DONNE ELITE — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-26<br><b>Descrizione:</b> CRONOPROGRAMMA:\r\nVerifica tessere: presso PALAZZETTO DELLO SPORT dalle 9.00 alle 10-30\r\nPartenza primo concorrente ore: 11.30\r\nOrdine di partenza: PRIMA I MASCHI POI LE FEMMINE IN ORDINE CASUALE\r\nPremiazione ore: 13,30\r\nDESCRIZIONE DEL PERCORSO DI GARA:\r\nLunghezza: 5,3 KM\r\nDislivello positivo: 200 metri.\r\nPrincipali strade e località attraversate: VERLA, Palù, Passo Croce, Serci, Maso Roncador, VILLE<br><b>Luogo Ritrovo:</b> Giovo (TN) 38030<br><b>Indirizzo Ritrovo:</b> VIA DELLE SCUOLE PALAZZETTO SPORTIVO<br><b>Orario Ritrovo:</b> 08:30<br><b>Luogo Partenza:</b> VERLA DI GIOVO PRESSO LA CHIESA<br><b>Orario Partenza:</b> 11:30<br><b>Luogo Arrivo:</b> VILLE DI GIOVO<br><b>Orario Arrivo:</b> 13:00<br><b>Lunghezza KM:</b> 5,3"
-    ],
-    "luogo_ritrovo": "Giovo (TN) 38030",
-    "indirizzo_ritrovo": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO",
-    "orario_partenza": "11:30",
-    "km": "5,3",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "CRONO_FESTA_DELL_UVA_JUNIORES_DONNE_JUNIOR_DONNE_UNDER_23_DONNE_ELITE_2026-09-26_GC": {
-    "raceid": "181729",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181729&site=strada_it",
-    "info": [
-      "CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR -  DONNE UNDER 23 - DONNE ELITE — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-26 <b>al:</b> 2026-09-26<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Giovo (TN) 38030",
-    "indirizzo_ritrovo": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO",
-    "orario_partenza": "11:30",
-    "km": "5,3 Servizi: PRONTO SOCCORSO PIU' VICINO: OSPEDALE S. CHIARA di TRENTO indirizzo LARGO MEDAGLIE D'ORO n. 9 a 23 km dalla zona di P/A. NUMERO UNICO DI EMERGENZA: 112. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE Strada CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE ID Gara: 181729 | Data: 26/09/2026 INFORMAZIONI GENERALI Localita: Verla-Ville di Giovo",
-    "location_str": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO, Giovo (TN) 38030, Italia",
-    "tappe": [],
-    "lat": 46.18584,
-    "lng": 11.14678
-  },
-  "GIRO_DELL_EMILIA_INTERNAZIONALE_DONNE_ELITE_2026-10-03_TAPPA1": {
-    "raceid": "178701",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178701&site=strada_it",
-    "info": [
-      "GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE — 1ª tappa<br><b>Data:</b> 2026-10-03<br><b>Descrizione:</b> Ferrara Viale Cavour (inizio trasferimento) - Ferrara Via Ferraresi (partenza ufficiale) - Chiesuol del Fosso - Svincolo autostrada - Gallo Ferrarese - Malalbergo - Altedo - Minerbio - S. Martino di Soverzano - Maddalena di Cazzano - Bagnarola - Vigorso - Castenaso - Rotatoria attraversamento SS 9 - Mura S. Carlo - Loc. La Pulce - Farneto - Botteghino di Zocca - Salita di Zocca - Rastignano - Bologna Porta Santo Stefano - Bologna Porta Saragozza - Arco del Meloncello - San Luca - Arco del Meloncello - Bologna S. Luca ARRIVO<br><b>Luogo Arrivo:</b> Bologna - Loc. San Luca - Via Monte Albano<br><b>Lunghezza KM:</b> 111,300"
-    ],
-    "luogo_ritrovo": "GRUPPO SPORTIVO EMILIA S.R.L",
-    "indirizzo_ritrovo": "VIA M. SERENARI 8",
-    "orario_partenza": null,
-    "km": "111,300",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "GIRO_DELL_EMILIA_INTERNAZIONALE_DONNE_ELITE_2026-10-03_GC": {
-    "raceid": "178701",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178701&site=strada_it",
-    "info": [
-      "GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-03 <b>al:</b> 2026-10-03<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "GRUPPO SPORTIVO EMILIA S.R.L",
-    "indirizzo_ritrovo": "VIA M. SERENARI 8",
-    "orario_partenza": null,
-    "km": "111,300 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE Strada GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE ID Gara: 178701 | Data: 03/10/2026 INFORMAZIONI GENERALI Localita: CASALECCHIO DI RENO- BOLOGNA",
-    "location_str": "VIA M. SERENARI 8, GRUPPO SPORTIVO EMILIA S.R.L, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "89_COPPA_CITTA_DI_SAN_DANIELE_2026-10-06_TAPPA1": {
-    "raceid": "178675",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178675&site=strada_it",
-    "info": [
-      "89^ COPPA CITTA' DI SAN DANIELE — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-10-06<br><b>Descrizione:</b> San Daniele Del Friuli, Rodeano Alto, Rodeano Basso, bivio località San Marco, Castello D'Arcano (loc. Arcano Superiore), Strada SP 116 (Panoramica) e nuovamente San Daniele Del Friuli. Percorso da ripetersi 6 volte per un totale di 108,3 km. \r\nTerminati i giri del percorso iniziale si raggiunge il Comune di Ragogna (UD), bivio Pignano, località Muris, salita del Monte di Ragogna (GPM), località San Pietro, Ragogna, località Pignano, nuovamente San Daniele del Friuli (via Umberto I° - transito sotto lo striscione d’arrivo), nuovamente bivio Pignano, località Muris, salita del Monte di Ragogna (2° GPM), località San Pietro, Ragogna, località Pignano, San Daniele Del Friuli (via Umberto I°)  - ARRIVO.<br><b>Luogo Ritrovo:</b> San Daniele del Friuli (UD)<br><b>Indirizzo Ritrovo:</b> Via Del Monte (presso Palazzo Monte di Pietà)<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> San Daniele del Friuli (UD) piazza V. Emanuele<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> San Daniele del Friuli (UD) via Umberto I°<br><b>Orario Arrivo:</b> 17:20<br><b>Lunghezza KM:</b> 148,200"
-    ],
-    "luogo_ritrovo": "San Daniele del Friuli (UD)",
-    "indirizzo_ritrovo": "Via Del Monte (presso Palazzo Monte di Pietà)",
-    "orario_partenza": "13:00",
-    "km": "148,200",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "89_COPPA_CITTA_DI_SAN_DANIELE_2026-10-06_GC": {
-    "raceid": "178675",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178675&site=strada_it",
-    "info": [
-      "89^ COPPA CITTA' DI SAN DANIELE — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-06 <b>al:</b> 2026-10-06<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "San Daniele del Friuli (UD)",
-    "indirizzo_ritrovo": "Via Del Monte (presso Palazzo Monte di Pietà)",
-    "orario_partenza": "13:00",
-    "km": "148,200 Servizi: La partenza ufficiale (KM 0) è programmata a San Daniele del Friuli (UD) via Kennedy (Meccanotecnica) AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 89^ COPPA CITTA' DI SAN DANIELE Strada 89^ COPPA CITTA' DI SAN DANIELE ID Gara: 178675 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: SAN DANIELE DEL FRIULI",
-    "location_str": "Via Del Monte (presso Palazzo Monte di Pietà), San Daniele del Friuli (UD), Italia",
-    "tappe": [],
-    "lat": 46.16005,
-    "lng": 13.0106
-  },
-  "6_TRE_VALLI_VARESINE_WOMEN_S_RACE_2026-10-06_TAPPA1": {
-    "raceid": "178703",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178703&site=strada_it",
-    "info": [
-      "6^ TRE VALLI VARESINE WOMEN'S RACE — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-10-06<br><b>Descrizione:</b> PARTENZA DA VIA VOLTA KM0 A BUSTO ARSIZIO A VARESE DI CIRCA 40 KM, TRATTO IN LINEA, POI INGRESSO IN CIRCUITO A VARESE DI 16 KM  DA PERCORRERE 6 VOLTE<br><b>Luogo Ritrovo:</b> BUSTO ARSIZIO<br><b>Indirizzo Ritrovo:</b> VIA VOLTA 6 C/O MUSEO DEL TESSILE<br><b>Orario Ritrovo:</b> 07:30<br><b>Luogo Partenza:</b> VIA VOLTA BUSTO ARSIZIO<br><b>Orario Partenza:</b> 09:15<br><b>Luogo Arrivo:</b> VIA SACCO VARESE<br><b>Orario Arrivo:</b> 13:20<br><b>Lunghezza KM:</b> 133,860"
-    ],
-    "luogo_ritrovo": "BUSTO ARSIZIO",
-    "indirizzo_ritrovo": "VIA VOLTA 6 C/O MUSEO DEL TESSILE",
-    "orario_partenza": "09:15",
-    "km": "133,860",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "6_TRE_VALLI_VARESINE_WOMEN_S_RACE_2026-10-06_GC": {
-    "raceid": "178703",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178703&site=strada_it",
-    "info": [
-      "6^ TRE VALLI VARESINE WOMEN'S RACE — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-06 <b>al:</b> 2026-10-06<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "BUSTO ARSIZIO",
-    "indirizzo_ritrovo": "VIA VOLTA 6 C/O MUSEO DEL TESSILE",
-    "orario_partenza": "09:15",
-    "km": "133,860 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6^ TRE VALLI VARESINE WOMEN'S RACE Strada 6^ TRE VALLI VARESINE WOMEN'S RACE ID Gara: 178703 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: BUSTO ARSIZIO-VARESE",
-    "location_str": "VIA VOLTA 6 C/O MUSEO DEL TESSILE, BUSTO ARSIZIO, Italia",
-    "tappe": [],
-    "lat": 45.61193,
-    "lng": 8.85183
   },
   "TROFEO_TESSILE_MODA_COMUNI_DI_VALDENGO_E_BIELLA_2026-10-11": {
     "raceid": "178707",
@@ -1101,141 +651,6 @@
     "tappe": [],
     "lat": null,
     "lng": null
-  },
-  "69_GRAN_PREMIO_SOMMA_TROFEO_GIOVANNI_OLDRINI_A_M_2026-10-04_TAPPA1": {
-    "raceid": "178999",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178999&site=strada_it",
-    "info": [
-      "69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M — 1ª tappa<br><b>Data:</b> 2026-10-04<br><b>Descrizione:</b> CIRCUITO SOMMA-VERGIATE-VARANO-CASALE LITTA-VERGIATE SOMMA DA RIPETERSI 5 VOLTE INDI VERGIATE-SESTO CALENDE -GOLASECCA-SOMMA DA RIPETRSI 4 VOLTE  CON ARRIVIO IN CORSO EUROPA A SOMMA LOMBARDO<br><b>Luogo Ritrovo:</b> SOMMA LOMBARDO<br><b>Indirizzo Ritrovo:</b> CASTELLO VISCONTI VIA MAZZINI<br><b>Orario Ritrovo:</b> 08:30<br><b>Luogo Partenza:</b> VIA MAZZINI<br><b>Orario Partenza:</b> 11:30<br><b>Luogo Arrivo:</b> CORSO EUROPA<br><b>Orario Arrivo:</b> 15:30<br><b>Lunghezza KM:</b> 162,9"
-    ],
-    "luogo_ritrovo": "SOMMA LOMBARDO",
-    "indirizzo_ritrovo": "CASTELLO VISCONTI VIA MAZZINI",
-    "orario_partenza": "11:30",
-    "km": "162,9",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "69_GRAN_PREMIO_SOMMA_TROFEO_GIOVANNI_OLDRINI_A_M_2026-10-04_GC": {
-    "raceid": "178999",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178999&site=strada_it",
-    "info": [
-      "69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-04 <b>al:</b> 2026-10-04<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "SOMMA LOMBARDO",
-    "indirizzo_ritrovo": "CASTELLO VISCONTI VIA MAZZINI",
-    "orario_partenza": "11:30",
-    "km": "162,9 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M Strada 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M ID Gara: 178999 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: SOMMA LOMBARDO",
-    "location_str": "CASTELLO VISCONTI VIA MAZZINI, SOMMA LOMBARDO, Italia",
-    "tappe": [],
-    "lat": 45.68362,
-    "lng": 8.70709
-  },
-  "76_GRAN_PREMIO_CALVATONE_2026-10-06_TAPPA1": {
-    "raceid": "179000",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179000&site=strada_it",
-    "info": [
-      "76° GRAN PREMIO CALVATONE — 1ª tappa<br><b>Data:</b> 2026-10-06<br><b>Descrizione:</b> Circuito cittadino di km 2.700 da tipetersi 37 volte per un totale di Km 99,900.\r\nVia Umberto I, Via Vecchia di Piadena, Strada Vicinale Virsecchi, Via Santa Maria, Via Umerto I.<br><b>Luogo Ritrovo:</b> Calvatone (CR)<br><b>Indirizzo Ritrovo:</b> Via Umberto I<br><b>Orario Ritrovo:</b> 12:00<br><b>Luogo Partenza:</b> Calvatone (CR)<br><b>Orario Partenza:</b> 14:30<br><b>Lunghezza KM:</b> 99,9"
-    ],
-    "luogo_ritrovo": "Calvatone (CR)",
-    "indirizzo_ritrovo": "Via Umberto I",
-    "orario_partenza": "14:30",
-    "km": "99,9",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "76_GRAN_PREMIO_CALVATONE_2026-10-06_GC": {
-    "raceid": "179000",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179000&site=strada_it",
-    "info": [
-      "76° GRAN PREMIO CALVATONE — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-06 <b>al:</b> 2026-10-06<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Calvatone (CR)",
-    "indirizzo_ritrovo": "Via Umberto I",
-    "orario_partenza": "14:30",
-    "km": "99,9 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 76° GRAN PREMIO CALVATONE Strada 76° GRAN PREMIO CALVATONE ID Gara: 179000 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: CALVATONE",
-    "location_str": "Via Umberto I, Calvatone (CR), Italia",
-    "tappe": [],
-    "lat": 45.12621,
-    "lng": 10.44196
-  },
-  "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_TAPPA1": {
-    "raceid": "179001",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179001&site=strada_it",
-    "info": [
-      "75° GRAN PREMIO EZIO DEL ROSSO — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-10-11<br><b>Descrizione:</b> Trasferimento di Km.2 da Viale Verdi a Corso Roma al Km 0\r\nMontecatini, Pieve a Nievole, Monsunnano, Ponte Bugg.,Borgo a Buggiano, Montecatini, Vico, Ponte di Serravalle,\r\nMonsummano, Ponte Bugg.,Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano, Ponte B., Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano,\r\nPonte B., Buggiano, Colle, Margine Coperta, Montecatini, indi Vico, Ponte di Serravalle, Pieve a Nievole,\r\nMontecatini da ripetere 4 volte.<br><b>Luogo Ritrovo:</b> MONTECATINI TERME<br><b>Indirizzo Ritrovo:</b> CASA DELLA PREVENZIONE \"PARCO TERMALE\"<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> MONTECATINI TERME Corso Roma<br><b>Orario Partenza:</b> 12:30<br><b>Luogo Arrivo:</b> MONTECATINI TERME  VIALE G. VERDI<br><b>Orario Arrivo:</b> 16:45<br><b>Lunghezza KM:</b> 180"
-    ],
-    "luogo_ritrovo": "MONTECATINI TERME",
-    "indirizzo_ritrovo": "CASA DELLA PREVENZIONE \"PARCO TERMALE\"",
-    "orario_partenza": "12:30",
-    "km": "180",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_GC": {
-    "raceid": "179001",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179001&site=strada_it",
-    "info": [
-      "75° GRAN PREMIO EZIO DEL ROSSO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-11 <b>al:</b> 2026-10-11<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "MONTECATINI TERME",
-    "indirizzo_ritrovo": "CASA DELLA PREVENZIONE \"PARCO TERMALE\"",
-    "orario_partenza": "12:30",
-    "km": "180 Servizi: 6 Auto Giuria e direzione corsa \"Racing Service\" 3 Auto Assistenza Neutra \" Racing Service\" Scorta Tecnica e moto giuria \"gruppo Capannolese e Motociclisti Pistoiesi\" Personale incroci e rotonde \" ASA Polizia di Stato \" 3 Ambulanze di cui 2 con medico a bordo AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 75° GRAN PREMIO EZIO DEL ROSSO Strada 75° GRAN PREMIO EZIO DEL ROSSO ID Gara: 179001 | Data: 11/10/2026 INFORMAZIONI GENERALI Localita: MONTECATINI TERME - PISTOIA",
-    "location_str": "CASA DELLA PREVENZIONE \"PARCO TERMALE\", MONTECATINI TERME, Italia",
-    "tappe": [],
-    "lat": 43.88318,
-    "lng": 10.77095
-  },
-  "74_COPPA_DEL_MOBILIO_2026-10-13_TAPPA1": {
-    "raceid": "179002",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
-    "info": [
-      "74^  COPPA DEL MOBILIO — 1ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-12<br><b>Descrizione:</b> PONSACCO VIALE ITALIA TRASFERIMENTO KM 2,200 FINO A VIA VANNI (PART.UFFICIALE)\r\nPONSACCO VIA VANNI-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI DI KM 8 DA RIPETERE 4 VOLTE, INDI PONSACCO-VARIANTE SR 439-LA CAPANNINA-S.PIETRO BELVEDERE-SELVATELLE-LA ROSA-PECCIOLI-SP11-SP 26-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI KM 46 DA RIPETERE 2 VOLTE<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> ENOTECA LE MELORIE VIALE ITALIA 10<br><b>Orario Ritrovo:</b> 06:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIALE ITALIA<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 11:50<br><b>Lunghezza KM:</b> 124"
-    ],
-    "luogo_ritrovo": "PONSACCO (PI)",
-    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
-    "orario_partenza": "09:00",
-    "km": "124",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "74_COPPA_DEL_MOBILIO_2026-10-13_TAPPA2": {
-    "raceid": "179002",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
-    "info": [
-      "74^  COPPA DEL MOBILIO — 2ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-13<br><b>Descrizione:</b> CRONOMETRO INDIVIDUALE RISERVATA AI PRIMI 15 CLASSIFICATI DELLA FRAZIONE IN LINEA CON ACCREDITATO IL TEMPO IMPIEGATO NELLA FRAZIONE STESSA - PARTENZE OGNI 3 MINUTI\r\n\r\nPONSACCO VIA VANNI-CAPANNOLI-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-PERIGNANO-4 STRADE-ROTONDA LAVAIANO-VIA DELL'ARGINELLO-VARIANTE SR 439-LE MELORIE-VIALE EUROPA-PONSACCO VIA VANNI<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> BAR DELLA MOSTRA VIA VANNI<br><b>Orario Ritrovo:</b> 14:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Partenza:</b> 15:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 16:23<br><b>Lunghezza KM:</b> 32,800"
-    ],
-    "luogo_ritrovo": "PONSACCO (PI)",
-    "indirizzo_ritrovo": "BAR DELLA MOSTRA VIA VANNI",
-    "orario_partenza": "15:00",
-    "km": "32,800",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "74_COPPA_DEL_MOBILIO_2026-10-13_GC": {
-    "raceid": "179002",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
-    "info": [
-      "74^  COPPA DEL MOBILIO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-12 <b>al:</b> 2026-10-13<br><b>Numero di tappe:</b> 2"
-    ],
-    "luogo_ritrovo": "PONSACCO (PI)",
-    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
-    "orario_partenza": "09:00",
-    "km": "124 Servizi: PRIMI 15^ CLASSIFICATI DISPUTERANNO LA PROVA A CRONOMETRO INDIVIDUALE - A QUESTI ATLETI SARA' OFFERTO IL PRANZO C/O ENOTECA LE MELORIE 2 - 74^ COPPA DEL MOBILIO - FRAZIONE A CRONOMETRO INDIVIDUALE Tipo: Semitappa Prova: 2 Data: 13/10/2026",
-    "location_str": "ENOTECA LE MELORIE VIALE ITALIA 10, PONSACCO (PI), Italia",
-    "tappe": [],
-    "lat": 43.6252,
-    "lng": 10.616
   },
   "COPPA_CITTA_DI_BOZZOLO_2026-10-20": {
     "raceid": "181826",
@@ -1477,156 +892,6 @@
     "lat": 45.96108,
     "lng": 12.97885
   },
-  "6_G_P_VARIGNANA_CABLOTECH_BIOTRAINING_COPPA_DALFIUME_1952_2026-09-26_TAPPA1": {
-    "raceid": "178995",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178995&site=strada_it",
-    "info": [
-      "6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 — 1ª tappa<br><b>Data:</b> 2026-09-26<br><b>Descrizione:</b> Partenza in via Lombardia,1 circuito pianeggiante da ripetere N° 5 giri (Km 11,1),tratto in linea direzione Castel San Pietro Terme Km 12,1 ,inizio 2 circuito delle Terme N° 6 giri (Km 5,3)Liano, Gallo bolognese , Casalecchio dei Conti , via Ca' Masino , Varignana inizio circuito finale giri 4 (Km 4,2) ARRIVO Vedasi Allegati.<br><b>Luogo Ritrovo:</b> Osteria Grande di Castel San Pietro Terme<br><b>Indirizzo Ritrovo:</b> Ditta Cabloteck Via Umbria , 6<br><b>Orario Ritrovo:</b> 09:45<br><b>Luogo Partenza:</b> Osteria Grande D.Cabloteck Turistico sino al Km 0<br><b>Orario Partenza:</b> 13:25<br><b>Luogo Arrivo:</b> Varignana , via D.De' Jani<br><b>Orario Arrivo:</b> 16:50<br><b>Lunghezza KM:</b> 137,600"
-    ],
-    "luogo_ritrovo": "Osteria Grande di Castel San Pietro Terme",
-    "indirizzo_ritrovo": "Ditta Cabloteck Via Umbria , 6",
-    "orario_partenza": "13:25",
-    "km": "137,600",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "6_G_P_VARIGNANA_CABLOTECH_BIOTRAINING_COPPA_DALFIUME_1952_2026-09-26_GC": {
-    "raceid": "178995",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178995&site=strada_it",
-    "info": [
-      "6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-26 <b>al:</b> 2026-09-26<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Osteria Grande di Castel San Pietro Terme",
-    "indirizzo_ritrovo": "Ditta Cabloteck Via Umbria , 6",
-    "orario_partenza": "13:25",
-    "km": "137,600 Servizi: Siamo a dichiarare che essendo arrivo in salita,la transennatura sara' Mt 100 prima e Mt 50 dopo a causa della sede stradale. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 Strada 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 ID Gara: 178995 | Data: 26/09/2026 INFORMAZIONI GENERALI Localita: Castel San Pietro Terme Frazione Osteria Grande",
-    "location_str": "Ditta Cabloteck Via Umbria , 6, Osteria Grande di Castel San Pietro Terme, Italia",
-    "tappe": [],
-    "lat": 44.43118,
-    "lng": 11.52289
-  },
-  "66_COPPA_MESSAPICA_GIRO_DI_PUGLIA_2026-09-27_TAPPA1": {
-    "raceid": "178996",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178996&site=strada_it",
-    "info": [
-      "66^ COPPA MESSAPICA - GIRO DI PUGLIA — 1ª tappa<br><b>Data:</b> 2026-09-27<br><b>Descrizione:</b> PARTENZA E ARRIVO A CEGLIE MESSAPICA (BR). N.5 giri di un percorso urbano ed extra urbano, con continui saliscendi; seguiti da n. 5 giri del percorso urbano \"dei Trulli e delle grotte\", percorso nervoso che non consente distrazioni. Gli ultimi 800 mt. che si percorrono 10 volte si passa da mt. 268 a mt. 312 dell'arrivo.<br><b>Luogo Ritrovo:</b> CEGLIE MESSAPICA<br><b>Indirizzo Ritrovo:</b> C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA<br><b>Orario Ritrovo:</b> 13:00<br><b>Luogo Partenza:</b> CEGLIE MESSAPICA<br><b>Orario Partenza:</b> 14:00<br><b>Luogo Arrivo:</b> CEGLIE MESSAPICA<br><b>Orario Arrivo:</b> 14:45<br><b>Lunghezza KM:</b> 146,40"
-    ],
-    "luogo_ritrovo": "CEGLIE MESSAPICA",
-    "indirizzo_ritrovo": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA",
-    "orario_partenza": "14:00",
-    "km": "146,40",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "66_COPPA_MESSAPICA_GIRO_DI_PUGLIA_2026-09-27_GC": {
-    "raceid": "178996",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178996&site=strada_it",
-    "info": [
-      "66^ COPPA MESSAPICA - GIRO DI PUGLIA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-27 <b>al:</b> 2026-09-27<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "CEGLIE MESSAPICA",
-    "indirizzo_ritrovo": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA",
-    "orario_partenza": "14:00",
-    "km": "146,40 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 66^ COPPA MESSAPICA - GIRO DI PUGLIA Strada 66^ COPPA MESSAPICA - GIRO DI PUGLIA ID Gara: 178996 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: CEGLIE MESSAPICA",
-    "location_str": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA, CEGLIE MESSAPICA, Italia",
-    "tappe": [],
-    "lat": 40.64604,
-    "lng": 17.51706
-  },
-  "6_GIRO_DEI_PRATI_STABILI_2026-09-12_TAPPA1": {
-    "raceid": "181635",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
-    "info": [
-      "6° GIRO DEI PRATI STABILI — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO \r\nVOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - \r\nLOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI \r\n8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE<br><b>Luogo Ritrovo:</b> MARMIROLO<br><b>Indirizzo Ritrovo:</b> AREA FESTE - VIA DI VITTORIO<br><b>Orario Ritrovo:</b> 12:00<br><b>Luogo Partenza:</b> MARMIROLO - VIA DI VITTORIO<br><b>Orario Partenza:</b> 14:30<br><b>Luogo Arrivo:</b> MARMIROLO - VIA DI VITTORIO<br><b>Lunghezza KM:</b> 137"
-    ],
-    "luogo_ritrovo": "MARMIROLO",
-    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
-    "orario_partenza": "14:30",
-    "km": "137",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "6_GIRO_DEI_PRATI_STABILI_2026-09-12_GC": {
-    "raceid": "181635",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
-    "info": [
-      "6° GIRO DEI PRATI STABILI — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-12 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "MARMIROLO",
-    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
-    "orario_partenza": "14:30",
-    "km": "137 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | Data: 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO",
-    "location_str": "AREA FESTE - VIA DI VITTORIO, MARMIROLO, Italia",
-    "tappe": [],
-    "lat": 45.22056,
-    "lng": 10.75639
-  },
-  "72_G_P_CICLISTICO_DI_SANNAZZARO_2026-09-23_TAPPA1": {
-    "raceid": "181708",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181708&site=strada_it",
-    "info": [
-      "72° G.P. CICLISTICO DI SANNAZZARO — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-23<br><b>Descrizione:</b> VIALE ITALIA - PIAZZA CESARE BATTISTI - VIA MAZZINI - VIALE LORETO - VIA MATTEI - VIA F.LLI ROSSELLI (S.S. 756) - VIA GRAMSCI(S.P. 193 BIS) -  BIVIO PAVIA - VIA PAVIA - VIALE ITALIA<br><b>Luogo Ritrovo:</b> SANNAZZARO DE BURGONDI<br><b>Indirizzo Ritrovo:</b> PIAZZALE MAINOLI - ZONA FESTE<br><b>Orario Ritrovo:</b> 12:00<br><b>Luogo Partenza:</b> VIALE ITALIA - SANNAZZARO DE BURGONDI<br><b>Orario Partenza:</b> 14:00<br><b>Luogo Arrivo:</b> VIALE ITALIA - SANNAZZARO DE BURGONDI<br><b>Orario Arrivo:</b> 17:00<br><b>Lunghezza KM:</b> 137"
-    ],
-    "luogo_ritrovo": "SANNAZZARO DE BURGONDI",
-    "indirizzo_ritrovo": "PIAZZALE MAINOLI - ZONA FESTE",
-    "orario_partenza": "14:00",
-    "km": "137",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "72_G_P_CICLISTICO_DI_SANNAZZARO_2026-09-23_GC": {
-    "raceid": "181708",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181708&site=strada_it",
-    "info": [
-      "72° G.P. CICLISTICO DI SANNAZZARO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-23 <b>al:</b> 2026-09-23<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "SANNAZZARO DE BURGONDI",
-    "indirizzo_ritrovo": "PIAZZALE MAINOLI - ZONA FESTE",
-    "orario_partenza": "14:00",
-    "km": "137 Servizi: LA PRO LOCO E' OPERATIVA PER I PAST PER GLI AVENTI DIRITTO DALLE ORE 10.30 CON DISTRIBUZIONE BUONI PASTO DALLE ORE 8:00 PRESENTAZIONE SQUADRE ORE 13:15 PRESSO PALCO PRO LOCO IN PIAZZALE MAINOLI LE PREMIAZIONI SARANNO EFFETTUATE IN PIAZZA PALESTRO AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 72° G.P. CICLISTICO DI SANNAZZARO Strada 72° G.P. CICLISTICO DI SANNAZZARO ID Gara: 181708 | Data: 23/09/2026 INFORMAZIONI GENERALI Localita: SANNAZZARO DEI BURGUNDI",
-    "location_str": "PIAZZALE MAINOLI - ZONA FESTE, SANNAZZARO DE BURGONDI, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "79_GIRO_DEL_PIAVE_MEMORIAL_PIERGIORGIO_SBARDELLA_E_MARIO_DE_BON_2026-10-10_TAPPA1": {
-    "raceid": "180202",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180202&site=strada_it",
-    "info": [
-      "79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E  MARIO DE BON\" — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-10-10<br><b>Descrizione:</b> Belluno, Piazza dei Martiri, Via Roma, Via Sarajevo, Via Monte Grappa, Sinistra Piave, Ponte San Felice, Via Vittorio Veneto, GALLERIA, lunga 250 mt., strada Valle del Mis, Sospirolo centro GPM 3° cat. Via Rosolin, Canale del Mis, Certosa, Ponte Mis, Via Dolomiti, Casoni, Via Agordo, Via Gregorio, Ponte degli Alpini, Via Caduti, Viale Cadore, Statale Alemagna, Soverzere, Via Gallina, Via Provagna, Longarono, Ponte Fiume Piave, Giovanni Umberti, SS51 Alemagna, Via Termine, Ospitale di Cadore, Perarolo di Cadore, Località Fontanelle, Salita Cavallera vecchia uscita GPM 2° Cat. SS51 Via Belluno, Sogttocastello, Pieve di Cadore, Calalzo di Cadore, Via Roma Domegge, Lozzo, SS52 Carnica, SDtr.Dolomiti, Via Dell'Angelo, Passo Sant. Antonio al cartello GPM 1° cat. Padola, Dosoledo, Santo Stefano di Cadore, San Pietro, inizio salita VAL VISDENDE.<br><b>Luogo Ritrovo:</b> BELLUNO<br><b>Indirizzo Ritrovo:</b> MUNICIPIO DI BELLUNO  Piazza Duomo Vicino Giardini<br><b>Orario Ritrovo:</b> 09:30<br><b>Luogo Partenza:</b> BELLUNO  piazza  dei Martiri<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> VAL VISDENDE    COMELICO<br><b>Orario Arrivo:</b> 16:00<br><b>Lunghezza KM:</b> 137"
-    ],
-    "luogo_ritrovo": "BELLUNO",
-    "indirizzo_ritrovo": "MUNICIPIO DI BELLUNO  Piazza Duomo Vicino Giardini",
-    "orario_partenza": "13:00",
-    "km": "137",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "79_GIRO_DEL_PIAVE_MEMORIAL_PIERGIORGIO_SBARDELLA_E_MARIO_DE_BON_2026-10-10_GC": {
-    "raceid": "180202",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180202&site=strada_it",
-    "info": [
-      "79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E  MARIO DE BON\" — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-10 <b>al:</b> 2026-10-10<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "BELLUNO",
-    "indirizzo_ritrovo": "MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini",
-    "orario_partenza": "13:00",
-    "km": "137 Servizi: LA presentazione delle squadre, presso i Giardini fronte Municipio di Belluno inizio ore 11,45.= Logistica all' arrivo , della Giuria. ecc, ANTIDOPING. presso Locanda ALPINA Val Visdende a 500 mt. prima dell'arrivo. Le auto e moto al seguito della corsa devono passare sotto l'arrivo e fermarsi più avanti aspettando il fine corsa, questo perchè non è possibile effettuare la deviazione per manzanza di spazio o deviazioni. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" Strada 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" ID Gara: 180202 | Data: 10/10/2026 INFORMAZIONI GENERALI Localita: Belluno",
-    "location_str": "MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini, BELLUNO, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
   "76_TARGA_CROCIFISSO_GIRO_DI_PUGLIA_CHALLENGE_2026-10-18": {
     "raceid": "178998",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178998&site=strada_it",
@@ -1641,126 +906,6 @@
     "tappe": [],
     "lat": 42.63843,
     "lng": 12.6743
-  },
-  "CRONOSCALATA_VALLE_D_AGRO_CAMPIONATO_REGIONALE_CRONOSCALATA_2026-10-04_TAPPA1": {
-    "raceid": "182723",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182723&site=strada_it",
-    "info": [
-      "CRONOSCALATA VALLE D'AGRO'  CAMPIONATO REGIONALE CRONOSCALATA — 1ª tappa<br><b>Data:</b> 2026-10-04<br><b>Descrizione:</b> Cronoscalata di 8.1 km e con circa 500m di dislivello. Il tracciato di sviluppa nella seguente: i primi 2 km con pendenza leggera passando attraverso la frazione di San Francesco di Paola, arrivando a Rina le pendenza cominciano a farsi impegnative fino ad arrivare a Savoca, dove, usciti dal paese, si affronterà l'ultimo chilometro e mezzo sulle rampe in doppia cifra della frazione Cucco Santa Domenica.<br><b>Luogo Ritrovo:</b> Santa Teresa di Riva<br><b>Indirizzo Ritrovo:</b> Piazza Antonio Stracuzzi (Piazza Mercato)<br><b>Orario Ritrovo:</b> 07:00<br><b>Luogo Partenza:</b> Santa Teresa di Riva<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> Savoca<br><b>Lunghezza KM:</b> 8.1"
-    ],
-    "luogo_ritrovo": "Santa Teresa di Riva",
-    "indirizzo_ritrovo": "Piazza Antonio Stracuzzi (Piazza Mercato)",
-    "orario_partenza": "09:00",
-    "km": "8.1",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "CRONOSCALATA_VALLE_D_AGRO_CAMPIONATO_REGIONALE_CRONOSCALATA_2026-10-04_GC": {
-    "raceid": "182723",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182723&site=strada_it",
-    "info": [
-      "CRONOSCALATA VALLE D'AGRO'  CAMPIONATO REGIONALE CRONOSCALATA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-04 <b>al:</b> 2026-10-04<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "Santa Teresa di Riva",
-    "indirizzo_ritrovo": "Piazza Antonio Stracuzzi (Piazza Mercato)",
-    "orario_partenza": "09:00",
-    "km": "8.1 Servizi: Assistenza sanitaria con 2 ambulanze (1 alla partenza ed 1 all'arrivo). Pacco gara. Pasta party finale. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA Strada CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA ID Gara: 182723 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: Santa Teresa di Riva",
-    "location_str": "Piazza Antonio Stracuzzi (Piazza Mercato), Santa Teresa di Riva, Italia",
-    "tappe": [],
-    "lat": 37.94696,
-    "lng": 15.36769
-  },
-  "75_TR_MADONNA_DEL_ROSARIO_49_TR_MARIO_ZANCHI_22_TR_FOSCO_FRASCONI_2026-10-05_TAPPA1": {
-    "raceid": "182755",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182755&site=strada_it",
-    "info": [
-      "75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-10-05<br><b>Descrizione:</b> CAST.FIBOCCHI-MELICIANO-CASTELLUCCIO-MONTIONE-SAL LEO-PONTICINO-LATERINA-CAST.FIBOCCHI-MELICIANO-LA DOCCIA-C.FIBOCCHI-SAN GIUSTINO -LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA-CAST. FIBOCCHI-SAN GIUSTINO- LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA- indi CAST. FIBOCCHI. MELICIANO .LA DOCCIA CAST. FIBOCCHI (sa ripetere 5 volte)<br><b>Luogo Ritrovo:</b> CAST. FIBOCCHI<br><b>Indirizzo Ritrovo:</b> CIRCOLO ACLI<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> CASTIGLION FIBOCCHI<br><b>Orario Partenza:</b> 14:00<br><b>Luogo Arrivo:</b> CASTIGLION FIBOCCHI<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 141,500"
-    ],
-    "luogo_ritrovo": "CAST. FIBOCCHI",
-    "indirizzo_ritrovo": "CIRCOLO ACLI",
-    "orario_partenza": "14:00",
-    "km": "141,500",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "75_TR_MADONNA_DEL_ROSARIO_49_TR_MARIO_ZANCHI_22_TR_FOSCO_FRASCONI_2026-10-05_GC": {
-    "raceid": "182755",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182755&site=strada_it",
-    "info": [
-      "75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-05 <b>al:</b> 2026-10-05<br><b>Numero di tappe:</b> 1"
-    ],
-    "luogo_ritrovo": "CAST. FIBOCCHI",
-    "indirizzo_ritrovo": "CIRCOLO ACLI",
-    "orario_partenza": "14:00",
-    "km": "141,500 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI Strada 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI ID Gara: 182755 | Data: 05/10/2026 INFORMAZIONI GENERALI Localita: CASTIGLION FIBOCCHI (AR)",
-    "location_str": "CIRCOLO ACLI, CAST. FIBOCCHI, Italia",
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "34_GIRO_DEL_VENETO_2026-09-10_TAPPA1": {
-    "raceid": "180200",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
-    "info": [
-      "34° GIRO DEL VENETO — 1ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-10<br><b>Descrizione:</b> Percorso Viale Camerini a Piazzola sul Brenta di un Km.\r\nCRONOMETRO INDIVIDUALE, con partenze da nei pressi dell'incrocio Via Silvestro, fino arrivo davanti al Municipio.  PARTENZE ogni 0,30 secondi<br><b>Luogo Ritrovo:</b> PIAZZOLA SUL BRENTA<br><b>Indirizzo Ritrovo:</b> Sala Consigliare<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Partenza:</b> 16:00<br><b>Luogo Arrivo:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 1,00"
-    ],
-    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
-    "indirizzo_ritrovo": "Sala Consigliare",
-    "orario_partenza": "16:00",
-    "km": "1,00",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "34_GIRO_DEL_VENETO_2026-09-10_TAPPA2": {
-    "raceid": "180200",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
-    "info": [
-      "34° GIRO DEL VENETO — 2ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-11<br><b>Descrizione:</b> Recoaro Terme, Fonti Principali, TRASFERIMENTO  al Km. 0 Recoaro Via Roma, SP246, Viale dei Lanifici, Rotonda Viale Europa Valdagno, Galleria, Via Enrico Fermi, Via Ortigara, Vatiante Cornedo, Galleria, Via Verlando, Priabona, GPM 3°cat,  Via Centro, Via Boro, SP124 Via Pace, Via Milano, Via Venezia, Malo, Via Colleoni, Via Della Serenissima, Via Dell’Olmo, Via Valdastico, Thiene, Via Costo, Via Dante, Via Roma, Caltrano, Camisino, GPM 2°cat, Via Togarelli, TV, Breganze, Via Turra, Colceresa, Intergiro, Via Nogaredo, Marostica, Via Rubbi, Via Salarola, Valle San Floriano, Rosina, GPM 1°cat, S.Michele, 248 Viale Vicenza, Strada Marchesane, Nove, TV , Via Bassanese, Pozzoleone, San Pietro in Gù, Via stradone, Via Monte Grappa, Via Degli eroi, Quinto Vicentino, sotto l’arrivo di Km. 110,350.= 3 giro del Circuito: Via Degli Eroi, Via Marconi, Via Quintarello, Villaggio Montegrappa, Via Po, Marola, Via Valprotto, Valprotto, Via degli Eroi, fine 1° giro di Km. 12, altri due Giri, per Arrivar<br><b>Luogo Ritrovo:</b> RECOARO TERME<br><b>Indirizzo Ritrovo:</b> FONTI PRINCIPALI<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> RECOARO TERME  Via Roma municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> QUINTO VICENTINO  fronte municipio<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 146,050"
-    ],
-    "luogo_ritrovo": "RECOARO TERME",
-    "indirizzo_ritrovo": "FONTI PRINCIPALI",
-    "orario_partenza": "13:00",
-    "km": "146,050",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "34_GIRO_DEL_VENETO_2026-09-10_TAPPA3": {
-    "raceid": "180200",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
-    "info": [
-      "34° GIRO DEL VENETO — 3ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> SOSSANO, Via Roma,  Giro locale di Km. 24,400, Sossano Via Roma, Via Seccalegno, Orgiano centro, Via Ronego, Via Albaria centro, Via Bagnolo, Tangenziale Ovest, SP 17, Almisano, SP22, Via Crosara, Via Mazzini, Via Olmo, Via Roma Roncà; circuito:  Via Nuova, Via Costa, SP17, Via Moschina, Via Pergola, rotonda 2° uscita Via S. Margherita, Via Alpone, Via Binelli Via Roma Roncà TV.; Via Nuova, Via Costa, Via Pergola, Monteforte, Via Alpone, Via S. Lorenzo, Via Ruffo  Soave centro, INTERGIRO, Via S. Matteo, Castelletto, Via Del Lavoro, Via Porto, Via Adige, Perzacco, Via Cavallina, Via Toscana, Zevio, Ponte Perez, Via Diga, Via Busolo, rotonde dritti, Via Vanghetto,  VAGO, si prende a Sx La str Provinciale, Via Copernico, sempre dritti fino a S. MARTINO B.A. centro, a Dx. Via Verdi, Via Ferazze, Via Falcona Comune di VERONA, a Dx. Via Vegron, a Sx. Legnago, a Dx. Via Ponte Florio,  a Dx. Contrada Campagnola, a dx. Contrada Moranda, a sx. Contrada Nascente, Contrada Gazzego, Contrada Vendri<br><b>Luogo Ritrovo:</b> SOSSANO<br><b>Indirizzo Ritrovo:</b> Via Roma   Municipio<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> SOSSANO Via Roma fronte municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> Piazzale Chiesa BOSCO CHIESANUOVA<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 141,370"
-    ],
-    "luogo_ritrovo": "SOSSANO",
-    "indirizzo_ritrovo": "Via Roma   Municipio",
-    "orario_partenza": "13:00",
-    "km": "141,370",
-    "location_str": null,
-    "tappe": [],
-    "lat": null,
-    "lng": null
-  },
-  "34_GIRO_DEL_VENETO_2026-09-10_GC": {
-    "raceid": "180200",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
-    "info": [
-      "34° GIRO DEL VENETO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-10 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 3"
-    ],
-    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
-    "indirizzo_ritrovo": "Sala Consigliare",
-    "orario_partenza": "16:00",
-    "km": "1,00 Servizi: PRESENTAZIONE SQUADRE: parcheggio riservato fronte Villa Camerini alle ore 14,30.= All'arrivo si chiede l'autorizzazione che le ammiraglie delle Società che seguono i corridori, di passare sotto l'arrivo per la deviazione. Eventuale controllo antidopoing, presso la sede dei Vigili Urbani di Piazzola sul Brenta 2 - 34° GIRO DEL VENETO 2026 - 2° TAPPA RECOARO TERME - QUINTO VICENTINO Tipo: Tappa Prova: 2 Data: 11/09/2026",
-    "location_str": "Sala Consigliare, PIAZZOLA SUL BRENTA, Italia",
-    "tappe": [],
-    "lat": 45.54272,
-    "lng": 11.76895
   },
   "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_PRIMA_TAPPA_2026-09-03": {
     "raceid": "178663",
@@ -1836,5 +981,860 @@
     "tappe": [],
     "lat": 45.81561,
     "lng": 13.12465
+  },
+  "48_GIRO_NAZIONALE_DEL_VALDARNO_2026-09-07": {
+    "raceid": "178987",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178987&site=strada_it",
+    "info": [
+      "48° GIRO NAZIONALE DEL VALDARNO Strada 48° GIRO NAZIONALE DEL VALDARNO ID Gara: 178987 | <br><b>Data:</b> 07/09/2026 INFORMAZIONI GENERALI Localita: FIGLINE E INCISA VALDANO - FIRENZE <br><b>Provincia:</b> FI <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Specifica Gara:</b> 41° G.P. INDUSTRIA COMMERCIO ARTIGIANATO FIGLINESE <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> AMANTINI ENZO Vice <br><b>Direttore di Corsa:</b> CARNASCIALI FABRIZIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> G.S. FIGLINE BIKE ASSOCIAZIONE SPORTIVA DILETTANTISTICA <br><b>Indirizzo:</b> VICOLO MENICHINO 37 <br><b>CAP:</b> 50063 Citta: FIGLINE E INCISA VALDARNO <br><b>Provincia:</b> FI <br><b>Telefono:</b> 3485810750 <br><b>Email:</b> FIGLINEBIKE@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> CIRCOLO MCL PONTEROSSO <br><b>Indirizzo:</b> VIA DEL PONTEROSSO 7, 50063 FIGLINE VALDARNO, FI <br><b>Telefono:</b> 348.5810750 <br><b>Email:</b> figlinebike@gmail.com Sito: figlinebike.it <br><b>Iscrizioni Dal - Al:</b> 26/01/2026 - 03/09/2026 RITROVO PROVE 1 - 48° GIRO NAZIONALE DEL VALDARNO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 07/09/2026 <br><b>Descrizione:</b> Partenza Uff.sa P.za M. Ficino-PARTENZA UFFICIALE-P.za Santa Lucia-Incisa-La Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino-Ponte Arno-Rotatoria Cristal-Rotatoria Rismauto-La Massa Incisa-Via delle Fornaci-(Percorso da ripetere 2 Volte) indi la Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino Ponte Arno-Rotatoria Cristal- Rotatoria Decathon a sx-Rotatoria Hotel Toscana a sx-Via Del Ponterosso-Via del Giglio-Corso V. Veneto-Corso Matteotti-P.za M.Ficino(1°passaggio sull’arrivo)indi Corso Mazzini-Via San Romolo-Via Del Puglia-Via G.Galilei-Ponterosso a dx-Via N.Pistelli-Via Di Norcenni-Stecco-huCamping Girasole-Bivio S.Andrea-S.Martino-Bivio Brollo-Pian Delle Macchie-Gagliana Variantina a dx.-Rotatoria Cerviano-Via N.Pistelli-a sx.Bivio Via N. Copernico-SP 69 a dx-Via di Ponterosso-Via Maestro da Figline-Via Del Giglio-Corso V.Veneto-Corso <br><b>Note:</b> ALLE ORE 12,00 VERRA' EFFETTUATA LA CHIAMATA DELLE SQUADRE E DEI PARTECIPANTI ALLA PARTENZA IN PIAZZA MARSILIO FICINO.PARTENZA UFFICIOSA DALLA PIAZZA MARSILIO FICINO ORE 12:45 E TRASFERIMENTO DI CIRCA 6 KM. A INCISA VALDARNO IN PIAZZA SANTA LUCIA DI FRONTE AL CIRCOLO ARCI DOVE E' POSTO IL KM.0 E DA DOVE SARA' DATA LA PARTENZA UFFICIALE ALLE ORE 13:00. PERCORSO 172 KM.ARRIVO IN PIAZZA MARSILIO FICINO ALLE ORE 17.30 <br><b>Luogo Ritrovo:</b> 50063 FIGLINE VALDARNO <br><b>Indirizzo Ritrovo:</b> CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7 <br><b>Orario Ritrovo:</b> 08:30 <br><b>Luogo Partenza:</b> PIAZZA MARSILIO FICINO FIGLINE ORE 12,45 <br><b>Orario Partenza:</b> 12:45 <br><b>Luogo Arrivo:</b> PIAZZA MARSILIO FICINO FIGLINE VALDARNO <br><b>Orario Arrivo:</b> 17:30 <br><b>Luogo Verifica:</b> CIRCOLO MCL PONTEROSSO DALLE 8,30 ALLE 10,30 <br><b>Punto Incontro DS:</b> CIRCOLO MCL PONTEROSSO ORE 10,45 SEGUE RIUNIONE SICUREZZA ORE 11,30 <br><b>Lunghezza KM:</b> 172 Servizi: -RESPONSABILITA'-LA SOCIETà ORGANIZZATRICE G.S.FIGLINE BIKE DECLINA PER SE E PER I PROPRI TESSERATI, SOCI E VOLONTARI OGNI RESPONSABILITA' PER QUANTO POSSA ACCADERE AI PARTECIPANTI ALLA MANIFESTAZIONE, A TERZI, A COSE E ANIMALI PRIMA ,DURANTE E DOPO LO SVOLGIMENTO DELLA MANIFESTAZIONE O PER CAUSE AD ESSA INERENTI. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "50063 FIGLINE VALDARNO",
+    "indirizzo_ritrovo": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7",
+    "orario_partenza": "12:45",
+    "km": "172 Servizi: -RESPONSABILITA'-LA SOCIETà ORGANIZZATRICE G.S.FIGLINE BIKE DECLINA PER SE E PER I PROPRI TESSERATI, SOCI E VOLONTARI OGNI RESPONSABILITA' PER QUANTO POSSA ACCADERE AI PARTECIPANTI ALLA MANIFESTAZIONE, A TERZI, A COSE E ANIMALI PRIMA ,DURANTE E DOPO LO SVOLGIMENTO DELLA MANIFESTAZIONE O PER CAUSE AD ESSA INERENTI. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 48° GIRO NAZIONALE DEL VALDARNO Strada 48° GIRO NAZIONALE DEL VALDARNO ID Gara: 178987 | Data: 07/09/2026 INFORMAZIONI GENERALI Localita: FIGLINE E INCISA VALDANO - FIRENZE",
+    "location_str": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7, 50063 FIGLINE VALDARNO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-07",
+        "descrizione": "Partenza Uff.sa P.za M. Ficino-PARTENZA UFFICIALE-P.za Santa Lucia-Incisa-La Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino-Ponte Arno-Rotatoria Cristal-Rotatoria Rismauto-La Massa Incisa-Via delle Fornaci-(Percorso da ripetere 2 Volte) indi la Fonte-Burchio-Polo Lionello-Fashion Groove-Torre del Castellano-Rotatoria A1-Montanino-Prulli-Tognaccini Noleggi-Matassino Ponte Arno-Rotatoria Cristal- Rotatoria Decathon a sx-Rotatoria Hotel Toscana a sx-Via Del Ponterosso-Via del Giglio-Corso V. Veneto-Corso Matteotti-P.za M.Ficino(1°passaggio sull’arrivo)indi Corso Mazzini-Via San Romolo-Via Del Puglia-Via G.Galilei-Ponterosso a dx-Via N.Pistelli-Via Di Norcenni-Stecco-huCamping Girasole-Bivio S.Andrea-S.Martino-Bivio Brollo-Pian Delle Macchie-Gagliana Variantina a dx.-Rotatoria Cerviano-Via N.Pistelli-a sx.Bivio Via N. Copernico-SP 69 a dx-Via di Ponterosso-Via Maestro da Figline-Via Del Giglio-Corso V.Veneto-Corso",
+        "luogo_ritrovo": "50063 FIGLINE VALDARNO",
+        "indirizzo_ritrovo": "CIRCOLO MCL PONTEROSSO VIA DEL PONTEROSSO N.7",
+        "orario_ritrovo": "08:30",
+        "luogo_partenza": "PIAZZA MARSILIO FICINO FIGLINE ORE 12,45",
+        "orario_partenza": "12:45",
+        "luogo_arrivo": "PIAZZA MARSILIO FICINO FIGLINE VALDARNO",
+        "orario_arrivo": "17:30",
+        "km": "172"
+      }
+    ],
+    "lat": 43.62216,
+    "lng": 11.46427
+  },
+  "91_TARGA_LIBERO_FERRARIO_2026-09-13": {
+    "raceid": "178988",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178988&site=strada_it",
+    "info": [
+      "91° TARGA LIBERO FERRARIO Strada 91° TARGA LIBERO FERRARIO ID Gara: 178988 | <br><b>Data:</b> 13/09/2026 INFORMAZIONI GENERALI Localita: PARABIAGO <br><b>Provincia:</b> MI <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> PORTA GRAZIANO Vice <br><b>Direttore di Corsa:</b> RANCILIO ROBERTO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> G.C. LIBERO FERRARIO PARABIAGO ASS.SPORT.DILETTANTISTICA <br><b>Indirizzo:</b> VIA OLONA N° 16 <br><b>CAP:</b> 20015 Citta: PARABIAGO <br><b>Provincia:</b> MI <br><b>Telefono:</b> 0331551078 <br><b>Email:</b> INFO@GCLIBEROFERRARIO.IT ISCRIZIONI <br><b>Indirizzo:</b> , 20015 PARABIAGO, MI <br><b>Telefono:</b> 3933788311 <br><b>Email:</b> info@gcliberoferrario.it RITROVO PROVE 1 - 91° TARGA LIBERO FERRARIO <br><b>Prova:</b> 1 <br><b>Data:</b> 13/09/2026 <br><b>Descrizione:</b> Percorso: Circuito extra cittadino Interamente pianeggiante. Si ricorda che gli spartitraffico e le rotatorie saranno affrontate secondo il normale senso di marcia, solo in caso di segnalazione preventiva ci sarà il cambio di senso di marcia. Lungo il circuito non vige il blocco della circolazione ma la sospensione temporanea della circolazione; si raccomanda quindi di prestare la massima attenzione durante lo svolgimento della manifestazione Giro da 20,100 km da ripetere 7 volte Trasferimento da Piazza Maggiolini al Km 0, incrocio SP109 via Gabriele D'Annunzio di Km 3,800 Riunione Tecnica in via San Giuseppe 1 ore 10.30 <br><b>Luogo Ritrovo:</b> PARABIAGO <br><b>Indirizzo Ritrovo:</b> PIAZZA MAGGIOLINI ANG.S.ANTONIO <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> PARABIAGO VIA CARSO <br><b>Orario Partenza:</b> 12:00 <br><b>Luogo Arrivo:</b> PARABIAGO PIAZZA MAGGIOLINI <br><b>Luogo Verifica:</b> PIAZZA MAGGIOLINI HOTEL DEL RIALE <br><b>Lunghezza KM:</b> 158.300 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "PARABIAGO",
+    "indirizzo_ritrovo": "PIAZZA MAGGIOLINI ANG.S.ANTONIO",
+    "orario_partenza": "12:00",
+    "km": "158.300 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 91° TARGA LIBERO FERRARIO Strada 91° TARGA LIBERO FERRARIO ID Gara: 178988 | Data: 13/09/2026 INFORMAZIONI GENERALI Localita: PARABIAGO",
+    "location_str": "PIAZZA MAGGIOLINI ANG.S.ANTONIO, PARABIAGO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-09-13",
+        "descrizione": "Percorso: Circuito extra cittadino Interamente pianeggiante. Si ricorda che gli spartitraffico e le rotatorie saranno affrontate secondo il normale senso di marcia, solo in caso di segnalazione preventiva ci sarà il cambio di senso di marcia. Lungo il circuito non vige il blocco della circolazione ma la sospensione temporanea della circolazione; si raccomanda quindi di prestare la massima attenzione durante lo svolgimento della manifestazione\r\nGiro da 20,100 km da ripetere 7 volte\r\nTrasferimento da Piazza Maggiolini al Km 0, incrocio SP109 via Gabriele D'Annunzio di Km 3,800\r\nRiunione Tecnica in via San Giuseppe 1 ore 10.30",
+        "luogo_ritrovo": "PARABIAGO",
+        "indirizzo_ritrovo": "PIAZZA MAGGIOLINI ANG.S.ANTONIO",
+        "orario_ritrovo": "09:00",
+        "luogo_partenza": "PARABIAGO VIA CARSO",
+        "orario_partenza": "12:00",
+        "luogo_arrivo": "PARABIAGO PIAZZA MAGGIOLINI",
+        "orario_arrivo": null,
+        "km": "158.300"
+      }
+    ],
+    "lat": 45.55864,
+    "lng": 8.94798
+  },
+  "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15": {
+    "raceid": "178990",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178990&site=strada_it",
+    "info": [
+      "85^ COPPA CIUFFENNA - 98^ COPPA ANTICA Strada 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA ID Gara: 178990 | <br><b>Data:</b> 15/09/2026 INFORMAZIONI GENERALI Localita: LORO CIUFENNA <br><b>Provincia:</b> AR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> AMANTINI ENZO Vice <br><b>Direttore di Corsa:</b> CARNASCIALI FABRIZIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. U.S. LORESE 1919 <br><b>Indirizzo:</b> VIA LORO CAMPAGNA 54/B <br><b>CAP:</b> 52024 Citta: LORO CIUFFENNA <br><b>Provincia:</b> AR <br><b>Telefono:</b> 055/9172130 <br><b>Email:</b> USLORESE1919@VIRGILIO.IT ISCRIZIONI <br><b>Luogo:</b> FATTORE K <br><b>Indirizzo:</b> VIA LORO CAMPAGNA 54/B, 52024 LORO CIUFFENNA, AR <br><b>Telefono:</b> 3397961905-3286756272 <br><b>Email:</b> sporteventciclismo@gmail.com RITROVO PROVE 1 - 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 15/09/2026 <br><b>Descrizione:</b> PARTENZA PIAZZA MATTEOTTI , BIVIO CASALINI, GANGHERETO, ROTONDA TERRANUOVA BRACCIOLINI, PENNA, LORO CIUFFENNA, CIRCUITO DI KM 14,900 DA RIPETERE 11 VOLTE . <br><b>Luogo Ritrovo:</b> LORO CIUFFENNA <br><b>Indirizzo Ritrovo:</b> COMUNE PIAZZA MATTEOTTI <br><b>Orario Ritrovo:</b> 08:30 <br><b>Luogo Partenza:</b> PIAZZA MATTEOTTI LORO CIUFFENNA <br><b>Orario Partenza:</b> 13:00 <br><b>Luogo Arrivo:</b> VIALE ALCIDE DE GASPERI LORO CIUFFENNA <br><b>Orario Arrivo:</b> 17:30 <br><b>Luogo Verifica:</b> DALLE ORE 08:30 ALLE ORE 10:30 PALAZZO COMUNALE <br><b>Punto Incontro DS:</b> SALA CONSILIARE ORE 11:00 LORO CIUFFENNA <br><b>Lunghezza KM:</b> 163.900 Servizi: PER INFORMAZIONI CONTATTARE IL SIG. GAMBINI LUCIANO CEL.3397961905 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "LORO CIUFFENNA",
+    "indirizzo_ritrovo": "COMUNE PIAZZA MATTEOTTI",
+    "orario_partenza": "13:00",
+    "km": "163.900 Servizi: PER INFORMAZIONI CONTATTARE IL SIG. GAMBINI LUCIANO CEL.3397961905 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA Strada 85^ COPPA CIUFFENNA - 98^ COPPA ANTICA ID Gara: 178990 | Data: 15/09/2026 INFORMAZIONI GENERALI Localita: LORO CIUFENNA",
+    "location_str": "COMUNE PIAZZA MATTEOTTI, LORO CIUFFENNA, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-15",
+        "descrizione": "PARTENZA PIAZZA MATTEOTTI , BIVIO CASALINI, GANGHERETO, ROTONDA TERRANUOVA BRACCIOLINI, PENNA, LORO CIUFFENNA, CIRCUITO DI KM 14,900 DA RIPETERE 11 VOLTE .",
+        "luogo_ritrovo": "LORO CIUFFENNA",
+        "indirizzo_ritrovo": "COMUNE PIAZZA MATTEOTTI",
+        "orario_ritrovo": "08:30",
+        "luogo_partenza": "PIAZZA MATTEOTTI LORO CIUFFENNA",
+        "orario_partenza": "13:00",
+        "luogo_arrivo": "VIALE ALCIDE DE GASPERI LORO CIUFFENNA",
+        "orario_arrivo": "17:30",
+        "km": "163.900"
+      }
+    ],
+    "lat": 43.59324,
+    "lng": 11.63153
+  },
+  "1_G_P_SKA_IMMOBILIARE_SRL_1_MEMORIAL_KEVIN_BONALDO_2026-09-19": {
+    "raceid": "178991",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178991&site=strada_it",
+    "info": [
+      "1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO Strada 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO ID Gara: 178991 | <br><b>Data:</b> 19/09/2026 INFORMAZIONI GENERALI Localita: LORIA <br><b>Provincia:</b> TV <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> Elite e Under 23 (1.12) <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> FASOLO MARCO Vice <br><b>Direttore di Corsa:</b> TRABUIO ALESSIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. S.C. PADOVANI <br><b>Indirizzo:</b> GALLERIA TRIESTE 6 C/O DOTT. COCCIA <br><b>CAP:</b> 35121 Citta: PADOVA <br><b>Provincia:</b> PD <br><b>Telefono:</b> 049/9998411 <br><b>Email:</b> ASDPADOVANI@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> Fattore K <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 348 7232554 <br><b>Email:</b> angelo.teo983@gmail.com <br><b>Iscrizioni Dal - Al:</b> 15/07/2026 - 16/09/2026 RITROVO PROVE 1 - 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 19/09/2026 <br><b>Descrizione:</b> Percorso ondulato di 161km, che prevede un circuito iniziale pianeggiate di 13,4km da ripetersi per 3 volte con 3 traguardi volanti a punteggio sotto l'arco d'arrivo, a seguire percorso in linea di 61km caratterizzato da 2 GPM, indi altro circuito da 21km da percorrere due volte e che prevede altri 2 GPM, a seguire tratto in linea di 18 km fino all'arrivo. Classifica GPM a punteggio. <br><b>Note:</b> Radio Corsa frequenza 160.025, canale WHF. <br><b>Luogo Ritrovo:</b> 31037 Ramon di Loria (TV) c/o SKA IMMOBILIARE <br><b>Indirizzo Ritrovo:</b> via Giorgione, 17 <br><b>Orario Ritrovo:</b> 11:00 <br><b>Luogo Partenza:</b> km 0 VIA ASOLANA SP 20 FRONTE AUTO ART <br><b>Orario Partenza:</b> 14:00 <br><b>Luogo Arrivo:</b> Via Catellana SP 20 Loria <br><b>Orario Arrivo:</b> 18:15 <br><b>Luogo Verifica:</b> dalle 11:00 alle 12:00 <br><b>Punto Incontro DS:</b> 12:30 <br><b>Lunghezza KM:</b> 160,570 Servizi: Presentazione squadre di fronte all’azienda SKA Immobiliare srl dalle ore 12.10 termine 30 minuti prima della partenza. Partenza ufficiosa ore 13.40 da via Castellana SP 20 intersezione con via Giorgione fronte stabilimento CERANTOLA S.P.A, trasferimento di 1.360 km e passaggio presso il cimitero per un saluto a Kevin proseguo del trasferimento per altri 1.160 km per raggiungere il km 0. Partenza ufficiale ore 14.00 al KM 0 con piede a terra in via Asolana SP 20 fronte stabilimento AUTO ART AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "31037 Ramon di Loria (TV) c/o SKA IMMOBILIARE",
+    "indirizzo_ritrovo": "via Giorgione, 17",
+    "orario_partenza": "14:00",
+    "km": "160,570 Servizi: Presentazione squadre di fronte all’azienda SKA Immobiliare srl dalle ore 12.10 termine 30 minuti prima della partenza. Partenza ufficiosa ore 13.40 da via Castellana SP 20 intersezione con via Giorgione fronte stabilimento CERANTOLA S.P.A, trasferimento di 1.360 km e passaggio presso il cimitero per un saluto a Kevin proseguo del trasferimento per altri 1.160 km per raggiungere il km 0. Partenza ufficiale ore 14.00 al KM 0 con piede a terra in via Asolana SP 20 fronte stabilimento AUTO ART AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO Strada 1° G.P. SKA IMMOBILIARE SRL - 1° MEMORIAL KEVIN BONALDO ID Gara: 178991 | Data: 19/09/2026 INFORMAZIONI GENERALI Localita: LORIA",
+    "location_str": "via Giorgione, 17, 31037 Ramon di Loria (TV) c/o SKA IMMOBILIARE, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-19",
+        "descrizione": "Percorso ondulato di 161km, che prevede un circuito iniziale pianeggiate di 13,4km da ripetersi per 3 volte con 3 traguardi volanti a punteggio sotto l'arco d'arrivo, a seguire percorso in linea di 61km caratterizzato da 2 GPM, indi altro circuito da 21km da percorrere due volte e che prevede altri 2 GPM, a seguire tratto in linea di 18 km fino all'arrivo. Classifica GPM a punteggio.",
+        "luogo_ritrovo": "31037 Ramon di Loria (TV)  c/o SKA IMMOBILIARE",
+        "indirizzo_ritrovo": "via Giorgione, 17",
+        "orario_ritrovo": "11:00",
+        "luogo_partenza": "km 0 VIA ASOLANA SP 20 FRONTE AUTO ART",
+        "orario_partenza": "14:00",
+        "luogo_arrivo": "Via Catellana SP 20 Loria",
+        "orario_arrivo": "18:15",
+        "km": "160,570"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "59_PICCOLA_SANREMO_2026-09-20": {
+    "raceid": "178992",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178992&site=strada_it",
+    "info": [
+      "59^ PICCOLA SANREMO Strada 59^ PICCOLA SANREMO ID Gara: 178992 | <br><b>Data:</b> 20/09/2026 INFORMAZIONI GENERALI Localita: SOVIZZO - VICENZA <br><b>Provincia:</b> VI <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> ELITE' - UNDER 23 (min. 4 - max 7) <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> FRANCESCHETTO MICHELE Vice <br><b>Direttore di Corsa:</b> SARTORI GIAMPAOLO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. UNIONE CICLISTICA SOVIZZO <br><b>Indirizzo:</b> VIA CAVALIERI DI VITTORIO VENETO, 17 <br><b>CAP:</b> 36049 Citta: SOVIZZO <br><b>Provincia:</b> VI <br><b>Telefono:</b> 3299895176 <br><b>Email:</b> INFO@UCSOVIZZO.IT ISCRIZIONI <br><b>Luogo:</b> A.S.D. UNIONE CICLISTICA SOVIZZO <br><b>Indirizzo:</b> VIA CAVALIERI DI VITTORIO VENETO 17, 36049 SOVIZZO, VI <br><b>Telefono:</b> 333/5331912 <br><b>Email:</b> segreteria@ucsovizzo.it Sito: piccolasanremo.com <br><b>Iscrizioni Dal - Al:</b> - 16/09/2026 RITROVO PROVE 1 - 59^ PICCOLA SANREMO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 20/09/2026 <br><b>Descrizione:</b> SOVIZZO (trasf. 2,9 km). MONTECCHIO MAGG.RE (Via Lombardi - p/o Villa Cordellina Lombardi - VIA UFFICIALE) - San Daniele - SOVIZZO. Indi: SOVIZZO - CREAZZO - ALTAVILLA VIC.NA - SR11 - Tavernelle - SP120 - MONTECCHIO MAGGIORE - San Daniele - SOVIZZO (TV - circuito di km 7,200 da ripetere per 9 v.). Indi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - SP35 dir (Via Roma) - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a sx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 12,2 da ripetere per 4 v.). Indi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - Via Valdiezza (loc. Prà Della Punta) - Montemezzo (loc. Castello - GPM) - Via Righi - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a dx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 16,5 da ripetere per 2 v.). <br><b>Luogo Ritrovo:</b> SOVIZZO <br><b>Indirizzo Ritrovo:</b> ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3 <br><b>Orario Ritrovo:</b> 08:30 <br><b>Luogo Partenza:</b> MONTECCHIO MAGG. (Via Lombardi - Villa Cordellina) <br><b>Orario Partenza:</b> 13:30 <br><b>Luogo Arrivo:</b> SOVIZZO (Viale degli Alpini) <br><b>Orario Arrivo:</b> 17:15 <br><b>Luogo Verifica:</b> ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3 - dalle ore 08.45 alle ore 10.45 <br><b>Punto Incontro DS:</b> ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3 - ore 11:00 <br><b>Lunghezza KM:</b> 149.800 Servizi: Tutta la documentazione della gara è disponibile su www.piccolasanremo.com AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "SOVIZZO",
+    "indirizzo_ritrovo": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3",
+    "orario_partenza": "13:30",
+    "km": "149.800 Servizi: Tutta la documentazione della gara è disponibile su www.piccolasanremo.com AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 59^ PICCOLA SANREMO Strada 59^ PICCOLA SANREMO ID Gara: 178992 | Data: 20/09/2026 INFORMAZIONI GENERALI Localita: SOVIZZO - VICENZA",
+    "location_str": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3, SOVIZZO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-20",
+        "descrizione": "SOVIZZO (trasf. 2,9 km). MONTECCHIO MAGG.RE (Via Lombardi - p/o Villa Cordellina Lombardi - VIA UFFICIALE) - San Daniele - SOVIZZO. \r\nIndi: SOVIZZO - CREAZZO - ALTAVILLA VIC.NA - SR11 - Tavernelle - SP120 - MONTECCHIO MAGGIORE - San Daniele - SOVIZZO (TV - circuito di km 7,200 da ripetere per 9 v.). \r\nIndi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - SP35 dir (Via Roma) - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a sx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 12,2 da ripetere per 4 v.).\r\nIndi: SOVIZZO - SP35 - CREAZZO - SOVIZZO - Via Valdiezza (loc. Prà Della Punta) -  Montemezzo (loc. Castello - GPM) - Via Righi - SP35 al km 4,2 (loc. Dalla Vecchia) svoltare a dx - Vigo (GPM) - Sovizzo Colle - SOVIZZO (circuito di km 16,5 da ripetere per 2 v.).",
+        "luogo_ritrovo": "SOVIZZO",
+        "indirizzo_ritrovo": "ISTITUTO COMPRENSIVO DI SOVIZZO - VIA ALFIERI 3",
+        "orario_ritrovo": "08:30",
+        "luogo_partenza": "MONTECCHIO MAGG. (Via Lombardi - Villa Cordellina)",
+        "orario_partenza": "13:30",
+        "luogo_arrivo": "SOVIZZO (Viale degli Alpini)",
+        "orario_arrivo": "17:15",
+        "km": "149.800"
+      }
+    ],
+    "lat": 45.55569,
+    "lng": 11.43199
+  },
+  "90_COPPA_COLLECCHIO_2026-09-22": {
+    "raceid": "178993",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178993&site=strada_it",
+    "info": [
+      "90^ COPPA COLLECCHIO Strada 90^ COPPA COLLECCHIO ID Gara: 178993 | <br><b>Data:</b> 22/09/2026 INFORMAZIONI GENERALI Localita: COLLECCHIO <br><b>Provincia:</b> PR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> ZUELLI FIORENZO Vice <br><b>Direttore di Corsa:</b> MACHI' CALOGERO FRANCO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> GRUPPO SPORTIVO VIRTUS COLLECCHIO A.S. DILETTANTISTICA <br><b>Indirizzo:</b> V.LO PAVERI,1 <br><b>CAP:</b> 43044 Citta: COLLECCHIO <br><b>Provincia:</b> PR <br><b>Telefono:</b> 3474305398 <br><b>Email:</b> VIRTUSCOLLECCHIO@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> procedura informatica federale <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3474305398 <br><b>Email:</b> mad-88@hotmail.it <br><b>Iscrizioni Dal - Al:</b> - 19/09/2026 RITROVO PROVE 1 - 90^ COPPA COLLECCHIO <br><b>Prova:</b> 1 <br><b>Data:</b> 22/09/2026 <br><b>Descrizione:</b> Collecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo, Talignano, Pontescodogna, Collecchio - 7 giri indi Collecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo, Via Capanna (GPM), Talignano, Pontescodogna, Collecchio - 3 giri <br><b>Note:</b> Ad ogni GPM vengono attribuiti 5, 3, 1 punto ai primi 3 concorrenti classificati ad ogni passaggio in via Capanna. <br><b>Luogo Ritrovo:</b> 43034 - Collecchio - PR <br><b>Indirizzo Ritrovo:</b> via Paveri 1 Collecchio (PR) -sede gruppo sportivo <br><b>Orario Ritrovo:</b> 08:45 <br><b>Luogo Partenza:</b> Collecchio viale libertà 3 - fronte Municipio <br><b>Orario Partenza:</b> 13:00 <br><b>Luogo Arrivo:</b> Collecchio viale libertà 3 - fronte Municipio <br><b>Orario Arrivo:</b> 16:30 <br><b>Luogo Verifica:</b> 22/09/2026 - dalle ore 09:00 alle ore 10:55 - presso i locali esterni sede Virtus Collecchio <br><b>Punto Incontro DS:</b> 22/09/26 - ore 11:00 - presso sede Virtus Collecchio <br><b>Lunghezza KM:</b> 137,90 Servizi: Si prega le società di indicare un codice IBAN su cui verranno effttuati i versamenti dei premi conquistati AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "43034 - Collecchio - PR",
+    "indirizzo_ritrovo": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo",
+    "orario_partenza": "13:00",
+    "km": "137,90 Servizi: Si prega le società di indicare un codice IBAN su cui verranno effttuati i versamenti dei premi conquistati AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 90^ COPPA COLLECCHIO Strada 90^ COPPA COLLECCHIO ID Gara: 178993 | Data: 22/09/2026 INFORMAZIONI GENERALI Localita: COLLECCHIO",
+    "location_str": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo, 43034 - Collecchio - PR, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-09-22",
+        "descrizione": "Collecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo,\r\nTalignano, Pontescodogna, Collecchio - 7 giri\r\nindi\r\nCollecchio (partenza/arrivo Viale Libertà), Via Nazionale Ovest, Via Conventino, Loc. Pifferi, Str. Olmo, Via Capanna (GPM), Talignano, Pontescodogna, Collecchio - 3 giri",
+        "luogo_ritrovo": "43034 - Collecchio - PR",
+        "indirizzo_ritrovo": "via Paveri 1 Collecchio (PR) -sede gruppo sportivo",
+        "orario_ritrovo": "08:45",
+        "luogo_partenza": "Collecchio viale libertà 3 - fronte Municipio",
+        "orario_partenza": "13:00",
+        "luogo_arrivo": "Collecchio viale libertà 3 - fronte Municipio",
+        "orario_arrivo": "16:30",
+        "km": "137,90"
+      }
+    ],
+    "lat": 44.75182,
+    "lng": 10.21918
+  },
+  "44_PICCOLO_GIRO_DELL_EMILIA_2026-09-27": {
+    "raceid": "178997",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178997&site=strada_it",
+    "info": [
+      "44° PICCOLO GIRO DELL'EMILIA Strada 44° PICCOLO GIRO DELL'EMILIA ID Gara: 178997 | <br><b>Data:</b> 27/09/2026 INFORMAZIONI GENERALI Localita: Zola Predosa (Bo) <br><b>Provincia:</b> BO <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> Elite/Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> CHINI FRANCO Vice <br><b>Direttore di Corsa:</b> DALMONTE NICOLA <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> S.C.CERETOLESE 1969 ASD <br><b>Indirizzo:</b> VIA ALLENDE 13 <br><b>CAP:</b> 40033 Citta: CASALECCHIO DI RENO <br><b>Provincia:</b> BO <br><b>Telefono:</b> 051755391 <br><b>Email:</b> CERETOLESE@LIBERO.IT ISCRIZIONI <br><b>Luogo:</b> S.C. Ceretolese 1969 FATTORE K <br><b>Indirizzo:</b> via Allende 13, 40033 Casalecchio di Reno, Bo <br><b>Telefono:</b> 3472205458 <br><b>Email:</b> ceretolese@libero.it Sito: ciclismoceretolese.it RITROVO PROVE 1 - 44° PICCOLO GIRO DELL'EMILIA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 27/09/2026 <br><b>Descrizione:</b> Trasferimento di k. 5 fino a km. 0 - Casalecchio di Reno, Sasso Marconi, Marzabotto, Pian di Venola, Ca' Bortolani (GPM), Savigno, Zappolino, Stiore, Monteveglio, Zappolino, Stiore, Muffa, Crespellano, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Via L. da Vinci, Via Montevecchio, Via L. da Vinci, Via Montevecchio, Ponte Ronca, Zola Predosa, Via Risorgimento. <br><b>Luogo Ritrovo:</b> Zola Predosa (Bo) <br><b>Indirizzo Ritrovo:</b> Piazza della Repubblica (Municipio) <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> Zola Predosa, Via Risorgimento, trasf. al km. 0 <br><b>Orario Partenza:</b> 13:30 <br><b>Luogo Arrivo:</b> Zola Predosa <br><b>Orario Arrivo:</b> 17:10 <br><b>Luogo Verifica:</b> h. 10:15 presso Municipio <br><b>Punto Incontro DS:</b> h. 12:00 presso Municipio <br><b>Lunghezza KM:</b> 152,6 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Zola Predosa (Bo)",
+    "indirizzo_ritrovo": "Piazza della Repubblica (Municipio)",
+    "orario_partenza": "13:30",
+    "km": "152,6 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 44° PICCOLO GIRO DELL'EMILIA Strada 44° PICCOLO GIRO DELL'EMILIA ID Gara: 178997 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: Zola Predosa (Bo)",
+    "location_str": "Piazza della Repubblica (Municipio), Zola Predosa (Bo), Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-27",
+        "descrizione": "Trasferimento di k. 5 fino a km. 0  -  Casalecchio di Reno, Sasso Marconi, Marzabotto, Pian di Venola, Ca' Bortolani (GPM), Savigno, Zappolino, Stiore, Monteveglio, Zappolino, Stiore, Muffa, Crespellano, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Zola Predosa, Ponterivabella, San Lorenzo in Collina (GPM), San Martino in Casola, Ponte Ronca, Via L. da Vinci, Via Montevecchio, Via L. da Vinci, Via Montevecchio, Ponte Ronca, Zola Predosa, Via Risorgimento.",
+        "luogo_ritrovo": "Zola Predosa (Bo)",
+        "indirizzo_ritrovo": "Piazza della Repubblica (Municipio)",
+        "orario_ritrovo": "09:00",
+        "luogo_partenza": "Zola Predosa, Via Risorgimento, trasf. al km. 0",
+        "orario_partenza": "13:30",
+        "luogo_arrivo": "Zola Predosa",
+        "orario_arrivo": "17:10",
+        "km": "152,6"
+      }
+    ],
+    "lat": 44.48967,
+    "lng": 11.21831
+  },
+  "29_TROFEO_S_S_ADDOLORATA_2026-09-06": {
+    "raceid": "181999",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181999&site=strada_it",
+    "info": [
+      "29° TROFEO S.S. ADDOLORATA Strada 29° TROFEO S.S. ADDOLORATA ID Gara: 181999 | <br><b>Data:</b> 06/09/2026 INFORMAZIONI GENERALI Localita: MONTECOSARO <br><b>Provincia:</b> MC <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> Elite s.c. e under 23 <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> MICHELI ANDREA Vice <br><b>Direttore di Corsa:</b> STORTONI ALBINO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> ASSOCIAZIONE SPORTIVA DILETTANTISTICA BORN TO RUN <br><b>Indirizzo:</b> VIA ELPIDIENSE 2771 <br><b>CAP:</b> 63811 Citta: SANT'ELPIDIO A MARE <br><b>Provincia:</b> FM <br><b>Telefono:</b> 0734 252929 <br><b>Email:</b> BORNTORUNSV@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> Locale del comune Montecosaro <br><b>Indirizzo:</b> 3395818384 - VITELLOZZI STEFANO, , <br><b>Telefono:</b> 3395818384 <br><b>Email:</b> borntorunsv@gmail.com <br><b>Iscrizioni Dal - Al:</b> 20/08/2026 - 04/09/2026 RITROVO PROVE 1 - 29° TROFEO S.S. ADDOLORATA <br><b>Prova:</b> 1 <br><b>Data:</b> 06/09/2026 <br><b>Descrizione:</b> Partenza ufficiale Montecosaro via della Vittoria, indi (SP 74) SP10 Morrovalle, via 1° Maggio, borgo pintura, via Collodi, contrada Conicchio, contrada Castellano, strada Molinello, via della stazione, viale della vittoria. Circuito di KM 16,500 da ripetere 7 volte. Ultimo giro deviazione in via del Pietrone, via Martiri della libertà Ungherese, arrivo in piazza Trieste. <br><b>Note:</b> Pasto per alteti e accompagnatori presso locale difronte al comune di Montecosaro dalle ore 11:00 <br><b>Luogo Ritrovo:</b> locale vicino piazza Trieste <br><b>Indirizzo Ritrovo:</b> Montecosaro <br><b>Orario Ritrovo:</b> 10:30 <br><b>Luogo Partenza:</b> via della Vittoria, Montecosaro <br><b>Orario Partenza:</b> 14:30 <br><b>Luogo Arrivo:</b> piazza Trieste, Montecosaro <br><b>Orario Arrivo:</b> 17:30 <br><b>Luogo Verifica:</b> Difronte comune Montecosaro, dalle 10:30 alle 12:00 <br><b>Punto Incontro DS:</b> Presso locale del comune Montecosaro ore 13:30 <br><b>Lunghezza KM:</b> 115 Servizi: Premiazioni presso arrivo Controllo medico - presso locale difronte al comune di Montecosaro Sala giuria arrivo - locale comune di Montecosaro AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "locale vicino piazza Trieste",
+    "indirizzo_ritrovo": "Montecosaro",
+    "orario_partenza": "14:30",
+    "km": "115 Servizi: Premiazioni presso arrivo Controllo medico - presso locale difronte al comune di Montecosaro Sala giuria arrivo - locale comune di Montecosaro AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 29° TROFEO S.S. ADDOLORATA Strada 29° TROFEO S.S. ADDOLORATA ID Gara: 181999 | Data: 06/09/2026 INFORMAZIONI GENERALI Localita: MONTECOSARO",
+    "location_str": "Montecosaro, locale vicino piazza Trieste, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-09-06",
+        "descrizione": "Partenza ufficiale Montecosaro via della Vittoria, indi (SP 74) SP10 Morrovalle, via 1° Maggio, borgo pintura, via Collodi, contrada Conicchio, contrada Castellano, strada Molinello, via della stazione, viale della vittoria. Circuito di KM 16,500 da ripetere 7 volte. Ultimo giro deviazione in via del Pietrone, via Martiri della libertà Ungherese, arrivo in piazza Trieste.",
+        "luogo_ritrovo": "locale vicino piazza Trieste",
+        "indirizzo_ritrovo": "Montecosaro",
+        "orario_ritrovo": "10:30",
+        "luogo_partenza": "via della Vittoria, Montecosaro",
+        "orario_partenza": "14:30",
+        "luogo_arrivo": "piazza Trieste, Montecosaro",
+        "orario_arrivo": "17:30",
+        "km": "115"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "63_G_P_SAN_LUIGI_2026-09-08": {
+    "raceid": "179371",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179371&site=strada_it",
+    "info": [
+      "63° G.P. SAN LUIGI Strada 63° G.P. SAN LUIGI ID Gara: 179371 | <br><b>Data:</b> 08/09/2026 INFORMAZIONI GENERALI Localita: Sona <br><b>Provincia:</b> VR <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> Elite - under 23 <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> CRISTOFALETTI IVAN Vice <br><b>Direttore di Corsa:</b> FASOLI MICHELE <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.DILETTANTISTICA US AUSONIA CSI <br><b>Indirizzo:</b> CORSO S. LORENZO <br><b>CAP:</b> 37026 Citta: PESCANTINA <br><b>Provincia:</b> VR <br><b>Telefono:</b> 0457150622 <br><b>Email:</b> USAUSONIA@LIBERO.IT ISCRIZIONI <br><b>Luogo:</b> ASD US AUSONIA CSI PESCANTINA <br><b>Indirizzo:</b> STADIO SAN LORENZO, 37026 PESCANTINA, VR <br><b>Telefono:</b> 3490079729 <br><b>Email:</b> usausonia@libero.it <br><b>Iscrizioni Dal - Al:</b> 22/08/2026 - 06/09/2026 RITROVO PROVE 1 - 63° G.P. SAN LUIGI <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 08/09/2026 <br><b>Descrizione:</b> Sona, via Marconi, via Roma, San Quirico, Bosco, San Giorgio in Salici, Valle, via Discesa Chiesa, Sona di Km 9.600 da ripetere 8 volte, INDI Sona, via Marconi, via Roma, San Quirico, Valle, via Discesa Chiesa di Km 4.800 da ripetere 9 volte <br><b>Luogo Ritrovo:</b> Sona <br><b>Indirizzo Ritrovo:</b> Piazza Roma <br><b>Orario Ritrovo:</b> 12:30 <br><b>Luogo Partenza:</b> Sona <br><b>Orario Partenza:</b> 14:30 <br><b>Luogo Arrivo:</b> Sona <br><b>Orario Arrivo:</b> 17:15 <br><b>Luogo Verifica:</b> dalle ore 12:30 alle ore 13:30 <br><b>Punto Incontro DS:</b> ore 13:30 <br><b>Lunghezza KM:</b> 120 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Sona",
+    "indirizzo_ritrovo": "Piazza Roma",
+    "orario_partenza": "14:30",
+    "km": "120 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 63° G.P. SAN LUIGI Strada 63° G.P. SAN LUIGI ID Gara: 179371 | Data: 08/09/2026 INFORMAZIONI GENERALI Localita: Sona",
+    "location_str": "Piazza Roma, Sona, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-08",
+        "descrizione": "Sona, via Marconi, via Roma, San Quirico, Bosco, San Giorgio in Salici, Valle, via Discesa Chiesa, Sona di Km 9.600 da ripetere 8 volte, INDI Sona, via Marconi, via Roma, San Quirico, Valle, via Discesa Chiesa di Km 4.800 da ripetere 9 volte",
+        "luogo_ritrovo": "Sona",
+        "indirizzo_ritrovo": "Piazza Roma",
+        "orario_ritrovo": "12:30",
+        "luogo_partenza": "Sona",
+        "orario_partenza": "14:30",
+        "luogo_arrivo": "Sona",
+        "orario_arrivo": "17:15",
+        "km": "120"
+      }
+    ],
+    "lat": 45.43395,
+    "lng": 10.83295
+  },
+  "72_COPPA_COMUNE_DI_LIVRAGA_2026-09-08": {
+    "raceid": "181633",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181633&site=strada_it",
+    "info": [
+      "72° COPPA COMUNE DI LIVRAGA Strada 72° COPPA COMUNE DI LIVRAGA ID Gara: 181633 | <br><b>Data:</b> 08/09/2026 INFORMAZIONI GENERALI Localita: LIVRAGA <br><b>Provincia:</b> LO <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER23 <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> CASALI MARCO Vice <br><b>Direttore di Corsa:</b> VASELLI FRANCESCO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> U.S. LIVRAGA CICLISMO ASD <br><b>Indirizzo:</b> VIA GIOVANNI XXIII 1 <br><b>CAP:</b> 26814 Citta: LIVRAGA <br><b>Provincia:</b> LO <br><b>Telefono:</b> 3358086236 <br><b>Email:</b> USLIVRAGA@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> TRAMITE FATTORE K <br><b>Indirizzo:</b> VIA GIOVANNI XXII 1, 26814 LIVRAGA, LO <br><b>Telefono:</b> 037787005 - 3358086236 <br><b>Email:</b> uslivraga@gmail.com RITROVO GIURIA Dettagli Giuria Ruolo Nome Giudice PRESIDENTE DI GIURIA MERELLI ELENA COMPONENTE VECCHIO MAURO EMILIO GIUDICE DI ARRIVO FACCHINETTI ELENA COMPONENTE IN MOTO BALZI DANIELE PROVE 1 - 72° COPPA COMUNE DI LIVRAGA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 08/09/2026 <br><b>Descrizione:</b> VIA ROMA, S.P.107, VIA VENERE, VIA TURATI, VIA VITTADINI, VIA GARIBALDI, VIA CAIROLI, FRAZ. CA' DE MAZZI, FRAZ. BARAZZINA, BORGHETTO LODIGIANO, VIA NENNI, VIA CAVALLOTTI, VIA TAVAZZI, VIA CASE BRAGLIA, VIA COPPI, S.P. 125, S.P. 207, VIA RISORGIMENTO, ARRIVO. <br><b>Note:</b> PERCORSO PIANEGGIANTE <br><b>Luogo Ritrovo:</b> LIVRAGA (LO) <br><b>Indirizzo Ritrovo:</b> VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI) <br><b>Orario Ritrovo:</b> 12:00 <br><b>Luogo Partenza:</b> LIVRAGA, VIA RISORGIMENTO <br><b>Orario Partenza:</b> 14:00 <br><b>Luogo Arrivo:</b> LIVRAGA, VIA RISORGIMENTO <br><b>Orario Arrivo:</b> 17:30 <br><b>Luogo Verifica:</b> 08/09/2026 DALLE ORE 12:00 ALLE ORE 13:00 <br><b>Punto Incontro DS:</b> 08/09/2026 ORE 13:00 <br><b>Lunghezza KM:</b> 119,7 Servizi: MASSIMO CORRIDORI ISCRITTI 200 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "LIVRAGA (LO)",
+    "indirizzo_ritrovo": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI)",
+    "orario_partenza": "14:00",
+    "km": "119,7 Servizi: MASSIMO CORRIDORI ISCRITTI 200 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 72° COPPA COMUNE DI LIVRAGA Strada 72° COPPA COMUNE DI LIVRAGA ID Gara: 181633 | Data: 08/09/2026 INFORMAZIONI GENERALI Localita: LIVRAGA",
+    "location_str": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI), LIVRAGA (LO), Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-08",
+        "descrizione": "VIA ROMA, S.P.107, VIA VENERE, VIA TURATI, VIA VITTADINI, VIA GARIBALDI, VIA CAIROLI, FRAZ. CA' DE MAZZI, FRAZ. BARAZZINA, BORGHETTO LODIGIANO, VIA NENNI, VIA CAVALLOTTI, VIA TAVAZZI, VIA CASE BRAGLIA, VIA COPPI, S.P. 125, S.P. 207, VIA RISORGIMENTO, ARRIVO.",
+        "luogo_ritrovo": "LIVRAGA (LO)",
+        "indirizzo_ritrovo": "VIA ROMA 10 - LIVRAGA (ORATORIO VITTADINI)",
+        "orario_ritrovo": "12:00",
+        "luogo_partenza": "LIVRAGA, VIA RISORGIMENTO",
+        "orario_partenza": "14:00",
+        "luogo_arrivo": "LIVRAGA, VIA RISORGIMENTO",
+        "orario_arrivo": "17:30",
+        "km": "119,7"
+      }
+    ],
+    "lat": 45.18743,
+    "lng": 9.54685
+  },
+  "TROFEO_PRATI_STABILI_2026-09-12": {
+    "raceid": "181635",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
+    "info": [
+      "6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | <br><b>Data:</b> 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO <br><b>Provincia:</b> MN <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER 23 <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> CAMPIONATO REGIONALE <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> TREBBI DAVIDE Vice <br><b>Direttore di Corsa:</b> PEZZINI SIMONE <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> U.C. CERESARESE A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA TRIFOGLIO 2 <br><b>CAP:</b> 46040 Citta: CERESARA <br><b>Provincia:</b> MN <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> SIMONEPEZZINI@TISCALI.IT ISCRIZIONI <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> simonepezzini@tiscali.it RITROVO GIURIA Dettagli Giuria Ruolo Nome Giudice PRESIDENTE DI GIURIA MENINI ILENIA COMPONENTE BERTAZZONI ALESSANDRO GIUDICE DI ARRIVO MARIANI STEFANO COMPONENTE IN MOTO REGOLO VALENTINA PROVE 1 - 6° GIRO DEI PRATI STABILI <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 12/09/2026 <br><b>Descrizione:</b> MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO VOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - LOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI 8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE <br><b>Luogo Ritrovo:</b> MARMIROLO <br><b>Indirizzo Ritrovo:</b> AREA FESTE - VIA DI VITTORIO <br><b>Orario Ritrovo:</b> 12:00 <br><b>Luogo Partenza:</b> MARMIROLO - VIA DI VITTORIO <br><b>Orario Partenza:</b> 14:30 <br><b>Luogo Arrivo:</b> MARMIROLO - VIA DI VITTORIO <br><b>Luogo Verifica:</b> 12:00 - 13:10 <br><b>Punto Incontro DS:</b> 13:15 PRESSO AREA FESTE <br><b>Lunghezza KM:</b> 137 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "MARMIROLO",
+    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
+    "orario_partenza": "14:30",
+    "km": "137 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | Data: 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO",
+    "location_str": "AREA FESTE - VIA DI VITTORIO, MARMIROLO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-12",
+        "descrizione": "MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO \r\nVOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - \r\nLOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI \r\n8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE",
+        "luogo_ritrovo": "MARMIROLO",
+        "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
+        "orario_ritrovo": "12:00",
+        "luogo_partenza": "MARMIROLO - VIA DI VITTORIO",
+        "orario_partenza": "14:30",
+        "luogo_arrivo": "MARMIROLO - VIA DI VITTORIO",
+        "orario_arrivo": null,
+        "km": "137"
+      }
+    ],
+    "lat": 45.22056,
+    "lng": 10.75639
+  },
+  "CRONO_FESTA_DELL_UVA_JUNIORES_DONNE_JUNIOR_DONNE_UNDER_23_DONNE_ELITE_2026-09-26": {
+    "raceid": "181729",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181729&site=strada_it",
+    "info": [
+      "CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE Strada CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE ID Gara: 181729 | <br><b>Data:</b> 26/09/2026 INFORMAZIONI GENERALI Localita: Verla-Ville di Giovo <br><b>Provincia:</b> TN <br><b>Categoria:</b> Crono Multicategoria da Elite m/f <br><b>Categorie Ammesse:</b> Juniores maschile Donne Junior Donne Under 23 Donne Elite 150 ISCRITTI MASSIMO Tipo di Accesso: Libera <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Cronometro Tipo di Percorso: Cronometro <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> PANIZZA GIULIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. U.S. MONTECORONA <br><b>Indirizzo:</b> VIA SCUOLE N 1 - FRAZ PALU' <br><b>CAP:</b> 38030 Citta: GIOVO <br><b>Provincia:</b> TN <br><b>Telefono:</b> 3495217065 <br><b>Email:</b> US.MONTECORONA@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> A.S.D. UNIONE SPORTIVA MONTECORONA fattore K <br><b>Indirizzo:</b> via delle scuole palu di giovo , 38030 Giovo , TN <br><b>Telefono:</b> 3495217065 <br><b>Email:</b> us.montecorona@gmail.com <br><b>Iscrizioni Dal - Al:</b> 09/09/2026 - 23/09/2026 RITROVO PROVE 1 - CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 26/09/2026 <br><b>Descrizione:</b> CRONOPROGRAMMA: Verifica tessere: presso PALAZZETTO DELLO SPORT dalle 9.00 alle 10-30 Partenza primo concorrente ore: 11.30 Ordine di partenza: PRIMA I MASCHI POI LE FEMMINE IN ORDINE CASUALE Premiazione ore: 13,30 DESCRIZIONE DEL PERCORSO DI GARA: Lunghezza: 5,3 KM Dislivello positivo: 200 metri. Principali strade e località attraversate: VERLA, Palù, Passo Croce, Serci, Maso Roncador, VILLE <br><b>Note:</b> Cronometraggio a cura di: FEDERAZIONE ITALIANA CRONOMETRISTI <br><b>Luogo Ritrovo:</b> Giovo (TN) 38030 <br><b>Indirizzo Ritrovo:</b> VIA DELLE SCUOLE PALAZZETTO SPORTIVO <br><b>Orario Ritrovo:</b> 08:30 <br><b>Luogo Partenza:</b> VERLA DI GIOVO PRESSO LA CHIESA <br><b>Orario Partenza:</b> 11:30 <br><b>Luogo Arrivo:</b> VILLE DI GIOVO <br><b>Orario Arrivo:</b> 13:00 <br><b>Luogo Verifica:</b> 9:00-10:30 <br><b>Punto Incontro DS:</b> 10:30 <br><b>Lunghezza KM:</b> 5,3 Servizi: PRONTO SOCCORSO PIU' VICINO: OSPEDALE S. CHIARA di TRENTO indirizzo LARGO MEDAGLIE D'ORO n. 9 a 23 km dalla zona di P/A. NUMERO UNICO DI EMERGENZA: 112. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Giovo (TN) 38030",
+    "indirizzo_ritrovo": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO",
+    "orario_partenza": "11:30",
+    "km": "5,3 Servizi: PRONTO SOCCORSO PIU' VICINO: OSPEDALE S. CHIARA di TRENTO indirizzo LARGO MEDAGLIE D'ORO n. 9 a 23 km dalla zona di P/A. NUMERO UNICO DI EMERGENZA: 112. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE Strada CRONO FESTA DELL'UVA JUNIORES - DONNE JUNIOR - DONNE UNDER 23 - DONNE ELITE ID Gara: 181729 | Data: 26/09/2026 INFORMAZIONI GENERALI Localita: Verla-Ville di Giovo",
+    "location_str": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO, Giovo (TN) 38030, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-26",
+        "descrizione": "CRONOPROGRAMMA:\r\nVerifica tessere: presso PALAZZETTO DELLO SPORT dalle 9.00 alle 10-30\r\nPartenza primo concorrente ore: 11.30\r\nOrdine di partenza: PRIMA I MASCHI POI LE FEMMINE IN ORDINE CASUALE\r\nPremiazione ore: 13,30\r\nDESCRIZIONE DEL PERCORSO DI GARA:\r\nLunghezza: 5,3 KM\r\nDislivello positivo: 200 metri.\r\nPrincipali strade e località attraversate: VERLA, Palù, Passo Croce, Serci, Maso Roncador, VILLE",
+        "luogo_ritrovo": "Giovo (TN) 38030",
+        "indirizzo_ritrovo": "VIA DELLE SCUOLE PALAZZETTO SPORTIVO",
+        "orario_ritrovo": "08:30",
+        "luogo_partenza": "VERLA DI GIOVO PRESSO LA CHIESA",
+        "orario_partenza": "11:30",
+        "luogo_arrivo": "VILLE DI GIOVO",
+        "orario_arrivo": "13:00",
+        "km": "5,3"
+      }
+    ],
+    "lat": 46.18584,
+    "lng": 11.14678
+  },
+  "GIRO_DELL_EMILIA_INTERNAZIONALE_DONNE_ELITE_2026-10-03": {
+    "raceid": "178701",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178701&site=strada_it",
+    "info": [
+      "GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE Strada GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE ID Gara: 178701 | <br><b>Data:</b> 03/10/2026 INFORMAZIONI GENERALI Localita: CASALECCHIO DI RENO- BOLOGNA <br><b>Provincia:</b> BO <br><b>Categoria:</b> DONNE ELITE 1.PRO <br><b>Categoria Geografica:</b> Internazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> DONNE ELITE NAZ/INT <br><b>Direttore di Corsa:</b> NEGRO ANDREA MARCO Vice <br><b>Direttore di Corsa:</b> CANTONE IVANO <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> GRUPPO SPORTIVO EMILIA S.R.L. <br><b>Indirizzo:</b> VIA M. SERENARI 8 <br><b>CAP:</b> 40033 Citta: CASALECCHIO DI RENO <br><b>Provincia:</b> BO <br><b>Telefono:</b> 3482811612 <br><b>Email:</b> INFO@GSEMILIA.IT ISCRIZIONI <br><b>Luogo:</b> GRUPPO SPORTIVO EMILIA S.R.L. <br><b>Indirizzo:</b> Via Serenari 8, 40033 CASALECCHIO DI RENO, BO <br><b>Telefono:</b> 3482811612 <br><b>Email:</b> INFO@GSEMILIA.IT <br><b>Iscrizioni Dal - Al:</b> 01/09/2026 - 30/09/2026 PROVE 1 - GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE <br><b>Prova:</b> 1 <br><b>Data:</b> 03/10/2026 <br><b>Descrizione:</b> Ferrara Viale Cavour (inizio trasferimento) - Ferrara Via Ferraresi (partenza ufficiale) - Chiesuol del Fosso - Svincolo autostrada - Gallo Ferrarese - Malalbergo - Altedo - Minerbio - S. Martino di Soverzano - Maddalena di Cazzano - Bagnarola - Vigorso - Castenaso - Rotatoria attraversamento SS 9 - Mura S. Carlo - Loc. La Pulce - Farneto - Botteghino di Zocca - Salita di Zocca - Rastignano - Bologna Porta Santo Stefano - Bologna Porta Saragozza - Arco del Meloncello - San Luca - Arco del Meloncello - Bologna S. Luca ARRIVO <br><b>Luogo Arrivo:</b> Bologna - Loc. San Luca - Via Monte Albano <br><b>Lunghezza KM:</b> 111,300 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "GRUPPO SPORTIVO EMILIA S.R.L",
+    "indirizzo_ritrovo": "VIA M. SERENARI 8",
+    "orario_partenza": null,
+    "km": "111,300 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE Strada GIRO DELL'EMILIA INTERNAZIONALE DONNE ELITE ID Gara: 178701 | Data: 03/10/2026 INFORMAZIONI GENERALI Localita: CASALECCHIO DI RENO- BOLOGNA",
+    "location_str": "VIA M. SERENARI 8, GRUPPO SPORTIVO EMILIA S.R.L, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-10-03",
+        "descrizione": "Ferrara Viale Cavour (inizio trasferimento) - Ferrara Via Ferraresi (partenza ufficiale) - Chiesuol del Fosso - Svincolo autostrada - Gallo Ferrarese - Malalbergo - Altedo - Minerbio - S. Martino di Soverzano - Maddalena di Cazzano - Bagnarola - Vigorso - Castenaso - Rotatoria attraversamento SS 9 - Mura S. Carlo - Loc. La Pulce - Farneto - Botteghino di Zocca - Salita di Zocca - Rastignano - Bologna Porta Santo Stefano - Bologna Porta Saragozza - Arco del Meloncello - San Luca - Arco del Meloncello - Bologna S. Luca ARRIVO",
+        "luogo_ritrovo": null,
+        "indirizzo_ritrovo": null,
+        "orario_ritrovo": null,
+        "luogo_partenza": null,
+        "orario_partenza": null,
+        "luogo_arrivo": "Bologna - Loc. San Luca - Via Monte Albano",
+        "orario_arrivo": null,
+        "km": "111,300"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "89_COPPA_CITTA_DI_SAN_DANIELE_2026-10-06": {
+    "raceid": "178675",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178675&site=strada_it",
+    "info": [
+      "89^ COPPA CITTA' DI SAN DANIELE Strada 89^ COPPA CITTA' DI SAN DANIELE ID Gara: 178675 | <br><b>Data:</b> 06/10/2026 INFORMAZIONI GENERALI Localita: SAN DANIELE DEL FRIULI <br><b>Provincia:</b> UD <br><b>Categoria:</b> (1.2 ME) Elite e Under 23 <br><b>Categorie Ammesse:</b> Elite / Under 23 (classe 1.2 ME) GARA AD INVITO (alle società invitate sarà trasmesso il bollettino d'iscrizione) <br><b>Categoria Geografica:</b> Internazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> DE MONTE DAVIDE Vice <br><b>Direttore di Corsa:</b> BONATO GIANPIETRO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. U.C. SANDANIELESI <br><b>Indirizzo:</b> PIAZZA IV NOVEMBRE, 14 <br><b>CAP:</b> 33038 Citta: SAN DANIELE DEL FRIULI <br><b>Provincia:</b> UD <br><b>Telefono:</b> 0432957385 <br><b>Email:</b> UC.SANDANIELESI@YAHOO.IT ISCRIZIONI <br><b>Luogo:</b> A.S.D. UNIONE CICLISTI SANDANIELESI <br><b>Indirizzo:</b> PIAZZA IV NOVEMBRE, 14, 33038 SAN DANIELE DEL FRIULI, <br><b>Telefono:</b> 3493313506 (Ornella Michele) <br><b>Email:</b> uc.sandanielesi@yahoo.it <br><b>Iscrizioni Dal - Al:</b> 03/09/2026 - 03/10/2026 RITROVO PROVE 1 - 89^ COPPA CITTA' DI SAN DANIELE <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 06/10/2026 <br><b>Descrizione:</b> San Daniele Del Friuli, Rodeano Alto, Rodeano Basso, bivio località San Marco, Castello D'Arcano (loc. Arcano Superiore), Strada SP 116 (Panoramica) e nuovamente San Daniele Del Friuli. Percorso da ripetersi 6 volte per un totale di 108,3 km. Terminati i giri del percorso iniziale si raggiunge il Comune di Ragogna (UD), bivio Pignano, località Muris, salita del Monte di Ragogna (GPM), località San Pietro, Ragogna, località Pignano, nuovamente San Daniele del Friuli (via Umberto I° - transito sotto lo striscione d’arrivo), nuovamente bivio Pignano, località Muris, salita del Monte di Ragogna (2° GPM), località San Pietro, Ragogna, località Pignano, San Daniele Del Friuli (via Umberto I°) - ARRIVO. <br><b>Luogo Ritrovo:</b> San Daniele del Friuli (UD) <br><b>Indirizzo Ritrovo:</b> Via Del Monte (presso Palazzo Monte di Pietà) <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> San Daniele del Friuli (UD) piazza V. Emanuele <br><b>Orario Partenza:</b> 13:00 <br><b>Luogo Arrivo:</b> San Daniele del Friuli (UD) via Umberto I° <br><b>Orario Arrivo:</b> 17:20 <br><b>Luogo Verifica:</b> San Daniele del Friuli (UD) Via Del Monte (presso Palazzo Monte di Pietà) - dalle 09:00 alle 10:30 <br><b>Punto Incontro DS:</b> San Daniele del Friuli (UD) Via Del Monte (presso Palazzo Monte di Pietà) - ore 11:00 <br><b>Lunghezza KM:</b> 148,200 Servizi: La partenza ufficiale (KM 0) è programmata a San Daniele del Friuli (UD) via Kennedy (Meccanotecnica) AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "San Daniele del Friuli (UD)",
+    "indirizzo_ritrovo": "Via Del Monte (presso Palazzo Monte di Pietà)",
+    "orario_partenza": "13:00",
+    "km": "148,200 Servizi: La partenza ufficiale (KM 0) è programmata a San Daniele del Friuli (UD) via Kennedy (Meccanotecnica) AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 89^ COPPA CITTA' DI SAN DANIELE Strada 89^ COPPA CITTA' DI SAN DANIELE ID Gara: 178675 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: SAN DANIELE DEL FRIULI",
+    "location_str": "Via Del Monte (presso Palazzo Monte di Pietà), San Daniele del Friuli (UD), Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-06",
+        "descrizione": "San Daniele Del Friuli, Rodeano Alto, Rodeano Basso, bivio località San Marco, Castello D'Arcano (loc. Arcano Superiore), Strada SP 116 (Panoramica) e nuovamente San Daniele Del Friuli. Percorso da ripetersi 6 volte per un totale di 108,3 km. \r\nTerminati i giri del percorso iniziale si raggiunge il Comune di Ragogna (UD), bivio Pignano, località Muris, salita del Monte di Ragogna (GPM), località San Pietro, Ragogna, località Pignano, nuovamente San Daniele del Friuli (via Umberto I° - transito sotto lo striscione d’arrivo), nuovamente bivio Pignano, località Muris, salita del Monte di Ragogna (2° GPM), località San Pietro, Ragogna, località Pignano, San Daniele Del Friuli (via Umberto I°)  - ARRIVO.",
+        "luogo_ritrovo": "San Daniele del Friuli (UD)",
+        "indirizzo_ritrovo": "Via Del Monte (presso Palazzo Monte di Pietà)",
+        "orario_ritrovo": "09:00",
+        "luogo_partenza": "San Daniele del Friuli (UD) piazza V. Emanuele",
+        "orario_partenza": "13:00",
+        "luogo_arrivo": "San Daniele del Friuli (UD) via Umberto I°",
+        "orario_arrivo": "17:20",
+        "km": "148,200"
+      }
+    ],
+    "lat": 46.16005,
+    "lng": 13.0106
+  },
+  "6_TRE_VALLI_VARESINE_WOMEN_S_RACE_2026-10-06": {
+    "raceid": "178703",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178703&site=strada_it",
+    "info": [
+      "6^ TRE VALLI VARESINE WOMEN'S RACE Strada 6^ TRE VALLI VARESINE WOMEN'S RACE ID Gara: 178703 | <br><b>Data:</b> 06/10/2026 INFORMAZIONI GENERALI Localita: BUSTO ARSIZIO-VARESE <br><b>Provincia:</b> VA <br><b>Categoria:</b> DONNE ELITE 1.PRO <br><b>Categorie Ammesse:</b> CATALOGATA 1.PRO SERIES MANIFESTAZIONE AD INVITO SQUADRE <br><b>Categoria Geografica:</b> Internazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> DONNE ELITE NAZ/INT <br><b>Direttore di Corsa:</b> PURICELLI FABIO Vice <br><b>Direttore di Corsa:</b> LIETTA PAOLA <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> S.C. ALFREDO BINDA S.S.D.R.L. <br><b>Indirizzo:</b> VIA DE CRISTOFORIS 12 <br><b>CAP:</b> 21100 Citta: VARESE <br><b>Provincia:</b> VA <br><b>Telefono:</b> 3381819530 <br><b>Email:</b> BINDA@TREVALLIVARESINE.COM ISCRIZIONI <br><b>Luogo:</b> S.C.ALFREDO BINDA S.S.D.R.L <br><b>Indirizzo:</b> PIAZZA MILITE IGNOTO 4, 21100 VARESE, VA <br><b>Telefono:</b> 3381819530 <br><b>Email:</b> women@trevallivaresine.com RITROVO PROVE 1 - 6^ TRE VALLI VARESINE WOMEN'S RACE <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 06/10/2026 <br><b>Descrizione:</b> PARTENZA DA VIA VOLTA KM0 A BUSTO ARSIZIO A VARESE DI CIRCA 40 KM, TRATTO IN LINEA, POI INGRESSO IN CIRCUITO A VARESE DI 16 KM DA PERCORRERE 6 VOLTE <br><b>Luogo Ritrovo:</b> BUSTO ARSIZIO <br><b>Indirizzo Ritrovo:</b> VIA VOLTA 6 C/O MUSEO DEL TESSILE <br><b>Orario Ritrovo:</b> 07:30 <br><b>Luogo Partenza:</b> VIA VOLTA BUSTO ARSIZIO <br><b>Orario Partenza:</b> 09:15 <br><b>Luogo Arrivo:</b> VIA SACCO VARESE <br><b>Orario Arrivo:</b> 13:20 <br><b>Luogo Verifica:</b> LUNEDI 05 OTTTOBRE DALLE ORE 14:00 MUSEO DEL TESSILE VIA VOLTA BUSTO ARSIZIO <br><b>Punto Incontro DS:</b> LUNEDI ORE 16.15 <br><b>Lunghezza KM:</b> 133,860 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "BUSTO ARSIZIO",
+    "indirizzo_ritrovo": "VIA VOLTA 6 C/O MUSEO DEL TESSILE",
+    "orario_partenza": "09:15",
+    "km": "133,860 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6^ TRE VALLI VARESINE WOMEN'S RACE Strada 6^ TRE VALLI VARESINE WOMEN'S RACE ID Gara: 178703 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: BUSTO ARSIZIO-VARESE",
+    "location_str": "VIA VOLTA 6 C/O MUSEO DEL TESSILE, BUSTO ARSIZIO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-06",
+        "descrizione": "PARTENZA DA VIA VOLTA KM0 A BUSTO ARSIZIO A VARESE DI CIRCA 40 KM, TRATTO IN LINEA, POI INGRESSO IN CIRCUITO A VARESE DI 16 KM  DA PERCORRERE 6 VOLTE",
+        "luogo_ritrovo": "BUSTO ARSIZIO",
+        "indirizzo_ritrovo": "VIA VOLTA 6 C/O MUSEO DEL TESSILE",
+        "orario_ritrovo": "07:30",
+        "luogo_partenza": "VIA VOLTA BUSTO ARSIZIO",
+        "orario_partenza": "09:15",
+        "luogo_arrivo": "VIA SACCO VARESE",
+        "orario_arrivo": "13:20",
+        "km": "133,860"
+      }
+    ],
+    "lat": 45.61193,
+    "lng": 8.85183
+  },
+  "69_GRAN_PREMIO_SOMMA_TROFEO_GIOVANNI_OLDRINI_A_M_2026-10-04": {
+    "raceid": "178999",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178999&site=strada_it",
+    "info": [
+      "69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M Strada 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M ID Gara: 178999 | <br><b>Data:</b> 04/10/2026 INFORMAZIONI GENERALI Localita: SOMMA LOMBARDO <br><b>Provincia:</b> VA <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> ELITE-UNDER23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> RUBONI ANDREA Vice <br><b>Direttore di Corsa:</b> ZERBINATTI MARCO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> VELO CLUB SOMMESE A.S.D. <br><b>Indirizzo:</b> VIA SAN GIOVANNI BOSCO NR. 66 <br><b>CAP:</b> 21019 Citta: SOMMA LOMBARDO <br><b>Provincia:</b> VA <br><b>Telefono:</b> 3482833110 <br><b>Email:</b> VELOCLUBSOMMESEASD@LIBERO.IT ISCRIZIONI <br><b>Luogo:</b> VELO CLUB SOMMESE ASD <br><b>Indirizzo:</b> SAN GIOVANNI BOSCO, 21019 SOMMA LOMBARDO, <br><b>Telefono:</b> 3482833110 <br><b>Email:</b> veloclubsommeseasd@libero.it <br><b>Iscrizioni Dal - Al:</b> 09/08/2026 - 01/10/2026 RITROVO PROVE 1 - 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M <br><b>Prova:</b> 1 <br><b>Data:</b> 04/10/2026 <br><b>Descrizione:</b> CIRCUITO SOMMA-VERGIATE-VARANO-CASALE LITTA-VERGIATE SOMMA DA RIPETERSI 5 VOLTE INDI VERGIATE-SESTO CALENDE -GOLASECCA-SOMMA DA RIPETRSI 4 VOLTE CON ARRIVIO IN CORSO EUROPA A SOMMA LOMBARDO <br><b>Luogo Ritrovo:</b> SOMMA LOMBARDO <br><b>Indirizzo Ritrovo:</b> CASTELLO VISCONTI VIA MAZZINI <br><b>Orario Ritrovo:</b> 08:30 <br><b>Luogo Partenza:</b> VIA MAZZINI <br><b>Orario Partenza:</b> 11:30 <br><b>Luogo Arrivo:</b> CORSO EUROPA <br><b>Orario Arrivo:</b> 15:30 <br><b>Luogo Verifica:</b> 8:30 <br><b>Punto Incontro DS:</b> 10:30 <br><b>Lunghezza KM:</b> 162,9 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "SOMMA LOMBARDO",
+    "indirizzo_ritrovo": "CASTELLO VISCONTI VIA MAZZINI",
+    "orario_partenza": "11:30",
+    "km": "162,9 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M Strada 69° GRAN PREMIO SOMMA - TROFEO GIOVANNI OLDRINI A.M ID Gara: 178999 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: SOMMA LOMBARDO",
+    "location_str": "CASTELLO VISCONTI VIA MAZZINI, SOMMA LOMBARDO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-10-04",
+        "descrizione": "CIRCUITO SOMMA-VERGIATE-VARANO-CASALE LITTA-VERGIATE SOMMA DA RIPETERSI 5 VOLTE INDI VERGIATE-SESTO CALENDE -GOLASECCA-SOMMA DA RIPETRSI 4 VOLTE  CON ARRIVIO IN CORSO EUROPA A SOMMA LOMBARDO",
+        "luogo_ritrovo": "SOMMA LOMBARDO",
+        "indirizzo_ritrovo": "CASTELLO VISCONTI VIA MAZZINI",
+        "orario_ritrovo": "08:30",
+        "luogo_partenza": "VIA MAZZINI",
+        "orario_partenza": "11:30",
+        "luogo_arrivo": "CORSO EUROPA",
+        "orario_arrivo": "15:30",
+        "km": "162,9"
+      }
+    ],
+    "lat": 45.68362,
+    "lng": 8.70709
+  },
+  "76_GRAN_PREMIO_CALVATONE_2026-10-06": {
+    "raceid": "179000",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179000&site=strada_it",
+    "info": [
+      "76° GRAN PREMIO CALVATONE Strada 76° GRAN PREMIO CALVATONE ID Gara: 179000 | <br><b>Data:</b> 06/10/2026 INFORMAZIONI GENERALI Localita: CALVATONE <br><b>Provincia:</b> CR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> ZUELLI FIORENZO Vice <br><b>Direttore di Corsa:</b> PEGOIANI ANTONIO ALESSANDRO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> VELO CLUB CREMONESE A.S.D. <br><b>Indirizzo:</b> VIA BRESCIA 199 <br><b>CAP:</b> 26100 Citta: CREMONA <br><b>Provincia:</b> CR <br><b>Telefono:</b> 3355229211 <br><b>Email:</b> SEGRETERIA@VELOCLUBCR.IT ISCRIZIONI <br><b>Luogo:</b> Velo Club Cremonese <br><b>Indirizzo:</b> Via Brescia 199, 26100 Cremona, CR <br><b>Telefono:</b> 3355229211 <br><b>Email:</b> segreteria@veloclubcr.it <br><b>Iscrizioni Dal - Al:</b> - 03/10/2026 RITROVO PROVE 1 - 76° GRAN PREMIO CALVATONE <br><b>Prova:</b> 1 <br><b>Data:</b> 06/10/2026 <br><b>Descrizione:</b> Circuito cittadino di km 2.700 da tipetersi 37 volte per un totale di Km 99,900. Via Umberto I, Via Vecchia di Piadena, Strada Vicinale Virsecchi, Via Santa Maria, Via Umerto I. <br><b>Luogo Ritrovo:</b> Calvatone (CR) <br><b>Indirizzo Ritrovo:</b> Via Umberto I <br><b>Orario Ritrovo:</b> 12:00 <br><b>Luogo Partenza:</b> Calvatone (CR) <br><b>Orario Partenza:</b> 14:30 <br><b>Luogo Verifica:</b> Dalle ore 12:00 alle ore 13:00 <br><b>Punto Incontro DS:</b> Ore 13:30 c/o Ritrovo <br><b>Lunghezza KM:</b> 99,9 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Calvatone (CR)",
+    "indirizzo_ritrovo": "Via Umberto I",
+    "orario_partenza": "14:30",
+    "km": "99,9 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 76° GRAN PREMIO CALVATONE Strada 76° GRAN PREMIO CALVATONE ID Gara: 179000 | Data: 06/10/2026 INFORMAZIONI GENERALI Localita: CALVATONE",
+    "location_str": "Via Umberto I, Calvatone (CR), Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-10-06",
+        "descrizione": "Circuito cittadino di km 2.700 da tipetersi 37 volte per un totale di Km 99,900.\r\nVia Umberto I, Via Vecchia di Piadena, Strada Vicinale Virsecchi, Via Santa Maria, Via Umerto I.",
+        "luogo_ritrovo": "Calvatone (CR)",
+        "indirizzo_ritrovo": "Via Umberto I",
+        "orario_ritrovo": "12:00",
+        "luogo_partenza": "Calvatone (CR)",
+        "orario_partenza": "14:30",
+        "luogo_arrivo": null,
+        "orario_arrivo": null,
+        "km": "99,9"
+      }
+    ],
+    "lat": 45.12621,
+    "lng": 10.44196
+  },
+  "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11": {
+    "raceid": "179001",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179001&site=strada_it",
+    "info": [
+      "75° GRAN PREMIO EZIO DEL ROSSO Strada 75° GRAN PREMIO EZIO DEL ROSSO ID Gara: 179001 | <br><b>Data:</b> 11/10/2026 INFORMAZIONI GENERALI Localita: MONTECATINI TERME - PISTOIA <br><b>Provincia:</b> PT <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> ZINGONI FRANCESCO Vice <br><b>Direttore di Corsa:</b> ARZILLI FABRIZIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> G.S. LE CASETTE - A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA U. FOSCOLO, 43 <br><b>CAP:</b> 51016 Citta: MONTECATINI-TERME <br><b>Provincia:</b> PT <br><b>Telefono:</b> 3386420644 <br><b>Email:</b> GSLECASETTE@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> KSPORT <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3357447856 <br><b>Email:</b> gslecasette@gmail.com <br><b>Iscrizioni Dal - Al:</b> 01/09/2026 - 08/10/2026 RITROVO PROVE 1 - 75° GRAN PREMIO EZIO DEL ROSSO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 11/10/2026 <br><b>Descrizione:</b> Trasferimento di Km.2 da Viale Verdi a Corso Roma al Km 0 Montecatini, Pieve a Nievole, Monsunnano, Ponte Bugg.,Borgo a Buggiano, Montecatini, Vico, Ponte di Serravalle, Monsummano, Ponte Bugg.,Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano, Ponte B., Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano, Ponte B., Buggiano, Colle, Margine Coperta, Montecatini, indi Vico, Ponte di Serravalle, Pieve a Nievole, Montecatini da ripetere 4 volte. <br><b>Note:</b> Gli automezzi delle società dovranno parcheggiare nei luoghi indicati dall'organizzazione <br><b>Luogo Ritrovo:</b> MONTECATINI TERME <br><b>Indirizzo Ritrovo:</b> CASA DELLA PREVENZIONE \"PARCO TERMALE\" <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> MONTECATINI TERME Corso Roma <br><b>Orario Partenza:</b> 12:30 <br><b>Luogo Arrivo:</b> MONTECATINI TERME VIALE G. VERDI <br><b>Orario Arrivo:</b> 16:45 <br><b>Luogo Verifica:</b> CASA DELLA PREVENZIONE DALLE ORE 9,00 ALLE ORE 11,00 <br><b>Punto Incontro DS:</b> CASA DELLA PREVENZIONE ORE 11,00 <br><b>Lunghezza KM:</b> 180 Servizi: 6 Auto Giuria e direzione corsa \"Racing Service\" 3 Auto Assistenza Neutra \" Racing Service\" Scorta Tecnica e moto giuria \"gruppo Capannolese e Motociclisti Pistoiesi\" Personale incroci e rotonde \" ASA Polizia di Stato \" 3 Ambulanze di cui 2 con medico a bordo AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "MONTECATINI TERME",
+    "indirizzo_ritrovo": "CASA DELLA PREVENZIONE \"PARCO TERMALE\"",
+    "orario_partenza": "12:30",
+    "km": "180 Servizi: 6 Auto Giuria e direzione corsa \"Racing Service\" 3 Auto Assistenza Neutra \" Racing Service\" Scorta Tecnica e moto giuria \"gruppo Capannolese e Motociclisti Pistoiesi\" Personale incroci e rotonde \" ASA Polizia di Stato \" 3 Ambulanze di cui 2 con medico a bordo AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 75° GRAN PREMIO EZIO DEL ROSSO Strada 75° GRAN PREMIO EZIO DEL ROSSO ID Gara: 179001 | Data: 11/10/2026 INFORMAZIONI GENERALI Localita: MONTECATINI TERME - PISTOIA",
+    "location_str": "CASA DELLA PREVENZIONE \"PARCO TERMALE\", MONTECATINI TERME, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-11",
+        "descrizione": "Trasferimento di Km.2 da Viale Verdi a Corso Roma al Km 0\r\nMontecatini, Pieve a Nievole, Monsunnano, Ponte Bugg.,Borgo a Buggiano, Montecatini, Vico, Ponte di Serravalle,\r\nMonsummano, Ponte Bugg.,Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano, Ponte B., Buggiano, Colle, Margine Coperta, Montecatini, Vico, Ponte di Serravalle, Monsummano,\r\nPonte B., Buggiano, Colle, Margine Coperta, Montecatini, indi Vico, Ponte di Serravalle, Pieve a Nievole,\r\nMontecatini da ripetere 4 volte.",
+        "luogo_ritrovo": "MONTECATINI TERME",
+        "indirizzo_ritrovo": "CASA DELLA PREVENZIONE \"PARCO TERMALE\"",
+        "orario_ritrovo": "09:00",
+        "luogo_partenza": "MONTECATINI TERME Corso Roma",
+        "orario_partenza": "12:30",
+        "luogo_arrivo": "MONTECATINI TERME  VIALE G. VERDI",
+        "orario_arrivo": "16:45",
+        "km": "180"
+      }
+    ],
+    "lat": 43.88318,
+    "lng": 10.77095
+  },
+  "74_COPPA_DEL_MOBILIO_PRIMA_TAPPA_2026-10-12": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — 1ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-12<br><b>Descrizione:</b> PONSACCO VIALE ITALIA TRASFERIMENTO KM 2,200 FINO A VIA VANNI (PART.UFFICIALE)\r\nPONSACCO VIA VANNI-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI DI KM 8 DA RIPETERE 4 VOLTE, INDI PONSACCO-VARIANTE SR 439-LA CAPANNINA-S.PIETRO BELVEDERE-SELVATELLE-LA ROSA-PECCIOLI-SP11-SP 26-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI KM 46 DA RIPETERE 2 VOLTE<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> ENOTECA LE MELORIE VIALE ITALIA 10<br><b>Orario Ritrovo:</b> 06:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIALE ITALIA<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 11:50<br><b>Lunghezza KM:</b> 124"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
+    "orario_partenza": "09:00",
+    "km": "124",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "74_COPPA_DEL_MOBILIO_SECONDA_TAPPA_2026-10-13": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — 2ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-13<br><b>Descrizione:</b> CRONOMETRO INDIVIDUALE RISERVATA AI PRIMI 15 CLASSIFICATI DELLA FRAZIONE IN LINEA CON ACCREDITATO IL TEMPO IMPIEGATO NELLA FRAZIONE STESSA - PARTENZE OGNI 3 MINUTI\r\n\r\nPONSACCO VIA VANNI-CAPANNOLI-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-PERIGNANO-4 STRADE-ROTONDA LAVAIANO-VIA DELL'ARGINELLO-VARIANTE SR 439-LE MELORIE-VIALE EUROPA-PONSACCO VIA VANNI<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> BAR DELLA MOSTRA VIA VANNI<br><b>Orario Ritrovo:</b> 14:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Partenza:</b> 15:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 16:23<br><b>Lunghezza KM:</b> 32,800"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "BAR DELLA MOSTRA VIA VANNI",
+    "orario_partenza": "15:00",
+    "km": "32,800",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "74_COPPA_DEL_MOBILIO_CLASSIFICA_GENERALE_2026-10-13": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-12 <b>al:</b> 2026-10-13<br><b>Numero di tappe:</b> 2"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
+    "orario_partenza": "09:00",
+    "km": "124 Servizi: PRIMI 15^ CLASSIFICATI DISPUTERANNO LA PROVA A CRONOMETRO INDIVIDUALE - A QUESTI ATLETI SARA' OFFERTO IL PRANZO C/O ENOTECA LE MELORIE 2 - 74^ COPPA DEL MOBILIO - FRAZIONE A CRONOMETRO INDIVIDUALE Tipo: Semitappa Prova: 2 Data: 13/10/2026",
+    "location_str": "ENOTECA LE MELORIE VIALE ITALIA 10, PONSACCO (PI), Italia",
+    "tappe": [],
+    "lat": 43.6252,
+    "lng": 10.616
+  },
+  "6_G_P_VARIGNANA_CABLOTECH_BIOTRAINING_COPPA_DALFIUME_1952_2026-09-26": {
+    "raceid": "178995",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178995&site=strada_it",
+    "info": [
+      "6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 Strada 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 ID Gara: 178995 | <br><b>Data:</b> 26/09/2026 INFORMAZIONI GENERALI Localita: Castel San Pietro Terme Frazione Osteria Grande <br><b>Provincia:</b> BO <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> Elite e Under 23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> CHINI FRANCO Vice <br><b>Direttore di Corsa:</b> REATI ANTONIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> ASD POLISPORTIVA VILLAFONTANA <br><b>Indirizzo:</b> VIA E.DALLA VALLE 77 <br><b>CAP:</b> 40059 Citta: MEDICINA <br><b>Provincia:</b> BO <br><b>Telefono:</b> 3311706366 <br><b>Email:</b> INFO@POLISPORTIVAVILLAFONTANA.IT ISCRIZIONI <br><b>Luogo:</b> ASD Polisportiva Villafontana <br><b>Indirizzo:</b> Via Ercole dalla Valle , 77, 40059 Medicina Bo, BO <br><b>Telefono:</b> 3311706366 <br><b>Email:</b> info@polisportivavillafontana.it <br><b>Iscrizioni Dal - Al:</b> 07/08/2026 - 23/09/2026 RITROVO PROVE 1 - 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 <br><b>Prova:</b> 1 <br><b>Data:</b> 26/09/2026 <br><b>Descrizione:</b> Partenza in via Lombardia,1 circuito pianeggiante da ripetere N° 5 giri (Km 11,1),tratto in linea direzione Castel San Pietro Terme Km 12,1 ,inizio 2 circuito delle Terme N° 6 giri (Km 5,3)Liano, Gallo bolognese , Casalecchio dei Conti , via Ca' Masino , Varignana inizio circuito finale giri 4 (Km 4,2) ARRIVO Vedasi Allegati. <br><b>Luogo Ritrovo:</b> Osteria Grande di Castel San Pietro Terme <br><b>Indirizzo Ritrovo:</b> Ditta Cabloteck Via Umbria , 6 <br><b>Orario Ritrovo:</b> 09:45 <br><b>Luogo Partenza:</b> Osteria Grande D.Cabloteck Turistico sino al Km 0 <br><b>Orario Partenza:</b> 13:25 <br><b>Luogo Arrivo:</b> Varignana , via D.De' Jani <br><b>Orario Arrivo:</b> 16:50 <br><b>Luogo Verifica:</b> ore 10.15-11.45 <br><b>Punto Incontro DS:</b> ore 12:00 <br><b>Lunghezza KM:</b> 137,600 Servizi: Siamo a dichiarare che essendo arrivo in salita,la transennatura sara' Mt 100 prima e Mt 50 dopo a causa della sede stradale. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Osteria Grande di Castel San Pietro Terme",
+    "indirizzo_ritrovo": "Ditta Cabloteck Via Umbria , 6",
+    "orario_partenza": "13:25",
+    "km": "137,600 Servizi: Siamo a dichiarare che essendo arrivo in salita,la transennatura sara' Mt 100 prima e Mt 50 dopo a causa della sede stradale. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 Strada 6° G.P. VARIGNANA CABLOTECH BIOTRAINING - COPPA DALFIUME 1952 ID Gara: 178995 | Data: 26/09/2026 INFORMAZIONI GENERALI Localita: Castel San Pietro Terme Frazione Osteria Grande",
+    "location_str": "Ditta Cabloteck Via Umbria , 6, Osteria Grande di Castel San Pietro Terme, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-09-26",
+        "descrizione": "Partenza in via Lombardia,1 circuito pianeggiante da ripetere N° 5 giri (Km 11,1),tratto in linea direzione Castel San Pietro Terme Km 12,1 ,inizio 2 circuito delle Terme N° 6 giri (Km 5,3)Liano, Gallo bolognese , Casalecchio dei Conti , via Ca' Masino , Varignana inizio circuito finale giri 4 (Km 4,2) ARRIVO Vedasi Allegati.",
+        "luogo_ritrovo": "Osteria Grande di Castel San Pietro Terme",
+        "indirizzo_ritrovo": "Ditta Cabloteck Via Umbria , 6",
+        "orario_ritrovo": "09:45",
+        "luogo_partenza": "Osteria Grande D.Cabloteck Turistico sino al Km 0",
+        "orario_partenza": "13:25",
+        "luogo_arrivo": "Varignana , via D.De' Jani",
+        "orario_arrivo": "16:50",
+        "km": "137,600"
+      }
+    ],
+    "lat": 44.43118,
+    "lng": 11.52289
+  },
+  "66_COPPA_MESSAPICA_GIRO_DI_PUGLIA_2026-09-27": {
+    "raceid": "178996",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178996&site=strada_it",
+    "info": [
+      "66^ COPPA MESSAPICA - GIRO DI PUGLIA Strada 66^ COPPA MESSAPICA - GIRO DI PUGLIA ID Gara: 178996 | <br><b>Data:</b> 27/09/2026 INFORMAZIONI GENERALI Localita: CEGLIE MESSAPICA <br><b>Provincia:</b> BR <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> ELITE - UNDER 23 NAZ/INT <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> ASTEGGIANO LUCA Vice <br><b>Direttore di Corsa:</b> MESSUTI NICOLA <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> ASS. SPORT. DILETT. ORAZIO LORUSSO <br><b>Indirizzo:</b> VIA OSPEDALE VECCHIO 7 <br><b>CAP:</b> 72013 Citta: CEGLIE MESSAPICA <br><b>Provincia:</b> BR <br><b>Telefono:</b> 3333349199 <br><b>Email:</b> DIREZIONE@COPPAMESSAPICA.IT ISCRIZIONI <br><b>Luogo:</b> ASD ORAZIO LORUSSO <br><b>Indirizzo:</b> VIA OSPEDALE VECCHIO , 7, 7013 CEGLIE MESSAPICA, <br><b>Telefono:</b> 3333349199 <br><b>Email:</b> direzione@coppamessapica.it Sito: coppamessapica.it <br><b>Iscrizioni Dal - Al:</b> 11/07/2026 - 23/09/2026 RITROVO PROVE 1 - 66^ COPPA MESSAPICA - GIRO DI PUGLIA <br><b>Prova:</b> 1 <br><b>Data:</b> 27/09/2026 <br><b>Descrizione:</b> PARTENZA E ARRIVO A CEGLIE MESSAPICA (BR). N.5 giri di un percorso urbano ed extra urbano, con continui saliscendi; seguiti da n. 5 giri del percorso urbano \"dei Trulli e delle grotte\", percorso nervoso che non consente distrazioni. Gli ultimi 800 mt. che si percorrono 10 volte si passa da mt. 268 a mt. 312 dell'arrivo. <br><b>Luogo Ritrovo:</b> CEGLIE MESSAPICA <br><b>Indirizzo Ritrovo:</b> C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA <br><b>Orario Ritrovo:</b> 13:00 <br><b>Luogo Partenza:</b> CEGLIE MESSAPICA <br><b>Orario Partenza:</b> 14:00 <br><b>Luogo Arrivo:</b> CEGLIE MESSAPICA <br><b>Orario Arrivo:</b> 14:45 <br><b>Luogo Verifica:</b> C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA <br><b>Punto Incontro DS:</b> C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA <br><b>Lunghezza KM:</b> 146,40 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "CEGLIE MESSAPICA",
+    "indirizzo_ritrovo": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA",
+    "orario_partenza": "14:00",
+    "km": "146,40 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 66^ COPPA MESSAPICA - GIRO DI PUGLIA Strada 66^ COPPA MESSAPICA - GIRO DI PUGLIA ID Gara: 178996 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: CEGLIE MESSAPICA",
+    "location_str": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA, CEGLIE MESSAPICA, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-09-27",
+        "descrizione": "PARTENZA E ARRIVO A CEGLIE MESSAPICA (BR). N.5 giri di un percorso urbano ed extra urbano, con continui saliscendi; seguiti da n. 5 giri del percorso urbano \"dei Trulli e delle grotte\", percorso nervoso che non consente distrazioni. Gli ultimi 800 mt. che si percorrono 10 volte si passa da mt. 268 a mt. 312 dell'arrivo.",
+        "luogo_ritrovo": "CEGLIE MESSAPICA",
+        "indirizzo_ritrovo": "C/O COMUNE CEGLIE MESSAPICA - VIA ENRICO DE NICOLA",
+        "orario_ritrovo": "13:00",
+        "luogo_partenza": "CEGLIE MESSAPICA",
+        "orario_partenza": "14:00",
+        "luogo_arrivo": "CEGLIE MESSAPICA",
+        "orario_arrivo": "14:45",
+        "km": "146,40"
+      }
+    ],
+    "lat": 40.64604,
+    "lng": 17.51706
+  },
+  "6_GIRO_DEI_PRATI_STABILI_2026-09-12": {
+    "raceid": "181635",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181635&site=strada_it",
+    "info": [
+      "6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | <br><b>Data:</b> 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO <br><b>Provincia:</b> MN <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER 23 <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> CAMPIONATO REGIONALE <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> TREBBI DAVIDE Vice <br><b>Direttore di Corsa:</b> PEZZINI SIMONE <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> U.C. CERESARESE A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA TRIFOGLIO 2 <br><b>CAP:</b> 46040 Citta: CERESARA <br><b>Provincia:</b> MN <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> SIMONEPEZZINI@TISCALI.IT ISCRIZIONI <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> simonepezzini@tiscali.it RITROVO GIURIA Dettagli Giuria Ruolo Nome Giudice PRESIDENTE DI GIURIA MENINI ILENIA COMPONENTE BERTAZZONI ALESSANDRO GIUDICE DI ARRIVO MARIANI STEFANO COMPONENTE IN MOTO REGOLO VALENTINA PROVE 1 - 6° GIRO DEI PRATI STABILI <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 12/09/2026 <br><b>Descrizione:</b> MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO VOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - LOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI 8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE <br><b>Luogo Ritrovo:</b> MARMIROLO <br><b>Indirizzo Ritrovo:</b> AREA FESTE - VIA DI VITTORIO <br><b>Orario Ritrovo:</b> 12:00 <br><b>Luogo Partenza:</b> MARMIROLO - VIA DI VITTORIO <br><b>Orario Partenza:</b> 14:30 <br><b>Luogo Arrivo:</b> MARMIROLO - VIA DI VITTORIO <br><b>Luogo Verifica:</b> 12:00 - 13:10 <br><b>Punto Incontro DS:</b> 13:15 PRESSO AREA FESTE <br><b>Lunghezza KM:</b> 137 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "MARMIROLO",
+    "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
+    "orario_partenza": "14:30",
+    "km": "137 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° GIRO DEI PRATI STABILI Strada 6° GIRO DEI PRATI STABILI ID Gara: 181635 | Data: 12/09/2026 INFORMAZIONI GENERALI Localita: MARMIROLO",
+    "location_str": "AREA FESTE - VIA DI VITTORIO, MARMIROLO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-12",
+        "descrizione": "MARMIROLO - ROVERBELLA - CIRCUITO DI 3,9 KM DA RIPETERE 2 VOLTE - LOC. POZZOLO \r\nVOLTA MANTOVANA - CIRCUITO VOLTA MANTOVANA - CAVIANA DI 13,9 KM DA RIPETERE 2 VOLTE - \r\nLOC. FERRI - LOC. TORRE DI GOITO - GOITO - LOC. MAGLIO - SOAVE DI PORTO MANTOVANO - CIRCUITO DI \r\n8,5 KM DA RIPETERE 3 VOLTE - MARMIROLO - CIRCUITO DI 7,2 KM DA RIPETERE 4 VOLTE",
+        "luogo_ritrovo": "MARMIROLO",
+        "indirizzo_ritrovo": "AREA FESTE - VIA DI VITTORIO",
+        "orario_ritrovo": "12:00",
+        "luogo_partenza": "MARMIROLO - VIA DI VITTORIO",
+        "orario_partenza": "14:30",
+        "luogo_arrivo": "MARMIROLO - VIA DI VITTORIO",
+        "orario_arrivo": null,
+        "km": "137"
+      }
+    ],
+    "lat": 45.22056,
+    "lng": 10.75639
+  },
+  "72_G_P_CICLISTICO_DI_SANNAZZARO_2026-09-23": {
+    "raceid": "181708",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181708&site=strada_it",
+    "info": [
+      "72° G.P. CICLISTICO DI SANNAZZARO Strada 72° G.P. CICLISTICO DI SANNAZZARO ID Gara: 181708 | <br><b>Data:</b> 23/09/2026 INFORMAZIONI GENERALI Localita: SANNAZZARO DEI BURGUNDI <br><b>Provincia:</b> PV <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 <br><b>Categorie Ammesse:</b> ELITE/UNDER23 <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> ZINI ALFREDO Vice <br><b>Direttore di Corsa:</b> CASALI MARCO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> G.C. SANNAZZARO A.S.DILETTANTISTICA <br><b>Indirizzo:</b> VIA FORNACI N° 36 <br><b>CAP:</b> 27039 Citta: SANNAZZARO DE' BURGONDI <br><b>Provincia:</b> PV <br><b>Telefono:</b> 0382996500 <br><b>Email:</b> GCSANNAZZARO@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> K SPORT <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3343191741 3357892503 <br><b>Email:</b> GCSANNAZZARO@GMAIL.COM <br><b>Iscrizioni Dal - Al:</b> 15/08/2026 - 21/09/2026 RITROVO GIURIA Dettagli Giuria Ruolo Nome Giudice PRESIDENTE DI GIURIA MAGGIONI ERNESTO COMPONENTE ALBERTI GIUSEPPE GIUDICE DI ARRIVO BALZI DANIELE COMPONENTE IN MOTO SAROLLI PATRIZIA PROVE 1 - 72° G.P. CICLISTICO DI SANNAZZARO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 23/09/2026 <br><b>Descrizione:</b> VIALE ITALIA - PIAZZA CESARE BATTISTI - VIA MAZZINI - VIALE LORETO - VIA MATTEI - VIA F.LLI ROSSELLI (S.S. 756) - VIA GRAMSCI(S.P. 193 BIS) - BIVIO PAVIA - VIA PAVIA - VIALE ITALIA <br><b>Note:</b> PER INFORMAZIONI: 3343191741 3357892503 MAIL: GCSANNAZZARO@GMAIL.COM <br><b>Luogo Ritrovo:</b> SANNAZZARO DE BURGONDI <br><b>Indirizzo Ritrovo:</b> PIAZZALE MAINOLI - ZONA FESTE <br><b>Orario Ritrovo:</b> 12:00 <br><b>Luogo Partenza:</b> VIALE ITALIA - SANNAZZARO DE BURGONDI <br><b>Orario Partenza:</b> 14:00 <br><b>Luogo Arrivo:</b> VIALE ITALIA - SANNAZZARO DE BURGONDI <br><b>Orario Arrivo:</b> 17:00 <br><b>Luogo Verifica:</b> DALLE 12:00 ALLE 13:00 <br><b>Punto Incontro DS:</b> ORE 13:00 PIAZZALE MAINOLI /PALCO PRO LOCO <br><b>Lunghezza KM:</b> 137 Servizi: LA PRO LOCO E' OPERATIVA PER I PAST PER GLI AVENTI DIRITTO DALLE ORE 10.30 CON DISTRIBUZIONE BUONI PASTO DALLE ORE 8:00 PRESENTAZIONE SQUADRE ORE 13:15 PRESSO PALCO PRO LOCO IN PIAZZALE MAINOLI LE PREMIAZIONI SARANNO EFFETTUATE IN PIAZZA PALESTRO AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "SANNAZZARO DE BURGONDI",
+    "indirizzo_ritrovo": "PIAZZALE MAINOLI - ZONA FESTE",
+    "orario_partenza": "14:00",
+    "km": "137 Servizi: LA PRO LOCO E' OPERATIVA PER I PAST PER GLI AVENTI DIRITTO DALLE ORE 10.30 CON DISTRIBUZIONE BUONI PASTO DALLE ORE 8:00 PRESENTAZIONE SQUADRE ORE 13:15 PRESSO PALCO PRO LOCO IN PIAZZALE MAINOLI LE PREMIAZIONI SARANNO EFFETTUATE IN PIAZZA PALESTRO AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 72° G.P. CICLISTICO DI SANNAZZARO Strada 72° G.P. CICLISTICO DI SANNAZZARO ID Gara: 181708 | Data: 23/09/2026 INFORMAZIONI GENERALI Localita: SANNAZZARO DEI BURGUNDI",
+    "location_str": "PIAZZALE MAINOLI - ZONA FESTE, SANNAZZARO DE BURGONDI, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-23",
+        "descrizione": "VIALE ITALIA - PIAZZA CESARE BATTISTI - VIA MAZZINI - VIALE LORETO - VIA MATTEI - VIA F.LLI ROSSELLI (S.S. 756) - VIA GRAMSCI(S.P. 193 BIS) -  BIVIO PAVIA - VIA PAVIA - VIALE ITALIA",
+        "luogo_ritrovo": "SANNAZZARO DE BURGONDI",
+        "indirizzo_ritrovo": "PIAZZALE MAINOLI - ZONA FESTE",
+        "orario_ritrovo": "12:00",
+        "luogo_partenza": "VIALE ITALIA - SANNAZZARO DE BURGONDI",
+        "orario_partenza": "14:00",
+        "luogo_arrivo": "VIALE ITALIA - SANNAZZARO DE BURGONDI",
+        "orario_arrivo": "17:00",
+        "km": "137"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "79_GIRO_DEL_PIAVE_MEMORIAL_PIERGIORGIO_SBARDELLA_E_MARIO_DE_BON_2026-10-10": {
+    "raceid": "180202",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180202&site=strada_it",
+    "info": [
+      "79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" Strada 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" ID Gara: 180202 | <br><b>Data:</b> 10/10/2026 INFORMAZIONI GENERALI Localita: Belluno <br><b>Provincia:</b> BL <br><b>Categoria:</b> (1.12) Elite e Under 23 <br><b>Categorie Ammesse:</b> ELITE - UN23 <br><b>Categoria Geografica:</b> Nazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> ELITE - UNDER 23 NAZ/INT <br><b>Direttore di Corsa:</b> BONATO GIANPIETRO Vice <br><b>Direttore di Corsa:</b> PITTARELLO ERCOLE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> ORGANIZZAZIONE EVENTI SPORTIVI A.S.D. <br><b>Indirizzo:</b> VIA DANIELE MANIN 32 <br><b>CAP:</b> 36061 Citta: BASSANO DEL GRAPPA <br><b>Provincia:</b> VI <br><b>Telefono:</b> 3396754034 <br><b>Email:</b> oes.eventisportivi@gmail.com ISCRIZIONI <br><b>Luogo:</b> OES.Organizzazione Eventi Sportivi ASD <br><b>Indirizzo:</b> Via Daniele Manin 32, 36061 BASSANO DEL GRAPPA, VI <br><b>Telefono:</b> 339 6754034 <br><b>Email:</b> oes.eventisportivi@gmail.com RITROVO PROVE 1 - 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA e MARIO DE BON\" <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 10/10/2026 <br><b>Descrizione:</b> Belluno, Piazza dei Martiri, Via Roma, Via Sarajevo, Via Monte Grappa, Sinistra Piave, Ponte San Felice, Via Vittorio Veneto, GALLERIA, lunga 250 mt., strada Valle del Mis, Sospirolo centro GPM 3° cat. Via Rosolin, Canale del Mis, Certosa, Ponte Mis, Via Dolomiti, Casoni, Via Agordo, Via Gregorio, Ponte degli Alpini, Via Caduti, Viale Cadore, Statale Alemagna, Soverzere, Via Gallina, Via Provagna, Longarono, Ponte Fiume Piave, Giovanni Umberti, SS51 Alemagna, Via Termine, Ospitale di Cadore, Perarolo di Cadore, Località Fontanelle, Salita Cavallera vecchia uscita GPM 2° Cat. SS51 Via Belluno, Sogttocastello, Pieve di Cadore, Calalzo di Cadore, Via Roma Domegge, Lozzo, SS52 Carnica, SDtr.Dolomiti, Via Dell'Angelo, Passo Sant. Antonio al cartello GPM 1° cat. Padola, Dosoledo, Santo Stefano di Cadore, San Pietro, inizio salita VAL VISDENDE. <br><b>Luogo Ritrovo:</b> BELLUNO <br><b>Indirizzo Ritrovo:</b> MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini <br><b>Orario Ritrovo:</b> 09:30 <br><b>Luogo Partenza:</b> BELLUNO piazza dei Martiri <br><b>Orario Partenza:</b> 13:00 <br><b>Luogo Arrivo:</b> VAL VISDENDE COMELICO <br><b>Orario Arrivo:</b> 16:00 <br><b>Luogo Verifica:</b> MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini dalle ore 09,30 alle 10,30 del 10.10.2026 <br><b>Punto Incontro DS:</b> MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini ORE 11,00 <br><b>Lunghezza KM:</b> 137 Servizi: LA presentazione delle squadre, presso i Giardini fronte Municipio di Belluno inizio ore 11,45.= Logistica all' arrivo , della Giuria. ecc, ANTIDOPING. presso Locanda ALPINA Val Visdende a 500 mt. prima dell'arrivo. Le auto e moto al seguito della corsa devono passare sotto l'arrivo e fermarsi più avanti aspettando il fine corsa, questo perchè non è possibile effettuare la deviazione per manzanza di spazio o deviazioni. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "BELLUNO",
+    "indirizzo_ritrovo": "MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini",
+    "orario_partenza": "13:00",
+    "km": "137 Servizi: LA presentazione delle squadre, presso i Giardini fronte Municipio di Belluno inizio ore 11,45.= Logistica all' arrivo , della Giuria. ecc, ANTIDOPING. presso Locanda ALPINA Val Visdende a 500 mt. prima dell'arrivo. Le auto e moto al seguito della corsa devono passare sotto l'arrivo e fermarsi più avanti aspettando il fine corsa, questo perchè non è possibile effettuare la deviazione per manzanza di spazio o deviazioni. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" Strada 79° GIRO DEL PIAVE - \"MEMORIAL PIERGIORGIO SBARDELLA E MARIO DE BON\" ID Gara: 180202 | Data: 10/10/2026 INFORMAZIONI GENERALI Localita: Belluno",
+    "location_str": "MUNICIPIO DI BELLUNO Piazza Duomo Vicino Giardini, BELLUNO, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-10",
+        "descrizione": "Belluno, Piazza dei Martiri, Via Roma, Via Sarajevo, Via Monte Grappa, Sinistra Piave, Ponte San Felice, Via Vittorio Veneto, GALLERIA, lunga 250 mt., strada Valle del Mis, Sospirolo centro GPM 3° cat. Via Rosolin, Canale del Mis, Certosa, Ponte Mis, Via Dolomiti, Casoni, Via Agordo, Via Gregorio, Ponte degli Alpini, Via Caduti, Viale Cadore, Statale Alemagna, Soverzere, Via Gallina, Via Provagna, Longarono, Ponte Fiume Piave, Giovanni Umberti, SS51 Alemagna, Via Termine, Ospitale di Cadore, Perarolo di Cadore, Località Fontanelle, Salita Cavallera vecchia uscita GPM 2° Cat. SS51 Via Belluno, Sogttocastello, Pieve di Cadore, Calalzo di Cadore, Via Roma Domegge, Lozzo, SS52 Carnica, SDtr.Dolomiti, Via Dell'Angelo, Passo Sant. Antonio al cartello GPM 1° cat. Padola, Dosoledo, Santo Stefano di Cadore, San Pietro, inizio salita VAL VISDENDE.",
+        "luogo_ritrovo": "BELLUNO",
+        "indirizzo_ritrovo": "MUNICIPIO DI BELLUNO  Piazza Duomo Vicino Giardini",
+        "orario_ritrovo": "09:30",
+        "luogo_partenza": "BELLUNO  piazza  dei Martiri",
+        "orario_partenza": "13:00",
+        "luogo_arrivo": "VAL VISDENDE    COMELICO",
+        "orario_arrivo": "16:00",
+        "km": "137"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "CRONOSCALATA_VALLE_D_AGRO_CAMPIONATO_REGIONALE_CRONOSCALATA_2026-10-04": {
+    "raceid": "182723",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182723&site=strada_it",
+    "info": [
+      "CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA Strada CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA ID Gara: 182723 | <br><b>Data:</b> 04/10/2026 INFORMAZIONI GENERALI Localita: Santa Teresa di Riva <br><b>Provincia:</b> ME <br><b>Categoria:</b> Crono Multicategoria da Elite m/f <br><b>Categorie Ammesse:</b> CATEGORIE FCI DA ALLIEVI M/F A ELITE M/F <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Cronometro <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> PARTENOPE GIUSEPPE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> A.S.D. CITTA' DI SANTA TERESA <br><b>Indirizzo:</b> VIA LEONARDO SCIASCIA, 54 <br><b>CAP:</b> 98028 Citta: SANTA TERESA DI RIVA <br><b>Provincia:</b> ME <br><b>Telefono:</b> 3408056441 <br><b>Email:</b> marco.gugliotta91@gmail.com ISCRIZIONI <br><b>Luogo:</b> 3/10 Gatto nero - 4/10 piazza stracuzzi S. Teresa <br><b>Indirizzo:</b> 3480615898, 98028 Santa Teresa di Riva , ME <br><b>Telefono:</b> 3480615898 <br><b>Email:</b> cittasantateresabiketeam@gmail.com <br><b>Iscrizioni Dal - Al:</b> - 01/10/2026 RITROVO PROVE 1 - CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA <br><b>Prova:</b> 1 <br><b>Data:</b> 04/10/2026 <br><b>Descrizione:</b> Cronoscalata di 8.1 km e con circa 500m di dislivello. Il tracciato di sviluppa nella seguente: i primi 2 km con pendenza leggera passando attraverso la frazione di San Francesco di Paola, arrivando a Rina le pendenza cominciano a farsi impegnative fino ad arrivare a Savoca, dove, usciti dal paese, si affronterà l'ultimo chilometro e mezzo sulle rampe in doppia cifra della frazione Cucco Santa Domenica. <br><b>Luogo Ritrovo:</b> Santa Teresa di Riva <br><b>Indirizzo Ritrovo:</b> Piazza Antonio Stracuzzi (Piazza Mercato) <br><b>Orario Ritrovo:</b> 07:00 <br><b>Luogo Partenza:</b> Santa Teresa di Riva <br><b>Orario Partenza:</b> 09:00 <br><b>Luogo Arrivo:</b> Savoca <br><b>Luogo Verifica:</b> Il Gatto Nero e Piazza Antonio Stracuzzi - Santa Teresa di Riva <br><b>Lunghezza KM:</b> 8.1 Servizi: Assistenza sanitaria con 2 ambulanze (1 alla partenza ed 1 all'arrivo). Pacco gara. Pasta party finale. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Santa Teresa di Riva",
+    "indirizzo_ritrovo": "Piazza Antonio Stracuzzi (Piazza Mercato)",
+    "orario_partenza": "09:00",
+    "km": "8.1 Servizi: Assistenza sanitaria con 2 ambulanze (1 alla partenza ed 1 all'arrivo). Pacco gara. Pasta party finale. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA Strada CRONOSCALATA VALLE D'AGRO' CAMPIONATO REGIONALE CRONOSCALATA ID Gara: 182723 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: Santa Teresa di Riva",
+    "location_str": "Piazza Antonio Stracuzzi (Piazza Mercato), Santa Teresa di Riva, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": null,
+        "data": "2026-10-04",
+        "descrizione": "Cronoscalata di 8.1 km e con circa 500m di dislivello. Il tracciato di sviluppa nella seguente: i primi 2 km con pendenza leggera passando attraverso la frazione di San Francesco di Paola, arrivando a Rina le pendenza cominciano a farsi impegnative fino ad arrivare a Savoca, dove, usciti dal paese, si affronterà l'ultimo chilometro e mezzo sulle rampe in doppia cifra della frazione Cucco Santa Domenica.",
+        "luogo_ritrovo": "Santa Teresa di Riva",
+        "indirizzo_ritrovo": "Piazza Antonio Stracuzzi (Piazza Mercato)",
+        "orario_ritrovo": "07:00",
+        "luogo_partenza": "Santa Teresa di Riva",
+        "orario_partenza": "09:00",
+        "luogo_arrivo": "Savoca",
+        "orario_arrivo": null,
+        "km": "8.1"
+      }
+    ],
+    "lat": 37.94696,
+    "lng": 15.36769
+  },
+  "75_TR_MADONNA_DEL_ROSARIO_49_TR_MARIO_ZANCHI_22_TR_FOSCO_FRASCONI_2026-10-05": {
+    "raceid": "182755",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182755&site=strada_it",
+    "info": [
+      "75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI Strada 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI ID Gara: 182755 | <br><b>Data:</b> 05/10/2026 INFORMAZIONI GENERALI Localita: CASTIGLION FIBOCCHI (AR) <br><b>Provincia:</b> AR <br><b>Categoria:</b> (1.19) Elite s.c. e Under 23 Tipo di Accesso: Libera <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> In linea \\ strada Tipo di Percorso: In linea <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> CASUCCI GIAMPAOLO Vice <br><b>Direttore di Corsa:</b> CARNASCIALI FABRIZIO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> POLISPORT MERCATALE 2000 ASS. SPORT. DILETTANTISTICA <br><b>Indirizzo:</b> VIA VERDI 43 <br><b>CAP:</b> 52021 Citta: BUCINE <br><b>Provincia:</b> AR <br><b>Telefono:</b> 3395495494 <br><b>Email:</b> POLISPORT2000@ALICE.IT ISCRIZIONI <br><b>Luogo:</b> Asd Polisport mercatale <br><b>Indirizzo:</b> VIA VERDI 23, 52021 Bucine, AR <br><b>Telefono:</b> 3395495494 <br><b>Email:</b> polisport2000@alice.it <br><b>Iscrizioni Dal - Al:</b> 15/07/2026 - 03/10/2026 RITROVO PROVE 1 - 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 05/10/2026 <br><b>Descrizione:</b> CAST.FIBOCCHI-MELICIANO-CASTELLUCCIO-MONTIONE-SAL LEO-PONTICINO-LATERINA-CAST.FIBOCCHI-MELICIANO-LA DOCCIA-C.FIBOCCHI-SAN GIUSTINO -LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA-CAST. FIBOCCHI-SAN GIUSTINO- LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA- indi CAST. FIBOCCHI. MELICIANO .LA DOCCIA CAST. FIBOCCHI (sa ripetere 5 volte) <br><b>Luogo Ritrovo:</b> CAST. FIBOCCHI <br><b>Indirizzo Ritrovo:</b> CIRCOLO ACLI <br><b>Orario Ritrovo:</b> 09:00 <br><b>Luogo Partenza:</b> CASTIGLION FIBOCCHI <br><b>Orario Partenza:</b> 14:00 <br><b>Luogo Arrivo:</b> CASTIGLION FIBOCCHI <br><b>Orario Arrivo:</b> 17:30 <br><b>Luogo Verifica:</b> 9:00 <br><b>Punto Incontro DS:</b> ORE 13:00 <br><b>Lunghezza KM:</b> 141,500 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "CAST. FIBOCCHI",
+    "indirizzo_ritrovo": "CIRCOLO ACLI",
+    "orario_partenza": "14:00",
+    "km": "141,500 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI Strada 75° TR. MADONNA DEL ROSARIO - 49° TR. MARIO ZANCHI - 22° TR. FOSCO FRASCONI ID Gara: 182755 | Data: 05/10/2026 INFORMAZIONI GENERALI Localita: CASTIGLION FIBOCCHI (AR)",
+    "location_str": "CIRCOLO ACLI, CAST. FIBOCCHI, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-05",
+        "descrizione": "CAST.FIBOCCHI-MELICIANO-CASTELLUCCIO-MONTIONE-SAL LEO-PONTICINO-LATERINA-CAST.FIBOCCHI-MELICIANO-LA DOCCIA-C.FIBOCCHI-SAN GIUSTINO -LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA-CAST. FIBOCCHI-SAN GIUSTINO- LATERINA- CAST. FIBOCCHI-MELICIANO- LA DOCCIA- indi CAST. FIBOCCHI. MELICIANO .LA DOCCIA CAST. FIBOCCHI (sa ripetere 5 volte)",
+        "luogo_ritrovo": "CAST. FIBOCCHI",
+        "indirizzo_ritrovo": "CIRCOLO ACLI",
+        "orario_ritrovo": "09:00",
+        "luogo_partenza": "CASTIGLION FIBOCCHI",
+        "orario_partenza": "14:00",
+        "luogo_arrivo": "CASTIGLION FIBOCCHI",
+        "orario_arrivo": "17:30",
+        "km": "141,500"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_PRIMA_TAPPA_2026-09-10": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 1ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-10<br><b>Descrizione:</b> Percorso Viale Camerini a Piazzola sul Brenta di un Km.\r\nCRONOMETRO INDIVIDUALE, con partenze da nei pressi dell'incrocio Via Silvestro, fino arrivo davanti al Municipio.  PARTENZE ogni 0,30 secondi<br><b>Luogo Ritrovo:</b> PIAZZOLA SUL BRENTA<br><b>Indirizzo Ritrovo:</b> Sala Consigliare<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Partenza:</b> 16:00<br><b>Luogo Arrivo:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 1,00"
+    ],
+    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
+    "indirizzo_ritrovo": "Sala Consigliare",
+    "orario_partenza": "16:00",
+    "km": "1,00",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 2ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-11<br><b>Descrizione:</b> Recoaro Terme, Fonti Principali, TRASFERIMENTO  al Km. 0 Recoaro Via Roma, SP246, Viale dei Lanifici, Rotonda Viale Europa Valdagno, Galleria, Via Enrico Fermi, Via Ortigara, Vatiante Cornedo, Galleria, Via Verlando, Priabona, GPM 3°cat,  Via Centro, Via Boro, SP124 Via Pace, Via Milano, Via Venezia, Malo, Via Colleoni, Via Della Serenissima, Via Dell’Olmo, Via Valdastico, Thiene, Via Costo, Via Dante, Via Roma, Caltrano, Camisino, GPM 2°cat, Via Togarelli, TV, Breganze, Via Turra, Colceresa, Intergiro, Via Nogaredo, Marostica, Via Rubbi, Via Salarola, Valle San Floriano, Rosina, GPM 1°cat, S.Michele, 248 Viale Vicenza, Strada Marchesane, Nove, TV , Via Bassanese, Pozzoleone, San Pietro in Gù, Via stradone, Via Monte Grappa, Via Degli eroi, Quinto Vicentino, sotto l’arrivo di Km. 110,350.= 3 giro del Circuito: Via Degli Eroi, Via Marconi, Via Quintarello, Villaggio Montegrappa, Via Po, Marola, Via Valprotto, Valprotto, Via degli Eroi, fine 1° giro di Km. 12, altri due Giri, per Arrivar<br><b>Luogo Ritrovo:</b> RECOARO TERME<br><b>Indirizzo Ritrovo:</b> FONTI PRINCIPALI<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> RECOARO TERME  Via Roma municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> QUINTO VICENTINO  fronte municipio<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 146,050"
+    ],
+    "luogo_ritrovo": "RECOARO TERME",
+    "indirizzo_ritrovo": "FONTI PRINCIPALI",
+    "orario_partenza": "13:00",
+    "km": "146,050",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_TERZA_TAPPA_2026-09-12": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 3ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> SOSSANO, Via Roma,  Giro locale di Km. 24,400, Sossano Via Roma, Via Seccalegno, Orgiano centro, Via Ronego, Via Albaria centro, Via Bagnolo, Tangenziale Ovest, SP 17, Almisano, SP22, Via Crosara, Via Mazzini, Via Olmo, Via Roma Roncà; circuito:  Via Nuova, Via Costa, SP17, Via Moschina, Via Pergola, rotonda 2° uscita Via S. Margherita, Via Alpone, Via Binelli Via Roma Roncà TV.; Via Nuova, Via Costa, Via Pergola, Monteforte, Via Alpone, Via S. Lorenzo, Via Ruffo  Soave centro, INTERGIRO, Via S. Matteo, Castelletto, Via Del Lavoro, Via Porto, Via Adige, Perzacco, Via Cavallina, Via Toscana, Zevio, Ponte Perez, Via Diga, Via Busolo, rotonde dritti, Via Vanghetto,  VAGO, si prende a Sx La str Provinciale, Via Copernico, sempre dritti fino a S. MARTINO B.A. centro, a Dx. Via Verdi, Via Ferazze, Via Falcona Comune di VERONA, a Dx. Via Vegron, a Sx. Legnago, a Dx. Via Ponte Florio,  a Dx. Contrada Campagnola, a dx. Contrada Moranda, a sx. Contrada Nascente, Contrada Gazzego, Contrada Vendri<br><b>Luogo Ritrovo:</b> SOSSANO<br><b>Indirizzo Ritrovo:</b> Via Roma   Municipio<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> SOSSANO Via Roma fronte municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> Piazzale Chiesa BOSCO CHIESANUOVA<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 141,370"
+    ],
+    "luogo_ritrovo": "SOSSANO",
+    "indirizzo_ritrovo": "Via Roma   Municipio",
+    "orario_partenza": "13:00",
+    "km": "141,370",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_CLASSIFICA_GENERALE_2026-09-12": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-10 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 3"
+    ],
+    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
+    "indirizzo_ritrovo": "Sala Consigliare",
+    "orario_partenza": "16:00",
+    "km": "1,00 Servizi: PRESENTAZIONE SQUADRE: parcheggio riservato fronte Villa Camerini alle ore 14,30.= All'arrivo si chiede l'autorizzazione che le ammiraglie delle Società che seguono i corridori, di passare sotto l'arrivo per la deviazione. Eventuale controllo antidopoing, presso la sede dei Vigili Urbani di Piazzola sul Brenta 2 - 34° GIRO DEL VENETO 2026 - 2° TAPPA RECOARO TERME - QUINTO VICENTINO Tipo: Tappa Prova: 2 Data: 11/09/2026",
+    "location_str": "Sala Consigliare, PIAZZOLA SUL BRENTA, Italia",
+    "tappe": [],
+    "lat": 45.54272,
+    "lng": 11.76895
   }
 }

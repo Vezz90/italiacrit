@@ -20054,5 +20054,260 @@
     "tappe": [],
     "lat": 45.81561,
     "lng": 13.12465
+  },
+  "50_GIRO_DELLA_LUNIGIANA_PRIMA_TAPPA_2026-09-09": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — 1ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-09<br><b>Descrizione:</b> LA SPEZIA: PIAZZA EUROPA (TRASFERIMENTO DI 1 Km) - LA SPEZIA: VIALE AMENDOLA (PARTENZA UFFICIALE) - FOCE - RICCO' DEL GOLFO - SAN BENEDETTO - BEVERINO - PADIVARMA - BORGHETTO VARA - CARRODANO - BRACCHETTO - SESTO GODANO - BRUGNATO - BORGHETTO VARA - CARRODANO - BRACCHETTO - SESTO GODANO - BRUGNATO - BORGHETTO VARA - BEVERINO - PADIVARMA - GRAVEGLIA - CALICE AL CORNOVIGLIO - PODENZANA - FOLLO - BOLANO - CEPARANA - AULLA - CAPRIGLIOLA - SANTO STEFANO MAGRA - PONZANO MAGRA - SARZANA - CANIPAROLA - FOSDINOVO<br><b>Luogo Ritrovo:</b> LA SPEZIA (SP)<br><b>Indirizzo Ritrovo:</b> PIAZZA EUROPA<br><b>Orario Ritrovo:</b> 13:00<br><b>Luogo Partenza:</b> PIAZZA EUROPA - LA SPEZIA (UFFICIOSA)<br><b>Orario Partenza:</b> 14:25<br><b>Luogo Arrivo:</b> VIA ROMA - FOSDINOVO<br><b>Orario Arrivo:</b> 17:10<br><b>Lunghezza KM:</b> 98,00"
+    ],
+    "luogo_ritrovo": "LA SPEZIA (SP)",
+    "indirizzo_ritrovo": "PIAZZA EUROPA",
+    "orario_partenza": "14:25",
+    "km": "98,00",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "50_GIRO_DELLA_LUNIGIANA_SECONDA_TAPPA_2026-09-10": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — 2ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-10<br><b>Descrizione:</b> PORTOFINO: PIAZZA MARTIRI DELL'OLIVETTA (TRASFERIMENTO DI 8,8 KM) - RAPALLO: VIA MILITE IGNOTO (PARTENZA UFFICIALE) - SANTA MARGHERITA LIGURE - SAN LORENZO COSTA - CAMOGLI - RECCO - AVEGNO - SALTO - USCIO - TRIBOGNA - MONTANARI - MOCONOSI - GATTORNA - NEIRONE - LUMARZO - FERRIERE - BARGAGLI - ROLLA - DAVAGNA - SOTTOCOLLE - SCOFFERA - LACCIO - DAVAGNA - LUMARZO - BOASI PAESE - FERRIERE - NEIRONE - TRIBOGNA - MOCONOSI - CATTORNA - PEZZONASCA - CICAGNA - ORERO - SAN COLOMBANO - CALVARI - MAGGI - LEIVI - BOCCO - SAMPIEDICANNE - CHIAVARI (ARRIVO)<br><b>Luogo Ritrovo:</b> PORTOFINO (GE)<br><b>Indirizzo Ritrovo:</b> PIAZZA MARTIRI DELL'OLIVETTA<br><b>Orario Ritrovo:</b> 09:00<br><b>Luogo Partenza:</b> PIAZZA MARTIRI DELL'OLIVETTA-PORTOFINO (UFFICIOSA)<br><b>Orario Partenza:</b> 10:15<br><b>Luogo Arrivo:</b> VIA ARATA - CHIAVARI<br><b>Orario Arrivo:</b> 13:00<br><b>Lunghezza KM:</b> 93,4"
+    ],
+    "luogo_ritrovo": "PORTOFINO (GE)",
+    "indirizzo_ritrovo": "PIAZZA MARTIRI DELL'OLIVETTA",
+    "orario_partenza": "10:15",
+    "km": "93,4",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "50_GIRO_DELLA_LUNIGIANA_TERZA_TAPPA_2026-09-11": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — 3ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-09-11<br><b>Descrizione:</b> FIVIZZANO: PIAZZA MEDICEA (PARTENZA UFFIOSA) - TRASFERIMENTO DI 10 KM - SERRICIOLO (PARTENZA UFFICIALE) - AULLA - SERRICCIOLO - PALLERONE - PONTE DI ALBIANO MAGRA - S.STEFANO MAGRA - SARZANA - LUNI - CARRARA - MASSA - MONTIGNOSO - MARINA DI MASSA<br><b>Luogo Ritrovo:</b> FIVIZZANO (MS)<br><b>Indirizzo Ritrovo:</b> PIAZZA MEDICEA<br><b>Orario Ritrovo:</b> 08:00<br><b>Luogo Partenza:</b> PIAZZA MEDICEA - FIVIZZANO (UFFICIOSA)<br><b>Orario Partenza:</b> 09:15<br><b>Luogo Arrivo:</b> VIALE VESPUCCI - MARINA DI MASSA<br><b>Orario Arrivo:</b> 11:00<br><b>Lunghezza KM:</b> 54,6"
+    ],
+    "luogo_ritrovo": "FIVIZZANO (MS)",
+    "indirizzo_ritrovo": "PIAZZA MEDICEA",
+    "orario_partenza": "09:15",
+    "km": "54,6",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "50_GIRO_DELLA_LUNIGIANA_QUARTA_TAPPA_2026-09-11": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — 4ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-09-11<br><b>Descrizione:</b> BOTTAGNA: PISTA CICLABILE BALDASSINI (TRASFERIMENTO DI 8 Km) BATTIFOLLO: SS1 AURELIA SUD (PARTENZA UFFICIALE) - SARZANA - SANTO STEFANO MAGRA - PONZANO MAGRA - AULLA - CAPRIGLIOLA - BOLANO - CEPARANA - FOLLO - VEZZANO LIGURE - PIANO DI VALERIANO - FOLLO - VALDURASCA - LA SPEZIA - SAN ROCCO - LA FOCE - BIASSA - RIOMAGGIORE (CINQUE TERRE) - ZORZA - GROPPO DI RIOMAGGIORE<br><b>Luogo Ritrovo:</b> BOTTAGNA (SP)<br><b>Indirizzo Ritrovo:</b> PISTA CICLABILE DINO BALDASSINI<br><b>Orario Ritrovo:</b> 14:00<br><b>Luogo Partenza:</b> PISTA CICLABILE D. BALDASSINI-BOTTAGNA (UFFICIOSA)<br><b>Orario Partenza:</b> 15:20<br><b>Luogo Arrivo:</b> VIA LITORANEA - RIOMAGGIORE (LOC. GROPPO)<br><b>Orario Arrivo:</b> 16:50<br><b>Lunghezza KM:</b> 45,8"
+    ],
+    "luogo_ritrovo": "BOTTAGNA (SP)",
+    "indirizzo_ritrovo": "PISTA CICLABILE DINO BALDASSINI",
+    "orario_partenza": "15:20",
+    "km": "45,8",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "50_GIRO_DELLA_LUNIGIANA_QUINTA_TAPPA_2026-09-12": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — 5ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> CASTELNUOVO MAGRA: VIA ROMA (TRASFERIMENTO DI 6,1 Km) - COLOMBIERA: SS1 AURELIA (PARTENZA UFFICIALE) - LUNI - LUNI MARE - AMEGLIA - SARZANA - CASTELNUOVO MAGRA - COLOMBIERA - LUNI - CASANO DI LUNI - ORTONOVO PAESE - FONTIA - FOSSOLA - TURIGLIANO - MARINA DI CARRARA - MARINELLA DI SARZANA - AMEGLIA - FIUMARETTA - LA FERRARA - MONTEMARCELLO - LERICI - AMEGLIA - LA SERRA - PUGLIOLA - ROMITO MAGRA - SENATO - LUNI MARE - DOGANA DI LUNI  - CASANO DI LUNI - ORTONOVO PAESE - FONTIA - FOSSOLA - TURIGLIANO - LUNI - CASANO DI LUNI - ORTONOVO PAESE - FONTIA - FOSSOLA - TURIGLIANO - LUNI  - CASANO DI LUNI (ARRIVO)<br><b>Luogo Ritrovo:</b> CASTELNUOVO MAGRA (SP)<br><b>Indirizzo Ritrovo:</b> VIA ROMA<br><b>Orario Ritrovo:</b> 08:00<br><b>Luogo Partenza:</b> VIA ROMA - CASTELNUOVO MAGRA (UFFICIOSA)<br><b>Orario Partenza:</b> 09:20<br><b>Luogo Arrivo:</b> VIA CASTAGNO - CASANO DI LUNI<br><b>Orario Arrivo:</b> 12:30<br><b>Lunghezza KM:</b> 108,1"
+    ],
+    "luogo_ritrovo": "CASTELNUOVO MAGRA (SP)",
+    "indirizzo_ritrovo": "VIA ROMA",
+    "orario_partenza": "09:20",
+    "km": "108,1",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "50_GIRO_DELLA_LUNIGIANA_CLASSIFICA_GENERALE_2026-09-12": {
+    "raceid": "178688",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=178688&site=strada_it",
+    "info": [
+      "50° GIRO DELLA LUNIGIANA — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-09 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 5"
+    ],
+    "luogo_ritrovo": "LA SPEZIA (SP)",
+    "indirizzo_ritrovo": "PIAZZA EUROPA",
+    "orario_partenza": "14:25",
+    "km": "98,00 Servizi: DIRETTORE DI CORSA: A136605 RE DEPAOLINI MARIA CAROLINA 2 - 2^ TAPPA: PORTOFINO - CHIAVARI Tipo: Tappa Prova: 2 Data: 10/09/2026",
+    "location_str": "PIAZZA EUROPA, LA SPEZIA (SP), Italia",
+    "tappe": [],
+    "lat": 44.10768,
+    "lng": 9.82856
+  },
+  "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_PRIMA_TAPPA_2026-09-26": {
+    "raceid": "182296",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182296&site=strada_it",
+    "info": [
+      "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501 — 1ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-26<br><b>Descrizione:</b> Cat. ESORDIENTI 1º ANNO M/F\r\nPartenza centro sportivo, via Girola, via Santuario (andata/ritorno), via Valisetta, via della Noce, via Girola, via Anzani, via Santuario, Via Girola, Arrivo.<br><b>Luogo Ritrovo:</b> Alzate Brianza<br><b>Indirizzo Ritrovo:</b> Cpa Alzate Brianza  via Girola 187<br><b>Orario Ritrovo:</b> 07:00<br><b>Luogo Partenza:</b> Alzate Brianza<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> Alzate Brianza<br><b>Lunghezza KM:</b> 4.2"
+    ],
+    "luogo_ritrovo": "Alzate Brianza",
+    "indirizzo_ritrovo": "Cpa Alzate Brianza  via Girola 187",
+    "orario_partenza": "09:00",
+    "km": "4.2",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_SECONDA_TAPPA_2026-09-26": {
+    "raceid": "182296",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182296&site=strada_it",
+    "info": [
+      "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501 — 2ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-26<br><b>Descrizione:</b> Cat. ESORDIENTI 2º ANNO M/F\r\nPartenza centro sportivo, via Girola, via Santuario (andata/ritorno), via Valisetta, via della Noce, via Girola, via Anzani, via Santuario, Via Girola, Arrivo.<br><b>Luogo Ritrovo:</b> Alzate Brianza<br><b>Indirizzo Ritrovo:</b> Cpa Alzate Brianza  via Girola 187<br><b>Orario Ritrovo:</b> 07:00<br><b>Luogo Partenza:</b> Alzate Brianza<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> Alzate Brianza<br><b>Lunghezza KM:</b> 4.2"
+    ],
+    "luogo_ritrovo": "Alzate Brianza",
+    "indirizzo_ritrovo": "Cpa Alzate Brianza  via Girola 187",
+    "orario_partenza": "09:00",
+    "km": "4.2",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_TERZA_TAPPA_2026-09-26": {
+    "raceid": "182296",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182296&site=strada_it",
+    "info": [
+      "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501 — 3ª tappa<br><b>Tipo:</b> Corsa singola<br><b>Data:</b> 2026-09-26<br><b>Descrizione:</b> Cat. ALLIEVI M/F\r\nPartenza centro sportivo, via Girola, via Santuario (andata/ritorno), via Valisetta, via della Noce, via Girola, via Anzani, via Santuario, Via Girola, Arrivo<br><b>Luogo Ritrovo:</b> Alzate Brianza<br><b>Indirizzo Ritrovo:</b> Cpa Alzate Brianza via Girola 187<br><b>Orario Ritrovo:</b> 12:45<br><b>Luogo Partenza:</b> Alzate Brianza<br><b>Orario Partenza:</b> 14:45<br><b>Luogo Arrivo:</b> Alzate Brianza<br><b>Lunghezza KM:</b> 4.2"
+    ],
+    "luogo_ritrovo": "Alzate Brianza",
+    "indirizzo_ritrovo": "Cpa Alzate Brianza via Girola 187",
+    "orario_partenza": "14:45",
+    "km": "4.2",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_CLASSIFICA_GENERALE_2026-09-26": {
+    "raceid": "182296",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182296&site=strada_it",
+    "info": [
+      "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501 — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-26 <b>al:</b> 2026-09-26<br><b>Numero di tappe:</b> 3"
+    ],
+    "luogo_ritrovo": "Alzate Brianza",
+    "indirizzo_ritrovo": "Cpa Alzate Brianza via Girola 187",
+    "orario_partenza": "09:00",
+    "km": "4.2 Servizi: Servizio di assistenza sanitaria a cura di LARIOSOCCORSO ERBA. Servizio di gruppo whatsapp dedicato alla manifestazione. Contattare la società organizzatrice per essere inseriti. (solo DS e Staff, no genitori supporter etc..) 2 - Esordienti 2º anno M/F - 4ª CRONOMETRO BANCA BCC BRIANZA E LAGHI - LA CARICA DEI 501 Tipo: Corsa singola Prova: 2 Data: 26/09/2026",
+    "location_str": "Cpa Alzate Brianza via Girola 187, Alzate Brianza, Italia",
+    "tappe": [],
+    "lat": 45.76096,
+    "lng": 9.18463
+  },
+  "74_COPPA_DEL_MOBILIO_PRIMA_TAPPA_2026-10-12": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — 1ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-12<br><b>Descrizione:</b> PONSACCO VIALE ITALIA TRASFERIMENTO KM 2,200 FINO A VIA VANNI (PART.UFFICIALE)\r\nPONSACCO VIA VANNI-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI DI KM 8 DA RIPETERE 4 VOLTE, INDI PONSACCO-VARIANTE SR 439-LA CAPANNINA-S.PIETRO BELVEDERE-SELVATELLE-LA ROSA-PECCIOLI-SP11-SP 26-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-LE MELORIE-PONSACCO V.LE EUROPA-PONSACCO VIA VANNI KM 46 DA RIPETERE 2 VOLTE<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> ENOTECA LE MELORIE VIALE ITALIA 10<br><b>Orario Ritrovo:</b> 06:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIALE ITALIA<br><b>Orario Partenza:</b> 09:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 11:50<br><b>Lunghezza KM:</b> 124"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
+    "orario_partenza": "09:00",
+    "km": "124",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "74_COPPA_DEL_MOBILIO_SECONDA_TAPPA_2026-10-13": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — 2ª tappa<br><b>Tipo:</b> Semitappa<br><b>Data:</b> 2026-10-13<br><b>Descrizione:</b> CRONOMETRO INDIVIDUALE RISERVATA AI PRIMI 15 CLASSIFICATI DELLA FRAZIONE IN LINEA CON ACCREDITATO IL TEMPO IMPIEGATO NELLA FRAZIONE STESSA - PARTENZE OGNI 3 MINUTI\r\n\r\nPONSACCO VIA VANNI-CAPANNOLI-S.PIETRO BELVEDERE-LA CAPANNINA-VARIANTE SR 439-PERIGNANO-4 STRADE-ROTONDA LAVAIANO-VIA DELL'ARGINELLO-VARIANTE SR 439-LE MELORIE-VIALE EUROPA-PONSACCO VIA VANNI<br><b>Luogo Ritrovo:</b> PONSACCO (PI)<br><b>Indirizzo Ritrovo:</b> BAR DELLA MOSTRA VIA VANNI<br><b>Orario Ritrovo:</b> 14:00<br><b>Luogo Partenza:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Partenza:</b> 15:00<br><b>Luogo Arrivo:</b> PONSACCO (PI) VIA VANNI<br><b>Orario Arrivo:</b> 16:23<br><b>Lunghezza KM:</b> 32,800"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "BAR DELLA MOSTRA VIA VANNI",
+    "orario_partenza": "15:00",
+    "km": "32,800",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "74_COPPA_DEL_MOBILIO_CLASSIFICA_GENERALE_2026-10-13": {
+    "raceid": "179002",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179002&site=strada_it",
+    "info": [
+      "74^  COPPA DEL MOBILIO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-10-12 <b>al:</b> 2026-10-13<br><b>Numero di tappe:</b> 2"
+    ],
+    "luogo_ritrovo": "PONSACCO (PI)",
+    "indirizzo_ritrovo": "ENOTECA LE MELORIE VIALE ITALIA 10",
+    "orario_partenza": "09:00",
+    "km": "124 Servizi: PRIMI 15^ CLASSIFICATI DISPUTERANNO LA PROVA A CRONOMETRO INDIVIDUALE - A QUESTI ATLETI SARA' OFFERTO IL PRANZO C/O ENOTECA LE MELORIE 2 - 74^ COPPA DEL MOBILIO - FRAZIONE A CRONOMETRO INDIVIDUALE Tipo: Semitappa Prova: 2 Data: 13/10/2026",
+    "location_str": "ENOTECA LE MELORIE VIALE ITALIA 10, PONSACCO (PI), Italia",
+    "tappe": [],
+    "lat": 43.6252,
+    "lng": 10.616
+  },
+  "34_GIRO_DEL_VENETO_PRIMA_TAPPA_2026-09-10": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 1ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-10<br><b>Descrizione:</b> Percorso Viale Camerini a Piazzola sul Brenta di un Km.\r\nCRONOMETRO INDIVIDUALE, con partenze da nei pressi dell'incrocio Via Silvestro, fino arrivo davanti al Municipio.  PARTENZE ogni 0,30 secondi<br><b>Luogo Ritrovo:</b> PIAZZOLA SUL BRENTA<br><b>Indirizzo Ritrovo:</b> Sala Consigliare<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Partenza:</b> 16:00<br><b>Luogo Arrivo:</b> Via Camerini a Piazzola sul Brenta<br><b>Orario Arrivo:</b> 17:30<br><b>Lunghezza KM:</b> 1,00"
+    ],
+    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
+    "indirizzo_ritrovo": "Sala Consigliare",
+    "orario_partenza": "16:00",
+    "km": "1,00",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 2ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-11<br><b>Descrizione:</b> Recoaro Terme, Fonti Principali, TRASFERIMENTO  al Km. 0 Recoaro Via Roma, SP246, Viale dei Lanifici, Rotonda Viale Europa Valdagno, Galleria, Via Enrico Fermi, Via Ortigara, Vatiante Cornedo, Galleria, Via Verlando, Priabona, GPM 3°cat,  Via Centro, Via Boro, SP124 Via Pace, Via Milano, Via Venezia, Malo, Via Colleoni, Via Della Serenissima, Via Dell’Olmo, Via Valdastico, Thiene, Via Costo, Via Dante, Via Roma, Caltrano, Camisino, GPM 2°cat, Via Togarelli, TV, Breganze, Via Turra, Colceresa, Intergiro, Via Nogaredo, Marostica, Via Rubbi, Via Salarola, Valle San Floriano, Rosina, GPM 1°cat, S.Michele, 248 Viale Vicenza, Strada Marchesane, Nove, TV , Via Bassanese, Pozzoleone, San Pietro in Gù, Via stradone, Via Monte Grappa, Via Degli eroi, Quinto Vicentino, sotto l’arrivo di Km. 110,350.= 3 giro del Circuito: Via Degli Eroi, Via Marconi, Via Quintarello, Villaggio Montegrappa, Via Po, Marola, Via Valprotto, Valprotto, Via degli Eroi, fine 1° giro di Km. 12, altri due Giri, per Arrivar<br><b>Luogo Ritrovo:</b> RECOARO TERME<br><b>Indirizzo Ritrovo:</b> FONTI PRINCIPALI<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> RECOARO TERME  Via Roma municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> QUINTO VICENTINO  fronte municipio<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 146,050"
+    ],
+    "luogo_ritrovo": "RECOARO TERME",
+    "indirizzo_ritrovo": "FONTI PRINCIPALI",
+    "orario_partenza": "13:00",
+    "km": "146,050",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_TERZA_TAPPA_2026-09-12": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — 3ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-12<br><b>Descrizione:</b> SOSSANO, Via Roma,  Giro locale di Km. 24,400, Sossano Via Roma, Via Seccalegno, Orgiano centro, Via Ronego, Via Albaria centro, Via Bagnolo, Tangenziale Ovest, SP 17, Almisano, SP22, Via Crosara, Via Mazzini, Via Olmo, Via Roma Roncà; circuito:  Via Nuova, Via Costa, SP17, Via Moschina, Via Pergola, rotonda 2° uscita Via S. Margherita, Via Alpone, Via Binelli Via Roma Roncà TV.; Via Nuova, Via Costa, Via Pergola, Monteforte, Via Alpone, Via S. Lorenzo, Via Ruffo  Soave centro, INTERGIRO, Via S. Matteo, Castelletto, Via Del Lavoro, Via Porto, Via Adige, Perzacco, Via Cavallina, Via Toscana, Zevio, Ponte Perez, Via Diga, Via Busolo, rotonde dritti, Via Vanghetto,  VAGO, si prende a Sx La str Provinciale, Via Copernico, sempre dritti fino a S. MARTINO B.A. centro, a Dx. Via Verdi, Via Ferazze, Via Falcona Comune di VERONA, a Dx. Via Vegron, a Sx. Legnago, a Dx. Via Ponte Florio,  a Dx. Contrada Campagnola, a dx. Contrada Moranda, a sx. Contrada Nascente, Contrada Gazzego, Contrada Vendri<br><b>Luogo Ritrovo:</b> SOSSANO<br><b>Indirizzo Ritrovo:</b> Via Roma   Municipio<br><b>Orario Ritrovo:</b> 10:00<br><b>Luogo Partenza:</b> SOSSANO Via Roma fronte municipio<br><b>Orario Partenza:</b> 13:00<br><b>Luogo Arrivo:</b> Piazzale Chiesa BOSCO CHIESANUOVA<br><b>Orario Arrivo:</b> 16:30<br><b>Lunghezza KM:</b> 141,370"
+    ],
+    "luogo_ritrovo": "SOSSANO",
+    "indirizzo_ritrovo": "Via Roma   Municipio",
+    "orario_partenza": "13:00",
+    "km": "141,370",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "34_GIRO_DEL_VENETO_CLASSIFICA_GENERALE_2026-09-12": {
+    "raceid": "180200",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180200&site=strada_it",
+    "info": [
+      "34° GIRO DEL VENETO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-10 <b>al:</b> 2026-09-12<br><b>Numero di tappe:</b> 3"
+    ],
+    "luogo_ritrovo": "PIAZZOLA SUL BRENTA",
+    "indirizzo_ritrovo": "Sala Consigliare",
+    "orario_partenza": "16:00",
+    "km": "1,00 Servizi: PRESENTAZIONE SQUADRE: parcheggio riservato fronte Villa Camerini alle ore 14,30.= All'arrivo si chiede l'autorizzazione che le ammiraglie delle Società che seguono i corridori, di passare sotto l'arrivo per la deviazione. Eventuale controllo antidopoing, presso la sede dei Vigili Urbani di Piazzola sul Brenta 2 - 34° GIRO DEL VENETO 2026 - 2° TAPPA RECOARO TERME - QUINTO VICENTINO Tipo: Tappa Prova: 2 Data: 11/09/2026",
+    "location_str": "Sala Consigliare, PIAZZOLA SUL BRENTA, Italia",
+    "tappe": [],
+    "lat": 45.54272,
+    "lng": 11.76895
   }
 }
