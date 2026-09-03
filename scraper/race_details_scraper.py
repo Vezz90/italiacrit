@@ -11,6 +11,40 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 import unicodedata
 
+# Stessa identica funzione di calendar_scraper.py (id gara di base) — usata
+# qui per costruire gli id delle tappe divise ESATTAMENTE come li costruisce
+# in autonomia fci_complete_scraper.py per i risultati (gara_id =
+# slug(nome_gara_come_appare_nella_pagina_risultati) + "_" + data + "_" +
+# cat_code, vedi quel file riga ~416) — i due scraper non si parlano fra
+# loro, quindi l'UNICO modo perché "62° Giro ... - 1a tappa" (calendario)
+# e "62 GIRO ... PRIMA TAPPA" (risultati FCI) puntino allo stesso id è
+# generare il nome delle tappe divise usando la STESSA convenzione italiana
+# a parole (PRIMA/SECONDA/TERZA TAPPA, CLASSIFICA GENERALE) che FCI usa
+# nativamente sulla pagina risultati — non un nostro schema inventato
+# (_TAPPA1/_TAPPA2), che non avrebbe mai potuto combaciare. Bug reale,
+# segnalato dal vivo dall'utente: la tappa 1 del Giro del FVG (2026-09-03)
+# aveva già i risultati veri sotto l'id FCI nativo, ma la card 'gara di
+# oggi' del sito continuava a mostrarla come 'senza risultati' perché
+# cercava un id (_TAPPA1) che i risultati non usano.
+def _slug(s):
+    if not s: return "SCONOSCIUTO"
+    s = unicodedata.normalize("NFD", str(s).lower())
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = re.sub(r"[^a-z0-9]", " ", s)
+    return re.sub(r"\s+", "_", s).strip("_").upper() or "SCONOSCIUTO"
+
+# Ordinali italiani in lettere, stesso stile usato da FCI sulla pagina
+# risultati ("PRIMA TAPPA", "SECONDA TAPPA", ... "CLASSIFICA GENERALE" per
+# l'ultima) — coprono fino a 20 tappe, più che sufficiente per qualunque
+# giro a tappe del calendario FCI.
+_ORDINALI_IT = [
+    'PRIMA', 'SECONDA', 'TERZA', 'QUARTA', 'QUINTA', 'SESTA', 'SETTIMA', 'OTTAVA', 'NONA', 'DECIMA',
+    'UNDICESIMA', 'DODICESIMA', 'TREDICESIMA', 'QUATTORDICESIMA', 'QUINDICESIMA',
+    'SEDICESIMA', 'DICIASSETTESIMA', 'DICIOTTESIMA', 'DICIANNOVESIMA', 'VENTESIMA',
+]
+def _ordinale_it(n):
+    return _ORDINALI_IT[n - 1] if 1 <= n <= len(_ORDINALI_IT) else f"{n}ª"
+
 # Timeout globale: interrompe lo script dopo MAX_SECONDS secondi
 # così non può bloccare il job GitHub Actions oltre il necessario
 MAX_SECONDS = 18 * 60  # 18 minuti
@@ -340,10 +374,16 @@ def split_stage_races(calendar, details_map):
                          'campionato_italiano', 'regione', 'categoria', 'luogo')}
 
         for stage in tappe:
-            stage_id = f"{cal_id}_TAPPA{stage['numero']}"
+            # Stesso nome/id che assegnerebbe fci_complete_scraper.py quando
+            # troverà i risultati di questa tappa — vedi commento su _slug()
+            # in cima al file. NON usare un trattino o un numero (es. "-  1a
+            # tappa"): deve essere la stessa sequenza di parole, altrimenti
+            # lo slug non combacia più.
+            stage_nome = f"{c['nome']} {_ordinale_it(stage['numero'])} TAPPA"
+            stage_id = f"{_slug(stage_nome)}_{stage['data']}"
             out_calendar.append({
                 'id': stage_id,
-                'nome': f"{c['nome']} - {stage['numero']}ª tappa",
+                'nome': stage_nome,
                 'data': stage['data'],
                 **base_fields,
             })
@@ -363,11 +403,12 @@ def split_stage_races(calendar, details_map):
                 'lat': None, 'lng': None, 'location_str': None,
             }
 
-        gc_id = f"{cal_id}_GC"
+        gc_nome = f"{c['nome']} CLASSIFICA GENERALE"
+        gc_id = f"{_slug(gc_nome)}_{tappe[-1]['data']}"
         ultima_data = tappe[-1]['data']
         out_calendar.append({
             'id': gc_id,
-            'nome': f"{c['nome']} - Classifica Generale",
+            'nome': gc_nome,
             'data': ultima_data,
             **{**base_fields, 'moltiplicatore': (base_fields.get('moltiplicatore') or 1) + 1},
         })
