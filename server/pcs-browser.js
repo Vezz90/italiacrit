@@ -222,4 +222,51 @@ async function launchPcsBrowser() {
   return { browser, context, page };
 }
 
-module.exports = { launchPcsBrowser, gotoPcsPage, humanDelay, isChallengePage, sleep, withTimeout };
+/**
+ * Stessa identica configurazione browser di launchPcsBrowser() (Brave se
+ * disponibile, user-agent realistico, navigator.webdriver nascosto), ma
+ * generica: visita `warmupUrl` per i cookie di sessione invece di essere
+ * fissa su PCS — usata da script per altri siti (es.
+ * firstcycling-photo-import.js) che hanno la stessa identica protezione
+ * anti-bot Cloudflare Turnstile ma un dominio diverso.
+ */
+async function launchBrowser(warmupUrl) {
+  const { chromium } = require('playwright');
+
+  let browser;
+  const bravePath = findBravePath();
+  if (bravePath) {
+    try {
+      browser = await chromium.launch({
+        executablePath: bravePath,
+        headless: false,
+        args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
+      });
+    } catch { /* fallback sotto */ }
+  }
+  if (!browser) {
+    try { browser = await chromium.launch({ channel: 'chrome', headless: false, args: ['--disable-blink-features=AutomationControlled'] }); }
+    catch { browser = await chromium.launch({ headless: false }); }
+  }
+
+  const context = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    locale: 'it-IT',
+    viewport: { width: 1280, height: 800 },
+  });
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+  });
+
+  const page = await context.newPage();
+
+  if (warmupUrl) {
+    await page.goto(warmupUrl, { waitUntil: 'networkidle', timeout: 30000 })
+      .then(() => sleep(2500))
+      .catch(() => sleep(2000));
+  }
+
+  return { browser, context, page };
+}
+
+module.exports = { launchPcsBrowser, launchBrowser, gotoPcsPage, humanDelay, isChallengePage, sleep, withTimeout };
