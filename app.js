@@ -20787,12 +20787,75 @@ async function renderGara(gara_id) {
       <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
       <div class="card" style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="color:var(--text-muted);font-size:.88rem">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
-        ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          ${adminEditBtn('gara', primaryGaraId)}
+          ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
+          ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
+          ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+        </div>
+      </div>
+      <div class="card" style="padding:20px 24px;margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <strong style="font-size:1rem">Foto & Video</strong>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(primaryGaraId)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>` : ''}
+            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(primaryGaraId)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>` : ''}
+          </div>
+        </div>
+        <div id="pre-race-media-grid" style="color:var(--text-muted);font-size:.85rem">Caricamento…</div>
       </div>
       ${_preRaceDetailsHtml}
       </div>
       `);
     window._currentGaraId = primaryGaraId;
+
+    // Foto/video già presenti (es. una diretta collegata prima che ci
+    // fossero risultati) — caricati DOPO il primo paint per non bloccare
+    // la pagina su una fetch di rete. Stesso set di funzioni globali già
+    // usate nella vista gara "normale" (adminEditVideo/adminDeleteVideo/
+    // openVideoModal ecc.), solo con un grid minimale invece dell'hero
+    // layout completo — qui basta poter vedere/gestire quello che c'è.
+    (async () => {
+      const wrap = document.getElementById('pre-race-media-grid');
+      if (!wrap) return;
+      const _isAdminPre = authUser()?.role === 'admin';
+      const _preAdminBtnStyle = 'padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+      const vids = (globalData.videos || {})[primaryGaraId] || (globalData.videos || {})[gara_id] || [];
+      let photos = [];
+      try {
+        const r = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(primaryGaraId)}`);
+        const d = await r.json();
+        photos = d.photos || [];
+      } catch {}
+      if (!vids.length && !photos.length) {
+        wrap.innerHTML = 'Nessuna foto o video ancora. Sii il primo a condividerne uno!';
+        return;
+      }
+      const videoCards = vids.map((v, i) => {
+        if (!isPlayableVideo(v.url) && videoKind(v.url) !== 'link') return '';
+        const k = videoKind(v.url);
+        const click = k === 'yt'   ? `window.openVideoModal('${ytId(v.url)}','${esc((v.title||'').replace(/'/g,"\\'"))}')`
+                    : k === 'fb'   ? `window.openFacebookVideoModal('${esc(v.url)}','${esc((v.title||'').replace(/'/g,"\\'"))}')`
+                    : k === 'file' ? `window.openVideoFileModal('${esc(v.url)}','${esc((v.title||'').replace(/'/g,"\\'"))}')`
+                    : `window.open('${esc(v.url)}','_blank')`;
+        const thumb = k === 'yt' ? `<img src="https://img.youtube.com/vi/${ytId(v.url)}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`
+                    : k === 'fb' ? fbThumbHtml(v.url)
+                    : k === 'file' ? `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`
+                    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
+        return `<div style="position:relative;width:160px;height:96px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0" onclick="${click}">
+          ${thumb}
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)">▶</div>
+          ${v.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 DIRETTA</div>` : ''}
+          ${_isAdminPre ? `<div style="position:absolute;top:4px;left:4px;display:flex;gap:3px">
+            <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${i},${!!v.is_live})" style="${_preAdminBtnStyle};background:#2563eb">✏️</button>
+            <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${i})" style="${_preAdminBtnStyle};background:#dc2626">🗑</button>
+          </div>` : ''}
+        </div>`;
+      }).join('');
+      const photoCards = photos.map(p => `<img src="${esc(PHOTOS_BASE + '/photos/' + p.filename)}" alt="" loading="lazy" style="width:96px;height:96px;object-fit:cover;border-radius:6px;flex-shrink:0"/>`).join('');
+      wrap.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">${videoCards}${photoCards}</div>`;
+    })();
+
     return;
     } // fine else (gara futura)
   } // fine if (!results.length && calEntry)
