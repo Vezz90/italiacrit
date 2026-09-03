@@ -448,7 +448,19 @@ def scrape_all_details():
             existing = details_map.get(cal_id, {})
 
             # ── Scarica dettagli se non ci sono ancora ───────────
-            if not existing.get("info"):
+            # Migrazione una tantum: i record già in cache PRIMA di
+            # extract_stages() (commit 86810a1c) non hanno mai la chiave
+            # 'tappe', quindi split_stage_races() non li dividerebbe mai —
+            # anche se sono davvero gare a tappe — perché qui si salta il
+            # ri-fetch quando "info" è già presente. Forza un ri-fetch (una
+            # volta sola: dopo, 'tappe' esiste sempre, anche se vuota per le
+            # gare in linea) SOLO per le gare non ancora passate, per non
+            # rifare inutilmente ~1400 richieste su gare già concluse (e per
+            # non toccare gare a tappe passate già scrapate come documento
+            # unico, come deciso con l'utente il 2026-09-03).
+            today_iso = time.strftime('%Y-%m-%d')
+            needs_migration = 'tappe' not in existing and c_date >= today_iso
+            if not existing.get("info") or needs_migration:
                 fci_list = fci_races_map.get(c_date, [])
                 best_match_id = None
                 for (f_norm, f_id, f_nome) in fci_list:
