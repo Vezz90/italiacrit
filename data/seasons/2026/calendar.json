@@ -9552,66 +9552,6 @@
     "luogo": "ORZINUOVI"
   },
   {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03_TAPPA1",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA - 1ª tappa",
-    "data": "2026-09-03",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03_TAPPA2",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA - 2ª tappa",
-    "data": "2026-09-04",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03_TAPPA3",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA - 3ª tappa",
-    "data": "2026-09-05",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03_TAPPA4",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA - 4ª tappa",
-    "data": "2026-09-06",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03_GC",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA - Classifica Generale",
-    "data": "2026-09-06",
-    "tipo": "internazionale",
-    "moltiplicatore": 5,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
     "id": "50_GIRO_DELLA_LUNIGIANA_2026-09-09_TAPPA1",
     "nome": "50° GIRO DELLA LUNIGIANA - 1ª tappa",
     "data": "2026-09-09",
@@ -9790,30 +9730,6 @@
     "regione": "TOSCANA",
     "categoria": "Juniores",
     "luogo": "CERRETO GUIDI (FI)"
-  },
-  {
-    "id": "28_TROFEO_SAN_ROCCO_2026-09-06_TAPPA1",
-    "nome": "28° TROFEO SAN ROCCO - 1ª tappa",
-    "data": "2026-09-06",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Juniores",
-    "luogo": "FABBRICA DI PECCIOLI"
-  },
-  {
-    "id": "28_TROFEO_SAN_ROCCO_2026-09-06_GC",
-    "nome": "28° TROFEO SAN ROCCO - Classifica Generale",
-    "data": "2026-09-06",
-    "tipo": "nazionale",
-    "moltiplicatore": 4,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Juniores",
-    "luogo": "FABBRICA DI PECCIOLI"
   },
   {
     "id": "48_GIRO_NAZIONALE_DEL_VALDARNO_2026-09-07_TAPPA1",
@@ -19786,5 +19702,29 @@
     "regione": "PIEMONTE",
     "categoria": "Donne Allieve",
     "luogo": "BOGOGNO NO"
+  },
+  {
+    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03",
+    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA",
+    "data": "2026-09-03",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "FRIULI VENEZIA GIULIA",
+    "categoria": "Elite e Under 23 a  tappe",
+    "luogo": "VARIE LOCALITA'"
+  },
+  {
+    "id": "28_TROFEO_SAN_ROCCO_2026-09-06",
+    "nome": "28° TROFEO SAN ROCCO",
+    "data": "2026-09-06",
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "TOSCANA",
+    "categoria": "Juniores",
+    "luogo": "FABBRICA DI PECCIOLI"
   }
 ]
