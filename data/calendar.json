@@ -15564,18 +15564,6 @@
         "luogo": "ZOLA PREDOSA (BO)"
     },
     {
-        "id": "TIPO_PISTA_2026-09-04",
-        "nome": "TIPO PISTA",
-        "data": "2026-09-04",
-        "tipo": "regionale",
-        "moltiplicatore": 1,
-        "campionato_regionale": false,
-        "campionato_italiano": false,
-        "regione": "EMILIA ROMAGNA",
-        "categoria": "TIPO PISTA PIU' CATEGORIE",
-        "luogo": "MISANO ADRIATICO"
-    },
-    {
         "id": "SCONOSCIUTO_2026-09-05",
         "nome": "-",
         "data": "2026-09-05",
