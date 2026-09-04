@@ -25448,6 +25448,27 @@ async function renderRisultati() {
       // entrare nella pagina gara (che ha già Aggiungi risultati/Da foto
       // ordine d'arrivo/Aggiungi Video per chiunque sia loggato).
       if (race._pending) {
+        // Una diretta può essere collegata prima ancora che arrivino i
+        // risultati (esattamente il caso segnalato dall'utente: Giro FVG
+        // 2ª tappa) — senza questo la card "di oggi" non dava alcun segnale
+        // che ci fosse un video da guardare, solo "risultati non disponibili".
+        const pendingVideo = ((globalData.videos || {})[race.id] || [])[0] || null;
+        const pendingVKind = pendingVideo ? videoKind(pendingVideo.url) : null;
+        const pendingHasVideoTile = pendingVKind === 'yt' || pendingVKind === 'file' || pendingVKind === 'fb';
+        const pendingVClick = pendingHasVideoTile
+          ? (pendingVKind === 'yt'   ? `window.openVideoModal('${ytId(pendingVideo.url)}','${esc((pendingVideo.title||'').replace(/'/g,"\\'"))}')`
+           : pendingVKind === 'fb'   ? `window.openFacebookVideoModal('${esc(pendingVideo.url)}','${esc((pendingVideo.title||'').replace(/'/g,"\\'"))}')`
+           : `window.openVideoFileModal('${esc(pendingVideo.url)}','${esc((pendingVideo.title||'').replace(/'/g,"\\'"))}')`)
+          : '';
+        const pendingVideoHtml = pendingHasVideoTile ? `
+          <div class="ris-card-video-thumb" style="margin-bottom:12px" onclick="${pendingVClick}">
+            ${pendingVKind === 'yt' ? `<img src="https://img.youtube.com/vi/${ytId(pendingVideo.url)}/hqdefault.jpg" alt="${esc(pendingVideo.title||'Video')}" loading="lazy"/>`
+              : pendingVKind === 'fb' ? fbThumbHtml(pendingVideo.url)
+              : `<video src="${esc(pendingVideo.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
+            <div class="ris-video-play">&#9658;</div>
+            ${pendingVideo.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 DIRETTA</div>` : ''}
+            ${pendingVideo.channel ? `<div class="ris-video-channel">${esc(pendingVideo.channel)}</div>` : ''}
+          </div>` : '';
         return `
         <div class="hero-band ris-card">
           <div class="ris-card-body">
@@ -25459,6 +25480,7 @@ async function renderRisultati() {
               ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
             </div>
             <div class="hero-divider" style="margin-bottom:12px;"></div>
+            ${pendingVideoHtml}
             <div style="color:var(--text-muted);font-size:.85rem;margin-bottom:14px">${race._categoriaLabel ? esc(race._categoriaLabel) + ' — ' : ''}Risultati non ancora disponibili. Sei in gara o hai una foto dell'ordine d'arrivo?</div>
             <a href="/gara/${esc(race.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;display:block">VAI ALLA GARA &rarr;</a>
           </div>
