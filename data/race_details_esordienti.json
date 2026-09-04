@@ -4414,5 +4414,35 @@
     ],
     "lat": 45.10475,
     "lng": 7.48082
+  },
+  "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11": {
+    "raceid": "181819",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181819&site=strada_it",
+    "info": [
+      "9° TROFEO COMUNE DI MARCARIA Strada 9° TROFEO COMUNE DI MARCARIA ID Gara: 181819 | <br><b>Data:</b> 11/10/2026 INFORMAZIONI GENERALI Localita: MARCARIA <br><b>Provincia:</b> MN <br><b>Categoria:</b> (1.30) Esordienti 1°/2° anno <br><b>Categorie Ammesse:</b> ESORDIENTI GARA UNICA LIMITATA A 120 ISCRITTI <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> PEZZINI SIMONE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> U.C. CERESARESE A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA TRIFOGLIO 2 <br><b>CAP:</b> 46040 Citta: CERESARA <br><b>Provincia:</b> MN <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> SIMONEPEZZINI@TISCALI.IT ISCRIZIONI <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> simonepezzini@tiscali.it RITROVO PROVE 1 - 9° TROFEO COMUNE DI MARCARIA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 11/10/2026 <br><b>Descrizione:</b> CIRCUITO DI 2000 METRI DA RIPETERE 15 VOLTE <br><b>Luogo Ritrovo:</b> MARCARIA <br><b>Indirizzo Ritrovo:</b> VIA CRISPI 121 <br><b>Orario Ritrovo:</b> 12:30 <br><b>Luogo Partenza:</b> MARCARIA - VIA CRISPI <br><b>Orario Partenza:</b> 16:15 <br><b>Luogo Verifica:</b> 12:30 - 14:10 <br><b>Punto Incontro DS:</b> 14:15 BIBLIOTECA COMUNALE <br><b>Lunghezza KM:</b> 30 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "MARCARIA",
+    "indirizzo_ritrovo": "VIA CRISPI 121",
+    "orario_partenza": "16:15",
+    "km": "30 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 9° TROFEO COMUNE DI MARCARIA Strada 9° TROFEO COMUNE DI MARCARIA ID Gara: 181819 | Data: 11/10/2026 INFORMAZIONI GENERALI Localita: MARCARIA",
+    "location_str": "VIA CRISPI 121, MARCARIA, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-10-11",
+        "descrizione": "CIRCUITO DI 2000 METRI DA RIPETERE 15 VOLTE",
+        "luogo_ritrovo": "MARCARIA",
+        "indirizzo_ritrovo": "VIA CRISPI 121",
+        "orario_ritrovo": "12:30",
+        "luogo_partenza": "MARCARIA - VIA CRISPI",
+        "orario_partenza": "16:15",
+        "luogo_arrivo": null,
+        "orario_arrivo": null,
+        "km": "30"
+      }
+    ],
+    "lat": 45.119,
+    "lng": 10.5338
   }
 }
