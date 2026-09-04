@@ -718,36 +718,6 @@
     "lat": null,
     "lng": null
   },
-  "TIPO_PISTA_2026-09-04": {
-    "raceid": "179456",
-    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179456&site=strada_it",
-    "info": [
-      "LA GIALLA CYCLING TIPO PISTA Strada LA GIALLA CYCLING TIPO PISTA ID Gara: 179456 | <br><b>Data:</b> 04/09/2026 INFORMAZIONI GENERALI Localita: Misano World Circuit Simoncelli <br><b>Provincia:</b> RN <br><b>Categoria:</b> TIPO PISTA PIU' CATEGORIE <br><b>Categorie Ammesse:</b> Esordienti e Allievi M/F Tipo di Accesso: Libera <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Tipo Pista <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> BUSATTO FEDERICO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> ASSOCIAZIONE SPORTIVA DILETTANTISTICA PEDALE RIMINESE <br><b>Indirizzo:</b> VIA FLAMINIA, 28 <br><b>CAP:</b> 47923 Citta: RIMINI <br><b>Provincia:</b> RN <br><b>Telefono:</b> 3331277610 <br><b>Email:</b> PEDALERIMINESE@GMAIL.COM ISCRIZIONI <br><b>Luogo:</b> tramite k-sport <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3480048380 Daniele Volpe <br><b>Email:</b> pedaleriminese@gmail.com RITROVO PROVE 1 - LA GIALLA CYCLING TIPO PISTA <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 04/09/2026 <br><b>Descrizione:</b> Circuito di metri 900 all'interno del Misano World Circuit Marco Simoncelli ES 12 giri 3 traguardi per un totale di km 10.800 DE 12 giri 3 traguardi per un totale di km 10.800 DA 16 giri 4 traguardi per un totale di km 14.400 AL 20 giri 5 traguardi per un totale di km 18 <br><b>Note:</b> Ogni atleta partente dovrà consegnare al momento della verifica licenze il modulo ASSUNZIONE DI RESPONSABILITA' scaricabile dai documenti <br><b>Luogo Ritrovo:</b> Misano World Circuit Simoncelli Misano Adriatico <br><b>Indirizzo Ritrovo:</b> Via Gilles Villeneuve, 18 (Medical Center) <br><b>Orario Ritrovo:</b> 14:00 <br><b>Luogo Partenza:</b> Misano World Circuit Simoncelli Misano Adriatico <br><b>Orario Partenza:</b> 15:30 <br><b>Luogo Arrivo:</b> Misano World Circuit Simoncelli Misano Adriatico <br><b>Orario Arrivo:</b> 17:00 <br><b>Luogo Verifica:</b> dalle 14:00 alle 15:00 <br><b>Punto Incontro DS:</b> sotto il gazebo della segreteria alle 15:00 <br><b>Lunghezza KM:</b> 0,900 Servizi: Premizioni sul palco centrale dell'Italian Bike Festival alle ore 17:30 AGGIUNGI QUESTA GARA AL CALENDARIO"
-    ],
-    "luogo_ritrovo": "Misano World Circuit Simoncelli Misano Adriatico",
-    "indirizzo_ritrovo": "Via Gilles Villeneuve, 18 (Medical Center)",
-    "orario_partenza": "15:30",
-    "km": "0,900 Servizi: Premizioni sul palco centrale dell'Italian Bike Festival alle ore 17:30 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara LA GIALLA CYCLING TIPO PISTA Strada LA GIALLA CYCLING TIPO PISTA ID Gara: 179456 | Data: 04/09/2026 INFORMAZIONI GENERALI Localita: Misano World Circuit Simoncelli",
-    "location_str": "Via Gilles Villeneuve, 18 (Medical Center), Misano World Circuit Simoncelli Misano Adriatico, Italia",
-    "tappe": [
-      {
-        "numero": 1,
-        "tipo": "Corsa singola",
-        "data": "2026-09-04",
-        "descrizione": "Circuito di metri 900 all'interno del Misano World Circuit Marco Simoncelli\r\nES 12 giri 3 traguardi per un totale di km 10.800\r\nDE 12 giri 3 traguardi per un totale di km 10.800\r\nDA 16 giri 4 traguardi per un totale di km 14.400\r\nAL 20 giri 5 traguardi per un totale di km 18",
-        "luogo_ritrovo": "Misano World Circuit Simoncelli Misano Adriatico",
-        "indirizzo_ritrovo": "Via Gilles Villeneuve, 18 (Medical Center)",
-        "orario_ritrovo": "14:00",
-        "luogo_partenza": "Misano World Circuit Simoncelli Misano Adriatico",
-        "orario_partenza": "15:30",
-        "luogo_arrivo": "Misano World Circuit Simoncelli Misano Adriatico",
-        "orario_arrivo": "17:00",
-        "km": "0,900"
-      }
-    ],
-    "lat": null,
-    "lng": null
-  },
   "MEMORIAL_FRANCO_TRAVERSA_2026-09-12": {
     "raceid": "181326",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181326&site=strada_it",
