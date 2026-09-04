@@ -75,6 +75,26 @@
   </script>
 </head>
 <body>
+<script>
+  // Tema chiaro/scuro: il CSS di base (design.css) è scuro finché il body
+  // non ha la classe .light-mode (vedi "body:not(.light-mode)" vs
+  // "body.light-mode") — quella classe la aggiungeva SOLO app.js dentro
+  // initTheme(), che gira dopo DOMContentLoaded E dopo il primo
+  // caricamento dati completo (loadAll(), una fetch di rete che può
+  // volerci un attimo, specie a freddo su Render). Per tutto quel tempo la
+  // pagina si vedeva scura anche per chi ha/dovrebbe avere il tema chiaro
+  // (default) — segnalato dall'utente come "il sito parte di notte". Va
+  // messo qui, PRIMO figlio del body, PRIMA di qualunque altro contenuto
+  // visibile: nessun flash, nessuna dipendenza dal caricamento dati.
+  // initTheme() in app.js resta invariato (aggiunge/toglie la stessa
+  // classe al click, stessa regola di default) — questo script copre solo
+  // il primissimo istante prima che app.js (deferred) possa intervenire.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('ics_theme'); } catch (e) {}
+    if (saved !== 'dark') document.body.classList.add('light-mode');
+  })();
+</script>
 
 <!-- ══════════════════════════════════════════════════════════ -->
 <!--  NAVBAR                                                    -->
