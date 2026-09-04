@@ -25225,8 +25225,24 @@ async function loadRisPhotos() {
   return _risPhotosMap;
 }
 
+// globalData.videos al primo caricamento può venire dal fallback statico
+// data/videos.json (se l'API Render era addormentata, vedi loadAll()) —
+// quel file è aggiornato solo dallo scraper periodico, quindi un video
+// appena aggiunto (es. una diretta collegata a mano) risultava MANCANTE
+// nelle card qui, pur essendo già visibile aprendo la pagina della singola
+// gara (che rifà sempre un fetch fresco, vedi renderGara). Un solo refresh
+// in background per sessione, poi ri-renderizza se si è ancora su questa
+// pagina — segnalato dal vivo dall'utente (diretta assente in Risultati,
+// presente aprendo la tappa).
+let _risVideoRefreshDone = false;
 async function renderRisultati() {
   if (!globalData) return;
+  if (!_risVideoRefreshDone) {
+    _risVideoRefreshDone = true;
+    refreshVideos().then(() => {
+      if ((location.hash || '').includes('/risultati')) renderRisultati();
+    });
+  }
   const { resultsRaw, calendar } = globalData;
   const photosMap = await loadRisPhotos();
 
