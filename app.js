@@ -27952,7 +27952,7 @@ window.showShareModal = async function(type, payload) {
         <button class="share-action-btn share-action-native" id="share-native-btn-wa" onclick="window.nativeShare()">🖼 Condividi la foto</button>
       </div>
       <div class="share-actions" id="share-actions-facebook" style="display:none">
-        <button class="share-action-btn share-action-download" onclick="window.downloadShareCard()">⬇ Scarica</button>
+        <button class="share-action-btn share-action-download" onclick="window.downloadFacebookImage()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" onclick="window.shareOnFacebook()">↗ Condividi</button>
       </div>
     </div>
@@ -28061,6 +28061,28 @@ async function _refreshPreview(){
   if(!loading||!preview) return;
   loading.style.display='flex'; preview.style.display='none';
   try{
+    // Per Facebook l'anteprima deve mostrare la VERA immagine generata dal
+    // server (foto + overlay podio in stile editoriale) — quella che userà
+    // davvero il link-preview di Facebook — non una ricostruzione lato
+    // client nello stile di Instagram: erano due grafiche diverse spacciate
+    // per la stessa, fuorviante (segnalato dal vivo: "non deve essere come
+    // quelle per instagram", con screenshot della grafica reale che deve
+    // restare quella).
+    if (_sharePlatKey === 'facebook' && ['gara','atleta','team','class'].includes(_shareType) && _sharePayload?._id) {
+      let url = `${API_BASE}/og-image/${_shareType}/${encodeURIComponent(_sharePayload._id)}`;
+      if (_shareType === 'gara' && (_shareImgAdjust.scale > 1.001 || Math.abs(_shareImgAdjust.offsetX) > 0.5 || Math.abs(_shareImgAdjust.offsetY) > 0.5)) {
+        url += `?s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
+      }
+      await new Promise(resolve => { preview.onload = resolve; preview.onerror = resolve; preview.src = url; });
+      loading.style.display='none'; preview.style.display='block';
+      _initShareDragHandlers();
+      const adjustBox=document.getElementById('share-photo-adjust');
+      // Il ritaglio regolabile lato server esiste solo per le gare (foto +
+      // overlay) — per atleta/team/classifica l'immagine OG non ha un
+      // pannello di aggiustamento.
+      if (adjustBox) adjustBox.style.display = (_shareType === 'gara') ? 'block' : 'none';
+      return;
+    }
     const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
     preview.src=canvas.toDataURL('image/png');
     loading.style.display='none'; preview.style.display='block';
@@ -28077,6 +28099,22 @@ function _downloadCanvas(canvas, suffix){
   a.download=`italiacrit-${_shareType}-${suffix}-${p.w}x${p.h}.png`;
   a.href=canvas.toDataURL('image/png'); a.click();
 }
+
+// Scarica la stessa immagine mostrata in anteprima per Facebook (quella vera
+// del server, con l'eventuale ritaglio regolato) — non quella ricostruita
+// lato client di downloadShareCard/generateShareCanvas, che per Facebook
+// avrebbe uno stile diverso da quella davvero condivisa (vedi _refreshPreview).
+window.downloadFacebookImage=async function(){
+  const preview=document.getElementById('share-canvas-preview');
+  if(!preview?.src) return;
+  try{
+    const blob=await fetch(preview.src).then(r=>r.blob());
+    const a=document.createElement('a');
+    a.download=`italiacrit-${_shareType}-facebook.jpg`;
+    a.href=URL.createObjectURL(blob); a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  }catch(e){ showToast('Errore scaricamento: '+e.message, 'error'); }
+};
 
 // Scaricando dalla vista "Vincitore" (quella principale) escono ENTRAMBE le
 // grafiche in un colpo solo — quella del vincitore e quella dei risultati —
