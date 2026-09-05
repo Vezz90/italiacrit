@@ -26,11 +26,11 @@
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 922,
+    "punti": 942,
     "vittorie": 6,
     "p1": 6,
     "p2": 9,
-    "p3": 7,
+    "p3": 8,
     "pout": 37,
     "n_atleti": 13,
     "pos": 3
@@ -38,12 +38,12 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 723,
+    "punti": 733,
     "vittorie": 9,
     "p1": 9,
     "p2": 6,
     "p3": 5,
-    "pout": 43,
+    "pout": 44,
     "n_atleti": 9,
     "pos": 4
   },
@@ -84,27 +84,27 @@
     "pos": 7
   },
   {
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
+    "punti": 486,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 3,
+    "p3": 0,
+    "pout": 22,
+    "n_atleti": 8,
+    "pos": 8
+  },
+  {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 469,
+    "punti": 477,
     "vittorie": 6,
     "p1": 6,
     "p2": 3,
     "p3": 3,
-    "pout": 23,
+    "pout": 24,
     "n_atleti": 9,
-    "pos": 8
-  },
-  {
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti": 462,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 2,
-    "p3": 0,
-    "pout": 22,
-    "n_atleti": 8,
     "pos": 9
   },
   {
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
+    "team_nome": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+    "punti": 337,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 9,
+    "pos": 13
+  },
+  {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
     "team_nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
     "punti": 337,
@@ -153,7 +165,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
@@ -165,19 +177,19 @@
     "p3": 4,
     "pout": 30,
     "n_atleti": 9,
-    "pos": 14
+    "pos": 15
   },
   {
-    "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
-    "team_nome": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
-    "punti": 325,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 2,
-    "pout": 13,
-    "n_atleti": 9,
-    "pos": 15
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
+    "team_nome": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
+    "punti": 278,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 8,
+    "pos": 16
   },
   {
     "team_id": "ASD_SWATT_CLUB",
@@ -189,7 +201,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 6,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
@@ -201,7 +213,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 9,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
@@ -212,18 +224,6 @@
     "p2": 1,
     "p3": 5,
     "pout": 15,
-    "n_atleti": 6,
-    "pos": 18
-  },
-  {
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
-    "team_nome": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
-    "punti": 256,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 5,
     "n_atleti": 6,
     "pos": 19
   },
@@ -276,6 +276,18 @@
     "pos": 23
   },
   {
+    "team_id": "TEAM_UKYO",
+    "team_nome": "TEAM UKYO",
+    "punti": 194,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 5,
+    "pos": 24
+  },
+  {
     "team_id": "VPM_MORETTI_SCS",
     "team_nome": "VPM MORETTI SCS",
     "punti": 182,
@@ -285,7 +297,7 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 10,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -297,18 +309,6 @@
     "p3": 4,
     "pout": 17,
     "n_atleti": 6,
-    "pos": 25
-  },
-  {
-    "team_id": "TEAM_UKYO",
-    "team_nome": "TEAM UKYO",
-    "punti": 162,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 4,
     "pos": 26
   },
   {
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
+    "team_nome": "AVC AIX EN PROVENCE DOLE",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 63
+  },
+  {
     "team_id": "GARLASCHESE_A_S_D",
     "team_nome": "GARLASCHESE A.S.D.",
     "punti": 17,
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "DEKA_RIDERS_TEAM_ASD",
@@ -765,18 +777,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 64
-  },
-  {
-    "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
-    "team_nome": "AVC AIX EN PROVENCE DOLE",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 3,
     "pos": 65
   },
   {
