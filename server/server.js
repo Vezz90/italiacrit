@@ -1071,6 +1071,8 @@ Stesso principio per "stagione_team_del_vincitore": se utile, puoi accennare al 
 
 Altre regole: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
 
+IMPORTANTE sul formato della risposta: rispondi SOLO con il post finale pronto da pubblicare, a partire dalla prima riga con il titolo — nient'altro. Se noti incongruenze nei dati (es. "tutti_i_risultati_stagione_vincitore" incompleto rispetto a "stagione_vincitore", squadre diverse tra compagni di podio, ecc.), risolvile SEMPRE in silenzio secondo le regole sopra (fidati dei conteggi ufficiali, cita solo ciò che è confermato dai dati) — non scrivere mai una premessa, una nota, un avviso o un commento sulla qualità/coerenza dei dati prima o dopo il post: chi legge deve vedere solo il post, non il tuo ragionamento. Il codice che elabora questa risposta si aspetta che la RIGA 1 sia il titolo del post: qualunque testo aggiuntivo prima del titolo rompe la pagina.
+
 Dati della gara (JSON):
 ${JSON.stringify(dataForPrompt, null, 2)}`
       }]
