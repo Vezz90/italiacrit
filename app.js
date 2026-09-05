@@ -12501,7 +12501,7 @@ async function refreshMediaAndRerender(opts = {}) {
   if (photos) invalidatePhotoCache();
   if (videos) await refreshVideos();
   // Ri-renderizza la vista attuale con i dati aggiornati
-  if (window._currentGaraId && (location.hash || '').includes('/gara/')) {
+  if (window._currentGaraId && _resolveVirtualHash().includes('/gara/')) {
     await _rerenderCurrentGaraPage();
   } else {
     route();
@@ -15658,6 +15658,24 @@ async function renderAtleta(atleta_id, opts = {}) {
       ${adminEditBtn('atleta', atleta_id)}
     </div>
     <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
+    ${(() => {
+      // globalData.videos al primo caricamento può venire dal fallback statico
+      // data/videos.json (vuoto, vedi loadAll()) durante un cold-start di
+      // Render — un video appena caricato su una tappa dove l'atleta ha
+      // vinto/piazzato restava MANCANTE dalla sezione MEDIA finché non si
+      // ricaricava la pagina a mano (stesso bug già risolto per Risultati/
+      // pagina gara, mai applicato qui). Un solo refresh in background, poi
+      // ridisegna SOLO il blocco media (non l'intera pagina) se si è ancora
+      // sulla scheda di questo stesso atleta.
+      window._currentAtletaId = atleta_id;
+      refreshVideos().then(() => {
+        const el = document.getElementById('atleta-media-nativo');
+        if (el && window._currentAtletaId === atleta_id) {
+          el.innerHTML = buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear });
+        }
+      });
+      return '';
+    })()}
     <div id="atleta-ciclismo-media"></div>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
@@ -25265,7 +25283,12 @@ async function renderRisultati() {
   if (!_risVideoRefreshDone) {
     _risVideoRefreshDone = true;
     refreshVideos().then(() => {
-      if ((location.hash || '').includes('/risultati')) renderRisultati();
+      // _resolveVirtualHash(), non location.hash: con gli URL puliti
+      // (pushState, es. "/risultati") location.hash resta VUOTO — un
+      // controllo diretto su location.hash qui non scattava mai, quindi
+      // questo refresh in background non ri-renderizzava mai la pagina
+      // (bug pre-esistente, mai realmente verificato dal vivo prima d'ora).
+      if (_resolveVirtualHash().includes('/risultati')) renderRisultati();
     });
   }
   const { resultsRaw, calendar } = globalData;
@@ -25352,8 +25375,12 @@ async function renderRisultati() {
           if (Array.isArray(rows) && rows.length) _risPcsPendingCache[g.id] = rows;
         }).catch(() => {})
       )).then(() => {
+        // _resolveVirtualHash(), non location.hash: vedi commento sul refresh
+        // video sopra — con URL puliti location.hash è sempre vuoto, quindi
+        // questo ri-render non scattava mai (la card restava bloccata su
+        // "non ancora disponibili" anche dopo un import PCS riuscito).
         if (Object.keys(_risPcsPendingCache).some(id => toCheck.some(g => g.id === id))
-            && (location.hash || '').includes('/risultati')) renderRisultati();
+            && _resolveVirtualHash().includes('/risultati')) renderRisultati();
       });
     }
   }
