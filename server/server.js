@@ -10552,7 +10552,13 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // Cycling Tipo Pista".
   let resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
   resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
-  const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+  let results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+  // Stesso fallback usato per titolo/testo (vedi _buildGaraNarrative): senza
+  // questo, una gara con risultati per ora solo importati da PCS mostrava la
+  // foto ma MAI il pannello podio accanto (results.length gate più sotto in
+  // _generateGaraPhotoBuffer) — segnalato dal vivo condividendo il Giro FVG
+  // Terza Tappa: foto sì, "primi 3" no.
+  if (!results.length) results = await _pcsResultsFallback(garaId, cal);
   const first = results[0];
   const catCode = first ? _rankingCodeFromRow(first) : null;
   const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';

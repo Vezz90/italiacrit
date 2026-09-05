@@ -25874,6 +25874,12 @@ const SHARE_PLATFORMS = {
 };
 const SHARE_URL = 'italiacyclingstats.com';
 const SHARE_TAG = '#italiacrit #ciclismo';
+// Riepilogo mensile e atleta/team-del-mese non hanno una pagina/URL
+// persistente da far leggere al Facebook Sharer (niente route /og/:id
+// dedicata) — per questi tipi la scheda "Facebook" mostra solo Scarica/
+// Condividi come le altre piattaforme, senza il pulsante dedicato che apre
+// il popup "condividi link" di Facebook (vedi setSharePlat).
+const _noFbSharerTypes = ['recap','atleta-mese','team-mese'];
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
@@ -27881,12 +27887,6 @@ window.showShareModal = async function(type, payload) {
     fetch(`${API_BASE}/og-image/${type}/${encodeURIComponent(payload._id)}`).catch(()=>{});
   }
   const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica',recap:'Riepilogo Mensile','atleta-mese':'Atleta del Mese','team-mese':'Team del Mese'};
-  // Riepilogo mensile e atleta/team-del-mese non hanno una pagina/URL
-  // persistente da far leggere al Facebook Sharer (niente route /og/:id
-  // dedicata) — per questi tipi il bottone "Facebook" si comporta come gli
-  // altri (genera+scarica l'immagine 1200×630) invece di aprire il popup
-  // "condividi link" di Facebook.
-  const _noFbSharerTypes = ['recap','atleta-mese','team-mese'];
   const platBtns = [
     {k:'instagram', label:'Instagram\nFeed',sz:'1080×1350',  fb:false},
     {k:'story',     label:'Story /\nReels', sz:'1080×1920',  fb:false},
@@ -27895,9 +27895,14 @@ window.showShareModal = async function(type, payload) {
     {k:'whatsapp',  label:'WhatsApp',       sz:'1080×1080',  fb:false},
   ].map(({k,label,sz,fb})=>{
     const p=SHARE_PLATFORMS[k];
-    const onclick = fb
-      ? `window.shareOnFacebook()`
-      : `window.setSharePlat('${k}')`;
+    // Il pulsante Facebook portava dritto al popup di condivisione, senza dare
+    // modo di aggiustare foto/ritaglio prima (unica piattaforma così) — ora si
+    // comporta come tutte le altre: mostra l'anteprima nel formato giusto
+    // (1200×630) e lascia trascinare/zoomare la foto; si condivide solo
+    // cliccando l'azione dedicata più sotto (segnalato dal vivo: "quando
+    // clicco su FB non deve andare direttamente nell'app... deve aprirmi
+    // la preview e darmi la possibilità di modificarla").
+    const onclick = `window.setSharePlat('${k}')`;
     return `<button class="share-plat-btn ${p.cls} ${k==='instagram'?'active':''}" id="sp-${k}" onclick="${onclick}" title="${sz}">
       <div class="share-plat-icon">${_SVGS[k]||''}</div>
       <span class="share-plat-label">${label.replace('\n','\n')}</span>
@@ -27945,6 +27950,10 @@ window.showShareModal = async function(type, payload) {
       <div class="share-actions" id="share-actions-whatsapp" style="display:none">
         <button class="share-action-btn" onclick="window.shareWhatsappLink()">🔗 Condividi il link</button>
         <button class="share-action-btn share-action-native" id="share-native-btn-wa" onclick="window.nativeShare()">🖼 Condividi la foto</button>
+      </div>
+      <div class="share-actions" id="share-actions-facebook" style="display:none">
+        <button class="share-action-btn share-action-download" onclick="window.downloadShareCard()">⬇ Scarica</button>
+        <button class="share-action-btn share-action-native" onclick="window.shareOnFacebook()">↗ Condividi</button>
       </div>
     </div>
   </div>`);
