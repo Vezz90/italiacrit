@@ -21557,6 +21557,33 @@ async function renderGara(gara_id) {
   window._shareGaraData  = _mkShare(results, catLabel(cat), primaryGaraId);
   window._shareGaraData2 = null;
 
+  // Se la FCI non ha ancora pubblicato i risultati ma esiste già un ordine
+  // d'arrivo importato da PCS, il testo di condivisione restava sempre
+  // "spoglio" (niente podio/hashtag atleti, solo titolo/data/foto) — stesso
+  // gap già risolto per la card OG di Facebook e per Risultati, qui non
+  // ancora coperto. Segnalato dal vivo: "sono sparite le scritte che ci
+  // dovevano essere sotto come avevamo fatto per le altre gare". Aggiorna
+  // window._shareGaraData in background non appena arrivano i dati PCS —
+  // il pulsante "Condividi" viene sempre cliccato DOPO che la pagina ha
+  // finito di caricare, quindi trova già la versione aggiornata.
+  if (!results.length) {
+    apiCall(`/pcs-results/gara/${encodeURIComponent(primaryGaraId)}`).then(rows => {
+      if (!Array.isArray(rows) || !rows.length || window._currentGaraId !== primaryGaraId) return;
+      const pseudoResults = rows.slice().sort((a, b) => a.posizione - b.posizione).map(r => {
+        const parts = (r.rider_name || '').trim().split(/\s+/);
+        const nome = parts.length > 1 ? parts.pop() : '';
+        return {
+          posizione: r.posizione,
+          cognome: (parts.join(' ') || r.rider_name || '').toUpperCase(),
+          nome: nome.toUpperCase(),
+          team: (r.team_name || '').toUpperCase(),
+          atleta_id: r.atleta_id, punti_effettivi: 0, tempo: r.distacco || '',
+        };
+      });
+      window._shareGaraData = _mkShare(pseudoResults, catLabel(cat), primaryGaraId);
+    }).catch(() => {});
+  }
+
   const siRaceIntelHtml = '';
 
   window._currentGaraId = primaryGaraId;
@@ -25574,8 +25601,23 @@ async function renderRisultati() {
            : pendingVKind === 'fb'   ? `window.openFacebookVideoModal('${esc(pendingVideo.url)}','${esc((pendingVideo.title||'').replace(/'/g,"\\'"))}')`
            : `window.openVideoFileModal('${esc(pendingVideo.url)}','${esc((pendingVideo.title||'').replace(/'/g,"\\'"))}')`)
           : '';
+        // Una foto caricata da un utente/admin su una gara di oggi ancora
+        // senza risultati (dalla pagina gara, "Carica foto") viene salvata
+        // con l'id di calendario "nudo" (nessun risultato ancora suffissato
+        // per categoria) — stessa chiave con cui la cerchiamo qui. Prima la
+        // card "in attesa" mostrava solo il video, mai la foto: segnalato
+        // dal vivo ("ho messo la foto nella gara ma non si vede in Risultati").
+        const pendingPhoto = (photosMap || {})[race.id] || null;
+        const pendingPhotoSrc = pendingPhoto
+          ? (pendingPhoto.url ? icProxy(pendingPhoto.url) : (pendingPhoto.filename ? `${PHOTOS_BASE}/photos/${pendingPhoto.filename}` : ''))
+          : '';
+        const pendingHasPhoto = !!pendingPhotoSrc;
+        const pendingPhotoHtml = pendingHasPhoto ? `
+          <a href="/gara/${esc(race.id)}" class="ris-card-photo${pendingHasVideoTile ? ' ris-media-half' : ''}">
+            <img src="${esc(pendingPhotoSrc)}" alt="Foto gara" loading="lazy"/>
+          </a>` : '';
         const pendingVideoHtml = pendingHasVideoTile ? `
-          <div class="ris-card-video-thumb" style="margin-bottom:12px" onclick="${pendingVClick}">
+          <div class="ris-card-video-thumb${pendingHasPhoto ? ' ris-media-half' : ''}" onclick="${pendingVClick}">
             ${pendingVKind === 'yt' ? `<img src="https://img.youtube.com/vi/${ytId(pendingVideo.url)}/hqdefault.jpg" alt="${esc(pendingVideo.title||'Video')}" loading="lazy"/>`
               : pendingVKind === 'fb' ? fbThumbHtml(pendingVideo.url)
               : `<video src="${esc(pendingVideo.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
@@ -25583,6 +25625,9 @@ async function renderRisultati() {
             ${pendingVideo.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 DIRETTA</div>` : ''}
             ${pendingVideo.channel ? `<div class="ris-video-channel">${esc(pendingVideo.channel)}</div>` : ''}
           </div>` : '';
+        const pendingMediaPanel = (pendingPhotoHtml || pendingVideoHtml)
+          ? `<div class="ris-card-media${pendingHasPhoto && pendingHasVideoTile ? ' ris-card-media-split' : ''}" style="margin-bottom:12px">${pendingPhotoHtml}${pendingVideoHtml}</div>`
+          : '';
         return `
         <div class="hero-band ris-card">
           <div class="ris-card-body">
@@ -25594,7 +25639,7 @@ async function renderRisultati() {
               ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
             </div>
             <div class="hero-divider" style="margin-bottom:12px;"></div>
-            ${pendingVideoHtml}
+            ${pendingMediaPanel}
             ${race._pcsResults ? (() => {
               // Ordine d'arrivo già importato da PCS ma non ancora scrapato
               // dalla FCI (niente punteggio ufficiale finché non passa lo
