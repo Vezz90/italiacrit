@@ -25301,7 +25301,11 @@ async function renderRisultati() {
   const _risTodayIso = new Date().toISOString().slice(0, 10);
   const _hasResultsToday = new Set(Object.values(eventMap).map(ev => toCalId(ev.id)));
   const pendingToday = (calendar || [])
-    .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id))
+    // g.nome === '-' (o vuoto): la fonte FCI non aveva un nome leggibile per
+    // questa riga di calendario (id generato come "SCONOSCIUTO_{data}") —
+    // una card "di oggi" senza titolo è più confusa che utile, meglio non
+    // mostrarla (segnalato dal vivo dall'utente).
+    .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-')
     .map(g => ({
       id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
       regione: g.regione, mult: g.moltiplicatore || 1,

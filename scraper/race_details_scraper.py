@@ -353,9 +353,25 @@ def split_stage_races(calendar, details_map):
     out_calendar = []
     out_details = dict(details_map)  # tiene anche gli id base, come cache
     split_count = 0
+    seen_ids = set()  # dedup generale: id già emessi in out_calendar
+
+    # fci_complete_scraper.py NON sa nulla della divisione in tappe: ogni
+    # volta che ri-scarica il calendario da FCI (circa ogni 20h, vedi
+    # run_cycle()) aggiunge di nuovo la gara COMBINATA se il suo id non è
+    # già presente — cosa sempre vera, dato che l'id combinato è diverso da
+    # quelli delle tappe divise. Senza questo controllo, ogni giro
+    # ri-splittava la stessa gara producendo tappe DUPLICATE (bug reale,
+    # segnalato dal vivo dall'utente: '62 Giro FVG Terza Tappa' comparsa
+    # due volte, più altre 20 gare a tappe nello stesso stato). Pre-calcola
+    # tutti gli id già presenti nel calendario PRIMA di processare, così se
+    # i figli di una gara a tappe esistono già si salta la ri-divisione
+    # invece di generarli una seconda volta.
+    all_ids = {g['id'] for g in calendar}
 
     for c in calendar:
         cal_id = c['id']
+        if cal_id in seen_ids:
+            continue  # riga duplicata alla fonte (stesso id due volte)
         det = details_map.get(cal_id)
         tappe = det.get('tappe') if det else None
         # Una sola "Prova" nella sezione PROVE di FCI NON è una gara a tappe
@@ -366,13 +382,28 @@ def split_stage_races(calendar, details_map):
         # Rocco, 2026-09-03). Serve almeno 2 prove per essere davvero a tappe.
         if not tappe or len(tappe) < 2:
             out_calendar.append(c)
+            seen_ids.add(cal_id)
             continue
 
-        split_count += 1
         base_fields = {k: c.get(k) for k in
                         ('tipo', 'moltiplicatore', 'campionato_regionale',
                          'campionato_italiano', 'regione', 'categoria', 'luogo')}
 
+        # Calcola gli id che avrebbero le tappe/GC PRIMA di crearle — se
+        # esistono già nel calendario (di questo giro o già emessi in
+        # out_calendar), la gara è già stata divisa in un giro precedente:
+        # scarta silenziosamente la combinata ripescata da FCI invece di
+        # ricreare tappe già presenti.
+        stage_ids = []
+        for s in tappe:
+            stage_nome_check = c['nome'] + ' ' + _ordinale_it(s['numero']) + ' TAPPA'
+            stage_ids.append(_slug(stage_nome_check) + '_' + s['data'])
+        gc_nome_check = c['nome'] + ' CLASSIFICA GENERALE'
+        gc_id_check = _slug(gc_nome_check) + '_' + tappe[-1]['data']
+        if any(sid in all_ids or sid in seen_ids for sid in stage_ids) or gc_id_check in all_ids or gc_id_check in seen_ids:
+            continue  # già divisa in precedenza, non ri-processare
+
+        split_count += 1
         for stage in tappe:
             # Stesso nome/id che assegnerebbe fci_complete_scraper.py quando
             # troverà i risultati di questa tappa — vedi commento su _slug()
@@ -381,6 +412,7 @@ def split_stage_races(calendar, details_map):
             # lo slug non combacia più.
             stage_nome = f"{c['nome']} {_ordinale_it(stage['numero'])} TAPPA"
             stage_id = f"{_slug(stage_nome)}_{stage['data']}"
+            seen_ids.add(stage_id)
             out_calendar.append({
                 'id': stage_id,
                 'nome': stage_nome,
@@ -405,6 +437,7 @@ def split_stage_races(calendar, details_map):
 
         gc_nome = f"{c['nome']} CLASSIFICA GENERALE"
         gc_id = f"{_slug(gc_nome)}_{tappe[-1]['data']}"
+        seen_ids.add(gc_id)
         ultima_data = tappe[-1]['data']
         out_calendar.append({
             'id': gc_id,
