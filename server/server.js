@@ -789,13 +789,18 @@ async function _buildGaraNarrative(id, cal, resultsRawIn) {
   //
   // Il nome gara va SEMPRE per primo (è il termine che le persone cercano
   // davvero, non la frase sul vincitore) e il titolo intero deve restare
-  // sotto ~60 caratteri: oltre quella soglia Google riscrive spesso il
+  // entro un limite: oltre una certa soglia Google riscrive spesso il
   // <title> per conto suo nei risultati di ricerca, e l'abbiamo visto scegliere
   // di tenere SOLO la seconda metà (la narrazione), buttando via il nome
   // gara — il contrario di quello che vogliamo per l'indicizzazione. Prova
   // in cascata: narrazione intera → "Vince X" breve → solo nome gara,
-  // fermandosi alla prima che rientra nel limite.
-  const TITLE_MAX = 60;
+  // fermandosi alla prima che rientra nel limite. 60 tagliava fuori "Vince
+  // X" per QUALSIASI gara con un nome anche solo moderatamente lungo (es.
+  // "62° Giro della Regione Friuli Venezia Giulia Terza Tappa", già 57
+  // caratteri da solo) — alzato a 90 su richiesta esplicita dell'utente:
+  // Google tronca comunque i titoli molto lunghi, ma raramente arriva a
+  // buttare via anche il nome gara con questo margine più ampio.
+  const TITLE_MAX = 90;
   let title = raceName;
   if (winner) {
     const longTitle  = `${raceName} - ${winnerTitleTail}`;

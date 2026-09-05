@@ -27979,11 +27979,19 @@ window.setSharePlat=async function(k){
   if(lbl) lbl.textContent=`${names[k]} · ${sizes[k]}`;
   // Per WhatsApp: niente "Scarica"/"Condividi" generico, ma link (apre l'app,
   // si sceglie la chat) o foto (share sheet nativo, stesso risultato per
-  // l'immagine). Per tutte le altre piattaforme resta invariato.
+  // l'immagine). Per Facebook (solo i tipi con una pagina/URL persistente,
+  // vedi _noFbSharerTypes): "Condividi" apre il popup di condivisione link
+  // di Facebook DOPO che la foto/ritaglio sono stati aggiustati
+  // sull'anteprima qui sopra, non prima — prima cliccare "Facebook" saltava
+  // dritto al popup senza dare modo di sistemare l'inquadratura (segnalato
+  // dal vivo). Per tutte le altre piattaforme resta invariato.
+  const isFbSharer = k==='facebook' && !_noFbSharerTypes.includes(_shareType);
   const defRow=document.getElementById('share-actions-default');
   const waRow=document.getElementById('share-actions-whatsapp');
-  if(defRow) defRow.style.display = k==='whatsapp' ? 'none' : '';
+  const fbRow=document.getElementById('share-actions-facebook');
+  if(defRow) defRow.style.display = (k==='whatsapp' || isFbSharer) ? 'none' : '';
   if(waRow) waRow.style.display = k==='whatsapp' ? '' : 'none';
+  if(fbRow) fbRow.style.display = isFbSharer ? '' : 'none';
   await _refreshPreview();
 };
 
