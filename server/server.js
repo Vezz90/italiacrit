@@ -10465,7 +10465,16 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // accanto alla foto (quando c'è) sia per la card "lista risultati" a
   // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
   // fallback senza foto, la foto e i risultati non comparivano mai insieme.
-  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  // I risultati inseriti a mano (manual_results — es. gare Esordienti/Tipo
+  // Pista da foto ordine d'arrivo o inserimento manuale) non finiscono mai
+  // nel JSON statico results_raw.json prodotto dallo scraper FCI: senza
+  // questo merge (già usato per il testo AI, vedi _buildGaraAiCaption) la
+  // card condivisa su Facebook per una gara SOLO manuale non trovava mai
+  // risultati e cadeva sempre sulla card generica "solo nome gara" invece
+  // di mostrare il podio — segnalato dal vivo condividendo "La Gialla
+  // Cycling Tipo Pista".
+  let resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
   const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
   const first = results[0];
   const catCode = first ? _rankingCodeFromRow(first) : null;
