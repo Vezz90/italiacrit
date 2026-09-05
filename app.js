@@ -2187,8 +2187,22 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
       const _edUnique = calEd2 && (_editionDateCount[cal.data + '|' + calEd2] || 0) <= 1;
       if (!isStageRace && _edUnique && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
-      { let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
-        if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id; }
+      // Fallback "prefisso comune lunghissimo" — va bene per due gare diverse
+      // che coincidono per caso su un pezzo di nome, ma per una gara A TAPPE
+      // ogni tappa ha ora una propria voce di calendario (PRIMA_TAPPA,
+      // SECONDA_TAPPA, ... CLASSIFICA_GENERALE) che condividono TUTTE lo
+      // stesso lunghissimo prefisso ("62_GIRO_..._GIULIA_"): applicato qui
+      // senza guardia, questo fallback riassegnava (sovrascrivendola ad ogni
+      // giro del ciclo esterno sulle voci di calendario) la stessa riga
+      // PCS/risultato a QUALSIASI tappa — l'ultima nell'ordine del calendario
+      // vinceva sempre, facendo apparire p.es. la Prima Tappa con la data
+      // della Classifica Generale. Per le gare a tappe i controlli forti già
+      // sopra (garaBase === calBaseNoEd, calNorm2 === garaNorm, ecc.)
+      // bastano a trovare la tappa giusta: qui va escluso, non stretto.
+      if (!isStageRace) {
+        let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
+        if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id;
+      }
     }
   }
 
@@ -25235,6 +25249,17 @@ async function loadRisPhotos() {
 // pagina — segnalato dal vivo dall'utente (diretta assente in Risultati,
 // presente aprendo la tappa).
 let _risVideoRefreshDone = false;
+
+// Cache dei risultati importati da PCS per le card "in attesa" di oggi:
+// una gara di oggi può avere già un ordine d'arrivo importato a mano da PCS
+// (pulsante "Importa PCS" sulla pagina gara) PRIMA che la FCI pubblichi i
+// suoi risultati ufficiali — senza questo, la card restava bloccata su
+// "Risultati non ancora disponibili" anche subito dopo un import riuscito
+// (segnalato dal vivo: "ho appena importato l'ordine di arrivo da pcs").
+// Chiave: gara_id di calendario → array di righe {rider_name, team_name,
+// posizione, atleta_id} oppure null se già verificato e non trovato nulla.
+const _risPcsPendingCache = {};
+const _risPcsPendingChecked = new Set();
 async function renderRisultati() {
   if (!globalData) return;
   if (!_risVideoRefreshDone) {
@@ -25311,7 +25336,27 @@ async function renderRisultati() {
       regione: g.regione, mult: g.moltiplicatore || 1,
       campionato_regionale: !!g.campionato_regionale, campionato_italiano: !!g.campionato_italiano,
       byCategory: {}, _pending: true, _categoriaLabel: g.categoria || '',
+      _pcsResults: _risPcsPendingCache[g.id] || null,
     }));
+
+  // Avvia (una sola volta per gara_id, in background) il controllo di un
+  // eventuale ordine d'arrivo già importato da PCS per le card "in attesa"
+  // di oggi — vedi _risPcsPendingCache sopra. Ri-renderizza solo se trova
+  // qualcosa di nuovo, per non far "saltare" la pagina senza motivo.
+  {
+    const toCheck = pendingToday.filter(g => !_risPcsPendingChecked.has(g.id));
+    if (toCheck.length) {
+      toCheck.forEach(g => _risPcsPendingChecked.add(g.id));
+      Promise.all(toCheck.map(g =>
+        apiCall(`/pcs-results/gara/${encodeURIComponent(g.id)}`).then(rows => {
+          if (Array.isArray(rows) && rows.length) _risPcsPendingCache[g.id] = rows;
+        }).catch(() => {})
+      )).then(() => {
+        if (Object.keys(_risPcsPendingCache).some(id => toCheck.some(g => g.id === id))
+            && (location.hash || '').includes('/risultati')) renderRisultati();
+      });
+    }
+  }
 
   let races = [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''))];
 
@@ -25501,8 +25546,38 @@ async function renderRisultati() {
             </div>
             <div class="hero-divider" style="margin-bottom:12px;"></div>
             ${pendingVideoHtml}
-            <div style="color:var(--text-muted);font-size:.85rem;margin-bottom:14px">${race._categoriaLabel ? esc(race._categoriaLabel) + ' — ' : ''}Risultati non ancora disponibili. Sei in gara o hai una foto dell'ordine d'arrivo?</div>
-            <a href="/gara/${esc(race.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;display:block">VAI ALLA GARA &rarr;</a>
+            ${race._pcsResults ? (() => {
+              // Ordine d'arrivo già importato da PCS ma non ancora scrapato
+              // dalla FCI (niente punteggio ufficiale finché non passa lo
+              // scraper) — segnalato dal vivo: "ho appena importato l'ordine
+              // di arrivo da pcs" e la card restava bloccata su "non ancora
+              // disponibili". rider_name da PCS è "Cognome Nome" in un'unica
+              // stringa: l'ultima parola è il nome, il resto il cognome
+              // (approssimazione ragionevole, non abbiamo altro dato).
+              const top3 = race._pcsResults.slice().sort((a,b) => a.posizione - b.posizione).slice(0, 3);
+              const rows = top3.map((r, i) => {
+                const pClass = ['p1','p2','p3'][i] || 'pout';
+                const parts = (r.rider_name || '').trim().split(/\s+/);
+                const nome = parts.length > 1 ? parts.pop() : '';
+                const cognome = parts.join(' ') || r.rider_name || '';
+                const linkOpen  = r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">` : '<span>';
+                const linkClose = r.atleta_id ? '</a>' : '</span>';
+                return `<div class="hero-podio-row ris-podio-row">
+                  <div class="hero-pos ${pClass}">${r.posizione}&#176;</div>
+                  <div class="ris-podio-info">
+                    <div class="hero-name">${linkOpen}${esc(cognome)} ${esc(nome)}${linkClose}</div>
+                    <div class="hero-team" style="color:var(--text-secondary)">${esc(r.team_name || '')}</div>
+                  </div>
+                </div>`;
+              }).join('');
+              return `
+              <div class="ris-cat-section">
+                <div class="ris-cat-label">${race._categoriaLabel ? esc(race._categoriaLabel) : 'Ordine d’arrivo'}</div>
+                <div class="ris-tech-bit" style="color:var(--text-muted)">Da PCS — punteggio in attesa dello scraper ufficiale</div>
+                ${rows}
+              </div>`;
+            })() : `<div style="color:var(--text-muted);font-size:.85rem;margin-bottom:14px">${race._categoriaLabel ? esc(race._categoriaLabel) + ' — ' : ''}Risultati non ancora disponibili. Sei in gara o hai una foto dell'ordine d'arrivo?</div>`}
+            <a href="/gara/${esc(race.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;display:block;margin-top:${race._pcsResults ? '14px' : '0'}">VAI ALLA GARA &rarr;</a>
           </div>
         </div>`;
       }
