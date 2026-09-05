@@ -18003,6 +18003,28 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     esteroStatsEl.style.display = '';
   }
 
+  // Un video/foto può già esistere per una gara che l'atleta ha corso ma che
+  // la sezione MEDIA (buildProfileMedia, calcolata al render iniziale) non
+  // vede ancora perché basata solo su icsRisultati — un risultato importato
+  // da PCS ma non ancora scrapato dalla FCI (es. una vittoria di oggi) non fa
+  // ancora parte di icsRisultati e restava quindi assente dal video/foto
+  // vincitore anche quando il video era già stato caricato (segnalato dal
+  // vivo: "a garibbo si vede la vittoria ma a dati non compare" — Dati aveva
+  // vinto la tappa di oggi, per cui non c'era ancora un risultato ICS).
+  // Ri-genera qui il blocco MEDIA includendo anche garaExtra.
+  if (garaExtra.length) {
+    const mediaEl = document.getElementById('atleta-media-nativo');
+    if (mediaEl && window._currentAtletaId === atletaId) {
+      loadRisPhotos().then(photosMap => {
+        if (!document.contains(mediaEl) || window._currentAtletaId !== atletaId) return;
+        mediaEl.innerHTML = buildProfileMedia(
+          [...(icsRisultati || []), ...garaExtra], photosMap, globalData?.videos,
+          { atletaIds: [atletaId], year: season }
+        );
+      }).catch(() => {});
+    }
+  }
+
   if (!garaExtra.length && !esteroExtra.length) return;
 
   // Rimuovi riga "Nessun risultato" se presente
@@ -25589,11 +25611,15 @@ async function renderRisultati() {
                 const cognome = parts.join(' ') || r.rider_name || '';
                 const linkOpen  = r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">` : '<span>';
                 const linkClose = r.atleta_id ? '</a>' : '</span>';
+                // I dati ICS (FCI/manuali) sono salvati già in MAIUSCOLO — quelli
+                // importati da PCS arrivano invece in Title Case ("Dati Tommaso"):
+                // senza normalizzare qui il podio provvisorio saltava all'occhio
+                // come "scritto diverso" dal resto del sito (segnalato dal vivo).
                 return `<div class="hero-podio-row ris-podio-row">
                   <div class="hero-pos ${pClass}">${r.posizione}&#176;</div>
                   <div class="ris-podio-info">
-                    <div class="hero-name">${linkOpen}${esc(cognome)} ${esc(nome)}${linkClose}</div>
-                    <div class="hero-team" style="color:var(--text-secondary)">${esc(r.team_name || '')}</div>
+                    <div class="hero-name">${linkOpen}${esc(cognome.toUpperCase())} ${esc(nome.toUpperCase())}${linkClose}</div>
+                    <div class="hero-team" style="color:var(--text-secondary)">${esc((r.team_name || '').toUpperCase())}</div>
                   </div>
                 </div>`;
               }).join('');
