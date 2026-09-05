@@ -692,8 +692,37 @@ function _ogPodiumLine(nome, podiums, seed) {
 // frasi diverse, così non sembra un testo generato da un template fisso.
 // Condivisa tra /og/gara/:id (meta tag per i crawler) e
 // /api/admin/gara-share-text/:id (testo copiabile per il post FB manuale).
-async function _buildGaraNarrative(id, cal, resultsRaw) {
-  const results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
+async function _buildGaraNarrative(id, cal, resultsRawIn) {
+  // Stesso gap già risolto per l'immagine OG (_generateGaraOgBuffer) e per il
+  // testo di condivisione lato client (_mkShare in app.js): una gara i cui
+  // risultati sono per ora solo inseriti a mano o importati da PCS (non
+  // ancora scrapati dalla FCI) restava sempre priva del "Vince X" nel
+  // titolo — l'unico campo che Facebook mostra davvero (vedi commento sotto)
+  // — anche a gara conclusa. Segnalato dal vivo: i post FB recenti restano
+  // senza il nome del vincitore mentre quelli vecchi (gara scrapata dalla
+  // FCI) ce l'hanno.
+  let resultsRaw = await _mergeManualResultsIntoRaw(resultsRawIn);
+  let results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
+  if (!results.length && supabase) {
+    try {
+      const { data: pcsRows } = await supabase
+        .from('pcs_gara_results')
+        .select('atleta_id, rider_name, team_name, posizione')
+        .eq('gara_id', id).order('posizione', { ascending: true }).limit(10);
+      if (pcsRows && pcsRows.length) {
+        results = pcsRows.map(r => {
+          const parts = (r.rider_name || '').trim().split(/\s+/);
+          const nome = parts.length > 1 ? parts.pop() : '';
+          return {
+            gara_id: id, posizione: r.posizione, data: cal?.data || '',
+            cognome: (parts.join(' ') || r.rider_name || '').toUpperCase(),
+            nome: nome.toUpperCase(), team: (r.team_name || '').toUpperCase(),
+            team_id: '', atleta_id: r.atleta_id, genere: null,
+          };
+        });
+      }
+    } catch (e) { console.warn('[gara-narrative] pcs fallback error:', e.message); }
+  }
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
   const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
