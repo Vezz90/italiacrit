@@ -692,6 +692,35 @@ function _ogPodiumLine(nome, podiums, seed) {
 // frasi diverse, così non sembra un testo generato da un template fisso.
 // Condivisa tra /og/gara/:id (meta tag per i crawler) e
 // /api/admin/gara-share-text/:id (testo copiabile per il post FB manuale).
+// Ordine d'arrivo importato da PCS ma non ancora scrapato dalla FCI,
+// convertito in righe compatibili con quelle di results_raw.json (stesso
+// shape minimo: gara_id/posizione/cognome/nome/team/atleta_id/data) — usato
+// come ultima spiaggia quando una gara non ha ancora nessun risultato
+// "ufficiale" (né FCI né manuale). Fattorizzato qui perché usato da
+// _buildGaraNarrative (titolo/meta OG) E _buildGaraAiCaption (testo AI per
+// il post) — stesso identico gap in entrambi, segnalato dal vivo su gare
+// diverse ("sono sparite le scritte", titolo Facebook senza vincitore).
+async function _pcsResultsFallback(id, cal) {
+  if (!supabase) return [];
+  try {
+    const { data: pcsRows } = await supabase
+      .from('pcs_gara_results')
+      .select('atleta_id, rider_name, team_name, posizione')
+      .eq('gara_id', id).order('posizione', { ascending: true }).limit(10);
+    if (!pcsRows || !pcsRows.length) return [];
+    return pcsRows.map(r => {
+      const parts = (r.rider_name || '').trim().split(/\s+/);
+      const nome = parts.length > 1 ? parts.pop() : '';
+      return {
+        gara_id: id, posizione: r.posizione, data: cal?.data || '',
+        cognome: (parts.join(' ') || r.rider_name || '').toUpperCase(),
+        nome: nome.toUpperCase(), team: (r.team_name || '').toUpperCase(),
+        team_id: '', atleta_id: r.atleta_id, genere: null,
+      };
+    });
+  } catch (e) { console.warn('[pcs-results-fallback] error:', e.message); return []; }
+}
+
 async function _buildGaraNarrative(id, cal, resultsRawIn) {
   // Stesso gap già risolto per l'immagine OG (_generateGaraOgBuffer) e per il
   // testo di condivisione lato client (_mkShare in app.js): una gara i cui
@@ -703,26 +732,7 @@ async function _buildGaraNarrative(id, cal, resultsRawIn) {
   // FCI) ce l'hanno.
   let resultsRaw = await _mergeManualResultsIntoRaw(resultsRawIn);
   let results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
-  if (!results.length && supabase) {
-    try {
-      const { data: pcsRows } = await supabase
-        .from('pcs_gara_results')
-        .select('atleta_id, rider_name, team_name, posizione')
-        .eq('gara_id', id).order('posizione', { ascending: true }).limit(10);
-      if (pcsRows && pcsRows.length) {
-        results = pcsRows.map(r => {
-          const parts = (r.rider_name || '').trim().split(/\s+/);
-          const nome = parts.length > 1 ? parts.pop() : '';
-          return {
-            gara_id: id, posizione: r.posizione, data: cal?.data || '',
-            cognome: (parts.join(' ') || r.rider_name || '').toUpperCase(),
-            nome: nome.toUpperCase(), team: (r.team_name || '').toUpperCase(),
-            team_id: '', atleta_id: r.atleta_id, genere: null,
-          };
-        });
-      }
-    } catch (e) { console.warn('[gara-narrative] pcs fallback error:', e.message); }
-  }
+  if (!results.length) results = await _pcsResultsFallback(id, cal);
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
   const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
@@ -967,7 +977,12 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   const corr = await _getResultCorrections().catch(() => ({ garaCorrections: {}, risultatoCorrections: {}, excludedIds: new Set() }));
   let resultsRaw = _applyResultCorrections(resultsRawIn, corr);
   resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
-  const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
+  let results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
+  // Stesso fallback PCS di _buildGaraNarrative (vedi lì per il contesto):
+  // senza questo, il testo AI per una gara solo-PCS restava sempre null,
+  // e la richiesta ripiombava ogni volta sul fallback a template invece
+  // di generare/salvare un vero racconto (podio/hashtag) come le altre gare.
+  if (!results.length) results = await _pcsResultsFallback(id, cal);
   if (!results.length) return null;
   const winner = results[0];
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
