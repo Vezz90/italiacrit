@@ -1014,10 +1014,32 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   if (winner?.atleta_id) {
     const tally = await _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
     stagione_vincitore = { vittorie_totali_stagione_QUESTA_INCLUSA: tally.wins, podi_totali_stagione_QUESTO_INCLUSO: tally.podiums };
-    tutti_i_risultati_stagione_vincitore = (resultsRaw || [])
+    const nativeRows = (resultsRaw || [])
       .filter(r => r.atleta_id === winner.atleta_id && (r.data || '') <= raceDate)
-      .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0))
       .map(r => ({ data: r.data || '', posizione: Number(r.posizione) || null, gara: r.nome_gara || r.gara_id, questa_gara: r.gara_id === id }));
+    // _ogSeasonTally somma ai risultati italiani (sopra) anche le gare
+    // PCS/estere (UCI, club esteri, ecc.) — senza includerle anche QUI,
+    // l'elenco dettagliato dato a Claude per "contare da sé" restava
+    // strutturalmente più corto del totale ufficiale (che le include), e
+    // Claude si trovava davanti un'incongruenza reale — non un errore suo —
+    // scrivendone a volte un disclaimer nel post invece di limitarsi al
+    // numero ufficiale. Stessa fonte, stesso filtro anti-doppione "(NAT)"
+    // di _ogSeasonTally, così i due conteggi ora combaciano DAVVERO invece
+    // di doversi fidare alla cieca di un totale che l'elenco non giustifica.
+    let extraRows = [];
+    try {
+      const season = Number(String(raceDate || '').slice(0, 4));
+      if (season) {
+        const { data: pcsRows } = await supabase.from('pcs_results')
+          .select('data, posizione, gara_name')
+          .eq('atleta_id', winner.atleta_id).eq('season', season).lte('data', raceDate);
+        extraRows = (pcsRows || [])
+          .filter(r => !(r.gara_name || '').includes('(NAT)'))
+          .map(r => ({ data: r.data || '', posizione: Number(r.posizione) || null, gara: r.gara_name || '', questa_gara: false }));
+      }
+    } catch { /* PCS opzionale, non bloccare */ }
+    tutti_i_risultati_stagione_vincitore = [...nativeRows, ...extraRows]
+      .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0));
   }
   const compagni_di_squadra_a_podio = winner
     ? results.filter(r => r.posizione > 1 && r.posizione <= 3 && r.team_id === winner.team_id)
