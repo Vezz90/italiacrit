@@ -1041,8 +1041,17 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
     tutti_i_risultati_stagione_vincitore = [...nativeRows, ...extraRows]
       .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0));
   }
+  // Bug reale: le righe PCS-fallback (vedi _pcsResultsFallback) non hanno un
+  // vero team_id (non lo forniamo, solo il nome squadra) e lo lasciano ''
+  // per TUTTE — un confronto diretto "r.team_id === winner.team_id" risultava
+  // sempre vero ('' === '') per QUALSIASI corridore a podio, facendo credere
+  // a Claude una tripletta di squadra inventata anche con team diversissimi
+  // (segnalato dal vivo con screenshot: Zanini/XDS Astana e Pizzi/Technipes
+  // spacciati per compagni di Dati/Team Ukyo). Con team_id assente confronta
+  // per nome squadra (unico dato disponibile), mai per stringa vuota.
   const compagni_di_squadra_a_podio = winner
-    ? results.filter(r => r.posizione > 1 && r.posizione <= 3 && r.team_id === winner.team_id)
+    ? results.filter(r => r !== winner && r.posizione > 1 && r.posizione <= 3 &&
+        (winner.team_id ? r.team_id === winner.team_id : !!(winner.team && r.team && r.team === winner.team)))
         .map(r => `${r.posizione}° ${r.cognome} ${r.nome}`)
     : [];
 
