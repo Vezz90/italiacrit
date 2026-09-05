@@ -17662,5 +17662,65 @@
     "regione": "LOMBARDIA",
     "categoria": "Esordienti 1°/2° anno",
     "luogo": "MARCARIA"
+  },
+  {
+    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03",
+    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA",
+    "data": "2026-09-03",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "FRIULI VENEZIA GIULIA",
+    "categoria": "Elite e Under 23 a  tappe",
+    "luogo": "VARIE LOCALITA'"
+  },
+  {
+    "id": "50_GIRO_DELLA_LUNIGIANA_2026-09-09",
+    "nome": "50° GIRO DELLA LUNIGIANA",
+    "data": "2026-09-09",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LIGURIA",
+    "categoria": "Juniores a tappe",
+    "luogo": "VARIE LOCALITA'"
+  },
+  {
+    "id": "34_GIRO_DEL_VENETO_2026-09-10",
+    "nome": "34° GIRO DEL VENETO",
+    "data": "2026-09-10",
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "VENETO",
+    "categoria": "Elite s.c. e Under 23 tappe",
+    "luogo": "VARIE LOCALITA'"
+  },
+  {
+    "id": "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_2026-09-26",
+    "nome": "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501",
+    "data": "2026-09-26",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LOMBARDIA",
+    "categoria": "Crono Multicategoria da Esordienti m/f",
+    "luogo": "ALZATE BRIANZA"
+  },
+  {
+    "id": "74_COPPA_DEL_MOBILIO_2026-10-13",
+    "nome": "74^  COPPA DEL MOBILIO",
+    "data": "2026-10-13",
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "TOSCANA",
+    "categoria": "Elite e Under 23",
+    "luogo": "PONSACCO - PISA"
   }
 ]
