@@ -2,8 +2,10 @@
   "179456": {
     "nome": "LA GIALLA CYCLING TIPO PISTA",
     "data": "4 Settembre 2026",
-    "status": "pending",
-    "lastChecked": "2026-09-04T05:00:40.197Z"
+    "status": "imported",
+    "lastChecked": "2026-09-05T05:01:00.160Z",
+    "written": 25,
+    "review": []
   },
   "180140": {
     "nome": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
@@ -71,7 +73,7 @@
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:37.914Z"
+    "lastChecked": "2026-09-05T05:00:37.098Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -85,7 +87,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:37.344Z"
+    "lastChecked": "2026-09-05T05:00:36.531Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -99,7 +101,7 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:36.208Z"
+    "lastChecked": "2026-09-05T05:00:35.393Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
@@ -113,7 +115,7 @@
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-03T05:00:38.219Z"
+    "lastChecked": "2026-09-05T05:00:35.964Z"
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -170,7 +172,7 @@
     "nome": "2° TROFEO FLAMINIO SULAS",
     "data": "3 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:39.626Z"
+    "lastChecked": "2026-09-05T05:00:38.797Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -184,7 +186,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:35.644Z"
+    "lastChecked": "2026-09-05T05:00:34.831Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -206,12 +208,12 @@
     "nome": "2° TROFEO SANT'EGIDIO",
     "data": "2 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:39.055Z"
+    "lastChecked": "2026-09-05T05:00:38.235Z"
   },
   "182813": {
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
     "data": "27 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:38.483Z"
+    "lastChecked": "2026-09-05T05:00:37.672Z"
   }
 }
