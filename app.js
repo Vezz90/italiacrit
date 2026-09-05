@@ -19697,9 +19697,20 @@ window.openOcrArrivoUpload = (garaId) => {
   input.type = 'file';
   input.accept = 'image/*';
   input.capture = 'environment'; // su mobile apre la fotocamera per default
+  // L'input va inserito nella pagina (anche se invisibile) PRIMA di
+  // chiamare .click(): un <input type="file"> mai aggiunto al DOM può non
+  // aprire affatto il selettore file su alcuni browser mobile (soprattutto
+  // webview in-app, es. Instagram/Facebook, o certi Android) — nessun
+  // errore, semplicemente non succede nulla al tocco, esattamente come
+  // segnalato dal vivo ("niente di niente" dopo aver scelto la foto). La
+  // card "Carica foto" (window.openRacePhotoUpload) non ha questo problema
+  // perché il suo <input> è già dentro una modale vera inserita nel DOM.
+  input.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(input);
+  const cleanup = () => { input.remove(); };
   input.onchange = async () => {
     const file = input.files?.[0];
-    if (!file) return;
+    if (!file) { cleanup(); return; }
     showToast('📷 Leggo la foto…', 'info');
     try {
       const { base64, mediaType } = await _resizeImageForOcr(file);
@@ -19710,6 +19721,7 @@ window.openOcrArrivoUpload = (garaId) => {
       window.openManualResultBulkForm(garaId, rows);
       showToast(`✓ ${rows.length} righe estratte — controllale prima di salvare`);
     } catch (e) { showToast('Errore lettura foto: ' + e.message, 'error'); }
+    finally { cleanup(); }
   };
   input.click();
 };
