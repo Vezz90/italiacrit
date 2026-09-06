@@ -2,14 +2,38 @@
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 466,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 646,
+    "vittorie": 12,
+    "p1": 12,
     "p2": 9,
     "p3": 2,
     "pout": 29,
     "n_atleti": 8,
     "pos": 1
+  },
+  {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 431,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 6,
+    "p3": 5,
+    "pout": 23,
+    "n_atleti": 6,
+    "pos": 2
+  },
+  {
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 428,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
+    "p3": 11,
+    "pout": 15,
+    "n_atleti": 5,
+    "pos": 3
   },
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
@@ -21,7 +45,19 @@
     "p3": 5,
     "pout": 22,
     "n_atleti": 5,
-    "pos": 2
+    "pos": 4
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 322,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 7,
+    "p3": 5,
+    "pout": 14,
+    "n_atleti": 4,
+    "pos": 5
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
@@ -33,42 +69,6 @@
     "p3": 4,
     "pout": 34,
     "n_atleti": 7,
-    "pos": 3
-  },
-  {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 308,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 5,
-    "p3": 7,
-    "pout": 15,
-    "n_atleti": 5,
-    "pos": 4
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 287,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 5,
-    "pout": 23,
-    "n_atleti": 6,
-    "pos": 5
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 286,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 7,
-    "p3": 5,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 6
   },
   {
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 197,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 17,
+    "n_atleti": 6,
+    "pos": 8
+  },
+  {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
     "punti": 184,
@@ -93,7 +105,19 @@
     "p3": 3,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 8
+    "pos": 9
+  },
+  {
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 163,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 26,
+    "n_atleti": 6,
+    "pos": 10
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -105,7 +129,7 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 5,
-    "pos": 9
+    "pos": 11
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -117,7 +141,7 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 10
+    "pos": 12
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -129,7 +153,19 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 2,
-    "pos": 11
+    "pos": 13
+  },
+  {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 139,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 16,
+    "n_atleti": 6,
+    "pos": 14
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -141,19 +177,19 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 12
+    "pos": 15
   },
   {
-    "team_id": "GS_CICLI_FIORIN_ASD",
-    "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 103,
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 105,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
+    "p2": 2,
     "p3": 1,
-    "pout": 22,
-    "n_atleti": 6,
-    "pos": 13
+    "pout": 17,
+    "n_atleti": 4,
+    "pos": 16
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -165,7 +201,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 14
+    "pos": 17
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -177,31 +213,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 15
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 83,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 16
-  },
-  {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 81,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "BLU_TEAM",
@@ -213,18 +225,6 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 67,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 4,
     "pos": 19
   },
   {
@@ -356,7 +356,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 2,
+    "n_atleti": 5,
     "pos": 30
   },
   {
@@ -476,7 +476,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 3,
+    "n_atleti": 5,
     "pos": 40
   },
   {
@@ -608,7 +608,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
+    "n_atleti": 2,
     "pos": 51
   },
   {
@@ -706,5 +706,53 @@
     "pout": 1,
     "n_atleti": 1,
     "pos": 59
+  },
+  {
+    "team_id": "LIGURIA",
+    "team_nome": "LIGURIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 60
+  },
+  {
+    "team_id": "VALLE_D_AOSTA",
+    "team_nome": "VALLE D'AOSTA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 61
+  },
+  {
+    "team_id": "MARCHE",
+    "team_nome": "MARCHE",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 62
+  },
+  {
+    "team_id": "FRIULI_VENEZIA_GIULIA",
+    "team_nome": "FRIULI VENEZIA GIULIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 63
   }
 ]

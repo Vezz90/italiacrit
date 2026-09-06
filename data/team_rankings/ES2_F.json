@@ -14,22 +14,22 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 413,
-    "vittorie": 11,
-    "p1": 11,
+    "punti": 425,
+    "vittorie": 12,
+    "p1": 12,
     "p2": 6,
-    "p3": 7,
+    "p3": 8,
     "pout": 20,
-    "n_atleti": 2,
+    "n_atleti": 3,
     "pos": 2
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 379,
+    "punti": 385,
     "vittorie": 8,
     "p1": 8,
-    "p2": 5,
+    "p2": 6,
     "p3": 7,
     "pout": 28,
     "n_atleti": 4,
@@ -60,6 +60,30 @@
     "pos": 5
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 197,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 6,
+    "p3": 3,
+    "pout": 23,
+    "n_atleti": 4,
+    "pos": 6
+  },
+  {
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 173,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 3,
+    "pout": 22,
+    "n_atleti": 2,
+    "pos": 7
+  },
+  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
     "punti": 159,
@@ -69,41 +93,17 @@
     "p3": 5,
     "pout": 25,
     "n_atleti": 6,
-    "pos": 6
-  },
-  {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 159,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 3,
-    "pout": 20,
-    "n_atleti": 2,
-    "pos": 7
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 155,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 23,
-    "n_atleti": 4,
     "pos": 8
   },
   {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
     "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 137,
+    "punti": 140,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 1,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 3,
     "pos": 9
   },
@@ -134,12 +134,12 @@
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 101,
-    "vittorie": 0,
-    "p1": 0,
+    "punti": 112,
+    "vittorie": 1,
+    "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 4,
     "pos": 12
   },
@@ -180,6 +180,30 @@
     "pos": 15
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 85,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 16
+  },
+  {
+    "team_id": "SESTU_BIKE_A_S_D",
+    "team_nome": "SESTU BIKE A.S.D.",
+    "punti": 82,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 17
+  },
+  {
     "team_id": "GAZZANIGHESE_ASD",
     "team_nome": "GAZZANIGHESE ASD",
     "punti": 79,
@@ -189,19 +213,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 16
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 78,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 2,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "UC_DONORATICO",
@@ -213,18 +225,6 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 18
-  },
-  {
-    "team_id": "SESTU_BIKE_A_S_D",
-    "team_nome": "SESTU BIKE A.S.D.",
-    "punti": 75,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 19
   },
   {
@@ -252,6 +252,30 @@
     "pos": 21
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 52,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 4,
+    "pos": 22
+  },
+  {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 23
+  },
+  {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
     "team_nome": "ASD TIRRENO BIKE CICLI FATATO",
     "punti": 43,
@@ -261,7 +285,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 24
   },
   {
     "team_id": "A_S_D_AVIS_BIKE_RUVO",
@@ -273,30 +297,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 23
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 36,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 3,
-    "pos": 24
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 35,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 3,
     "pos": 25
   },
   {
@@ -320,7 +320,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "n_atleti": 1,
+    "n_atleti": 3,
     "pos": 27
   },
   {
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 30
+  },
+  {
     "team_id": "TOSCANA",
     "team_nome": "TOSCANA",
     "punti": 24,
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "A_S_D_MONGIBELLO_MTB_TEAM",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "VALLE_D_AOSTA",
@@ -381,7 +393,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "TRENTO",
@@ -392,18 +404,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "n_atleti": 2,
-    "pos": 33
-  },
-  {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 2,
     "pos": 34
   },
@@ -416,7 +416,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
+    "n_atleti": 6,
     "pos": 35
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
+    "team_nome": "UNIONE CICLISTICA OSSANESGA",
+    "punti": 14,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 37
+  },
+  {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
     "team_nome": "KTM ACADEMY LE MARMOTTE",
     "punti": 12,
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "CARISMA_TEAM",
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -489,7 +501,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "UMBRIA",
@@ -501,7 +513,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "A_S_D_ORANGE_BIKE_TEAM",
@@ -512,18 +524,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 43
-  },
-  {
-    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
-    "team_nome": "UNIONE CICLISTICA OSSANESGA",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 44
   },
@@ -560,7 +560,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
+    "n_atleti": 2,
     "pos": 47
   },
   {
@@ -634,5 +634,29 @@
     "pout": 1,
     "n_atleti": 1,
     "pos": 53
+  },
+  {
+    "team_id": "SARDEGNA",
+    "team_nome": "SARDEGNA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 54
+  },
+  {
+    "team_id": "SICILIA",
+    "team_nome": "SICILIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 55
   }
 ]
