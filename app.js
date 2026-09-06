@@ -25569,7 +25569,24 @@ async function renderRisultati() {
   // macchinoso"). SOLO oggi, non tutte le gare future — altrimenti la lista
   // Risultati si riempirebbe di gare lontane senza nulla da vedere.
   const _risTodayIso = new Date().toISOString().slice(0, 10);
-  const _hasResultsToday = new Set(Object.values(eventMap).map(ev => toCalId(ev.id)));
+  // toCalId() da solo stacca SOLO un suffisso finale tipo "_ES1_F": non basta
+  // quando lo scraper FCI genera per i risultati un nome/id ben più
+  // dettagliato di quello (generico) del calendario, con le parole di
+  // categoria incastrate IN MEZZO all'id e non solo in coda — es. calendario
+  // "14_TROFEO_A_COMBERLATO_2026-09-06" ("Donne Esordienti" solo nel campo
+  // categoria) vs risultato reale
+  // "14_TROFEO_A_COMBERLATO_DONNE_ESORDIENTI_PRIMO_ANNO_2026-09-06_ES1_F".
+  // toCalId() su quest'ultimo toglie solo "_ES1_F" e non arriva mai all'id
+  // calendario, quindi la card "in attesa" restava lì per sempre anche a
+  // scraping completato (segnalato dal vivo con screenshot). garaToCalId
+  // (stessa mappa di alias già usata altrove per foto/video) risolve questi
+  // casi con l'euristica di contenimento inversa — va consultata anche qui.
+  const _g2c = globalData?.garaToCalId || {};
+  const _hasResultsToday = new Set(Object.values(eventMap).flatMap(ev => {
+    const ids = [toCalId(ev.id)];
+    if (_g2c[ev.id]) ids.push(_g2c[ev.id]);
+    return ids;
+  }));
   // Alcune righe calendario FCI non hanno affatto un vero nome gara — la
   // pagina federciclismo.it mostra lì SOLO la categoria (es. "Allievi"),
   // probabilmente perché il circolo organizzatore non ha compilato un
