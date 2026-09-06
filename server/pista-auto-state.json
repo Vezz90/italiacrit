@@ -15,6 +15,100 @@
     "written": 24,
     "review": []
   },
+  "180256": {
+    "nome": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+    "data": "29 Maggio 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:24:09.321Z",
+    "written": 16,
+    "review": [
+      {
+        "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+        "posizione": 2,
+        "cognome": "BISOGNIN",
+        "nome": "GIOSUE'",
+        "team": "ROTOGAL GUADENSE",
+        "categoria": "AL_M",
+        "reason": "team non combacia",
+        "teamNoto": "U.S.FAUSTO COPPI MONTECCHIO PRECALCINO"
+      },
+      {
+        "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+        "posizione": 3,
+        "cognome": "STOCCHIERO",
+        "nome": "LUCA",
+        "team": "FAIZANE' CSZ SANDRIGO BIKE",
+        "categoria": "AL_M",
+        "reason": "team non combacia",
+        "teamNoto": "U.S.FAUSTO COPPI MONTECCHIO PRECALCINO"
+      },
+      {
+        "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+        "posizione": 6,
+        "cognome": "BIASIA",
+        "nome": "EDOARDO",
+        "team": "FAIZANE' CSZ SANDRIGO BIKE",
+        "categoria": "AL_M",
+        "reason": "team non combacia",
+        "teamNoto": "VELO JUNIOR NOVE"
+      },
+      {
+        "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+        "posizione": 8,
+        "cognome": "GUIDOLIN",
+        "nome": "RICCARDO",
+        "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+        "categoria": "AL_M",
+        "reason": "team non combacia",
+        "teamNoto": "CAMPANA IMBALLAGGI MORBIATO TRENTINO"
+      },
+      {
+        "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+        "posizione": 9,
+        "cognome": "FERRARI",
+        "nome": "NICCOLO'",
+        "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+        "categoria": "AL_M",
+        "reason": "team non combacia",
+        "teamNoto": "CAMPANA IMBALLAGGI MORBIATO TRENTINO"
+      }
+    ]
+  },
+  "180257": {
+    "nome": "14^ NOTTURNA DI ORSAGO",
+    "data": "5 Giugno 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:24:12.341Z"
+  },
+  "180258": {
+    "nome": "15° TROFEO GRAFICA 78",
+    "data": "12 Giugno 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:24:40.191Z",
+    "written": 13,
+    "review": [
+      {
+        "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_AL_F",
+        "posizione": 3,
+        "cognome": "FANTIN",
+        "nome": "NICOLE",
+        "team": "ASD GS SORGENTE PRADIPOZZO",
+        "categoria": "AL_F",
+        "reason": "team non combacia",
+        "teamNoto": "ASS.NE CICLISTICA DILETT. VALVASONE"
+      },
+      {
+        "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_AL_M",
+        "posizione": 1,
+        "cognome": "RODRIGUES DOS SANTOS VICENTE",
+        "nome": "JUNIOR",
+        "team": "A.S.D. SACILESE",
+        "categoria": "AL_M",
+        "reason": "nome ambiguo (split incerto)",
+        "teamNoto": "A.S.D. SACILESE"
+      }
+    ]
+  },
   "180259": {
     "nome": "G.P. 43° FESTA DELLO SPORT 3° MEM. G. BERTOLDO- 9° TROFEO SMANIA - 6°MEM. FRANCO E DAVIDE FAVARETTO",
     "data": "14 Agosto 2026",
@@ -30,6 +124,12 @@
     "lastChecked": "2026-08-29T05:00:38.586Z",
     "written": 0,
     "review": []
+  },
+  "180302": {
+    "nome": "SOUTH KRIT GIOVANISSIMI GIORNATA AZZURRA",
+    "data": "2 Giugno 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:24:10.623Z"
   },
   "180449": {
     "nome": "NOTTURNA DELL'ASSUNTA",
@@ -73,7 +173,7 @@
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:37.098Z"
+    "lastChecked": "2026-09-06T14:25:00.121Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -87,7 +187,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:36.531Z"
+    "lastChecked": "2026-09-06T14:24:59.534Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -101,19 +201,93 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:35.393Z"
+    "lastChecked": "2026-09-06T14:24:58.365Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
     "data": "26 Giugno 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:24:56.502Z",
+    "written": 18,
+    "review": [
+      {
+        "garaId": "5_NOTTURNA_CASTEL_ROMANO_2026-06-26_AL_F",
+        "posizione": 2,
+        "cognome": "LOMBARDI",
+        "nome": "GIULIA",
+        "team": "BUSTO GAROLFO",
+        "categoria": "AL_F",
+        "reason": "team non combacia",
+        "teamNoto": "S.C. CESANO MADERNO"
+      },
+      {
+        "garaId": "5_NOTTURNA_CASTEL_ROMANO_2026-06-26_ES2_F",
+        "posizione": 3,
+        "cognome": "LONGO BORGHINI MARTA",
+        "nome": "ELIZABETH",
+        "team": "SCUOLA CICLISMO VERSO L'IRIDE",
+        "categoria": "ES2_F",
+        "reason": "nome ambiguo (split incerto)",
+        "teamNoto": "SCUOLA CICLISMO VERSO L'IRIDE"
+      }
+    ]
+  },
+  "180906": {
+    "nome": "15° TROFEO GRAFICA 78",
+    "data": "12 Giugno 2026",
     "status": "pending",
-    "lastChecked": "2026-08-24T22:48:12.433Z"
+    "lastChecked": "2026-09-06T14:24:27.861Z"
   },
   "181050": {
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:35.964Z"
+    "lastChecked": "2026-09-06T14:24:57.795Z"
+  },
+  "181169": {
+    "nome": "POLICRIT IQM SELEZIONE",
+    "data": "23 Maggio 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:23:51.288Z"
+  },
+  "181246": {
+    "nome": "MEMORIAL PINUCCIO CHIAVASSA",
+    "data": "14 Maggio 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:23:50.576Z",
+    "written": 21,
+    "review": [
+      {
+        "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_ES2_M",
+        "posizione": 6,
+        "cognome": "MARCHISIO",
+        "nome": "MATTIA",
+        "team": "ALBA BRA LANGHE ROERO",
+        "categoria": "ES2_M",
+        "reason": "team non combacia",
+        "teamNoto": "ESPERIA PIASCO"
+      },
+      {
+        "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_JUN_M",
+        "posizione": 4,
+        "cognome": "ROCCIA",
+        "nome": "MANUEL",
+        "team": "CASANO",
+        "categoria": "JUN_M",
+        "reason": "team non combacia",
+        "teamNoto": "G.S. CICLI FIORIN CYCLING TEAM ASD"
+      },
+      {
+        "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_JUN_M",
+        "posizione": 5,
+        "cognome": "GALLO",
+        "nome": "FILIPPO",
+        "team": "U.C. PIASCO",
+        "categoria": "JUN_M",
+        "reason": "team non combacia",
+        "teamNoto": "ESPERIA PIASCO"
+      }
+    ]
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -122,6 +296,33 @@
     "lastChecked": "2026-08-24T22:48:54.859Z",
     "written": 44,
     "review": []
+  },
+  "181346": {
+    "nome": "TROFEO AMICI DEL CICLISMO DI CASALOLDO - 1° MEM. GIANCARLO PELLEGRI",
+    "data": "12 Giugno 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:24:27.129Z",
+    "written": 16,
+    "review": [
+      {
+        "garaId": "TROFEO_AMICI_DEL_CICLISMO_DI_CASALOLDO_1_MEM_GIANCARLO_PELLEGRI_2026-06-12_ES1_M",
+        "posizione": 4,
+        "cognome": "DE ANGELIS",
+        "nome": "AUGUSTO",
+        "team": "CAMIGNONE A.S.D.",
+        "categoria": "ES1_M",
+        "reason": "nuovo/non abbinato"
+      },
+      {
+        "garaId": "TROFEO_AMICI_DEL_CICLISMO_DI_CASALOLDO_1_MEM_GIANCARLO_PELLEGRI_2026-06-12_ES1_M",
+        "posizione": 1,
+        "cognome": "FALAVIGNA",
+        "nome": "SEBASTIANO",
+        "team": "S. C. MINCIO-CHIESE A.S.D",
+        "categoria": "ES1_M",
+        "reason": "nuovo/non abbinato"
+      }
+    ]
   },
   "181395": {
     "nome": "33° TROFEO PROLOCO",
@@ -164,13 +365,96 @@
     "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
     "data": "25 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-04T05:00:36.778Z"
+    "lastChecked": "2026-09-06T14:24:58.934Z"
+  },
+  "181505": {
+    "nome": "37° G.P. JONNY MOLE  - 12° MEMORIAL ILVANO PINTON",
+    "data": "5 Giugno 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:24:11.768Z"
   },
   "181775": {
     "nome": "2° TROFEO FLAMINIO SULAS",
     "data": "3 Settembre 2026",
+    "status": "imported",
+    "lastChecked": "2026-09-06T14:25:21.535Z",
+    "written": 23,
+    "review": [
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+        "posizione": 6,
+        "cognome": "FOIS ANTONELLO",
+        "nome": "LUCA",
+        "team": "S.C. PATTADA",
+        "categoria": "ES1_M",
+        "reason": "nuovo/non abbinato"
+      },
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+        "posizione": 7,
+        "cognome": "MARRAS",
+        "nome": "STEFANO",
+        "team": "ALGHERO BIKE A.S.D.",
+        "categoria": "ES1_M",
+        "reason": "nuovo/non abbinato"
+      },
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_F",
+        "posizione": 1,
+        "cognome": "SOLLA",
+        "nome": "LINDA",
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "categoria": "ES1_F",
+        "reason": "anno esordienti incerto",
+        "teamNoto": "CRAZY WHEELS - CYCLING ACADEMY"
+      },
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+        "posizione": 1,
+        "cognome": "LAI",
+        "nome": "GIUSEPPE",
+        "team": "ALGHERO BIKE A.S.D.",
+        "categoria": "JUN_M",
+        "reason": "team non combacia",
+        "teamNoto": "V.C.EMPOLI ARDARESE ASD"
+      },
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+        "posizione": 1,
+        "cognome": "FARA",
+        "nome": "ALESSANDRO",
+        "team": "S.C. FC'72",
+        "categoria": "JUN_M",
+        "reason": "nuovo/non abbinato"
+      },
+      {
+        "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+        "posizione": 2,
+        "cognome": "PINTUS",
+        "nome": "GABRIELE",
+        "team": "S.C. FC'72",
+        "categoria": "JUN_M",
+        "reason": "nuovo/non abbinato"
+      }
+    ]
+  },
+  "181778": {
+    "nome": "TROFEO CITTÀ DI GUSPINI",
+    "data": "6 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:38.797Z"
+    "lastChecked": "2026-09-06T14:25:22.243Z"
+  },
+  "181860": {
+    "nome": "SOUTH KRIT 2026 AMATORI EDITION 1 GP CICLISMO OGGI E DOMANI",
+    "data": "2 Giugno 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:24:10.055Z"
+  },
+  "182042": {
+    "nome": "6° TROFEO ISOLA RIZZA BY NIGHT ON THE ROAD",
+    "data": "4 Giugno 2026",
+    "status": "pending",
+    "lastChecked": "2026-09-06T14:24:11.194Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -184,7 +468,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:34.831Z"
+    "lastChecked": "2026-09-06T14:24:57.216Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -206,12 +490,12 @@
     "nome": "2° TROFEO SANT'EGIDIO",
     "data": "2 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:38.235Z"
+    "lastChecked": "2026-09-06T14:25:01.269Z"
   },
   "182813": {
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
     "data": "27 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-05T05:00:37.672Z"
+    "lastChecked": "2026-09-06T14:25:00.696Z"
   }
 }

@@ -19762,6 +19762,12 @@ function _mrIsWordSubset(needleWords, haystackWords) {
 // stesso sistema già usato dallo scraper FCI).
 const _MR_NATIONAL_TEAM_RE = /\b(ITALIA|NAZIONALE|RAPPRESENTATIVA|COMITATO|SELEZIONE|REPUBBLICA|SVIZZERA|FRANCIA|GERMANIA|SPAGNA|SLOVENIA|AUSTRIA|BELGIO|OLANDA|DANIMARCA|GRAN BRETAGNA|POLONIA|UCRAINA|NATIONAL TEAM)\b/i;
 function _mrIsNationalTeam(name) { return _MR_NATIONAL_TEAM_RE.test(String(name || '')); }
+function _mrSquashTeam(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ''); }
+function _mrTeamsDiffer(a, b) {
+  const sa = _mrSquashTeam(a), sb = _mrSquashTeam(b);
+  if (!sa || !sb) return false;
+  return sa !== sb && !sa.includes(sb) && !sb.includes(sa);
+}
 
 // Riconoscimento automatico di un atleta GIA' A DATABASE dietro una riga
 // OCR — evita di creare un profilo doppione quando la foto riporta il nome
@@ -19811,7 +19817,7 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
         // altrimenti si registra come detto sulla foto (può davvero essere
         // cambiato team rispetto all'ultima volta che l'abbiamo visto).
         const team = (match.team && _mrIsNationalTeam(r.team)) ? match.team : (r.team || match.team);
-        return { pos: r.pos, cognome: match.cognome, nome: match.nome, team, tempo: r.tempo || '', atletaId: match.id, _autoMatched: true, _ocrRaw: `${r.cognome || ''} ${r.nome || ''}`.trim() };
+        return { pos: r.pos, cognome: match.cognome, nome: match.nome, team, tempo: r.tempo || '', atletaId: match.id, _autoMatched: true, _ocrRaw: `${r.cognome || ''} ${r.nome || ''}`.trim(), _dbTeam: match.team || '' };
       }
       return { pos: r.pos, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', tempo: r.tempo || '', atletaId: null,
                _ocrCognome: r.cognome || '', _ocrNome: r.nome || '', _ocrTeam: r.team || '' };
@@ -19870,11 +19876,14 @@ window._mrBulkRender = () => {
     ${window._mrBulkRows.map((r, idx) => `
       <div style="display:grid;grid-template-columns:52px 1fr 1fr 110px 28px;gap:6px;margin-bottom:6px;position:relative">
         <input type="number" min="1" value="${r.pos}" style="${inp}" oninput="window._mrBulkRows[${idx}].pos=parseInt(this.value,10)||0"/>
+        ${(() => { const teamMismatch = r._autoMatched && _mrTeamsDiffer(r.team, r._dbTeam); const col = teamMismatch ? '#F59E0B' : '#22C55E'; return `
         <div style="position:relative">
           <input type="text" placeholder="Cerca corridore…" autocomplete="off" value="${esc(r.cognome ? `${r.cognome} ${r.nome}`.trim() : '')}"
-            oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}${r._autoMatched ? ';border-color:#22C55E' : ''}"
+            oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}${r._autoMatched ? `;border-color:${col}` : ''}"
             title="${r._autoMatched ? `Riconosciuto — la foto riportava \\"${esc(r._ocrRaw)}\\", già a database come sopra` : ''}"/>
-          ${r._autoMatched ? `<div style="font-size:.66rem;color:#22C55E;margin-top:2px">✓ già a database (foto: "${esc(r._ocrRaw)}")</div>` : ''}
+          ${teamMismatch
+            ? `<div style="font-size:.66rem;color:${col};margin-top:2px">⚠ team diverso da quello a database ("${esc(r._dbTeam)}") — verifica prima di salvare</div>`
+            : r._autoMatched ? `<div style="font-size:.66rem;color:${col};margin-top:2px">✓ già a database (foto: "${esc(r._ocrRaw)}")</div>` : ''}`; })()}
           ${(r._ocrCognome && !r._autoMatched && authUser()?.role === 'admin') ? `<div style="font-size:.66rem;margin-top:2px"><button onclick="window.openMrBulkCreateAthlete(${idx})" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;font-size:inherit">＋ Nessun atleta trovato — crea nuovo profilo</button></div>` : ''}
           <div id="mr-bulk-dd-${idx}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:180px;overflow:auto;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
         </div>
