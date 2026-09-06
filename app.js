@@ -15033,7 +15033,12 @@ function _stageSuffixLabel(nome) {
   if (/PROLOGO/i.test(s)) return 'Prologo';
   const isTT = /CRONOMETRO/i.test(s);
   const label = s.replace(/\s+/g, ' ')
-    .replace(/\s*A?\s*CRONOMETRO\s*$/i, '')
+    // \s+ (non \s*) OBBLIGATORIO prima dell'eventuale "A": senza, il motore
+    // regex trova un match più a sinistra facendo combaciare A? con la "A"
+    // finale di "TAPPA" stessa (invece che uno spazio vero prima di
+    // CRONOMETRO) — segnalato dal vivo: "8ª Tapp (Crono)" invece di "8ª
+    // Tappa (Crono)", la label perdeva l'ultima lettera.
+    .replace(/\s+A?\s*CRONOMETRO\s*$/i, '')
     .replace(/^(\d+)[°^ª]?\s+TAPPA$/i, '$1ª Tappa')
     .replace(/^TAPPA\s+(\d+)$/i, '$1ª Tappa')
     .replace(/\bPRIMA\b/i, '1ª').replace(/\bSECONDA\b/i, '2ª').replace(/\bTERZA\b/i, '3ª')
