@@ -14965,21 +14965,36 @@ function _raceBaseName(nome) {
 // Classifica Generale nella stessa "serie" a prescindere dalla data (ogni
 // tappa ha una data diversa, quindi _raceBaseName/_catGroups — pensati per
 // le categorie dello STESSO giorno — non le raggruppano mai). Toglie la coda
-// "PRIMA/SECONDA/... TAPPA" o "CLASSIFICA GENERALE"; se non trova nessuna di
-// queste code non è una gara a tappe e ritorna stringa vuota (niente tab).
-const _STAGE_SUFFIX_RE = /\s+(?:(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|\d+[°^ª]?)\s+TAPPA|TAPPA\s+\d+|PROLOGO|CLASSIFICA\s+GENERALE)\s*$/i;
+// "PRIMA/SECONDA/... TAPPA" (con eventuale descrittore extra tipo
+// "CRONOMETRO", visto dal vivo su "OTTAVA TAPPA CRONOMETRO" — senza
+// l'opzionale la tappa a cronometro non veniva riconosciuta affatto) o
+// "CLASSIFICA GENERALE"; se non trova nessuna di queste code non è (di per
+// sé) riconoscibile come gara a tappe.
+const _STAGE_SUFFIX_RE = /\s+(?:(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|\d+[°^ª]?)\s+TAPPA(?:\s+A?\s*CRONOMETRO)?|TAPPA\s+\d+|PROLOGO|CLASSIFICA\s+GENERALE)\s*$/i;
 function _stageBaseName(nome) {
   let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ').replace(/\s+/g, ' ').trim();
   if (!_STAGE_SUFFIX_RE.test(s)) return '';
   return s.replace(_STAGE_SUFFIX_RE, '').trim();
 }
+// Nome-base "effettivo" per il raggruppamento: alcuni giri non danno affatto
+// alla PRIMA tappa una coda "PRIMA TAPPA" (segnalato dal vivo: "GIRO
+// D'ITALIA NEXT GEN" nudo per la tappa 1, "...SECONDA TAPPA" dalla seconda
+// in poi) — _stageBaseName da sola la escluderebbe dal gruppo (nessuna coda
+// da togliere → stringa vuota, mai uguale alla base delle altre tappe).
+// Qui, se non c'è coda riconoscibile, il nome intero conta come possibile
+// "prima tappa senza numero" e si confronta così com'è.
+function _stageEffectiveBase(nome) {
+  return _stageBaseName(nome) || String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ').replace(/\s+/g, ' ').trim();
+}
 function _stageSuffixLabel(nome) {
   const m = String(nome || '').toUpperCase().match(_STAGE_SUFFIX_RE);
-  if (!m) return '';
+  if (!m) return '1ª Tappa'; // nessuna coda: è la tappa "nuda", vedi _stageEffectiveBase
   const s = m[0].trim();
   if (/CLASSIFICA/i.test(s)) return 'Classifica Generale';
   if (/PROLOGO/i.test(s)) return 'Prologo';
-  return s.replace(/\s+/g, ' ')
+  const isTT = /CRONOMETRO/i.test(s);
+  const label = s.replace(/\s+/g, ' ')
+    .replace(/\s*A?\s*CRONOMETRO\s*$/i, '')
     .replace(/^(\d+)[°^ª]?\s+TAPPA$/i, '$1ª Tappa')
     .replace(/^TAPPA\s+(\d+)$/i, '$1ª Tappa')
     .replace(/\bPRIMA\b/i, '1ª').replace(/\bSECONDA\b/i, '2ª').replace(/\bTERZA\b/i, '3ª')
@@ -14988,6 +15003,7 @@ function _stageSuffixLabel(nome) {
     .replace(/\bDECIMA\b/i, '10ª')
     .replace(/\bTAPPA\b/i, 'Tappa')
     .split(' ').map(w => w[0] + w.slice(1).toLowerCase()).join(' ');
+  return isTT ? `${label} (Crono)` : label;
 }
 
 // Alcuni nomi calendario sono DUE gare incollate in una stringa sola, ognuna
@@ -21452,16 +21468,22 @@ async function renderGara(gara_id) {
   // ATTRAVERSO date diverse — _raceBaseName da solo non le unisce mai
   // (ogni tappa tiene le proprie parole "PRIMA/SECONDA... TAPPA" perché non
   // sono nella lista di parole-rumore delle categorie).
-  const _stageBase = _stageBaseName(name);
+  const _stageBase = _stageEffectiveBase(name);
   const _stageList = [];
   if (_stageBase) {
     const seenStageIds = new Set();
+    let _sawRealStageSuffix = false;
     for (const c of (calendar || [])) {
-      if (_stageBaseName(c.nome) !== _stageBase) continue;
+      if (_stageEffectiveBase(c.nome) !== _stageBase) continue;
       if (seenStageIds.has(c.id)) continue;
       seenStageIds.add(c.id);
+      if (_stageBaseName(c.nome)) _sawRealStageSuffix = true; // almeno una vera coda "Tappa"/GC, non solo nomi identici per caso
       _stageList.push({ id: c.id, data: c.data, isGC: /CLASSIFICA\s+GENERALE/i.test(c.nome || ''), label: _stageSuffixLabel(c.nome) });
     }
+    // Senza NESSUNA coda tappa/classifica generale riconosciuta da nessuna
+    // parte, sono solo N gare diverse che per puro caso condividono il nome
+    // intero — niente schede (evita falsi positivi tra gare non a tappe).
+    if (!_sawRealStageSuffix) _stageList.length = 0;
     _stageList.sort((a, b) => a.isGC - b.isGC || (a.data || '').localeCompare(b.data || ''));
   }
   const _curStageId = (globalData?.garaToCalId || {})[primaryGaraId] || primaryGaraId;
@@ -21637,6 +21659,14 @@ async function renderGara(gara_id) {
   // al calId per retrocompatibilità con video inseriti prima di questa fix.
   const _vids = globalData.videos || {};
   const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUN_M, _ELI_M ecc.
+  // Come sopra per le foto: garaToCalId va SOLO da id-risultati a
+  // id-calendario. Arrivando già sull'id calendario NUDO (es. dalle schede
+  // tappa, che linkano quello) serve anche il verso opposto — quali id
+  // risultati (con suffisso categoria) puntano a questo id calendario —
+  // altrimenti un video salvato sotto "..._ELI_M" restava invisibile da qui
+  // (segnalato dal vivo: tappa raggiunta dalla scheda senza foto né video).
+  const _reverseVideoAliasIds = Object.entries(globalData?.garaToCalId || {})
+    .filter(([, calId]) => calId === primaryGaraId).map(([resId]) => resId);
   // Unisce video da tutte le chiavi possibili (nuova + legacy) e deduplica per URL
   const _videoKeys = [
     primaryGaraId,
@@ -21644,6 +21674,7 @@ async function renderGara(gara_id) {
     _calId,
     _calIdStripped !== _calId ? _calIdStripped : null,
     primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
+    ..._reverseVideoAliasIds,
   ].filter(Boolean);
   // Raccoglie i video deduplicati per URL, tracciando TUTTE le chiavi (annate)
   // su cui ogni video è salvato → serve per il badge "Entrambi" e per le azioni admin.
@@ -21777,8 +21808,16 @@ async function renderGara(gara_id) {
     // database (segnalato dal vivo: "non vedo la foto che avevo messo del
     // vincitore").
     const _aliasGaraId = (globalData?.garaToCalId || {})[primaryGaraId];
-    const _photoKeys = _aliasGaraId && _aliasGaraId !== primaryGaraId
-      ? [primaryGaraId, _aliasGaraId] : [primaryGaraId];
+    // garaToCalId va SOLO in una direzione (id risultati → id calendario): se
+    // invece si arriva qui già con l'id calendario NUDO (es. dalle nuove
+    // schede tappa, che linkano l'id di calendario) è l'id risultati con
+    // suffisso categoria (dove le foto sono davvero salvate) a mancare —
+    // serve anche il verso opposto, cercando quali id risultati puntano A
+    // primaryGaraId (segnalato dal vivo: foto assente sulla tappa raggiunta
+    // dalla scheda, presente sotto l'id "..._ELI_M").
+    const _reverseAliasIds = Object.entries(globalData?.garaToCalId || {})
+      .filter(([, calId]) => calId === primaryGaraId).map(([resId]) => resId);
+    const _photoKeys = [...new Set([primaryGaraId, _aliasGaraId, ..._reverseAliasIds].filter(Boolean))];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
       fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
     ));
