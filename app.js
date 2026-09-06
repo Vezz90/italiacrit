@@ -21451,7 +21451,17 @@ async function renderGara(gara_id) {
   let _shareHeroCredit = '';
   let _shareHeroSource = '';
   try {
-    const _photoKeys = [primaryGaraId];
+    // Una foto caricata prima che la FCI scrapasse i risultati ufficiali (o
+    // quando la FCI usa per la stessa gara un id leggermente diverso da
+    // quello di calendario, vedi il fix di garaToCalId) resta salvata sotto
+    // il vecchio id — senza questo alias qui, la foto "hero" della pagina
+    // gara (quella usata anche come sfondo nelle grafiche di condivisione)
+    // spariva non appena arrivava lo scraping reale, pur essendo ancora nel
+    // database (segnalato dal vivo: "non vedo la foto che avevo messo del
+    // vincitore").
+    const _aliasGaraId = (globalData?.garaToCalId || {})[primaryGaraId];
+    const _photoKeys = _aliasGaraId && _aliasGaraId !== primaryGaraId
+      ? [primaryGaraId, _aliasGaraId] : [primaryGaraId];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
       fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
     ));
