@@ -66,6 +66,30 @@ const CAL_FILES = [
   path.join(DATA_DIR, 'seasons', String(SEASON), 'calendar.json'),
 ];
 
+// ─── Anti-collisione omonimi (Juniores) ─────────────────────────────────────
+// Stesso meccanismo di pcs-athlete-import-storico.js (vedi lì il commento
+// esteso: caso reale "Santoro Antonio") — qui serve solo per JUN_M/JUN_F
+// (unica categoria giovanile che questo script tratta, vedi ATH_CATS: ELI
+// è già adulta, nessun controllo di età necessario). Un Juniores con una
+// "carriera PCS" iniziata anni prima della stagione corrente non può
+// essere la stessa persona: crea un profilo separato invece di sovrascrivere.
+const JUN_CATS_BUFFER = { JUN_M: 2, JUN_F: 2 };
+function loadCurrentCategoriaMap() {
+  try {
+    const raw = fs.readFileSync(path.join(DATA_DIR, 'athletes.json'), 'utf8');
+    const athletesJson = JSON.parse(raw);
+    const map = new Map();
+    for (const [id, a] of Object.entries(athletesJson)) map.set(id, { categoria: a.categoria, genere: a.genere });
+    return map;
+  } catch { return new Map(); }
+}
+function implausibleEarliestSeasonForJun(categoria, teamHistory, currentSeason) {
+  const buffer = JUN_CATS_BUFFER[categoria];
+  if (buffer == null || !teamHistory?.length) return null;
+  const earliestSeason = Math.min(...teamHistory.map(t => t.season));
+  return earliestSeason < currentSeason - buffer ? earliestSeason : null;
+}
+
 function normalizeStr(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ').trim();
@@ -1051,6 +1075,11 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   const calMap = buildCalendarMap();
   console.log(`Calendario: ${calMap.size} date di gara caricate\n`);
 
+  // Categoria attuale per il controllo anti-collisione omonimi Juniores —
+  // vedi implausibleEarliestSeasonForJun sopra.
+  const currentCategoriaMap = loadCurrentCategoriaMap();
+  let disambiguated = 0;
+
   // 4. Browser (visibile — necessario per superare eventuali sfide anti-bot)
   let { browser, page } = await launchPcsBrowser();
   console.log('Pronto.\n');
@@ -1152,6 +1181,22 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     }
     const { photo, socials, results, teamHistory } = extracted;
 
+    // Anti-collisione omonimi (Juniores) — vedi commento in cima al file.
+    let targetAtletaId = atletaId;
+    const curCat = currentCategoriaMap.get(atletaId);
+    const badSeason = implausibleEarliestSeasonForJun(curCat?.categoria, teamHistory, SEASON);
+    if (badSeason) {
+      targetAtletaId = `${atletaId}_${badSeason}`;
+      disambiguated++;
+      process.stdout.write(`\n  ⚠ possibile omonimo: "${ath.cognome} ${ath.nome}" è ${curCat.categoria} nella stagione corrente, ma PCS mostra una carriera dal ${badSeason} — creo profilo separato "${targetAtletaId}".\n`);
+      try {
+        await sb.from('manual_athletes').upsert({
+          atleta_id: targetAtletaId, cognome: ath.cognome, nome: ath.nome,
+          genere: curCat?.genere || null, categoria: null, source: 'pcs_disambig',
+        }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+      } catch (e) { process.stdout.write(`  ERRORE creazione profilo disambiguato: ${e.message}\n`); errors++; }
+    }
+
     // Trovato: se era marcato "non trovato" in un giro precedente, ripulisci
     // il marker — non ha più senso una volta che il profilo esiste davvero.
     if (notFoundMap.has(atletaId)) {
@@ -1159,10 +1204,10 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     }
 
     const fields = { pcs_slug: slug };
-    if (photo && !withPhoto.has(atletaId)) {
+    if (photo && !withPhoto.has(targetAtletaId)) {
       try {
         fields.photo_url = await uploadPhoto(sb, slug, photo);
-        withPhoto.add(atletaId);
+        withPhoto.add(targetAtletaId);
         donePhoto++;
       } catch (e) {
         process.stdout.write(`ERRORE foto: ${e.message} `);
@@ -1175,15 +1220,15 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     if (socials?.facebook)  fields.facebook_url  = socials.facebook;
 
     try {
-      await upsertOverrides(sb, atletaId, fields);
+      await upsertOverrides(sb, targetAtletaId, fields);
     } catch (e) {
       process.stdout.write(`ERRORE DB override: ${e.message} `);
       errors++;
     }
-    savedSlugs.set(atletaId, slug);
+    savedSlugs.set(targetAtletaId, slug);
 
     try {
-      await upsertTeamHistory(sb, atletaId, teamHistory);
+      await upsertTeamHistory(sb, targetAtletaId, teamHistory);
     } catch (e) {
       process.stdout.write(`ERRORE DB team: ${e.message} `);
       errors++;
@@ -1191,7 +1236,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
 
     if (results.length) {
       const rows = results.map(r => ({
-        atleta_id:     atletaId,
+        atleta_id:     targetAtletaId,
         pcs_slug:      slug,
         season:        SEASON,
         gara_name:     r.gara_name,
@@ -1239,6 +1284,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   console.log(`\n=== Completato ===`);
   console.log(`📷 Foto salvate:        ${donePhoto}`);
   console.log(`🏁 Atleti con risultati: ${doneResults} (${totalRows} righe totali)`);
+  console.log(`⚠ Omonimi disambiguati: ${disambiguated} (profilo separato creato invece di sovrascrivere un Juniores)`);
   console.log(`❓ Non trovati su PCS:   ${notFound}`);
   console.log(`⏳ Sfide non superate:   ${challengeFails} (rilanciare lo script per riprovarli)`);
   console.log(`❌ Errori:               ${errors}`);

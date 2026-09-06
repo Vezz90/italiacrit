@@ -59,6 +59,46 @@ const FIX_EMPTY_TEAMHISTORY = args.includes('--fix-empty-teamhistory');
 const RETIRED_AFTER_YEARS = 3;
 const RECHECK_AFTER_DAYS  = 90;
 
+// ─── Anti-collisione omonimi ────────────────────────────────────────────────
+// L'atleta_id è sempre e solo uno slug di cognome+nome (stessa normalizzazione
+// in tutto il progetto): due persone REALI con lo stesso nome e cognome
+// finiscono quindi sullo stesso id, e questo script gli attaccherebbe la
+// carriera PCS trovata per nome senza nessun controllo di plausibilità — caso
+// reale scoperto dal vivo (Santoro Antonio, Esordiente 1° Anno 2026 del Velo
+// Club Cattolica, con attaccata l'intera carriera pro 2008-2020 di un
+// ALTRO Antonio Santoro nato nel 1989: Androni Giocattoli, Ceramica
+// Flaminia, Work Service...). Invece di scegliere quale dei due tenere,
+// quando la carriera PCS trovata è cronologicamente impossibile per la
+// categoria giovanile ATTUALE dell'atleta (Esordienti/Allievi non possono
+// avere NESSUNA storia PCS reale — troppo giovani — e i Juniores non
+// possono averne una iniziata anni prima), si crea un secondo profilo
+// separato con un id disambiguato, lasciando quello originale intatto.
+const YOUTH_CATS_NO_PCS   = new Set(['ES1_M', 'ES2_M', 'AL_M', 'ES1_F', 'ES2_F', 'AL_F']);
+const YOUTH_CATS_BUFFER   = { JUN_M: 2, JUN_F: 2 }; // anni di margine tollerato prima della stagione corrente
+function loadCurrentCategoriaMap() {
+  try {
+    const raw = fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8');
+    const athletesJson = JSON.parse(raw);
+    const map = new Map();
+    for (const [id, a] of Object.entries(athletesJson)) map.set(id, { categoria: a.categoria, genere: a.genere });
+    return map;
+  } catch { return new Map(); }
+}
+// Ritorna null se plausibile, altrimenti la stagione più vecchia trovata
+// (usata per costruire l'id disambiguato, es. "SANTORO_ANTONIO_2008").
+function implausibleEarliestSeason(categoria, teamHistory, birthYear, currentSeason) {
+  if (!categoria || !teamHistory?.length) return null;
+  const earliestSeason = Math.min(...teamHistory.map(t => t.season));
+  // Un anno di nascita letto direttamente da PCS è il segnale più forte:
+  // se implica che l'atleta avesse meno di ~14 anni alla prima stagione
+  // PCS trovata, è impossibile fisicamente che sia la stessa persona.
+  if (birthYear && (earliestSeason - birthYear) < 14) return earliestSeason;
+  if (YOUTH_CATS_NO_PCS.has(categoria)) return earliestSeason;
+  const buffer = YOUTH_CATS_BUFFER[categoria];
+  if (buffer != null && earliestSeason < currentSeason - buffer) return earliestSeason;
+  return null;
+}
+
 // Un singolo blip di rete verso Supabase durante il caricamento iniziale
 // (le scansioni a pagine di loadAtletiStorici/--skip-complete/
 // --fix-empty-teamhistory, PRIMA che parta il vero e proprio giro sugli
@@ -425,6 +465,13 @@ async function loadAtletiStorici(sb) {
   let athletes = await loadAtletiStorici(sb);
   console.log(`Atleti storici unici (deduplicati per atleta_id): ${athletes.length}\n`);
 
+  // Categoria ATTUALE (stagione nativa in corso) per il controllo anti-
+  // collisione omonimi — vedi YOUTH_CATS_NO_PCS/implausibleEarliestSeason
+  // più sopra. Letta una volta sola dal file statico locale, non da Supabase
+  // (nessuna query in più per ogni atleta del giro).
+  const currentCategoriaMap = loadCurrentCategoriaMap();
+  let disambiguated = 0;
+
   if (SINGLE_ID) athletes = athletes.filter(a => a.atleta_id === SINGLE_ID);
 
   if (SKIP_COMPLETE) {
@@ -609,6 +656,26 @@ async function loadAtletiStorici(sb) {
     }
     const { photo, socials, birthYear, teamHistory, results } = extracted;
 
+    // Anti-collisione omonimi (vedi commento in cima al file): se la
+    // categoria ATTUALE di questo atleta_id è giovanile e la carriera PCS
+    // appena trovata è cronologicamente incompatibile, non scrivere nulla
+    // sotto l'id originale — crea/usa un id disambiguato per un profilo
+    // SEPARATO, così l'atleta vero (giovane) resta intatto.
+    let targetAtletaId = ath.atleta_id;
+    const curCat = currentCategoriaMap.get(ath.atleta_id);
+    const badSeason = implausibleEarliestSeason(curCat?.categoria, teamHistory, birthYear, season);
+    if (badSeason) {
+      targetAtletaId = `${ath.atleta_id}_${badSeason}`;
+      disambiguated++;
+      process.stdout.write(`\n  ⚠ possibile omonimo: "${ath.cognome} ${ath.nome}" è ${curCat.categoria} nella stagione corrente, ma PCS mostra una carriera dal ${badSeason} — creo profilo separato "${targetAtletaId}" invece di toccare l'originale.\n`);
+      try {
+        await sb.from('manual_athletes').upsert({
+          atleta_id: targetAtletaId, cognome: ath.cognome, nome: ath.nome,
+          genere: curCat?.genere || null, categoria: null, source: 'pcs_disambig',
+        }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+      } catch (e) { process.stdout.write(`  ERRORE creazione profilo disambiguato: ${e.message}\n`); errors++; }
+    }
+
     // Trovato: se era marcato "non trovato" in un giro precedente, ripulisci
     // il marker — non ha più senso una volta che il profilo esiste davvero.
     try {
@@ -630,17 +697,17 @@ async function loadAtletiStorici(sb) {
       // Non sovrascrivere una correzione admin già fatta a mano — stessa
       // cautela di ciclismo-backfill.js per lo stesso campo.
       const { data: existingYear } = await sb.from('entity_overrides').select('new_value')
-        .eq('entity_type', 'atleta').eq('entity_id', ath.atleta_id).eq('field', 'anno_nascita').maybeSingle();
+        .eq('entity_type', 'atleta').eq('entity_id', targetAtletaId).eq('field', 'anno_nascita').maybeSingle();
       if (!existingYear || !existingYear.new_value) { fields.anno_nascita = birthYear; doneBirth++; }
     }
 
-    try { await upsertOverrides(sb, ath.atleta_id, fields); } catch (e) { process.stdout.write(`ERRORE DB override: ${e.message} `); errors++; }
+    try { await upsertOverrides(sb, targetAtletaId, fields); } catch (e) { process.stdout.write(`ERRORE DB override: ${e.message} `); errors++; }
 
-    try { await upsertTeamHistory(sb, ath.atleta_id, teamHistory); if (teamHistory?.length) doneTeamHist++; } catch (e) { process.stdout.write(`ERRORE DB team: ${e.message} `); errors++; }
+    try { await upsertTeamHistory(sb, targetAtletaId, teamHistory); if (teamHistory?.length) doneTeamHist++; } catch (e) { process.stdout.write(`ERRORE DB team: ${e.message} `); errors++; }
 
     let totalResultRows = 0;
     if (results.length) {
-      const rows = results.map(r => ({ atleta_id: ath.atleta_id, pcs_slug: slug, season, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
+      const rows = results.map(r => ({ atleta_id: targetAtletaId, pcs_slug: slug, season, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
       try { await upsertResults(sb, rows); doneResults++; totalResultRows += rows.length; } catch (e) { process.stdout.write(`ERRORE DB risultati: ${e.message} `); errors++; }
     }
 
@@ -673,7 +740,7 @@ async function loadAtletiStorici(sb) {
       try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
       catch { continue; }
       if (yearResults.length) {
-        const rowsY = yearResults.map(r => ({ atleta_id: ath.atleta_id, pcs_slug: slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
+        const rowsY = yearResults.map(r => ({ atleta_id: targetAtletaId, pcs_slug: slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
         try { await upsertResults(sb, rowsY); totalResultRows += rowsY.length; extraYearsDone++; } catch (e) { process.stdout.write(`ERRORE DB risultati ${y}: ${e.message} `); errors++; }
       }
     }
@@ -697,6 +764,7 @@ async function loadAtletiStorici(sb) {
   console.log(`🎂 Date di nascita:      ${doneBirth}`);
   console.log(`🏳 Storia squadra:       ${doneTeamHist}`);
   console.log(`🏁 Atleti con risultati: ${doneResults}`);
+  console.log(`⚠ Omonimi disambiguati: ${disambiguated} (profilo separato creato invece di sovrascrivere un giovane)`);
   console.log(`❓ Non trovati su PCS:   ${notFound}`);
   console.log(`⏳ Sfide non superate:   ${challengeFails} (rilanciare lo script per riprovarli)`);
   console.log(`❌ Errori:               ${errors}`);
