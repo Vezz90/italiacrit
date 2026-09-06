@@ -3409,22 +3409,36 @@ async function _getLiveNowState() {
   // alla mezzanotte le due possono differire di un giorno.
   const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
   const candidates = []; // { gid, v, videoId, dateStr }
+  // I bucket "virtuali" (Presentazioni/Programmi TV/Altro — nessuna gara
+  // collegata, vedi window.openMediaAddForm) non hanno nessuna data-gara da
+  // leggere dalla chiave: senza questa eccezione una diretta lì dentro
+  // restava marcata "in corso" per sempre, mai controllata su YouTube e
+  // quindi mai spostata automaticamente tra i video normali a fine diretta
+  // (segnalato dal vivo). Sono bucket piccoli (poche righe): controllarli
+  // sempre, senza il filtro "solo data di oggi", ha un costo trascurabile.
+  const EXTRA_BUCKET_KEYS = new Set(['__PRESENTAZIONI__', '__PROGRAMMI_TV__', '__ALTRO__']);
   for (const [gid, arr] of Object.entries(videos)) {
+    const isExtraBucket = EXTRA_BUCKET_KEYS.has(gid);
     for (const v of (arr || [])) {
       if (!v.is_live) continue;
-      // Una tappa caricata in anticipo (chiave sintetica "calId::data tappa",
-      // vedi window._maddSubmitStageVideo) ha la data della TAPPA dopo "::",
-      // non quella di inizio del giro embedded nel calId — usarla altrimenti
-      // il banner/countdown/notifica scatterebbe (o non scatterebbe mai) nel
-      // giorno sbagliato per ogni tappa successiva alla prima.
-      const stageIdx = gid.lastIndexOf('::');
-      const dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
-      // Confronto sulla data ESATTA di oggi, non una tolleranza di ±1 giorno:
-      // un organizzatore che apre lo streaming in "sala d'attesa" con un
-      // giorno di anticipo (isLiveNow risulta vero su YouTube anche prima
-      // che la gara inizi davvero) altrimenti veniva mostrato/notificato un
-      // giorno prima del reale inizio della tappa.
-      if (dateStr !== todayStr) continue;
+      let dateStr;
+      if (isExtraBucket) {
+        dateStr = todayStr; // bypass del filtro data — vedi commento sopra
+      } else {
+        // Una tappa caricata in anticipo (chiave sintetica "calId::data tappa",
+        // vedi window._maddSubmitStageVideo) ha la data della TAPPA dopo "::",
+        // non quella di inizio del giro embedded nel calId — usarla altrimenti
+        // il banner/countdown/notifica scatterebbe (o non scatterebbe mai) nel
+        // giorno sbagliato per ogni tappa successiva alla prima.
+        const stageIdx = gid.lastIndexOf('::');
+        dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
+        // Confronto sulla data ESATTA di oggi, non una tolleranza di ±1 giorno:
+        // un organizzatore che apre lo streaming in "sala d'attesa" con un
+        // giorno di anticipo (isLiveNow risulta vero su YouTube anche prima
+        // che la gara inizi davvero) altrimenti veniva mostrato/notificato un
+        // giorno prima del reale inizio della tappa.
+        if (dateStr !== todayStr) continue;
+      }
       const videoId = _extractYouTubeId(v.url);
       if (!videoId) continue;
       candidates.push({ gid, v, videoId, dateStr });
@@ -6827,7 +6841,7 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
 // dalla coda scraper, o per contenuti che non passano mai dallo scraper.
 app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
   try {
-    const { tipo, url, title, channel } = req.body;
+    const { tipo, url, title, channel, is_live } = req.body;
     const bucket = MEDIA_EXTRA_BUCKETS[tipo];
     if (!bucket) return res.status(400).json({ error: 'tipo non valido (presentazione | programma_tv | altro)' });
     if (!url) return res.status(400).json({ error: 'url obbligatorio' });
@@ -6839,6 +6853,12 @@ app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
       url, title: title || url, channel: channel || '',
       published_at: ytMeta.published_at || new Date().toISOString().slice(0, 10),
       channel_avatar: ytMeta.channel_avatar,
+      // Prima non c'era proprio modo di segnare una diretta qui (checkbox
+      // assente sia lato form sia salvataggio) — una gara/evento non
+      // collegabile a nessuna gara del sito (es. una diretta professionistica
+      // fuori dal circuito FCI) non poteva mai comparire tra le Dirette,
+      // segnalato dal vivo.
+      is_live: !!is_live,
     });
     await writeVideos(videos);
     res.json({ ok: true });

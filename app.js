@@ -26212,6 +26212,11 @@ window.openMediaAddForm = () => {
       <input type="url" id="madd-url" placeholder="https://www.youtube.com/watch?v=... oppure link Facebook" style="${inpStyle}"/>
       <input type="text" id="madd-title" placeholder="Titolo" style="${inpStyle}"/>
       <input type="text" id="madd-channel" placeholder="Canale" style="${inpStyle}"/>
+      <div id="madd-live-wrap" style="display:none;margin:-2px 0 10px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-secondary);cursor:pointer">
+          <input type="checkbox" id="madd-is-live"/> 🔴 È una diretta (anche se non collegata a nessuna gara del sito, compare comunque tra le Dirette/Video appena termina)
+        </label>
+      </div>
       <div id="madd-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
       <button id="madd-btn" onclick="window._submitMediaAdd()" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
     </div>`;
@@ -26248,6 +26253,11 @@ window.openMediaAddForm = () => {
 window._maddSetTipo = (tipo) => {
   const wrap = document.getElementById('madd-gara-wrap');
   if (wrap) wrap.style.display = (tipo === 'gara' || tipo === 'diretta') ? '' : 'none';
+  // Il checkbox "è una diretta" serve solo per i contenuti SENZA gara
+  // collegata (presentazione/programma_tv/altro) — per "gara"/"diretta" lo
+  // stato live è già implicito nella scelta del tipo stesso.
+  const liveWrap = document.getElementById('madd-live-wrap');
+  if (liveWrap) liveWrap.style.display = (tipo === 'gara' || tipo === 'diretta') ? 'none' : '';
 };
 
 window._maddSearchGara = (q) => {
@@ -26304,7 +26314,8 @@ window._submitMediaAdd = async () => {
       }
       await apiCall('/videos/submit', { method: 'POST', body: { gara_id: targetGaraId, url, title, channel, is_live: tipo === 'diretta' } });
     } else {
-      await apiCall('/admin/media/extra', { method: 'POST', body: { tipo, url, title, channel } });
+      const isLive = !!document.getElementById('madd-is-live')?.checked;
+      await apiCall('/admin/media/extra', { method: 'POST', body: { tipo, url, title, channel, is_live: isLive } });
     }
     document.getElementById('modal-overlay')?.remove();
     showToast('✓ Aggiunto!');
@@ -26353,12 +26364,17 @@ async function renderMedia(openOpts) {
 
   let videoItems = [];
   for (const [gid, arr] of Object.entries(videos || {})) {
-    if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv || gid === EXTRA_BUCKETS.altro) continue;
-    // Se il gara_id non trova corrispondenza in evIndex (gara futura non
-    // ancora nel calendario, id salvato a mano che non collima, ecc.) il
-    // video/diretta NON va perso: si mostra comunque con i pochi dati che ha
-    // (titolo del video), invece di sparire silenziosamente dalla pagina Media.
-    let meta = evIndex[gid];
+    if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv) continue;
+    // "Altro" (contenuti senza nessuna gara collegabile, es. una diretta
+    // professionistica fuori dal circuito FCI) NON viene più escluso qui:
+    // deve comportarsi come qualunque altro video/diretta — comparire tra i
+    // Video se già conclusa, tra le Dirette se è (o è stata) una diretta —
+    // non restare confinato nella sola scheda "Altro". Richiesta esplicita
+    // dell'utente: "una diretta, anche se non collegata, deve andare in
+    // quelle già fatte, prossimamente, o in diretta se sono registrate".
+    // Resta comunque visibile anche nella scheda "Altro" (altroItems sotto),
+    // per chi vuole sfogliare solo i contenuti senza gara.
+    let meta = gid === EXTRA_BUCKETS.altro ? null : evIndex[gid];
     if (!meta) {
       // Chiave sintetica "calId::data tappa" (tappa caricata in anticipo,
       // non ancora scrapata): recuperiamo la data DALLA CHIAVE stessa, così
@@ -26368,7 +26384,13 @@ async function renderMedia(openOpts) {
       const stageMatch = gid.match(/::(\d{4}-\d{2}-\d{2})$/);
       meta = stageMatch ? { data: stageMatch[1] } : {};
     }
-    (arr || []).forEach((v, idx) => videoItems.push({ gara_id: gid, idx, meta, video: v }));
+    (arr || []).forEach((v, idx) => {
+      // Per "Altro" la data di riferimento (ordinamento/filtro mese) è
+      // quella del video stesso (pubblicazione YouTube), non essendoci
+      // nessuna data-gara nota.
+      const itemMeta = (gid === EXTRA_BUCKETS.altro && !meta.data) ? { ...meta, data: v.published_at || '' } : meta;
+      videoItems.push({ gara_id: gid, idx, meta: itemMeta, video: v });
+    });
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
   const programmiTvItems   = (videos?.[EXTRA_BUCKETS.programmi_tv]   || []).map((v, idx) => ({ video: v, extraIdx: idx }));
@@ -26654,6 +26676,10 @@ async function renderMedia(openOpts) {
     // reale, quindi non deve linkare a una pagina /gara/ inesistente — si apre
     // direttamente il player, come per Presentazioni/Programmi TV.
     const isPending = x.gara_id.includes('::');
+    // "Altro" non ha una vera pagina gara da linkare (vedi il merge in
+    // renderMedia più sopra) — va trattato come "pending" per l'apertura
+    // del player: mai un href verso /gara/__ALTRO__.
+    const isAltroNoGara = x.gara_id === EXTRA_BUCKETS.altro;
     const pendingBadge = isPending ? `<span class="yt-badge-duration" style="left:6px;right:auto">⏳ IN ATTESA TAPPA</span>` : '';
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     const vid = ytId(x.video.url);
@@ -26672,11 +26698,11 @@ async function renderMedia(openOpts) {
     // non ha quell'infrastruttura, quindi si apre col modale semplice.
     const isLive = !!x.video.is_live;
     const liveOnclick = vid ? `window.openLivePlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
-    const tag = (isPending || isLive) ? 'div' : 'a';
+    const tag = (isPending || isLive || isAltroNoGara) ? 'div' : 'a';
     const viewKey = esc(x.video.url || '');
     const incrCall = `window._legacyIncrView('${viewKey}');`;
     const hrefAttr = isLive ? `onclick="${incrCall}${liveOnclick}" style="cursor:pointer"`
-      : isPending ? `onclick="${incrCall}${pendingOnclick}" style="cursor:pointer"`
+      : (isPending || isAltroNoGara) ? `onclick="${incrCall}${pendingOnclick}" style="cursor:pointer"`
       : `href="#/gara/${esc(x.gara_id)}" onclick="${incrCall}"`;
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
