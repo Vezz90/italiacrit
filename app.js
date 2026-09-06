@@ -2178,10 +2178,30 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // e SOLO verso le righe disambiguate (mai verso quella orfana, che è
   // sempre un doppione della disambiguata con la stessa categoria: verificato
   // su tutti i 170 casi presenti oggi in calendar.json).
+  // La FCI a volte pubblica la stessa gara/edizione come riga di calendario
+  // SEPARATA con un nome più lungo che aggiunge solo parole di qualificazione
+  // — es. "7° Trofeo Art Cosmetic" (Esordienti/Allievi) e "7° Trofeo Art
+  // Cosmetic Campionato Regionale" (Donne Juniores), stessa gara/data/
+  // edizione, nomi calendario diversi solo per "Campionato Regionale"
+  // aggiunto. Il raggruppamento sopra (nome esatto) non le vede come lo
+  // stesso gruppo, quindi il match per categoria non scattava e "Donne
+  // Juniores" restava agganciata alla riga sbagliata (quella "Esordienti",
+  // più corta e quindi prefisso letterale di qualsiasi gara_id di quel
+  // giorno) — segnalato dal vivo con screenshot. _groupCore toglie queste
+  // parole di qualificazione (mai parte del nome "fisico" della gara) prima
+  // di raggruppare, così le due righe finiscono nello stesso gruppo
+  // ambiguo di prima. Verificato su tutto calendar.json: non genera nessuna
+  // nuova collisione di categoria rispetto al raggruppamento per nome esatto.
+  const _CAL_GROUP_FILLER = new Set(['CAMPIONATO','REGIONALE','ITALIANO','NAZIONALE','PROVINCIALE']);
+  const _calGroupCore = (nome) => (nome || '').trim().toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .split('_')
+    .filter(w => w && !_CAL_GROUP_FILLER.has(w))
+    .join('_');
   const _calGroupsByNomeData = {};
   for (const cal of (calendar || [])) {
     if (!cal.nome || !cal.data) continue;
-    const k = cal.nome.trim().toUpperCase() + '|' + cal.data;
+    const k = _calGroupCore(cal.nome) + '|' + cal.data;
     (_calGroupsByNomeData[k] ||= []).push(cal);
   }
   // Gare "a tappe" (giri multi-giorno): il calendario ha una sola voce con la
@@ -2244,7 +2264,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // una disambiguata, es. entrambe "Donne Esordienti") vincerebbe quella
     // sbagliata (la prima incontrata nell'array), lasciando la riga
     // disambiguata vera per sempre senza risultati agganciati.
-    const _calGroup = (cal.nome||'').trim() ? _calGroupsByNomeData[cal.nome.trim().toUpperCase() + '|' + cal.data] : null;
+    const _calGroup = (cal.nome||'').trim() ? _calGroupsByNomeData[_calGroupCore(cal.nome) + '|' + cal.data] : null;
     const _calAmbiguous = _calGroup && _calGroup.length > 1 && new Set(_calGroup.map(g => (g.categoria||'').trim().toLowerCase())).size > 1;
     const _calCatLbl = (cal.categoria||'').trim().toLowerCase();
     const _isBareInGroup = _calAmbiguous && _calGroup.slice().sort((a,b)=>a.id.length-b.id.length)[0].id === cal.id;
