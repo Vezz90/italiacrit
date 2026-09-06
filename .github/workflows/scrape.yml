@@ -45,6 +45,14 @@ jobs:
         run: python scraper/fci_complete_scraper.py
         env:
           PYTHONUNBUFFERED: '1'
+          # Per includere anche i risultati manuali/da foto e le anteprime
+          # PCS nella Classifica Generale (richiesta esplicita dell'utente,
+          # vedi fetch_pending_extra_results in fci_complete_scraper.py) —
+          # se questi due secret non sono impostati lo script continua
+          # comunque, solo senza quell'arricchimento (classifica solo da
+          # risultati nativi FCI, come prima).
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET }}
 
       - name: Run race details scraper (informazioni tecniche gare)
         run: python scraper/race_details_scraper.py

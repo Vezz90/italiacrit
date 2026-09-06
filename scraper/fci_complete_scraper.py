@@ -607,6 +607,112 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 
 
 # ═══════════════════════════════════════════════════════════════
+# 2b. RISULTATI MANUALI/DA FOTO + ANTEPRIMA PCS — SOLO per la Classifica
+#     Generale (richiesta esplicita dell'utente: un risultato inserito a
+#     mano/da foto ordine d'arrivo (manual_results) o già visto su PCS
+#     (pcs_gara_results, gara di oggi non ancora scrapata dalla FCI) deve
+#     contare anche nel ranking ufficiale, non solo nella pagina
+#     gara/profilo). Uniti SOLO al calcolo del ranking (vedi run_cycle:
+#     aggregate() chiamata una seconda volta con questi in più), MAI a
+#     results_raw.json/athletes.json/teams.json — quei file restano "solo
+#     nativo FCI" come sempre: il sito li unisce già da solo lato server/
+#     client per la pagina gara/profilo (_mergeManualResultsIntoRaw in
+#     server.js, _loadAtletaPcsExtra in app.js) — scriverli anche qui li
+#     farebbe comparire due volte lì.
+# ═══════════════════════════════════════════════════════════════
+
+def fetch_pending_extra_results(races_map: dict) -> list[dict]:
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_SECRET")
+    if not url or not key:
+        print("  [ranking-extra] SUPABASE_URL/SUPABASE_SECRET assenti — Classifica Generale solo da risultati nativi FCI")
+        return []
+    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+    extra = []
+
+    # ── manual_results: admin "Aggiungi risultati" / foto ordine d'arrivo —
+    # già con punti_effettivi/moltiplicatore/tipo/categoria corretti al
+    # momento dell'inserimento (vedi _submitManualResult in server.js),
+    # nessun ricalcolo necessario.
+    try:
+        r = requests.get(f"{url}/rest/v1/manual_results",
+                          params={"select": "gara_id,posizione,cognome,nome,atleta_id,team,team_id,"
+                                             "data,categoria,genere,tipo,moltiplicatore,punti_effettivi,"
+                                             "regione,km,media,nome_gara",
+                                  "data": f"gte.{CURRENT_YEAR}-01-01"},
+                          headers=headers, timeout=30)
+        r.raise_for_status()
+        for row in r.json():
+            if not row.get("atleta_id"):
+                continue  # riga "solo team" (gara a squadre) senza corridore
+            cat_code = row.get("categoria") or ""
+            genere = row.get("genere") or ("F" if cat_code.endswith("_F") else "M")
+            mult = row.get("moltiplicatore") or 1
+            pos = row["posizione"]
+            pts = row.get("punti_effettivi")
+            if pts is None:
+                pts = BASE_PTS.get(pos, 0) * mult
+            extra.append({
+                "gara_id": row["gara_id"], "nome_gara": row.get("nome_gara") or row["gara_id"],
+                "data": row.get("data") or "", "posizione": pos,
+                "cognome": row.get("cognome") or "", "nome": row.get("nome") or "",
+                "atleta_id": row["atleta_id"], "team": row.get("team") or "",
+                "team_id": row.get("team_id") or slug(row.get("team") or ""),
+                "categoria": cat_code, "genere": genere,
+                "tipo": row.get("tipo") or "regionale", "moltiplicatore": mult,
+                "punti_effettivi": pts,
+                "regione": row.get("regione") or "ITALIA",
+                "km": row.get("km") or "", "media": row.get("media") or "",
+            })
+    except Exception as e:
+        print(f"  [ranking-extra] errore manual_results: {e}")
+
+    # ── pcs_gara_results: anteprima PCS di una gara del giorno stesso non
+    # ancora scrapata dalla FCI. Non ha moltiplicatore/tipo/categoria propri
+    # — vanno presi dal CALENDARIO (races_map, stessa gara), stessa formula
+    # BASE_PTS*moltiplicatore già usata per i risultati nativi. Se non si
+    # trova nessuna gara di calendario corrispondente si scarta la riga:
+    # meglio non contarla che assegnare un moltiplicatore inventato.
+    try:
+        r = requests.get(f"{url}/rest/v1/pcs_gara_results",
+                          params={"select": "gara_id,posizione,rider_name,atleta_id,team_name",
+                                  "season": f"eq.{CURRENT_YEAR}", "posizione": "lte.10"},
+                          headers=headers, timeout=30)
+        r.raise_for_status()
+        for row in r.json():
+            gid = row["gara_id"]
+            m = re.search(r"_(ELI|JUN|AL|ES1|ES2)_([MF])$", gid)
+            if not m:
+                continue  # niente codice categoria riconoscibile nell'id, salta
+            cat_code = f"{m.group(1)}_{m.group(2)}"
+            base_id = gid[:m.start()]
+            cal = races_map.get(gid) or races_map.get(base_id)
+            if not cal:
+                continue
+            name_parts = str(row.get("rider_name") or "").strip().split()
+            cognome = name_parts[0] if name_parts else (row.get("rider_name") or "")
+            nome = " ".join(name_parts[1:])
+            mult = cal.get("moltiplicatore") or 1
+            pos = row["posizione"]
+            extra.append({
+                "gara_id": gid, "nome_gara": cal.get("nome") or gid,
+                "data": cal.get("data") or "", "posizione": pos,
+                "cognome": cognome, "nome": nome,
+                "atleta_id": row.get("atleta_id") or slug(row.get("rider_name") or ""),
+                "team": row.get("team_name") or "", "team_id": slug(row.get("team_name") or ""),
+                "categoria": cat_code, "genere": m.group(2),
+                "tipo": cal.get("tipo") or "regionale", "moltiplicatore": mult,
+                "punti_effettivi": BASE_PTS.get(pos, 0) * mult,
+                "regione": cal.get("regione") or "ITALIA",
+                "km": cal.get("km") or "", "media": cal.get("media") or "",
+            })
+    except Exception as e:
+        print(f"  [ranking-extra] errore pcs_gara_results: {e}")
+
+    return extra
+
+
+# ═══════════════════════════════════════════════════════════════
 # 3. AGGREGAZIONE con classifiche team per categoria
 # ═══════════════════════════════════════════════════════════════
 
@@ -980,7 +1086,16 @@ async def run_cycle():
             races_map[g["id"]] = g
 
     athletes, teams, a_rank, t_rank, clean_results = aggregate(all_results)
-    
+
+    # Classifica Generale arricchita anche con risultati manuali/da foto e
+    # anteprime PCS (richiesta esplicita dell'utente) — SOLO a_rank/t_rank:
+    # results_raw.json/athletes.json/teams.json restano quelli "puliti" di
+    # sopra (solo nativo FCI), vedi commento su fetch_pending_extra_results.
+    pending_extra = fetch_pending_extra_results(races_map)
+    if pending_extra:
+        print(f"  [ranking-extra] {len(pending_extra)} risultati manuali/PCS aggiunti alla sola Classifica Generale")
+        _, _, a_rank, t_rank, _ = aggregate(all_results + pending_extra)
+
     def wj(path, data):
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
