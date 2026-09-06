@@ -21795,16 +21795,10 @@ async function renderGara(gara_id) {
   // (segnalato dal vivo: tappa raggiunta dalla scheda senza foto né video).
   const _reverseVideoAliasIds = Object.entries(globalData?.garaToCalId || {})
     .filter(([, calId]) => calId === primaryGaraId).map(([resId]) => resId);
-  // Stessa richiesta esplicita di sopra (foto): anche i video delle ALTRE
-  // tappe dello stesso giro (_stageList) devono comparire da qualsiasi
-  // tappa, non solo dalla propria.
-  const _siblingStageVideoKeys = (_stageList || []).flatMap(s => {
-    if (s.id === primaryGaraId) return [];
-    const sAlias = (globalData?.garaToCalId || {})[s.id];
-    const sReverse = Object.entries(globalData?.garaToCalId || {})
-      .filter(([, calId]) => calId === s.id).map(([resId]) => resId);
-    return [s.id, sAlias, ...sReverse];
-  });
+  // NB: NON aggregare qui i video delle altre tappe (_stageList) — provato
+  // e tolto: mischiava foto/video di tappe diverse sulla stessa pagina in
+  // modo confuso (segnalato dal vivo). Ogni gara mostra solo ciò che è
+  // stato caricato specificamente per lei.
   // Unisce video da tutte le chiavi possibili (nuova + legacy) e deduplica per URL
   const _videoKeys = [
     primaryGaraId,
@@ -21813,7 +21807,6 @@ async function renderGara(gara_id) {
     _calIdStripped !== _calId ? _calIdStripped : null,
     primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
     ..._reverseVideoAliasIds,
-    ..._siblingStageVideoKeys,
   ].filter(Boolean);
   // Raccoglie i video deduplicati per URL, tracciando TUTTE le chiavi (annate)
   // su cui ogni video è salvato → serve per il badge "Entrambi" e per le azioni admin.
@@ -21956,21 +21949,12 @@ async function renderGara(gara_id) {
     // dalla scheda, presente sotto l'id "..._ELI_M").
     const _reverseAliasIds = Object.entries(globalData?.garaToCalId || {})
       .filter(([, calId]) => calId === primaryGaraId).map(([resId]) => resId);
-    // Richiesta esplicita dell'utente: da QUALSIASI tappa vedere anche le
-    // foto/video delle ALTRE tappe dello stesso giro (_stageList, le stesse
-    // schede appena aggiunte), non solo quelle proprie — prima ogni tappa
-    // vedeva SOLO la propria galleria, anche standoci sopra con le schede
-    // per passare da una all'altra. Per ogni tappa sorella si risolve lo
-    // stesso alias inverso (id calendario nudo → id risultati con
-    // suffisso categoria, dove le foto sono davvero salvate).
-    const _siblingStageKeys = (_stageList || []).flatMap(s => {
-      if (s.id === primaryGaraId) return [];
-      const sAlias = (globalData?.garaToCalId || {})[s.id];
-      const sReverse = Object.entries(globalData?.garaToCalId || {})
-        .filter(([, calId]) => calId === s.id).map(([resId]) => resId);
-      return [s.id, sAlias, ...sReverse];
-    });
-    const _photoKeys = [...new Set([primaryGaraId, _aliasGaraId, ..._reverseAliasIds, ..._siblingStageKeys].filter(Boolean))];
+    // NB: NON aggregare qui le foto delle altre tappe (_stageList) — provato
+    // e tolto: mischiava foto/video di tappe diverse sulla stessa pagina in
+    // modo confuso, a volte anche rubando il posto di "foto principale"
+    // alla foto vera della gara (segnalato dal vivo). Ogni gara mostra solo
+    // ciò che è stato caricato specificamente per lei.
+    const _photoKeys = [...new Set([primaryGaraId, _aliasGaraId, ..._reverseAliasIds].filter(Boolean))];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
       fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
     ));
