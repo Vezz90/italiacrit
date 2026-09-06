@@ -15675,7 +15675,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           <div class="athlete-pts-display" id="atleta-pts-display">
             <div class="athlete-pts-dot"></div>
             <div>
-              <div class="athlete-pts-value">${a.punti_totali}</div>
+              <div class="athlete-pts-value" id="atleta-pts-value" data-base="${a.punti_totali}">${a.punti_totali}</div>
               <div class="athlete-pts-label">PUNTI STAGIONE</div>
             </div>
             ${globalPos !== '-' ? `
@@ -18283,6 +18283,22 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
         else if (r.posizione >= 4 && r.posizione <= 10) add[3]++;
       }
       vals.forEach((el, i) => { if (add[i]) el.textContent = (parseInt(el.textContent, 10) || 0) + add[i]; });
+    }
+  }
+
+  // "PUNTI STAGIONE" — stesso ragionamento del blocco podi qui sopra: i
+  // risultati "da PCS" (garaExtra) vanno contati nel totale punti esattamente
+  // come quelli inseriti manualmente o da foto, non solo mostrati nella
+  // tabella con l'asterisco. Il valore mostrato inizialmente (a.punti_totali)
+  // è calcolato PRIMA di questa funzione (solo da icsRisultati/manuali già
+  // noti): sommiamo qui i punti provvisori di garaExtra, usando data-base per
+  // non sommarli due volte se la funzione viene richiamata più volte.
+  if (garaExtra.length) {
+    const ptsEl = document.getElementById('atleta-pts-value');
+    if (ptsEl) {
+      const base = parseInt(ptsEl.dataset.base, 10) || 0;
+      const extraPts = garaExtra.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+      ptsEl.textContent = base + extraPts;
     }
   }
 
