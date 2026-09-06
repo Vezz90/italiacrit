@@ -18165,15 +18165,32 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
           const info = icsGaraInfo[r.gara_id] || {};
+          // moltiplicatore/tipo: se la FCI non ha ancora scrapato questa
+          // tappa (info vuoto) va preso dal CALENDARIO — che il moltiplicatore
+          // vero ce l'ha già da sempre (è la stessa gara, stesso circuito,
+          // stesso valore di ogni altra tappa del giro) — non il default "1"/
+          // regionale. Segnalato dal vivo: tappa vinta oggi mostrata
+          // "Reg.le (x1)" invece di "Int.le (x3)" come le tappe sorelle già
+          // scrapate, "un problema molto diffuso" (vale per QUALSIASI gara
+          // PCS-pending, non solo questa).
+          const _mult = info.moltiplicatore || cal?.moltiplicatore || 1;
+          const _tipo = info.tipo || cal?.tipo || '';
           return {
             data:           cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
             gara_id:        r.gara_id,
             nome_gara:      info.nome_gara || cal?.nome || r.gara_id,
             km:             info.km || cal?.km || '',
-            moltiplicatore: info.moltiplicatore || 1,
-            tipo:           info.tipo || '',
+            moltiplicatore: _mult,
+            tipo:           _tipo,
             media:          info.media || '',
             posizione:      r.posizione,
+            // Punti "provvisori" con lo stesso moltiplicatore vero, finché la
+            // FCI non scrapa ufficialmente — mostrati con un'etichetta
+            // dedicata (non paragonati a un punteggio già confermato) invece
+            // che uno "0" fisso che nascondeva la vittoria/piazzamento del
+            // giorno anche quando il moltiplicatore era già noto.
+            punti_effettivi: (BASEPTS[r.posizione] || 0) * _mult,
+            _pcsPendingPts: true,
           };
         })
     : [];
@@ -18208,6 +18225,27 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const esteroExtra = Array.isArray(seasonRaw)
     ? seasonRaw.filter(r => !r.gara_id && r.country && !icsDates.has(r.data))
     : [];
+
+  // Il contatore podi "ITALIA" in cima al profilo è calcolato PRIMA di
+  // questa funzione (solo da icsRisultati, disponibile subito) — una
+  // vittoria/podio "da PCS" di oggi (garaExtra) non veniva mai contata lì,
+  // pur comparendo poi in tabella: segnalato dal vivo ("non è stata messa
+  // la vittoria"). Si somma qui ai numeri già mostrati invece di
+  // ricalcolarli da zero (evita di duplicare la logica di conteggio ICS).
+  if (garaExtra.length) {
+    const italiaBar = document.getElementById('atleta-stats-italia-bar');
+    const vals = italiaBar?.querySelectorAll('.athlete-stat-val');
+    if (vals && vals.length === 4) {
+      const add = [0, 0, 0, 0];
+      for (const r of garaExtra) {
+        if (r.posizione === 1) add[0]++;
+        else if (r.posizione === 2) add[1]++;
+        else if (r.posizione === 3) add[2]++;
+        else if (r.posizione >= 4 && r.posizione <= 10) add[3]++;
+      }
+      vals.forEach((el, i) => { if (add[i]) el.textContent = (parseInt(el.textContent, 10) || 0) + add[i]; });
+    }
+  }
 
   // Riepilogo podi "ESTERO" nell'header, accanto a quello "ITALIA" già
   // presente — dà un quadro completo del corridore a colpo d'occhio.
@@ -18291,7 +18329,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts">0</td>`);
+      <td class="td-pts" title="Da PCS, in attesa dello scraper ufficiale FCI">${r.punti_effettivi || 0}<span style="color:var(--text-muted);font-weight:400">*</span></td>`);
   }
 
   for (const r of esteroExtra) {
