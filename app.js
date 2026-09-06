@@ -14989,6 +14989,39 @@ window.openRaceEdition = async (garaId, year) => {
 // vedeva mai senza scrollare parecchio (segnalato dall'utente). Ora un tab
 // visibile subito sotto l'intestazione fa comparire il pannello sul posto,
 // senza scroll.
+// Cerca atleta/team nella tabella risultati di una gara — stesso bisogno
+// già coperto in Classifica (ranking-search), richiesto esplicitamente
+// anche qui: "bisogna mettere un cerca che permetta di trovare tutti gli
+// atleti o il team di quella selezione......come c'è in classifica".
+// Filtro puro sul DOM (nasconde le righe non corrispondenti) invece di
+// ricostruire la tabella: la classifica di una gara è già tutta in pagina
+// (nessuna paginazione), quindi non serve rifare il fetch/render dei dati.
+window.filterGaraResults = (q) => {
+  const tbody = document.getElementById('main-results-tbody');
+  if (!tbody) return;
+  q = (q || '').trim().toLowerCase();
+  let visible = 0;
+  const rows = [...tbody.querySelectorAll('tr')].filter(tr => !tr.classList.contains('gara-search-empty'));
+  for (const tr of rows) {
+    const match = !q || tr.textContent.toLowerCase().includes(q);
+    tr.style.display = match ? '' : 'none';
+    if (match) visible++;
+  }
+  let emptyRow = tbody.querySelector('.gara-search-empty');
+  if (q && visible === 0) {
+    if (!emptyRow) {
+      emptyRow = document.createElement('tr');
+      emptyRow.className = 'gara-search-empty';
+      tbody.appendChild(emptyRow);
+    }
+    const nCols = rows[0]?.children.length || 7;
+    emptyRow.innerHTML = `<td colspan="${nCols}" class="empty-state">Nessun atleta o team trovato per "${esc(q)}"</td>`;
+    emptyRow.style.display = '';
+  } else if (emptyRow) {
+    emptyRow.style.display = 'none';
+  }
+};
+
 window._switchGaraTab = (tab) => {
   const res = document.getElementById('gara-results-panel');
   const albo = document.getElementById('race-albo-doro');
@@ -27989,6 +28022,7 @@ window.showShareModal = async function(type, payload) {
       </div>
       <div class="share-actions" id="share-actions-facebook" style="display:none">
         <button class="share-action-btn share-action-download" onclick="window.downloadFacebookImage()">⬇ Scarica</button>
+        <button class="share-action-btn" onclick="window.copyFacebookLink()" title="Incollalo tu stesso in un post — evita il popup di Facebook, che a volte resta bloccato su 'Pubblicazione in corso'">🔗 Copia link</button>
         <button class="share-action-btn share-action-native" onclick="window.shareOnFacebook()">↗ Condividi</button>
       </div>
     </div>
@@ -28223,17 +28257,32 @@ function _ogUrl(type, payload) {
   if (!id) return null;
   return `${OG_BASE}/${type}/${encodeURIComponent(id)}`;
 }
-window.shareOnFacebook = function() {
+// URL da condividere/incollare, con l'eventuale regolazione zoom/posizione
+// della foto (_shareImgAdjust) inclusa — stessa logica usata sia dal popup
+// automatico (shareOnFacebook) sia dal pulsante "Copia link" (per chi
+// preferisce incollare il link a mano su Facebook invece di passare dal
+// popup, che a volte resta bloccato su "Pubblicazione in corso" — problema
+// del composer di Facebook stesso, non aggirabile da qui).
+function _buildFbShareUrl() {
   let url = _ogUrl(_shareType, _sharePayload);
-  if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
-  // Inoltra la stessa regolazione zoom/posizione usata per l'anteprima
-  // Post/Instagram/Story (_shareImgAdjust): senza, la card Facebook usava
-  // sempre il ritaglio automatico del server, ignorando quanto centrato a
-  // mano nella modale — unico formato dove non si poteva correggere.
+  if (!url) return null;
   if (_shareType === 'gara' && (_shareImgAdjust.scale > 1.001 || Math.abs(_shareImgAdjust.offsetX) > 0.5 || Math.abs(_shareImgAdjust.offsetY) > 0.5)) {
     const qs = `s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
     url += (url.includes('?') ? '&' : '?') + qs;
   }
+  return url;
+}
+window.copyFacebookLink = async function() {
+  const url = _buildFbShareUrl();
+  if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('✓ Link copiato — incollalo su Facebook, l\'anteprima con foto/podio si genera da sola');
+  } catch (e) { showToast('Errore copia: ' + e.message, 'error'); }
+};
+window.shareOnFacebook = function() {
+  const url = _buildFbShareUrl();
+  if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
   // Niente 'width=600,height=400': quei parametri fanno aprire una vera
   // finestra popup (non una scheda), che molti browser desktop (e la
   // maggior parte degli ad-blocker/estensioni anti-popup) trattano con
