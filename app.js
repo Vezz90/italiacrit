@@ -28226,7 +28226,15 @@ window.shareOnFacebook = function() {
     const qs = `s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
     url += (url.includes('?') ? '&' : '?') + qs;
   }
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+  // Niente 'width=600,height=400': quei parametri fanno aprire una vera
+  // finestra popup (non una scheda), che molti browser desktop (e la
+  // maggior parte degli ad-blocker/estensioni anti-popup) trattano con
+  // molto più sospetto e bloccano — su mobile quegli stessi parametri
+  // vengono semplicemente ignorati, quindi lì apriva sempre come scheda
+  // normale e funzionava. Segnalato dal vivo: "da computer non funziona
+  // mai e da telefono si". Una scheda normale ('_blank' senza dimensioni)
+  // è molto meno soggetta a blocchi su qualunque piattaforma.
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
   _showFbShareText();
 };
 
