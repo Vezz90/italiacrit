@@ -4499,9 +4499,17 @@ async function _submitManualResult(req, res) {
       // Il profilo pcs_atleta vuole la categoria in formato CODICE (es. "AL_F",
       // "ES1_F"), non l'etichetta leggibile ("Allievi", "Esordienti 1° Anno") che
       // arriva dal form — altrimenti getRankingFileCode non la riconosce e la
-      // pagina team non riesce a metterla nel tab/roster giusto.
-      const profCategoria = _garaIdToCategoria(garaId);
-      const profGenere = profCategoria.endsWith('_F') ? 'F' : 'M';
+      // pagina team non riesce a metterla nel tab/roster giusto. _garaIdToCategoria
+      // legge il codice dal SUFFISSO del gara_id (es. "..._AL_M") — ma non ogni
+      // gara_id ce l'ha (es. gare a squadre/miste come questa, segnalato dal
+      // vivo: "..._2026-09-06" senza suffisso), e in quel caso ricade sul
+      // default hardcoded 'ELI_M', SBAGLIATO per qualunque altra categoria
+      // (creato un profilo Allievi mostrato come Elite-Under23). Se il body
+      // porta già un codice valido (il form bulk lo manda sempre così, vedi
+      // _mrDeriveMeta lato client), va preferito al fallback da gara_id.
+      const _CAT_CODE_RE = /^(ELI|JUN|AL|ES1|ES2)_[MF]$/;
+      const profCategoria = (categoria && _CAT_CODE_RE.test(categoria)) ? categoria : _garaIdToCategoria(garaId);
+      const profGenere = (genere === 'M' || genere === 'F') ? genere : (profCategoria.endsWith('_F') ? 'F' : 'M');
       await _ensureManualAthleteProfile({
         atletaId, cognome: cognomeU, nome: nomeU,
         teamId: finalTeamId, teamNome: finalTeamNome,
