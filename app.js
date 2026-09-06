@@ -7605,7 +7605,39 @@ async function _hdRenderReal(myRenderId) {
   const in7gg = _hdCutDate(todayStr, -7); // _hdCutDate sottrae "days": -7 = +7gg avanti
   const prossime7 = (calendar || []).filter(g => g.data > todayStr && g.data <= in7gg && calMatchesCat(g))
     .sort((a, b) => a.data.localeCompare(b.data));
+  // Gare di OGGI (filtro categoria/genere già applicato, vedi gareOggi
+  // sopra) già disputate ma non ancora scrapate dalla FCI: se PCS ha già un
+  // ordine d'arrivo, il vincitore compare qui subito invece di aspettare —
+  // stessa richiesta già soddisfatta su Risultati (pendingToday), estesa
+  // qui esplicitamente su conferma dell'utente ("assolutamente sì").
+  // Riusa la stessa cache/set globali di renderRisultati
+  // (_risPcsPendingCache/_risPcsPendingChecked) così non rifà la fetch se
+  // l'altra pagina l'ha già popolata in questa sessione.
+  const _hdHasNativeToday = new Set(hubRes.filter(r => r.data === todayStr).map(r => toCalId(r.gara_id)));
+  const _hdPcsPendingToday = gareOggi.filter(g => !_hdHasNativeToday.has(g.id));
+  if (_hdPcsPendingToday.length) {
+    await Promise.all(_hdPcsPendingToday.map(async g => {
+      if (_risPcsPendingCache[g.id] || _risPcsPendingChecked.has(g.id)) return;
+      _risPcsPendingChecked.add(g.id);
+      try {
+        const rows = await apiCall(`/pcs-results/gara/${encodeURIComponent(g.id)}`);
+        if (Array.isArray(rows) && rows.length) _risPcsPendingCache[g.id] = rows;
+      } catch {}
+    }));
+    if (myRenderId !== window._hdRenderId) return; // filtro/pagina cambiati nel frattempo
+  }
   const vincitoriRecenti = hubRes.filter(r => r.posizione === 1 && r.data).sort((a, b) => b.data.localeCompare(a.data));
+  for (const g of _hdPcsPendingToday) {
+    const rows = _risPcsPendingCache[g.id];
+    const w = rows?.find(r => r.posizione === 1);
+    if (!w) continue;
+    const [cognome, ...restNome] = String(w.rider_name || '').trim().split(/\s+/);
+    vincitoriRecenti.unshift({
+      gara_id: g.id, nome_gara: g.nome, data: g.data, categoria: catCode, genere: gender,
+      atleta_id: w.atleta_id, cognome: cognome || w.rider_name, nome: restNome.join(' '),
+      team: w.team_name || '', posizione: 1, _pcsPending: true,
+    });
+  }
   const ultimoRisultato = vincitoriRecenti[0] || null;
 
   // ── Classifica generale (top5, filtrata) ─────────────────────────
@@ -8225,15 +8257,22 @@ function _hdBuildHtml(d) {
     <div class="card hd-card hd-wide">
       <div class="hd-card-title">ULTIMI RISULTATI</div>
       <div class="hd-list">
-        ${d.ultimiRisultati.length ? d.ultimiRisultati.map(r => `
+        ${d.ultimiRisultati.length ? d.ultimiRisultati.map(r => {
+          // Vincitore "da PCS" (gara di oggi non ancora scrapata dalla FCI,
+          // vedi _hdPcsPendingToday sopra): niente punteggio ufficiale ancora
+          // e a volte l'atleta non è nemmeno un profilo noto sul sito —
+          // badge dedicato e link atleta solo se esiste davvero un profilo.
+          const winnerInner = `${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
+              <span class="hd-list-winner-id"><span class="hd-list-winner-name">${esc(r.cognome)} ${esc(r.nome)}</span><span class="hd-list-team">${esc(r.team||'')}</span></span>`;
+          const winnerBlock = r.atleta_id
+            ? `<a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner-block">${winnerInner}</a>`
+            : `<span class="hd-list-winner-block">${winnerInner}</span>`;
+          return `
           <div class="hd-list-row hd-list-row--result">
             <span class="hd-list-date">${_hdShortDate(r.data)}</span>
-            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main"><span class="hd-list-title">${esc(r.nome_gara||'')}</span><span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}</span></a>
-            <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="hd-list-winner-block">
-              ${_hdAvatar(r.atleta_id, r.cognome, r.nome, d.photoMap, 'sm')}
-              <span class="hd-list-winner-id"><span class="hd-list-winner-name">${esc(r.cognome)} ${esc(r.nome)}</span><span class="hd-list-team">${esc(r.team||'')}</span></span>
-            </a>
-          </div>`).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
+            <a href="#/gara/${encodeURIComponent(r.gara_id)}" class="hd-list-main"><span class="hd-list-title">${esc(r.nome_gara||'')}</span><span class="hd-list-cat">${esc(catLabel(getRankingFileCode(r)))}${r._pcsPending ? ' · <span style="color:var(--accent)">Da PCS</span>' : ''}</span></a>
+            ${winnerBlock}
+          </div>`; }).join('') : '<div class="hd-empty">Nessun risultato disponibile</div>'}
       </div>
       <a href="#/risultati" class="hd-card-cta">Vedi tutti i risultati →</a>
     </div>`;
