@@ -14961,6 +14961,35 @@ function _raceBaseName(nome) {
   return _RACE_BASE_ALIASES.get(base) || base;
 }
 
+// Nome-base di una gara A TAPPE, per raggruppare tutte le tappe + la
+// Classifica Generale nella stessa "serie" a prescindere dalla data (ogni
+// tappa ha una data diversa, quindi _raceBaseName/_catGroups — pensati per
+// le categorie dello STESSO giorno — non le raggruppano mai). Toglie la coda
+// "PRIMA/SECONDA/... TAPPA" o "CLASSIFICA GENERALE"; se non trova nessuna di
+// queste code non è una gara a tappe e ritorna stringa vuota (niente tab).
+const _STAGE_SUFFIX_RE = /\s+(?:(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|\d+[°^ª]?)\s+TAPPA|TAPPA\s+\d+|PROLOGO|CLASSIFICA\s+GENERALE)\s*$/i;
+function _stageBaseName(nome) {
+  let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!_STAGE_SUFFIX_RE.test(s)) return '';
+  return s.replace(_STAGE_SUFFIX_RE, '').trim();
+}
+function _stageSuffixLabel(nome) {
+  const m = String(nome || '').toUpperCase().match(_STAGE_SUFFIX_RE);
+  if (!m) return '';
+  const s = m[0].trim();
+  if (/CLASSIFICA/i.test(s)) return 'Classifica Generale';
+  if (/PROLOGO/i.test(s)) return 'Prologo';
+  return s.replace(/\s+/g, ' ')
+    .replace(/^(\d+)[°^ª]?\s+TAPPA$/i, '$1ª Tappa')
+    .replace(/^TAPPA\s+(\d+)$/i, '$1ª Tappa')
+    .replace(/\bPRIMA\b/i, '1ª').replace(/\bSECONDA\b/i, '2ª').replace(/\bTERZA\b/i, '3ª')
+    .replace(/\bQUARTA\b/i, '4ª').replace(/\bQUINTA\b/i, '5ª').replace(/\bSESTA\b/i, '6ª')
+    .replace(/\bSETTIMA\b/i, '7ª').replace(/\bOTTAVA\b/i, '8ª').replace(/\bNONA\b/i, '9ª')
+    .replace(/\bDECIMA\b/i, '10ª')
+    .replace(/\bTAPPA\b/i, 'Tappa')
+    .split(' ').map(w => w[0] + w.slice(1).toLowerCase()).join(' ');
+}
+
 // Alcuni nomi calendario sono DUE gare incollate in una stringa sola, ognuna
 // con la propria numerazione — non solo quella iniziale, che _raceBaseName
 // già toglie (es. "28 TROFEO COMUNE DI VERTOVA 23 MEMORIAL MERELLI": la 28ª
@@ -21415,6 +21444,32 @@ async function renderGara(gara_id) {
       ${_catList.map(c => `<button class="tab-btn ${c.code === _curCode ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(c.gid)}'">${esc(c.label)}</button>`).join('')}
     </div>` : '';
 
+  // ── Schede TAPPA di una gara a tappe (stesso giro, date diverse) ──
+  // Richiesta esplicita dell'utente: vedere velocemente le altre tappe/la
+  // classifica generale dello stesso giro senza uscire e ricercarle. A
+  // differenza di _catGroups sopra (stessa data, categorie diverse) qui si
+  // raggruppa per NOME BASE senza la coda tappa/classifica generale,
+  // ATTRAVERSO date diverse — _raceBaseName da solo non le unisce mai
+  // (ogni tappa tiene le proprie parole "PRIMA/SECONDA... TAPPA" perché non
+  // sono nella lista di parole-rumore delle categorie).
+  const _stageBase = _stageBaseName(name);
+  const _stageList = [];
+  if (_stageBase) {
+    const seenStageIds = new Set();
+    for (const c of (calendar || [])) {
+      if (_stageBaseName(c.nome) !== _stageBase) continue;
+      if (seenStageIds.has(c.id)) continue;
+      seenStageIds.add(c.id);
+      _stageList.push({ id: c.id, data: c.data, isGC: /CLASSIFICA\s+GENERALE/i.test(c.nome || ''), label: _stageSuffixLabel(c.nome) });
+    }
+    _stageList.sort((a, b) => a.isGC - b.isGC || (a.data || '').localeCompare(b.data || ''));
+  }
+  const _curStageId = (globalData?.garaToCalId || {})[primaryGaraId] || primaryGaraId;
+  const _stageTabsHtml = _stageList.length > 1 ? `
+    <div class="tab-group" role="tablist" aria-label="Tappe del giro" style="display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px">
+      ${_stageList.map(s => `<button class="tab-btn ${s.id === _curStageId ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(s.id)}'">${esc(s.label)}</button>`).join('')}
+    </div>` : '';
+
   // ── Gare "a squadre" (es. cronometro a squadre): la FCI pubblica UNA sola
   // riga di arrivo per team (nessun corridore elencato). Lo scraper la
   // registra come un finto atleta (nome squadra spezzato in cognome/nome) —
@@ -21996,6 +22051,7 @@ async function renderGara(gara_id) {
         ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(primaryGaraId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
     ${_catTabsHtml}
+    ${_stageTabsHtml}
     <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
       <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
       <button id="tab-albo" class="tab-btn" style="opacity:.55" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro <span id="tab-albo-spin" style="display:inline-block;width:9px;height:9px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-left:4px;vertical-align:middle;animation:spin .8s linear infinite"></span></button>
