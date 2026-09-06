@@ -16788,8 +16788,21 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
         ? `<a href="#/team/${esc(nowTid)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(nowTeamEntry.team)} →</a>`
         : `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(nowTeamEntry.team)}</span>`;
     }
+    // Per un team "solo PCS" (straniero, non nel nostro database) non c'è
+    // un logo affidabile da mostrare — ma svuotare del tutto il riquadro
+    // lasciava un buco vuoto sul profilo di moltissimi atleti (segnalato
+    // dal vivo: "tantissimi altri" senza logo team a destra). Stesso
+    // placeholder neutro (silhouette + nome team) già usato al primo
+    // render quando un team non ha una foto caricata — mai un logo
+    // indovinato a caso, ma nemmeno un vuoto senza spiegazione.
     const photoWrap = document.getElementById('atleta-team-photo-wrap');
-    if (photoWrap) photoWrap.innerHTML = ''; // nessun logo team affidabile per un team solo-PCS, meglio vuoto che quello sbagliato
+    if (photoWrap) {
+      const _phIcon = `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`;
+      const _phLabel = `<span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nowTeamEntry.team)}</span>`;
+      photoWrap.innerHTML = nowTid
+        ? `<a href="#/team/${esc(nowTid)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(nowTeamEntry.team)}">${_phIcon}${_phLabel}</a>`
+        : `<span style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px" title="${esc(nowTeamEntry.team)}">${_phIcon}${_phLabel}</span>`;
+    }
   }
 
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
@@ -17437,12 +17450,15 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   }
   const photoWrap = document.getElementById('atleta-team-photo-wrap');
   if (photoWrap) {
+    // Stesso placeholder neutro anche quando il team storico non si
+    // risolve a un id nostro (niente link cliccabile, ma comunque
+    // l'icona+nome invece di un buco vuoto — vedi lo stesso fix poco
+    // sopra per il ramo "team solo PCS").
+    const _phIcon = `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`;
+    const _phLabel = `<span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(team)}</span>`;
     photoWrap.innerHTML = resolvedTeamId
-      ? `<a href="#/team/${esc(resolvedTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(team)}">
-          <span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>
-          <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(team)}</span>
-        </a>`
-      : '';
+      ? `<a href="#/team/${esc(resolvedTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(team)}">${_phIcon}${_phLabel}</a>`
+      : `<span style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px" title="${esc(team)}">${_phIcon}${_phLabel}</span>`;
   }
 
   // Punti: non stimiamo NOI un punteggio (nessun moltiplicatore reale noto
@@ -17585,8 +17601,18 @@ window.setAtletaPcsYear = (atletaId, anno) => {
     const catBadge = headerTop.querySelector('.badge-cat');
     if (catBadge) catBadge.textContent = 'Professionista';
   }
+  // Stesso placeholder neutro (mai un buco vuoto) usato per i due rami
+  // "team non risolvibile" poco sopra — qui il team è sempre estero/pro,
+  // mai un id nostro, ma il nome c'è e vale la pena mostrarlo comunque.
   const photoWrap = document.getElementById('atleta-team-photo-wrap');
-  if (photoWrap) photoWrap.innerHTML = '';
+  if (photoWrap) {
+    photoWrap.innerHTML = team
+      ? `<span style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px" title="${esc(team)}">
+          <span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>
+          <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(team)}</span>
+        </span>`
+      : '';
+  }
 
   const ptsDisplay = document.getElementById('atleta-pts-display');
   if (ptsDisplay) ptsDisplay.style.display = 'none';
