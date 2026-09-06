@@ -2204,6 +2204,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const k = _calGroupCore(cal.nome) + '|' + cal.data;
     (_calGroupsByNomeData[k] ||= []).push(cal);
   }
+  // Id delle righe "orfane" (vedi sopra) in un gruppo ambiguo — usato anche
+  // fuori da questo cascade (in renderRisultati, per le card "in attesa di
+  // risultato" di oggi): una riga orfana non riceve MAI più risultati propri
+  // (il match per categoria qui sopra li dirotta sempre alla disambiguata
+  // giusta), quindi lasciarla generare una propria card "in attesa" crea un
+  // doppione fantasma accanto alla card vera con i risultati — segnalato dal
+  // vivo con screenshot multipli (Castelfranco Emilia, Franco Pilone,
+  // Esercenti Industria, Art Cosmetic, Parte Montis...). Va sempre esclusa.
+  const _calBareOrphanIds = new Set();
+  for (const group of Object.values(_calGroupsByNomeData)) {
+    if (group.length < 2) continue;
+    if (new Set(group.map(g => (g.categoria||'').trim().toLowerCase())).size < 2) continue;
+    _calBareOrphanIds.add(group.slice().sort((a,b)=>a.id.length-b.id.length)[0].id);
+  }
   // Gare "a tappe" (giri multi-giorno): il calendario ha una sola voce con la
   // data della PRIMA tappa, ma ogni tappa successiva è scrapata con la sua
   // data reale e un suffisso diverso (es. "..._SECONDA_TAPPA_2026-07-17...").
@@ -2578,7 +2592,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     resultsByAtleta,
     resultsByTeam,
     _femaleIds,
-    garaToCalId
+    garaToCalId,
+    calBareOrphanIds: _calBareOrphanIds
   };
 }
 
@@ -26167,13 +26182,23 @@ async function renderRisultati() {
   // trattamento del caso "-"/vuoto già escluso qui sotto: non è utile
   // mostrarla, il nome da solo non identifica nessuna gara specifica.
   const _bareCatWords = new Set(['ESORDIENTI','ALLIEVI','ALLIEVE','JUNIORES','ELITE','UNDER23','UNDER 23','DONNE','UOMINI']);
+  // Righe di calendario "orfane" (vedi globalData.calBareOrphanIds, calcolato
+  // in processLoadedData): quando la FCI pubblica la stessa gara più volte
+  // con categorie diverse, una riga senza categoria propria non riceve MAI
+  // risultati (vanno sempre alla riga disambiguata giusta) — mostrarla come
+  // "in attesa" crea un doppione fantasma accanto alla card vera con i
+  // risultati già presenti (segnalato dal vivo con screenshot multipli:
+  // Castelfranco Emilia, Franco Pilone, Esercenti Industria, Art Cosmetic,
+  // Parte Montis...). Va sempre esclusa dalla lista, indipendentemente da
+  // _hasResultsToday.
+  const _calBareOrphanIds = globalData?.calBareOrphanIds || new Set();
   const pendingToday = (calendar || [])
     // g.nome === '-' (o vuoto): la fonte FCI non aveva un nome leggibile per
     // questa riga di calendario (id generato come "SCONOSCIUTO_{data}") —
     // una card "di oggi" senza titolo è più confusa che utile, meglio non
     // mostrarla (segnalato dal vivo dall'utente).
     .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
-      && !_bareCatWords.has(g.nome.trim().toUpperCase()))
+      && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id))
     .map(g => ({
       id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
       regione: g.regione, mult: g.moltiplicatore || 1,
