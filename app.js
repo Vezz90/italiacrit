@@ -17979,6 +17979,15 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
 
   // gara_ids già nella tabella ICS — non duplicare
   const icsGaraIds = new Set((icsRisultati || []).map(r => r.gara_id));
+  // La STESSA gara può avere risultati nativi ICS sotto un id e risultati
+  // importati da PCS sotto un id DIVERSO (calendario vs FCI, vedi il fix di
+  // garaToCalId per le gare dove la FCI usa un nome leggermente diverso tra
+  // calendario e risultati) — confrontare solo gara_id esatti non bastava:
+  // la stessa gara compariva due volte in tabella, una "ufficiale" (punti
+  // veri) e una "PCS" (0 punti, moltiplicatore magari sbagliato) — segnalato
+  // dal vivo con screenshot (Terza Tappa duplicata, Naz.le x2 e Reg.le x1).
+  const _calIdOf = gid => (globalData?.garaToCalId || {})[gid] || toCalId(gid);
+  const icsCalIds = new Set([...icsGaraIds].map(_calIdOf));
 
   // Indice per-gara da resultsRaw: nome, km, moltiplicatore, tipo, media
   const icsGaraInfo = {};
@@ -17997,7 +18006,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const excludedGaraIds = await getExcludedGaraIds();
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
-        .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id) && !excludedGaraIds.has(r.gara_id))
+        .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id) && !icsCalIds.has(_calIdOf(r.gara_id)) && !excludedGaraIds.has(r.gara_id))
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
