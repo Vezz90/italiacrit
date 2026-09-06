@@ -2156,6 +2156,34 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const k = cal.data + '|' + ed;
     _editionDateCount[k] = (_editionDateCount[k] || 0) + 1;
   }
+  // La FCI a volte pubblica PIÙ righe calendario con nome+data identici ma
+  // categoria diversa (es. "14° Trofeo A. Comberlato" 06/09: una riga "Donne
+  // Esordienti", una "Donne Allieve" — calendar_scraper.py le disambigua
+  // appendendo la categoria all'id, "..._DONNE_ESORDIENTI"/"..._DONNE_ALLIEVE").
+  // Il problema: quando calendar.json esisteva GIÀ prima che questa disambigua
+  // fosse introdotta, la riga originale (senza suffisso categoria, "orfana")
+  // resta per sempre accanto alle nuove righe disambiguate — sono 3 voci di
+  // calendario per 2 categorie reali. Il confronto testuale del cascade qui
+  // sotto (tier 0, "startsWith") fa match con la riga orfana per QUALSIASI
+  // categoria di quello stesso evento, visto che il suo id è un prefisso
+  // letterale di tutti i gara_id delle altre categorie: le righe correttamente
+  // disambiguate restavano quindi "in attesa di risultato" per sempre anche a
+  // scraping avvenuto (segnalato dal vivo con screenshot — bug esteso, non
+  // solo il Comberlato: 170 gare del calendario 2026 hanno questo pattern).
+  // Fix: quando più righe calendario condividono nome+data ma categorie
+  // diverse, si preferisce SEMPRE un match per CATEGORIA (via
+  // getRankingFileCode/catLabel, che riproducono l'etichetta "Donne
+  // Esordienti 1° Anno" ecc. a partire dal codice categoria del risultato)
+  // rispetto al generico confronto testuale — con priorità massima (tier -1)
+  // e SOLO verso le righe disambiguate (mai verso quella orfana, che è
+  // sempre un doppione della disambiguata con la stessa categoria: verificato
+  // su tutti i 170 casi presenti oggi in calendar.json).
+  const _calGroupsByNomeData = {};
+  for (const cal of (calendar || [])) {
+    if (!cal.nome || !cal.data) continue;
+    const k = cal.nome.trim().toUpperCase() + '|' + cal.data;
+    (_calGroupsByNomeData[k] ||= []).push(cal);
+  }
   // Gare "a tappe" (giri multi-giorno): il calendario ha una sola voce con la
   // data della PRIMA tappa, ma ogni tappa successiva è scrapata con la sua
   // data reale e un suffisso diverso (es. "..._SECONDA_TAPPA_2026-07-17...").
@@ -2207,9 +2235,40 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       .replace(/_+/g,'_').replace(/^_|_$/g,'');
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
+    // Gruppo calendario (nome+data) a cui appartiene questa riga, e se è
+    // "ambiguo" (più categorie diverse per lo stesso nome+data) — vedi
+    // commento su _calGroupsByNomeData sopra. isBareInGroup individua la
+    // riga "orfana" del gruppo (id più corto, senza suffisso categoria):
+    // va SEMPRE esclusa dal match per categoria qui sotto, altrimenti in
+    // caso di pareggio (stessa categoria testuale della riga orfana e di
+    // una disambiguata, es. entrambe "Donne Esordienti") vincerebbe quella
+    // sbagliata (la prima incontrata nell'array), lasciando la riga
+    // disambiguata vera per sempre senza risultati agganciati.
+    const _calGroup = (cal.nome||'').trim() ? _calGroupsByNomeData[cal.nome.trim().toUpperCase() + '|' + cal.data] : null;
+    const _calAmbiguous = _calGroup && _calGroup.length > 1 && new Set(_calGroup.map(g => (g.categoria||'').trim().toLowerCase())).size > 1;
+    const _calCatLbl = (cal.categoria||'').trim().toLowerCase();
+    const _isBareInGroup = _calAmbiguous && _calGroup.slice().sort((a,b)=>a.id.length-b.id.length)[0].id === cal.id;
     for (const r of (resultsRaw || [])) {
       if (!r.gara_id) continue;
       if (!isStageRace && r.data !== cal.data) continue;
+      // Pre-check per categoria (priorità massima, tier -1) — vedi commento
+      // sopra su _calGroupsByNomeData: scatta solo per gruppi ambigui, mai
+      // sulla riga orfana, e richiede comunque una base testuale minimamente
+      // compatibile per evitare falsi incroci fra gare diverse con nome
+      // identico ma categoria coincidente per puro caso.
+      if (_calAmbiguous && _calCatLbl && !_isBareInGroup) {
+        const _rCode = getRankingFileCode(r);
+        const _rLbl = _rCode ? catLabel(_rCode).trim().toLowerCase() : '';
+        if (_rLbl && (_rLbl === _calCatLbl || _rLbl.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl + ' '))) {
+          const _garaBaseChk = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
+          const _garaNormChk = _nm2(_garaBaseChk);
+          let _i=0; while(_i<calNorm2.length && _i<_garaNormChk.length && calNorm2[_i]===_garaNormChk[_i]) _i++;
+          if (_i >= 10 || _garaNormChk.startsWith(calNorm2) || calNorm2.startsWith(_garaNormChk)) {
+            _setGaraToCalId(r.gara_id, cal.id, -1);
+            continue;
+          }
+        }
+      }
       if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
       if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
