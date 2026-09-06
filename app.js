@@ -2149,7 +2149,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // incroci fra gare diverse con nomi simili.
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
-    const isStageRace = /tappe/i.test(cal.categoria || '');
+    // "categoria" dice "a tappe" SOLO sulla voce "ombrello" del giro (es.
+    // "Juniores a tappe") — le singole tappe/la Classifica Generale hanno
+    // categoria semplice ("Juniores", senza "tappe"), verificato dal vivo.
+    // Con isStageRace=false per queste, il filtro data rigido resta attivo
+    // (giusto, ogni tappa ha una data diversa) MA riattiva anche il
+    // fallback "prefisso comune >= 18" (riga sotto, pensato SOLO per gare
+    // non a tappe) — quando due tappe/CG dello STESSO giro condividono
+    // anche la data (GC spesso lo stesso giorno dell'ultima tappa), quel
+    // fallback le scambiava per puro caso di lunghezza del prefisso
+    // (segnalato dal vivo: foto/video della Terza Tappa finiti sulla
+    // Classifica Generale). _stageBaseName riconosce il suffisso
+    // tappa/classifica-generale dal NOME anche quando la categoria non lo
+    // dice.
+    const isStageRace = /tappe/i.test(cal.categoria || '') || !!_stageBaseName(cal.nome || '');
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     // "ED" (edizione) a volte resta incollato al numero nell'id calendario
     // (es. "4ED_LA_PIERI_ALIGI_..." invece di "4_LA_PIERI_ALIGI_...", come
