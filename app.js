@@ -19900,7 +19900,13 @@ function _mrDeriveMeta(garaId, sampleRow) {
   const calEntry = (globalData?.calendar || []).find(g => g.id === garaId);
   // Suffissi reali del gara_id (verificati sui dati): ELI, JUN, AL, ES1, ES2.
   const m = garaId.match(/_(ELI|JUN|AL|ES1|ES2)_(M|F)$/);
-  const genere = m ? m[2] : (sampleRow?.genere || '');
+  // Se non c'è ancora nessun risultato campione (gara mai scrapata/inserita
+  // prima), l'unica fonte di genere resta il testo categoria del calendario
+  // ("Donne Esordienti", "Donne Allieve"...) — senza questo fallback una
+  // gara femminile ancora "in attesa" veniva proposta di default come
+  // maschile al primo inserimento (segnalato indirettamente insieme al
+  // selettore anno Esordienti: stesso scenario, nessun sample disponibile).
+  const genere = m ? m[2] : (sampleRow?.genere || (/donne/i.test(calEntry?.categoria || '') ? 'F' : ''));
   // Priorità al suffisso del gara_id (sempre affidabile e già in formato codice);
   // altrimenti normalizza l'etichetta leggibile della riga/calendario in codice.
   const categoria = (m ? `${m[1]}_${genere}` : '')
