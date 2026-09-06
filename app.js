@@ -2223,7 +2223,21 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // incroci come effetto collaterale (foto proprie sparite altrove,
     // segnalato dal vivo). Resta il criterio originale, più stretto.
     const isStageRace = /tappe/i.test(cal.categoria || '');
-    const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+    let calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+    // La FCI a volte scrive il numero di edizione in numeri romani nel
+    // calendario ("II Memorial Franco Pilone") ma in arabi nei risultati
+    // ("2 Memorial Franco Pilone") — senza convertirlo qui i due id non
+    // condividevano NESSUN prefisso comune (calBaseNoEd restava "II_..." e
+    // non c'era alcun modo di farlo combaciare con "MEMORIAL..."), quindi il
+    // risultato restava per sempre senza collegamento al calendario
+    // (segnalato dal vivo). Copre solo I-XX: oltre non capita quasi mai per
+    // un'edizione di gara ciclistica e il rischio di falsi positivi (parole
+    // reali che sembrano numeri romani, es. "DI", "MI") sale con la lunghezza.
+    const _ROMAN_NUM = { I:1, II:2, III:3, IV:4, V:5, VI:6, VII:7, VIII:8, IX:9, X:10,
+      XI:11, XII:12, XIII:13, XIV:14, XV:15, XVI:16, XVII:17, XVIII:18, XIX:19, XX:20 };
+    const _romanEdM = calBase.match(/^([IVX]{1,5})_/i);
+    const _romanEdVal = _romanEdM && _ROMAN_NUM[_romanEdM[1].toUpperCase()];
+    if (_romanEdVal) calBase = _romanEdVal + calBase.slice(_romanEdM[0].length - 1);
     // "ED" (edizione) a volte resta incollato al numero nell'id calendario
     // (es. "4ED_LA_PIERI_ALIGI_..." invece di "4_LA_PIERI_ALIGI_...", come
     // genera lo scraper FCI per i risultati) — senza tollerarlo qui lo strip
@@ -2279,7 +2293,18 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (_calAmbiguous && _calCatLbl && !_isBareInGroup) {
         const _rCode = getRankingFileCode(r);
         const _rLbl = _rCode ? catLabel(_rCode).trim().toLowerCase() : '';
-        if (_rLbl && (_rLbl === _calCatLbl || _rLbl.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl + ' '))) {
+        // La FCI a volte accorpa due categorie in un'unica riga "promiscua"
+        // (es. "Promiscua All - Jun" = Allievi e Juniores insieme in una
+        // sola gara/classifica) — il confronto per prefisso/uguaglianza
+        // sopra non la riconosce mai (il testo non ha nulla in comune con
+        // "Allievi" o "Juniores"), quindi restava sempre "in attesa" anche
+        // quando i risultati esistevano già (segnalato dal vivo, "Trofeo
+        // Unione dei Comuni Parte Montis").
+        const _isPromiscuaMatch = /promiscua/i.test(_calCatLbl) &&
+          ((/\ball\b/i.test(_calCatLbl) && /^allievi/i.test(_rLbl)) ||
+           (/\bjun\b/i.test(_calCatLbl) && /^juniores/i.test(_rLbl)) ||
+           (/esord/i.test(_calCatLbl) && /^esordienti/i.test(_rLbl)));
+        if (_rLbl && (_isPromiscuaMatch || _rLbl === _calCatLbl || _rLbl.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl + ' '))) {
           const _garaBaseChk = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
           const _garaNormChk = _nm2(_garaBaseChk);
           let _i=0; while(_i<calNorm2.length && _i<_garaNormChk.length && calNorm2[_i]===_garaNormChk[_i]) _i++;
@@ -2307,7 +2332,27 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // legittimamente variare, il NUMERO di edizione no.
       const garaEdForCheck = (r.gara_id.match(/^(\d+)_/)||[])[1];
       const _stageEdOk = !isStageRace || !calEd2 || !garaEdForCheck || calEd2 === garaEdForCheck;
-      if (calNorm2 === garaNorm && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 1); continue; }
+      if (calNorm2 === garaNorm && _stageEdOk) {
+        // Due voci di calendario possono avere lo STESSO nome normalizzato
+        // (tier 1) quando una è una riga "orfana" pre-esistente senza
+        // numero di edizione e un'altra, più recente, ce l'ha (es. "GP
+        // Esercenti Industria" e "77° GP Esercenti Industria" — stessa gara,
+        // l'edizione è stata aggiunta dalla FCI dopo la prima registrazione,
+        // mai sanata) — a parità di tier vinceva sempre la prima incontrata
+        // nell'array, spesso quella SENZA edizione, lasciando quella vera
+        // (con edizione, quindi più informativa/corretta) per sempre senza
+        // risultati collegati (segnalato dal vivo con screenshot, "77° GP
+        // Esercenti Industria"). A parità di nome, preferisci sempre la
+        // voce calendario la cui edizione combacia con quella del
+        // risultato; quella senza alcuna edizione nota resta un fallback
+        // più debole, usato solo se non esiste un'alternativa con edizione
+        // corretta.
+        let _tier1 = 1;
+        if (calEd2 && garaEdForCheck) _tier1 = calEd2 === garaEdForCheck ? 1 : 1.5;
+        else if (!calEd2) _tier1 = 1.2;
+        _setGaraToCalId(r.gara_id, cal.id, _tier1);
+        continue;
+      }
       if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
