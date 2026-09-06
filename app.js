@@ -21958,6 +21958,7 @@ async function renderGara(gara_id) {
       return [s.id, sAlias, ...sReverse];
     });
     const _photoKeys = [...new Set([primaryGaraId, _aliasGaraId, ..._reverseAliasIds, ..._siblingStageKeys].filter(Boolean))];
+    window.__debugPhotoKeys = { primaryGaraId, _aliasGaraId, _reverseAliasIds, _siblingStageKeys, stageListIds: (_stageList||[]).map(s=>s.id), _photoKeys };
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
       fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
     ));
