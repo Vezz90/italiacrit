@@ -844,8 +844,17 @@ app.get('/og/gara/:id', async (req, res) => {
   // Canonical sulla pagina pulita reale (indicizzabile da quando esiste il
   // router URL puliti, vedi commento in ogHtml) invece che su questa stessa
   // pagina bot-only: senza, Google indicizzava/mostrava in ricerca l'URL
-  // spoglio /og/gara/... al posto della vera app.
-  const canonical = redirect;
+  // spoglio /og/gara/... al posto della vera app. MA quando l'utente ha
+  // regolato a mano la foto (adjustQS presente), il canonical NON deve
+  // "collassare" sulla versione base senza regolazione: Facebook usa
+  // rel=canonical per capire quale sia "la vera pagina" e, puntando sempre
+  // al bare /gara/:id, ignorava la regolazione riusando l'immagine già in
+  // cache di quella versione base — segnalato dal vivo: "nonostante cambi
+  // la posizione della foto... comunque me la mette come vuole lui".
+  const qsForCanonical = ['s', 'ox', 'oy']
+    .filter(k => req.query[k] != null)
+    .map(k => `${k}=${encodeURIComponent(req.query[k])}`).join('&');
+  const canonical = qsForCanonical ? `${redirect}?${qsForCanonical}` : redirect;
   // Tabella con TUTTA la classifica (non solo il podio) — contenuto reale e
   // indicizzabile, non solo meta tag: è la parte che rende questa pagina
   // utile a Google oltre che ai crawler social.
