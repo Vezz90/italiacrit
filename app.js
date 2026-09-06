@@ -19906,11 +19906,23 @@ function _mrDeriveMeta(garaId, sampleRow) {
   const categoria = (m ? `${m[1]}_${genere}` : '')
     || _catLabelToCode(sampleRow?.categoria, genere)
     || _catLabelToCode(calEntry?.categoria, genere);
+  // L'ordine d'arrivo Esordienti 1° e 2° anno è quasi sempre UNA gara sola,
+  // corsa insieme e poi divisa in due classifiche separate — quando il
+  // gara_id non specifica già ES1/ES2 (non stiamo modificando un risultato
+  // ES1/ES2 già esistente), _catLabelToCode indovina "alla cieca" dal testo
+  // categoria del calendario (spesso ambiguo, es. "Esordienti 1°/2° anno",
+  // o addirittura sbagliato: "contiene un 2" veniva letto come 2° anno anche
+  // per etichette tipo "42° Esordienti"). L'admin che carica l'ordine
+  // d'arrivo (a mano o da foto) è l'unico che sa DAVVERO se quel foglio è il
+  // 1° o il 2° anno — va sempre chiesto esplicitamente, mai indovinato
+  // (segnalato dal vivo: risultati Esordienti finiti nell'anno sbagliato).
+  const esordientiAmbiguous = !m && (categoria === `ES1_${genere || 'M'}` || categoria === `ES2_${genere || 'M'}`);
   return {
     nome_gara: sampleRow?.nome_gara || calEntry?.nome || '',
     data: sampleRow?.data || calEntry?.data || '',
     categoria,
     genere,
+    esordientiAmbiguous,
     tipo: sampleRow?.tipo || calEntry?.tipo || 'regionale',
     moltiplicatore: sampleRow?.moltiplicatore || calEntry?.moltiplicatore || 1,
     campionato_regionale: sampleRow?.campionato_regionale ?? calEntry?.campionato_regionale ?? false,
@@ -19918,6 +19930,58 @@ function _mrDeriveMeta(garaId, sampleRow) {
     regione: sampleRow?.regione || calEntry?.regione || '',
   };
 }
+
+// Markup del selettore "1° o 2° anno" — condiviso dal form singolo e da
+// quello bulk/OCR. Aggiorna solo window._mrMeta.categoria e lo stato visivo
+// dei due pulsanti (non ridisegna tutto il form: perderebbe i campi già
+// compilati dall'admin, es. cognome/nome digitati prima di accorgersi della
+// scelta anno). id_prefix distingue i due picker quando entrambi i form
+// potessero coesistere nel DOM (non succede oggi, ma resta innocuo).
+function _mrEsordientiAnnoPicker(idPrefix) {
+  const cur = window._mrMeta?.categoria || '';
+  const g = window._mrMeta?.genere || 'M';
+  const btn = (code, label) => `<button type="button" id="${idPrefix}-${code}" onclick="window._mrSetEsordientiAnno('${code}_${g}','${idPrefix}')" style="flex:1;padding:9px 0;border-radius:var(--r-sm);font-size:0.82rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
+  return `
+    <div style="margin-bottom:12px;padding:10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:var(--r-sm)">
+      <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-primary);margin-bottom:6px">Questo ordine d'arrivo è di 1° o 2° anno? <span style="color:var(--red-hot)">*</span></label>
+      <div style="display:flex;gap:8px">${btn('ES1', '1° Anno')}${btn('ES2', '2° Anno')}</div>
+    </div>`;
+}
+window._mrSetEsordientiAnno = (categoria, idPrefix) => {
+  if (!window._mrMeta) return;
+  window._mrMeta.categoria = categoria;
+  const isEs1 = categoria.startsWith('ES1');
+  const on = 'border:1px solid var(--accent);background:var(--accent);color:#fff';
+  const off = 'border:1px solid var(--border-subtle);background:var(--bg-primary);color:var(--text-primary)';
+  const es1Btn = document.getElementById(`${idPrefix}-ES1`);
+  const es2Btn = document.getElementById(`${idPrefix}-ES2`);
+  if (es1Btn) es1Btn.style.cssText = `flex:1;padding:9px 0;border-radius:var(--r-sm);font-size:0.82rem;font-weight:700;cursor:pointer;${isEs1 ? on : off}`;
+  if (es2Btn) es2Btn.style.cssText = `flex:1;padding:9px 0;border-radius:var(--r-sm);font-size:0.82rem;font-weight:700;cursor:pointer;${!isEs1 ? on : off}`;
+  // Nel form bulk il titolo mostra la categoria — aggiornalo a vista (il
+  // form singolo non ha un'etichetta categoria equivalente da sincronizzare).
+  const catLabelEl = document.getElementById('mr-bulk-cat-label');
+  if (catLabelEl) catLabelEl.textContent = catLabel(categoria) || categoria;
+  // Il riconoscimento automatico dai dati OCR (window.openManualResultBulkForm)
+  // gira SUBITO all'apertura del form, filtrando gli atleti per la categoria
+  // ancora "indovinata" — se l'admin corregge l'anno qui, un match trovato
+  // nella categoria sbagliata (o mai trovato perché cercava nell'anno
+  // sbagliato) va ripetuto con la categoria giusta, altrimenti la card
+  // "corregge l'anno" da sola non risolve il problema che l'ha causata.
+  if (idPrefix === 'mr-bulk-anno' && Array.isArray(window._mrBulkRows)) {
+    window._mrBulkRows = window._mrBulkRows.map(r => {
+      const raw = r._ocrRaw || (r._ocrCognome ? `${r._ocrCognome} ${r._ocrNome || ''}`.trim() : '');
+      const rawTeam = r._ocrTeam || (r._autoMatched ? r.team : '') || '';
+      if (!raw) return r;
+      const match = _mrAutoMatchAthlete(raw.split(' ')[0], raw.split(' ').slice(1).join(' '), rawTeam, window._mrMeta);
+      if (match) {
+        const team = (match.team && _mrIsNationalTeam(rawTeam)) ? match.team : (rawTeam || match.team);
+        return { ...r, cognome: match.cognome, nome: match.nome, team, atletaId: match.id, _autoMatched: true, _ocrRaw: raw, _dbTeam: match.team || '' };
+      }
+      return { ...r, cognome: r._autoMatched ? '' : r.cognome, nome: r._autoMatched ? '' : r.nome, atletaId: null, _autoMatched: false, _ocrCognome: raw.split(' ')[0], _ocrNome: raw.split(' ').slice(1).join(' '), _ocrTeam: rawTeam };
+    });
+    window._mrBulkRender();
+  }
+};
 
 // Inserisce/aggiorna la riga in globalData.resultsRaw senza dover ricaricare tutto
 function _mrPatchLocal(row) {
@@ -19989,6 +20053,7 @@ window.openManualResultForm = (garaId, posizione, forceAdd) => {
         <button onclick="window._mrCloseModal()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
       <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : (forceAdd ? 'Aggiungi un altro corridore alla stessa posizione — utile per le gare a squadre (es. cronometro a squadre), dove più atleti condividono lo stesso risultato del team.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.')}</p>
+      ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-anno') : ''}
       ${addedList}
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
       <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : (posizione || '')}" style="${inpStyle}"/>
@@ -20248,10 +20313,11 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
   overlay.innerHTML = `
     <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:720px;max-height:88vh;overflow:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <strong style="font-size:1rem">Aggiungi risultati — ${esc(catLabel(window._mrMeta.categoria) || window._mrMeta.categoria || '')}</strong>
+        <strong style="font-size:1rem">Aggiungi risultati — <span id="mr-bulk-cat-label">${esc(catLabel(window._mrMeta.categoria) || window._mrMeta.categoria || '')}</span></strong>
         <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
       <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.${prefilledRows && prefilledRows.length ? ' <strong style="color:var(--accent)">Righe estratte dalla foto — controlla nomi e team prima di salvare, l\'OCR può sbagliare su scritte poco chiare o tagliate.</strong>' : ''}</p>
+      ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-bulk-anno') : ''}
       ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
       <div id="mr-bulk-rows"></div>
       <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
