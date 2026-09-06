@@ -2228,6 +2228,18 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // di essere ritrovato. Per le gare normali (un solo giorno) il confronto
   // resta rigorosamente sulla stessa data, per non rischiare falsi
   // incroci fra gare diverse con nomi simili.
+  // Estratta fuori dal loop (era ridefinita identica ad ogni iterazione) —
+  // serve anche dopo, nel rilevamento a posteriori dei doppioni "orfani"
+  // qui sotto (_calDuplicateOrphanIds).
+  const _nm2 = s => s
+    .replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g,'GRAN_PREMIO')
+    .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g,'GRAN_PREMIO')
+    .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g,'GRAN_PREMIO')
+    .replace(/(?<![A-Z0-9])M_O(?![A-Z0-9])/g,'MEDAGLIA_ORO')
+    .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
+    .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
+    .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
+    .replace(/_+/g,'_').replace(/^_|_$/g,'');
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
     // NB: provato ad allargare isStageRace anche al nome (non solo alla
@@ -2260,27 +2272,9 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // caricato su quella gara prima dei risultati restava "orfano" per
     // sempre, anche dopo che i risultati venivano pubblicati.
     const calBaseNoEd = calBase.replace(/^\d+(?:ED)?_/i, '');
-    const _nm2 = s => s
-      .replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g,'GRAN_PREMIO')
-      .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g,'GRAN_PREMIO')
-      .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g,'GRAN_PREMIO')
-      .replace(/(?<![A-Z0-9])M_O(?![A-Z0-9])/g,'MEDAGLIA_ORO')
-      .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
-      // La FCI a volte usa un nome leggermente diverso tra la pagina
-      // calendario/dettaglio e quella dei risultati per la STESSA gara, es.
-      // "62 GIRO DELLA REGIONE FRIULI..." (calendario) vs "62 GIRO DEL
-      // FRIULI..." (risultati) — verificato dal vivo, stessa gara, stesso
-      // giorno, gara_id comunque diverso: senza normalizzare via una
-      // preposizione articolata in meno/parola "REGIONE" in più, i due id
-      // non si incrociavano MAI, e la card coi risultati veri finiva
-      // completamente scollegata da foto/video/podio provvisorio già
-      // attaccati al vecchio id (segnalato dal vivo: "oggi non ci sono
-      // più"). Rimosse SOLO come parole intere — non toccano mai
-      // PRIMA/SECONDA/TERZA ecc., le uniche parole che devono continuare a
-      // distinguere le tappe di una gara a tappe tra loro.
-      .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
-      .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
-      .replace(/_+/g,'_').replace(/^_|_$/g,'');
+    // _nm2: normalizzazione condivisa definita sopra, fuori dal loop — vedi
+    // il suo commento per il perché di ogni singola sostituzione (GP→GRAN
+    // PREMIO, rimozione DELLA/DEL/REGIONE come rumore, ecc.).
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
     // Gruppo calendario (nome+data) a cui appartiene questa riga, e se è
@@ -2367,14 +2361,28 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
         _setGaraToCalId(r.gara_id, cal.id, _tier1);
         continue;
       }
-      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2); continue; }
+      // Spareggio per categoria, applicato a tutti i tier testuali qui sotto
+      // (non solo al gruppo "ambiguo" di sopra): due voci di calendario
+      // DIVERSE possono condividere lo stesso prefisso testuale (es. "54
+      // Giornata del Pedale - 8° Trofeo Ruffato Leonida" Allievi e "54
+      // Giornata del Pedale - 30° Trofeo Ruffato Evaristo" Esordienti,
+      // entrambe iniziano per "54 Giornata del Pedale") — a parità di tier
+      // vinceva sempre la prima incontrata nell'array, lasciando l'altra
+      // categoria per sempre senza risultati collegati (segnalato dal vivo).
+      // Un piccolissimo sconto (0.01, non abbastanza da scavalcare un tier
+      // intero migliore) fa vincere sempre la voce la cui categoria
+      // combacia col risultato, quando è nota.
+      const _rCode2 = getRankingFileCode(r);
+      const _rLbl2 = _rCode2 ? catLabel(_rCode2).trim().toLowerCase() : '';
+      const _catTie = (_calCatLbl && _rLbl2 && (_rLbl2 === _calCatLbl || _rLbl2.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl2 + ' '))) ? 0.01 : 0;
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
       // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
       // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
       // gara, stesso giorno — verificato dal vivo) — prima veniva
       // controllato solo il caso calendario-più-lungo, mai questo.
-      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2); continue; }
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie); continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
@@ -2402,6 +2410,41 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
         if (i>=18 && calNorm2.slice(0,i).endsWith('_')) _setGaraToCalId(r.gara_id, cal.id, 4);
       }
     }
+  }
+
+  // Doppioni "orfani" non coperti da _calBareOrphanIds sopra (quello copre
+  // solo il caso nome-identico/quasi-identico con categoria disambiguata):
+  // qui si individua a POSTERIORI, dopo che tutto il matching sopra si è già
+  // risolto, un pattern più generale — due voci di calendario per la STESSA
+  // data e STESSA categoria (es. "GP Esercenti Industria" e "77° GP
+  // Esercenti Industria", identiche a parte il numero di edizione aggiunto
+  // dalla FCI in un secondo momento e mai sanato) dove UNA delle due non ha
+  // ricevuto NESSUN risultato mentre l'altra sì — segno che sono la stessa
+  // gara fisica e quella vuota è un doppione stantio, non una gara distinta
+  // ancora da scrapare (segnalato dal vivo con screenshot, "77° GP Esercenti
+  // Industria" mostrata "in attesa" nonostante i risultati esistessero già
+  // sotto l'altra voce). Il confronto testuale usa la stessa normalizzazione
+  // _nm2 già usata sopra, richiedendo che una base sia contenuta nell'altra
+  // (non un generico prefisso comune) per restare stretto ed evitare falsi
+  // positivi fra gare diverse che coincidono per caso su categoria e data.
+  const _calHasResultsSet = new Set(Object.values(garaToCalId));
+  const _calByDateCat = {};
+  for (const cal of (calendar || [])) {
+    if (!cal.id || !cal.data) continue;
+    const k = cal.data + '|' + (cal.categoria || '').trim().toLowerCase();
+    (_calByDateCat[k] ||= []).push(cal);
+  }
+  for (const cal of (calendar || [])) {
+    if (!cal.id || !cal.data || _calHasResultsSet.has(cal.id) || _calBareOrphanIds.has(cal.id)) continue;
+    const k = cal.data + '|' + (cal.categoria || '').trim().toLowerCase();
+    const siblings = (_calByDateCat[k] || []).filter(g => g.id !== cal.id && _calHasResultsSet.has(g.id));
+    if (!siblings.length) continue;
+    const calBaseX = _nm2(cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
+    const isDup = siblings.some(sib => {
+      const sBaseX = _nm2(sib.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
+      return sBaseX === calBaseX || sBaseX.startsWith(calBaseX + '_') || calBaseX.startsWith(sBaseX + '_');
+    });
+    if (isDup) _calBareOrphanIds.add(cal.id);
   }
 
   // Video/dirette caricati IN ANTICIPO su una tappa specifica (prima che la
