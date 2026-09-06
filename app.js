@@ -2123,6 +2123,25 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // Mappa gara_id (risultati) → calendar_id — necessaria perché i gara_id
   // dei risultati hanno suffissi extra rispetto agli id del calendario
   const garaToCalId = {};
+  // Un risultato può soddisfare la cascata qui sotto con PIÙ voci di
+  // calendario diverse (es. sia la propria tappa — match forte — sia la
+  // registrazione "ombrello" dell'intera gara a tappe, che spesso condivide
+  // edizione e un pezzo di nome — match debole). Senza tracciare la
+  // "qualità" del match già trovato, l'ultima voce di calendario elaborata
+  // nell'array vinceva sempre, anche se il suo match era più debole di uno
+  // già trovato prima per lo stesso risultato — verificato dal vivo: la
+  // Terza Tappa del 62° Giro della Regione Friuli Venezia Giulia (match
+  // forte, indice 1274 nell'array) perdeva il proprio alias a favore della
+  // voce ombrello dello stesso giro (match debole per contenimento, indice
+  // 1822, elaborata dopo), foto/video propri risultavano introvabili.
+  // Numeri più bassi = match più affidabile (vedi tier passato ad ogni
+  // chiamata sotto); si sovrascrive solo se il nuovo match è MIGLIORE.
+  const _garaToCalTier = {};
+  const _setGaraToCalId = (garaId, calId, tier) => {
+    if (_garaToCalTier[garaId] !== undefined && _garaToCalTier[garaId] <= tier) return;
+    garaToCalId[garaId] = calId;
+    _garaToCalTier[garaId] = tier;
+  };
   // Conta quante voci di calendario condividono (data, numero di edizione) —
   // usato per bloccare il fallback debole "solo edizione" sotto quando due
   // gare COMPLETAMENTE diverse coincidono per puro caso (es. "53 Trofeo
@@ -2191,9 +2210,9 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     for (const r of (resultsRaw || [])) {
       if (!r.gara_id) continue;
       if (!isStageRace && r.data !== cal.data) continue;
-      if (r.gara_id.startsWith(calBase)) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
-      if (garaBase === calBaseNoEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
       const garaNorm = _nm2(garaBase);
       // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
       // ha una data diversa) — questo però riapre la porta a incroci tra
@@ -2209,15 +2228,15 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // legittimamente variare, il NUMERO di edizione no.
       const garaEdForCheck = (r.gara_id.match(/^(\d+)_/)||[])[1];
       const _stageEdOk = !isStageRace || !calEd2 || !garaEdForCheck || calEd2 === garaEdForCheck;
-      if (calNorm2 === garaNorm && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
-      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (calNorm2 === garaNorm && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 1); continue; }
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
       // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
       // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
       // gara, stesso giorno — verificato dal vivo) — prima veniva
       // controllato solo il caso calendario-più-lungo, mai questo.
-      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2); continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
@@ -2227,7 +2246,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // della Regione Friuli Venezia Giulia") — per queste va escluso.
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
       const _edUnique = calEd2 && (_editionDateCount[cal.data + '|' + calEd2] || 0) <= 1;
-      if (!isStageRace && _edUnique && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (!isStageRace && _edUnique && garaEd && calEd2 === garaEd) { _setGaraToCalId(r.gara_id, cal.id, 3); continue; }
       // Fallback "prefisso comune lunghissimo" — va bene per due gare diverse
       // che coincidono per caso su un pezzo di nome, ma per una gara A TAPPE
       // ogni tappa ha ora una propria voce di calendario (PRIMA_TAPPA,
@@ -2242,7 +2261,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // bastano a trovare la tappa giusta: qui va escluso, non stretto.
       if (!isStageRace) {
         let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
-        if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id;
+        if (i>=18 && calNorm2.slice(0,i).endsWith('_')) _setGaraToCalId(r.gara_id, cal.id, 4);
       }
     }
   }
