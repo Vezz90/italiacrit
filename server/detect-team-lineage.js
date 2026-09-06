@@ -116,8 +116,20 @@ function nameSimilarity(a, b) {
     for (const teamFrom of teamsFrom) {
       const rosterFrom = rosters.get(rosterKey(teamFrom, sFrom));
       if (!rosterFrom || rosterFrom.size < MIN_RIDERS) continue;
+      const teamIdFrom = teamIdFromName(teamFrom);
       for (const teamTo of teamsTo) {
-        if (teamTo === teamFrom) continue; // stesso nome = già lo stesso team_id sul sito
+        const teamIdTo = teamIdFromName(teamTo);
+        // Confronto sull'ID derivato, non sul nome grezzo: due nomi DIVERSI
+        // (es. "Team Technipes inEmiliaRomagna" vs "Team Technipes
+        // #inEmiliaRomagna", solo un "#" aggiunto davanti allo sponsor)
+        // possono comunque generare lo STESSO team_id — se il nome grezzo
+        // fosse l'unico controllo, la coppia passava come "candidata"
+        // valida e finiva confermata come una transizione verso SE STESSA
+        // (team_id_from === team_id_to), mandando in loop infinito la
+        // catena "Storico Squadra" lato frontend (guard a 30 ripetizioni,
+        // segnalato dal vivo con screenshot). L'id è sempre il criterio di
+        // identità reale sul sito, il nome no.
+        if (teamIdTo === teamIdFrom) continue;
         const rosterTo = rosters.get(rosterKey(teamTo, sTo));
         if (!rosterTo || rosterTo.size < MIN_RIDERS) continue;
         let common = 0;
@@ -126,8 +138,8 @@ function nameSimilarity(a, b) {
         const overlapRatio = common / Math.min(rosterFrom.size, rosterTo.size);
         if (overlapRatio < MIN_OVERLAP) continue;
         candidates.push({
-          team_id_from: teamIdFromName(teamFrom), team_from: teamFrom, season_from: sFrom,
-          team_id_to: teamIdFromName(teamTo), team_to: teamTo, season_to: sTo,
+          team_id_from: teamIdFrom, team_from: teamFrom, season_from: sFrom,
+          team_id_to: teamIdTo, team_to: teamTo, season_to: sTo,
           common_riders: common, overlap_ratio: Math.round(overlapRatio * 100) / 100,
           name_similarity: Math.round(nameSimilarity(teamFrom, teamTo) * 100) / 100,
         });

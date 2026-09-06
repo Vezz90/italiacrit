@@ -15885,16 +15885,25 @@ async function _loadTeamLineage() {
 // serve altro che seguirli finché ce n'è uno.
 function _teamLineageChain(team_id, links, currentNome) {
   const chain = [{ team_id, nome: currentNome, season: null, current: true }];
+  // Un link con team_id_from === team_id_to (stessa squadra, solo il nome
+  // visualizzato cambiato — es. una spaziatura diversa, o un "#" aggiunto
+  // davanti allo sponsor — mai una vera transizione) non fa avanzare il
+  // cursore: senza questa guardia, .find() lo ritrovava identico ad ogni
+  // giro e il ciclo si fermava solo al limite di sicurezza (30), producendo
+  // 30 chip ripetuti in entrambe le direzioni — visto dal vivo su un caso
+  // reale ("Team Technipes inEmiliaRomagna"). Alla radice queste righe non
+  // andrebbero proprio generate (corretto anche lì), ma un guard qui protegge
+  // comunque da qualunque futuro dato sporco dello stesso tipo.
   let cursor = team_id, guard = 0;
   while (guard++ < 30) {
-    const prev = links.find(l => l.team_id_to === cursor);
+    const prev = links.find(l => l.team_id_to === cursor && l.team_id_from !== cursor);
     if (!prev) break;
     chain.unshift({ team_id: prev.team_id_from, nome: prev.team_from, season: prev.season_from });
     cursor = prev.team_id_from;
   }
   cursor = team_id; guard = 0;
   while (guard++ < 30) {
-    const next = links.find(l => l.team_id_from === cursor);
+    const next = links.find(l => l.team_id_from === cursor && l.team_id_to !== cursor);
     if (!next) break;
     chain.push({ team_id: next.team_id_to, nome: next.team_to, season: next.season_to });
     cursor = next.team_id_to;
@@ -26548,12 +26557,26 @@ async function renderMedia(openOpts) {
     const vid = ytId(x.video.url);
     return vid && window._liveStatusToday && window._liveStatusToday[vid] === false;
   };
-  const diretteOggi = direteItems.filter(x => x.meta?.data === _todayStrMedia && !_isEndedLive(x));
+  // Per un contenuto "Altro" (nessuna gara collegata, vedi il merge in
+  // videoItems più sopra) x.meta.data è la data di PUBBLICAZIONE del video
+  // su YouTube, non quella reale dell'evento — e un livestream viene spesso
+  // creato/pubblicato il giorno PRIMA di andare davvero in onda (es.
+  // pubblicato il 5, evento e diretta reale il 6): il confronto sulla sola
+  // data lo escludeva da "In Diretta Oggi" pur essendo realmente live in
+  // questo momento — segnalato dal vivo (banner "2 DIRETTE ORA" già corretto
+  // in basso, ma assente da questo raggruppamento). window._liveStatusToday
+  // (stato REALE da YouTube, non una data salvata) è un segnale più forte:
+  // se dice che è live ORA, mostralo qui a prescindere dalla data.
+  const _isLiveRightNow = (x) => {
+    const vid = ytId(x.video.url);
+    return !!(vid && window._liveStatusToday && window._liveStatusToday[vid] === true);
+  };
+  const diretteOggi = direteItems.filter(x => (x.meta?.data === _todayStrMedia || _isLiveRightNow(x)) && !_isEndedLive(x));
   const direttePros = direteItems
     .filter(x => x.meta?.data && x.meta.data > _todayStrMedia)
     .sort((a, b) => (a.meta.data || '').localeCompare(b.meta.data || '')); // più vicina prima
   const diretteResto = direteItems.filter(x =>
-    !(x.meta?.data === _todayStrMedia && !_isEndedLive(x)) && !(x.meta?.data && x.meta.data > _todayStrMedia));
+    !((x.meta?.data === _todayStrMedia || _isLiveRightNow(x)) && !_isEndedLive(x)) && !(x.meta?.data && x.meta.data > _todayStrMedia));
   if (mediaTab === 'dirette') _refreshLiveStatusToday();
   const presentazioniAll = applyFilters(presentazioniItems).sort(byPublishedDesc);
   const programmiTvAll   = applyFilters(programmiTvItems).sort(byPublishedDesc);
