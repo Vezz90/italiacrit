@@ -2189,15 +2189,29 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
       if (garaBase === calBaseNoEd) { garaToCalId[r.gara_id] = cal.id; continue; }
       const garaNorm = _nm2(garaBase);
-      if (calNorm2 === garaNorm) { garaToCalId[r.gara_id] = cal.id; continue; }
-      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
+      // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
+      // ha una data diversa) — questo però riapre la porta a incroci tra
+      // giri COMPLETAMENTE diversi che, dopo aver tolto "DELLA/DEL/REGIONE"
+      // come rumore (vedi _nm2, aggiunto per un caso legittimo: stesso giro,
+      // stesso numero edizione, solo preposizione diversa tra calendario e
+      // risultati), restano testualmente indistinguibili — verificato dal
+      // vivo: "62° GIRO DELLA REGIONE FRIULI..." (Elite, settembre) e "24
+      // GIRO DEL FRIULI..." (Juniores, maggio) collassano entrambi in
+      // "GIRO_FRIULI_VENEZIA_GIULIA", foto/video di un giro finivano
+      // mescolati con l'altro. In più, per le gare a tappe l'edizione deve
+      // combaciare quando è nota da entrambe le parti — la preposizione può
+      // legittimamente variare, il NUMERO di edizione no.
+      const garaEdForCheck = (r.gara_id.match(/^(\d+)_/)||[])[1];
+      const _stageEdOk = !isStageRace || !calEd2 || !garaEdForCheck || calEd2 === garaEdForCheck;
+      if (calNorm2 === garaNorm && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
       // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
       // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
       // gara, stesso giorno — verificato dal vivo) — prima veniva
       // controllato solo il caso calendario-più-lungo, mai questo.
-      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { garaToCalId[r.gara_id] = cal.id; continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
