@@ -2240,6 +2240,54 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
     .replace(/_+/g,'_').replace(/^_|_$/g,'');
+  // Variante di _nm2 usata SOLO sul testo del RISULTATO (mai su quello del
+  // calendario): "GARA_UNICA"/"PROVA_VALIDA" sono etichette che la pagina
+  // risultati FCI a volte aggiunge quando accorpa più ordinali in una sola
+  // classifica (es. "54 Giornata del Pedale GARA UNICA" per Esordienti 1°+2°
+  // insieme) — noise SOLO se il calendario non le ha (altrimenti "Coppa
+  // Maria Assunta GARA UNICA", dove è invece il vero nome ufficiale di
+  // quella riga di calendario, verrebbe confusa con "Coppa Maria Assunta
+  // Allievi": provato a toglierle da ENTRAMBI i lati, causava proprio
+  // questo — verificato dal vivo con un giro completo su tutti i dati).
+  // Applicata solo lato risultato, il confronto testuale coi rispettivi
+  // calNorm2 (mai spogliati) resta corretto in entrambi i casi.
+  const _nm2Res = s => _nm2(s)
+    .replace(/(?<![A-Z0-9])GARA_UNICA(?![A-Z0-9])/g,'')
+    .replace(/(?<![A-Z0-9])PROVA_VALIDA(?![A-Z0-9])/g,'')
+    .replace(/_+/g,'_').replace(/^_|_$/g,'');
+  // Confronto categoria condiviso da tutti i punti del cascade che ne fanno
+  // uso (pre-check per categoria, spareggio tra match testuali a pari
+  // livello) — gestisce anche il caso in cui la riga calendario accorpa più
+  // ordinali in una sola categoria testuale (es. "Esordienti 1°/2° anno")
+  // mentre il risultato ha sempre l'ordinale singolo ("Esordienti 1° Anno"):
+  // tolti i numeri, le parole restanti devono coincidere.
+  const _calCatMatch = (calCatLbl, rLbl) => {
+    if (!calCatLbl || !rLbl) return false;
+    if (rLbl === calCatLbl || rLbl.startsWith(calCatLbl + ' ') || calCatLbl.startsWith(rLbl + ' ')) return true;
+    if (/promiscua/i.test(calCatLbl)) {
+      if (/\ball\b/i.test(calCatLbl) && /^allievi/i.test(rLbl)) return true;
+      if (/\bjun\b/i.test(calCatLbl) && /^juniores/i.test(rLbl)) return true;
+      if (/esord/i.test(calCatLbl) && /^esordienti/i.test(rLbl)) return true;
+    }
+    if (calCatLbl.includes('/')) {
+      // Il separatore "/" copre DUE casi testualmente identici ma
+      // semanticamente diversi, entrambi visti dal vivo:
+      // 1) categorie DIVERSE accorpate (es. "Juniores / Allievi") — ogni
+      //    parte, presa singolarmente, è già un'etichetta valida da
+      //    confrontare per prefisso/uguaglianza come sopra.
+      const alts = calCatLbl.split('/').map(s => s.trim()).filter(Boolean);
+      if (alts.some(alt => rLbl === alt || rLbl.startsWith(alt + ' ') || alt.startsWith(rLbl + ' '))) return true;
+      // 2) stesso ordinale spezzato in due dalla "/" (es. "Esordienti
+      //    1°/2° anno" → split ingenuo darebbe "Esordienti 1°" e "2° anno",
+      //    perdendo "Esordienti" sul secondo pezzo) — qui invece tolti i
+      //    numeri le parole restanti (categoria + "anno") devono coincidere.
+      const strip = s => s.replace(/\d+°?/g, '').replace(/[\/°]/g, ' ').split(/\s+/).filter(Boolean);
+      const calWords = strip(calCatLbl);
+      const rWords = strip(rLbl);
+      if (calWords.length && calWords.every(w => rWords.includes(w))) return true;
+    }
+    return false;
+  };
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
     // NB: provato ad allargare isStageRace anche al nome (non solo alla
@@ -2301,22 +2349,18 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (_calAmbiguous && _calCatLbl && !_isBareInGroup) {
         const _rCode = getRankingFileCode(r);
         const _rLbl = _rCode ? catLabel(_rCode).trim().toLowerCase() : '';
-        // La FCI a volte accorpa due categorie in un'unica riga "promiscua"
-        // (es. "Promiscua All - Jun" = Allievi e Juniores insieme in una
-        // sola gara/classifica) — il confronto per prefisso/uguaglianza
-        // sopra non la riconosce mai (il testo non ha nulla in comune con
-        // "Allievi" o "Juniores"), quindi restava sempre "in attesa" anche
-        // quando i risultati esistevano già (segnalato dal vivo, "Trofeo
-        // Unione dei Comuni Parte Montis").
-        const _isPromiscuaMatch = /promiscua/i.test(_calCatLbl) &&
-          ((/\ball\b/i.test(_calCatLbl) && /^allievi/i.test(_rLbl)) ||
-           (/\bjun\b/i.test(_calCatLbl) && /^juniores/i.test(_rLbl)) ||
-           (/esord/i.test(_calCatLbl) && /^esordienti/i.test(_rLbl)));
-        if (_rLbl && (_isPromiscuaMatch || _rLbl === _calCatLbl || _rLbl.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl + ' '))) {
+        if (_calCatMatch(_calCatLbl, _rLbl)) {
           const _garaBaseChk = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
-          const _garaNormChk = _nm2(_garaBaseChk);
+          const _garaNormChk = _nm2Res(_garaBaseChk);
+          // Soglia coerente con quella del fallback generico più sotto (18
+          // caratteri, non 10): una gara diversa che condivide solo un
+          // pezzo di nome generico ("GRAN_PREMIO_...", 12 caratteri) con
+          // un'altra ambigua della STESSA categoria e STESSA data veniva
+          // agganciata per errore — verificato dal vivo (24 G.P. Rosa Città
+          // di Bovolone e 65 G.P. A. Fantini, gare completamente diverse,
+          // stesso giorno, entrambe con una riga "Esordienti 1°/2° anno").
           let _i=0; while(_i<calNorm2.length && _i<_garaNormChk.length && calNorm2[_i]===_garaNormChk[_i]) _i++;
-          if (_i >= 10 || _garaNormChk.startsWith(calNorm2) || calNorm2.startsWith(_garaNormChk)) {
+          if (_i >= 18 || _garaNormChk.startsWith(calNorm2) || calNorm2.startsWith(_garaNormChk)) {
             _setGaraToCalId(r.gara_id, cal.id, -1);
             continue;
           }
@@ -2325,7 +2369,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
       if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
-      const garaNorm = _nm2(garaBase);
+      const garaNorm = _nm2Res(garaBase);
       // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
       // ha una data diversa) — questo però riapre la porta a incroci tra
       // giri COMPLETAMENTE diversi che, dopo aver tolto "DELLA/DEL/REGIONE"
@@ -2374,7 +2418,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // combacia col risultato, quando è nota.
       const _rCode2 = getRankingFileCode(r);
       const _rLbl2 = _rCode2 ? catLabel(_rCode2).trim().toLowerCase() : '';
-      const _catTie = (_calCatLbl && _rLbl2 && (_rLbl2 === _calCatLbl || _rLbl2.startsWith(_calCatLbl + ' ') || _calCatLbl.startsWith(_rLbl2 + ' '))) ? 0.01 : 0;
+      const _catTie = _calCatMatch(_calCatLbl, _rLbl2) ? 0.01 : 0;
       if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
