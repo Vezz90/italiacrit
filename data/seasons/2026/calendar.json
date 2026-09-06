@@ -22983,45 +22983,6 @@
     "luogo": "MASSA COZZILE - BISCOLLA"
   },
   {
-    "id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_2026-09-03",
-    "fci_id": "178663",
-    "nome": "62°  GIRO DELLA REGIONE FRIULI VENEZIA GIULIA",
-    "data": "2026-09-03",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "FRIULI VENEZIA GIULIA",
-    "categoria": "Elite e Under 23 a  tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "50_GIRO_DELLA_LUNIGIANA_2026-09-09",
-    "fci_id": "178688",
-    "nome": "50° GIRO DELLA LUNIGIANA",
-    "data": "2026-09-09",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LIGURIA",
-    "categoria": "Juniores a tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
-    "id": "34_GIRO_DEL_VENETO_2026-09-10",
-    "fci_id": "180200",
-    "nome": "34° GIRO DEL VENETO",
-    "data": "2026-09-10",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Elite s.c. e Under 23 tappe",
-    "luogo": "VARIE LOCALITA'"
-  },
-  {
     "id": "GP_COMUNE_DI_CASTELFR_EMILIA_2026-09-06_DONNE_ALLIEVE",
     "fci_id": "179442",
     "nome": "GP COMUNE DI CASTELFR. EMILIA",
@@ -23373,19 +23334,6 @@
     "luogo": "CASTELLUCCHIO"
   },
   {
-    "id": "4_CRONOMETRO_BCC_BRIANZA_E_LAGHI_LA_CARICA_DEI_501_2026-09-26",
-    "fci_id": "182296",
-    "nome": "4ª CRONOMETRO BCC BRIANZA E LAGHI - LA CARICA DEI 501",
-    "data": "2026-09-26",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Crono Multicategoria da Esordienti m/f",
-    "luogo": "ALZATE BRIANZA"
-  },
-  {
     "id": "2_TROFEO_MASTANTUONI_SPORT_CITTA_DI_ROTONDI_GP_CICLISMO_OGGI_E_DOMANI_2026-09-27_ESORDIENTI_1_2_ANNO",
     "fci_id": "180269",
     "nome": "2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\"",
@@ -23410,19 +23358,6 @@
     "regione": "CAMPANIA",
     "categoria": "Allievi",
     "luogo": "ROTONDI"
-  },
-  {
-    "id": "74_COPPA_DEL_MOBILIO_2026-10-13",
-    "fci_id": "179002",
-    "nome": "74^  COPPA DEL MOBILIO",
-    "data": "2026-10-13",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Elite e Under 23",
-    "luogo": "PONSACCO - PISA"
   },
   {
     "id": "5_TROFEO_RICORDO_DI_ALESSIO_E_NICOLA_2026-10-04_ESORDIENTI_1_ANNO",
