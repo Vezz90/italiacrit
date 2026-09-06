@@ -19044,6 +19044,7 @@ async function renderTeam(team_id, opts = {}) {
       <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
       ${adminEditBtn('team', team_id)}
+      ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
     </div>
 
     <div id="team-native-content">
@@ -30920,5 +30921,57 @@ window.submitTeamAddAthlete = async function() {
     globalData = await loadAll();
     renderMyProfile();
   } catch (err) { showToast('Errore: ' + err.message, 'error'); }
+};
+
+// Stessa funzione di sopra (aggiungere un corridore non ancora scrapato
+// dalla FCI a un roster), ma per l'admin dalla pagina pubblica di
+// QUALUNQUE team — prima esisteva solo per un account "team" dalla
+// propria dashboard privata, l'admin non aveva alcun modo di creare un
+// nuovo atleta da nessuna parte del sito (segnalato dal vivo).
+window.openAdminAddAthlete = function(teamId, teamName) {
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-add-athlete-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const catOpts = ['ES1_M','ES2_M','AL_M','JUN_M','ELI_M','ES1_F','ES2_F','AL_F','JUN_F','ELI_F']
+    .map(c => `<option value="${c}">${esc(catLabel(c))}</option>`).join('');
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <strong style="font-size:1rem">➕ Aggiungi corridore</strong>
+        <button onclick="this.closest('#admin-add-athlete-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:.78rem;color:var(--text-muted);margin:0 0 14px">Squadra: ${esc(teamName || teamId)} — crea un profilo visibile subito (0 punti finché non compaiono risultati reali).</p>
+      <input type="text" id="aaa-cognome" placeholder="Cognome" style="${inpStyle}"/>
+      <input type="text" id="aaa-nome" placeholder="Nome" style="${inpStyle}"/>
+      <select id="aaa-categoria" style="${inpStyle}"><option value="">— categoria —</option>${catOpts}</select>
+      <select id="aaa-genere" style="${inpStyle}"><option value="M">Uomini</option><option value="F">Donne</option></select>
+      <div id="aaa-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="aaa-submit" onclick="window.submitAdminAddAthlete('${esc(teamId)}','${esc((teamName||'').replace(/'/g,"\\'"))}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Aggiungi</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('aaa-cognome')?.focus();
+};
+window.submitAdminAddAthlete = async function(teamId, teamName) {
+  const cognome = document.getElementById('aaa-cognome')?.value.trim();
+  const nome = document.getElementById('aaa-nome')?.value.trim();
+  const categoria = document.getElementById('aaa-categoria')?.value.trim();
+  const genere = document.getElementById('aaa-genere')?.value;
+  const errEl = document.getElementById('aaa-err');
+  if (!cognome || !nome) { errEl.textContent = 'Nome e cognome obbligatori.'; errEl.style.display = 'block'; return; }
+  const btn = document.getElementById('aaa-submit');
+  btn.disabled = true; btn.textContent = 'Aggiungo…';
+  try {
+    await apiCall(`/admin/team/${encodeURIComponent(teamId)}/add-athlete`, {
+      method: 'POST', body: { cognome, nome, categoria, genere, team_name: teamName },
+    });
+    document.getElementById('admin-add-athlete-overlay')?.remove();
+    showToast(`✓ ${cognome} ${nome} aggiunto al roster`);
+    globalData = await loadAll();
+    renderTeam(teamId);
+  } catch (err) {
+    errEl.textContent = 'Errore: ' + err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Aggiungi';
+  }
 };
 

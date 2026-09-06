@@ -1921,6 +1921,32 @@ app.post('/api/team/add-athlete', requireAuth, async (req, res) => {
   }
 });
 
+// Stesso identico meccanismo di sopra, ma per l'admin: aggiungere un
+// corridore a QUALSIASI team dalla sua pagina pubblica — prima questa
+// possibilità esisteva SOLO per chi si era registrato come account "team"
+// (dalla propria dashboard privata, non dalla pagina team), l'admin non
+// aveva alcun modo di creare un nuovo atleta né di aggiungerlo a un
+// roster, da nessuna parte del sito (segnalato dal vivo: "non vedo
+// nemmeno la possibilità per me admin di creare corridori").
+app.post('/api/admin/team/:teamId/add-athlete', requireAdmin, async (req, res) => {
+  try {
+    const team_id = req.params.teamId;
+    const { cognome, nome, categoria, genere, team_name } = req.body;
+    if (!cognome?.trim() || !nome?.trim()) return res.status(400).json({ error: 'Nome e cognome obbligatori' });
+
+    const atleta_id = await _uniqueManualAthleteId(cognome, nome);
+    const row = await queries.createManualAthlete({
+      atleta_id, cognome: cognome.trim().toUpperCase(), nome: nome.trim().toUpperCase(),
+      team_id, team: (team_name || team_id || '').trim(),
+      categoria: categoria || null, genere: genere === 'F' ? 'F' : 'M',
+      created_by: req.user.id, source: 'admin',
+    });
+    res.status(201).json({ ok: true, athlete: row });
+  } catch (e) {
+    res.status(500).json({ error: 'Errore durante l\'aggiunta del corridore' });
+  }
+});
+
 // Roster manuale (team + auto-registrazioni), stessa forma di /api/data/pcs-extra-roster
 // così il frontend può unirli con la stessa identica logica di merge già esistente.
 app.get('/api/data/manual-athletes', async (req, res) => {
