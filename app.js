@@ -21554,19 +21554,38 @@ async function renderGara(gara_id) {
   const _stageList = [];
   if (_stageBase) {
     const seenStageIds = new Set();
-    let _sawRealStageSuffix = false;
+    const _stageCandidates = [];
     for (const c of (calendar || [])) {
       if (_stageEffectiveBase(c.nome) !== _stageBase) continue;
       if (seenStageIds.has(c.id)) continue;
       seenStageIds.add(c.id);
-      if (_stageBaseName(c.nome)) _sawRealStageSuffix = true; // almeno una vera coda "Tappa"/GC, non solo nomi identici per caso
-      _stageList.push({ id: c.id, data: c.data, isGC: /CLASSIFICA\s+GENERALE/i.test(c.nome || ''), label: _stageSuffixLabel(c.nome) });
+      _stageCandidates.push({
+        id: c.id, data: c.data, hasSuffix: !!_stageBaseName(c.nome),
+        isGC: /CLASSIFICA\s+GENERALE/i.test(c.nome || ''), label: _stageSuffixLabel(c.nome),
+      });
     }
     // Senza NESSUNA coda tappa/classifica generale riconosciuta da nessuna
     // parte, sono solo N gare diverse che per puro caso condividono il nome
     // intero — niente schede (evita falsi positivi tra gare non a tappe).
-    if (!_sawRealStageSuffix) _stageList.length = 0;
-    _stageList.sort((a, b) => a.isGC - b.isGC || (a.data || '').localeCompare(b.data || ''));
+    if (_stageCandidates.some(c => c.hasSuffix)) {
+      // Una voce SENZA coda tappa/classifica generale che condivide la
+      // DATA con un'altra voce che invece ce l'ha non è "la tappa 1
+      // implicita" (quel fallback in _stageEffectiveBase vale solo quando
+      // è l'unica voce per quella data, es. Giro d'Italia Next Gen) — è
+      // la registrazione FCI "ombrello" dell'intera gara a tappe (stesso
+      // ID Gara, date che coprono l'intero evento), che convive con la
+      // nostra voce specifica di quel giorno. Mostrarla come scheda
+      // duplicava "1ª Tappa" e ne mescolava foto/video con quelli veri
+      // della tappa — segnalato dal vivo (due schede "1ª Tappa" identiche
+      // sul Giro della Regione Friuli Venezia Giulia, foto di un'altra
+      // corsa omonima mescolate).
+      const datesWithSuffix = new Set(_stageCandidates.filter(c => c.hasSuffix).map(c => c.data));
+      for (const c of _stageCandidates) {
+        if (!c.hasSuffix && datesWithSuffix.has(c.data)) continue;
+        _stageList.push(c);
+      }
+      _stageList.sort((a, b) => a.isGC - b.isGC || (a.data || '').localeCompare(b.data || ''));
+    }
   }
   const _curStageId = (globalData?.garaToCalId || {})[primaryGaraId] || primaryGaraId;
   const _stageTabsHtml = _stageList.length > 1 ? `
