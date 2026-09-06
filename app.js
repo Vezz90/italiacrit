@@ -19717,6 +19717,61 @@ window.submitManualResult = async (garaId) => {
 // d'arrivo (vedi window.openOcrArrivoUpload) — stesso form, stessa
 // risoluzione atleta/team per categoria+genere, l'utente le rivede e
 // corregge riga per riga esattamente come farebbe scrivendole a mano.
+// Confronto "a bag di parole": vero se OGNI parola di needle compare tra le
+// parole di haystack (ordine e confine cognome/nome irrilevanti) — coglie
+// sia un OCR che taglia il nome a metà ("RODRIGUES DOS SANTOS" estratto da
+// "RODRIGUES DOS SANTOS VICENTE JUNIOR") sia lo split cognome/nome sbagliato
+// (già segnalato altrove nel sito come "nome ambiguo" per lo stesso
+// corridore). Richiede almeno 2 parole per evitare falsi positivi su un
+// singolo cognome comune.
+function _mrWordSet(s) {
+  return new Set(String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toUpperCase().split(/[^A-Z]+/).filter(Boolean));
+}
+function _mrIsWordSubset(needle, haystack) {
+  if (needle.size < 2) return false;
+  for (const w of needle) if (!haystack.has(w)) return false;
+  return true;
+}
+
+// Stessa lista usata dallo scraper FCI (fci_complete_scraper.py, is_national)
+// per NON scegliere una nazionale/rappresentativa come team "principale" di
+// un atleta quando ha corso anche per il suo vero club — qui si applica allo
+// stesso modo: se una riga OCR riporta una nazionale ma l'atleta è già noto
+// col suo club reale, resta il club (richiesta esplicita dell'utente: "le
+// società... rimangano quelle che sono in db e non riprenda quelle nuove",
+// stesso sistema già usato dallo scraper FCI).
+const _MR_NATIONAL_TEAM_RE = /\b(ITALIA|NAZIONALE|RAPPRESENTATIVA|COMITATO|SELEZIONE|REPUBBLICA|SVIZZERA|FRANCIA|GERMANIA|SPAGNA|SLOVENIA|AUSTRIA|BELGIO|OLANDA|DANIMARCA|GRAN BRETAGNA|POLONIA|UCRAINA|NATIONAL TEAM)\b/i;
+function _mrIsNationalTeam(name) { return _MR_NATIONAL_TEAM_RE.test(String(name || '')); }
+
+// Riconoscimento automatico di un atleta GIA' A DATABASE dietro una riga
+// OCR — evita di creare un profilo doppione quando la foto riporta il nome
+// spezzato/tagliato ma il corridore è già noto sul sito con team e
+// categoria (segnalato dal vivo: "RODRIGUES DOS SANTOS" isolato da un OCR
+// invece di "RODRIGUES DOS SANTOS VICENTE JUNIOR", già presente a database
+// nella stessa categoria/team). Filtra per categoria+genere della gara come
+// l'autocomplete manuale; il team, se combacia, è solo un rinforzo di
+// fiducia — non è richiesto (l'OCR può sbagliare anche quello).
+function _mrAutoMatchAthlete(rawCognome, rawNome, rawTeam, meta) {
+  const needle = _mrWordSet(`${rawCognome || ''} ${rawNome || ''}`);
+  if (needle.size < 2 || !globalData?.athletes) return null;
+  const needleTeam = _mrWordSet(rawTeam);
+  let best = null;
+  for (const [id, a] of Object.entries(globalData.athletes)) {
+    if (meta.genere && a.genere && a.genere !== meta.genere) continue;
+    if (meta.categoria && a.categoria && a.categoria !== meta.categoria) continue;
+    const haystack = _mrWordSet(`${a.cognome || ''} ${a.nome || ''}`);
+    if (!_mrIsWordSubset(needle, haystack)) continue;
+    const teamMatch = needleTeam.size && [..._mrWordSet(a.team_attuale)].some(w => needleTeam.has(w));
+    // Preferisci il match con più parole in comune (il più "specifico") e a
+    // parità il team che combacia — così tra più omonimi possibili si sceglie
+    // quello davvero coerente con la riga letta dalla foto.
+    const score = haystack.size + (teamMatch ? 100 : 0);
+    if (!best || score > best.score) best = { id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '', score };
+  }
+  return best;
+}
+
 window.openManualResultBulkForm = (garaId, prefilledRows) => {
   const user = authUser();
   // Aperto a chiunque sia loggato, non solo admin — richiesta esplicita
@@ -19729,9 +19784,19 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
   window._mrBulkGaraId = garaId;
   window._mrBulkFromOcr = !!(prefilledRows && prefilledRows.length);
   if (prefilledRows && prefilledRows.length) {
-    window._mrBulkRows = prefilledRows.map(r => ({
-      pos: r.pos, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', tempo: r.tempo || '', atletaId: null,
-    }));
+    window._mrBulkRows = prefilledRows.map(r => {
+      const match = _mrAutoMatchAthlete(r.cognome, r.nome, r.team, window._mrMeta);
+      if (match) {
+        // Se la foto riporta una nazionale/rappresentativa ma l'atleta ha già
+        // un club reale a database, resta il club (vedi _mrIsNationalTeam) —
+        // altrimenti si registra come detto sulla foto (può davvero essere
+        // cambiato team rispetto all'ultima volta che l'abbiamo visto).
+        const team = (match.team && _mrIsNationalTeam(r.team)) ? match.team : (r.team || match.team);
+        return { pos: r.pos, cognome: match.cognome, nome: match.nome, team, tempo: r.tempo || '', atletaId: match.id, _autoMatched: true, _ocrRaw: `${r.cognome || ''} ${r.nome || ''}`.trim() };
+      }
+      return { pos: r.pos, cognome: r.cognome || '', nome: r.nome || '', team: r.team || '', tempo: r.tempo || '', atletaId: null,
+               _ocrCognome: r.cognome || '', _ocrNome: r.nome || '', _ocrTeam: r.team || '' };
+    });
   } else if (allRows.length) {
     const byPos = new Map();
     allRows.forEach(r => { if (!byPos.has(r.posizione)) byPos.set(r.posizione, r); });
@@ -19788,7 +19853,10 @@ window._mrBulkRender = () => {
         <input type="number" min="1" value="${r.pos}" style="${inp}" oninput="window._mrBulkRows[${idx}].pos=parseInt(this.value,10)||0"/>
         <div style="position:relative">
           <input type="text" placeholder="Cerca corridore…" autocomplete="off" value="${esc(r.cognome ? `${r.cognome} ${r.nome}`.trim() : '')}"
-            oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}"/>
+            oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}${r._autoMatched ? ';border-color:#22C55E' : ''}"
+            title="${r._autoMatched ? `Riconosciuto — la foto riportava \\"${esc(r._ocrRaw)}\\", già a database come sopra` : ''}"/>
+          ${r._autoMatched ? `<div style="font-size:.66rem;color:#22C55E;margin-top:2px">✓ già a database (foto: "${esc(r._ocrRaw)}")</div>` : ''}
+          ${(r._ocrCognome && !r._autoMatched && authUser()?.role === 'admin') ? `<div style="font-size:.66rem;margin-top:2px"><button onclick="window.openMrBulkCreateAthlete(${idx})" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;font-size:inherit">＋ Nessun atleta trovato — crea nuovo profilo</button></div>` : ''}
           <div id="mr-bulk-dd-${idx}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:180px;overflow:auto;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
         </div>
         <input type="text" placeholder="Team (obbligatorio se il corridore è vuoto)" value="${esc(r.team)}" oninput="window._mrBulkRows[${idx}].team=this.value" style="${inp}"/>
@@ -19802,6 +19870,8 @@ window._mrBulkRender = () => {
 window._mrBulkSearch = (idx, val) => {
   const dd = document.getElementById(`mr-bulk-dd-${idx}`);
   window._mrBulkRows[idx].cognome = ''; // se digita a mano, non è più un match confermato finché non sceglie
+  window._mrBulkRows[idx].atletaId = null;
+  window._mrBulkRows[idx]._autoMatched = false;
   const parts = val.trim().split(/\s+/);
   window._mrBulkRows[idx]._raw = val;
   if (!dd) return;
@@ -19828,7 +19898,69 @@ window._mrBulkPick = (idx, cognome, nome, team) => {
   window._mrBulkRows[idx].cognome = cognome;
   window._mrBulkRows[idx].nome = nome;
   window._mrBulkRows[idx].team = team;
+  window._mrBulkRows[idx]._autoMatched = false; // scelta manuale, non più "riconosciuto automaticamente"
   window._mrBulkRender();
+};
+
+// "Adviser" per un classificato che l'auto-match non ha trovato tra gli
+// atleti noti (es. straniero mai visto prima, il caso segnalato dal vivo del
+// 9° classificato di una gara internazionale): invece di lasciare che si
+// crei un profilo "al buio" al salvataggio (con qualunque testo l'OCR ha
+// letto), l'admin conferma/corregge qui nome e team e lo crea subito,
+// vedendolo riconosciuto nella riga come gli altri. Riusa lo stesso
+// endpoint di "➕ Aggiungi corridore" sulla pagina team.
+window.openMrBulkCreateAthlete = (idx) => {
+  const row = window._mrBulkRows[idx];
+  const meta = window._mrMeta || {};
+  const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  const overlay = document.createElement('div');
+  overlay.id = 'mr-add-athlete-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px';
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <strong style="font-size:1rem">＋ Nuovo atleta</strong>
+        <button onclick="this.closest('#mr-add-athlete-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:.78rem;color:var(--text-muted);margin:0 0 14px">Nessun atleta esistente combacia — controlla nome e team dalla foto e crea il profilo (categoria/genere presi dalla gara).</p>
+      <input type="text" id="mraa-cognome" placeholder="Cognome" value="${esc(row._ocrCognome || '')}" style="${inpStyle}"/>
+      <input type="text" id="mraa-nome" placeholder="Nome" value="${esc(row._ocrNome || '')}" style="${inpStyle}"/>
+      <input type="text" id="mraa-team" placeholder="Team" value="${esc(row._ocrTeam || row.team || '')}" style="${inpStyle}"/>
+      <div id="mraa-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="mraa-submit" onclick="window._mrBulkSubmitCreateAthlete(${idx})" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Crea e usa in questa riga</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('mraa-cognome')?.focus();
+};
+window._mrBulkSubmitCreateAthlete = async (idx) => {
+  const cognome = document.getElementById('mraa-cognome')?.value.trim();
+  const nome = document.getElementById('mraa-nome')?.value.trim();
+  const team = document.getElementById('mraa-team')?.value.trim();
+  const errEl = document.getElementById('mraa-err');
+  if (!cognome || !nome) { errEl.textContent = 'Nome e cognome obbligatori.'; errEl.style.display = 'block'; return; }
+  const meta = window._mrMeta || {};
+  const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  const teamId = norm(team) || 'SCONOSCIUTO';
+  const btn = document.getElementById('mraa-submit');
+  btn.disabled = true; btn.textContent = 'Creo…';
+  try {
+    await apiCall(`/admin/team/${encodeURIComponent(teamId)}/add-athlete`, {
+      method: 'POST', body: { cognome, nome, categoria: meta.categoria || '', genere: meta.genere || '', team_name: team },
+    });
+    document.getElementById('mr-add-athlete-overlay')?.remove();
+    window._mrBulkRows[idx].cognome = cognome;
+    window._mrBulkRows[idx].nome = nome;
+    window._mrBulkRows[idx].team = team;
+    window._mrBulkRows[idx]._autoMatched = false;
+    window._mrBulkRows[idx]._ocrCognome = ''; // creato: non riproporre più l'adviser su questa riga
+    showToast(`✓ ${cognome} ${nome} creato`);
+    globalData = await loadAll();
+    window._mrBulkRender();
+  } catch (err) {
+    errEl.textContent = 'Errore: ' + err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Crea e usa in questa riga';
+  }
 };
 
 // Carica una foto dell'ordine d'arrivo ufficiale FCI, la fa leggere a Claude
