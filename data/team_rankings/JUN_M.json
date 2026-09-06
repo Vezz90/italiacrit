@@ -2,22 +2,22 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1512,
-    "vittorie": 21,
-    "p1": 21,
+    "punti": 1580,
+    "vittorie": 22,
+    "p1": 22,
     "p2": 17,
-    "p3": 15,
-    "pout": 61,
+    "p3": 16,
+    "pout": 63,
     "n_atleti": 13,
     "pos": 1
   },
   {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 770,
+    "punti": 794,
     "vittorie": 5,
     "p1": 5,
-    "p2": 12,
+    "p2": 13,
     "p3": 6,
     "pout": 46,
     "n_atleti": 9,
@@ -38,12 +38,12 @@
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 733,
+    "punti": 739,
     "vittorie": 10,
     "p1": 10,
     "p2": 3,
     "p3": 9,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 3,
     "pos": 4
   },
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 648,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 5,
+    "p3": 3,
+    "pout": 44,
+    "n_atleti": 10,
+    "pos": 7
+  },
+  {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
     "punti": 644,
@@ -81,18 +93,6 @@
     "p3": 9,
     "pout": 46,
     "n_atleti": 11,
-    "pos": 7
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 636,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 5,
-    "p3": 3,
-    "pout": 42,
-    "n_atleti": 10,
     "pos": 8
   },
   {
@@ -170,12 +170,12 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 467,
+    "punti": 477,
     "vittorie": 8,
     "p1": 8,
     "p2": 4,
     "p3": 6,
-    "pout": 38,
+    "pout": 39,
     "n_atleti": 10,
     "pos": 15
   },
@@ -206,12 +206,12 @@
   {
     "team_id": "ACCADEMIA_CICLISTICA",
     "team_nome": "ACCADEMIA CICLISTICA",
-    "punti": 402,
+    "punti": 414,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
     "p3": 3,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 4,
     "pos": 18
   },
