@@ -12,12 +12,6 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["server/server.js"],
       "port": 8002
-    },
-    {
-      "name": "story-preview",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8931", "--directory", "C:/Users/vezza/AppData/Local/Temp/claude/C--Users-vezza--gemini-antigravity-scratch-gpx-viewer/5045b6c7-80f2-4590-9ff5-cf499b02db43/scratchpad"],
-      "port": 8931
     }
   ]
 }
