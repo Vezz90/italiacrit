@@ -15898,7 +15898,21 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   let data;
   try {
     data = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaId)}`);
-  } catch { return; }
+  } catch { data = null; }
+  // Un ordine d'arrivo importato da PCS PRIMA che la FCI scrapasse i
+  // risultati ufficiali (o quando la FCI usa per la stessa gara un id
+  // leggermente diverso da quello di calendario, vedi il fix di garaToCalId)
+  // resta salvato sotto il vecchio id, non quello finale scrapato — senza
+  // questo fallback qui, tutti i corridori oltre il podio ufficiale (già
+  // importati, magari il campo intero) sparivano dalla pagina non appena
+  // arrivava lo scraping reale, pur essendo ancora tutti nel database
+  // (segnalato dal vivo: "adesso vedo solo i primi 10").
+  if (!Array.isArray(data) || !data.length) {
+    const aliasId = (globalData?.garaToCalId || {})[garaId];
+    if (aliasId && aliasId !== garaId) {
+      try { data = await apiCall(`/pcs-results/gara/${encodeURIComponent(aliasId)}`); } catch {}
+    }
+  }
   if (!Array.isArray(data) || !data.length) {
     // Nessun risultato scraped: mostra comunque il link PCS se lo slug è configurato
     try {
