@@ -2165,6 +2165,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g,'GRAN_PREMIO')
       .replace(/(?<![A-Z0-9])M_O(?![A-Z0-9])/g,'MEDAGLIA_ORO')
       .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
+      // La FCI a volte usa un nome leggermente diverso tra la pagina
+      // calendario/dettaglio e quella dei risultati per la STESSA gara, es.
+      // "62 GIRO DELLA REGIONE FRIULI..." (calendario) vs "62 GIRO DEL
+      // FRIULI..." (risultati) — verificato dal vivo, stessa gara, stesso
+      // giorno, gara_id comunque diverso: senza normalizzare via una
+      // preposizione articolata in meno/parola "REGIONE" in più, i due id
+      // non si incrociavano MAI, e la card coi risultati veri finiva
+      // completamente scollegata da foto/video/podio provvisorio già
+      // attaccati al vecchio id (segnalato dal vivo: "oggi non ci sono
+      // più"). Rimosse SOLO come parole intere — non toccano mai
+      // PRIMA/SECONDA/TERZA ecc., le uniche parole che devono continuare a
+      // distinguere le tappe di una gara a tappe tra loro.
+      .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
+      .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
       .replace(/_+/g,'_').replace(/^_|_$/g,'');
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
@@ -2177,6 +2191,13 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const garaNorm = _nm2(garaBase);
       if (calNorm2 === garaNorm) { garaToCalId[r.gara_id] = cal.id; continue; }
       if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
+      // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
+      // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
+      // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
+      // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
+      // gara, stesso giorno — verificato dal vivo) — prima veniva
+      // controllato solo il caso calendario-più-lungo, mai questo.
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
@@ -25694,15 +25715,22 @@ async function renderRisultati() {
       const mult = race.mult || 1;
       const categories = Object.entries(race.byCategory || {});
 
-      // Una sezione per ogni categoria dell'evento
-      // Foto featured a livello card (prima categoria che ha una foto)
-      const featuredPhoto = Object.values(race.byCategory || {})
-        .map(c => photosMap[c.gara_id]).find(Boolean);
-
       // Video: usa la mappa gara_id → calendar_id
       const raceCalId = (globalData.garaToCalId || {})[race.id] || toCalId(race.id);
       const raceVideos = (globalData.videos || {})[raceCalId] ||
                          (globalData.videos || {})[race.id] || [];
+
+      // Una sezione per ogni categoria dell'evento
+      // Foto featured a livello card (prima categoria che ha una foto) —
+      // stesso fallback via garaToCalId/toCalId già usato sopra per i
+      // video: una foto caricata PRIMA che la FCI scrapasse i risultati usa
+      // l'id di calendario (senza suffisso categoria), non quello finale —
+      // senza questo fallback qui (a differenza del video, che ce l'aveva
+      // già) la foto spariva dalla card non appena arrivavano i risultati
+      // veri, anche a parità di gara (segnalato dal vivo).
+      const featuredPhoto = Object.values(race.byCategory || {})
+        .map(c => photosMap[c.gara_id] || photosMap[(globalData.garaToCalId || {})[c.gara_id]] || photosMap[toCalId(c.gara_id)])
+        .find(Boolean);
       const featuredVideo = raceVideos[0] || null;
       const _vKind = featuredVideo ? videoKind(featuredVideo.url) : null;
       const featuredVideoId = (_vKind === 'yt') ? ytId(featuredVideo.url) : null;
