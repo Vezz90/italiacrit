@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 604,
-    "vittorie": 13,
-    "p1": 13,
+    "punti": 634,
+    "vittorie": 14,
+    "p1": 14,
     "p2": 7,
     "p3": 6,
     "pout": 30,
@@ -26,12 +26,12 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 368,
+    "punti": 372,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
     "p3": 5,
-    "pout": 43,
+    "pout": 44,
     "n_atleti": 7,
     "pos": 3
   },
@@ -50,36 +50,36 @@
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 237,
+    "punti": 265,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
     "p3": 2,
-    "pout": 22,
+    "pout": 24,
     "n_atleti": 8,
     "pos": 5
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 219,
+    "punti": 253,
     "vittorie": 2,
     "p1": 2,
-    "p2": 3,
+    "p2": 4,
     "p3": 0,
-    "pout": 28,
+    "pout": 29,
     "n_atleti": 6,
     "pos": 6
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 217,
+    "punti": 239,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
-    "p3": 7,
-    "pout": 16,
+    "p3": 8,
+    "pout": 17,
     "n_atleti": 7,
     "pos": 7
   },
@@ -146,13 +146,13 @@
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 30,
+    "punti": 38,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 4,
-    "n_atleti": 4,
+    "pout": 5,
+    "n_atleti": 5,
     "pos": 13
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "S_C_V_BIKE_CADORAGO_ASD",
+    "team_nome": "S.C.V. BIKE CADORAGO ASD",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 20
+  },
+  {
     "team_id": "SPAGNA",
     "team_nome": "SPAGNA",
     "punti": 9,
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
@@ -249,24 +261,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "POLISH_CYCLING_FEDERATION",
     "team_nome": "POLISH CYCLING FEDERATION",
     "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 22
-  },
-  {
-    "team_id": "S_C_V_BIKE_CADORAGO_ASD",
-    "team_nome": "S.C.V. BIKE CADORAGO ASD",
-    "punti": 3,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
