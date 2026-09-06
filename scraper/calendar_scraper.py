@@ -85,11 +85,12 @@ def scrape_calendar_fci(year=2026):
                                 
                         is_cr = "campionato regionale" in nome.lower()
                         is_ci = "campionato italiano" in nome.lower()
-                        
+
                         gara_id = f"{slug(nome)}_{data_iso}"
-                        
+
                         calendar.append({
                             "id": gara_id,
+                            "id_base": gara_id,
                             "nome": nome,
                             "data": data_iso,
                             "tipo": tipo,
@@ -108,13 +109,37 @@ def scrape_calendar_fci(year=2026):
                     print(f"Errore scraping calendario URL {url}: {e}")
                     break
 
+    # La FCI a volte pubblica PIU' righe calendario con nome+data identici ma
+    # categoria diversa (es. "14° TROFEO A. COMBERLATO" il 06/09/2026: una
+    # riga "Donne Esordienti" ID Gara 179879, una "Donne Allieve" ID Gara
+    # 179880 — stesso evento fisico, due gare/categorie ufficialmente
+    # distinte). Il gara_id sopra è derivato solo da nome+data, quindi
+    # collidevano: la seconda spariva silenziosamente nel dedup finale (mai
+    # scaricata a calendario, anche se i suoi risultati venivano poi scrapati
+    # regolarmente da un'altra fonte — segnalato dal vivo con screenshot
+    # della pagina federciclismo.it che mostra chiaramente le due righe).
+    # Fix: quando un id_base raccoglie PIU' categorie diverse, si
+    # disambigua appendendo la categoria all'id di OGNI riga di quel
+    # gruppo (non solo delle successive) — così nessuna vince silenziosamente
+    # sull'altra e l'id resta stabile indipendentemente dall'ordine di
+    # scraping. Se invece tutte le righe di un id_base condividono la stessa
+    # categoria, sono vere ripetizioni (es. ri-fetch di pagine diverse) e
+    # l'id resta quello di sempre, per non rompere link/alias già in uso.
+    cats_per_base = {}
+    for g in calendar:
+        cats_per_base.setdefault(g["id_base"], set()).add(g["categoria"] or "")
+    for g in calendar:
+        if len(cats_per_base[g["id_base"]]) > 1:
+            g["id"] = f"{g['id_base']}_{slug(g['categoria'])}"
+        del g["id_base"]
+
     unique_calendar = []
     seen = set()
     for g in calendar:
         if g["id"] not in seen:
             seen.add(g["id"])
             unique_calendar.append(g)
-            
+
     print(f"--- FINE SCRAPING CALENDARIO: TROVATE {len(unique_calendar)} GARE UNICHE ---")
     return unique_calendar
 
