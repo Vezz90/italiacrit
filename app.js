@@ -2914,6 +2914,20 @@ window.saveAdminEdit = async function(entityType, entityId) {
       }
     }
 
+    // Una correzione gara (tipo/moltiplicatore/nome/slug PCS) va applicata
+    // SUBITO anche ai dati già in memoria — non solo alla pagina gara
+    // corrente, ma a ogni riga già caricata che cita questo gara_id: il
+    // calendario, results_raw E i risultati di OGNI atleta che ha corso
+    // quella gara (stessa funzione già usata al caricamento iniziale, vedi
+    // applyGaraCorrections in loadAll). Senza questo la modifica restava
+    // visibile solo dopo un reload completo, e nel frattempo la scheda di
+    // un atleta già aperto (o aperta subito dopo, nella stessa sessione)
+    // continuava a mostrare il valore vecchio — segnalato dal vivo: "ho
+    // fatto la modifica alla gara ma non ha modificato nella pagina atleta".
+    if (globalData && entityType === 'gara' && Object.keys(saved).length) {
+      applyGaraCorrections(globalData.calendar, globalData.resultsRaw, globalData.athletes, { [entityId]: saved });
+    }
+
     document.getElementById('admin-edit-overlay')?.remove();
     const toast = document.createElement('div');
     toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red-hot);color:#fff;padding:10px 24px;border-radius:6px;font-family:var(--font-display);font-size:1rem;letter-spacing:.06em;z-index:9999';
@@ -2923,8 +2937,16 @@ window.saveAdminEdit = async function(entityType, entityId) {
 
     // Rirenderizza subito la pagina se siamo già su questo profilo, così le
     // modifiche (es. categoria corretta) si vedono senza dover ricaricare.
-    if (entityType === 'atleta' && location.hash.includes(`/atleta/${entityId}`)) renderAtleta(entityId);
-    if (entityType === 'team' && location.hash.includes(`/team/${entityId}`)) renderTeam(entityId);
+    // _resolveVirtualHash(), non location.hash: con gli URL puliti (pushState,
+    // es. "/atleta/xxx") location.hash resta SEMPRE vuoto — un controllo
+    // diretto su location.hash qui non scattava MAI, quindi questo
+    // ri-render non è mai partito finora per nessun tipo di modifica
+    // (atleta/team/gara), in nessuna pagina — bug pre-esistente, mai
+    // verificato dal vivo prima d'ora.
+    const _aeHash = _resolveVirtualHash();
+    if (entityType === 'atleta' && _aeHash.includes(`/atleta/${entityId}`)) renderAtleta(entityId);
+    if (entityType === 'team' && _aeHash.includes(`/team/${entityId}`)) renderTeam(entityId);
+    if (entityType === 'gara' && _aeHash.includes(`/gara/${entityId}`)) renderGara(entityId);
 
     if (_importNeeded) {
       try {

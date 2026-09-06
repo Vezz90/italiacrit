@@ -2045,19 +2045,40 @@ app.post('/api/admin/gare/:gara_id/restore', requireAdmin, async (req, res) => {
 // lettura, come /excluded, per lo stesso motivo (il frontend lo applica
 // prima di renderizzare i dati statici GitHub Pages).
 const GARA_EDITABLE_FIELDS = ['nome', 'data', 'cat', 'km', 'media', 'tipo', 'regione'];
+// Il pulsante generico "Modifica" sulla pagina gara (ADMIN_EDIT_FIELDS.gara:
+// nome_gara/tipo/moltiplicatore/pcs_race_slug) scrive in entity_overrides
+// (entity_type='gara'), una tabella DIVERSA da gara_overrides — le due non
+// si parlavano affatto: una correzione fatta da "Modifica" (es. tipo/
+// moltiplicatore sbagliati) non arrivava MAI ad applyGaraCorrections lato
+// client (che legge solo questo endpoint), quindi restava invisibile
+// ovunque tranne che, magari, nella UI di modifica stessa — segnalato dal
+// vivo: "ho fatto la modifica alla gara ma non ha modificato nella pagina
+// atleta" (in realtà non si vedeva da NESSUNA parte dopo un reload).
+// Uniti qui i campi compatibili (tipo, moltiplicatore, nome→nome_gara) da
+// entrambe le fonti, entity_overrides vince in caso di conflitto perché
+// più recente/usata attivamente dall'admin.
+const GARA_ENTITY_OV_FIELDS = ['tipo', 'moltiplicatore', 'nome_gara'];
 let _garaCorrectionsCache = null, _garaCorrectionsCacheTs = 0;
 app.get('/api/gara-overrides/corrections', async (req, res) => {
   try {
     if (_garaCorrectionsCache && (Date.now() - _garaCorrectionsCacheTs) < 5 * 60 * 1000) {
       return res.json({ corrections: _garaCorrectionsCache });
     }
-    const { data, error } = await supabase.from('gara_overrides')
-      .select('gara_id, field, new_value').in('field', GARA_EDITABLE_FIELDS);
+    const [{ data, error }, { data: entData, error: entErr }] = await Promise.all([
+      supabase.from('gara_overrides').select('gara_id, field, new_value').in('field', GARA_EDITABLE_FIELDS),
+      supabase.from('entity_overrides').select('entity_id, field, new_value')
+        .eq('entity_type', 'gara').in('field', GARA_ENTITY_OV_FIELDS),
+    ]);
     if (error) throw error;
+    if (entErr) throw entErr;
     const corrections = {};
     for (const r of (data || [])) {
       if (!corrections[r.gara_id]) corrections[r.gara_id] = {};
       corrections[r.gara_id][r.field] = r.new_value;
+    }
+    for (const r of (entData || [])) {
+      if (!corrections[r.entity_id]) corrections[r.entity_id] = {};
+      corrections[r.entity_id][r.field] = r.new_value;
     }
     _garaCorrectionsCache = corrections;
     _garaCorrectionsCacheTs = Date.now();
