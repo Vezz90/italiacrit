@@ -14653,10 +14653,18 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const seenVG = new Set();
 
   for (const r of sorted) {
-    // Foto: ricerca esatta sulla SUA annata, poi fallback senza suffisso categoria.
-    // NIENTE fallback all'altra annata ES: se la foto è solo sul 1° anno non deve
-    // apparire al 2° (per "entrambi" l'admin la salva su entrambe le chiavi).
-    const photo = _photos[r.gara_id] || (() => {
+    // Foto: ricerca esatta sulla SUA annata, poi il calId del calendario
+    // (una foto caricata prima dello scraping FCI — o quando la FCI usa per
+    // la stessa gara un id leggermente diverso da quello di calendario,
+    // vedi il fix di garaToCalId — resta salvata sotto il vecchio id), poi
+    // fallback senza suffisso categoria. Stessa identica logica già usata
+    // qui sotto per il video: prima il video aveva questo alias e la foto
+    // no, quindi la foto del vincitore spariva dal profilo (foto sì per il
+    // video, niente per la foto) — segnalato dal vivo. NIENTE fallback
+    // all'altra annata ES: se la foto è solo sul 1° anno non deve apparire
+    // al 2° (per "entrambi" l'admin la salva su entrambe le chiavi).
+    const _calIdForPhoto = (globalData?.garaToCalId || {})[r.gara_id] || null;
+    const photo = _photos[r.gara_id] || (_calIdForPhoto ? _photos[_calIdForPhoto] : null) || (() => {
       const base = r.gara_id ? r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '') : '';
       return base && base !== r.gara_id ? _photos[base] : null;
     })();
