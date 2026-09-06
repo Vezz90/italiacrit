@@ -25534,12 +25534,22 @@ async function renderRisultati() {
   // Risultati si riempirebbe di gare lontane senza nulla da vedere.
   const _risTodayIso = new Date().toISOString().slice(0, 10);
   const _hasResultsToday = new Set(Object.values(eventMap).map(ev => toCalId(ev.id)));
+  // Alcune righe calendario FCI non hanno affatto un vero nome gara — la
+  // pagina federciclismo.it mostra lì SOLO la categoria (es. "Allievi"),
+  // probabilmente perché il circolo organizzatore non ha compilato un
+  // titolo — e il nostro scraper la registra fedelmente com'è: risultato,
+  // "nome" è identico a "categoria", una card "di oggi" chiamata solo
+  // "ALLIEVI" senza nessun nome reale (segnalato dal vivo). Stesso
+  // trattamento del caso "-"/vuoto già escluso qui sotto: non è utile
+  // mostrarla, il nome da solo non identifica nessuna gara specifica.
+  const _bareCatWords = new Set(['ESORDIENTI','ALLIEVI','ALLIEVE','JUNIORES','ELITE','UNDER23','UNDER 23','DONNE','UOMINI']);
   const pendingToday = (calendar || [])
     // g.nome === '-' (o vuoto): la fonte FCI non aveva un nome leggibile per
     // questa riga di calendario (id generato come "SCONOSCIUTO_{data}") —
     // una card "di oggi" senza titolo è più confusa che utile, meglio non
     // mostrarla (segnalato dal vivo dall'utente).
-    .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-')
+    .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
+      && !_bareCatWords.has(g.nome.trim().toUpperCase()))
     .map(g => ({
       id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
       regione: g.regione, mult: g.moltiplicatore || 1,
