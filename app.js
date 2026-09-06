@@ -17165,6 +17165,10 @@ async function renderGaraStorica(ciclismoGaraId) {
         <span class="section-title">ORDINE DI ARRIVO</span>
         <span class="section-line"></span>
       </div>
+      <div class="ranking-filter-bar" style="margin:12px 0">
+        <input type="search" id="gara-results-search" placeholder="Cerca atleta o team…"
+          oninput="window.filterGaraResults(this.value)" aria-label="Cerca nei risultati" />
+      </div>
       <div class="results-table-wrap">
         <table class="results-table">
           <thead><tr>
@@ -21683,6 +21687,10 @@ async function renderGara(gara_id) {
       ${siRaceIntelHtml}
       <div id="gara-media-gallery"></div>
       <div id="gara-narrative-box"></div>
+      ${results.length ? `<div class="ranking-filter-bar" style="margin:12px 0">
+        <input type="search" id="gara-results-search" placeholder="Cerca atleta o team…"
+          oninput="window.filterGaraResults(this.value)" aria-label="Cerca nei risultati" />
+      </div>` : ''}
       <div class="results-table-wrap">
         <table class="results-table">
           <thead><tr>
