@@ -1,5 +1,157 @@
 [
   {
+    "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_ES2_M",
+    "posizione": 6,
+    "cognome": "MARCHISIO",
+    "nome": "MATTIA",
+    "team": "ALBA BRA LANGHE ROERO",
+    "categoria": "ES2_M",
+    "reason": "team non combacia",
+    "teamNoto": "ESPERIA PIASCO",
+    "garaNome": "MEMORIAL PINUCCIO CHIAVASSA"
+  },
+  {
+    "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_JUN_M",
+    "posizione": 4,
+    "cognome": "ROCCIA",
+    "nome": "MANUEL",
+    "team": "CASANO",
+    "categoria": "JUN_M",
+    "reason": "team non combacia",
+    "teamNoto": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "garaNome": "MEMORIAL PINUCCIO CHIAVASSA"
+  },
+  {
+    "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_JUN_M",
+    "posizione": 5,
+    "cognome": "GALLO",
+    "nome": "FILIPPO",
+    "team": "U.C. PIASCO",
+    "categoria": "JUN_M",
+    "reason": "team non combacia",
+    "teamNoto": "ESPERIA PIASCO",
+    "garaNome": "MEMORIAL PINUCCIO CHIAVASSA"
+  },
+  {
+    "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 2,
+    "cognome": "BISOGNIN",
+    "nome": "GIOSUE'",
+    "team": "ROTOGAL GUADENSE",
+    "categoria": "AL_M",
+    "reason": "team non combacia",
+    "teamNoto": "U.S.FAUSTO COPPI MONTECCHIO PRECALCINO",
+    "garaNome": "2* GRAN PREMIO MSTC - LA PALLADIANA"
+  },
+  {
+    "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 3,
+    "cognome": "STOCCHIERO",
+    "nome": "LUCA",
+    "team": "FAIZANE' CSZ SANDRIGO BIKE",
+    "categoria": "AL_M",
+    "reason": "team non combacia",
+    "teamNoto": "U.S.FAUSTO COPPI MONTECCHIO PRECALCINO",
+    "garaNome": "2* GRAN PREMIO MSTC - LA PALLADIANA"
+  },
+  {
+    "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 6,
+    "cognome": "BIASIA",
+    "nome": "EDOARDO",
+    "team": "FAIZANE' CSZ SANDRIGO BIKE",
+    "categoria": "AL_M",
+    "reason": "team non combacia",
+    "teamNoto": "VELO JUNIOR NOVE",
+    "garaNome": "2* GRAN PREMIO MSTC - LA PALLADIANA"
+  },
+  {
+    "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 8,
+    "cognome": "GUIDOLIN",
+    "nome": "RICCARDO",
+    "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+    "categoria": "AL_M",
+    "reason": "team non combacia",
+    "teamNoto": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "garaNome": "2* GRAN PREMIO MSTC - LA PALLADIANA"
+  },
+  {
+    "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 9,
+    "cognome": "FERRARI",
+    "nome": "NICCOLO'",
+    "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+    "categoria": "AL_M",
+    "reason": "team non combacia",
+    "teamNoto": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "garaNome": "2* GRAN PREMIO MSTC - LA PALLADIANA"
+  },
+  {
+    "garaId": "TROFEO_AMICI_DEL_CICLISMO_DI_CASALOLDO_1_MEM_GIANCARLO_PELLEGRI_2026-06-12_ES1_M",
+    "posizione": 4,
+    "cognome": "DE ANGELIS",
+    "nome": "AUGUSTO",
+    "team": "CAMIGNONE A.S.D.",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "TROFEO AMICI DEL CICLISMO DI CASALOLDO - 1° MEM. GIANCARLO PELLEGRI"
+  },
+  {
+    "garaId": "TROFEO_AMICI_DEL_CICLISMO_DI_CASALOLDO_1_MEM_GIANCARLO_PELLEGRI_2026-06-12_ES1_M",
+    "posizione": 1,
+    "cognome": "FALAVIGNA",
+    "nome": "SEBASTIANO",
+    "team": "S. C. MINCIO-CHIESE A.S.D",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "TROFEO AMICI DEL CICLISMO DI CASALOLDO - 1° MEM. GIANCARLO PELLEGRI"
+  },
+  {
+    "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_AL_F",
+    "posizione": 3,
+    "cognome": "FANTIN",
+    "nome": "NICOLE",
+    "team": "ASD GS SORGENTE PRADIPOZZO",
+    "categoria": "AL_F",
+    "reason": "team non combacia",
+    "teamNoto": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "garaNome": "15° TROFEO GRAFICA 78"
+  },
+  {
+    "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_AL_M",
+    "posizione": 1,
+    "cognome": "RODRIGUES DOS SANTOS VICENTE",
+    "nome": "JUNIOR",
+    "team": "A.S.D. SACILESE",
+    "categoria": "AL_M",
+    "reason": "nome ambiguo (split incerto)",
+    "teamNoto": "A.S.D. SACILESE",
+    "garaNome": "15° TROFEO GRAFICA 78"
+  },
+  {
+    "garaId": "5_NOTTURNA_CASTEL_ROMANO_2026-06-26_AL_F",
+    "posizione": 2,
+    "cognome": "LOMBARDI",
+    "nome": "GIULIA",
+    "team": "BUSTO GAROLFO",
+    "categoria": "AL_F",
+    "reason": "team non combacia",
+    "teamNoto": "S.C. CESANO MADERNO",
+    "garaNome": "5^ NOTTURNA CASTEL ROMANO"
+  },
+  {
+    "garaId": "5_NOTTURNA_CASTEL_ROMANO_2026-06-26_ES2_F",
+    "posizione": 3,
+    "cognome": "LONGO BORGHINI MARTA",
+    "nome": "ELIZABETH",
+    "team": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "categoria": "ES2_F",
+    "reason": "nome ambiguo (split incerto)",
+    "teamNoto": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "garaNome": "5^ NOTTURNA CASTEL ROMANO"
+  },
+  {
     "garaId": "33_TROFEO_PROLOCO_2026-07-16_ES1_M",
     "posizione": 6,
     "cognome": "REDAELLI",
@@ -41,5 +193,67 @@
     "reason": "nome ambiguo (split incerto)",
     "teamNoto": "A.S.D. SACILESE",
     "garaNome": "45° TROFEO CITTA' DI PORDENONE - MEMORIAL DEMETRIO MORAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+    "posizione": 6,
+    "cognome": "FOIS ANTONELLO",
+    "nome": "LUCA",
+    "team": "S.C. PATTADA",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+    "posizione": 7,
+    "cognome": "MARRAS",
+    "nome": "STEFANO",
+    "team": "ALGHERO BIKE A.S.D.",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_F",
+    "posizione": 1,
+    "cognome": "SOLLA",
+    "nome": "LINDA",
+    "team": "CRAZY WHEELS - CYCLING ACADEMY",
+    "categoria": "ES1_F",
+    "reason": "anno esordienti incerto",
+    "teamNoto": "CRAZY WHEELS - CYCLING ACADEMY",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 1,
+    "cognome": "LAI",
+    "nome": "GIUSEPPE",
+    "team": "ALGHERO BIKE A.S.D.",
+    "categoria": "JUN_M",
+    "reason": "team non combacia",
+    "teamNoto": "V.C.EMPOLI ARDARESE ASD",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 1,
+    "cognome": "FARA",
+    "nome": "ALESSANDRO",
+    "team": "S.C. FC'72",
+    "categoria": "JUN_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 2,
+    "cognome": "PINTUS",
+    "nome": "GABRIELE",
+    "team": "S.C. FC'72",
+    "categoria": "JUN_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
   }
 ]

@@ -130,6 +130,32 @@ function categoriaFromLabel(label) {
   return null;
 }
 
+// Fallback quando la label del tab non rivela la categoria (visto dal vivo:
+// tab "classifica OMNIUM DJ/DA/ED1/ED2" — la riunione è organizzata a
+// heat/omnium invece che un tab per categoria, e "OMNIUM" da solo non dice
+// nulla su chi corre). La categoria è comunque scritta nel codice di ogni
+// riga ("COGNOME NOME - DJ" ecc.), stesso schema già usato da
+// pista-vera-scan.js per la pista vera — qui applicato anche alla pista su
+// strada, dato che senza questo fallback l'intero tab veniva scartato come
+// "categoria non riconosciuta" e la gara risultava "importata" con 0 righe
+// scritte pur avendo categorie normalissime (non Giovanissimi). Le righe di
+// un tab OMNIUM condividono sempre lo stesso codice, quindi basta guardare
+// la prima riga per l'intero tab.
+function categoriaFromRiderCode(code) {
+  const m = String(code || '').toUpperCase().match(/^(ES|ED|AL|DA|JU|DJ|UN|EL|DU|DE)(\d)?$/);
+  if (!m) return null;
+  const [, base, yr] = m;
+  if (base === 'ES' || base === 'ED') {
+    if (yr === '1') return { cat: 'ES1', uncertainYear: false };
+    if (yr === '2') return { cat: 'ES2', uncertainYear: false };
+    return { cat: 'ES1', uncertainYear: true };
+  }
+  if (base === 'AL' || base === 'DA') return { cat: 'AL', uncertainYear: false };
+  if (base === 'JU' || base === 'DJ') return { cat: 'JUN', uncertainYear: false };
+  if (base === 'UN' || base === 'EL' || base === 'DU' || base === 'DE') return { cat: 'ELI', uncertainYear: false };
+  return null;
+}
+
 function genereFromCode(code, tabLabel) {
   if (code && code !== 'REG' && /D/.test(code)) return 'F';
   if (/donne|femmin|allieve\b/i.test(tabLabel)) return 'F';
@@ -356,7 +382,11 @@ async function login() {
     const raceReview = [];
 
     for (const tab of tabs) {
-      const mapped = categoriaFromLabel(tab.label);
+      let mapped = categoriaFromLabel(tab.label);
+      if (!mapped && tab.rows.length) {
+        const codeSuffix0 = (tab.rows[0].nomeCode.match(/-\s*([A-Z0-9]+)$/) || [])[1] || '';
+        mapped = categoriaFromRiderCode(codeSuffix0);
+      }
       if (!mapped) continue;
       const rows = tab.rows.map(r => {
         const codeSuffix = (r.nomeCode.match(/-\s*([A-Z0-9]+)$/) || [])[1] || '';

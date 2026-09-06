@@ -19728,9 +19728,28 @@ function _mrWordSet(s) {
   return new Set(String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .toUpperCase().split(/[^A-Z]+/).filter(Boolean));
 }
-function _mrIsWordSubset(needle, haystack) {
-  if (needle.size < 2) return false;
-  for (const w of needle) if (!haystack.has(w)) return false;
+function _mrWordList(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toUpperCase().split(/[^A-Z]+/).filter(Boolean);
+}
+// Come _mrWordSet ma ammette anche il taglio A META' PAROLA sull'ULTIMA
+// parola letta — non solo parole mancanti per intero. Il bordo di una foto
+// (o dell'inquadratura) taglia il testo esattamente lì, mai a inizio parola:
+// segnalato dal vivo con "ALVAREZ GONZALEZ BRA" dove il vero nome era
+// "...BRAULIO" — "BRA" non è mai una parola dell'atleta vero, ma NE è un
+// prefisso, quindi va accettato mentre le altre parole restano un match
+// esatto (troncare a metà una parola che non sia l'ultima non ha senso per
+// come legge una foto l'OCR, e richiedere l'esattezza altrove evita falsi
+// positivi su prefissi corti comuni).
+function _mrIsWordSubset(needleWords, haystackWords) {
+  if (needleWords.length < 2) return false;
+  for (let i = 0; i < needleWords.length; i++) {
+    const w = needleWords[i];
+    if (haystackWords.includes(w)) continue;
+    const isLast = i === needleWords.length - 1;
+    if (isLast && w.length >= 3 && haystackWords.some(hw => hw.startsWith(w))) continue;
+    return false;
+  }
   return true;
 }
 
@@ -19753,20 +19772,20 @@ function _mrIsNationalTeam(name) { return _MR_NATIONAL_TEAM_RE.test(String(name 
 // l'autocomplete manuale; il team, se combacia, è solo un rinforzo di
 // fiducia — non è richiesto (l'OCR può sbagliare anche quello).
 function _mrAutoMatchAthlete(rawCognome, rawNome, rawTeam, meta) {
-  const needle = _mrWordSet(`${rawCognome || ''} ${rawNome || ''}`);
-  if (needle.size < 2 || !globalData?.athletes) return null;
+  const needle = _mrWordList(`${rawCognome || ''} ${rawNome || ''}`);
+  if (needle.length < 2 || !globalData?.athletes) return null;
   const needleTeam = _mrWordSet(rawTeam);
   let best = null;
   for (const [id, a] of Object.entries(globalData.athletes)) {
     if (meta.genere && a.genere && a.genere !== meta.genere) continue;
     if (meta.categoria && a.categoria && a.categoria !== meta.categoria) continue;
-    const haystack = _mrWordSet(`${a.cognome || ''} ${a.nome || ''}`);
+    const haystack = _mrWordList(`${a.cognome || ''} ${a.nome || ''}`);
     if (!_mrIsWordSubset(needle, haystack)) continue;
     const teamMatch = needleTeam.size && [..._mrWordSet(a.team_attuale)].some(w => needleTeam.has(w));
     // Preferisci il match con più parole in comune (il più "specifico") e a
     // parità il team che combacia — così tra più omonimi possibili si sceglie
     // quello davvero coerente con la riga letta dalla foto.
-    const score = haystack.size + (teamMatch ? 100 : 0);
+    const score = haystack.length + (teamMatch ? 100 : 0);
     if (!best || score > best.score) best = { id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '', score };
   }
   return best;
