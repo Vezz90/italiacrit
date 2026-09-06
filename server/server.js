@@ -4434,7 +4434,7 @@ async function _submitManualResult(req, res) {
     const garaId = req.params.garaId;
     const { posizione, cognome, nome, team, tempo, km, media,
             nome_gara, data, categoria, genere, tipo, moltiplicatore,
-            campionato_regionale, campionato_italiano, regione, punti_override } = req.body || {};
+            campionato_regionale, campionato_italiano, regione, punti_override, atleta_id: atletaIdOverride } = req.body || {};
     const cognomeU = String(cognome || '').trim().toUpperCase();
     const nomeU    = String(nome || '').trim().toUpperCase();
     const teamU    = String(team || '').trim().toUpperCase();
@@ -4452,7 +4452,18 @@ async function _submitManualResult(req, res) {
     // punteggio EFFETTIVO invece di quello calcolato dalla tabella standard,
     // senza toccare punti_base (resta lo storico "quanto varrebbe normalmente").
     const puntiOverride = punti_override != null && punti_override !== '' ? Math.round(Number(punti_override)) : null;
-    const atletaId = cognomeU ? _makeAtletaId(cognomeU, nomeU) : '';
+    // atleta_id esplicito (usato dal form "Aggiungi risultati" quando il
+    // corridore è stato appena creato lì per lì da un profilo omonimo GIA'
+    // ESISTENTE ma in un'altra categoria/team: _uniqueManualAthleteId ha
+    // dovuto disambiguare l'id, es. "PELHAN_TJAS_2" invece del semplice
+    // "PELHAN_TJAS" già occupato — segnalato dal vivo: senza questo, ricalcolare
+    // l'id qui dal solo cognome/nome tornava a collidere col profilo vecchio,
+    // vanificando la disambiguazione appena fatta e mischiando il risultato
+    // nuovo sotto la categoria/team sbagliati). Va bene solo se combacia
+    // ancora con cognome/nome della riga, altrimenti si ignora.
+    const atletaId = (atletaIdOverride && String(atletaIdOverride).startsWith(_makeAtletaId(cognomeU, nomeU)))
+      ? String(atletaIdOverride)
+      : (cognomeU ? _makeAtletaId(cognomeU, nomeU) : '');
 
     // "Tipo pista": la regola (punteggio dimezzato, SOLO i primi 5, zero da
     // qui in poi) deve valere per QUALSIASI riga aggiunta a questa gara —

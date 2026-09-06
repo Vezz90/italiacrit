@@ -19970,10 +19970,26 @@ window._mrBulkSubmitCreateAthlete = async (idx) => {
   const meta = window._mrMeta || {};
   const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   const teamId = norm(team) || 'SCONOSCIUTO';
+  // Un omonimo può già esistere in un'ALTRA categoria/genere (fuori dal
+  // filtro di _mrAutoMatchAthlete, che cerca apposta solo nella categoria di
+  // questa gara) — es. un profilo importato mesi fa da uno storico esterno,
+  // magari con una categoria ormai vecchia. "Nessun atleta trovato" qui vuol
+  // dire solo "non in QUESTA categoria", non "non esiste affatto": va
+  // segnalato prima di creare, altrimenti l'admin pensa di creare un
+  // profilo pulito quando invece ne esiste già uno con dati diversi
+  // (segnalato dal vivo: PELHAN_TJAS esisteva già come Esordienti 2°Anno /
+  // team storico, il "nuovo" ES1_M... ereditava categoria sbagliata).
+  const wantedId = `${norm(cognome)}_${norm(nome)}`;
+  const existing = globalData?.athletes?.[wantedId];
+  if (existing && !window._mrBulkRows[idx]._collisionConfirmed) {
+    const ok = confirm(`${cognome} ${nome} esiste già a database come ${catLabel(existing.categoria) || existing.categoria || '?'} (team: ${existing.team_attuale || '?'}).\n\nQuesta gara è ${catLabel(meta.categoria) || meta.categoria || '?'}: se è la stessa persona cambiata categoria, valuta di correggere il profilo esistente invece di crearne uno nuovo.\n\nCreare comunque un profilo separato per questa categoria?`);
+    if (!ok) return;
+    window._mrBulkRows[idx]._collisionConfirmed = true;
+  }
   const btn = document.getElementById('mraa-submit');
   btn.disabled = true; btn.textContent = 'Creo…';
   try {
-    await apiCall(`/admin/team/${encodeURIComponent(teamId)}/add-athlete`, {
+    const { athlete } = await apiCall(`/admin/team/${encodeURIComponent(teamId)}/add-athlete`, {
       method: 'POST', body: { cognome, nome, categoria: meta.categoria || '', genere: meta.genere || '', team_name: team },
     });
     document.getElementById('mr-add-athlete-overlay')?.remove();
@@ -19982,6 +19998,11 @@ window._mrBulkSubmitCreateAthlete = async (idx) => {
     window._mrBulkRows[idx].team = team;
     window._mrBulkRows[idx]._autoMatched = false;
     window._mrBulkRows[idx]._ocrCognome = ''; // creato: non riproporre più l'adviser su questa riga
+    // L'id restituito può essere disambiguato (es. "PELHAN_TJAS_2" se
+    // "PELHAN_TJAS" era già preso) — va portato fino al salvataggio del
+    // risultato, altrimenti il server lo ricalcola dal solo nome e torna a
+    // collidere col profilo vecchio (vedi submitManualResultBulk).
+    window._mrBulkRows[idx].atletaId = athlete?.atleta_id || null;
     showToast(`✓ ${cognome} ${nome} creato`);
     globalData = await loadAll();
     window._mrBulkRender();
@@ -20084,7 +20105,13 @@ window.submitManualResultBulk = async () => {
       // _submitManualResult in server.js.
       const { row } = await apiCall(`/gara/${encodeURIComponent(garaId)}/manual-result`, {
         method: 'POST',
-        body: { posizione: r.pos, cognome: r.cognome, nome: r.nome, team: r.team, tempo: r.tempo, ...meta },
+        // atleta_id: solo se già lo conosciamo per certo (match automatico o
+        // appena creato da qui) — vedi _mrAutoMatchAthlete/_mrBulkSubmitCreateAthlete.
+        // Necessario quando l'id è stato disambiguato (es. "PELHAN_TJAS_2"
+        // perché "PELHAN_TJAS" esisteva già sotto un'altra categoria): senza
+        // questo il server lo ricalcola dal solo cognome/nome e torna a
+        // collidere col profilo vecchio (segnalato dal vivo).
+        body: { posizione: r.pos, cognome: r.cognome, nome: r.nome, team: r.team, tempo: r.tempo, atleta_id: r.atletaId || undefined, ...meta },
       });
       _mrPatchLocal(row);
       ok++;
