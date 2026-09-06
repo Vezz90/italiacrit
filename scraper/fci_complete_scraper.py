@@ -833,13 +833,40 @@ async def run_cycle():
         print("Calendario da FCI: caricamento gare nuove..." if calendar else "Scaricamento calendario automatico dalla FCI...")
         fresh_calendar = scrape_calendar_fci(CURRENT_YEAR)
         existing_ids = {g["id"] for g in calendar}
-        added = 0
+        existing_by_fci = {g["fci_id"]: g for g in calendar if g.get("fci_id")}
+        added = renamed = 0
         for g in fresh_calendar:
-            if g["id"] not in existing_ids:
-                calendar.append(g)
+            if g["id"] in existing_ids:
+                # Stesso id: se la riga già presente è vecchia (pre-fix, senza
+                # fci_id) recupera comunque l'ID Gara FCI per poter sanare un
+                # eventuale rename futuro.
+                if g.get("fci_id"):
+                    for old in calendar:
+                        if old["id"] == g["id"] and not old.get("fci_id"):
+                            old["fci_id"] = g["fci_id"]
+                            existing_by_fci[g["fci_id"]] = old
+                continue
+            # Id nuovo (nome mai visto per questa data): se condivide lo
+            # stesso ID Gara FCI di una riga già presente, non è una gara
+            # diversa ma un RENAME — es. la FCI corregge il numero
+            # d'edizione dopo la prima pubblicazione ("13° TROFEO A.
+            # COMBERLATO" "In fase di approvazione" → "14° TROFEO A.
+            # COMBERLATO" "Approvata", stesso ID Gara 179879, segnalato dal
+            # vivo: la vecchia card restava per sempre "in attesa" mentre i
+            # risultati veri finivano solo sotto il nome nuovo). Si aggiorna
+            # la riga esistente sul posto invece di crearne una fantasma.
+            old = existing_by_fci.get(g.get("fci_id")) if g.get("fci_id") else None
+            if old:
+                old.update(g)
                 existing_ids.add(g["id"])
-                added += 1
-        print(f"Calendario: {added} nuove gare aggiunte ({len(calendar)} totali).")
+                if g.get("fci_id"): existing_by_fci[g["fci_id"]] = old
+                renamed += 1
+                continue
+            calendar.append(g)
+            existing_ids.add(g["id"])
+            if g.get("fci_id"): existing_by_fci[g["fci_id"]] = g
+            added += 1
+        print(f"Calendario: {added} nuove gare aggiunte, {renamed} rinominate/aggiornate ({len(calendar)} totali).")
         with open(calendar_file, "w", encoding="utf-8") as f:
             json.dump(calendar, f, indent=4, ensure_ascii=False)
         with open(calendar_meta_file, "w", encoding="utf-8") as f:

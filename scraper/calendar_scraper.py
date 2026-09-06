@@ -67,10 +67,24 @@ def scrape_calendar_fci(year=2026):
                         
                         id_class_div = race.find('div', class_='wp-race-id-class')
                         categoria = ""
+                        fci_id = ""
                         if id_class_div:
                             text = id_class_div.get_text(strip=True)
                             m = re.search(r"Classe:\s*(?:\([^)]+\))?\s*(.*)", text)
                             if m: categoria = m.group(1).strip()
+                            # ID numerico interno FCI (es. "ID Gara: 179880 -
+                            # Classe: ..."): a differenza del nostro gara_id
+                            # (derivato dal nome), è STABILE anche se la FCI
+                            # corregge il nome/edizione dopo la prima
+                            # pubblicazione (visto dal vivo: "13° TROFEO A.
+                            # COMBERLATO" "In fase di approvazione" diventato
+                            # poi "14° TROFEO A. COMBERLATO" "Approvata" per
+                            # lo stesso ID Gara 179879 — senza questo id
+                            # tracciato, il rename creava un doppione fantasma
+                            # invece di aggiornare la riga esistente). Usato
+                            # sotto per sanare i rename durante il merge.
+                            m2 = re.search(r"ID\s*Gara:\s*(\d+)", text)
+                            if m2: fci_id = m2.group(1)
                             
                         loc_div = race.find('div', class_='wp-race-location')
                         regione = ""
@@ -91,6 +105,7 @@ def scrape_calendar_fci(year=2026):
                         calendar.append({
                             "id": gara_id,
                             "id_base": gara_id,
+                            "fci_id": fci_id,
                             "nome": nome,
                             "data": data_iso,
                             "tipo": tipo,
