@@ -2431,24 +2431,30 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const _rCode2 = getRankingFileCode(r);
       const _rLbl2 = _rCode2 ? catLabel(_rCode2).trim().toLowerCase() : '';
       const _catTie = _calCatMatch(_calCatLbl, _rLbl2) ? 0.01 : 0;
-      // Secondo spareggio, molto più piccolo (non scavalca mai _catTie sopra):
-      // a parità di categoria, preferisci la voce calendario con il nome più
-      // completo/lungo — spesso quella "ufficiale" con fci_id, contro un
-      // vecchio doppione abbreviato senza fci_id (es. "Criterium 648 -
-      // Tr.D.Fiorina a.m." abbreviato vs "Criterium 648 - 9° Trofeo Danilo
-      // Fiorina a.m. - Campionato Provinciale" completo, stesso risultato,
-      // entrambe candidate a pari tier — segnalato dal vivo: vinceva sempre
-      // la prima incontrata nell'array, quasi sempre quella abbreviata,
-      // lasciando la voce ufficiale per sempre senza risultati collegati).
-      const _lenTie = Math.min(calNorm2.length, 999) / 1e6;
-      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _lenTie); continue; }
+      // Secondo spareggio, molto più piccolo (non scavalca mai _catTie
+      // sopra): a parità di categoria, preferisci la voce calendario con un
+      // fci_id reale — è la registrazione UFFICIALE della FCI, contro un
+      // vecchio doppione (es. "Criterium 648 - Tr.D.Fiorina a.m." senza
+      // fci_id vs "Criterium 648 - 9° Trofeo Danilo Fiorina a.m. -
+      // Campionato Provinciale" con fci_id, stesso risultato, entrambe
+      // candidate a pari tier — segnalato dal vivo: vinceva sempre la prima
+      // incontrata nell'array, quasi sempre il doppione, lasciando la voce
+      // ufficiale per sempre senza risultati collegati). NB: provato prima
+      // con "preferisci il nome più lungo" — sbagliato, causava una
+      // regressione opposta quando è la riga PIÙ CORTA ad avere l'fci_id
+      // reale (es. "36° GP San Mauro Pascoli - Allievi", fci_id vero, contro
+      // "...Prova Valida Campionato Regionale", doppione senza fci_id ma
+      // nome più lungo): l'fci_id è un segnale affidabile, la lunghezza del
+      // nome no.
+      const _fciTie = cal.fci_id ? 0.001 : 0;
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _fciTie); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
       // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
       // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
       // gara, stesso giorno — verificato dal vivo) — prima veniva
       // controllato solo il caso calendario-più-lungo, mai questo.
-      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _lenTie); continue; }
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _fciTie); continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
