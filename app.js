@@ -26257,6 +26257,13 @@ let _risVideoRefreshDone = false;
 // posizione, atleta_id} oppure null se già verificato e non trovato nulla.
 const _risPcsPendingCache = {};
 const _risPcsPendingChecked = new Set();
+// Gare (internazionali/pro) di cui abbiamo confermato via PCS l'esistenza di
+// un ordine d'arrivo, anche se lo scraper FCI non le tocca mai (circuito
+// diverso, es. World Tour/UCI ProSeries) — usato da "Gare senza risultati"
+// per non segnalarle come mancanti: hanno già i loro dati, solo non nella
+// tabella resultsRaw nativa (segnalato dal vivo: "GP Industria & Artigianato"
+// vinta da Pidcock comparsa come "senza risultati" pur avendo già il podio).
+const _risPcsFoundGaraIds = new Set();
 async function renderRisultati() {
   if (!globalData) return;
   if (!_risVideoRefreshDone) {
@@ -26385,7 +26392,7 @@ async function renderRisultati() {
   const missingRaces = risShowMissing
     ? (calendar || [])
         .filter(g => g.data && g.data <= _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
-          && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id))
+          && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id) && !_risPcsFoundGaraIds.has(g.id))
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
         .map(g => ({
           id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
@@ -26415,6 +26422,26 @@ async function renderRisultati() {
         // "non ancora disponibili" anche dopo un import PCS riuscito).
         if (Object.keys(_risPcsPendingCache).some(id => toCheck.some(g => g.id === id))
             && _resolveVirtualHash().includes('/risultati')) renderRisultati();
+      });
+    }
+  }
+
+  // Stesso controllo PCS di sopra, ma per "Gare senza risultati" — limitato
+  // alle gare di tipo "internazionale" (World Tour/UCI ProSeries ecc.): sono
+  // le UNICHE che PCS può davvero coprire, le migliaia di gare regionali
+  // minori non ci sono mai. Ristretto così per non lanciare centinaia di
+  // fetch ad ogni apertura del filtro. Un risultato trovato esclude la gara
+  // dalla lista per sempre (non solo la arricchisce) — vedi _risPcsFoundGaraIds.
+  if (risShowMissing) {
+    const toCheckMissing = missingRaces.filter(g => g.tipo === 'internazionale' && !_risPcsPendingChecked.has(g.id));
+    if (toCheckMissing.length) {
+      toCheckMissing.forEach(g => _risPcsPendingChecked.add(g.id));
+      Promise.all(toCheckMissing.map(g =>
+        apiCall(`/pcs-results/gara/${encodeURIComponent(g.id)}`).then(rows => {
+          if (Array.isArray(rows) && rows.length) _risPcsFoundGaraIds.add(g.id);
+        }).catch(() => {})
+      )).then(() => {
+        if (_risPcsFoundGaraIds.size && _resolveVirtualHash().includes('/risultati')) renderRisultati();
       });
     }
   }
