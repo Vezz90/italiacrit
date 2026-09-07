@@ -25945,6 +25945,13 @@ let risQueryMonth = '';
 let risQueryRegion = '';
 let risQueryTipo = '';
 let risSearchQuery = '';
+// "Gare senza risultati": mostra le gare di calendario già svolte (data <=
+// oggi) per cui non è mai stato trovato/inserito NESSUN risultato — prima
+// queste sparivano semplicemente dalla pagina Risultati (lo scraper le
+// scarta se non le trova o non riesce ad abbinarle), senza lasciare alcuna
+// traccia visibile: impossibile capire quali gare recuperare a mano
+// (segnalato dal vivo: "così non so quali gare non sono state trovate").
+let risShowMissing = false;
 let _risSearchTimer = null;
 // Paginazione "carica altro": il primo batch è piccolo per un caricamento
 // veloce della pagina (poche card pesanti da costruire/dipingere), i batch
@@ -26003,6 +26010,11 @@ window.risSetSearch = (v) => {
   _risSearchTimer = setTimeout(() => { risSearchQuery = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); }, 300);
 };
 window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
+window.risToggleMissing = () => {
+  risShowMissing = !risShowMissing;
+  risVisibleCount = RIS_PAGE_INITIAL;
+  renderRisultati();
+};
 
 // Anni storici (ciclismo.info, fino al 2007): il pulsante nativo resta
 // "reale" solo per la stagione caricata — ogni anno precedente mostra le
@@ -26366,6 +26378,24 @@ async function renderRisultati() {
       _pcsResults: _risPcsPendingCache[g.id] || null,
     }));
 
+  // Stessa identica esclusione di pendingToday sopra, ma su TUTTE le gare
+  // già svolte (non solo quelle di oggi) — vedi risShowMissing. _hasResultsToday,
+  // nonostante il nome, è già costruito da TUTTI i risultati della stagione
+  // (eventMap non filtra per data), quindi vale anche qui senza modifiche.
+  const missingRaces = risShowMissing
+    ? (calendar || [])
+        .filter(g => g.data && g.data <= _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
+          && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id))
+        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+        .map(g => ({
+          id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
+          regione: g.regione, mult: g.moltiplicatore || 1,
+          campionato_regionale: !!g.campionato_regionale, campionato_italiano: !!g.campionato_italiano,
+          byCategory: {}, _pending: true, _categoriaLabel: g.categoria || '',
+          _pcsResults: null,
+        }))
+    : [];
+
   // Avvia (una sola volta per gara_id, in background) il controllo di un
   // eventuale ordine d'arrivo già importato da PCS per le card "in attesa"
   // di oggi — vedi _risPcsPendingCache sopra. Ri-renderizza solo se trova
@@ -26389,7 +26419,9 @@ async function renderRisultati() {
     }
   }
 
-  let races = [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''))];
+  let races = risShowMissing
+    ? missingRaces
+    : [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''))];
 
   // Extract all regions, filtering out category false positives
   const badRegions = ['JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
@@ -26504,6 +26536,7 @@ async function renderRisultati() {
             style="width:100%;box-sizing:border-box;padding:12px 16px;margin-bottom:12px;"
             oninput="window.risSetSearch(this.value)" autocomplete="off">
           <div id="ris-selects">${selectsHtml}</div>
+          <button id="ris-missing-toggle" onclick="window.risToggleMissing()" style="margin:8px 0 0;padding:8px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;cursor:pointer;border:1px solid ${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'};background:${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${risShowMissing ? '#fff' : 'var(--text-secondary)'}">⚠ Gare senza risultati</button>
           <span class="ranking-count" id="ris-count"></span>
         </div>
         <div class="risultati-feed" style="margin-top:20px" id="ris-cards"></div>
@@ -26519,6 +26552,10 @@ async function renderRisultati() {
   const selTipo   = document.getElementById('ris-sel-tipo');
   const countEl   = document.getElementById('ris-count');
   const cardsEl   = document.getElementById('ris-cards');
+  const missingToggleEl = document.getElementById('ris-missing-toggle');
+  if (missingToggleEl) {
+    missingToggleEl.style.cssText = `margin:8px 0 0;padding:8px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;cursor:pointer;border:1px solid ${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'};background:${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${risShowMissing ? '#fff' : 'var(--text-secondary)'}`;
+  }
 
   if (selMonth)  selMonth.value  = risQueryMonth  || '';
   if (selGenere) selGenere.value = risQueryGenere || '';
