@@ -1705,8 +1705,8 @@
         "km": "33"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.50366,
+    "lng": 8.47081
   },
   "19_TROFEO_EDIL_SISTEM_16_GIORNATA_DELLA_BICICLETTA_2026-07-05_PROMISCUA_ALL_JUN": {
     "raceid": "181773",
@@ -1720,8 +1720,8 @@
     "km": null,
     "location_str": "VIA DEL CONDOTTO N. 11, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 44.38187,
+    "lng": 11.77972
   },
   "TROFEO_FOLK_FESTA_2026_2026-07-19_PROMISCUA_ALL_JUN": {
     "raceid": "181776",
