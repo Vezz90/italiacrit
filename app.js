@@ -2471,16 +2471,36 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // _nm2 già usata sopra, richiedendo che una base sia contenuta nell'altra
   // (non un generico prefisso comune) per restare stretto ed evitare falsi
   // positivi fra gare diverse che coincidono per caso su categoria e data.
+  // Famiglia di categoria (non il testo grezzo): la FCI scrive la STESSA
+  // categoria in modi diversi tra due righe di calendario duplicate della
+  // stessa gara (es. "Elite e Under 23" vs "Elite-Under23" — verificato dal
+  // vivo: "14° G.P. dell'Industria di Civitanova Marche 9° Memorial Cesare
+  // Lattanzi", riga FCI ufficiale con fci_id, mai risultata "trovata" pur
+  // avendo i risultati veri già scrapati sotto un secondo doppione più corto
+  // "14 Gran Premio dell'Industria di Civitanova Marche", perché le due righe
+  // non condividevano la stessa chiave testuale categoria+data). Confrontare
+  // per famiglia invece che per testo esatto individua questi casi senza
+  // perdere la sicurezza del controllo testuale sotto (resta comunque
+  // richiesto che una base sia contenuta nell'altra).
+  const _calCatFamily = (categoria) => {
+    const k = (categoria || '').toLowerCase();
+    if (k.includes('esord')) return k.includes('2') ? 'es2' : (k.includes('1') ? 'es1' : 'es');
+    if (k.includes('allie')) return 'al';
+    if (k.includes('junior')) return 'jun';
+    if (k.includes('elite') || k.includes('under')) return 'eli';
+    if (k.includes('promiscua')) return 'promiscua_' + k.replace(/[^a-z0-9]+/g, '');
+    return k.replace(/[^a-z0-9]+/g, '');
+  };
   const _calHasResultsSet = new Set(Object.values(garaToCalId));
   const _calByDateCat = {};
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
-    const k = cal.data + '|' + (cal.categoria || '').trim().toLowerCase();
+    const k = cal.data + '|' + _calCatFamily(cal.categoria);
     (_calByDateCat[k] ||= []).push(cal);
   }
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data || _calHasResultsSet.has(cal.id) || _calBareOrphanIds.has(cal.id)) continue;
-    const k = cal.data + '|' + (cal.categoria || '').trim().toLowerCase();
+    const k = cal.data + '|' + _calCatFamily(cal.categoria);
     const siblings = (_calByDateCat[k] || []).filter(g => g.id !== cal.id && _calHasResultsSet.has(g.id));
     if (!siblings.length) continue;
     const calBaseX = _nm2(cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
