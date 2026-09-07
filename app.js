@@ -2299,18 +2299,30 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const isStageRace = /tappe/i.test(cal.categoria || '');
     let calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     // La FCI a volte scrive il numero di edizione in numeri romani nel
-    // calendario ("II Memorial Franco Pilone") ma in arabi nei risultati
-    // ("2 Memorial Franco Pilone") — senza convertirlo qui i due id non
-    // condividevano NESSUN prefisso comune (calBaseNoEd restava "II_..." e
-    // non c'era alcun modo di farlo combaciare con "MEMORIAL..."), quindi il
-    // risultato restava per sempre senza collegamento al calendario
-    // (segnalato dal vivo). Copre solo I-XX: oltre non capita quasi mai per
-    // un'edizione di gara ciclistica e il rischio di falsi positivi (parole
-    // reali che sembrano numeri romani, es. "DI", "MI") sale con la lunghezza.
-    const _ROMAN_NUM = { I:1, II:2, III:3, IV:4, V:5, VI:6, VII:7, VIII:8, IX:9, X:10,
-      XI:11, XII:12, XIII:13, XIV:14, XV:15, XVI:16, XVII:17, XVIII:18, XIX:19, XX:20 };
-    const _romanEdM = calBase.match(/^([IVX]{1,5})_/i);
-    const _romanEdVal = _romanEdM && _ROMAN_NUM[_romanEdM[1].toUpperCase()];
+    // calendario ("II Memorial Franco Pilone", "XXIV Memorial Paolo
+    // Batignani") ma in arabi nei risultati ("2 Memorial Franco Pilone", "24
+    // Memorial Paolo Batignani") — senza convertirlo qui i due id non
+    // condividevano NESSUN prefisso comune (calBaseNoEd restava "II_"/"XXIV_"
+    // davanti e non c'era alcun modo di farlo combaciare con "MEMORIAL..."),
+    // quindi il risultato restava per sempre senza collegamento al calendario
+    // (segnalato dal vivo, entrambi i casi). Copre 1-49 con un vero
+    // convertitore romano→arabo (solo I/V/X/L, mai C/D/M — un'edizione di
+    // gara ciclistica raramente supera qualche decina) validato da una
+    // regex sui numeri romani corretti, per non scambiare per numeri romani
+    // parole reali che capitano a usare solo lettere I/V/X/L (es. "LIVE").
+    const _ROMAN_RE = /^(XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
+    const _romanToInt = (s) => {
+      const map = { I: 1, V: 5, X: 10, L: 50 };
+      let total = 0, prev = 0;
+      for (let i = s.length - 1; i >= 0; i--) {
+        const val = map[s[i]];
+        if (val < prev) total -= val; else { total += val; prev = val; }
+      }
+      return total;
+    };
+    const _romanEdM = calBase.match(/^([IVXL]{1,6})_/i);
+    const _romanEdStr = _romanEdM ? _romanEdM[1].toUpperCase() : '';
+    const _romanEdVal = (_romanEdStr && _ROMAN_RE.test(_romanEdStr)) ? _romanToInt(_romanEdStr) : null;
     if (_romanEdVal) calBase = _romanEdVal + calBase.slice(_romanEdM[0].length - 1);
     // "ED" (edizione) a volte resta incollato al numero nell'id calendario
     // (es. "4ED_LA_PIERI_ALIGI_..." invece di "4_LA_PIERI_ALIGI_...", come
@@ -2419,14 +2431,24 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const _rCode2 = getRankingFileCode(r);
       const _rLbl2 = _rCode2 ? catLabel(_rCode2).trim().toLowerCase() : '';
       const _catTie = _calCatMatch(_calCatLbl, _rLbl2) ? 0.01 : 0;
-      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie); continue; }
+      // Secondo spareggio, molto più piccolo (non scavalca mai _catTie sopra):
+      // a parità di categoria, preferisci la voce calendario con il nome più
+      // completo/lungo — spesso quella "ufficiale" con fci_id, contro un
+      // vecchio doppione abbreviato senza fci_id (es. "Criterium 648 -
+      // Tr.D.Fiorina a.m." abbreviato vs "Criterium 648 - 9° Trofeo Danilo
+      // Fiorina a.m. - Campionato Provinciale" completo, stesso risultato,
+      // entrambe candidate a pari tier — segnalato dal vivo: vinceva sempre
+      // la prima incontrata nell'array, quasi sempre quella abbreviata,
+      // lasciando la voce ufficiale per sempre senza risultati collegati).
+      const _lenTie = Math.min(calNorm2.length, 999) / 1e6;
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _lenTie); continue; }
       // Stessa idea in direzione OPPOSTA: la pagina risultati a volte
       // AGGIUNGE un suffisso che il calendario non ha (es. calendario "10
       // Edizione la Corsa del Dott. Carlo" vs risultati "10 Edizione la
       // Corsa del Dott. Carlo PROVA VALIDA CAMPIONATO REGIONALE", stessa
       // gara, stesso giorno — verificato dal vivo) — prima veniva
       // controllato solo il caso calendario-più-lungo, mai questo.
-      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie); continue; }
+      if (calNorm2.length >= 8 && garaNorm.startsWith(calNorm2 + '_') && _stageEdOk) { _setGaraToCalId(r.gara_id, cal.id, 2 - _catTie - _lenTie); continue; }
       // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
       // bene per le gare normali, dove il filtro data qui sopra ha già
       // escluso ogni altra gara con edizione coincidente per puro caso. Per
@@ -2484,12 +2506,21 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // richiesto che una base sia contenuta nell'altra).
   const _calCatFamily = (categoria) => {
     const k = (categoria || '').toLowerCase();
-    if (k.includes('esord')) return k.includes('2') ? 'es2' : (k.includes('1') ? 'es1' : 'es');
-    if (k.includes('allie')) return 'al';
-    if (k.includes('junior')) return 'jun';
-    if (k.includes('elite') || k.includes('under')) return 'eli';
+    // Genere SEMPRE incluso nella chiave: "Allievi" e "Donne Allieve" sono
+    // due categorie diverse (due gare/classifiche separate, mai la stessa
+    // fisica gara) — senza questo prefisso finivano nella stessa famiglia
+    // "al" e il controllo doppioni qui sotto arrivava a mescolare risultati
+    // maschili e femminili di gare completamente diverse (verificato subito
+    // dopo aver introdotto la famiglia, prima del deploy: "36° Gran Premio
+    // Città di San Mauro Pascoli" maschile risultava con dentro anche
+    // risultati "Donne Allieve" di un'altra riga calendario).
+    const g = /\bdonne\b|femminil/.test(k) ? 'f_' : '';
+    if (k.includes('esord')) return g + (k.includes('2') ? 'es2' : (k.includes('1') ? 'es1' : 'es'));
+    if (k.includes('allie')) return g + 'al';
+    if (k.includes('junior')) return g + 'jun';
+    if (k.includes('elite') || k.includes('under')) return g + 'eli';
     if (k.includes('promiscua')) return 'promiscua_' + k.replace(/[^a-z0-9]+/g, '');
-    return k.replace(/[^a-z0-9]+/g, '');
+    return g + k.replace(/[^a-z0-9]+/g, '');
   };
   const _calHasResultsSet = new Set(Object.values(garaToCalId));
   const _calByDateCat = {};
@@ -2504,9 +2535,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const siblings = (_calByDateCat[k] || []).filter(g => g.id !== cal.id && _calHasResultsSet.has(g.id));
     if (!siblings.length) continue;
     const calBaseX = _nm2(cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
+    const calWordsX = calBaseX.split('_').filter(Boolean);
     const isDup = siblings.some(sib => {
       const sBaseX = _nm2(sib.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
-      return sBaseX === calBaseX || sBaseX.startsWith(calBaseX + '_') || calBaseX.startsWith(sBaseX + '_');
+      if (sBaseX === calBaseX || sBaseX.startsWith(calBaseX + '_') || calBaseX.startsWith(sBaseX + '_')) return true;
+      // Sottoinsieme di parole (ignora l'ordine): copre il caso in cui una
+      // delle due righe include una parola in mezzo che l'altra non ha, es.
+      // "Castelfranco Monte Tomba" (orfana) vs "Castelfranco VENETO Monte
+      // Tomba 1° GP Mardegan Legno" (con risultati) — "Veneto" fa parte del
+      // nome ufficiale del comune, non rumore, quindi il controllo di
+      // contenimento sopra (che richiede lo stesso ORDINE) non basta. Soglia
+      // minima di 2 parole per restare stretto ed evitare falsi positivi.
+      const sWordsX = sBaseX.split('_').filter(Boolean);
+      const [shorter, longer] = calWordsX.length <= sWordsX.length ? [calWordsX, sWordsX] : [sWordsX, calWordsX];
+      return shorter.length >= 2 && shorter.every(w => longer.includes(w));
     });
     if (isDup) _calBareOrphanIds.add(cal.id);
   }

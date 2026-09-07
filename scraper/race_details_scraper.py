@@ -542,11 +542,33 @@ def scrape_all_details():
             needs_migration = 'tappe' not in existing and c_date >= today_iso
             if not existing.get("info") or needs_migration:
                 fci_list = fci_races_map.get(c_date, [])
+                # robust_norm toglie parole di rumore molto comuni (trofeo,
+                # memorial, coppa, articoli...) — per gare con un nome breve
+                # ("4° Trofeo dell'Uva" -> "4 dell uva") il norm risultante può
+                # ridursi a pochissimi caratteri, a volte solo il numero di
+                # edizione. Il vecchio controllo (solo "contenuto in") prendeva
+                # il PRIMO risultato della giornata che soddisfacesse anche
+                # banalmente questo confronto, indipendentemente da quanto
+                # fosse davvero simile — bastava che un'altra gara dello stesso
+                # giorno avesse un norm cortissimo o generico per rubare il
+                # raceid, mescolando due gare COMPLETAMENTE diverse (verificato
+                # dal vivo: "4° Trofeo dell'Uva", Impruneta/Toscana, finita con
+                # i dettagli tecnici di "10^ Edizione la Corsa del Dottor
+                # Carlo", Cepagatti/Abruzzo, stesso giorno, stesso raceid
+                # salvato per entrambe). Ora si richiede una lunghezza minima
+                # per considerare valido il confronto, e si sceglie il match
+                # con la maggiore sovrapposizione relativa (non il primo).
                 best_match_id = None
+                best_score = 0
+                MIN_NORM_LEN = 6
                 for (f_norm, f_id, f_nome) in fci_list:
+                    if len(c_norm) < MIN_NORM_LEN or len(f_norm) < MIN_NORM_LEN:
+                        continue
                     if c_norm in f_norm or f_norm in c_norm:
-                        best_match_id = f_id
-                        break
+                        score = min(len(c_norm), len(f_norm)) / max(len(c_norm), len(f_norm))
+                        if score > best_score:
+                            best_score = score
+                            best_match_id = f_id
 
                 if best_match_id:
                     print(f"  Scraping dettagli per {c['nome']} (FCI: {best_match_id})")
