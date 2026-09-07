@@ -1864,8 +1864,8 @@
         "km": "89"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.3213,
+    "lng": 10.65922
   },
   "PASQUALANDO_2026-04-04_ELITE_S_C_E_UNDER_23": {
     "raceid": "179192",
@@ -1894,7 +1894,7 @@
         "km": "72,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   }
 }

@@ -20360,8 +20360,8 @@
         "km": "89"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.3213,
+    "lng": 10.65922
   },
   "TROFEO_TECNOMECCANICA_2026-03-01_ELITE_S_C_E_UNDER_23": {
     "raceid": "179352",
@@ -20390,8 +20390,8 @@
         "km": "89"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.3213,
+    "lng": 10.65922
   },
   "42_TROFEO_VALLONCINI_ERNESTO_A_M_TROFEO_COMUNE_DI_PASSIRANO_2026-03-15_ESORDIENTI_1_ANNO": {
     "raceid": "179355",
@@ -20420,8 +20420,8 @@
         "km": "25,80"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61356,
+    "lng": 10.07216
   },
   "42_TROFEO_VALLONCINI_ERNESTO_A_M_TROFEO_COMUNE_DI_PASSIRANO_2026-03-15_ESORDIENTI_2_ANNO": {
     "raceid": "179355",
@@ -20450,8 +20450,8 @@
         "km": "25,80"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61356,
+    "lng": 10.07216
   },
   "2_GP_CADELBOSCO_DI_SOPRA_2026-03-22_ALLIEVI": {
     "raceid": "179381",
@@ -20480,8 +20480,8 @@
         "km": "52.650"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.76332,
+    "lng": 10.59518
   },
   "2_GP_CADELBOSCO_DI_SOPRA_2026-03-22_ESORDIENTI_1_ANNO": {
     "raceid": "179381",
@@ -20510,8 +20510,8 @@
         "km": "52.650"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.76332,
+    "lng": 10.59518
   },
   "2_GP_CADELBOSCO_DI_SOPRA_2026-03-22_ESORDIENTI_2_ANNO": {
     "raceid": "179381",
@@ -20540,8 +20540,8 @@
         "km": "52.650"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.76332,
+    "lng": 10.59518
   },
   "51_GRAN_PREMIO_CITTA_DI_MONSELICE_2026-03-22_ESORDIENTI_1_ANNO": {
     "raceid": "179574",
@@ -20570,8 +20570,8 @@
         "km": "28,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.22855,
+    "lng": 11.73944
   },
   "51_GRAN_PREMIO_CITTA_DI_MONSELICE_2026-03-22_ESORDIENTI_2_ANNO": {
     "raceid": "179574",
@@ -20600,8 +20600,8 @@
         "km": "28,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.22855,
+    "lng": 11.73944
   },
   "15_TROFEO_VINI_TERRE_GAIE_19_M_O_G_SELLA_A_M_26_MEMO_2026-03-22_DONNE_ALLIEVE": {
     "raceid": "179754",
@@ -20630,8 +20630,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.32788,
+    "lng": 11.64329
   },
   "15_TROFEO_VINI_TERRE_GAIE_19_M_O_G_SELLA_A_M_26_MEMO_2026-03-22_DONNE_ESORDIENTI": {
     "raceid": "179754",
@@ -20660,8 +20660,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.32788,
+    "lng": 11.64329
   },
   "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_JUNIORES": {
     "raceid": "180265",
@@ -20690,8 +20690,8 @@
         "km": "80,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.03244,
+    "lng": 10.11363
   },
   "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ESORDIENTI_1_ANNO": {
     "raceid": "180265",
@@ -20720,8 +20720,8 @@
         "km": "80,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.03244,
+    "lng": 10.11363
   },
   "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ESORDIENTI_2_ANNO": {
     "raceid": "180265",
@@ -20750,8 +20750,8 @@
         "km": "80,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.03244,
+    "lng": 10.11363
   },
   "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_ESORDIENTI_1_ANNO": {
     "raceid": "179365",
@@ -20780,8 +20780,8 @@
         "km": "25,568"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.53658,
+    "lng": 9.9408
   },
   "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_ESORDIENTI_2_ANNO": {
     "raceid": "179365",
@@ -20810,8 +20810,8 @@
         "km": "25,568"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.53658,
+    "lng": 9.9408
   },
   "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_ALLIEVI": {
     "raceid": "179365",
@@ -20840,8 +20840,8 @@
         "km": "25,568"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.53658,
+    "lng": 9.9408
   },
   "GP_FIORITURA_2026-03-29_DONNE_JUNIORES": {
     "raceid": "179384",
@@ -20870,8 +20870,8 @@
         "km": "78,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.47841,
+    "lng": 11.00909
   },
   "GP_FIORITURA_2026-03-29_ALLIEVI": {
     "raceid": "179384",
@@ -20900,8 +20900,8 @@
         "km": "78,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.47841,
+    "lng": 11.00909
   },
   "GP_FIORITURA_2026-03-29_ESORDIENTI_1_ANNO": {
     "raceid": "179384",
@@ -20930,8 +20930,8 @@
         "km": "78,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.47841,
+    "lng": 11.00909
   },
   "GP_FIORITURA_2026-03-29_ESORDIENTI_2_ANNO": {
     "raceid": "179384",
@@ -20960,8 +20960,8 @@
         "km": "78,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.47841,
+    "lng": 11.00909
   },
   "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_ESORDIENTI_1_ANNO": {
     "raceid": "179577",
@@ -20990,8 +20990,8 @@
         "km": "27,6"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.22383,
+    "lng": 11.08973
   },
   "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_ESORDIENTI_2_ANNO": {
     "raceid": "179577",
@@ -21020,8 +21020,8 @@
         "km": "27,6"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.22383,
+    "lng": 11.08973
   },
   "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_ALLIEVI": {
     "raceid": "179577",
@@ -21050,8 +21050,8 @@
         "km": "27,6"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.22383,
+    "lng": 11.08973
   },
   "MEMORIAL_BESOZZI_2026-03-29_ESORDIENTI_1_ANNO": {
     "raceid": "179989",
@@ -21080,8 +21080,8 @@
         "km": "Km 29"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.71217,
+    "lng": 8.64298
   },
   "MEMORIAL_BESOZZI_2026-03-29_ESORDIENTI_2_ANNO": {
     "raceid": "179989",
@@ -21110,8 +21110,8 @@
         "km": "Km 29"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.71217,
+    "lng": 8.64298
   },
   "15_MEM_TOMMASO_CAVORSO_23_TR_CROCE_AZZURRA_CENTRO_SANGUE_AIDO_DONATORI_ORGANI_2026-03-29_ESORDIENTI_1_ANNO": {
     "raceid": "180584",
@@ -21140,8 +21140,8 @@
         "km": "24"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.77246,
+    "lng": 11.42834
   },
   "15_MEM_TOMMASO_CAVORSO_23_TR_CROCE_AZZURRA_CENTRO_SANGUE_AIDO_DONATORI_ORGANI_2026-03-29_ESORDIENTI_2_ANNO": {
     "raceid": "180584",
@@ -21170,8 +21170,8 @@
         "km": "24"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.77246,
+    "lng": 11.42834
   },
   "PASQUALANDO_2026-04-04_JUNIORES": {
     "raceid": "179192",
@@ -21200,8 +21200,8 @@
         "km": "72,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "PASQUALANDO_2026-04-04_ELITE_S_C_E_UNDER_23": {
     "raceid": "179192",
@@ -21230,8 +21230,8 @@
         "km": "72,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "6_TROFEO_CITTA_BELLARIA_IGEA_MARINA_2026-04-04_ALLIEVI": {
     "raceid": "179388",
@@ -21410,8 +21410,8 @@
         "km": "24,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "PASQUALANDO_2026-04-05_ALLIEVI": {
     "raceid": "179194",
@@ -21440,8 +21440,8 @@
         "km": "24,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "PASQUALANDO_2026-04-05_DONNE_OPEN": {
     "raceid": "179194",
@@ -21470,8 +21470,8 @@
         "km": "24,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "46_G_P_MOSOLE_2026-04-06_ESORDIENTI_1_ANNO": {
     "raceid": "179579",
@@ -24110,8 +24110,8 @@
         "km": "23"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 42.24463,
+    "lng": 14.4829
   },
   "65_GRAN_PREMIO_A_FANTINI_2026-05-03_ALLIEVI": {
     "raceid": "179022",
@@ -24140,8 +24140,8 @@
         "km": "23"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 42.24463,
+    "lng": 14.4829
   },
   "51_G_P_LEIBALLI_CUZZUOL_2026-05-03_ESORDIENTI_1_ANNO": {
     "raceid": "179593",
@@ -24170,8 +24170,8 @@
         "km": "23"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.92308,
+    "lng": 12.336
   },
   "51_G_P_LEIBALLI_CUZZUOL_2026-05-03_ESORDIENTI_2_ANNO": {
     "raceid": "179593",
@@ -24200,8 +24200,8 @@
         "km": "23"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.92308,
+    "lng": 12.336
   },
   "3_TROFEO_GENERAL_STORE_24_G_P_ROSA_CITTA_DI_BOVOLONE_2026-05-03_DONNE_ALLIEVE": {
     "raceid": "179768",
@@ -24230,8 +24230,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.26981,
+    "lng": 11.12268
   },
   "3_TROFEO_GENERAL_STORE_24_G_P_ROSA_CITTA_DI_BOVOLONE_2026-05-03_DONNE_ESORDIENTI": {
     "raceid": "179768",
@@ -24260,8 +24260,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.26981,
+    "lng": 11.12268
   },
   "3_TROFEO_GENERAL_STORE_24_G_P_ROSA_CITTA_DI_BOVOLONE_2026-05-03_DONNE_JUNIORES": {
     "raceid": "179768",
@@ -24290,8 +24290,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.26981,
+    "lng": 11.12268
   },
   "GIORNATA_AZZURRA_DEL_CICLISMO_BRUGHERESE_CAMPIONATO_PROVINCIALE_MB_2026-05-03_ESORDIENTI_1_2_ANNO": {
     "raceid": "180839",
@@ -24320,8 +24320,8 @@
         "km": "29,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.56235,
+    "lng": 9.29989
   },
   "GIORNATA_AZZURRA_DEL_CICLISMO_BRUGHERESE_CAMPIONATO_PROVINCIALE_MB_2026-05-03_ALLIEVI": {
     "raceid": "180839",
@@ -24350,8 +24350,8 @@
         "km": "29,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.56235,
+    "lng": 9.29989
   },
   "1_COPPA_DELLE_BORGATE_2026-05-03_ESORDIENTI_1_2_ANNO": {
     "raceid": "181757",
@@ -24380,8 +24380,8 @@
         "km": "27,8 km"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.5936,
+    "lng": 8.28453
   },
   "1_COPPA_DELLE_BORGATE_2026-05-03_PROMISCUA_ALL_JUN": {
     "raceid": "181757",
@@ -24410,8 +24410,8 @@
         "km": "27,8 km"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.5936,
+    "lng": 8.28453
   },
   "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ESORDIENTI_1_ANNO": {
     "raceid": "179409",
@@ -24440,8 +24440,8 @@
         "km": "25,500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.13186,
+    "lng": 12.46351
   },
   "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ESORDIENTI_2_ANNO": {
     "raceid": "179409",
@@ -24470,8 +24470,8 @@
         "km": "25,500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.13186,
+    "lng": 12.46351
   },
   "10_GP_AMICI_DEL_CICLISMO_2026-05-10_JUNIORES": {
     "raceid": "179457",
@@ -24500,8 +24500,8 @@
         "km": "114"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.5201,
+    "lng": 10.88789
   },
   "10_GP_AMICI_DEL_CICLISMO_2026-05-10_ESORDIENTI_1_2_ANNO": {
     "raceid": "179457",
@@ -24530,8 +24530,8 @@
         "km": "114"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.5201,
+    "lng": 10.88789
   },
   "10_GP_AMICI_DEL_CICLISMO_2026-05-10_ALLIEVI": {
     "raceid": "179457",
@@ -24560,8 +24560,8 @@
         "km": "114"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.5201,
+    "lng": 10.88789
   },
   "GIORNATA_DEL_CICLISMO_2026-05-10_DONNE_ALLIEVE": {
     "raceid": "179771",
@@ -24590,8 +24590,8 @@
         "km": "50"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.83006,
+    "lng": 12.32713
   },
   "GIORNATA_DEL_CICLISMO_2026-05-10_DONNE_ESORDIENTI": {
     "raceid": "179771",
@@ -24620,8 +24620,8 @@
         "km": "50"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.83006,
+    "lng": 12.32713
   },
   "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_ESORDIENTI_1_2_ANNO": {
     "raceid": "180028",
@@ -24650,8 +24650,8 @@
         "km": "25"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61745,
+    "lng": 8.37185
   },
   "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_ALLIEVI": {
     "raceid": "180028",
@@ -24680,8 +24680,8 @@
         "km": "25"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61745,
+    "lng": 8.37185
   },
   "6_TROFEO_LA_CIVIDINA_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-05-10_ESORDIENTI_1_ANNO": {
     "raceid": "180354",
@@ -24710,8 +24710,8 @@
         "km": "32,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.08424,
+    "lng": 13.15056
   },
   "6_TROFEO_LA_CIVIDINA_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-05-10_ESORDIENTI_2_ANNO": {
     "raceid": "180354",
@@ -24740,8 +24740,8 @@
         "km": "32,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.08424,
+    "lng": 13.15056
   },
   "TR_TERME_DI_CALDIERO_AMMINISTRAZIONE_COMUNALE_DI_CALDIERO_2026-05-17_ESORDIENTI_1_ANNO": {
     "raceid": "179630",
@@ -24770,8 +24770,8 @@
         "km": "30,6"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.40334,
+    "lng": 11.17681
   },
   "TR_TERME_DI_CALDIERO_AMMINISTRAZIONE_COMUNALE_DI_CALDIERO_2026-05-17_ESORDIENTI_2_ANNO": {
     "raceid": "179630",
@@ -24800,8 +24800,8 @@
         "km": "30,6"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.40334,
+    "lng": 11.17681
   },
   "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_ESORDIENTI_1_2_ANNO": {
     "raceid": "180363",
@@ -24830,8 +24830,8 @@
         "km": "29,900"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68948,
+    "lng": 10.96174
   },
   "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_ALLIEVI": {
     "raceid": "180363",
@@ -24860,8 +24860,8 @@
         "km": "29,900"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68948,
+    "lng": 10.96174
   },
   "56_TROFEO_INDUSTRIE_E_ARTIGIANATO_RAVINA_2026-05-17_ALLIEVI": {
     "raceid": "180734",
@@ -24890,8 +24890,8 @@
         "km": "62"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.03458,
+    "lng": 11.12808
   },
   "56_TROFEO_INDUSTRIE_E_ARTIGIANATO_RAVINA_2026-05-17_ESORDIENTI_1_2_ANNO": {
     "raceid": "180734",
@@ -24920,8 +24920,8 @@
         "km": "62"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.03458,
+    "lng": 11.12808
   },
   "24_MEM_ALBERTO_COFFANI_1_PROVA_CHALLENGE_2026-05-17_DONNE_ESORDIENTI": {
     "raceid": "180850",
@@ -24950,8 +24950,8 @@
         "km": "24,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.20028,
+    "lng": 10.57938
   },
   "24_MEM_ALBERTO_COFFANI_1_PROVA_CHALLENGE_2026-05-17_DONNE_ALLIEVE": {
     "raceid": "180850",
@@ -24980,8 +24980,8 @@
         "km": "24,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.20028,
+    "lng": 10.57938
   },
   "4_TROFEO_MEMORIAL_MORI_ROSSANO_PROVA_VALIDA_CAMPIONATO_PROVINCIALE_2026-05-17_ALLIEVI": {
     "raceid": "181277",
@@ -25010,8 +25010,8 @@
         "km": "68"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.13284,
+    "lng": 10.41142
   },
   "4_TROFEO_MEMORIAL_MORI_ROSSANO_PROVA_VALIDA_CAMPIONATO_PROVINCIALE_2026-05-17_ESORDIENTI_1_2_ANNO": {
     "raceid": "181277",
@@ -25040,8 +25040,8 @@
         "km": "68"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.13284,
+    "lng": 10.41142
   },
   "COPPA_COMUNE_DI_LOIRI_PORTO_SAN_PAOLO_2026-05-17_PROMISCUA_ALL_JUN": {
     "raceid": "181761",
@@ -25070,8 +25070,8 @@
         "km": "60"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.84542,
+    "lng": 9.49408
   },
   "COPPA_COMUNE_DI_LOIRI_PORTO_SAN_PAOLO_2026-05-17_ESORDIENTI_1_2_ANNO": {
     "raceid": "181761",
@@ -25100,8 +25100,8 @@
         "km": "60"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.84542,
+    "lng": 9.49408
   },
   "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_ESORDIENTI_1_ANNO": {
     "raceid": "181996",
@@ -25130,8 +25130,8 @@
         "km": "29"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.20579,
+    "lng": 13.67122
   },
   "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_ESORDIENTI_2_ANNO": {
     "raceid": "181996",
@@ -25160,8 +25160,8 @@
         "km": "29"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.20579,
+    "lng": 13.67122
   },
   "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_ALLIEVI": {
     "raceid": "181996",
@@ -25190,8 +25190,8 @@
         "km": "29"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.20579,
+    "lng": 13.67122
   },
   "74_G_P_DELLA_GIOVENTU_2026-05-24_ESORDIENTI_1_ANNO": {
     "raceid": "179632",
@@ -25820,8 +25820,8 @@
         "km": "41,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.27008,
+    "lng": 11.87146
   },
   "44_GP_BARBARA_RANGO_2026-06-02_ESORDIENTI_2_ANNO": {
     "raceid": "179635",
@@ -25850,8 +25850,8 @@
         "km": "41,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.27008,
+    "lng": 11.87146
   },
   "41_TROFEO_CIRCOLO_ACLI_CHIARINO_7_MEMORIAL_MARIO_MARINELLI_2026-06-02_ESORDIENTI_1_ANNO": {
     "raceid": "179790",
@@ -25940,8 +25940,8 @@
         "km": "27,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.56732,
+    "lng": 8.13687
   },
   "MEMORIAL_SILVANO_BORRIONE_LINO_LAVA_E_ADRIANO_PELLA_2026-06-02_ESORDIENTI_2_ANNO": {
     "raceid": "180039",
@@ -25970,8 +25970,8 @@
         "km": "27,00"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.56732,
+    "lng": 8.13687
   },
   "2_TROFEO_CATTANEO_IMPIANTI_S_A_2026-06-02_DONNE_ESORDIENTI": {
     "raceid": "181182",
@@ -29150,8 +29150,8 @@
         "km": "34,20"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.96547,
+    "lng": 12.22203
   },
   "12_TROFEO_PREALPI_IN_ROSA_2026-07-26_DONNE_ALLIEVE": {
     "raceid": "179854",
@@ -29180,8 +29180,8 @@
         "km": "34,20"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.96547,
+    "lng": 12.22203
   },
   "12_TROFEO_PREALPI_IN_ROSA_2026-07-26_DONNE_OPEN": {
     "raceid": "179854",
@@ -29210,8 +29210,8 @@
         "km": "34,20"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.96547,
+    "lng": 12.22203
   },
   "MEMORIAL_BAROSIO_E_VAGAGGINI_2026-07-26_ESORDIENTI_1_ANNO": {
     "raceid": "182572",
@@ -29240,8 +29240,8 @@
         "km": "39,3"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.19549,
+    "lng": 9.76894
   },
   "MEMORIAL_BAROSIO_E_VAGAGGINI_2026-07-26_ESORDIENTI_2_ANNO": {
     "raceid": "182572",
@@ -29270,8 +29270,8 @@
         "km": "39,3"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.19549,
+    "lng": 9.76894
   },
   "1_MEMORIAL_NONNA_GINA_2026-07-26_ESORDIENTI_1_2_ANNO": {
     "raceid": "182661",
@@ -29300,8 +29300,8 @@
         "km": "40,8"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.33682,
+    "lng": 11.0742
   },
   "1_MEMORIAL_NONNA_GINA_2026-07-26_ALLIEVI": {
     "raceid": "182661",
@@ -29330,8 +29330,8 @@
         "km": "40,8"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.33682,
+    "lng": 11.0742
   },
   "PER_DANIELA_2026-08-02_ESORDIENTI_1_ANNO": {
     "raceid": "179657",
@@ -29360,8 +29360,8 @@
         "km": "39,960"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.90215,
+    "lng": 12.17885
   },
   "PER_DANIELA_2026-08-02_ESORDIENTI_2_ANNO": {
     "raceid": "179657",
@@ -29390,8 +29390,8 @@
         "km": "39,960"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.90215,
+    "lng": 12.17885
   },
   "TROFEO_SBG_2026-08-02_ESORDIENTI_1_ANNO": {
     "raceid": "182002",
@@ -29420,8 +29420,8 @@
         "km": "35,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.60561,
+    "lng": 10.97125
   },
   "TROFEO_SBG_2026-08-02_ESORDIENTI_2_ANNO": {
     "raceid": "182002",
@@ -29450,8 +29450,8 @@
         "km": "35,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.60561,
+    "lng": 10.97125
   },
   "TROFEO_SBG_2026-08-02_ALLIEVI": {
     "raceid": "182002",
@@ -29480,8 +29480,8 @@
         "km": "35,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.60561,
+    "lng": 10.97125
   },
   "TROFEO_SAN_GIOVANNI_GP_CICLISMO_OGGI_E_DOMANI_2026-08-02_ALLIEVI": {
     "raceid": "182656",
@@ -29510,8 +29510,8 @@
         "km": "65"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.56915,
+    "lng": 13.33301
   },
   "TROFEO_SAN_GIOVANNI_GP_CICLISMO_OGGI_E_DOMANI_2026-08-02_ESORDIENTI_1_2_ANNO": {
     "raceid": "182656",
@@ -29540,8 +29540,8 @@
         "km": "65"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.56915,
+    "lng": 13.33301
   },
   "7_TROFEO_SANTUARIO_MADONNA_DEL_BODEN_2026-08-08_DONNE_ALLIEVE": {
     "raceid": "180105",
@@ -29570,8 +29570,8 @@
         "km": "32,1"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.97077,
+    "lng": 8.41349
   },
   "7_TROFEO_SANTUARIO_MADONNA_DEL_BODEN_2026-08-08_DONNE_JUNIORES": {
     "raceid": "180105",
@@ -29600,8 +29600,8 @@
         "km": "32,1"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.97077,
+    "lng": 8.41349
   },
   "13_GRAN_PREMIO_OFFIC_BMC_E_MIB_MEM_STEFANO_E_SILVANO_BORTOLETTO_2026-08-09_ESORDIENTI_1_ANNO": {
     "raceid": "179659",
@@ -29630,8 +29630,8 @@
         "km": "38.400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.57422,
+    "lng": 12.10227
   },
   "13_GRAN_PREMIO_OFFIC_BMC_E_MIB_MEM_STEFANO_E_SILVANO_BORTOLETTO_2026-08-09_ESORDIENTI_2_ANNO": {
     "raceid": "179659",
@@ -29660,8 +29660,8 @@
         "km": "38.400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.57422,
+    "lng": 12.10227
   },
   "G_P_CITTA_DI_FONTANAFREDDA_2026-08-09_ESORDIENTI_1_ANNO": {
     "raceid": "180450",
@@ -29690,8 +29690,8 @@
         "km": "40,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.98921,
+    "lng": 12.54732
   },
   "G_P_CITTA_DI_FONTANAFREDDA_2026-08-09_ESORDIENTI_2_ANNO": {
     "raceid": "180450",
@@ -29720,8 +29720,8 @@
         "km": "40,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.98921,
+    "lng": 12.54732
   },
   "5_TROFEO_COMUNE_DI_PEGOGNAGA_2026-08-09_ESORDIENTI_1_ANNO": {
     "raceid": "181603",
@@ -29750,8 +29750,8 @@
         "km": "25:200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.99599,
+    "lng": 10.85877
   },
   "5_TROFEO_COMUNE_DI_PEGOGNAGA_2026-08-09_ESORDIENTI_2_ANNO": {
     "raceid": "181603",
@@ -29780,8 +29780,8 @@
         "km": "25:200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.99599,
+    "lng": 10.85877
   },
   "33_TROFEO_MAIONCHI_NEVIO_ALLA_MEMORIA_12_MEMORIAL_MAIONCHI_NILVIO_2026-08-09_JUNIORES": {
     "raceid": "182678",
@@ -29810,8 +29810,8 @@
         "km": "110"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.85108,
+    "lng": 10.70833
   },
   "33_TROFEO_MAIONCHI_NEVIO_ALLA_MEMORIA_12_MEMORIAL_MAIONCHI_NILVIO_2026-08-09_ALLIEVI": {
     "raceid": "182678",
@@ -29840,8 +29840,8 @@
         "km": "110"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.85108,
+    "lng": 10.70833
   },
   "25_TROFEO_SAGRA_DELLA_PATATA_ROSSA_2026-08-15_ESORDIENTI_1_ANNO": {
     "raceid": "182743",
@@ -29930,8 +29930,8 @@
         "km": "39,300"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.36143,
+    "lng": 10.83126
   },
   "TROFEO_EKOI_BODY_ENERGIE_2026-08-16_ESORDIENTI_2_ANNO": {
     "raceid": "179668",
@@ -29960,8 +29960,8 @@
         "km": "39,300"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.36143,
+    "lng": 10.83126
   },
   "TROFEO_EKOI_BODY_ENERGIE_2026-08-16_ALLIEVI": {
     "raceid": "179668",
@@ -29990,8 +29990,8 @@
         "km": "39,300"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.36143,
+    "lng": 10.83126
   },
   "INSEGUENDO_BOTTECCHIA_2026-08-23_ESORDIENTI_2_ANNO": {
     "raceid": "179602",
@@ -30020,8 +30020,8 @@
         "km": "49,36"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.58916,
+    "lng": 9.20053
   },
   "INSEGUENDO_BOTTECCHIA_2026-08-23_ESORDIENTI_1_ANNO": {
     "raceid": "179602",
@@ -30050,8 +30050,8 @@
         "km": "49,36"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.58916,
+    "lng": 9.20053
   },
   "TROFEO_SPORTING_CLUB_PETRUCCI_COSMOBIKE_2026-08-23_ESORDIENTI_1_2_ANNO": {
     "raceid": "179676",
@@ -30080,8 +30080,8 @@
         "km": "40.600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.37647,
+    "lng": 10.79593
   },
   "TROFEO_SPORTING_CLUB_PETRUCCI_COSMOBIKE_2026-08-23_ALLIEVI": {
     "raceid": "179676",
@@ -30110,8 +30110,8 @@
         "km": "40.600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.37647,
+    "lng": 10.79593
   },
   "GIORNATA_ROSA_11_GIORNATA_ROSA_2026-08-23_DONNE_ESORDIENTI": {
     "raceid": "179865",
@@ -30140,8 +30140,8 @@
         "km": "39,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66881,
+    "lng": 12.53822
   },
   "GIORNATA_ROSA_11_GIORNATA_ROSA_2026-08-23_DONNE_ALLIEVE": {
     "raceid": "179865",
@@ -30170,8 +30170,8 @@
         "km": "39,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66881,
+    "lng": 12.53822
   },
   "TROFEO_MOCAIANA_2026-08-23_ESORDIENTI_1_2_ANNO": {
     "raceid": "180764",
@@ -30200,8 +30200,8 @@
         "km": "112,800"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.37967,
+    "lng": 12.49778
   },
   "TROFEO_MOCAIANA_2026-08-23_ALLIEVI": {
     "raceid": "180764",
@@ -30230,8 +30230,8 @@
         "km": "112,800"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.37967,
+    "lng": 12.49778
   },
   "55_COPPA_CITTA_DI_FORMIGINE_2026-08-30_DONNE_ALLIEVE": {
     "raceid": "179437",
@@ -30260,8 +30260,8 @@
         "km": "61,040"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.57514,
+    "lng": 10.84703
   },
   "55_COPPA_CITTA_DI_FORMIGINE_2026-08-30_DONNE_ESORDIENTI": {
     "raceid": "179437",
@@ -30290,8 +30290,8 @@
         "km": "61,040"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.57514,
+    "lng": 10.84703
   },
   "TROFEO_SICI_2026-08-30_ESORDIENTI_1_ANNO": {
     "raceid": "179672",
@@ -30320,8 +30320,8 @@
         "km": "39,250"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.01592,
+    "lng": 11.79725
   },
   "TROFEO_SICI_2026-08-30_ESORDIENTI_2_ANNO": {
     "raceid": "179672",
@@ -30350,8 +30350,8 @@
         "km": "39,250"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.01592,
+    "lng": 11.79725
   },
   "TRITTICO_ROSA_ALTA_MARCA_TREVIGIANA_STRADA_2026-08-30_DONNE_ESORDIENTI": {
     "raceid": "179874",
@@ -30380,8 +30380,8 @@
         "km": "45,84"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.91632,
+    "lng": 12.02737
   },
   "TRITTICO_ROSA_ALTA_MARCA_TREVIGIANA_STRADA_2026-08-30_DONNE_ALLIEVE": {
     "raceid": "179874",
@@ -30410,8 +30410,8 @@
         "km": "45,84"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.91632,
+    "lng": 12.02737
   },
   "TRITTICO_ROSA_ALTA_MARCA_TREVIGIANA_STRADA_2026-08-30_DONNE_JUNIORES": {
     "raceid": "179874",
@@ -30440,8 +30440,8 @@
         "km": "45,84"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.91632,
+    "lng": 12.02737
   },
   "TROFEO_ANGELO_RICCA_2026-08-30_ESORDIENTI_1_ANNO": {
     "raceid": "180142",
@@ -30470,8 +30470,8 @@
         "km": "33,1"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.47086,
+    "lng": 7.94202
   },
   "TROFEO_ANGELO_RICCA_2026-08-30_ESORDIENTI_2_ANNO": {
     "raceid": "180142",
@@ -30500,8 +30500,8 @@
         "km": "33,1"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.47086,
+    "lng": 7.94202
   },
   "64_MEDAGLIA_D_ORO_SS_ANNUNZIATA_2026-08-30_ESORDIENTI_1_2_ANNO": {
     "raceid": "181545",
@@ -30530,8 +30530,8 @@
         "km": "37"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.68012,
+    "lng": 15.59304
   },
   "64_MEDAGLIA_D_ORO_SS_ANNUNZIATA_2026-08-30_ALLIEVI": {
     "raceid": "181545",
@@ -30560,8 +30560,8 @@
         "km": "37"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.68012,
+    "lng": 15.59304
   },
   "11_TROFEO_RICCARDO_STANGA_2026-08-30_ESORDIENTI_1_ANNO": {
     "raceid": "181611",
@@ -30650,8 +30650,8 @@
         "km": "29,75"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61193,
+    "lng": 8.85183
   },
   "10_MEMORIAL_TURCHI_ITALO_2026-08-30_ESORDIENTI_2_ANNO": {
     "raceid": "181616",
@@ -30680,8 +30680,8 @@
         "km": "29,75"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.61193,
+    "lng": 8.85183
   },
   "TROFEO_SANT_ANDREA_D_AGLIANO_COPPA_FERNANDO_ALUNNI_2026-08-30_ESORDIENTI_2_ANNO": {
     "raceid": "181991",
@@ -30710,8 +30710,8 @@
         "km": "49,850"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.05409,
+    "lng": 12.39528
   },
   "TROFEO_SANT_ANDREA_D_AGLIANO_COPPA_FERNANDO_ALUNNI_2026-08-30_ALLIEVI": {
     "raceid": "181991",
@@ -30740,8 +30740,8 @@
         "km": "49,850"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.05409,
+    "lng": 12.39528
   },
   "TROFEO_SANT_ANDREA_D_AGLIANO_COPPA_FERNANDO_ALUNNI_2026-08-30_ESORDIENTI_1_ANNO": {
     "raceid": "181991",
@@ -30770,8 +30770,8 @@
         "km": "49,850"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.05409,
+    "lng": 12.39528
   },
   "12_TROFEO_CENTRO_COMMERCIALE_MONTECATINI_2026-08-30_ESORDIENTI_1_ANNO": {
     "raceid": "182757",
@@ -30800,8 +30800,8 @@
         "km": "32,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.86136,
+    "lng": 10.7644
   },
   "12_TROFEO_CENTRO_COMMERCIALE_MONTECATINI_2026-08-30_ESORDIENTI_2_ANNO": {
     "raceid": "182757",
@@ -30830,8 +30830,8 @@
         "km": "32,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.86136,
+    "lng": 10.7644
   },
   "GP_COMUNE_DI_CASTELFR_EMILIA_2026-09-06_DONNE_ALLIEVE": {
     "raceid": "179442",
@@ -30860,8 +30860,8 @@
         "km": "65,800"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.59491,
+    "lng": 11.05288
   },
   "GP_COMUNE_DI_CASTELFR_EMILIA_2026-09-06_DONNE_ESORDIENTI": {
     "raceid": "179442",
@@ -30890,8 +30890,8 @@
         "km": "65,800"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.59491,
+    "lng": 11.05288
   },
   "14_TROFEO_A_COMBERLATO_2026-09-06_DONNE_ESORDIENTI": {
     "raceid": "179879",
@@ -30920,8 +30920,8 @@
         "km": "30.100"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.65221,
+    "lng": 11.50224
   },
   "14_TROFEO_A_COMBERLATO_2026-09-06_DONNE_ALLIEVE": {
     "raceid": "179879",
@@ -30950,8 +30950,8 @@
         "km": "30.100"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.65221,
+    "lng": 11.50224
   },
   "COPPA_SANTI_MEDICI_2026-09-06_ALLIEVI": {
     "raceid": "180289",
@@ -30980,8 +30980,8 @@
         "km": "80,40"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.78412,
+    "lng": 17.2377
   },
   "COPPA_SANTI_MEDICI_2026-09-06_ESORDIENTI_1_2_ANNO": {
     "raceid": "180289",
@@ -31010,8 +31010,8 @@
         "km": "80,40"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.78412,
+    "lng": 17.2377
   },
   "7_TROFEO_ART_COSMETIC_2026-09-06_ESORDIENTI_1_2_ANNO": {
     "raceid": "181626",
@@ -31040,8 +31040,8 @@
         "km": "96"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.49104,
+    "lng": 9.68288
   },
   "7_TROFEO_ART_COSMETIC_2026-09-06_ALLIEVI": {
     "raceid": "181626",
@@ -31070,8 +31070,8 @@
         "km": "96"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.49104,
+    "lng": 9.68288
   },
   "36_TROFEO_COMUNE_DI_CONCESIO_30_TROFEO_MADONNA_DEL_TRONTO_2026-09-06_ESORDIENTI_1_ANNO": {
     "raceid": "181629",
@@ -31160,8 +31160,8 @@
         "km": "29,4"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.35513,
+    "lng": 13.45803
   },
   "TROFEO_CRB_2026-09-06_ESORDIENTI_2_ANNO": {
     "raceid": "182595",
@@ -31190,8 +31190,8 @@
         "km": "29,4"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.35513,
+    "lng": 13.45803
   },
   "TROFEO_UNIONE_DEI_COMUNI_PARTE_MONTIS_2026-09-06_ESORDIENTI_1_2_ANNO": {
     "raceid": "182835",
@@ -31220,8 +31220,8 @@
         "km": "36"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 39.71264,
+    "lng": 8.77483
   },
   "TROFEO_UNIONE_DEI_COMUNI_PARTE_MONTIS_2026-09-06_PROMISCUA_ALL_JUN": {
     "raceid": "182835",
@@ -31250,8 +31250,8 @@
         "km": "36"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 39.71264,
+    "lng": 8.77483
   },
   "COPPA_COMUNE_DI_BERCHIDDA_2026-09-13_ESORDIENTI_1_2_ANNO": {
     "raceid": "181782",
@@ -31280,8 +31280,8 @@
         "km": "32,500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.78605,
+    "lng": 9.16428
   },
   "COPPA_COMUNE_DI_BERCHIDDA_2026-09-13_PROMISCUA_ALL_JUN": {
     "raceid": "181782",
@@ -31310,8 +31310,8 @@
         "km": "32,500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.78605,
+    "lng": 9.16428
   },
   "4_TROFEO_ZAZA_2026-09-19_ESORDIENTI_1_2_ANNO": {
     "raceid": "181645",
@@ -31340,8 +31340,8 @@
         "km": "42.55"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66414,
+    "lng": 8.89095
   },
   "4_TROFEO_ZAZA_2026-09-19_ALLIEVI": {
     "raceid": "181645",
@@ -31370,8 +31370,8 @@
         "km": "42.55"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66414,
+    "lng": 8.89095
   },
   "4_TROFEO_ZAZA_2026-09-19_JUNIORES": {
     "raceid": "181645",
@@ -31400,8 +31400,8 @@
         "km": "42.55"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66414,
+    "lng": 8.89095
   },
   "43_COPPA_CITTA_DI_TAVO_2026-09-20_ESORDIENTI_1_ANNO": {
     "raceid": "179642",
@@ -31430,8 +31430,8 @@
         "km": "28,42"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.48494,
+    "lng": 11.85713
   },
   "43_COPPA_CITTA_DI_TAVO_2026-09-20_ESORDIENTI_2_ANNO": {
     "raceid": "179642",
@@ -31460,8 +31460,8 @@
         "km": "28,42"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.48494,
+    "lng": 11.85713
   },
   "6_TROFEO_BND_BIKE_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-09-20_DONNE_ESORDIENTI": {
     "raceid": "180467",
@@ -31490,8 +31490,8 @@
         "km": "38,88"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.02063,
+    "lng": 12.86403
   },
   "40_MEMORIAL_F_VANORE_2_MEMORIAL_MIMI_FERRAIUOLO_2026-09-20_ALLIEVI": {
     "raceid": "180554",
@@ -31520,8 +31520,8 @@
         "km": "72"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.07586,
+    "lng": 14.33165
   },
   "40_MEMORIAL_F_VANORE_2_MEMORIAL_MIMI_FERRAIUOLO_2026-09-20_ESORDIENTI_1_2_ANNO": {
     "raceid": "180554",
@@ -31550,8 +31550,8 @@
         "km": "72"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.07586,
+    "lng": 14.33165
   },
   "5_TROFEO_DALLA_POSTUMIA_AL_MINCIO_3_PROVA_CHALLENGE_2026-09-20_DONNE_ESORDIENTI": {
     "raceid": "181692",
@@ -31580,8 +31580,8 @@
         "km": "39:500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.14728,
+    "lng": 10.64849
   },
   "5_TROFEO_DALLA_POSTUMIA_AL_MINCIO_3_PROVA_CHALLENGE_2026-09-20_DONNE_ALLIEVE": {
     "raceid": "181692",
@@ -31610,8 +31610,8 @@
         "km": "39:500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.14728,
+    "lng": 10.64849
   },
   "2_TROFEO_MASTANTUONI_SPORT_CITTA_DI_ROTONDI_GP_CICLISMO_OGGI_E_DOMANI_2026-09-27_ESORDIENTI_1_2_ANNO": {
     "raceid": "180269",
@@ -31640,8 +31640,8 @@
         "km": "29,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.03113,
+    "lng": 14.59672
   },
   "2_TROFEO_MASTANTUONI_SPORT_CITTA_DI_ROTONDI_GP_CICLISMO_OGGI_E_DOMANI_2026-09-27_ALLIEVI": {
     "raceid": "180269",
@@ -31670,8 +31670,8 @@
         "km": "29,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.03113,
+    "lng": 14.59672
   },
   "5_TROFEO_RICORDO_DI_ALESSIO_E_NICOLA_2026-10-04_ESORDIENTI_1_ANNO": {
     "raceid": "179684",
@@ -31700,8 +31700,8 @@
         "km": "4,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.538,
+    "lng": 12.15936
   },
   "5_TROFEO_RICORDO_DI_ALESSIO_E_NICOLA_2026-10-04_ESORDIENTI_2_ANNO": {
     "raceid": "179684",
@@ -31730,8 +31730,8 @@
         "km": "4,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.538,
+    "lng": 12.15936
   },
   "57_GP_INDUSTRIA_E_COMMERCIO_CARBONATESE_2026-10-04_ESORDIENTI_1_ANNO": {
     "raceid": "181813",
@@ -31760,8 +31760,8 @@
         "km": "40,3"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.6835,
+    "lng": 8.94007
   },
   "57_GP_INDUSTRIA_E_COMMERCIO_CARBONATESE_2026-10-04_ESORDIENTI_2_ANNO": {
     "raceid": "181813",
@@ -31790,8 +31790,8 @@
         "km": "40,3"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.6835,
+    "lng": 8.94007
   },
   "64_GP_SAN_MICHELE_2026-10-11_ESORDIENTI_1_2_ANNO": {
     "raceid": "180149",
@@ -31820,8 +31820,8 @@
         "km": null
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.70195,
+    "lng": 14.93239
   },
   "64_GP_SAN_MICHELE_2026-10-11_ALLIEVI": {
     "raceid": "180149",
@@ -31850,8 +31850,8 @@
         "km": null
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 41.70195,
+    "lng": 14.93239
   },
   "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11_ESORDIENTI_1_2_ANNO": {
     "raceid": "181784",
@@ -31865,8 +31865,8 @@
     "km": null,
     "location_str": "VIA GALLURA, 4/6, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 45.43752,
+    "lng": 9.19943
   },
   "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11_PROMISCUA_ALL_JUN": {
     "raceid": "181784",
@@ -31880,8 +31880,8 @@
     "km": null,
     "location_str": "VIA GALLURA, 4/6, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 45.43752,
+    "lng": 9.19943
   },
   "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ESORDIENTI_1_2_ANNO": {
     "raceid": "181819",
@@ -31910,8 +31910,8 @@
         "km": "30"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.119,
+    "lng": 10.5338
   },
   "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ALLIEVI": {
     "raceid": "181819",
@@ -31940,8 +31940,8 @@
         "km": "30"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.119,
+    "lng": 10.5338
   },
   "GRAN_FINALE_ROSA_ULTIMA_PROVA_DEL_TROFEO_ROSA_2026-10-11_DONNE_ALLIEVE": {
     "raceid": "182830",
@@ -31970,8 +31970,8 @@
         "km": "Km 63"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66251,
+    "lng": 8.53438
   },
   "GRAN_FINALE_ROSA_ULTIMA_PROVA_DEL_TROFEO_ROSA_2026-10-11_DONNE_ESORDIENTI": {
     "raceid": "182830",
@@ -32000,8 +32000,8 @@
         "km": "Km 63"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66251,
+    "lng": 8.53438
   },
   "TR_CITTA_DI_MONTE_S_GIOVANNI_CAMPANO_GP_CICLISMO_OGGI_E_DOMANI_2026-12-31_ALLIEVI": {
     "raceid": "179983",
@@ -32090,8 +32090,8 @@
     "km": null,
     "location_str": "VIA VINCIGUERRA 20, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 37.49661,
+    "lng": 15.08124
   },
   "SCONOSCIUTO_2026-12-31_ALLIEVI": {
     "raceid": "179983",
@@ -32120,8 +32120,8 @@
     "km": null,
     "location_str": "VIA VINCIGUERRA 20, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 37.49661,
+    "lng": 15.08124
   },
   "6_TROFEO_BND_BIKE_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-09-20_DONNE_ALLIEVE": {
     "raceid": "180467",
@@ -32150,7 +32150,7 @@
         "km": "38,88"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 46.02063,
+    "lng": 12.86403
   }
 }

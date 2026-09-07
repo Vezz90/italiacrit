@@ -2804,8 +2804,8 @@
         "km": "89"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.3213,
+    "lng": 10.65922
   },
   "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_JUNIORES": {
     "raceid": "180265",
@@ -2834,8 +2834,8 @@
         "km": "80,000"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.03244,
+    "lng": 10.11363
   },
   "GP_FIORITURA_2026-03-29_DONNE_JUNIORES": {
     "raceid": "179384",
@@ -2864,8 +2864,8 @@
         "km": "78,400"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 44.47841,
+    "lng": 11.00909
   },
   "PASQUALANDO_2026-04-04_JUNIORES": {
     "raceid": "179192",
@@ -2894,8 +2894,8 @@
         "km": "72,600"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "3_TROFEO_GENERAL_STORE_24_G_P_ROSA_CITTA_DI_BOVOLONE_2026-05-03_DONNE_JUNIORES": {
     "raceid": "179768",
@@ -2924,8 +2924,8 @@
         "km": "49,5"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.26981,
+    "lng": 11.12268
   },
   "10_GP_AMICI_DEL_CICLISMO_2026-05-10_JUNIORES": {
     "raceid": "179457",
@@ -2954,8 +2954,8 @@
         "km": "114"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.5201,
+    "lng": 10.88789
   },
   "13_MEMORIAL_GUIDO_CARTA_50_ANNI_DI_CICLISMO_A_SAN_PIETRO_IN_GU_2026-06-14_JUNIORES": {
     "raceid": "179484",
@@ -3074,8 +3074,8 @@
         "km": "32,1"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.97077,
+    "lng": 8.41349
   },
   "33_TROFEO_MAIONCHI_NEVIO_ALLA_MEMORIA_12_MEMORIAL_MAIONCHI_NILVIO_2026-08-09_JUNIORES": {
     "raceid": "182678",
@@ -3104,8 +3104,8 @@
         "km": "110"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.85108,
+    "lng": 10.70833
   },
   "TRITTICO_ROSA_ALTA_MARCA_TREVIGIANA_STRADA_2026-08-30_DONNE_JUNIORES": {
     "raceid": "179874",
@@ -3134,8 +3134,8 @@
         "km": "45,84"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.91632,
+    "lng": 12.02737
   },
   "4_TROFEO_ZAZA_2026-09-19_JUNIORES": {
     "raceid": "181645",
@@ -3164,7 +3164,7 @@
         "km": "42.55"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.66414,
+    "lng": 8.89095
   }
 }

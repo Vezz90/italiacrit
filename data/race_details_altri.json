@@ -1435,8 +1435,8 @@
         "km": "24,200"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 43.68637,
+    "lng": 10.79337
   },
   "TROFEO_CITTA_DI_GUSPINI_2026-04-12_PROMISCUA_ALL_JUN": {
     "raceid": "180987",
@@ -1585,8 +1585,8 @@
         "km": "27,8 km"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.5936,
+    "lng": 8.28453
   },
   "COPPA_COMUNE_DI_LOIRI_PORTO_SAN_PAOLO_2026-05-17_PROMISCUA_ALL_JUN": {
     "raceid": "181761",
@@ -1615,8 +1615,8 @@
         "km": "60"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.84542,
+    "lng": 9.49408
   },
   "COPPA_CITTA_DI_SERRAMANNA_2026-05-31_PROMISCUA_ALL_JUN": {
     "raceid": "181763",
@@ -1780,8 +1780,8 @@
         "km": "34,20"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 45.96547,
+    "lng": 12.22203
   },
   "TROFEO_UNIONE_DEI_COMUNI_PARTE_MONTIS_2026-09-06_PROMISCUA_ALL_JUN": {
     "raceid": "182835",
@@ -1810,8 +1810,8 @@
         "km": "36"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 39.71264,
+    "lng": 8.77483
   },
   "COPPA_COMUNE_DI_BERCHIDDA_2026-09-13_PROMISCUA_ALL_JUN": {
     "raceid": "181782",
@@ -1840,8 +1840,8 @@
         "km": "32,500"
       }
     ],
-    "lat": null,
-    "lng": null
+    "lat": 40.78605,
+    "lng": 9.16428
   },
   "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11_PROMISCUA_ALL_JUN": {
     "raceid": "181784",
@@ -1855,7 +1855,7 @@
     "km": null,
     "location_str": "VIA GALLURA, 4/6, Italia",
     "tappe": [],
-    "lat": null,
-    "lng": null
+    "lat": 45.43752,
+    "lng": 9.19943
   }
 }
