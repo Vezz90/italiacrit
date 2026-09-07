@@ -15720,7 +15720,7 @@
     "punti_totali": 219,
     "atleti": [
       "ROGERS_CAMERON",
-      "QUINTERO_OSORNO_JUAN",
+      "QUINTERO_OSORNO_DIEGO_JUAN",
       "QUINTERO_JUAN_DIEGO",
       "MILESI_NICOLAS"
     ],
@@ -15744,9 +15744,9 @@
         "gara_id": "62_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-09-06_ELI_M",
         "nome_gara": "62 GIRO DEL FRIULI VENEZIA GIULIA CLASSIFICA GENERALE",
         "data": "2026-09-06",
-        "atleta_id": "QUINTERO_OSORNO_JUAN",
+        "atleta_id": "QUINTERO_OSORNO_DIEGO_JUAN",
         "atleta_cognome": "QUINTERO OSORNO",
-        "atleta_nome": "JUAN",
+        "atleta_nome": "DIEGO JUAN",
         "posizione": 2,
         "punti_effettivi": 60,
         "moltiplicatore": 5,

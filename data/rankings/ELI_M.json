@@ -1296,9 +1296,9 @@
     "trend": 0
   },
   {
-    "atleta_id": "QUINTERO_OSORNO_JUAN",
+    "atleta_id": "QUINTERO_OSORNO_DIEGO_JUAN",
     "cognome": "QUINTERO OSORNO",
-    "nome": "JUAN",
+    "nome": "DIEGO JUAN",
     "team_id": "NETCOMPANY_INEOS_RACING_ACADEMY",
     "team_nome": "NETCOMPANY INEOS RACING ACADEMY",
     "punti": 60,
@@ -1309,7 +1309,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 82,
-    "trend": 0
+    "trend": null
   },
   {
     "atleta_id": "STEFANELLI_ANDREA",
