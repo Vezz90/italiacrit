@@ -18440,6 +18440,16 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
           // PCS-pending, non solo questa).
           const _mult = info.moltiplicatore || cal?.moltiplicatore || 1;
           const _tipo = info.tipo || cal?.tipo || '';
+          // Gare di livello PROFESSIONISTICO vero (World Tour, UCI ProSeries,
+          // Classe 1/2 Pro — riconoscibili dalla categoria di calendario, es.
+          // "GP Industria & Artigianato" categoria "UCI ProSeries", corsa da
+          // Pidcock e altri team World Tour) NON assegnano punti stagione:
+          // criterio esplicito dell'utente — "non tutti i dilettanti possono
+          // fare certe gare", non è un confronto alla pari col resto del
+          // circuito dilettantistico. Il risultato resta visibile in
+          // cronologia (posizione, gara, avversari) ma senza punteggio, come
+          // già succede per le gare estere in esteroExtra qui sotto.
+          const _isProTier = /world\s*tour|pro\s*series|classe\s*[12]\s*pro\b/i.test(cal?.categoria || '');
           return {
             data:           cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
             gara_id:        r.gara_id,
@@ -18453,9 +18463,11 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
             // FCI non scrapa ufficialmente — mostrati con un'etichetta
             // dedicata (non paragonati a un punteggio già confermato) invece
             // che uno "0" fisso che nascondeva la vittoria/piazzamento del
-            // giorno anche quando il moltiplicatore era già noto.
-            punti_effettivi: (BASEPTS[r.posizione] || 0) * _mult,
+            // giorno anche quando il moltiplicatore era già noto. Zero fisso
+            // invece per le gare di livello professionistico (vedi sopra).
+            punti_effettivi: _isProTier ? 0 : (BASEPTS[r.posizione] || 0) * _mult,
             _pcsPendingPts: true,
+            _isProTier,
           };
         })
     : [];
@@ -18502,7 +18514,11 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     const vals = italiaBar?.querySelectorAll('.athlete-stat-val');
     if (vals && vals.length === 4) {
       const add = [0, 0, 0, 0];
+      // _isProTier escluso anche qui: un piazzamento in una gara World
+      // Tour/ProSeries non è un podio "dilettantistico" da contare insieme
+      // agli altri (stesso criterio dei punti, vedi sopra).
       for (const r of garaExtra) {
+        if (r._isProTier) continue;
         if (r.posizione === 1) add[0]++;
         else if (r.posizione === 2) add[1]++;
         else if (r.posizione === 3) add[2]++;
@@ -18610,7 +18626,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts" title="Da PCS, in attesa dello scraper ufficiale FCI">${r.punti_effettivi || 0}<span style="color:var(--text-muted);font-weight:400">*</span></td>`);
+      <td class="td-pts" title="${r._isProTier ? 'Gara di livello professionistico (World Tour/ProSeries) — non assegna punti stagione' : 'Da PCS, in attesa dello scraper ufficiale FCI'}">${r._isProTier ? '—' : `${r.punti_effettivi || 0}<span style="color:var(--text-muted);font-weight:400">*</span>`}</td>`);
   }
 
   for (const r of esteroExtra) {
