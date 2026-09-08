@@ -2,38 +2,50 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 814,
+    "punti": 818,
     "vittorie": 15,
     "p1": 15,
     "p2": 12,
     "p3": 6,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 9,
     "pos": 1
   },
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 717,
+    "punti": 753,
     "vittorie": 14,
     "p1": 14,
-    "p2": 11,
+    "p2": 12,
     "p3": 6,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 7,
     "pos": 2
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 496,
+    "punti": 516,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
-    "p3": 9,
+    "p3": 10,
     "pout": 45,
     "n_atleti": 7,
     "pos": 3
+  },
+  {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 386,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 2,
+    "p3": 2,
+    "pout": 33,
+    "n_atleti": 9,
+    "pos": 4
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -45,18 +57,6 @@
     "p3": 6,
     "pout": 23,
     "n_atleti": 6,
-    "pos": 4
-  },
-  {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 378,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 2,
-    "p3": 2,
-    "pout": 32,
-    "n_atleti": 9,
     "pos": 5
   },
   {
@@ -74,33 +74,33 @@
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 306,
+    "punti": 316,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 9,
-    "pout": 23,
+    "pout": 24,
     "n_atleti": 7,
     "pos": 7
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 277,
+    "punti": 299,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 2,
-    "pout": 34,
+    "pout": 36,
     "n_atleti": 6,
     "pos": 8
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 159,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 189,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 1,
     "p3": 2,
     "pout": 10,
@@ -384,6 +384,18 @@
     "pos": 32
   },
   {
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "team_nome": "HORIZONS CYCLING CLUB",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 33
+  },
+  {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
     "team_nome": "A.S.D. CLUB CORRIDONIA S.C.",
     "punti": 1,
@@ -393,7 +405,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "ASS_CICLISTICA_REMO_CALZOLARI_ASD",
@@ -405,6 +417,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 3,
-    "pos": 34
+    "pos": 35
   }
 ]
