@@ -10,6 +10,17 @@
     "garaNome": "33° TROFEO PROLOCO"
   },
   {
+    "garaId": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 12,
+    "cognome": "RADAELLI",
+    "nome": "ELVIRA",
+    "team": "ISOLMANT - PREMAC - VITTORIA",
+    "categoria": "ELI_F",
+    "reason": "team non combacia",
+    "teamNoto": "SCONOSCIUTO",
+    "garaNome": "4° TROFEO TECAM TIPO PISTA FEMMINILE"
+  },
+  {
     "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
     "posizione": 2,
     "cognome": "RODRIGUES DOS SANTOS VICENTE",
