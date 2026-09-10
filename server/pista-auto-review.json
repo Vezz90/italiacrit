@@ -103,5 +103,67 @@
     "categoria": "JUN_M",
     "reason": "nuovo/non abbinato",
     "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+    "posizione": 6,
+    "cognome": "FOIS ANTONELLO",
+    "nome": "LUCA",
+    "team": "S.C. PATTADA",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_M",
+    "posizione": 7,
+    "cognome": "MARRAS",
+    "nome": "STEFANO",
+    "team": "ALGHERO BIKE A.S.D.",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_ES1_F",
+    "posizione": 1,
+    "cognome": "SOLLA",
+    "nome": "LINDA",
+    "team": "CRAZY WHEELS - CYCLING ACADEMY",
+    "categoria": "ES1_F",
+    "reason": "anno esordienti incerto",
+    "teamNoto": "CRAZY WHEELS - CYCLING ACADEMY",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 1,
+    "cognome": "LAI",
+    "nome": "GIUSEPPE",
+    "team": "ALGHERO BIKE A.S.D.",
+    "categoria": "JUN_M",
+    "reason": "team non combacia",
+    "teamNoto": "V.C.EMPOLI ARDARESE ASD",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 1,
+    "cognome": "FARA",
+    "nome": "ALESSANDRO",
+    "team": "S.C. FC'72",
+    "categoria": "JUN_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
+  },
+  {
+    "garaId": "2_TROFEO_FLAMINIO_SULAS_2026-09-03_JUN_M",
+    "posizione": 2,
+    "cognome": "PINTUS",
+    "nome": "GABRIELE",
+    "team": "S.C. FC'72",
+    "categoria": "JUN_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "2° TROFEO FLAMINIO SULAS"
   }
 ]
