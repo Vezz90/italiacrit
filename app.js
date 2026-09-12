@@ -13364,13 +13364,36 @@ function _ytAllRaceCandidates() {
   return out;
 }
 
+// Ricerca gara tollerante — condivisa da ytSearchGara e xpixSearchGara.
+// Prima cercava una corrispondenza ESATTA dell'intera frase digitata dentro
+// nome_gara/gara_id: si rompeva con un apostrofo mancante o "intelligente"
+// (es. gara "Coppa D'Oro" cercata come "coppa doro" o con l'apostrofo curvo
+// che il telefono inserisce da solo) e non guardava mai la categoria, quindi
+// aggiungere "allievi" alla ricerca per distinguere tra più categorie della
+// stessa gara la rompeva sempre — segnalato dal vivo ("Coppa D'Oro categoria
+// Allievi" introvabile). Ora: apostrofi/accenti tolti da entrambe le parti,
+// e ogni PAROLA della ricerca (non l'intera frase) deve comparire da
+// qualche parte in nome/id/categoria — l'ordine e i simboli non contano più.
+function _raceSearchNorm(s) {
+  return (s || '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[''`´]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+function _raceSearchMatch(query, race) {
+  const qWords = _raceSearchNorm(query).split(' ').filter(w => w.length >= 2);
+  if (!qWords.length) return false;
+  const haystack = _raceSearchNorm(`${race.nome_gara || ''} ${race.gara_id || ''} ${race.categoria || ''} ${race.genere || ''}`);
+  return qWords.every(w => haystack.includes(w));
+}
 window.ytSearchGara = (id, q) => {
   const resultsEl = document.getElementById('ytq-sr-' + id);
   if (!resultsEl) return;
   if (!q || q.length < 2) { resultsEl.innerHTML = ''; return; }
   const matches = _ytAllRaceCandidates()
-    .filter(r => (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
-              || r.gara_id.toLowerCase().includes(q.toLowerCase()))
+    .filter(r => _raceSearchMatch(q, r))
     .sort((a, b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 8);
 
@@ -13943,9 +13966,10 @@ window.xpixSearchGara = (id, q) => {
   // scrapate (stesso motivo di _xpixFindMatches sopra) — senza questo la
   // ricerca manuale non trovava comunque una gara come "Giro del Veneto
   // Elite Under23 - Prima Tappa" se non ancora scrapata (segnalato dal vivo).
+  // _raceSearchMatch (vedi ytSearchGara) tollera apostrofi/accenti diversi
+  // e cerca anche nella categoria, non solo nel nome.
   const matches = _ytAllRaceCandidates()
-    .filter(r => (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
-              || r.gara_id.toLowerCase().includes(q.toLowerCase()))
+    .filter(r => _raceSearchMatch(q, r))
     .sort((a, b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 8);
   resultsEl.innerHTML = matches.map(r => {
