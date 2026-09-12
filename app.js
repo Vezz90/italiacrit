@@ -13556,15 +13556,13 @@ function _xpixScore(albumName, race) {
 }
 
 function _xpixFindMatches(albumName, maxResults = 12) {
-  const races = (globalData?.resultsRaw || []);
-  const seen = new Set();
-  // Deduplica per gara_id COMPLETO (ES1 ed ES2 restano opzioni distinte)
-  const unique = races.filter(r => {
-    if (seen.has(r.gara_id)) return false;
-    seen.add(r.gara_id);
-    return true;
-  });
-  const matches = unique
+  // _ytAllRaceCandidates() include anche le gare di CALENDARIO non ancora
+  // scrapate — un fotografo pubblica l'album spesso PRIMA che la FCI
+  // pubblichi i risultati (es. "Giro del Veneto Elite Under23 - Prima Tappa"
+  // introvabile nel selettore perché non ancora scrapata, segnalato dal
+  // vivo). Stessa funzione già usata per i video YouTube, per non duplicare
+  // la stessa logica due volte.
+  const matches = _ytAllRaceCandidates()
     .map(r => ({ race: r, score: _xpixScore(albumName, r) }))
     .filter(x => x.score > 0.12)
     .sort((a, b) => b.score - a.score)
@@ -13908,14 +13906,13 @@ window.xpixSearchGara = (id, q) => {
   const resultsEl = document.getElementById('xpixq-sr-' + id);
   if (!resultsEl) return;
   if (!q || q.length < 2) { resultsEl.innerHTML = ''; return; }
-  const seen = new Set();
-  const matches = (globalData?.resultsRaw || [])
-    .filter(r => {
-      if (seen.has(r.gara_id)) return false;
-      seen.add(r.gara_id);
-      return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
-          || r.gara_id.toLowerCase().includes(q.toLowerCase());
-    })
+  // _ytAllRaceCandidates() include anche le gare di calendario non ancora
+  // scrapate (stesso motivo di _xpixFindMatches sopra) — senza questo la
+  // ricerca manuale non trovava comunque una gara come "Giro del Veneto
+  // Elite Under23 - Prima Tappa" se non ancora scrapata (segnalato dal vivo).
+  const matches = _ytAllRaceCandidates()
+    .filter(r => (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
+              || r.gara_id.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 8);
   resultsEl.innerHTML = matches.map(r => {
