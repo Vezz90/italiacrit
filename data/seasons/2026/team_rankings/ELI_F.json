@@ -26,12 +26,12 @@
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 452,
+    "punti": 469,
     "vittorie": 6,
     "p1": 6,
     "p2": 5,
     "p3": 5,
-    "pout": 20,
+    "pout": 24,
     "n_atleti": 9,
     "pos": 3
   },
@@ -50,12 +50,12 @@
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 363,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 388,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 9,
     "p3": 1,
-    "pout": 15,
+    "pout": 17,
     "n_atleti": 9,
     "pos": 5
   },
@@ -98,12 +98,12 @@
   {
     "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 235,
+    "punti": 237,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 4,
     "pos": 9
   },
@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "TOYOTA_VALENCIA_SAV",
+    "team_nome": "TOYOTA VALENCIA SAV",
+    "punti": 115,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 19
+  },
+  {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
     "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
     "punti": 111,
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "NEXETIS_TEAM",
@@ -237,18 +249,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 20
-  },
-  {
-    "team_id": "TOYOTA_VALENCIA_SAV",
-    "team_nome": "TOYOTA VALENCIA SAV",
-    "punti": 103,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 21
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 60,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 25
+  },
+  {
     "team_id": "AG_INSURANCE_SOUDAL",
     "team_nome": "AG INSURANCE SOUDAL",
     "punti": 54,
@@ -296,18 +308,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "n_atleti": 3,
-    "pos": 25
-  },
-  {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 50,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
     "n_atleti": 3,
     "pos": 26
   },
