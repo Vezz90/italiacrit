@@ -14,14 +14,26 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 436,
+    "punti": 441,
     "vittorie": 0,
     "p1": 0,
     "p2": 6,
     "p3": 5,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 6,
     "pos": 2
+  },
+  {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 435,
+    "vittorie": 12,
+    "p1": 12,
+    "p2": 5,
+    "p3": 5,
+    "pout": 22,
+    "n_atleti": 5,
+    "pos": 3
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -33,39 +45,27 @@
     "p3": 11,
     "pout": 15,
     "n_atleti": 5,
-    "pos": 3
-  },
-  {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 420,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 5,
-    "p3": 5,
-    "pout": 22,
-    "n_atleti": 5,
     "pos": 4
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 339,
+    "punti": 340,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 4,
-    "pout": 37,
+    "pout": 38,
     "n_atleti": 7,
     "pos": 5
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 322,
+    "punti": 334,
     "vittorie": 5,
     "p1": 5,
-    "p2": 7,
+    "p2": 8,
     "p3": 5,
     "pout": 14,
     "n_atleti": 4,
@@ -98,12 +98,12 @@
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 186,
+    "punti": 194,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
     "p3": 3,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 2,
     "pos": 9
   },
@@ -218,11 +218,11 @@
   {
     "team_id": "BLU_TEAM",
     "team_nome": "BLU TEAM",
-    "punti": 67,
+    "punti": 77,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
-    "p3": 0,
+    "p3": 1,
     "pout": 6,
     "n_atleti": 1,
     "pos": 19
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "ACS_OLIMPIC_ZARNESTI",
+    "team_nome": "ACS OLIMPIC ZARNESTI",
+    "punti": 47,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 22
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 47,
@@ -261,7 +273,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
@@ -272,18 +284,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 23
-  },
-  {
-    "team_id": "ACS_OLIMPIC_ZARNESTI",
-    "team_nome": "ACS OLIMPIC ZARNESTI",
-    "punti": 44,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 2,
     "n_atleti": 1,
     "pos": 24
   },
@@ -480,6 +480,18 @@
     "pos": 40
   },
   {
+    "team_id": "PERUTNINA_PTUJ",
+    "team_nome": "PERUTNINA PTUJ",
+    "punti": 20,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 41
+  },
+  {
     "team_id": "EMILIA_ROMAGNA",
     "team_nome": "EMILIA ROMAGNA",
     "punti": 20,
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "SAMABIKE",
@@ -501,18 +513,6 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 42
-  },
-  {
-    "team_id": "PERUTNINA_PTUJ",
-    "team_nome": "PERUTNINA PTUJ",
-    "punti": 16,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 2,
     "pos": 43
   },
   {
@@ -552,6 +552,18 @@
     "pos": 46
   },
   {
+    "team_id": "KK_TROPOVCI",
+    "team_nome": "KK TROPOVCI",
+    "punti": 14,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 47
+  },
+  {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "team_nome": "FOLIGNO CYCLING TEAM ASD",
     "punti": 13,
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "PIEMONTE",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
@@ -621,18 +633,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 0,
-    "pos": 52
-  },
-  {
-    "team_id": "KK_TROPOVCI",
-    "team_nome": "KK TROPOVCI",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 53
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "GERMANIA",
+    "team_nome": "GERMANIA",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 60
+  },
+  {
     "team_id": "LIGURIA",
     "team_nome": "LIGURIA",
     "punti": 0,
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "VALLE_D_AOSTA",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "MARCHE",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "FRIULI_VENEZIA_GIULIA",
@@ -753,6 +765,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   }
 ]
