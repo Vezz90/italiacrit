@@ -157,7 +157,7 @@
     "p3": 1,
     "pout": 16,
     "pos": 10,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "CINQUEGRANI_FEDERICA",
@@ -173,7 +173,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 11,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NERI_SARA",
@@ -221,7 +221,7 @@
     "p3": 4,
     "pout": 10,
     "pos": 14,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "MOINO_ALESSIA",
@@ -237,7 +237,7 @@
     "p3": 1,
     "pout": 17,
     "pos": 15,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CAMPOLI_AURORA",
@@ -477,7 +477,7 @@
     "p3": 1,
     "pout": 10,
     "pos": 30,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "LOMBARDI_ELEONORA",
@@ -493,7 +493,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 31,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOTTARO_SOFIA",
