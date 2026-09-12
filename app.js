@@ -2353,6 +2353,23 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     for (const r of (resultsRaw || [])) {
       if (!r.gara_id) continue;
       if (!isStageRace && r.data !== cal.data) continue;
+      // Il "cronoprologo" (cronometro individuale che apre una gara a tappe)
+      // è per convenzione la PRIMA TAPPA della corsa, ma la FCI lo pubblica
+      // nei risultati con quel nome, senza nessuna parola in comune con
+      // "Prima Tappa" del calendario — nessun confronto testuale qui sotto
+      // può quindi mai collegarli, e il risultato finiva sulla riga
+      // "ombrello" della gara (data di partenza, generica) invece che sulla
+      // sua vera Prima Tappa, lasciando foto/media già caricati sulla Prima
+      // Tappa scollegati dal proprio risultato (segnalato dal vivo: "34°
+      // Giro del Veneto" — Cronoprologo vinto da Boscaro il 10/09, stessa
+      // data della Prima Tappa di calendario, ma mai agganciato lì). Priorità
+      // massima (tier -2): scatta SOLO se la data combacia esattamente E
+      // questa riga di calendario è esplicitamente "Prima Tappa" — nessun
+      // margine per falsi incroci con altre gare a tappe.
+      if (isStageRace && r.data === cal.data && /prima_tappa/i.test(cal.id) && /cronoprologo|prologo/i.test(r.gara_id)) {
+        _setGaraToCalId(r.gara_id, cal.id, -2);
+        continue;
+      }
       // Pre-check per categoria (priorità massima, tier -1) — vedi commento
       // sopra su _calGroupsByNomeData: scatta solo per gruppi ambigui, mai
       // sulla riga orfana, e richiede comunque una base testuale minimamente
@@ -2378,9 +2395,25 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
           }
         }
       }
-      if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
+      // Per le gare a tappe, la riga "ombrello" (senza suffisso tappa, es.
+      // "34 Giro del Veneto") è SEMPRE un prefisso letterale di ogni
+      // risultato di OGNI tappa — quindi combacia a tier 0 esattamente come
+      // la tappa giusta e specifica (es. "34 Giro del Veneto Seconda
+      // Tappa"), a parità di livello. Senza uno spareggio qui, vinceva
+      // sempre la prima incontrata nell'array (quasi sempre l'ombrello,
+      // registrata per prima) anche quando esisteva già una corrispondenza
+      // ESATTA e più specifica per la tappa giusta (segnalato dal vivo: "34
+      // Giro del Veneto Seconda Tappa" finita sull'ombrello nonostante il
+      // proprio gara_id combaciasse alla lettera). A differenza degli
+      // spareggi "preferisci il nome più lungo" già provati e scartati sui
+      // tier deboli (2/4, dove creavano falsi incroci — vedi Pascoli), qui è
+      // sicuro: entrambi i candidati sono GIÀ prefissi letterali ESATTI del
+      // gara_id, quindi il più lungo è per definizione il più specifico,
+      // mai un incrocio con una gara diversa.
+      const _tier0 = 0 - Math.min(calBase.length, 999) / 1e6;
+      if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
-      if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, 0); continue; }
+      if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
       const garaNorm = _nm2Res(garaBase);
       // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
       // ha una data diversa) — questo però riapre la porta a incroci tra
