@@ -21815,7 +21815,26 @@ async function renderGara(gara_id) {
   const primaryGaraId = gara_id;
 
   const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id);
-  const results = resultsRaw.filter(r => r.gara_id === gara_id).sort((a,b) => a.posizione - b.posizione);
+  let results = resultsRaw.filter(r => r.gara_id === gara_id);
+  // Fallback quando gara_id è l'id "nudo" di calendario (senza suffisso
+  // categoria, es. "..._TERZA_TAPPA_2026-09-11") invece del gara_id nativo
+  // coi risultati (es. "..._TERZA_TAPPA_PRIMA_SEMITAPPA_2026-09-11_JUN_M")
+  // — succede SEMPRE quando si arriva da una scheda tappa (_stageTabsHtml
+  // sopra, che collega sempre l'id di calendario delle tappe sorelle, mai
+  // il gara_id nativo specifico) o da un link/URL diretto all'id di
+  // calendario. Il confronto sopra è ESATTO apposta (per non mescolare
+  // categorie diverse quando gara_id è già uno specifico id nativo, il caso
+  // normale) — ma quando non trova NULLA, recupera tutti i risultati il cui
+  // garaToCalId/toCalId punta comunque a questo stesso id di calendario:
+  // segnalato dal vivo con screenshot, "Nessuna classifica disponibile" su
+  // una tappa che invece i risultati li aveva già (Giro della Lunigiana,
+  // Terza Tappa divisa dalla FCI in due semitappe con gara_id propri).
+  if (!results.length) {
+    const _g2cLocal = globalData?.garaToCalId || {};
+    const _toCalIdLocal = id => id.replace(/_[A-Z0-9]+_[MF]$/, '');
+    results = resultsRaw.filter(r => r.gara_id && (_g2cLocal[r.gara_id] === gara_id || _toCalIdLocal(r.gara_id) === gara_id));
+  }
+  results = results.sort((a,b) => a.posizione - b.posizione);
   // Esposto per il tag picker di foto/video (vedi _rpBindRiderSearch) —
   // un partecipante non ancora nel ranking FCI di stagione (registrazione
   // recente, o comunque assente da globalData.athletes per qualsiasi
