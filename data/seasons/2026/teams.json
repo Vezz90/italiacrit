@@ -9151,7 +9151,7 @@
   "SOLME_OLMO_ARVEDI": {
     "id": "SOLME_OLMO_ARVEDI",
     "nome": "SOLME - OLMO - ARVEDI",
-    "punti_totali": 568,
+    "punti_totali": 554,
     "atleti": [
       "BUDA_SIMONE",
       "FIORIN_MATTEO",
@@ -9202,9 +9202,9 @@
         "atleta_cognome": "FIORIN",
         "atleta_nome": "MATTEO",
         "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -9217,9 +9217,9 @@
         "atleta_cognome": "BUDA",
         "atleta_nome": "SIMONE",
         "posizione": 9,
-        "punti_effettivi": 4,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -9796,13 +9796,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 568
+      "ELI_M": 554
     }
   },
   "BELTRAMI_TSA_TRE_COLLI": {
     "id": "BELTRAMI_TSA_TRE_COLLI",
     "nome": "BELTRAMI TSA TRE COLLI",
-    "punti_totali": 667,
+    "punti_totali": 663,
     "atleti": [
       "BASSO_DAVIDE",
       "PERANI_RICCARDO",
@@ -9840,9 +9840,9 @@
         "atleta_cognome": "PERANI",
         "atleta_nome": "RICCARDO",
         "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -10599,13 +10599,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 667
+      "ELI_M": 663
     }
   },
   "A_S_D_S_C_PADOVANI": {
     "id": "A_S_D_S_C_PADOVANI",
     "nome": "A.S.D. S.C. PADOVANI",
-    "punti_totali": 1259,
+    "punti_totali": 1233,
     "atleti": [
       "SCARSO_ANDREA",
       "BOSCARO_DAVIDE",
@@ -10645,9 +10645,9 @@
         "atleta_cognome": "BOSCARO",
         "atleta_nome": "DAVIDE",
         "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -10660,9 +10660,9 @@
         "atleta_cognome": "QUAGLIA",
         "atleta_nome": "TOMMASO",
         "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -10675,9 +10675,9 @@
         "atleta_cognome": "BOZZOLA",
         "atleta_nome": "MIRKO",
         "posizione": 6,
-        "punti_effettivi": 10,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -11764,13 +11764,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1259
+      "ELI_M": 1233
     }
   },
   "ASD_G_C_SISSIO_TEAM": {
     "id": "ASD_G_C_SISSIO_TEAM",
     "nome": "ASD G.C. SISSIO TEAM",
-    "punti_totali": 127,
+    "punti_totali": 124,
     "atleti": [
       "GODIZZI_ANDREA",
       "ROSA_LUCA",
@@ -11805,9 +11805,9 @@
         "atleta_cognome": "GODIZZI",
         "atleta_nome": "ANDREA",
         "posizione": 8,
-        "punti_effettivi": 6,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -12069,7 +12069,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 127
+      "ELI_M": 124
     }
   },
   "GALLINA_LUCCHINI_ECOTEK": {
@@ -12711,7 +12711,7 @@
   "GOODSHOP_YOYOGURT": {
     "id": "GOODSHOP_YOYOGURT",
     "nome": "GOODSHOP YOYOGURT",
-    "punti_totali": 65,
+    "punti_totali": 64,
     "atleti": [
       "BALDINI_MATTEO",
       "FRIGO_NICOLAS",
@@ -12742,9 +12742,9 @@
         "atleta_cognome": "BALDINI",
         "atleta_nome": "MATTEO",
         "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -12886,13 +12886,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 65
+      "ELI_M": 64
     }
   },
   "UCRAINA": {
     "id": "UCRAINA",
     "nome": "UCRAINA",
-    "punti_totali": 131,
+    "punti_totali": 121,
     "atleti": [
       "ZOZULIA_ANDRII",
       "CHYZHYKOV_HMORHII",
@@ -12910,9 +12910,9 @@
         "atleta_cognome": "ZOZULIA",
         "atleta_nome": "ANDRII",
         "posizione": 3,
-        "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -13114,14 +13114,14 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 129,
+      "ELI_M": 119,
       "JUN_M": 2
     }
   },
   "V_C_MENDRISIO": {
     "id": "V_C_MENDRISIO",
     "nome": "V.C.MENDRISIO",
-    "punti_totali": 201,
+    "punti_totali": 193,
     "atleti": [
       "BANFI_FABIO",
       "VIGNATI_JORDAN",
@@ -13139,9 +13139,9 @@
         "atleta_cognome": "BANFI",
         "atleta_nome": "FABIO",
         "posizione": 4,
-        "punti_effettivi": 16,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -13403,7 +13403,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 201
+      "ELI_M": 193
     }
   },
   "BFT_BURZONI": {
