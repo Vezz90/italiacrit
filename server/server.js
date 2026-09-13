@@ -1214,6 +1214,16 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   try {
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
+      // SDK Anthropic installato (0.26.1) è precedente all'introduzione dei
+      // blocchi "thinking" nella risposta — claude-sonnet-5 ragiona SEMPRE
+      // in automatico anche senza chiederlo (a differenza dei modelli
+      // precedenti), e un SDK così vecchio non sa deserializzare quel tipo
+      // di blocco: la chiamata falliva prima ancora di restituire una
+      // risposta, silenziosamente (catch a monte), per OGNI generazione AI
+      // del sito da quando il model id è stato aggiornato. Disattivarlo
+      // esplicitamente (supportato su questo modello) evita il problema
+      // senza dover aggiornare l'SDK in produzione.
+      thinking: { type: 'disabled' },
       max_tokens: 700,
       messages: [{
         role: 'user',
@@ -4758,6 +4768,16 @@ app.post('/api/gara/:garaId/ocr-arrivo', requireAuth, async (req, res) => {
 
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
+      // SDK Anthropic installato (0.26.1) è precedente all'introduzione dei
+      // blocchi "thinking" nella risposta — claude-sonnet-5 ragiona SEMPRE
+      // in automatico anche senza chiederlo (a differenza dei modelli
+      // precedenti), e un SDK così vecchio non sa deserializzare quel tipo
+      // di blocco: la chiamata falliva prima ancora di restituire una
+      // risposta, silenziosamente (catch a monte), per OGNI generazione AI
+      // del sito da quando il model id è stato aggiornato. Disattivarlo
+      // esplicitamente (supportato su questo modello) evita il problema
+      // senza dover aggiornare l'SDK in produzione.
+      thinking: { type: 'disabled' },
       max_tokens: 2000,
       messages: [{
         role: 'user',
@@ -7623,6 +7643,16 @@ async function generateSocialCaption({ nome_gara, winner_label, category, winner
   try {
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
+      // SDK Anthropic installato (0.26.1) è precedente all'introduzione dei
+      // blocchi "thinking" nella risposta — claude-sonnet-5 ragiona SEMPRE
+      // in automatico anche senza chiederlo (a differenza dei modelli
+      // precedenti), e un SDK così vecchio non sa deserializzare quel tipo
+      // di blocco: la chiamata falliva prima ancora di restituire una
+      // risposta, silenziosamente (catch a monte), per OGNI generazione AI
+      // del sito da quando il model id è stato aggiornato. Disattivarlo
+      // esplicitamente (supportato su questo modello) evita il problema
+      // senza dover aggiornare l'SDK in produzione.
+      thinking: { type: 'disabled' },
       max_tokens: 300,
       messages: [{
         role: 'user',
@@ -10128,6 +10158,16 @@ ${contextParts.join('\n\n')}
 
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
+      // SDK Anthropic installato (0.26.1) è precedente all'introduzione dei
+      // blocchi "thinking" nella risposta — claude-sonnet-5 ragiona SEMPRE
+      // in automatico anche senza chiederlo (a differenza dei modelli
+      // precedenti), e un SDK così vecchio non sa deserializzare quel tipo
+      // di blocco: la chiamata falliva prima ancora di restituire una
+      // risposta, silenziosamente (catch a monte), per OGNI generazione AI
+      // del sito da quando il model id è stato aggiornato. Disattivarlo
+      // esplicitamente (supportato su questo modello) evita il problema
+      // senza dover aggiornare l'SDK in produzione.
+      thinking: { type: 'disabled' },
       max_tokens: 600,
       system: systemPrompt,
       messages
