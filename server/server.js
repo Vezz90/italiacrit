@@ -310,7 +310,10 @@ async function _watermarkPhoto(buffer, text) {
     const W = meta.width || 1200, H = meta.height || 800;
     const fs2 = Math.max(14, Math.round(W * 0.022));
     const pad = Math.round(fs2 * 0.9);
-    const label = `© ${text} · italiacyclingstats.com`;
+    // Solo il nome del fotografo, senza il nome del sito accanto — con
+    // entrambi sembrava che il fotografo lavorasse per noi, quando invece è
+    // semplicemente la fonte della foto (richiesta esplicita dell'utente).
+    const label = `© ${text}`;
     const boxW = Math.min(W - pad, Math.round(label.length * fs2 * 0.56) + pad * 2);
     const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
       <rect x="${W - boxW - pad}" y="${H - fs2 - pad * 2}" width="${boxW}" height="${fs2 + pad}" rx="4" fill="rgba(0,0,0,0.45)"/>
