@@ -448,11 +448,11 @@ const DATA_DIR       = path.join(__dirname, '..', 'data');
 const SITE_URL       = 'https://italiacyclingstats.com';
 const SUPABASE_PUB   = 'https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public';
 const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
-// Bump ad ogni modifica alla generazione della grafica OG (buildGaraResultOverlaySvg,
+// Bump ad ogni modifica alla generazione della grafica OG (buildGaraSplitPanelSvg,
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 8;
+const OG_IMG_VERSION = 9;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -813,6 +813,49 @@ async function _buildGaraNarrative(id, cal, resultsRawIn) {
   return { results, raceName, raceDate, date, luogo, top3, podiumLines, title, desc };
 }
 
+// Trova la voce di calendario per un gara_id nativo scrapato dalla FCI.
+// I due tentativi esatti (id identico, o id nativo senza suffisso categoria)
+// coprono la maggioranza dei casi — ma quando il titolo UFFICIALE della gara
+// è lungo (sponsor, sottotitoli: "33 Trieste Gorizia Udine INSIEME NELLO
+// SPORT - 3 Prova Challenge Ciclismo e Turismo"), il calendario lo registra
+// per intero nel proprio id, mentre il gara_id nativo scrapato usa spesso
+// solo la parte iniziale ("33_TRIESTE_GORIZIA_UDINE_..._AL_M") — nessuno dei
+// due tentativi esatti può mai combaciare (la differenza è a metà stringa,
+// non un prefisso/suffisso). Il terzo tentativo cerca, tra le voci di
+// calendario della STESSA data, quella il cui "base" testuale (senza
+// numero edizione/data) è in prefisso reciproco col base del gara_id nativo
+// — stessa idea del cascade di matching completo lato client (garaToCalId),
+// ma alleggerita per questo uso (niente categoria/edizione fine, che qui non
+// servono: basta risalire al TITOLO/FOTO giusti). Richiede un prefisso
+// comune di almeno 8 caratteri per restare sicuro. Senza questo, sia il
+// titolo mostrato ai bot social sia la ricerca della foto caricata a mano
+// (taggata quasi sempre con l'id di calendario) fallivano silenziosamente
+// per queste gare — segnalato dal vivo (33° Trieste-Gorizia-Udine: foto
+// caricata mai trovata, condivisione Facebook caduta sul video come ripiego).
+function _findCalEntryForNativeGaraId(calendar, garaId) {
+  let cal = (calendar || []).find(g => g.id === garaId);
+  if (cal) return cal;
+  const bareId = garaId.replace(/_[A-Z0-9]+_[MF]$/, '');
+  cal = (calendar || []).find(g => g.id === bareId);
+  if (cal) return cal;
+  const dateM = garaId.match(/(\d{4}-\d{2}-\d{2})/);
+  const date = dateM ? dateM[1] : null;
+  if (!date) return null;
+  const base = bareId.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, '');
+  if (!base) return null;
+  let best = null, bestLen = 0;
+  for (const g of (calendar || [])) {
+    if (g.data !== date || !g.id) continue;
+    const gBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, '');
+    if (!gBase) continue;
+    if (gBase.startsWith(base) || base.startsWith(gBase)) {
+      const len = Math.min(gBase.length, base.length);
+      if (len > bestLen) { bestLen = len; best = g; }
+    }
+  }
+  return bestLen >= 8 ? best : null;
+}
+
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
   // Un utente vero (non un bot) che apre questo URL — tipicamente cliccando
@@ -830,8 +873,7 @@ app.get('/og/gara/:id', async (req, res) => {
   // condividendo dalla pagina di una gara già scrapata l'id nell'URL è quello
   // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
   // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
-  const cal = (calRaw || []).find(g => g.id === id)
-    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const cal = _findCalEntryForNativeGaraId(calRaw, id);
   const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw);
   // Inoltra la regolazione manuale foto (se presente in questo stesso URL,
   // vedi window.shareOnFacebook in app.js) all'URL dell'immagine — è questo
@@ -1198,8 +1240,7 @@ async function _fetchCalAndResultsFor(id) {
     readDataJsonFromGH('calendar.json'),
     readDataJsonFromGH('results_raw.json'),
   ]);
-  const cal = (calRaw || []).find(g => g.id === id)
-    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const cal = _findCalEntryForNativeGaraId(calRaw, id);
   return { cal, resultsRaw };
 }
 
@@ -10430,33 +10471,59 @@ async function _photoToOgPng(filename, adjust) {
   } catch { return null; }
 }
 
-// Card "risultati su foto intera" (stile indicato dall'utente, riferimento
-// una grafica del sito "domestique"): a differenza del vecchio pannello a
-// metà larghezza (buildGaraPodiumPanelSvg, sostituito da questa), la foto
-// riempie TUTTO il riquadro 1200x630 e i risultati sono sovrapposti in
-// basso su un degradé scuro — la foto resta protagonista, il testo è
-// leggibile solo dove serve. Fino a 5 posizioni (non solo il podio):
-// più contenuto reale nella stessa card, come nel riferimento.
-function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], credit = null }) {
-  const W = 1200, H = 630, pad = 56;
-  const medal = ['#f5c400', '#dadada', '#cd7f32'];
+// Card "divisa" (scelta dall'utente tra 3 alternative mostrate a confronto):
+// foto INTERA a sinistra, mai coperta da testo, + pannello scuro pieno a
+// destra con titolo/podio. Sostituisce la vecchia card a foto intera con
+// overlay in degradé (buildGaraResultOverlaySvg, rimossa): su una foto
+// podio — soggetto quasi sempre nei due terzi BASSI dell'inquadratura — il
+// degradé cadeva esattamente sopra i volti e il podio stesso, la parte più
+// importante della foto. Il pannello, superficie piatta indipendente dal
+// contenuto della foto, resta sempre leggibile qualunque sia la
+// composizione dello scatto (non richiede nessuna analisi del soggetto).
+// Genera solo il pannello destro (panelW x H): la foto a sinistra viene
+// preparata e composta separatamente, vedi _photoSplitOgPng sotto.
+function buildGaraSplitPanelSvg({ catLabel, title, subtitle, results = [], credit = null, panelW, H }) {
+  const pad = 40;
+  const innerW = panelW - pad * 2;
+  const ink = '#f4f5f7', muted = 'rgba(244,245,247,.6)', accent = '#e8001d';
+  const medal = ['#f0b400', '#c9ccd1', '#c17a3f'];
   const titleStr = (title || '').toUpperCase();
-  const fitTitle = (text, base, maxW) => {
-    const est = (text || '').length * base * 0.6;
-    return est > maxW ? Math.max(30, Math.floor(base * maxW / est)) : base;
-  };
-  const fsT = fitTitle(titleStr, 56, W - pad * 2);
 
-  // Solo podio (3): con meno righe c'è più spazio verticale per riga,
-  // sfruttato per nomi/team più grandi invece di stiparne fino a 5.
-  const n = Math.min(results.length, 3);
-  const rowsTop = 344, rowsBottom = H - 66;
-  const rH = Math.round((rowsBottom - rowsTop) / n);
-  const nameX = pad + 62, teamX = 760, timeX = W - pad;
-  const fitRow = (text, base, avail) => {
-    const est = (text || '').length * base * 0.58;
-    return est > avail ? Math.max(13, Math.floor(base * avail / est)) : base;
+  // Wrap multi-riga (non solo il taglio-a-una-riga di prima): il pannello è
+  // più stretto della vecchia card a piena larghezza, un titolo lungo ci
+  // deve stare su 2-3 righe leggibili invece di essere tagliato a metà parola.
+  const wrap = (text, fontSize, maxW, maxLines) => {
+    const maxChars = Math.max(6, Math.floor(maxW / (fontSize * 0.56)));
+    const words = text.split(/\s+/).filter(Boolean);
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      const test = cur ? cur + ' ' + w : w;
+      if (test.length > maxChars && cur) { lines.push(cur); cur = w; } else cur = test;
+    }
+    if (cur) lines.push(cur);
+    if (lines.length > maxLines) {
+      lines.length = maxLines;
+      lines[maxLines - 1] = lines[maxLines - 1].slice(0, -3) + '...';
+    }
+    return lines;
   };
+  const titleFs = titleStr.length > 34 ? 27 : 31;
+  const titleLines = wrap(titleStr, titleFs, innerW, 3);
+
+  const eyebrowY = 54;
+  const titleStartY = 92;
+  const titleLineH = titleFs + 7;
+  const titleHtml = titleLines.map((line, i) =>
+    `<text x="${pad}" y="${titleStartY + i * titleLineH}" font-family="Arial,Helvetica,sans-serif" font-size="${titleFs}" font-weight="800" fill="${ink}">${_ogEsc(line)}</text>`
+  ).join('');
+  const afterTitleY = titleStartY + (titleLines.length - 1) * titleLineH;
+  const subtitleY = afterTitleY + 34;
+
+  const rowsTop = subtitleY + 26;
+  const rowsBottom = H - 78;
+  const n = Math.min(results.length, 3);
+  const rH = Math.round((rowsBottom - rowsTop) / n);
 
   const rows3 = results.slice(0, n).map((r) => {
     const isTeamResult = !r.atleta_id && (r.team || r.team_id);
@@ -10464,72 +10531,73 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], cr
     const team = isTeamResult ? '' : (r.team || '');
     return { r, name, team };
   });
-  // Un'unica dimensione team per tutte le righe (non una a riga, che le
-  // rendeva disomogenee) — calcolata sul nome team più lungo dei tre, così
-  // restano leggibili e della stessa grandezza tra loro.
-  const teamAvail = timeX - 130 - teamX - 20;
-  const teamSizeShared = rows3.reduce((min, { team }) => Math.min(min, fitRow(team, 21, teamAvail)), 21);
+  const fitRow = (text, base, avail) => {
+    const est = (text || '').length * base * 0.58;
+    return est > avail ? Math.max(12, Math.floor(base * avail / est)) : base;
+  };
+  const nameFs = rows3.reduce((min, { name }) => Math.min(min, fitRow(name, 22, innerW - 54)), 22);
+  const teamFs = rows3.reduce((min, { team }) => Math.min(min, fitRow(team, 14.5, innerW - 54)), 14.5);
+  const badgeSize = 30;
 
   const rowsHtml = rows3.map(({ r, name, team }, i) => {
-    const ry = rowsTop + i * rH, mid = ry + rH / 2;
-    const nameSize = fitRow(name, 26, teamX - nameX - 20);
+    const ry = rowsTop + i * rH;
+    const mid = ry + rH / 2;
     const time = r.posizione === 1 ? (r.tempo || '') : _ogFmtGap(r.tempo);
     return `
-    <line x1="${pad}" y1="${ry}" x2="${W - pad}" y2="${ry}" stroke="rgba(255,255,255,0.15)"/>
-    <rect x="${pad}" y="${mid - 17}" width="44" height="34" rx="6" fill="${medal[i]}"/>
-    <text x="${pad + 22}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" fill="#1a1200" text-anchor="middle">${String(r.posizione ?? i + 1).padStart(2, '0')}</text>
-    <text x="${nameX}" y="${mid + 8}" font-family="Arial,Helvetica,sans-serif" font-size="${nameSize}" font-weight="800" fill="#fff">${_ogEsc(name)}</text>
-    ${team ? `<text x="${teamX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSizeShared}" font-weight="700" fill="rgba(255,255,255,0.65)">${_ogEsc(team)}</text>` : ''}
-    ${time ? `<text x="${timeX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="rgba(255,255,255,0.85)" text-anchor="end">${_ogEsc(time)}</text>` : ''}`;
+    ${i > 0 ? `<line x1="${pad}" y1="${ry}" x2="${panelW - pad}" y2="${ry}" stroke="rgba(255,255,255,0.12)"/>` : ''}
+    <rect x="${pad}" y="${mid - badgeSize / 2 - 9}" width="${badgeSize}" height="${badgeSize}" rx="6" fill="${medal[i]}"/>
+    <text x="${pad + badgeSize / 2}" y="${mid - badgeSize / 2 - 9 + badgeSize / 2 + 5}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="800" fill="#1a1200" text-anchor="middle">${String(r.posizione ?? i + 1).padStart(2, '0')}</text>
+    <text x="${pad + badgeSize + 16}" y="${mid - 9}" font-family="Arial,Helvetica,sans-serif" font-size="${nameFs}" font-weight="800" fill="${ink}">${_ogEsc(name)}</text>
+    ${team ? `<text x="${pad + badgeSize + 16}" y="${mid + 14}" font-family="Arial,Helvetica,sans-serif" font-size="${teamFs}" font-weight="600" fill="${muted}">${_ogEsc(team)}</text>` : ''}
+    ${time ? `<text x="${panelW - pad}" y="${mid - 9}" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="${muted}" text-anchor="end">${_ogEsc(time)}</text>` : ''}`;
   }).join('');
 
+  // Logo e nome sito ingranditi e a piena opacità (prima erano piccoli e
+  // sbiaditi al 55% — richiesta esplicita dell'utente "voglio che si legga
+  // meglio il sito e il logo" dopo aver visto le 3 card a confronto).
   const logo = _ogLogoDataUri();
+  const logoH = 34, logoW = 102;
+  const footerLogoY = H - 58;
+  const siteTextY = H - 58 + logoH / 2 + 6;
 
-  return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="ovg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="38%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="60%" stop-color="#000" stop-opacity="0.72"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.94"/>
-    </linearGradient>
-  </defs>
-  <rect width="${W}" height="${H}" fill="url(#ovg)"/>
-  <text x="${pad}" y="248" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="800" letter-spacing="2" fill="#e8001d">RISULTATI${catLabel ? ' · ' + _ogEsc((catLabel||'').toUpperCase()) : ''}</text>
-  <text x="${pad}" y="304" font-family="Arial,Helvetica,sans-serif" font-size="${fsT}" font-weight="800" fill="#fff">${_ogEsc(titleStr.slice(0, 48))}</text>
-  ${subtitle ? `<text x="${pad}" y="336" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="rgba(255,255,255,0.55)">${_ogEsc(subtitle)}</text>` : ''}
+  return `<svg width="${panelW}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="${panelW}" height="${H}" fill="#181c24"/>
+  <text x="${pad}" y="${eyebrowY}" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="800" letter-spacing="2" fill="${accent}">RISULTATI${catLabel ? ' · ' + _ogEsc((catLabel || '').toUpperCase()) : ''}</text>
+  ${titleHtml}
+  ${subtitle ? `<text x="${pad}" y="${subtitleY}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="${muted}">${_ogEsc(subtitle)}</text>` : ''}
   ${rowsHtml}
-  <line x1="${pad}" y1="${rowsBottom}" x2="${W - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.15)"/>
-  ${logo ? `<image href="${logo}" x="${pad}" y="${H - 46}" width="72" height="24" preserveAspectRatio="xMidYMid meet"/>` : ''}
-  <text x="${pad + (logo ? 84 : 0)}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)">italiacyclingstats.com</text>
+  <line x1="${pad}" y1="${rowsBottom}" x2="${panelW - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.14)"/>
+  ${logo ? `<image href="${logo}" x="${pad}" y="${footerLogoY}" width="${logoW}" height="${logoH}" preserveAspectRatio="xMidYMid meet"/>` : ''}
+  <text x="${pad + (logo ? logoW + 14 : 0)}" y="${siteTextY}" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="${ink}">italiacyclingstats.com</text>
   ${/xpix/i.test(credit || '') && _ogXpixLogoDataUri()
-    ? `<image href="${_ogXpixLogoDataUri()}" x="${W - pad - 130}" y="${H - 44}" width="24" height="24" preserveAspectRatio="xMidYMid meet"/>
-       <text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">xpix.it</text>`
-    : credit ? `<text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">📷 ${_ogEsc(credit)}</text>` : ''}
+    ? `<image href="${_ogXpixLogoDataUri()}" x="${pad}" y="${H - 30}" width="16" height="16" preserveAspectRatio="xMidYMid meet"/>
+       <text x="${pad + 20}" y="${H - 17}" font-family="Arial,Helvetica,sans-serif" font-size="12.5" font-weight="600" fill="${muted}">xpix.it</text>`
+    : credit ? `<text x="${pad}" y="${H - 14}" font-family="Arial,Helvetica,sans-serif" font-size="12.5" font-weight="600" fill="${muted}">📷 ${_ogEsc(credit)}</text>` : ''}
 </svg>`;
 }
 
-// Compone la foto a piena pagina (1200x630, ritaglio "cover") con l'overlay
-// testo sopra — stessa strategia di ritaglio (_ogCropPosition) del resto
-// delle card gara, ma senza dividere la foto a metà: rimane protagonista.
-async function _photoOverlayOgPng(filename, overlaySvg, adjust) {
+// Compone la card divisa: foto (ritaglio "cover", stessa strategia
+// _ogCropPosition del resto delle card gara) a sinistra larga photoW, e il
+// pannello SVG (buildGaraSplitPanelSvg) a destra — su un canvas 1200xH pieno
+// del colore del pannello, così i due pezzi si accostano senza cuciture.
+async function _photoSplitOgPng(filename, panelSvg, adjust, photoW, H) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
     const sharp = require('sharp');
+    const W = 1200;
     const meta = await sharp(raw).metadata();
-    // photoBuf resta PNG (senza perdita) qui: un .toBuffer() "nudo" dopo
-    // resize() riesporta nel formato sorgente (spesso JPEG) alla qualità di
-    // default di sharp (80) — un primo giro di compressione invisibile PRIMA
-    // ancora di comporre l'overlay e ri-comprimere in JPEG finale, che
-    // sommato rendeva le foto condivise su FB visibilmente più sgranate.
     const photoPipeline = _hasImgAdjust(adjust)
-      ? sharp(raw).extract(_photoCoverRectServer(meta, 1200, 630, adjust)).resize(1200, 630, { fit: 'fill' })
-      : sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) });
-    const photoBuf = await photoPipeline.png({ compressionLevel: 6 }).toBuffer();
-    const overlayBuf = await sharp(Buffer.from(overlaySvg)).png().toBuffer();
-    return await sharp(photoBuf).composite([{ input: overlayBuf, left: 0, top: 0 }]).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
-  } catch (e) { console.error('[og-image] overlay card fallita:', e.message); return null; }
+      ? sharp(raw).extract(_photoCoverRectServer(meta, photoW, H, adjust)).resize(photoW, H, { fit: 'fill' })
+      : sharp(raw).resize(photoW, H, { fit: 'cover', position: _ogCropPosition(meta) });
+    const photoBuf = await photoPipeline.jpeg({ quality: 95, mozjpeg: true }).toBuffer();
+    const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
+    const base = sharp({ create: { width: W, height: H, channels: 3, background: '#181c24' } });
+    return await base.composite([
+      { input: photoBuf, left: 0, top: 0 },
+      { input: panelBuf, left: photoW, top: 0 },
+    ]).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
+  } catch (e) { console.error('[og-image] split card fallita:', e.message); return null; }
 }
 
 // Ritaglia una foto in un cerchio (avatar), stesso trattamento della card
@@ -10582,11 +10650,11 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
     // trovata — l'overlay va quindi ricostruito per ogni fonte tentata
     // (foto caricata a mano → xpix.it → ciclismo.info), non una volta sola
     // prima di sapere quale foto si userà davvero.
+    const SPLIT_PHOTO_W = 690, SPLIT_H = 630;
     const toImage = async (photoSource, credit) => {
-      const overlaySvg = results.length ? buildGaraResultOverlaySvg({ catLabel, title, subtitle, results, credit }) : null;
-      return overlaySvg
-        ? (await _photoOverlayOgPng(photoSource, overlaySvg, adjust)) || (await _photoToOgPng(photoSource, adjust))
-        : await _photoToOgPng(photoSource, adjust);
+      if (!results.length) return await _photoToOgPng(photoSource, adjust);
+      const panelSvg = buildGaraSplitPanelSvg({ catLabel, title, subtitle, results, credit, panelW: 1200 - SPLIT_PHOTO_W, H: SPLIT_H });
+      return (await _photoSplitOgPng(photoSource, panelSvg, adjust, SPLIT_PHOTO_W, SPLIT_H)) || (await _photoToOgPng(photoSource, adjust));
     };
 
     // Alias id calendario (cal.id, quando trovato): il nome ESTESO ufficiale
@@ -10652,8 +10720,7 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
   // condivide dalla pagina di una gara già scrapata (id suffissato).
   const calendar = (await readDataJsonFromGH('calendar.json')) || [];
-  const cal = calendar.find(g => g.id === garaId)
-    || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const cal = _findCalEntryForNativeGaraId(calendar, garaId);
   const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
 
   // Risultati caricati una sola volta, riusati sia per il pannello podio
