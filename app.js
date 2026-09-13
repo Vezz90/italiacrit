@@ -2263,6 +2263,24 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     .replace(/(?<![A-Z0-9])GARA_UNICA(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])PROVA_VALIDA(?![A-Z0-9])/g,'')
     .replace(/_+/g,'_').replace(/^_|_$/g,'');
+  // Vocabolario "rumore" per il tier 5 (ultimissimo fallback, in fondo al
+  // cascade): confronto per SOMIGLIANZA DI PAROLE tra i nomi LEGGIBILI
+  // (cal.nome vs r.nome_gara), non gli id — trova un gruppo enorme di gare
+  // già scrapate ma mai agganciate al calendario perché il titolo cambia
+  // sponsor/dicitura tra le due fonti (es. calendario "GP Città di Nonantola"
+  // vs risultato "Gran Premio Città di Nonantola", o "11° Memorial Mario
+  // Bianco_Prova Valida Camp. Provinciale" vs "11 Memorial Mario Bianco") —
+  // un controllo diretto sull'audit richiesto dall'utente ("secondo me la
+  // maggior parte sono già state inserite") ha confermato che questo È il
+  // caso per centinaia di gare segnalate come "senza risultati". Le parole
+  // qui sotto sono titoli/formule talmente comuni da non discriminare NULLA
+  // (compaiono ovunque) — toglierle lascia solo le parole che identificano
+  // davvero la gara specifica (nomi propri, luoghi, sponsor).
+  const _FUZZY_NOISE = new Set(['TROFEO','MEMORIAL','GRAN','PREMIO','GP','COPPA','CAMPIONATO','REGIONALE','PROVINCIALE','ITALIANO','NAZIONALE','PROVA','VALIDA','UNICA','CITTA',"CITTA'",'GARA','EDIZIONE','ASSEGNAZIONE','MAGLIA','ANNO','DEL','DELLA','DELLO','DEGLI','DELLE','DEI','DI','IL','LO','LA','LE','GLI','UN','UNA','ED','MEM','TR','AM']);
+  const _fuzzyWords = s => new Set(String(s || '').toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9]+/g, ' ').split(' ')
+    .filter(w => w.length >= 3 && !_FUZZY_NOISE.has(w) && !/^(19|20)\d{2}$/.test(w)));
   // Confronto categoria condiviso da tutti i punti del cascade che ne fanno
   // uso (pre-check per categoria, spareggio tra match testuali a pari
   // livello) — gestisce anche il caso in cui la riga calendario accorpa più
@@ -2324,11 +2342,16 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // gara_id e data bastano a determinare questi valori: NON dipendono
   // dall'atleta/riga specifica, quindi si calcolano una volta sola.
   const _garaDerivedCache = new Map();
-  const _garaDerived = (garaId) => {
+  const _garaDerived = (r) => {
+    const garaId = r.gara_id;
     let d = _garaDerivedCache.get(garaId);
     if (d) return d;
     const garaBase = garaId.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
-    d = { garaBase, garaNorm: _nm2Res(garaBase), garaEd: (garaId.match(/^(\d+)_/)||[])[1] };
+    d = {
+      garaBase, garaNorm: _nm2Res(garaBase), garaEd: (garaId.match(/^(\d+)_/)||[])[1],
+      // Solo per il tier 5 (fuzzy) più sotto — vedi commento su _fuzzyWords.
+      fuzzyWords: _fuzzyWords(r.nome_gara),
+    };
     _garaDerivedCache.set(garaId, d);
     return d;
   };
@@ -2381,6 +2404,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // PREMIO, rimozione DELLA/DEL/REGIONE come rumore, ecc.).
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
+    // Solo per il tier 5 (fuzzy) più sotto.
+    const calFuzzyWords = _fuzzyWords(cal.nome);
     // Gruppo calendario (nome+data) a cui appartiene questa riga, e se è
     // "ambiguo" (più categorie diverse per lo stesso nome+data) — vedi
     // commento su _calGroupsByNomeData sopra. isBareInGroup individua la
@@ -2427,7 +2452,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
         const _rCode = getRankingFileCode(r);
         const _rLbl = _rCode ? catLabel(_rCode).trim().toLowerCase() : '';
         if (_calCatMatch(_calCatLbl, _rLbl)) {
-          const _garaNormChk = _garaDerived(r.gara_id).garaNorm;
+          const _garaNormChk = _garaDerived(r).garaNorm;
           // Soglia coerente con quella del fallback generico più sotto (18
           // caratteri, non 10): una gara diversa che condivide solo un
           // pezzo di nome generico ("GRAN_PREMIO_...", 12 caratteri) con
@@ -2459,7 +2484,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // mai un incrocio con una gara diversa.
       const _tier0 = 0 - Math.min(calBase.length, 999) / 1e6;
       if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
-      const { garaBase, garaNorm, garaEd: _garaEdCached } = _garaDerived(r.gara_id);
+      const { garaBase, garaNorm, garaEd: _garaEdCached, fuzzyWords: _garaFuzzyWords } = _garaDerived(r);
       if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
       // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
       // ha una data diversa) — questo però riapre la porta a incroci tra
@@ -2559,6 +2584,39 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (!isStageRace) {
         let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
         if (i>=18 && calNorm2.slice(0,i).endsWith('_')) _setGaraToCalId(r.gara_id, cal.id, 4);
+      }
+      // Tier 5 (ultimissimo fallback): somiglianza di PAROLE tra i nomi
+      // leggibili (cal.nome vs r.nome_gara — vedi _fuzzyWords sopra), non
+      // gli id. Nasce da un controllo esplicito richiesto dal vivo
+      // dall'utente ("secondo me la maggior parte [delle gare 'senza
+      // risultati'] sono già state inserite"): un audit sull'intera
+      // stagione ha confermato che centinaia di gare già scrapate restavano
+      // "in attesa" solo perché calendario e risultati usano una dicitura
+      // diversa dello stesso titolo (es. calendario "GP Città di Nonantola"
+      // vs risultato "Gran Premio Città di Nonantola" — "GP"→"GRAN_PREMIO"
+      // di _nm2 non basta da solo perché il resto del nome/id non combacia
+      // comunque a un tier più forte). Guardie strette per non introdurre
+      // incroci nuovi (questo tier è l'ULTIMO: può solo aggiungere un
+      // aggancio dove PRIMA non ce n'era nessuno, mai sovrascriverne uno
+      // migliore già trovato sopra):
+      // - stessa data ESATTA, anche per le gare a tappe (qui il bypass data
+      //   è troppo rischioso sommato a un confronto già debole);
+      // - categoria dell'atleta nota e compatibile con quella della riga di
+      //   calendario (mai un incrocio Uomini/Donne o età diversa per pura
+      //   coincidenza di parole — es. "20° Strade Bianche" Elite vs "12
+      //   Strade Bianche Donne", stesse 2 parole ma gare diverse);
+      // - numero di edizione, se noto da entrambe le parti, deve combaciare;
+      // - almeno 2 parole significative in comune, che coprano almeno il
+      //   60% dell'insieme più piccolo (soglia scelta verificando a campione
+      //   decine di coppie reali trovate dall'audit).
+      if (r.data === cal.data && calFuzzyWords.size && _garaFuzzyWords.size && _calCatMatch(_calCatLbl, _rLbl2)) {
+        const _fuzzyEdOk = !calEd2 || !garaEd || calEd2 === garaEd;
+        if (_fuzzyEdOk) {
+          let _fInter = 0;
+          for (const w of calFuzzyWords) if (_garaFuzzyWords.has(w)) _fInter++;
+          const _fDenom = Math.min(calFuzzyWords.size, _garaFuzzyWords.size);
+          if (_fInter >= 2 && _fDenom && _fInter / _fDenom >= 0.6) _setGaraToCalId(r.gara_id, cal.id, 5);
+        }
       }
     }
   }
