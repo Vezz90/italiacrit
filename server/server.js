@@ -731,7 +731,45 @@ async function _pcsResultsFallback(id, cal) {
   } catch (e) { console.warn('[pcs-results-fallback] error:', e.message); return []; }
 }
 
-async function _buildGaraNarrative(id, cal, resultsRawIn) {
+// Risultati REALI di una gara, con fallback in cascata: (1) match esatto sul
+// gara_id ricevuto — caso normale, id nativo FCI; (2) risultati PCS non
+// ancora scrapati dalla FCI (_pcsResultsFallback); (3) risultati nativi FCI
+// pubblicati sotto un gara_id DIVERSO da quello ricevuto, quando l'id
+// ricevuto è quello del CALENDARIO — es. una gara dal titolo "combinato"
+// con più sotto-gare unite da " - " ("4° Trofeo Nuova Flem - 3° Memorial
+// Franco Abate - 55° Coppa San Martino"): la FCI pubblica i risultati solo
+// sotto il nome dell'ULTIMA sotto-gara ("55_COPPA_SAN_MARTINO..."), un
+// gara_id che non condivide alcun prefisso/suffisso testuale con l'id di
+// calendario. Senza questo terzo tentativo, condividendo con l'id di
+// calendario (l'unico noto prima che i risultati esistano, o quello usato
+// dal sito come canonico) titolo/foto/podio restavano sempre vuoti anche a
+// risultati pubblicati, perché né (1) né (2) cercano mai sotto un gara_id
+// diverso da quello ricevuto — segnalato dal vivo con screenshot (55° Coppa
+// San Martino: card di condivisione senza foto né podio nonostante
+// entrambi già presenti sul sito). Cerca, tra i gara_id nativi della STESSA
+// data del calendario, quello il cui abbinamento (stessa identica funzione
+// _findCalEntryForNativeGaraId usata per il verso opposto) punta esattamente
+// a questa riga di calendario.
+async function _resolveGaraResults(id, cal, resultsRaw, calendar) {
+  let results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
+  if (!results.length) results = await _pcsResultsFallback(id, cal);
+  if (!results.length && cal?.id === id && cal?.data && calendar) {
+    const candidates = new Set();
+    for (const r of (resultsRaw || [])) {
+      if (r.gara_id && r.gara_id !== id && r.data === cal.data) candidates.add(r.gara_id);
+    }
+    for (const nid of candidates) {
+      const matched = _findCalEntryForNativeGaraId(calendar, nid);
+      if (matched && matched.id === cal.id) {
+        results = (resultsRaw || []).filter(r => r.gara_id === nid).sort((a, b) => a.posizione - b.posizione);
+        break;
+      }
+    }
+  }
+  return results;
+}
+
+async function _buildGaraNarrative(id, cal, resultsRawIn, calendar) {
   // Stesso gap già risolto per l'immagine OG (_generateGaraOgBuffer) e per il
   // testo di condivisione lato client (_mkShare in app.js): una gara i cui
   // risultati sono per ora solo inseriti a mano o importati da PCS (non
@@ -741,8 +779,7 @@ async function _buildGaraNarrative(id, cal, resultsRawIn) {
   // senza il nome del vincitore mentre quelli vecchi (gara scrapata dalla
   // FCI) ce l'hanno.
   let resultsRaw = await _mergeManualResultsIntoRaw(resultsRawIn);
-  let results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
-  if (!results.length) results = await _pcsResultsFallback(id, cal);
+  let results = await _resolveGaraResults(id, cal, resultsRaw, calendar);
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
   const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
@@ -936,7 +973,7 @@ app.get('/og/gara/:id', async (req, res) => {
   // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
   // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
   const cal = _findCalEntryForNativeGaraId(calRaw, id);
-  const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw);
+  const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
   // Inoltra la regolazione manuale foto (se presente in questo stesso URL,
   // vedi window.shareOnFacebook in app.js) all'URL dell'immagine — è questo
   // il campo che Facebook legge davvero per l'anteprima.
@@ -1100,18 +1137,18 @@ async function _mergeManualResultsIntoRaw(resultsRaw) {
   }
 }
 
-async function _buildGaraAiCaption(id, cal, resultsRawIn) {
+async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
   const ai = getAnthropic();
   if (!ai) return null;
   const corr = await _getResultCorrections().catch(() => ({ garaCorrections: {}, risultatoCorrections: {}, excludedIds: new Set() }));
   let resultsRaw = _applyResultCorrections(resultsRawIn, corr);
   resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
-  let results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
-  // Stesso fallback PCS di _buildGaraNarrative (vedi lì per il contesto):
-  // senza questo, il testo AI per una gara solo-PCS restava sempre null,
-  // e la richiesta ripiombava ogni volta sul fallback a template invece
-  // di generare/salvare un vero racconto (podio/hashtag) come le altre gare.
-  if (!results.length) results = await _pcsResultsFallback(id, cal);
+  // Stesso fallback (PCS + gara_id nativo diverso per titoli "combinati") di
+  // _buildGaraNarrative — vedi _resolveGaraResults per il contesto completo:
+  // senza questo, il testo AI per una gara solo-PCS o dal titolo combinato
+  // restava sempre null, e la richiesta ripiombava ogni volta sul fallback
+  // a template invece di generare/salvare un vero racconto.
+  let results = await _resolveGaraResults(id, cal, resultsRaw, calendar);
   if (!results.length) return null;
   const winner = results[0];
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
@@ -1274,7 +1311,7 @@ ${JSON.stringify(dataForPrompt, null, 2)}`
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
+    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
 
     // Stessa tabella persistita usata dalla pagina gara pubblica (vedi
     // _generateAndStoreGaraNarrative) — un'unica generazione serve sia il
@@ -1294,7 +1331,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
 
     // Fallback: narrazione deterministica a template, senza chiamata AI
     // (Claude non configurato, o la generazione è fallita).
-    const { raceName, date, luogo, top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw);
+    const { raceName, date, luogo, top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw, calendar);
     const credit = await _photoCreditFor(id, cal).catch(() => null);
     const lines = [
       raceName.toUpperCase(),
@@ -1332,7 +1369,7 @@ async function _fetchCalAndResultsFor(id) {
     readDataJsonFromGH('results_raw.json'),
   ]);
   const cal = _findCalEntryForNativeGaraId(calRaw, id);
-  return { cal, resultsRaw };
+  return { cal, resultsRaw, calendar: calRaw };
 }
 
 // Genera (Claude) e persiste (tabella gara_narratives) il racconto di una
@@ -1340,8 +1377,8 @@ async function _fetchCalAndResultsFor(id) {
 // gara, sweep periodico (vedi _sweepGaraNarratives), backfill storico, e il
 // bottone admin "Rigenera" nella modale di condivisione social.
 async function _generateAndStoreGaraNarrative(id) {
-  const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
-  const text = await _buildGaraAiCaption(id, cal, resultsRaw);
+  const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
+  const text = await _buildGaraAiCaption(id, cal, resultsRaw, calendar);
   if (text) await queries.upsertGaraNarrative(id, text);
   return text;
 }
@@ -1421,8 +1458,8 @@ app.get('/api/gara-narrative/:id', async (req, res) => {
     // background per la prossima visita, intanto risponde subito con la
     // vecchia narrazione a template così la pagina non resta mai vuota.
     _scheduleGaraNarrativeGeneration(id);
-    const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
-    const { top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw);
+    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
+    const { top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw, calendar);
     const text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
     res.json({ text, top3, podiumText: podiumLines.join(' '), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -10911,13 +10948,16 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // Cycling Tipo Pista".
   let resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
   resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
-  let results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
-  // Stesso fallback usato per titolo/testo (vedi _buildGaraNarrative): senza
-  // questo, una gara con risultati per ora solo importati da PCS mostrava la
-  // foto ma MAI il pannello podio accanto (results.length gate più sotto in
-  // _generateGaraPhotoBuffer) — segnalato dal vivo condividendo il Giro FVG
-  // Terza Tappa: foto sì, "primi 3" no.
-  if (!results.length) results = await _pcsResultsFallback(garaId, cal);
+  // Stesso fallback usato per titolo/testo — vedi _resolveGaraResults: senza
+  // il fallback PCS, una gara con risultati per ora solo importati da PCS
+  // mostrava la foto ma MAI il pannello podio accanto (results.length gate
+  // più sotto in _generateGaraPhotoBuffer) — segnalato dal vivo condividendo
+  // il Giro FVG Terza Tappa: foto sì, "primi 3" no. Senza il terzo fallback
+  // (gara_id nativo diverso da quello ricevuto), una gara dal titolo
+  // "combinato" condivisa con l'id di calendario restava sempre senza foto
+  // NÉ podio anche a risultati pubblicati — segnalato dal vivo (55° Coppa
+  // San Martino).
+  let results = await _resolveGaraResults(garaId, cal, resultsRaw, calendar);
   const first = results[0];
   const catCode = first ? _rankingCodeFromRow(first) : null;
   const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
@@ -11156,7 +11196,7 @@ async function _getHeadMetaFor(type, id) {
       readDataJsonFromGH('calendar.json'), readDataJsonFromGH('results_raw.json'),
     ]);
     const cal = _findCalEntryForNativeGaraId(calRaw, id);
-    const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw);
+    const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
     if (!results.length && !cal) return null;
     return {
       title: `${title} | ICS`, desc,
