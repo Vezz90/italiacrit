@@ -22012,7 +22012,28 @@ async function renderGara(gara_id) {
   // categoria dello stesso evento.
   const primaryGaraId = gara_id;
 
-  const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id);
+  // Fallback in più (toCalId) rispetto a prima: quando gara_id è un id
+  // suffisso "sintetico" creato dal selettore categoria dell'inserimento
+  // manuale (_mrEffectiveGaraId, es. per una gara FCI registrata come
+  // "Donne Open" ma con più ordini d'arrivo separati per età reale) non
+  // esiste NESSUNA riga di calendario con quell'id esatto — solo quella
+  // "nuda" originale. Senza questo, calEntry restava undefined su quelle
+  // pagine (regione/tipo/ecc. mancanti) e non c'era modo di risalire
+  // all'id nudo per aggiungere un'ALTRA categoria (vedi _calBareId sotto).
+  const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id) || calendar.find(g => g.id === toCalId(gara_id));
+  // Id di calendario "nudo" da usare SEMPRE per "Aggiungi risultati"/"Da
+  // foto ordine d'arrivo" (mai il gara_id specifico della pagina corrente,
+  // che può già essere quello di UNA categoria già inserita) — altrimenti,
+  // una volta inserita la prima categoria di una gara multi-categoria
+  // ("Open" o Esordienti 1°/2° anno), riaprire il form dalla sua pagina
+  // specifica derivava di nuovo la STESSA categoria (dal suffisso ormai
+  // presente nel gara_id) e non permetteva più di sceglierne un'altra —
+  // segnalato dal vivo: "una volta inserita una categoria non mi permette
+  // di inserirne altre se non modificare quella già inserita". Passando
+  // sempre l'id nudo, _mrDeriveMeta lo rideriva da zero e ripropone il
+  // selettore categoria; la MODIFICA di una riga già inserita resta
+  // invariata (usa sempre il gara_id reale della riga, dai bottoni ✏️).
+  const _calBareId = calEntry?.id || toCalId(gara_id);
   let results = resultsRaw.filter(r => r.gara_id === gara_id);
   // Fallback quando gara_id è l'id "nudo" di calendario (senza suffisso
   // categoria, es. "..._TERZA_TAPPA_2026-09-11") invece del gara_id nativo
@@ -22110,8 +22131,8 @@ async function renderGara(gara_id) {
           ${adminEditBtn('gara', primaryGaraId)}
           ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
           ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(primaryGaraId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
         </div>
       </div>
       <div class="card" style="padding:20px 24px;margin-top:16px">
@@ -22904,8 +22925,8 @@ async function renderGara(gara_id) {
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(primaryGaraId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${_stageTabsHtml}
