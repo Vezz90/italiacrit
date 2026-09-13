@@ -4368,8 +4368,23 @@ function _levenshtein(a, b) {
 // atleta FCI con una trascrizione diversa del nome (es. nomi cirillici:
 // "ILIA" negli esiti FCI vs "ILYA" nel roster PCS). Ricostruito ad ogni
 // chiamata di _buildPcsRosterMap (già cache 90s a quel livello).
+// Parole "vuote" per il confronto a sottoinsieme sotto — un nome/cognome
+// composto ("Jose Juan", "Di Luna") non deve far fallire il match solo
+// perché contiene una preposizione o una particella che l'altra fonte non
+// riporta allo stesso modo.
+const _FCI_DUP_NOISE = new Set(['DE','DEL','DELLA','DI','DA','LA','LO','LE','Y','VAN','VON','DER','DEN']);
+function _fciDupWords(s) {
+  return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z\s]/g, ' ').split(/\s+/).filter(w => w.length >= 2 && !_FCI_DUP_NOISE.has(w));
+}
 function _buildFciFuzzyIndex(ovMap) {
   const byCognomeTeam = new Map();
+  // Indice per squadra: copre il caso in cui cognome/nome sono stati divisi
+  // nel punto SBAGLIATO (nome composto, es. "Balliana Enrico Andrea" letto
+  // come cognome "Balliana Enrico" + nome "Andrea") — un confronto per
+  // cognome ESATTO come sopra non troverebbe mai il match, perché anche il
+  // campo cognome differisce tra le due fonti, non solo il nome.
+  const byTeam = new Map();
   try {
     const p = path.join(__dirname, '..', 'data', 'athletes.json');
     const all = JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -4380,21 +4395,51 @@ function _buildFciFuzzyIndex(ovMap) {
       const key = `${a.cognome.toUpperCase()}|${teamId}`;
       if (!byCognomeTeam.has(key)) byCognomeTeam.set(key, []);
       byCognomeTeam.get(key).push((a.nome || '').toUpperCase());
+      const words = _fciDupWords(`${a.cognome} ${a.nome || ''}`);
+      if (words.length >= 2) {
+        if (!byTeam.has(teamId)) byTeam.set(teamId, []);
+        byTeam.get(teamId).push(words);
+      }
     }
   } catch {}
-  return byCognomeTeam;
+  return { byCognomeTeam, byTeam };
 }
 
 // Un candidato PCS-only è un probabile "fantasma" duplicato se esiste già
-// un atleta FCI con stesso cognome, stessa squadra, e nome a distanza di
-// edit <= 2 (soglia bassa apposta: sorelle/fratelli con stesso cognome e
-// stessa squadra sono rari ma possibili, non vogliamo scartarli).
+// un atleta FCI nella stessa squadra che è quasi certamente la stessa
+// persona, per uno di due motivi:
+// 1) stesso cognome ESATTO e nome a distanza di edit <= 2 (soglia bassa
+//    apposta: sorelle/fratelli con stesso cognome e stessa squadra sono
+//    rari ma possibili, non vogliamo scartarli) — refuso/trascrizione,
+//    es. "Marco"/"Marko";
+// 2) le parole di cognome+nome del candidato sono un SOTTOINSIEME di
+//    quelle di un atleta FCI della stessa squadra (o viceversa), almeno 2
+//    parole — copre sia un nome composto troncato ("Brandon" ⊂ "Brandon
+//    Davide") sia un cognome/nome divisi nel punto sbagliato da una delle
+//    due fonti ("Balliana Enrico"+"Andrea" vs "Balliana"+"Enrico Andrea":
+//    l'insieme di parole {Balliana,Enrico,Andrea} coincide comunque) —
+//    segnalato dal vivo con screenshot, profili "fantasma" (zero risultati
+//    propri) mai scartati perché il controllo 1) da solo non li vedeva.
 function _isLikelyFciDuplicate(fuzzyIndex, cognome, nome, teamId) {
-  if (!cognome || !nome || !teamId) return false;
-  const names = fuzzyIndex.get(`${cognome.toUpperCase()}|${teamId}`);
-  if (!names) return false;
-  const n = nome.toUpperCase();
-  return names.some(fciNome => fciNome === n || _levenshtein(fciNome, n) <= 2);
+  if (!cognome || !teamId) return false;
+  const { byCognomeTeam, byTeam } = fuzzyIndex;
+  if (nome) {
+    const names = byCognomeTeam.get(`${cognome.toUpperCase()}|${teamId}`);
+    const n = nome.toUpperCase();
+    if (names && names.some(fciNome => fciNome === n || _levenshtein(fciNome, n) <= 2)) return true;
+  }
+  const candWords = _fciDupWords(`${cognome} ${nome || ''}`);
+  if (candWords.length < 2) return false;
+  const teamList = byTeam.get(teamId);
+  if (!teamList) return false;
+  const candSet = new Set(candWords);
+  for (const fciWords of teamList) {
+    const fciSet = new Set(fciWords);
+    const shorter = candSet.size <= fciSet.size ? candSet : fciSet;
+    const longer = candSet.size <= fciSet.size ? fciSet : candSet;
+    if (shorter.size >= 2 && [...shorter].every(w => longer.has(w))) return true;
+  }
+  return false;
 }
 
 // Costruisce la mappa team_id → { nome, atleti[] } degli atleti PCS.
