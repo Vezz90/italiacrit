@@ -1318,6 +1318,42 @@ function _addExclusionDelta(atletaId, r) {
   else if (pos >= 4 && pos <= 10) d.pout++;
 }
 
+// code (es. "AL_M") -> Map<atleta_id, delta> — SPECULARE a
+// _garaExclusionAthDelta sopra, ma in aggiunta invece che in sottrazione: la
+// classifica di categoria (data/rankings/*.json) è precalcolata da una
+// pipeline Python che legge SOLO i risultati scrapati dalla FCI — un
+// risultato inserito a mano (foto ordine d'arrivo, o corridore aggiunto
+// prima che la FCI pubblichi) aggiorna la SCHEDA ATLETA (punti_totali, vedi
+// _patchAthleteTeamForManualRow) ma non tocca mai quel file, quindi non
+// compariva MAI nella classifica di stagione — segnalato dal vivo con
+// screenshot, punti manuali "spariti" dalla classifica anche giorni dopo
+// l'inserimento. Popolato in _patchAthleteTeamForManualRow (chiamata sia al
+// caricamento iniziale per lo storico manuale, sia subito dopo ogni nuovo
+// salvataggio), applicato da loadRanking per la categoria giusta.
+let _manualRankDelta = new Map();
+function _addManualRankDelta(row) {
+  if (!row.atleta_id || row.tipo === 'pista') return; // pista ha classifica a sé, non entra in quella stradale
+  const code = getRankingFileCode(row);
+  if (!code) return;
+  let byAth = _manualRankDelta.get(code);
+  if (!byAth) { byAth = new Map(); _manualRankDelta.set(code, byAth); }
+  let d = byAth.get(row.atleta_id);
+  if (!d) {
+    d = { punti: 0, gare: 0, vittorie: 0, p1: 0, p2: 0, p3: 0, pout: 0, cognome: row.cognome, nome: row.nome, team_id: row.team_id, team_nome: row.team };
+    byAth.set(row.atleta_id, d);
+  }
+  // cognome/nome/team possono legittimamente cambiare tra una riga e l'altra
+  // (correzione, cambio squadra) — tiene sempre l'ultima versione vista.
+  d.cognome = row.cognome; d.nome = row.nome; d.team_id = row.team_id; d.team_nome = row.team;
+  d.punti += row.punti_effettivi || 0;
+  d.gare  += 1;
+  const pos = row.posizione;
+  if (pos === 1) { d.vittorie++; d.p1++; }
+  else if (pos === 2) d.p2++;
+  else if (pos === 3) d.p3++;
+  else if (pos >= 4 && pos <= 10) d.pout++;
+}
+
 // Filtra in-place calendar/resultsRaw/athletes rimuovendo le gare escluse e
 // ricalcolando punti_totali degli atleti coinvolti. Va chiamata PRIMA di
 // processLoadedData, che copia risultati/punti_totali di athletes.json così
@@ -1757,6 +1793,11 @@ function _mergeManualIntoRaw(resultsRaw, manualResults) {
 // nella sua scheda profilo o in quella del team senza aggiornare anche .risultati qui.
 function _applyManualResults(gd, manualResults) {
   if (!gd || !Array.isArray(manualResults) || !manualResults.length) return;
+  // Reset ad ogni caricamento completo (chiamata una sola volta da loadAll):
+  // ricostruito da zero dallo storico manuale attuale, poi eventuali nuovi
+  // salvataggi nella stessa sessione (_mrPatchLocal, che NON richiama questa
+  // funzione) si aggiungono sopra senza essere mai azzerati.
+  _manualRankDelta = new Map();
   for (const r of manualResults) {
     const row = {
       gara_id: r.gara_id, nome_gara: r.nome_gara || '', data: r.data || '',
@@ -1780,6 +1821,11 @@ function _applyManualResults(gd, manualResults) {
 // popolata senza dover ricaricare tutta la pagina.
 function _patchAthleteTeamForManualRow(gd, row) {
   if (!gd) return;
+  // Vedi commento su _manualRankDelta: la classifica di categoria è un file
+  // precalcolato che non sa nulla dei risultati manuali, questa è l'unica
+  // aggiunta necessaria per farceli comparire (sia allo storico caricamento
+  // iniziale sia subito dopo ogni nuovo salvataggio in questa sessione).
+  _addManualRankDelta(row);
   // Riga "solo squadra" (gara a squadre corretta a livello di posizione/team
   // prima — o senza — indicare i singoli corridori): niente atleta_id, quindi
   // nessuna scheda atleta va creata. Il risultato conta SOLO per il team,
@@ -2933,6 +2979,46 @@ async function loadRanking(code) {
       a.pout     = Math.max(0, (a.pout || 0) - d.pout);
     }
     if (touched) {
+      data.sort((a, b) => (b.punti || 0) - (a.punti || 0));
+      data.forEach((a, i) => { a.pos = i + 1; });
+    }
+  }
+  // Vedi commento su _manualRankDelta: aggiunge alla classifica precalcolata
+  // i punti dei risultati inseriti a mano (foto ordine d'arrivo/manuale),
+  // che quel file non conosce affatto — senza questo, un risultato manuale
+  // non compariva MAI nella classifica di categoria (segnalato dal vivo con
+  // screenshot: punti già visibili sulla scheda atleta, ma "spariti" nella
+  // classifica di stagione). A differenza del delta di esclusione sopra
+  // (fisso, calcolato una volta), questo può CRESCERE durante la sessione
+  // (l'admin continua ad aggiungere risultati) — invece di un flag
+  // "applicato/non applicato" una tantum, si tiene uno snapshot per atleta
+  // di quanto già sommato e si applica solo la DIFFERENZA, cosicché nuovi
+  // inserimenti nella stessa sessione si aggiungano correttamente anche se
+  // questa categoria era già stata caricata prima. Un atleta assente dal
+  // file precalcolato (mai scrapato dalla FCI, es. straniera/nuova iscritta
+  // vista solo qui) viene aggiunto come riga nuova, non solo aggiornato.
+  const byAthDelta = _manualRankDelta.get(code);
+  if (byAthDelta && byAthDelta.size) {
+    if (!data._manualAppliedSnapshot) data._manualAppliedSnapshot = new Map();
+    let manualTouched = false;
+    for (const [atletaId, d] of byAthDelta) {
+      const prev = data._manualAppliedSnapshot.get(atletaId) || { punti: 0, gare: 0, vittorie: 0, p1: 0, p2: 0, p3: 0, pout: 0 };
+      const incPunti = d.punti - prev.punti, incGare = d.gare - prev.gare, incVittorie = d.vittorie - prev.vittorie,
+            incP1 = d.p1 - prev.p1, incP2 = d.p2 - prev.p2, incP3 = d.p3 - prev.p3, incPout = d.pout - prev.pout;
+      if (!incPunti && !incGare && !incVittorie && !incP1 && !incP2 && !incP3 && !incPout) continue;
+      manualTouched = true;
+      let entry = data.find(a => a.atleta_id === atletaId);
+      if (!entry) {
+        entry = { atleta_id: atletaId, cognome: d.cognome, nome: d.nome, team_id: d.team_id, team_nome: d.team_nome,
+                  punti: 0, vittorie: 0, gare: 0, p1: 0, p2: 0, p3: 0, pout: 0, pos: 0, trend: 0 };
+        data.push(entry);
+      }
+      entry.cognome = d.cognome; entry.nome = d.nome; entry.team_id = d.team_id; entry.team_nome = d.team_nome;
+      entry.punti += incPunti; entry.gare += incGare; entry.vittorie += incVittorie;
+      entry.p1 += incP1; entry.p2 += incP2; entry.p3 += incP3; entry.pout += incPout;
+      data._manualAppliedSnapshot.set(atletaId, { punti: d.punti, gare: d.gare, vittorie: d.vittorie, p1: d.p1, p2: d.p2, p3: d.p3, pout: d.pout });
+    }
+    if (manualTouched) {
       data.sort((a, b) => (b.punti || 0) - (a.punti || 0));
       data.forEach((a, i) => { a.pos = i + 1; });
     }
