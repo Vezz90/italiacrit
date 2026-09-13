@@ -2450,6 +2450,19 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // PREMIO, rimozione DELLA/DEL/REGIONE come rumore, ecc.).
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
+    // Gare "combinate" (calendario "4° Trofeo Nuova Flem - 3° Memorial Franco
+    // Abate - 55° Coppa San Martino"): il numero di edizione del calendario
+    // (calEd2) è quello della PRIMA sotto-gara nel titolo, ma la FCI spesso
+    // pubblica i risultati solo sotto il nome dell'ULTIMA sotto-gara, con il
+    // SUO numero di edizione (55) — calEd2 !== garaEd per costruzione, anche
+    // quando le parole combaciano perfettamente (tier 5 sotto). Ogni numero
+    // imbrigliato altrove nel titolo (qui "3" e "55") resta come token
+    // separato in calBaseNoEd: raccoglierli tutti permette al controllo
+    // edizione del tier 5 di accettare un match sull'edizione di QUALSIASI
+    // sotto-gara del titolo combinato, non solo la prima — segnalato dal
+    // vivo (55° Coppa San Martino, 47° GP Comune Villadose: pagine gara
+    // duplicate, mai agganciate alla riga calendario combinata).
+    const _calEmbeddedEds = new Set(calBaseNoEd.split('_').filter(w => /^\d+$/.test(w)));
     // Solo per il tier 5 (fuzzy) più sotto.
     const calFuzzyWords = _fuzzyWords(cal.nome);
     // Gruppo calendario (nome+data) a cui appartiene questa riga, e se è
@@ -2656,7 +2669,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       //   60% dell'insieme più piccolo (soglia scelta verificando a campione
       //   decine di coppie reali trovate dall'audit).
       if (r.data === cal.data && calFuzzyWords.size && _garaFuzzyWords.size && _calCatMatch(_calCatLbl, _rLbl2)) {
-        const _fuzzyEdOk = !calEd2 || !garaEd || calEd2 === garaEd;
+        const _fuzzyEdOk = !calEd2 || !garaEd || calEd2 === garaEd || _calEmbeddedEds.has(garaEd);
         if (_fuzzyEdOk) {
           let _fInter = 0;
           for (const w of calFuzzyWords) if (_garaFuzzyWords.has(w)) _fInter++;
