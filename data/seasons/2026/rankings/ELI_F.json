@@ -109,7 +109,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 7,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "VALGONEN_VALERIA",
@@ -125,7 +125,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 8,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GERY_CELIA",
@@ -141,7 +141,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 9,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FISHER_BLACK_NIAMH",
@@ -157,7 +157,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 10,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_GRANDIS_MICHELA",
@@ -173,7 +173,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 11,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "SIRI_IRMA",
@@ -189,7 +189,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 12,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GILLESPIE_LARA",
@@ -205,7 +205,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 13,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CONSONNI_CHIARA",
@@ -221,7 +221,7 @@
     "p3": 2,
     "pout": 3,
     "pos": 14,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "HOLMGREN_ISABELLA",
@@ -461,7 +461,7 @@
     "p3": 2,
     "pout": 5,
     "pos": 29,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "CASAGRANDA_ANDREA",
@@ -477,7 +477,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 30,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TRINCA_COLONEL_MONICA",
@@ -621,7 +621,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 39,
-    "trend": 10
+    "trend": 0
   },
   {
     "atleta_id": "GASPARRINI_ELEONORA_CAMILLA",
@@ -637,7 +637,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 40,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "WILLIAMS_LILY",
@@ -653,7 +653,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 41,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ZAMBELLI_ALESSIA",
@@ -669,7 +669,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 42,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "COLES_LYSTER_MAGGIE",
@@ -685,7 +685,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 43,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "KOOL_CHARLOTTE",
@@ -701,7 +701,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 44,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GIULIANI_GIULIA",
@@ -717,7 +717,7 @@
     "p3": 2,
     "pout": 2,
     "pos": 45,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RUEGG_NOEMI",
@@ -733,7 +733,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 46,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "WLODARCZYK_DOMINIKA",
@@ -749,7 +749,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 47,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "W_ODARCZYK_DOMINIKA",
@@ -765,7 +765,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 48,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_LAURENTIIS_ELENA",
@@ -781,7 +781,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 49,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LIECHTI_JASMIN",
@@ -845,7 +845,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 53,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "MWAMIKAZI_JAZILLA",
@@ -861,7 +861,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 54,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VAN_SINAEY_XAYDEE",
@@ -877,7 +877,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 55,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CHIATTO_MARIA_PIA",
@@ -893,7 +893,7 @@
     "p3": 2,
     "pout": 3,
     "pos": 56,
-    "trend": 8
+    "trend": 0
   },
   {
     "atleta_id": "TORMENA_GAIA",
@@ -909,7 +909,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 57,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PIRRONE_ELENA",
@@ -925,7 +925,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 58,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOBNAR_NIKA",
@@ -941,7 +941,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 59,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SOUREN_SCARLET",
@@ -957,7 +957,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 60,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LEIS_MAGDALENA",
@@ -973,7 +973,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 61,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SWINKELS_KARLIJN",
@@ -989,7 +989,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 62,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NIEWIADOMA_KASIA",
@@ -1005,7 +1005,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 63,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_VALLIER_ELISA",
@@ -1021,7 +1021,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 64,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "UNEKEN_LONNEKE",

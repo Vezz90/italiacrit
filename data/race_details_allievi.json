@@ -2831,6 +2831,36 @@
     "lat": 46.05335,
     "lng": 11.4566
   },
+  "4_TROFEO_NUOVA_FLEM_3_MEMORIAL_FRANCO_ABATE_55_COPPA_SAN_MARTINO_2026-09-13": {
+    "raceid": "181637",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181637&site=strada_it",
+    "info": [
+      "4° TROFEO NUOVA FLEM - 3° MEMORIAL FRANCO ABATE - 55° COPPA SAN MARTINO Strada 4° TROFEO NUOVA FLEM - 3° MEMORIAL FRANCO ABATE - 55° COPPA SAN MARTINO ID Gara: 181637 | <br><b>Data:</b> 13/09/2026 INFORMAZIONI GENERALI Localita: SAN MARTINO DELLA BATTAGLIA <br><b>Provincia:</b> BS <br><b>Categoria:</b> (1.24) Allievi <br><b>Categorie Ammesse:</b> ALLIEVI <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> 50° ANNIVERSARIO FLAEM NUOVA <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> TREBBI DAVIDE Vice <br><b>Direttore di Corsa:</b> PEZZINI SIMONE <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> GARDA PRO BIKE S.S.D. A.R.L. <br><b>Indirizzo:</b> VIA MALOCCO SOTTO 16/D <br><b>CAP:</b> 25017 Citta: LONATO DEL GARDA <br><b>Provincia:</b> BS <br><b>Telefono:</b> 3285656003 <br><b>Email:</b> DAVIDE@GARDAPROBIKE.COM ISCRIZIONI <br><b>Luogo:</b> FATTORE K <br><b>Indirizzo:</b> ID 181637, 25017 LONATO DEL GARDA, BS <br><b>Telefono:</b> 328 5656003 <br><b>Email:</b> gardaprobike@gmail.com Sito: gardaprobike.com <br><b>Iscrizioni Dal - Al:</b> 29/08/2026 - 11/09/2026 RITROVO GIURIA Dettagli Giuria Ruolo Nome Giudice GIUDICE DI ARRIVO ROTTIGNI ROBI PRESIDENTE DI GIURIA BALZI DANIELE COMPONENTE SEREGNI LORELLA SABI PROVE 1 - 4° TROFEO NUOVA FLEM - 3° MEMORIAL FRANCO ABATE - 55° COPPA SAN MARTINO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 13/09/2026 <br><b>Descrizione:</b> PERCORSO ONDULATO DI KM 18+200 DA PERCORRERE 5 VOLTE <br><b>Note:</b> Non è previsto vettura assistenza neutra. PREVISTO PRANZO IN CONVENZIONE PER ATLETI E ACCOMPAGNATORI PER PRENOTAZIONI TELEFONARE AL: NR. 328 1118269 MICHELE <br><b>Luogo Ritrovo:</b> CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA <br><b>Indirizzo Ritrovo:</b> SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28 <br><b>Orario Ritrovo:</b> 07:00 <br><b>Luogo Partenza:</b> SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28 <br><b>Orario Partenza:</b> 09:00 <br><b>Luogo Arrivo:</b> SAN MARTINO DELLA BATTAGLIA VIA UNITA' D'ITALIA 95 <br><b>Orario Arrivo:</b> 11:10 <br><b>Luogo Verifica:</b> dalle 07:00 alle 08:00 CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA <br><b>Punto Incontro DS:</b> ORE 08:00 CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA <br><b>Lunghezza KM:</b> 87,250 Servizi: Ospedale di Riferimento Desenzano del Garda. AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA",
+    "indirizzo_ritrovo": "SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28",
+    "orario_partenza": "09:00",
+    "km": "87,250 Servizi: Ospedale di Riferimento Desenzano del Garda. AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 4° TROFEO NUOVA FLEM - 3° MEMORIAL FRANCO ABATE - 55° COPPA SAN MARTINO Strada 4° TROFEO NUOVA FLEM - 3° MEMORIAL FRANCO ABATE - 55° COPPA SAN MARTINO ID Gara: 181637 | Data: 13/09/2026 INFORMAZIONI GENERALI Localita: SAN MARTINO DELLA BATTAGLIA",
+    "location_str": "SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28, CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA, Italia",
+    "tappe": [
+      {
+        "numero": 1,
+        "tipo": "Corsa singola",
+        "data": "2026-09-13",
+        "descrizione": "PERCORSO ONDULATO DI KM 18+200 DA PERCORRERE 5 VOLTE",
+        "luogo_ritrovo": "CENTRO SPORTIVO SAN MARTINO DELLA BATTAGLIA",
+        "indirizzo_ritrovo": "SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28",
+        "orario_ritrovo": "07:00",
+        "luogo_partenza": "SAN MARTINO DELLA BATTAGLIA VIA DUNANT 28",
+        "orario_partenza": "09:00",
+        "luogo_arrivo": "SAN MARTINO DELLA BATTAGLIA VIA UNITA' D'ITALIA 95",
+        "orario_arrivo": "11:10",
+        "km": "87,250"
+      }
+    ],
+    "lat": null,
+    "lng": null
+  },
   "TROFEO_PICARELLA_2026-09-13": {
     "raceid": "181639",
     "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181639&site=strada_it",
