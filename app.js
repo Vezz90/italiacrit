@@ -20107,12 +20107,25 @@ function _mrDeriveMeta(garaId, sampleRow) {
   // 1° o il 2° anno — va sempre chiesto esplicitamente, mai indovinato
   // (segnalato dal vivo: risultati Esordienti finiti nell'anno sbagliato).
   const esordientiAmbiguous = !m && (categoria === `ES1_${genere || 'M'}` || categoria === `ES2_${genere || 'M'}`);
+  // Gare "Open"/"Assoluta"/etc: un'unica categoria testuale che in realtà
+  // accorpa più classifiche reali per età (segnalato dal vivo: "13° Trofeo
+  // Inalpi - Viterie Annibale", calendario/FCI "Donne Open", ma l'admin ha
+  // ordini d'arrivo separati per categoria) — _catLabelToCode non riconosce
+  // nessuna parola chiave nota ("open" non è né esordienti né allievi né
+  // juniores né elite) e torna stringa vuota: senza un modo per scegliere
+  // esplicitamente la categoria reale, l'ordine d'arrivo non si può proprio
+  // inserire (categoria vuota rotta ovunque a valle: punti, profilo atleta,
+  // getRankingFileCode). A differenza di esordientiAmbiguous (categoria
+  // INDOVINATA ma incerta tra due opzioni), qui non è stata indovinata
+  // affatto: nessuna delle 5 categorie è nota.
+  const categoriaUnresolved = !m && !categoria;
   return {
     nome_gara: sampleRow?.nome_gara || calEntry?.nome || '',
     data: sampleRow?.data || calEntry?.data || '',
     categoria,
     genere,
     esordientiAmbiguous,
+    categoriaUnresolved,
     tipo: sampleRow?.tipo || calEntry?.tipo || 'regionale',
     moltiplicatore: sampleRow?.moltiplicatore || calEntry?.moltiplicatore || 1,
     campionato_regionale: sampleRow?.campionato_regionale ?? calEntry?.campionato_regionale ?? false,
@@ -20172,6 +20185,71 @@ window._mrSetEsordientiAnno = (categoria, idPrefix) => {
     window._mrBulkRender();
   }
 };
+
+// Selettore categoria generale — per gare la cui categoria testuale non
+// indica un'età precisa (es. FCI "Donne Open": una registrazione sola che
+// nella pratica accorpa più ordini d'arrivo separati per categoria reale,
+// segnalato dal vivo col "13° Trofeo Inalpi - Viterie Annibale"). A
+// differenza di _mrEsordientiAnnoPicker (che sceglie SOLO tra 1°/2° anno,
+// quando la categoria era già stata indovinata come Esordienti) qui nessuna
+// categoria è nota: si sceglie tra tutte e cinque. Il genere resta SEMPRE
+// dedotto dalla dicitura della gara (_mrDeriveMeta, es. "Donne Open" → F) —
+// mai chiesto qui, per non aggiungere un secondo picker.
+const _MR_CAT_OPTIONS = [['ES1','Esordienti 1° Anno'],['ES2','Esordienti 2° Anno'],['AL','Allievi'],['JUN','Juniores'],['ELI','Elite/Under 23']];
+function _mrCategoriaPicker(idPrefix) {
+  const cur = window._mrMeta?.categoria || '';
+  const g = window._mrMeta?.genere || 'M';
+  const btn = (code, label) => `<button type="button" id="${idPrefix}-cat-${code}" onclick="window._mrSetCategoria('${code}_${g}','${idPrefix}')" style="padding:8px 10px;border-radius:var(--r-sm);font-size:0.8rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
+  return `
+    <div style="margin-bottom:12px;padding:10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:var(--r-sm)">
+      <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-primary);margin-bottom:6px">Questa gara ha più categorie (es. "Open"): a quale appartiene questo ordine d'arrivo? <span style="color:var(--red-hot)">*</span></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${_MR_CAT_OPTIONS.map(([c,l]) => btn(c,l)).join('')}</div>
+    </div>`;
+}
+window._mrSetCategoria = (categoria, idPrefix) => {
+  if (!window._mrMeta) return;
+  window._mrMeta.categoria = categoria;
+  const on = 'border:1px solid var(--accent);background:var(--accent);color:#fff';
+  const off = 'border:1px solid var(--border-subtle);background:var(--bg-primary);color:var(--text-primary)';
+  _MR_CAT_OPTIONS.forEach(([code]) => {
+    const b = document.getElementById(`${idPrefix}-cat-${code}`);
+    if (b) b.style.cssText = `padding:8px 10px;border-radius:var(--r-sm);font-size:0.8rem;font-weight:700;cursor:pointer;${categoria.startsWith(code) ? on : off}`;
+  });
+  const catLabelEl = document.getElementById('mr-bulk-cat-label');
+  if (catLabelEl) catLabelEl.textContent = catLabel(categoria) || categoria;
+  // Stessa logica di window._mrSetEsordientiAnno: un match OCR già trovato
+  // nella categoria sbagliata (o mai trovato) va ripetuto ora che si sa la
+  // categoria vera.
+  if (idPrefix === 'mr-bulk-cat' && Array.isArray(window._mrBulkRows)) {
+    window._mrBulkRows = window._mrBulkRows.map(r => {
+      const raw = r._ocrRaw || (r._ocrCognome ? `${r._ocrCognome} ${r._ocrNome || ''}`.trim() : '');
+      const rawTeam = r._ocrTeam || (r._autoMatched ? r.team : '') || '';
+      if (!raw) return r;
+      const match = _mrAutoMatchAthlete(raw.split(' ')[0], raw.split(' ').slice(1).join(' '), rawTeam, window._mrMeta);
+      if (match) {
+        const team = (match.team && _mrIsNationalTeam(rawTeam)) ? match.team : (rawTeam || match.team);
+        return { ...r, cognome: match.cognome, nome: match.nome, team, atletaId: match.id, _autoMatched: true, _ocrRaw: raw, _dbTeam: match.team || '' };
+      }
+      return { ...r, cognome: r._autoMatched ? '' : r.cognome, nome: r._autoMatched ? '' : r.nome, atletaId: null, _autoMatched: false, _ocrCognome: raw.split(' ')[0], _ocrNome: raw.split(' ').slice(1).join(' '), _ocrTeam: rawTeam };
+    });
+    window._mrBulkRender();
+  }
+};
+// gara_id EFFETTIVO da usare per salvare/leggere i risultati: se baseId (l'id
+// di calendario, sempre "nudo" per una gara mai ancora scrapata) non ha già
+// un suffisso categoria valido, aggiunge quello scelto/dedotto in _mrMeta —
+// esattamente la stessa convenzione (suffisso "_COD_M/F") usata da TUTTI i
+// gara_id nativi scrapati dalla FCI altrove nel sito (garaToCalId, i tab
+// categoria _catTabsHtml, ecc.). Senza questo, righe di categorie DIVERSE
+// inserite a mano per una gara "Open" finirebbero tutte sotto lo STESSO
+// gara_id nudo — stessa posizione (es. "1°") occupata da atleti di categorie
+// diverse, nessuna scheda categoria per navigarle separatamente.
+function _mrEffectiveGaraId(baseId) {
+  if (!baseId) return baseId;
+  if (/_(ELI|JUN|AL|ES1|ES2)_[MF]$/.test(baseId)) return baseId;
+  const cat = window._mrMeta?.categoria;
+  return (cat && /^(ELI|JUN|AL|ES1|ES2)_[MF]$/.test(cat)) ? `${baseId}_${cat}` : baseId;
+}
 
 // Inserisce/aggiorna la riga in globalData.resultsRaw senza dover ricaricare tutto
 function _mrPatchLocal(row) {
@@ -20244,6 +20322,7 @@ window.openManualResultForm = (garaId, posizione, forceAdd) => {
       </div>
       <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : (forceAdd ? 'Aggiungi un altro corridore alla stessa posizione — utile per le gare a squadre (es. cronometro a squadre), dove più atleti condividono lo stesso risultato del team.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.')}</p>
       ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-anno') : ''}
+      ${window._mrMeta?.categoriaUnresolved ? _mrCategoriaPicker('mr-anno-cat') : ''}
       ${addedList}
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
       <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : (posizione || '')}" style="${inpStyle}"/>
@@ -20336,8 +20415,10 @@ window.submitManualResult = async (garaId) => {
   const errEl = document.getElementById('mr-err');
   if (!posizione || posizione < 1) { errEl.textContent = 'Inserisci una posizione valida'; errEl.style.display = 'block'; return; }
   if (!cognome) { errEl.textContent = 'Il cognome è obbligatorio'; errEl.style.display = 'block'; return; }
+  if (window._mrMeta?.categoriaUnresolved && !window._mrMeta?.categoria) { errEl.textContent = 'Scegli prima la categoria di questo ordine d\'arrivo'; errEl.style.display = 'block'; return; }
   const btn = document.getElementById('mr-submit');
   btn.disabled = true; btn.textContent = 'Salvo…';
+  garaId = _mrEffectiveGaraId(garaId);
   try {
     const meta = window._mrMeta || {};
     const { row } = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/manual-result`, {
@@ -20357,7 +20438,14 @@ window.submitManualResult = async (garaId) => {
       document.getElementById('modal-overlay')?.remove();
       showToast(window._mrEditing ? '✓ Risultato aggiornato' : '✓ Risultato aggiunto');
       window._mrDirty = false;
-      if (window._currentGaraId) _rerenderCurrentGaraPage();
+      // Se la categoria scelta ha prodotto un gara_id diverso da quello della
+      // pagina corrente (caso "Open": bare id → id suffisso categoria), vai
+      // alla pagina specifica invece di ri-renderizzare quella bare — che
+      // mostrerebbe (via il fallback categorie-miste di renderGara) tutte le
+      // categorie mescolate nella stessa tabella invece della sola appena
+      // inserita.
+      if (window._currentGaraId && garaId !== window._currentGaraId) location.hash = '#/gara/' + encodeURIComponent(garaId);
+      else if (window._currentGaraId) _rerenderCurrentGaraPage();
     }
   } catch (e) {
     errEl.textContent = e.message; errEl.style.display = 'block';
@@ -20508,6 +20596,7 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
       </div>
       <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.${prefilledRows && prefilledRows.length ? ' <strong style="color:var(--accent)">Righe estratte dalla foto — controlla nomi e team prima di salvare, l\'OCR può sbagliare su scritte poco chiare o tagliate.</strong>' : ''}</p>
       ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-bulk-anno') : ''}
+      ${window._mrMeta?.categoriaUnresolved ? _mrCategoriaPicker('mr-bulk-cat') : ''}
       ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
       <div id="mr-bulk-rows"></div>
       <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
@@ -20746,7 +20835,7 @@ function _resizeImageForOcr(file) {
 }
 
 window.submitManualResultBulk = async () => {
-  const garaId = window._mrBulkGaraId;
+  const garaId = _mrEffectiveGaraId(window._mrBulkGaraId);
   const meta = window._mrMeta || {};
   // Se non ha scelto dalla lista ma ha scritto qualcosa, prova a separare cognome/nome dal testo libero.
   // Una riga può avere SOLO il team (senza corridore) — utile per correggere
@@ -20758,6 +20847,7 @@ window.submitManualResultBulk = async () => {
   });
   const errEl = document.getElementById('mr-bulk-err');
   if (!rows.length) { errEl.textContent = 'Compila almeno una riga (posizione + corridore o team)'; errEl.style.display = 'block'; return; }
+  if (window._mrMeta?.categoriaUnresolved && !window._mrMeta?.categoria) { errEl.textContent = 'Scegli prima la categoria di questo ordine d\'arrivo'; errEl.style.display = 'block'; return; }
   const btn = document.getElementById('mr-bulk-submit');
   btn.disabled = true;
   let ok = 0, fail = 0;
@@ -20794,7 +20884,11 @@ window.submitManualResultBulk = async () => {
       body: { nome_gara: meta.nome_gara || garaId, count: ok, source: window._mrBulkFromOcr ? 'ocr' : 'manual' },
     }).catch(() => {});
   }
-  if (window._currentGaraId) _rerenderCurrentGaraPage();
+  // Vedi commento equivalente in submitManualResult: se la categoria scelta
+  // ha prodotto un gara_id diverso da quello della pagina corrente (caso
+  // "Open"), vai alla pagina specifica invece di ri-renderizzare la bare.
+  if (window._currentGaraId && garaId !== window._currentGaraId) location.hash = '#/gara/' + encodeURIComponent(garaId);
+  else if (window._currentGaraId) _rerenderCurrentGaraPage();
 };
 
 window.deleteManualResult = async (id, garaId) => {
