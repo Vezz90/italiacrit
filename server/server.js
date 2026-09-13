@@ -1237,7 +1237,15 @@ Dati della gara (JSON):
 ${JSON.stringify(dataForPrompt, null, 2)}`
       }]
     });
-    const text = msg.content[0].text.trim();
+    // claude-sonnet-5 pensa in automatico (thinking adattivo sempre attivo,
+    // anche senza chiederlo): content[0] può essere un blocco "thinking"
+    // invece del testo — con claude-sonnet-4-6 (pensiero disattivato di
+    // default) content[0] era sempre il testo, ma dopo il cambio modello
+    // .text su un blocco thinking è undefined e .trim() lancia, la
+    // generazione falliva silenziosamente (catch sotto) per OGNI gara.
+    const textBlock = msg.content.find(b => b.type === 'text');
+    if (!textBlock) return null;
+    const text = textBlock.text.trim();
     // Il link del sito va inserito subito dopo il titolo (prima riga), non
     // lasciato scrivere a Claude: così chi legge il post lo vede sempre,
     // nella stessa posizione, indipendentemente da come il modello formatta
@@ -4773,7 +4781,9 @@ Rispondi SOLO con l'array JSON, niente altro testo prima o dopo, niente markdown
         ],
       }],
     });
-    const text = (msg.content[0]?.text || '').trim();
+    // Vedi commento su _buildGaraAiCaption: con claude-sonnet-5 content[0]
+    // può essere un blocco "thinking", non il testo.
+    const text = (msg.content.find(b => b.type === 'text')?.text || '').trim();
     let rows;
     try {
       const jsonStr = text.replace(/^```json\s*|\s*```$/g, '').trim();
@@ -7626,7 +7636,10 @@ Data: ${date || '—'}
 Link: ${link}`
       }]
     });
-    return msg.content[0].text.trim();
+    // Vedi commento su _buildGaraAiCaption: con claude-sonnet-5 content[0]
+    // può essere un blocco "thinking", non il testo.
+    const textBlock = msg.content.find(b => b.type === 'text');
+    return textBlock ? textBlock.text.trim() : null;
   } catch (e) {
     console.warn('[social] Claude caption error:', e.message);
     return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' (' + category + ')' : ''}\n🔗 ${link}`;
@@ -10119,7 +10132,10 @@ ${contextParts.join('\n\n')}
       system: systemPrompt,
       messages
     });
-    res.json({ answer: msg.content[0].text.trim(), suggestions: _aiSuggestions });
+    // Vedi commento su _buildGaraAiCaption: con claude-sonnet-5 content[0]
+    // può essere un blocco "thinking", non il testo.
+    const textBlock = msg.content.find(b => b.type === 'text');
+    res.json({ answer: textBlock ? textBlock.text.trim() : '', suggestions: _aiSuggestions });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
