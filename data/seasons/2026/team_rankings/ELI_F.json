@@ -312,18 +312,6 @@
     "pos": 26
   },
   {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 46,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 2,
-    "pos": 27
-  },
-  {
     "team_id": "ZHIRAF",
     "team_nome": "ZHIRAF",
     "punti": 46,
@@ -333,6 +321,18 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 3,
+    "pos": 27
+  },
+  {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 2,
     "pos": 28
   },
   {

@@ -26,7 +26,7 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 551,
+    "punti": 550,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
@@ -50,19 +50,19 @@
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 413,
+    "punti": 421,
     "vittorie": 6,
     "p1": 6,
     "p2": 3,
     "p3": 6,
-    "pout": 27,
+    "pout": 28,
     "n_atleti": 7,
     "pos": 5
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 357,
+    "punti": 352,
     "vittorie": 2,
     "p1": 2,
     "p2": 5,
@@ -398,7 +398,7 @@
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
     "team_nome": "ST KILDA CYCLING CLUB",
-    "punti": 2,
+    "punti": 1,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
