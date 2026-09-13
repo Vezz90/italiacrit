@@ -530,6 +530,13 @@ const _OG_CAT_MAP = {ELI_M:'Elite',ELI_F:'Elite Donne',JUN_M:'Juniores',JUN_F:'J
 // reale — esattamente il problema che il redirect automatico rimosso in
 // passato causava (vedi commento in ogHtml).
 const OG_BOT_RE = /facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Pinterest|vkShare|redditbot|W3C_Validator|Googlebot|bingbot|DuckDuckBot|YandexBot|Baiduspider|Applebot|ia_archiver|SemrushBot|AhrefsBot|MJ12bot|Sogou|Exabot/i;
+// Sottoinsieme di OG_BOT_RE: SOLO i bot di anteprima social (non eseguono
+// JavaScript e vogliono la card ricca con foto/podio) — questi continuano a
+// essere rediretti a /og/... come prima. I motori di ricerca (Googlebot
+// ecc., ESCLUSI da qui) NON vengono più rediretti da nessuna parte: vedi
+// commento sulla SPA fallback più sotto sul perché un redirect (anche solo
+// per loro) è di per sé un problema SEO, non solo una scorciatoia bot-only.
+const SOCIAL_BOT_RE = /facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Pinterest|vkShare|redditbot|W3C_Validator/i;
 
 function ogHtml({ title, desc, img, redirect, canonical, bodyHtml }) {
   const safe = _ogHtmlEsc;
@@ -11002,6 +11009,96 @@ app.get('/api/og-image/class/:id', async (req, res) => {
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
+// ── Meta tag per-pagina iniettati DIRETTAMENTE nell'HTML reale della SPA ────
+// (Fase 3 SEO — sostituisce il redirect verso /og/... per Googlebot e affini)
+// Il redirect usato finora per i motori di ricerca (302 verso /og/gara/:id,
+// la cui pagina dichiara poi canonical="torna all'URL originale") creava un
+// ciclo redirect→canonical-di-ritorno che Google può interpretare come "non
+// so quale sia la pagina vera" — coerente con le esclusioni osservate in
+// Search Console ("pagina alternativa con canonical appropriato", "Google ha
+// scelto una canonica diversa", pagine "rilevate ma non indicizzate"). La
+// soluzione corretta (e quella che Google raccomanda oggi, niente più
+// "dynamic rendering" via redirect) è servire la STESSA identica pagina SPA
+// (stesso file, stesso app.js, nessuna perdita di interattività) ma con
+// <title>/<meta description>/<link canonical>/<meta og:...> già corretti fin
+// dalla PRIMA risposta HTTP, con status 200, per QUALSIASI visitatore — non
+// solo i bot, non serve nemmeno più distinguerli per queste pagine.
+let _indexHtmlTemplate = null, _indexHtmlTemplateTs = 0;
+function _readIndexHtmlTemplate() {
+  // Cache breve (60s): il file cambia solo ad ogni deploy, rileggerlo ad ogni
+  // richiesta di /gara|atleta|team/:id sarebbe uno stat+read di troppo su un
+  // file che in pratica non cambia mai durante l'uptime del processo.
+  if (_indexHtmlTemplate && Date.now() - _indexHtmlTemplateTs < 60000) return _indexHtmlTemplate;
+  _indexHtmlTemplate = fs.readFileSync(path.join(FRONTEND_DIR, 'index.html'), 'utf8');
+  _indexHtmlTemplateTs = Date.now();
+  return _indexHtmlTemplate;
+}
+function _injectHeadTags(html, { title, desc, canonical, ogImage }) {
+  const t = _ogHtmlEsc(title), d = _ogHtmlEsc(desc), c = _ogHtmlEsc(canonical), img = _ogHtmlEsc(ogImage);
+  return html
+    .replace(/<title>[^<]*<\/title>/, `<title>${t}</title>`)
+    .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${d}" />`)
+    .replace(/<meta property="og:title" content="[^"]*"\s*\/>/, `<meta property="og:title" content="${t}" />`)
+    .replace(/<meta property="og:description" content="[^"]*"\s*\/>/, `<meta property="og:description" content="${d}" />`)
+    .replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${c}" />`)
+    .replace(/<meta property="og:url" content="[^"]*"\s*\/>/, `<meta property="og:url" content="${c}" />`)
+    .replace(/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${img}" />`);
+}
+// Calcola {title, desc, canonical, ogImage} per gara/atleta/team — stessa
+// identica logica (stessi dati, stesse etichette) delle rispettive route
+// /og/.../:id, qui riusata per iniettarli nella pagina VERA invece che in
+// una pagina "di servizio" a parte. Ritorna null se l'id non esiste (in tal
+// caso si serve la pagina normale, che mostrerà "non trovata" via JS).
+async function _getHeadMetaFor(type, id) {
+  if (type === 'gara') {
+    const [calRaw, resultsRaw] = await Promise.all([
+      readDataJsonFromGH('calendar.json'), readDataJsonFromGH('results_raw.json'),
+    ]);
+    const cal = _findCalEntryForNativeGaraId(calRaw, id);
+    const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw);
+    if (!results.length && !cal) return null;
+    return {
+      title: `${title} | ICS`, desc,
+      canonical: `${SITE_URL}/gara/${encodeURIComponent(id)}`,
+      ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+    };
+  }
+  if (type === 'atleta') {
+    const [athletes, resultsRaw] = await Promise.all([
+      readDataJsonFromGH('athletes.json'), readDataJsonFromGH('results_raw.json'),
+    ]);
+    const ath = (athletes || {})[id];
+    if (!ath) return null;
+    const title = `${ath.cognome || ''} ${ath.nome || ''}`.trim() || id;
+    const cat = _OG_CAT_MAP[ath.categoria] || ath.categoria || '';
+    const parts = [cat, ath.team_attuale].filter(Boolean);
+    if (ath.punti_totali) parts.push(`${ath.punti_totali} pt`);
+    if (ath.vittorie) parts.push(`${ath.vittorie} vitt.`);
+    const desc = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
+    return {
+      title: `${title} | ICS`, desc,
+      canonical: `${SITE_URL}/atleta/${encodeURIComponent(id)}`,
+      ogImage: `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+    };
+  }
+  if (type === 'team') {
+    const [teams, athletes] = await Promise.all([
+      readDataJsonFromGH('teams.json'), readDataJsonFromGH('athletes.json'),
+    ]);
+    const team = (teams || {})[id];
+    if (!team) return null;
+    const title = team.nome || id.replace(/_/g, ' ');
+    const rosterCount = Object.values(athletes || {}).filter(a => a.team_id === id).length;
+    const desc = rosterCount ? `${rosterCount} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
+    return {
+      title: `${title} | ICS`, desc,
+      canonical: `${SITE_URL}/team/${encodeURIComponent(id)}`,
+      ogImage: `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+    };
+  }
+  return null;
+}
+
 // ── SPA fallback (Fase 2 SEO: URL puliti) ───────────────────────────────────
 // DEVE essere l'ultima route (registrata dopo tutte le API e dopo
 // express.static più sopra): se nessuna route/file statico precedente ha
@@ -11012,14 +11109,12 @@ app.get('/api/og-image/class/:id', async (req, res) => {
 // questo, una navigazione diretta o un refresh su un URL pulito darebbe un
 // 404 reale (quel path non esiste come file sul server).
 // Bot di anteprima social (WhatsApp, Telegram, Facebook, Twitter/X, ecc.):
-// non eseguono JavaScript, quindi su un URL "pulito" come /gara/:id
-// vedrebbero solo la shell SPA vuota con i meta tag generici della home,
-// non il titolo/descrizione/immagine di quella gara specifica — che invece
-// esistono già, ma solo sotto /og/gara/:id. Per gli utenti umani non
-// cambia nulla: solo questi bot vengono rediretti alla versione con i
-// meta tag corretti, che loro seguono normalmente (non eseguono JS ma
-// seguono i redirect HTTP).
-app.get('*', (req, res, next) => {
+// non eseguono JavaScript e vogliono la card ricca (foto/podio) — per loro
+// SOLO resta il redirect a /og/... (vedi SOCIAL_BOT_RE sopra). Per chiunque
+// altro — motori di ricerca COMPRESI, e ogni utente umano — niente più
+// redirect: le pagine gara/atleta/team ricevono i meta tag corretti già
+// nella prima risposta (vedi _getHeadMetaFor/_injectHeadTags sopra).
+app.get('*', async (req, res, next) => {
   const p = req.path;
   if (p.startsWith('/api/') || p.startsWith('/og/') || p.startsWith('/data/') ||
       p.startsWith('/uploads/') || p.startsWith('/photos/') ||
@@ -11030,7 +11125,7 @@ app.get('*', (req, res, next) => {
   if (/\.[a-zA-Z0-9]+$/.test(p)) return next();
 
   const ua = req.headers['user-agent'] || '';
-  if (OG_BOT_RE.test(ua)) {
+  if (SOCIAL_BOT_RE.test(ua)) {
     let m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
     if (m) return res.redirect(302, `/og/${m[1]}/${encodeURIComponent(m[2])}`);
     m = p.match(/^\/classifica\/([^/]+)\/?$/);
@@ -11044,6 +11139,14 @@ app.get('*', (req, res, next) => {
     m = p.match(new RegExp(`^/media/(?!(?:${MEDIA_FIXED_TABS})$)([\\w-]+)/?$`))
       || p.match(/^\/media\/creator\/([\w-]+)\/?$/);
     if (m) return res.redirect(302, `/og/media/${encodeURIComponent(m[1])}`);
+  }
+
+  const m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
+  if (m) {
+    try {
+      const meta = await _getHeadMetaFor(m[1], decodeURIComponent(m[2]));
+      if (meta) return res.send(_injectHeadTags(_readIndexHtmlTemplate(), meta));
+    } catch (e) { console.warn('[head-inject] fallito per', p, ':', e.message); }
   }
 
   res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
