@@ -10576,7 +10576,7 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
 // estratto in una funzione a parte per poterlo mettere in gara contro un
 // timeout in _generateGaraOgBuffer — vedi commento lì. Ritorna il buffer
 // JPEG o null.
-async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle, adjust) {
+async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle, adjust, cal) {
   try {
     // Il credit (nome fotografo o fonte esterna) dipende da QUALE foto viene
     // trovata — l'overlay va quindi ricostruito per ogni fonte tentata
@@ -10589,12 +10589,30 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
         : await _photoToOgPng(photoSource, adjust);
     };
 
-    const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
+    // Alias id calendario (cal.id, quando trovato): il nome ESTESO ufficiale
+    // di una gara finisce spesso nell'id di CALENDARIO ("...INSIEME_NELLO_
+    // SPORT_3_PROVA_CHALLENGE..."), mentre il gara_id NATIVO scrapato dalla
+    // FCI usa una forma più corta ("33_TRIESTE_GORIZIA_UDINE_...")  — una
+    // foto caricata a mano viene quasi sempre taggata con l'id di
+    // calendario (l'unico noto prima che i risultati siano scrapati), quindi
+    // NESSUNO dei 3 alias sotto (che derivano solo dal gara_id nativo con
+    // semplici tagli di prefisso/suffisso) può mai combaciare — la pagina
+    // vera del sito la trova comunque tramite il cascade di matching
+    // completo lato client (garaToCalId), che questo codice server-side non
+    // replica. Senza cal.id qui, la condivisione Facebook cadeva sul video
+    // come ripiego anche quando la foto esisteva ed era già visibile sulla
+    // pagina — segnalato dal vivo (33° Trieste-Gorizia-Udine).
+    const uploadedIds = [garaId, ...(cal?.id && cal.id !== garaId ? [cal.id] : [])];
+    let uploaded = [];
+    for (const uid of uploadedIds) {
+      uploaded = await queries.getApprovedRacePhotos(uid).catch(() => []);
+      if (uploaded && uploaded.length) break;
+    }
     if (uploaded && uploaded.length) {
       const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url, uploaded[0].photographer || null);
       if (buf) return buf;
     }
-    const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
+    const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, ''), ...(cal?.id ? [cal.id] : [])];
     const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
     for (const [src, srcCredit] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
       for (const alias of aliases) {
@@ -10686,7 +10704,7 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // il rallentamento viene dal fetch delle foto profilo dei 3 del podio).
   const photoSubtitle = [dateShort, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
   const photoBuf = await Promise.race([
-    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle, adjust),
+    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle, adjust, cal),
     new Promise(resolve => setTimeout(() => resolve(null), 8000)),
   ]);
   if (photoBuf) return photoBuf;
