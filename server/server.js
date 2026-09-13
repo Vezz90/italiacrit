@@ -452,7 +452,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 9;
+const OG_IMG_VERSION = 10;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -832,6 +832,20 @@ async function _buildGaraNarrative(id, cal, resultsRawIn) {
 // (taggata quasi sempre con l'id di calendario) fallivano silenziosamente
 // per queste gare — segnalato dal vivo (33° Trieste-Gorizia-Udine: foto
 // caricata mai trovata, condivisione Facebook caduta sul video come ripiego).
+// Rumore testuale comune tra id di calendario/foto e gara_id nativo — stessa
+// idea di _nm2 lato client (app.js): la FCI scrive a volte "Giro DELLA
+// REGIONE Friuli..." nel calendario/nella foto taggata e "Giro DEL Friuli..."
+// (senza "Regione") nel gara_id nativo scrapato per i risultati, STESSA gara
+// — senza normalizzare queste parole di riempimento, il confronto per
+// prefisso sotto non trova nessuna corrispondenza (la differenza cade a
+// metà stringa). Segnalato dal vivo: "62 Giro della Regione Friuli Venezia
+// Giulia" — foto caricata mai trovata per nessuna tappa.
+function _ogNormBase(s) {
+  return String(s || '').toUpperCase()
+    .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g, '')
+    .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g, '')
+    .replace(/_+/g, '_').replace(/^_|_$/g, '');
+}
 function _findCalEntryForNativeGaraId(calendar, garaId) {
   let cal = (calendar || []).find(g => g.id === garaId);
   if (cal) return cal;
@@ -841,12 +855,12 @@ function _findCalEntryForNativeGaraId(calendar, garaId) {
   const dateM = garaId.match(/(\d{4}-\d{2}-\d{2})/);
   const date = dateM ? dateM[1] : null;
   if (!date) return null;
-  const base = bareId.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, '');
+  const base = _ogNormBase(bareId.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
   if (!base) return null;
   let best = null, bestLen = 0;
   for (const g of (calendar || [])) {
     if (g.data !== date || !g.id) continue;
-    const gBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, '');
+    const gBase = _ogNormBase(g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
     if (!gBase) continue;
     if (gBase.startsWith(base) || base.startsWith(gBase)) {
       const len = Math.min(gBase.length, base.length);
