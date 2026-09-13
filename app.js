@@ -2239,6 +2239,14 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
+    // Ordinali "anno" scritti a lettere lato risultato FCI ("SECONDO_ANNO")
+    // vs a cifra lato calendario ("2_ANNO") — es. "19 Coppa di Sera Donne
+    // Esordienti SECONDO ANNO" (risultato) non veniva mai collegato a
+    // "19^ Coppa di Sera - Donne Esordienti 2° Anno" (calendario): nessun
+    // tier del cascade matcha testi con ordinali diversi. Normalizzando
+    // entrambi i lati alla cifra (trasformazione simmetrica, sicura su
+    // entrambi), il match torna a funzionare.
+    .replace(/(?<![A-Z0-9])(PRIMO|SECONDO|TERZO|QUARTO|QUINTO)(?=_ANNO(?![A-Z0-9]))/g, m => ({PRIMO:'1',SECONDO:'2',TERZO:'3',QUARTO:'4',QUINTO:'5'}[m]))
     .replace(/_+/g,'_').replace(/^_|_$/g,'');
   // Variante di _nm2 usata SOLO sul testo del RISULTATO (mai su quello del
   // calendario): "GARA_UNICA"/"PROVA_VALIDA" sono etichette che la pagina
