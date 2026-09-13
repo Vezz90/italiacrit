@@ -2296,6 +2296,23 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     }
     return false;
   };
+  // Indice risultati per data: senza questo, il ciclo sotto confrontava
+  // OGNI gara di calendario con TUTTI i risultati dell'intera stagione
+  // (1871 x ~13000 = oltre 24 milioni di iterazioni, ~5.5s bloccanti ad
+  // ogni caricamento pagina — rallentamento drastico segnalato dal vivo,
+  // misurato con processLoadedData() cronometrato in console). Per le gare
+  // NON a tappe (la stragrande maggioranza, >98%) basta e avanza guardare
+  // solo i risultati della stessa data — il filtro `r.data !== cal.data`
+  // più sotto li scartava comunque uno per uno, ma solo DOPO averli già
+  // visitati tutti. Le gare a tappe (isStageRace) restano sull'elenco
+  // completo perché devono poter agganciare risultati di tappe con date
+  // diverse dalla propria (vedi commento isStageRace più sotto).
+  const _resultsByDate = new Map();
+  for (const r of (resultsRaw || [])) {
+    if (!r.gara_id) continue;
+    const arr = _resultsByDate.get(r.data);
+    if (arr) arr.push(r); else _resultsByDate.set(r.data, [r]);
+  }
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
     // NB: provato ad allargare isStageRace anche al nome (non solo alla
@@ -2358,7 +2375,11 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const _calAmbiguous = _calGroup && _calGroup.length > 1 && new Set(_calGroup.map(g => (g.categoria||'').trim().toLowerCase())).size > 1;
     const _calCatLbl = (cal.categoria||'').trim().toLowerCase();
     const _isBareInGroup = _calAmbiguous && _calGroup.slice().sort((a,b)=>a.id.length-b.id.length)[0].id === cal.id;
-    for (const r of (resultsRaw || [])) {
+    // Vedi commento su _resultsByDate sopra: le gare non a tappe (la
+    // maggioranza) guardano solo il bucket della propria data invece
+    // dell'intero array dei risultati stagionali.
+    const _candidateResults = isStageRace ? (resultsRaw || []) : (_resultsByDate.get(cal.data) || []);
+    for (const r of _candidateResults) {
       if (!r.gara_id) continue;
       if (!isStageRace && r.data !== cal.data) continue;
       // Il "cronoprologo" (cronometro individuale che apre una gara a tappe)
