@@ -10895,11 +10895,20 @@ async function updateRankTable() {
       globalData.calendar.forEach(g => calMap[g.id] = g);
 
       resultsRaw.forEach(r => {
-        if (r.genere !== rankGender) return;
         // Strada e Pista sono classifiche separate (vedi rankDisciplina) —
         // ognuna prende SOLO i risultati del proprio tipo.
         if (rankDisciplina === 'pista' ? r.tipo !== 'pista' : r.tipo === 'pista') return;
-        // Check categoria
+        // Check categoria — getRankingFileCode incorpora già il genere (dal
+        // suffisso del gara_id, o da ATHLETE_GENDER_FIXES), quindi basta e
+        // avanza confrontare il codice risultante con rankCat. Un filtro
+        // separato e precedente su r.genere (rimosso) escludeva in silenzio
+        // qualunque risultato con quel campo vuoto — es. un risultato
+        // manuale salvato senza "genere" esplicito (succede quando il form
+        // di inserimento non lo passa) veniva scartato qui ancora PRIMA che
+        // getRankingFileCode potesse dedurlo correttamente dal suffisso —
+        // segnalato dal vivo: un punteggio manuale comparso su tutte le
+        // altre viste (profilo atleta, hub categoria) ma non nella pagina
+        // Classifica, l'unica che calcola dal vivo con questo doppio filtro.
         const rCat = getRankingFileCode(r);
         if (rCat !== rankCat) return;
 
@@ -11266,7 +11275,9 @@ async function updateRankTable() {
       globalData.calendar.forEach(g => calMap[g.id] = g);
 
       resultsRaw.forEach(r => {
-        if (r.genere !== rankGender) return;
+        // Vedi commento identico nella vista Atleti sopra: niente filtro
+        // separato su r.genere prima di getRankingFileCode, che lo incorpora
+        // già correttamente (anche quando il campo è vuoto su una riga manuale).
         if (rankDisciplina === 'pista' ? r.tipo !== 'pista' : r.tipo === 'pista') return;
         const rCat = getRankingFileCode(r);
         if (rCat !== rankCat) return;
@@ -29870,7 +29881,9 @@ window.shareClassifica=async function(){
     globalData.calendar.forEach(g => calMap[g.id] = g);
     const agg = {};
     resultsRaw.forEach(r => {
-      if (r.genere !== rankGender) return;
+      // Vedi commento in updateRankTable: getRankingFileCode incorpora già
+      // il genere, un filtro separato su r.genere escludeva in silenzio i
+      // risultati manuali con quel campo vuoto.
       if (getRankingFileCode(r) !== rankCat) return;
       const calEntry = calMap[r.gara_id];
       const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
