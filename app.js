@@ -2313,6 +2313,25 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const arr = _resultsByDate.get(r.data);
     if (arr) arr.push(r); else _resultsByDate.set(r.data, [r]);
   }
+  // Cache delle normalizzazioni testuali per gara_id: i risultati hanno UNA
+  // riga per ogni atleta arrivato (13000+ righe totali) ma solo ~1350
+  // gara_id DISTINTI (ogni gara ne condivide una) — senza questa cache, le
+  // ~10 replace/regex di _nm2Res venivano rieseguite IDENTICHE per ogni
+  // singolo atleta della stessa gara, in ogni voce di calendario con cui
+  // veniva confrontata: il costo reale dominante del rallentamento (~2.5s
+  // solo per il ciclo di matching, misurato in console) non era il numero
+  // di confronti calendario×risultato ma questa ripetizione ~9x per riga.
+  // gara_id e data bastano a determinare questi valori: NON dipendono
+  // dall'atleta/riga specifica, quindi si calcolano una volta sola.
+  const _garaDerivedCache = new Map();
+  const _garaDerived = (garaId) => {
+    let d = _garaDerivedCache.get(garaId);
+    if (d) return d;
+    const garaBase = garaId.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
+    d = { garaBase, garaNorm: _nm2Res(garaBase), garaEd: (garaId.match(/^(\d+)_/)||[])[1] };
+    _garaDerivedCache.set(garaId, d);
+    return d;
+  };
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
     // NB: provato ad allargare isStageRace anche al nome (non solo alla
@@ -2408,8 +2427,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
         const _rCode = getRankingFileCode(r);
         const _rLbl = _rCode ? catLabel(_rCode).trim().toLowerCase() : '';
         if (_calCatMatch(_calCatLbl, _rLbl)) {
-          const _garaBaseChk = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
-          const _garaNormChk = _nm2Res(_garaBaseChk);
+          const _garaNormChk = _garaDerived(r.gara_id).garaNorm;
           // Soglia coerente con quella del fallback generico più sotto (18
           // caratteri, non 10): una gara diversa che condivide solo un
           // pezzo di nome generico ("GRAN_PREMIO_...", 12 caratteri) con
@@ -2441,9 +2459,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // mai un incrocio con una gara diversa.
       const _tier0 = 0 - Math.min(calBase.length, 999) / 1e6;
       if (r.gara_id.startsWith(calBase)) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
-      const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
+      const { garaBase, garaNorm, garaEd: _garaEdCached } = _garaDerived(r.gara_id);
       if (garaBase === calBaseNoEd) { _setGaraToCalId(r.gara_id, cal.id, _tier0); continue; }
-      const garaNorm = _nm2Res(garaBase);
       // Per le gare A TAPPE il filtro data qui sopra è bypassato (ogni tappa
       // ha una data diversa) — questo però riapre la porta a incroci tra
       // giri COMPLETAMENTE diversi che, dopo aver tolto "DELLA/DEL/REGIONE"
@@ -2456,7 +2473,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // mescolati con l'altro. In più, per le gare a tappe l'edizione deve
       // combaciare quando è nota da entrambe le parti — la preposizione può
       // legittimamente variare, il NUMERO di edizione no.
-      const garaEdForCheck = (r.gara_id.match(/^(\d+)_/)||[])[1];
+      const garaEdForCheck = _garaEdCached;
       const _stageEdOk = !isStageRace || !calEd2 || !garaEdForCheck || calEd2 === garaEdForCheck;
       if (calNorm2 === garaNorm && _stageEdOk) {
         // Due voci di calendario possono avere lo STESSO nome normalizzato
@@ -2524,7 +2541,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // quindi lo stesso numero di edizione da solo può far incrociare due
       // giri COMPLETAMENTE diversi (es. "62° Valle d'Aosta" vs "62° Giro
       // della Regione Friuli Venezia Giulia") — per queste va escluso.
-      const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
+      const garaEd = _garaEdCached;
       const _edUnique = calEd2 && (_editionDateCount[cal.data + '|' + calEd2] || 0) <= 1;
       if (!isStageRace && _edUnique && garaEd && calEd2 === garaEd) { _setGaraToCalId(r.gara_id, cal.id, 3); continue; }
       // Fallback "prefisso comune lunghissimo" — va bene per due gare diverse
