@@ -455,7 +455,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 11;
+const OG_IMG_VERSION = 12;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -882,7 +882,33 @@ function _findCalEntryForNativeGaraId(calendar, garaId) {
       if (len > bestLen) { bestLen = len; best = g; }
     }
   }
-  return bestLen >= 8 ? best : null;
+  if (best) return best;
+  // Fallback per PAROLE (non più per prefisso letterale): a volte una parola
+  // vera si inserisce IN MEZZO al nome ufficiale, non solo in coda — es.
+  // calendario/foto "58 Coppa d'Oro Gran Premio D'ITALIA dei Direttori
+  // Sportivi" vs gara_id nativo "58 Coppa d'Oro Gran Premio dei Direttori
+  // Sportivi" (senza "D'Italia") — nessuna delle due stringhe è prefisso
+  // dell'altra (divergono a metà), ma le parole dell'una sono comunque
+  // TUTTE contenute nell'altra. Un vero sottoinsieme di parole (non una
+  // percentuale di sovrapposizione) resta un confronto sicuro: richiede
+  // comunque almeno 2 parole significative (tolto il rumore) in comune,
+  // stessa data esatta già garantita sopra.
+  const NOISE = new Set(['TROFEO','GRAN','PREMIO','COPPA','GP','CAMPIONATO','REGIONALE','PROVINCIALE','ITALIANO','NAZIONALE','MEMORIAL','CITTA',"CITTA'",'DI','D','A','E','IL','LO','LA','LE','GLI','UN','UNA','ED','MEM','TR','AM']);
+  const wordSet = s => new Set(s.split('_').filter(w => w.length >= 2 && !NOISE.has(w)));
+  const baseWords = wordSet(base);
+  if (baseWords.size < 2) return null;
+  let bestWord = null, bestWordLen = 0;
+  for (const g of (calendar || [])) {
+    if (g.data !== date || !g.id) continue;
+    const gBase = _ogNormBase(g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
+    if (!gBase) continue;
+    const gWords = wordSet(gBase);
+    const [shorter, longer] = baseWords.size <= gWords.size ? [baseWords, gWords] : [gWords, baseWords];
+    if (shorter.size >= 2 && [...shorter].every(w => longer.has(w)) && shorter.size > bestWordLen) {
+      bestWordLen = shorter.size; bestWord = g;
+    }
+  }
+  return bestWord;
 }
 
 app.get('/og/gara/:id', async (req, res) => {
@@ -952,10 +978,21 @@ app.get('/og/gara/:id', async (req, res) => {
 // così il credit corrisponde SEMPRE alla foto che si vede nell'anteprima.
 // Condividere una foto (specie di terzi, es. xpix.it) senza credit espone a
 // contestazioni: qui viene sempre incluso quando disponibile.
-async function _photoCreditFor(garaId) {
-  const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
-  if (uploaded && uploaded.length && uploaded[0].photographer) return uploaded[0].photographer;
-  const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
+// cal (opzionale, dalla stessa risoluzione di _findCalEntryForNativeGaraId
+// usata da _generateGaraPhotoBuffer): quando il titolo ufficiale della gara
+// è lungo o composto, l'id di calendario/quello con cui la foto è taggata
+// può differire dal gara_id nativo ben oltre un semplice prefisso — vedi i
+// commenti su _findCalEntryForNativeGaraId. Senza cal.id come alias in più
+// qui, il credit restava vuoto/sbagliato nel testo del post anche quando la
+// card immagine (già corretta) mostrava la foto giusta — segnalato dal vivo
+// ("58 Coppa d'Oro Gran Premio D'Italia dei Direttori Sportivi").
+async function _photoCreditFor(garaId, cal) {
+  const uploadedIds = [garaId, ...(cal?.id && cal.id !== garaId ? [cal.id] : [])];
+  for (const uid of uploadedIds) {
+    const uploaded = await queries.getApprovedRacePhotos(uid).catch(() => []);
+    if (uploaded && uploaded.length && uploaded[0].photographer) return uploaded[0].photographer;
+  }
+  const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, ''), ...(cal?.id ? [cal.id] : [])];
   const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
   for (const alias of aliases) if (xpix[alias]) return 'xpix.it';
   for (const alias of aliases) if (ic[alias]) return 'ciclismo.info';
@@ -1225,7 +1262,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
       aiText = await _generateAndStoreGaraNarrative(id).catch(() => null);
     }
     if (aiText) {
-      const credit = await _photoCreditFor(id).catch(() => null);
+      const credit = await _photoCreditFor(id, cal).catch(() => null);
       const text = credit ? `${aiText}\n\n📷 Foto: ${credit}` : aiText;
       return res.json({ text, ai: true });
     }
@@ -1233,7 +1270,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
     // Fallback: narrazione deterministica a template, senza chiamata AI
     // (Claude non configurato, o la generazione è fallita).
     const { raceName, date, luogo, top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw);
-    const credit = await _photoCreditFor(id).catch(() => null);
+    const credit = await _photoCreditFor(id, cal).catch(() => null);
     const lines = [
       raceName.toUpperCase(),
       '',
