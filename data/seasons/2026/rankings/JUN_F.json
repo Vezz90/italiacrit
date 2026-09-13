@@ -144,6 +144,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ZAMBELLI_GIULIA",
+    "cognome": "ZAMBELLI",
+    "nome": "GIULIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 129,
+    "vittorie": 3,
+    "gare": 13,
+    "p1": 3,
+    "p2": 0,
+    "p3": 1,
+    "pout": 9,
+    "pos": 10,
+    "trend": 1
+  },
+  {
     "atleta_id": "D_APOLLONIO_REBECCA",
     "cognome": "D'APOLLONIO",
     "nome": "REBECCA",
@@ -156,24 +172,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 16,
-    "pos": 10,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ZAMBELLI_GIULIA",
-    "cognome": "ZAMBELLI",
-    "nome": "GIULIA",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 119,
-    "vittorie": 3,
-    "gare": 12,
-    "p1": 3,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
     "pos": 11,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CAFUERI_RACHELE",
@@ -533,13 +533,13 @@
     "nome": "DESIREE",
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 45,
+    "punti": 46,
     "vittorie": 0,
-    "gare": 5,
+    "gare": 6,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "pos": 34,
     "trend": 0
   },
