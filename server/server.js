@@ -1213,7 +1213,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn) {
 
   try {
     const msg = await ai.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       max_tokens: 700,
       messages: [{
         role: 'user',
@@ -4749,7 +4749,7 @@ app.post('/api/gara/:garaId/ocr-arrivo', requireAuth, async (req, res) => {
     const mediaType = ['image/jpeg', 'image/png', 'image/webp'].includes(media_type) ? media_type : 'image/jpeg';
 
     const msg = await ai.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       max_tokens: 2000,
       messages: [{
         role: 'user',
@@ -7612,7 +7612,7 @@ async function generateSocialCaption({ nome_gara, winner_label, category, winner
   if (!ai) return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' — ' + category : ''}\n🔗 ${link}`;
   try {
     const msg = await ai.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       max_tokens: 300,
       messages: [{
         role: 'user',
@@ -10114,7 +10114,7 @@ ${contextParts.join('\n\n')}
     const messages = [...safeHistory, { role: 'user', content: question }];
 
     const msg = await ai.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       max_tokens: 600,
       system: systemPrompt,
       messages
