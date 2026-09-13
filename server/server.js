@@ -2854,34 +2854,6 @@ app.post('/api/admin/race-photos/fix-captions', requireAdmin, async (req, res) =
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
-// DIAGNOSTICA TEMPORANEA — da rimuovere subito dopo l'uso. Nessun dato
-// sensibile: solo lo stato di configurazione e, se presente, il messaggio
-// di errore dell'ultima chiamata di test ad Anthropic (mai la risposta,
-// mai la chiave).
-app.get('/api/_diag_ai', async (req, res) => {
-  const out = { anthropic_set: !!process.env.ANTHROPIC_API_KEY, sdk_version: null, test: null };
-  try { out.sdk_version = require('@anthropic-ai/sdk/package.json').version; } catch (e) { out.sdk_version = 'errore: ' + e.message; }
-  try {
-    const ai = getAnthropic();
-    if (!ai) { out.test = 'getAnthropic() ha restituito null'; return res.json(out); }
-    const msg = await ai.messages.create({
-      model: 'claude-sonnet-5',
-      max_tokens: 50,
-      thinking: { type: 'disabled' },
-      messages: [{ role: 'user', content: 'Rispondi solo con la parola: ok' }],
-    });
-    out.test = 'successo';
-    out.content_types = (msg.content || []).map(b => b.type);
-    out.text = (msg.content.find(b => b.type === 'text') || {}).text || null;
-  } catch (e) {
-    out.test = 'errore';
-    out.error_name = e.name;
-    out.error_message = e.message;
-    out.error_status = e.status;
-  }
-  res.json(out);
-});
-
 // ── Statistiche aggregate reali per la nuova homepage-dashboard (locale,
 // non ancora collegata al sito in produzione — vedi richiesta utente
 // "riprogetta la homepage, solo in locale"). Numeri veri dal DB storico
