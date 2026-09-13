@@ -452,7 +452,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 10;
+const OG_IMG_VERSION = 11;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -855,6 +855,18 @@ function _findCalEntryForNativeGaraId(calendar, garaId) {
   const dateM = garaId.match(/(\d{4}-\d{2}-\d{2})/);
   const date = dateM ? dateM[1] : null;
   if (!date) return null;
+  // Cronoprologo: per convenzione è la PRIMA TAPPA della corsa, ma la FCI lo
+  // pubblica nei risultati con quel nome, senza nessuna parola in comune con
+  // "Prima Tappa" del calendario — stessa regola già usata lato client
+  // (garaToCalId, tier -2 in app.js). Una foto caricata per il cronoprologo
+  // viene taggata con l'id di calendario "Prima Tappa" (l'unico noto), che
+  // nessun confronto testuale qui sotto può mai trovare da solo. Segnalato
+  // dal vivo: "34° Giro del Veneto Under23 Cronoprologo" — foto caricata mai
+  // trovata nella condivisione.
+  if (/cronoprologo|prologo/i.test(garaId)) {
+    const primaTappa = (calendar || []).find(g => g.data === date && /prima_tappa/i.test(g.id || ''));
+    if (primaTappa) return primaTappa;
+  }
   const base = _ogNormBase(bareId.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
   if (!base) return null;
   let best = null, bestLen = 0;
