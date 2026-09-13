@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "SCONOSCIUTO",
+    "team_nome": "SCONOSCIUTO",
+    "punti": 81,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 4,
+    "pos": 10
+  },
+  {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
     "punti": 75,
@@ -117,18 +129,6 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 10
-  },
-  {
-    "team_id": "SCONOSCIUTO",
-    "team_nome": "SCONOSCIUTO",
-    "punti": 72,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 3,
     "pos": 11
   },
   {
@@ -266,25 +266,25 @@
   {
     "team_id": "BURZONI_VO2_TEAM_PINK",
     "team_nome": "Burzoni - VO2 Team Pink",
-    "punti": 15,
+    "punti": 18,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
+    "pout": 2,
+    "n_atleti": 2,
     "pos": 23
   },
   {
     "team_id": "TEAM_CERESETTO_CANTURINO",
     "team_nome": "Team Ceresetto Canturino",
-    "punti": 12,
+    "punti": 18,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
+    "pout": 2,
+    "n_atleti": 2,
     "pos": 24
   },
   {
