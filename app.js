@@ -20687,18 +20687,32 @@ window._mrBulkRender = () => {
     ${window._mrBulkRows.map((r, idx) => `
       <div style="display:grid;grid-template-columns:52px 1fr 1fr 110px 28px;gap:6px;margin-bottom:6px;position:relative">
         <input type="number" min="1" value="${r.pos}" style="${inp}" oninput="window._mrBulkRows[${idx}].pos=parseInt(this.value,10)||0"/>
-        ${(() => { const teamMismatch = r._autoMatched && _mrTeamsDiffer(r.team, r._dbTeam); const col = teamMismatch ? '#F59E0B' : '#22C55E'; return `
+        ${(() => { const teamMismatch = r._autoMatched && _mrTeamsDiffer(r.team, r._dbTeam); const col = teamMismatch ? '#F59E0B' : '#22C55E';
+          // Testo digitato a mano ma MAI confermato da un click sul menù a
+          // tendina (r.cognome resta vuoto finché non si sceglie, vedi
+          // _mrBulkSearch) andava perso ad ogni ri-render della lista intera
+          // (_mrBulkRender, che ridisegna TUTTE le righe ogni volta che se ne
+          // conferma/crea/rimuove UNA) — segnalato dal vivo: un'atleta nuova
+          // appena digitata "spariva" dalla riga se nel frattempo si
+          // confermava un'altra riga. Il campo mostra sempre r._raw come
+          // fallback quando non c'è ancora un match confermato.
+          const _dispVal = r.cognome ? `${r.cognome} ${r.nome}`.trim() : (r._raw || '');
+          return `
         <div style="position:relative">
-          <input type="text" placeholder="Cerca corridore…" autocomplete="off" value="${esc(r.cognome ? `${r.cognome} ${r.nome}`.trim() : '')}"
+          <input type="text" placeholder="Cerca corridore…" autocomplete="off" value="${esc(_dispVal)}"
             oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}${r._autoMatched ? `;border-color:${col}` : ''}"
             title="${r._autoMatched ? `Riconosciuto — la foto riportava \\"${esc(r._ocrRaw)}\\", già a database come sopra` : ''}"/>
           ${teamMismatch
             ? `<div style="font-size:.66rem;color:${col};margin-top:2px">⚠ team diverso da quello a database ("${esc(r._dbTeam)}") — verifica prima di salvare</div>`
             : r._autoMatched ? `<div style="font-size:.66rem;color:${col};margin-top:2px">✓ già a database (foto: "${esc(r._ocrRaw)}")</div>` : ''}`; })()}
-          ${(r._ocrCognome && !r._autoMatched && authUser()?.role === 'admin') ? `<div style="font-size:.66rem;margin-top:2px"><button onclick="window.openMrBulkCreateAthlete(${idx})" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;font-size:inherit">＋ Nessun atleta trovato — crea nuovo profilo</button></div>` : ''}
+          ${((r._ocrCognome || (r._raw && !r.cognome)) && !r._autoMatched && authUser()?.role === 'admin') ? `<div style="font-size:.66rem;margin-top:2px"><button onclick="window.openMrBulkCreateAthlete(${idx})" style="background:none;border:none;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;font-size:inherit">＋ Nessun atleta trovato — crea nuovo profilo</button></div>` : ''}
           <div id="mr-bulk-dd-${idx}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:180px;overflow:auto;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
         </div>
-        <input type="text" placeholder="Team (obbligatorio se il corridore è vuoto)" value="${esc(r.team)}" oninput="window._mrBulkRows[${idx}].team=this.value" style="${inp}"/>
+        <div style="position:relative">
+          <input type="text" placeholder="Team (obbligatorio se il corridore è vuoto)" autocomplete="off" value="${esc(r.team)}"
+            oninput="window._mrBulkTeamSearch(${idx}, this.value)" style="${inp}"/>
+          <div id="mr-bulk-team-dd-${idx}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:180px;overflow:auto;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
+        </div>
         <input type="text" placeholder="1'23&quot;" value="${esc(r.tempo)}" oninput="window._mrBulkRows[${idx}].tempo=this.value" style="${inp}"/>
         <button onclick="window._mrBulkRemoveRow(${idx})" title="Rimuovi riga" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
       </div>`).join('')}
@@ -20717,20 +20731,39 @@ window._mrBulkSearch = (idx, val) => {
   const ql = val.trim().toLowerCase();
   if (!ql || !globalData) { dd.style.display = 'none'; return; }
   const meta = window._mrMeta || {};
-  const out = [];
+  // Escludere per categoria diversa dal profilo era troppo aggressivo: un
+  // profilo importato da fonti storiche (es. ciclismo.info) può avere una
+  // categoria vecchia/mancante o semplicemente diversa dalla gara che si sta
+  // inserendo ora (un'atleta cambia categoria a stagione in corso) — la
+  // ricerca la nascondeva del tutto, l'admin non la trovava mai e finiva per
+  // crearne un doppione (segnalato dal vivo: profilo FISCARELLI_REBECCA già
+  // esistente, mai trovato dalla ricerca durante l'inserimento di un ordine
+  // d'arrivo Juniores Donne). Ora un profilo con categoria diversa compare
+  // comunque, ma dopo quelli che combaciano e con un avviso chiaro — così
+  // resta possibile scegliere consapevolmente "sì, è la stessa persona,
+  // aggiornale la categoria" invece di crearne una seconda per errore. Il
+  // genere resta un filtro rigido (un mismatch qui è quasi sempre un errore
+  // di dati, non un cambio legittimo).
+  const exact = [], mismatched = [];
   for (const [id, a] of Object.entries(globalData.athletes || {})) {
     if (meta.genere && a.genere && a.genere !== meta.genere) continue;
-    if (meta.categoria && a.categoria && a.categoria !== meta.categoria) continue;
     const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
-    if (name.includes(ql)) out.push({ id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '' });
-    if (out.length >= 6) break;
+    if (!name.includes(ql)) continue;
+    const catOk = !meta.categoria || !a.categoria || a.categoria === meta.categoria;
+    const item = { id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '', categoria: a.categoria || '' };
+    (catOk ? exact : mismatched).push(item);
+    if (exact.length >= 6) break;
   }
+  const out = [...exact, ...mismatched].slice(0, 6);
   dd.innerHTML = out.length
-    ? out.map(o => `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
+    ? out.map(o => {
+        const catWarn = meta.categoria && o.categoria && o.categoria !== meta.categoria;
+        return `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
           onclick="window._mrBulkPick(${idx},'${esc(o.cognome.replace(/'/g,"\\'"))}','${esc(o.nome.replace(/'/g,"\\'"))}','${esc(o.team.replace(/'/g,"\\'"))}')">
           <strong>${esc(o.cognome)}</strong> ${esc(o.nome)} <span style="color:var(--text-muted);font-size:.72rem">— ${esc(o.team)}</span>
-        </div>`).join('')
-    : `<div style="padding:6px 8px;font-size:.74rem;color:var(--text-muted)">Nessun corridore di questa categoria trovato — verrà creato nuovo</div>`;
+          ${catWarn ? `<div style="color:#F59E0B;font-size:.68rem">⚠ a database come "${esc(catLabel(o.categoria) || o.categoria)}", diversa da questa gara — scegli solo se è la stessa persona</div>` : ''}
+        </div>`; }).join('')
+    : `<div style="padding:6px 8px;font-size:.74rem;color:var(--text-muted)">Nessun corridore trovato — verrà creato nuovo</div>`;
   dd.style.display = 'block';
 };
 window._mrBulkPick = (idx, cognome, nome, team) => {
@@ -20738,6 +20771,36 @@ window._mrBulkPick = (idx, cognome, nome, team) => {
   window._mrBulkRows[idx].nome = nome;
   window._mrBulkRows[idx].team = team;
   window._mrBulkRows[idx]._autoMatched = false; // scelta manuale, non più "riconosciuto automaticamente"
+  window._mrBulkRender();
+};
+
+// Suggerimenti team per riga N — stesso pattern di window._mrBulkSearch per
+// il corridore (richiesta esplicita dell'utente: "se dobbiamo cambiare il
+// team bisogna che ci sia il suggerimento come appare per il nome"). Senza
+// questo il campo team era testo libero puro, con niente che aiutasse a
+// riusare il nome ESATTO di un team già a database invece di ridigitarlo
+// (rischio di doppioni tipo "ASD Foo" vs "A.S.D. Foo") — il fuzzy-match lato
+// server (_findExistingTeam) recupera la maggior parte dei casi, ma
+// scegliere qui il nome giusto evita anche l'ambiguità visibile all'admin.
+window._mrBulkTeamSearch = (idx, val) => {
+  const dd = document.getElementById(`mr-bulk-team-dd-${idx}`);
+  window._mrBulkRows[idx].team = val;
+  if (!dd) return;
+  const ql = val.trim().toLowerCase();
+  if (!ql || !globalData) { dd.style.display = 'none'; return; }
+  const out = [];
+  for (const t of Object.values(globalData.teams || {})) {
+    if (!t.nome || !t.nome.toLowerCase().includes(ql)) continue;
+    out.push(t.nome);
+    if (out.length >= 6) break;
+  }
+  if (!out.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = out.map(nome => `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
+        onclick="window._mrBulkTeamPick(${idx},'${esc(nome.replace(/'/g,"\\'"))}')">${esc(nome)}</div>`).join('');
+  dd.style.display = 'block';
+};
+window._mrBulkTeamPick = (idx, nome) => {
+  window._mrBulkRows[idx].team = nome;
   window._mrBulkRender();
 };
 
@@ -20752,6 +20815,13 @@ window.openMrBulkCreateAthlete = (idx) => {
   const row = window._mrBulkRows[idx];
   const meta = window._mrMeta || {};
   const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  // Per una riga digitata a mano (non da foto) non c'è _ocrCognome/_ocrNome
+  // già separati: prova a spezzare _raw allo stesso modo di submitManualResultBulk
+  // (prima parola = cognome, resto = nome), così i campi arrivano precompilati
+  // anche qui invece di restare vuoti.
+  const _rawParts = (row._raw || '').trim().split(/\s+/);
+  const _guessCognome = row._ocrCognome || _rawParts[0] || '';
+  const _guessNome = row._ocrNome || _rawParts.slice(1).join(' ') || '';
   const overlay = document.createElement('div');
   overlay.id = 'mr-add-athlete-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px';
@@ -20762,9 +20832,9 @@ window.openMrBulkCreateAthlete = (idx) => {
         <strong style="font-size:1rem">＋ Nuovo atleta</strong>
         <button onclick="this.closest('#mr-add-athlete-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
-      <p style="font-size:.78rem;color:var(--text-muted);margin:0 0 14px">Nessun atleta esistente combacia — controlla nome e team dalla foto e crea il profilo (categoria/genere presi dalla gara).</p>
-      <input type="text" id="mraa-cognome" placeholder="Cognome" value="${esc(row._ocrCognome || '')}" style="${inpStyle}"/>
-      <input type="text" id="mraa-nome" placeholder="Nome" value="${esc(row._ocrNome || '')}" style="${inpStyle}"/>
+      <p style="font-size:.78rem;color:var(--text-muted);margin:0 0 14px">Nessun atleta esistente combacia — controlla nome e team e crea il profilo (categoria/genere presi dalla gara).</p>
+      <input type="text" id="mraa-cognome" placeholder="Cognome" value="${esc(_guessCognome)}" style="${inpStyle}"/>
+      <input type="text" id="mraa-nome" placeholder="Nome" value="${esc(_guessNome)}" style="${inpStyle}"/>
       <input type="text" id="mraa-team" placeholder="Team" value="${esc(row._ocrTeam || row.team || '')}" style="${inpStyle}"/>
       <div id="mraa-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
       <button id="mraa-submit" onclick="window._mrBulkSubmitCreateAthlete(${idx})" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Crea e usa in questa riga</button>
