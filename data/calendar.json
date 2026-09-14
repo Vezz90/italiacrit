@@ -23630,5 +23630,65 @@
     "regione": "CAMPANIA",
     "categoria": "Allievi",
     "luogo": "SUCCIVO"
+  },
+  {
+    "id": "IL_GIRO_D_ABRUZZO_PRIMA_TAPPA_2026-09-15",
+    "nome": "IL GIRO D'ABRUZZO PRIMA TAPPA",
+    "data": "2026-09-15",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "A tappe Classe 1 pro",
+    "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "IL_GIRO_D_ABRUZZO_SECONDA_TAPPA_2026-09-16",
+    "nome": "IL GIRO D'ABRUZZO SECONDA TAPPA",
+    "data": "2026-09-16",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "A tappe Classe 1 pro",
+    "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "IL_GIRO_D_ABRUZZO_TERZA_TAPPA_2026-09-17",
+    "nome": "IL GIRO D'ABRUZZO TERZA TAPPA",
+    "data": "2026-09-17",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "A tappe Classe 1 pro",
+    "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "IL_GIRO_D_ABRUZZO_QUARTA_TAPPA_2026-09-18",
+    "nome": "IL GIRO D'ABRUZZO QUARTA TAPPA",
+    "data": "2026-09-18",
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "A tappe Classe 1 pro",
+    "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "IL_GIRO_D_ABRUZZO_CLASSIFICA_GENERALE_2026-09-18",
+    "nome": "IL GIRO D'ABRUZZO CLASSIFICA GENERALE",
+    "data": "2026-09-18",
+    "tipo": "internazionale",
+    "moltiplicatore": 4,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "ABRUZZO",
+    "categoria": "A tappe Classe 1 pro",
+    "luogo": "VARIE LOCALITà"
   }
 ]

@@ -1857,5 +1857,80 @@
     "tappe": [],
     "lat": 45.43752,
     "lng": 9.19943
+  },
+  "IL_GIRO_D_ABRUZZO_PRIMA_TAPPA_2026-09-15": {
+    "raceid": "180713",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180713&site=strada_it",
+    "info": [
+      "IL GIRO D'ABRUZZO — 1ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-15<br><b>Descrizione:</b> .<br><b>Luogo Ritrovo:</b> CUPELLO<br><b>Indirizzo Ritrovo:</b> Piazza Benicario<br><b>Orario Ritrovo:</b> 09:50<br><b>Luogo Partenza:</b> CUPELLO<br><b>Orario Partenza:</b> 11:15<br><b>Luogo Arrivo:</b> CASALINCONTRADA<br><b>Orario Arrivo:</b> 15:15<br><b>Lunghezza KM:</b> 156"
+    ],
+    "luogo_ritrovo": "CUPELLO",
+    "indirizzo_ritrovo": "Piazza Benicario",
+    "orario_partenza": "11:15",
+    "km": "156",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "IL_GIRO_D_ABRUZZO_SECONDA_TAPPA_2026-09-16": {
+    "raceid": "180713",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180713&site=strada_it",
+    "info": [
+      "IL GIRO D'ABRUZZO — 2ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-16<br><b>Descrizione:</b> .<br><b>Luogo Ritrovo:</b> POPOLI TERME<br><b>Indirizzo Ritrovo:</b> Piazza Giuseppe Paolini<br><b>Orario Ritrovo:</b> 10:20<br><b>Luogo Partenza:</b> POPOLI TERME<br><b>Orario Partenza:</b> 11:40<br><b>Luogo Arrivo:</b> CARAMANICO TERME<br><b>Orario Arrivo:</b> 15:15<br><b>Lunghezza KM:</b> 143"
+    ],
+    "luogo_ritrovo": "POPOLI TERME",
+    "indirizzo_ritrovo": "Piazza Giuseppe Paolini",
+    "orario_partenza": "11:40",
+    "km": "143",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "IL_GIRO_D_ABRUZZO_TERZA_TAPPA_2026-09-17": {
+    "raceid": "180713",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180713&site=strada_it",
+    "info": [
+      "IL GIRO D'ABRUZZO — 3ª tappa<br><b>Data:</b> 2026-09-17<br><b>Descrizione:</b> .<br><b>Luogo Ritrovo:</b> ORICOLA - PIANA DEL CAVALIERE<br><b>Indirizzo Ritrovo:</b> Via Roma / Via Guardiola<br><b>Orario Ritrovo:</b> 10:15<br><b>Luogo Partenza:</b> ORICOLA - PIANA DEL CAVALIERE<br><b>Orario Partenza:</b> 11:35<br><b>Luogo Arrivo:</b> SAN BENEDETTO DEI MARSI<br><b>Orario Arrivo:</b> 15:15<br><b>Lunghezza KM:</b> 159"
+    ],
+    "luogo_ritrovo": "ORICOLA - PIANA DEL CAVALIERE",
+    "indirizzo_ritrovo": "Via Roma / Via Guardiola",
+    "orario_partenza": "11:35",
+    "km": "159",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "IL_GIRO_D_ABRUZZO_QUARTA_TAPPA_2026-09-18": {
+    "raceid": "180713",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180713&site=strada_it",
+    "info": [
+      "IL GIRO D'ABRUZZO — 4ª tappa<br><b>Tipo:</b> Tappa<br><b>Data:</b> 2026-09-18<br><b>Descrizione:</b> .<br><b>Luogo Ritrovo:</b> SILVI<br><b>Indirizzo Ritrovo:</b> Via Rubicone / Via Leonardo Da Vinci<br><b>Orario Ritrovo:</b> 09:30<br><b>Luogo Partenza:</b> SILVI<br><b>Orario Partenza:</b> 10:55<br><b>Luogo Arrivo:</b> CONTROGUERRA<br><b>Orario Arrivo:</b> 15:15<br><b>Lunghezza KM:</b> 182"
+    ],
+    "luogo_ritrovo": "SILVI",
+    "indirizzo_ritrovo": "Via Rubicone / Via Leonardo Da Vinci",
+    "orario_partenza": "10:55",
+    "km": "182",
+    "location_str": null,
+    "tappe": [],
+    "lat": null,
+    "lng": null
+  },
+  "IL_GIRO_D_ABRUZZO_CLASSIFICA_GENERALE_2026-09-18": {
+    "raceid": "180713",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180713&site=strada_it",
+    "info": [
+      "IL GIRO D'ABRUZZO — Classifica Generale<br><b>Copre le tappe dal:</b> 2026-09-15 <b>al:</b> 2026-09-18<br><b>Numero di tappe:</b> 4"
+    ],
+    "luogo_ritrovo": "CUPELLO",
+    "indirizzo_ritrovo": "Piazza Benicario",
+    "orario_partenza": "11:15",
+    "km": "156 2 - T2 Tipo: Tappa Prova: 2 Data: 16/09/2026",
+    "location_str": "Piazza Benicario, CUPELLO, Italia",
+    "tappe": [],
+    "lat": null,
+    "lng": null
   }
 }
