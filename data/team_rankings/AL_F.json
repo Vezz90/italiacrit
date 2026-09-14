@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "TEAM_SWORD",
+    "team_nome": "TEAM SWORD",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 45
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 15,
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "KK_TROPOVCI",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
@@ -573,7 +585,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
@@ -585,7 +597,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
+  },
+  {
+    "team_id": "ASD_ABRACALABRIA",
+    "team_nome": "ASD ABRACALABRIA",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 51
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE",
@@ -597,7 +621,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 52
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -609,7 +633,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 53
   },
   {
     "team_id": "PIEMONTE",
@@ -621,7 +645,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 52
+    "pos": 54
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
@@ -633,7 +657,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 0,
-    "pos": 53
+    "pos": 55
   },
   {
     "team_id": "RECANATI_BIKE_TEAM_ASD",
@@ -645,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 56
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -657,7 +681,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 55
+    "pos": 57
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -669,7 +693,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 58
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -681,7 +705,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 59
   },
   {
     "team_id": "PIKA_TEAM_BY_MASTERCARD",
@@ -693,7 +717,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 60
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
@@ -705,7 +729,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 61
   },
   {
     "team_id": "GERMANIA",
@@ -717,7 +741,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 62
   },
   {
     "team_id": "LIGURIA",
@@ -729,7 +753,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 63
   },
   {
     "team_id": "VALLE_D_AOSTA",
@@ -741,7 +765,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 64
   },
   {
     "team_id": "MARCHE",
@@ -753,7 +777,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 65
   },
   {
     "team_id": "FRIULI_VENEZIA_GIULIA",
@@ -765,6 +789,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 66
   }
 ]

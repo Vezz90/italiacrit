@@ -75753,13 +75753,14 @@
   "ASD_ABRACALABRIA": {
     "id": "ASD_ABRACALABRIA",
     "nome": "ASD ABRACALABRIA",
-    "punti_totali": 41,
+    "punti_totali": 53,
     "atleti": [
       "ROVITO_ANTONIO_KAROL",
       "COSENTINO_SALVATORE",
       "BUFFONE_LUIGI",
       "TENUTA_ANDREA",
-      "LOMBARDO_CRISTIAN_GISBERTO"
+      "LOMBARDO_CRISTIAN_GISBERTO",
+      "BROGNO_GIULIA_ROSARIA"
     ],
     "risultati": [
       {
@@ -75838,6 +75839,21 @@
         "media": "24.101"
       },
       {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_F",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "atleta_id": "BROGNO_GIULIA_ROSARIA",
+        "atleta_cognome": "BROGNO",
+        "atleta_nome": "GIULIA ROSARIA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "17.436"
+      },
+      {
         "gara_id": "COPPA_SANTI_MEDICI_GARA_UNICA_2026-09-06_ES2_M",
         "nome_gara": "COPPA SANTI MEDICI GARA UNICA",
         "data": "2026-09-06",
@@ -75855,15 +75871,17 @@
     ],
     "punti_per_cat": {
       "AL_M": 11,
-      "ES2_M": 30
+      "ES2_M": 30,
+      "AL_F": 12
     }
   },
   "TEAM_SWORD": {
     "id": "TEAM_SWORD",
     "nome": "TEAM SWORD",
-    "punti_totali": 3,
+    "punti_totali": 18,
     "atleti": [
-      "DANARO_ANTONIO"
+      "DANARO_ANTONIO",
+      "TOMASELLO_MARTINA"
     ],
     "risultati": [
       {
@@ -75880,10 +75898,26 @@
         "regione": "CALABRIA",
         "km": "5.000",
         "media": "25.924"
+      },
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_F",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "atleta_id": "TOMASELLO_MARTINA",
+        "atleta_cognome": "TOMASELLO",
+        "atleta_nome": "MARTINA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "17.436"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 3
+      "AL_M": 3,
+      "AL_F": 15
     }
   },
   "A_S_D_CICLO_TEAM_VALNOCE": {
