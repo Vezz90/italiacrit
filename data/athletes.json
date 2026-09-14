@@ -19617,6 +19617,448 @@
       }
     ]
   },
+  "CAMPANA_PASQUALE": {
+    "id": "CAMPANA_PASQUALE",
+    "nome": "PASQUALE",
+    "cognome": "CAMPANA",
+    "team_attuale": "LOCO BIKERS",
+    "team_id": "LOCO_BIKERS",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "LOCO BIKERS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      },
+      {
+        "gara_id": "1_CRONOSCALATA_DEL_FORTORE_2026-06-27_AL_M",
+        "nome_gara": "1 CRONOSCALATA DEL FORTORE",
+        "data": "2026-06-27",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "LOCO BIKERS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "4.000",
+        "media": "38.692"
+      },
+      {
+        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_2026-04-19_AL_M",
+        "nome_gara": "TROFEO VALLE D'OFANTO 2026",
+        "data": "2026-04-19",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "LOCO BIKERS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "50.000",
+        "media": "38.007"
+      }
+    ]
+  },
+  "CIANNI_PASQUALE": {
+    "id": "CIANNI_PASQUALE",
+    "nome": "PASQUALE",
+    "cognome": "CIANNI",
+    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
+    "team_id": "A_S_D_BELVEDERE_CICLONE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      }
+    ]
+  },
+  "SORRENTINO_ALESSIO": {
+    "id": "SORRENTINO_ALESSIO",
+    "nome": "ALESSIO",
+    "cognome": "SORRENTINO",
+    "team_attuale": "ASD STREGONE VOLANTE",
+    "team_id": "ASD_STREGONE_VOLANTE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 13,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "ASD STREGONE VOLANTE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      },
+      {
+        "gara_id": "10_MEMORIAL_ROSARIO_COSTA_2026-06-21_AL_M",
+        "nome_gara": "10 MEMORIAL ROSARIO COSTA",
+        "data": "2026-06-21",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ASD STREGONE VOLANTE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "50.000",
+        "media": ""
+      }
+    ]
+  },
+  "ARENA_ANTONIO": {
+    "id": "ARENA_ANTONIO",
+    "nome": "ANTONIO",
+    "cognome": "ARENA",
+    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
+    "team_id": "A_S_D_BELVEDERE_CICLONE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 13,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      },
+      {
+        "gara_id": "2_TROFEO_BICI_IN_COMUNE_2026-06-14_AL_M",
+        "nome_gara": "2 TROFEO BICI IN COMUNE",
+        "data": "2026-06-14",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "48.000",
+        "media": ""
+      }
+    ]
+  },
+  "SANGINETO_FRANCESCO": {
+    "id": "SANGINETO_FRANCESCO",
+    "nome": "FRANCESCO",
+    "cognome": "SANGINETO",
+    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
+    "team_id": "A_S_D_BELVEDERE_CICLONE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      },
+      {
+        "gara_id": "2_TROFEO_BICI_IN_COMUNE_2026-06-14_AL_M",
+        "nome_gara": "2 TROFEO BICI IN COMUNE",
+        "data": "2026-06-14",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "48.000",
+        "media": ""
+      },
+      {
+        "gara_id": "SOUTH_KRIT_2026-06-02_AL_M",
+        "nome_gara": "SOUTH KRIT",
+        "data": "2026-06-02",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "50.000",
+        "media": ""
+      }
+    ]
+  },
+  "ROVITO_ANTONIO_KAROL": {
+    "id": "ROVITO_ANTONIO_KAROL",
+    "nome": "ANTONIO KAROL",
+    "cognome": "ROVITO",
+    "team_attuale": "ASD ABRACALABRIA",
+    "team_id": "ASD_ABRACALABRIA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      }
+    ]
+  },
+  "COSENTINO_SALVATORE": {
+    "id": "COSENTINO_SALVATORE",
+    "nome": "SALVATORE",
+    "cognome": "COSENTINO",
+    "team_attuale": "ASD ABRACALABRIA",
+    "team_id": "ASD_ABRACALABRIA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      }
+    ]
+  },
+  "DANARO_ANTONIO": {
+    "id": "DANARO_ANTONIO",
+    "nome": "ANTONIO",
+    "cognome": "DANARO",
+    "team_attuale": "TEAM SWORD",
+    "team_id": "TEAM_SWORD",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM SWORD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      }
+    ]
+  },
+  "BUFFONE_LUIGI": {
+    "id": "BUFFONE_LUIGI",
+    "nome": "LUIGI",
+    "cognome": "BUFFONE",
+    "team_attuale": "ASD ABRACALABRIA",
+    "team_id": "ASD_ABRACALABRIA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_AL_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "25.924"
+      }
+    ]
+  },
+  "DE_LUCA_GUIDO_ANTONIO": {
+    "id": "DE_LUCA_GUIDO_ANTONIO",
+    "nome": "GUIDO ANTONIO",
+    "cognome": "DE LUCA",
+    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
+    "team_id": "A_S_D_BELVEDERE_CICLONE",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_ES1_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "22.295"
+      },
+      {
+        "gara_id": "64_MEDAGLIA_D_ORO_SS_ANNUNZIATA_GARA_UNICA_2026-08-30_ES1_M",
+        "nome_gara": "64 MEDAGLIA D'ORO SS ANNUNZIATA GARA UNICA",
+        "data": "2026-08-30",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "38.000",
+        "media": "23.750"
+      },
+      {
+        "gara_id": "10_MEMORIAL_ROSARIO_COSTA_GARA_UNICA_2026-06-21_ES1_M",
+        "nome_gara": "10 MEMORIAL ROSARIO COSTA GARA UNICA",
+        "data": "2026-06-21",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.S.D. BELVEDERE-CICLONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "30.000",
+        "media": ""
+      }
+    ]
+  },
+  "URSO_GIANNANTONIO_PIO": {
+    "id": "URSO_GIANNANTONIO_PIO",
+    "nome": "GIANNANTONIO PIO",
+    "cognome": "URSO",
+    "team_attuale": "A.S.D. CICLO TEAM VALNOCE",
+    "team_id": "A_S_D_CICLO_TEAM_VALNOCE",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_ES1_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. CICLO TEAM VALNOCE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "22.295"
+      }
+    ]
+  },
+  "TENUTA_ANDREA": {
+    "id": "TENUTA_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "TENUTA",
+    "team_attuale": "ASD ABRACALABRIA",
+    "team_id": "ASD_ABRACALABRIA",
+    "categoria": "ES2_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_ES2_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "24.101"
+      },
+      {
+        "gara_id": "COPPA_SANTI_MEDICI_GARA_UNICA_2026-09-06_ES2_M",
+        "nome_gara": "COPPA SANTI MEDICI GARA UNICA",
+        "data": "2026-09-06",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "38.400",
+        "media": "34.629"
+      }
+    ]
+  },
+  "LOMBARDO_CRISTIAN_GISBERTO": {
+    "id": "LOMBARDO_CRISTIAN_GISBERTO",
+    "nome": "CRISTIAN GISBERTO",
+    "cognome": "LOMBARDO",
+    "team_attuale": "ASD ABRACALABRIA",
+    "team_id": "ASD_ABRACALABRIA",
+    "categoria": "ES2_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_PARENTI_2026-09-13_ES2_M",
+        "nome_gara": "CRONOSCALATA PARENTI",
+        "data": "2026-09-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD ABRACALABRIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CALABRIA",
+        "km": "5.000",
+        "media": "24.101"
+      }
+    ]
+  },
   "BIANCU_LUCA": {
     "id": "BIANCU_LUCA",
     "nome": "LUCA",
@@ -67076,31 +67518,6 @@
       }
     ]
   },
-  "TENUTA_ANDREA": {
-    "id": "TENUTA_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "TENUTA",
-    "team_attuale": "ASD ABRACALABRIA",
-    "team_id": "ASD_ABRACALABRIA",
-    "categoria": "ES2_M",
-    "genere": "M",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "COPPA_SANTI_MEDICI_GARA_UNICA_2026-09-06_ES2_M",
-        "nome_gara": "COPPA SANTI MEDICI GARA UNICA",
-        "data": "2026-09-06",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ASD ABRACALABRIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "38.400",
-        "media": "34.629"
-      }
-    ]
-  },
   "DE_MARTINO_GENNARO": {
     "id": "DE_MARTINO_GENNARO",
     "nome": "MARTINO GENNARO",
@@ -98574,44 +98991,6 @@
         "regione": "TOSCANA",
         "km": "25.000",
         "media": "35.280"
-      }
-    ]
-  },
-  "DE_LUCA_GUIDO_ANTONIO": {
-    "id": "DE_LUCA_GUIDO_ANTONIO",
-    "nome": "GUIDO ANTONIO",
-    "cognome": "DE LUCA",
-    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
-    "team_id": "A_S_D_BELVEDERE_CICLONE",
-    "categoria": "ES1_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "64_MEDAGLIA_D_ORO_SS_ANNUNZIATA_GARA_UNICA_2026-08-30_ES1_M",
-        "nome_gara": "64 MEDAGLIA D'ORO SS ANNUNZIATA GARA UNICA",
-        "data": "2026-08-30",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "A.S.D. BELVEDERE-CICLONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "BASILICATA",
-        "km": "38.000",
-        "media": "23.750"
-      },
-      {
-        "gara_id": "10_MEMORIAL_ROSARIO_COSTA_GARA_UNICA_2026-06-21_ES1_M",
-        "nome_gara": "10 MEMORIAL ROSARIO COSTA GARA UNICA",
-        "data": "2026-06-21",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "A.S.D. BELVEDERE-CICLONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "30.000",
-        "media": ""
       }
     ]
   },
@@ -167224,44 +167603,6 @@
       }
     ]
   },
-  "CAMPANA_PASQUALE": {
-    "id": "CAMPANA_PASQUALE",
-    "nome": "PASQUALE",
-    "cognome": "CAMPANA",
-    "team_attuale": "LOCO BIKERS",
-    "team_id": "LOCO_BIKERS",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 9,
-    "risultati": [
-      {
-        "gara_id": "1_CRONOSCALATA_DEL_FORTORE_2026-06-27_AL_M",
-        "nome_gara": "1 CRONOSCALATA DEL FORTORE",
-        "data": "2026-06-27",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "LOCO BIKERS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "4.000",
-        "media": "38.692"
-      },
-      {
-        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_2026-04-19_AL_M",
-        "nome_gara": "TROFEO VALLE D'OFANTO 2026",
-        "data": "2026-04-19",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "LOCO BIKERS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "50.000",
-        "media": "38.007"
-      }
-    ]
-  },
   "FUNEDDA_MAURO": {
     "id": "FUNEDDA_MAURO",
     "nome": "MAURO",
@@ -170071,31 +170412,6 @@
         "regione": "TOSCANA",
         "km": "49.000",
         "media": "42.722"
-      }
-    ]
-  },
-  "SORRENTINO_ALESSIO": {
-    "id": "SORRENTINO_ALESSIO",
-    "nome": "ALESSIO",
-    "cognome": "SORRENTINO",
-    "team_attuale": "ASD STREGONE VOLANTE",
-    "team_id": "ASD_STREGONE_VOLANTE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "10_MEMORIAL_ROSARIO_COSTA_2026-06-21_AL_M",
-        "nome_gara": "10 MEMORIAL ROSARIO COSTA",
-        "data": "2026-06-21",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ASD STREGONE VOLANTE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "50.000",
-        "media": ""
       }
     ]
   },
@@ -174726,69 +175042,6 @@
         "regione": "VENETO",
         "km": "87.200",
         "media": "43.540"
-      }
-    ]
-  },
-  "ARENA_ANTONIO": {
-    "id": "ARENA_ANTONIO",
-    "nome": "ANTONIO",
-    "cognome": "ARENA",
-    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
-    "team_id": "A_S_D_BELVEDERE_CICLONE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 5,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_BICI_IN_COMUNE_2026-06-14_AL_M",
-        "nome_gara": "2 TROFEO BICI IN COMUNE",
-        "data": "2026-06-14",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "A.S.D. BELVEDERE-CICLONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "48.000",
-        "media": ""
-      }
-    ]
-  },
-  "SANGINETO_FRANCESCO": {
-    "id": "SANGINETO_FRANCESCO",
-    "nome": "FRANCESCO",
-    "cognome": "SANGINETO",
-    "team_attuale": "A.S.D. BELVEDERE-CICLONE",
-    "team_id": "A_S_D_BELVEDERE_CICLONE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 14,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_BICI_IN_COMUNE_2026-06-14_AL_M",
-        "nome_gara": "2 TROFEO BICI IN COMUNE",
-        "data": "2026-06-14",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.S.D. BELVEDERE-CICLONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "48.000",
-        "media": ""
-      },
-      {
-        "gara_id": "SOUTH_KRIT_2026-06-02_AL_M",
-        "nome_gara": "SOUTH KRIT",
-        "data": "2026-06-02",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "A.S.D. BELVEDERE-CICLONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "50.000",
-        "media": ""
       }
     ]
   },
