@@ -170,9 +170,9 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 477,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 492,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 4,
     "p3": 6,
     "pout": 39,
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
+    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+    "punti": 115,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 40
+  },
+  {
     "team_id": "OLANDA",
     "team_nome": "OLANDA",
     "punti": 110,
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -489,7 +501,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -501,7 +513,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "SS_AQUILA",
@@ -513,18 +525,6 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 43
-  },
-  {
-    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
-    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti": 103,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 44
   },
   {

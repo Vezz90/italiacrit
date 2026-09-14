@@ -640,6 +640,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BIANCU_LUCA",
+    "cognome": "BIANCU",
+    "nome": "LUCA",
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "team_nome": "POLISPORTIVA MONSUMMANESE",
+    "punti": 127,
+    "vittorie": 4,
+    "gare": 10,
+    "p1": 4,
+    "p2": 1,
+    "p3": 2,
+    "pout": 3,
+    "pos": 41,
+    "trend": 11
+  },
+  {
     "atleta_id": "CAVALLI_STEFANO",
     "cognome": "CAVALLI",
     "nome": "STEFANO",
@@ -652,8 +668,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 8,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "MARANGON_PAOLO_GRAZIANO",
@@ -668,8 +684,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 2,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "BONCIANI_ANDREA",
@@ -684,8 +700,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 8,
-    "pos": 43,
-    "trend": 0
+    "pos": 44,
+    "trend": -1
   },
   {
     "atleta_id": "CARUSO_SALVATORE",
@@ -700,8 +716,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 4,
-    "pos": 44,
-    "trend": 0
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "ZANOLINI_ERIC",
@@ -716,8 +732,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 8,
-    "pos": 45,
-    "trend": 0
+    "pos": 46,
+    "trend": -1
   },
   {
     "atleta_id": "WROLICH_SANTIAGO",
@@ -732,8 +748,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 4,
-    "pos": 46,
-    "trend": 0
+    "pos": 47,
+    "trend": -1
   },
   {
     "atleta_id": "COLOSIO_FRANCESCO",
@@ -748,8 +764,8 @@
     "p2": 1,
     "p3": 3,
     "pout": 7,
-    "pos": 47,
-    "trend": 0
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "BIRKEDAL_JULIUS",
@@ -764,8 +780,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 48,
-    "trend": 0
+    "pos": 49,
+    "trend": -1
   },
   {
     "atleta_id": "ARMANASCO_RAFFAELE",
@@ -780,8 +796,8 @@
     "p2": 3,
     "p3": 2,
     "pout": 4,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "UGUCCIONI_SAMUELE",
@@ -796,8 +812,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 10,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "IACONETA_LORENZO",
@@ -812,24 +828,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "pos": 51,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BIANCU_LUCA",
-    "cognome": "BIANCU",
-    "nome": "LUCA",
-    "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 112,
-    "vittorie": 3,
-    "gare": 9,
-    "p1": 3,
-    "p2": 1,
-    "p3": 2,
-    "pout": 3,
     "pos": 52,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "DEON_PIETRO",
@@ -1088,6 +1088,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MANNU_FRANCESCO",
+    "cognome": "MANNU",
+    "nome": "FRANCESCO",
+    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
+    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+    "punti": 94,
+    "vittorie": 1,
+    "gare": 10,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 5,
+    "pos": 69,
+    "trend": 9
+  },
+  {
     "atleta_id": "FERRONATO_PIETRO",
     "cognome": "FERRONATO",
     "nome": "PIETRO",
@@ -1100,8 +1116,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 3,
-    "pos": 69,
-    "trend": 0
+    "pos": 70,
+    "trend": -1
   },
   {
     "atleta_id": "PUCCI_LORENZO",
@@ -1116,8 +1132,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 8,
-    "pos": 70,
-    "trend": 0
+    "pos": 71,
+    "trend": -1
   },
   {
     "atleta_id": "LILLO_EDOARDO",
@@ -1132,8 +1148,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 7,
-    "pos": 71,
-    "trend": 0
+    "pos": 72,
+    "trend": -1
   },
   {
     "atleta_id": "SANTAMARIA_DANIELE",
@@ -1148,8 +1164,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 1,
-    "pos": 72,
-    "trend": 0
+    "pos": 73,
+    "trend": -1
   },
   {
     "atleta_id": "FORSYTH_ALISTAIR",
@@ -1164,8 +1180,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 73,
-    "trend": 0
+    "pos": 74,
+    "trend": -1
   },
   {
     "atleta_id": "BRUSTIA_SAMUELE",
@@ -1180,8 +1196,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 4,
-    "pos": 74,
-    "trend": 0
+    "pos": 75,
+    "trend": -1
   },
   {
     "atleta_id": "SANTORU_ALESSANDRO",
@@ -1196,8 +1212,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 2,
-    "pos": 75,
-    "trend": 0
+    "pos": 76,
+    "trend": -1
   },
   {
     "atleta_id": "KOLARSKI_ALEKSANDER",
@@ -1212,8 +1228,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 5,
-    "pos": 76,
-    "trend": 0
+    "pos": 77,
+    "trend": -1
   },
   {
     "atleta_id": "BANDINI_FILIPPO",
@@ -1228,24 +1244,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "pos": 77,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MANNU_FRANCESCO",
-    "cognome": "MANNU",
-    "nome": "FRANCESCO",
-    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
-    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti": 82,
-    "vittorie": 1,
-    "gare": 9,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 5,
     "pos": 78,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "DALLA_PRIA_GIACOMO",

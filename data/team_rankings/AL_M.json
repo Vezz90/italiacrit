@@ -420,6 +420,18 @@
     "pos": 35
   },
   {
+    "team_id": "S_C_PATTADA",
+    "team_nome": "S.C. PATTADA",
+    "punti": 193,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 6,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 36
+  },
+  {
     "team_id": "ASD_CICLOTOUR",
     "team_nome": "ASD CICLOTOUR",
     "punti": 186,
@@ -429,7 +441,19 @@
     "p3": 4,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 36
+    "pos": 37
+  },
+  {
+    "team_id": "U_C_GUSPINI_A_S_D",
+    "team_nome": "U.C. GUSPINI A.S.D.",
+    "punti": 185,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 3,
+    "p3": 2,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 38
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -441,19 +465,7 @@
     "p3": 6,
     "pout": 13,
     "n_atleti": 5,
-    "pos": 37
-  },
-  {
-    "team_id": "U_C_GUSPINI_A_S_D",
-    "team_nome": "U.C. GUSPINI A.S.D.",
-    "punti": 173,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 2,
-    "p3": 2,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
@@ -465,18 +477,6 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 39
-  },
-  {
-    "team_id": "S_C_PATTADA",
-    "team_nome": "S.C. PATTADA",
-    "punti": 172,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 6,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 40
   },
   {
@@ -720,6 +720,18 @@
     "pos": 60
   },
   {
+    "team_id": "SESTU_BIKE_A_S_D",
+    "team_nome": "SESTU BIKE A.S.D.",
+    "punti": 84,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 61
+  },
+  {
     "team_id": "SS_AQUILA",
     "team_nome": "SS AQUILA",
     "punti": 81,
@@ -729,7 +741,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "PEDALE_BREMBILLESE",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 22,
     "n_atleti": 3,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "TEAM_PIU_SPORT",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "ASD_ROBUR_BARCELLONA",
@@ -765,18 +777,6 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 64
-  },
-  {
-    "team_id": "SESTU_BIKE_A_S_D",
-    "team_nome": "SESTU BIKE A.S.D.",
-    "punti": 76,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 6,
-    "n_atleti": 1,
     "pos": 65
   },
   {
@@ -852,6 +852,18 @@
     "pos": 71
   },
   {
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 70,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 72
+  },
+  {
     "team_id": "PEDALE_OSSOLANO",
     "team_nome": "PEDALE OSSOLANO",
     "punti": 67,
@@ -861,7 +873,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -873,7 +885,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "V_C_BASSANO_1892",
@@ -909,18 +921,6 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 76
-  },
-  {
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 60,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 1,
     "pos": 77
   },
   {
