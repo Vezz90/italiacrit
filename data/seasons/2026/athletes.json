@@ -4846,7 +4846,7 @@
     "team_id": "A_S_D_S_C_PADOVANI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 160,
+    "punti_totali": 145,
     "risultati": [
       {
         "gara_id": "91_TARGA_LIBERO_FERRARIO_2026-09-13_ELI_M",
@@ -4866,10 +4866,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 1,
-        "punti_effettivi": 30,
+        "punti_effettivi": 15,
         "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -5052,7 +5052,7 @@
     "team_id": "V_C_MENDRISIO",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 30,
     "risultati": [
       {
         "gara_id": "91_TARGA_LIBERO_FERRARIO_2026-09-13_ELI_M",
@@ -5072,10 +5072,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 4,
-        "punti_effettivi": 16,
+        "punti_effettivi": 8,
         "team": "V.C.MENDRISIO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -33147,7 +33147,7 @@
     "team_id": "A_S_D_S_C_PADOVANI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 124,
+    "punti_totali": 118,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_CLASSIFICA_GENERALE_2026-09-12_ELI_M",
@@ -33180,10 +33180,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 5,
-        "punti_effettivi": 12,
+        "punti_effettivi": 6,
         "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -39885,7 +39885,7 @@
     "team_id": "SOLME_OLMO_ARVEDI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 150,
+    "punti_totali": 148,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11_ELI_M",
@@ -39905,10 +39905,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 9,
-        "punti_effettivi": 4,
+        "punti_effettivi": 2,
         "team": "SOLME - OLMO - ARVEDI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40040,7 +40040,7 @@
     "team_id": "SOLME_OLMO_ARVEDI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 205,
+    "punti_totali": 193,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11_ELI_M",
@@ -40060,10 +40060,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 2,
-        "punti_effettivi": 24,
+        "punti_effettivi": 12,
         "team": "SOLME - OLMO - ARVEDI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40169,7 +40169,7 @@
     "team_id": "ASD_G_C_SISSIO_TEAM",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 40,
+    "punti_totali": 37,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11_ELI_M",
@@ -40189,10 +40189,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 8,
-        "punti_effettivi": 6,
+        "punti_effettivi": 3,
         "team": "ASD G.C. SISSIO TEAM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40259,7 +40259,7 @@
     "team_id": "GOODSHOP_YOYOGURT",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_SECONDA_TAPPA_2026-09-11_ELI_M",
@@ -40279,10 +40279,10 @@
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 10,
-        "punti_effettivi": 2,
+        "punti_effettivi": 1,
         "team": "GOODSHOP YOYOGURT",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40323,17 +40323,17 @@
     "team_id": "UCRAINA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 92,
+    "punti_totali": 82,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 3,
-        "punti_effettivi": 20,
+        "punti_effettivi": 10,
         "team": "UCRAINA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40426,17 +40426,17 @@
     "team_id": "A_S_D_S_C_PADOVANI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 168,
+    "punti_totali": 163,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 6,
-        "punti_effettivi": 10,
+        "punti_effettivi": 5,
         "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
@@ -40542,17 +40542,17 @@
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 34,
+    "punti_totali": 30,
     "risultati": [
       {
         "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
         "nome_gara": "34 GIRO DEL VENETO UNDER23 CRONOPROLOGO",
         "data": "2026-09-10",
         "posizione": 7,
-        "punti_effettivi": 8,
+        "punti_effettivi": 4,
         "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
         "regione": "VENETO",
         "km": "1.000",
         "media": ""
