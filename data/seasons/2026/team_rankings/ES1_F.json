@@ -122,11 +122,11 @@
   {
     "team_id": "S_C_PATTADA",
     "team_nome": "S.C. PATTADA",
-    "punti": 132,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 157,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 3,
-    "p3": 4,
+    "p3": 5,
     "pout": 1,
     "n_atleti": 2,
     "pos": 11
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 40,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
     "team_id": "B_TEAM_CYCLING_PROJECT",
     "team_nome": "B-TEAM CYCLING PROJECT",
     "punti": 38,
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "U_S_C_S_I_RUBANO",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI",
@@ -393,7 +405,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "EMILIA_ROMAGNA",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 3,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -417,18 +429,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 35
-  },
-  {
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 28,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 36
   },
   {

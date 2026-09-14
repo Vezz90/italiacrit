@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "SAMABIKE",
+    "team_nome": "SAMABIKE",
+    "punti": 350,
+    "vittorie": 10,
+    "p1": 10,
+    "p2": 7,
+    "p3": 4,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 12
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 328,
@@ -141,7 +153,7 @@
     "p3": 9,
     "pout": 26,
     "n_atleti": 3,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -153,18 +165,6 @@
     "p3": 7,
     "pout": 45,
     "n_atleti": 4,
-    "pos": 13
-  },
-  {
-    "team_id": "SAMABIKE",
-    "team_nome": "SAMABIKE",
-    "punti": 323,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 6,
-    "p3": 4,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 14
   },
   {
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 157,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 4,
+    "p3": 2,
+    "pout": 13,
+    "n_atleti": 2,
+    "pos": 32
+  },
+  {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "team_nome": "GOTTARDO GIOCHI CANEVA",
     "punti": 157,
@@ -381,18 +393,6 @@
     "p3": 1,
     "pout": 17,
     "n_atleti": 3,
-    "pos": 32
-  },
-  {
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 151,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 2,
-    "pout": 12,
-    "n_atleti": 2,
     "pos": 33
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "DUEPPI_CYCLING_PROJECT",
+    "team_nome": "DUEPPI CYCLING PROJECT",
+    "punti": 139,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 6,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 37
+  },
+  {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
     "team_nome": "ASD G. C. FAUSTO COPPI",
     "punti": 131,
@@ -441,18 +453,6 @@
     "p3": 2,
     "pout": 26,
     "n_atleti": 4,
-    "pos": 37
-  },
-  {
-    "team_id": "DUEPPI_CYCLING_PROJECT",
-    "team_nome": "DUEPPI CYCLING PROJECT",
-    "punti": 129,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 5,
-    "pout": 6,
-    "n_atleti": 1,
     "pos": 38
   },
   {
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "SESTU_BIKE_A_S_D",
+    "team_nome": "SESTU BIKE A.S.D.",
+    "punti": 123,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 21,
+    "n_atleti": 2,
+    "pos": 43
+  },
+  {
     "team_id": "I_CINGHIALI_EVO",
     "team_nome": "I CINGHIALI EVO",
     "punti": 123,
@@ -513,7 +525,7 @@
     "p3": 4,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "V_C_LUGANO",
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -537,7 +549,7 @@
     "p3": 3,
     "pout": 13,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
@@ -549,7 +561,7 @@
     "p3": 3,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 21,
     "n_atleti": 4,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "UC_DONORATICO",
@@ -573,7 +585,7 @@
     "p3": 3,
     "pout": 21,
     "n_atleti": 4,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -585,18 +597,6 @@
     "p3": 1,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 49
-  },
-  {
-    "team_id": "SESTU_BIKE_A_S_D",
-    "team_nome": "SESTU BIKE A.S.D.",
-    "punti": 114,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 19,
-    "n_atleti": 2,
     "pos": 50
   },
   {
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
+    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+    "punti": 94,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 2,
+    "pos": 56
+  },
+  {
     "team_id": "PEDALE_SARZANESE",
     "team_nome": "PEDALE SARZANESE",
     "punti": 93,
@@ -669,7 +681,7 @@
     "p3": 1,
     "pout": 21,
     "n_atleti": 3,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -681,18 +693,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 57
-  },
-  {
-    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
-    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti": 86,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 13,
-    "n_atleti": 2,
     "pos": 58
   },
   {
@@ -960,6 +960,18 @@
     "pos": 80
   },
   {
+    "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
+    "team_nome": "S.C. TERRANOVA FANCELLO CICLI",
+    "punti": 50,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 11,
+    "n_atleti": 2,
+    "pos": 81
+  },
+  {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
     "punti": 50,
@@ -969,7 +981,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "A_S_D_U_S_F_COPPI_MONTECCHIO_P",
@@ -981,7 +993,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "S_C_TORRILE_PR",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "TEAM_SERIO",
@@ -1016,18 +1028,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 8,
-    "n_atleti": 2,
-    "pos": 85
-  },
-  {
-    "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
-    "team_nome": "S.C. TERRANOVA FANCELLO CICLI",
-    "punti": 47,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
     "n_atleti": 2,
     "pos": 86
   },
@@ -1104,6 +1104,18 @@
     "pos": 92
   },
   {
+    "team_id": "ALGHERO_BIKE_A_S_D",
+    "team_nome": "ALGHERO BIKE A.S.D.",
+    "punti": 39,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 93
+  },
+  {
     "team_id": "U_S_PEDALE_ARCORESE_ASD",
     "team_nome": "U.S. PEDALE ARCORESE ASD",
     "punti": 38,
@@ -1113,7 +1125,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
@@ -1125,18 +1137,6 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 94
-  },
-  {
-    "team_id": "ALGHERO_BIKE_A_S_D",
-    "team_nome": "ALGHERO BIKE A.S.D.",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 95
   },
   {
@@ -1622,12 +1622,12 @@
   {
     "team_id": "S_C_MONTEPONI_A_S_D",
     "team_nome": "S.C. MONTEPONI A.S.D.",
-    "punti": 6,
+    "punti": 7,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 1,
     "pos": 136
   },

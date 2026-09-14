@@ -336,6 +336,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ABRIONI_ALESSIA",
+    "cognome": "ABRIONI",
+    "nome": "ALESSIA",
+    "team_id": "S_C_PATTADA",
+    "team_nome": "S.C. PATTADA",
+    "punti": 83,
+    "vittorie": 3,
+    "gare": 6,
+    "p1": 3,
+    "p2": 1,
+    "p3": 1,
+    "pout": 1,
+    "pos": 22,
+    "trend": 2
+  },
+  {
     "atleta_id": "BUTTARAZZI_SOFIA",
     "cognome": "BUTTARAZZI",
     "nome": "SOFIA",
@@ -348,8 +364,8 @@
     "p2": 5,
     "p3": 2,
     "pout": 1,
-    "pos": 22,
-    "trend": 0
+    "pos": 23,
+    "trend": -1
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -364,24 +380,24 @@
     "p2": 0,
     "p3": 2,
     "pout": 11,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -1
   },
   {
-    "atleta_id": "ABRIONI_ALESSIA",
-    "cognome": "ABRIONI",
-    "nome": "ALESSIA",
+    "atleta_id": "ARCADU_GRETA",
+    "cognome": "ARCADU",
+    "nome": "GRETA",
     "team_id": "S_C_PATTADA",
     "team_nome": "S.C. PATTADA",
-    "punti": 73,
-    "vittorie": 3,
-    "gare": 5,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "pos": 24,
-    "trend": 0
+    "punti": 74,
+    "vittorie": 1,
+    "gare": 7,
+    "p1": 1,
+    "p2": 2,
+    "p3": 4,
+    "pout": 0,
+    "pos": 25,
+    "trend": 4
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -396,8 +412,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 11,
-    "pos": 25,
-    "trend": 0
+    "pos": 26,
+    "trend": -1
   },
   {
     "atleta_id": "CAPPAI_ARIANNA",
@@ -412,8 +428,8 @@
     "p2": 5,
     "p3": 0,
     "pout": 0,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -1
   },
   {
     "atleta_id": "CIANTI_NOEMI",
@@ -428,8 +444,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 11,
-    "pos": 27,
-    "trend": 0
+    "pos": 28,
+    "trend": -1
   },
   {
     "atleta_id": "CARLINO_MARIA_VITTORIA",
@@ -444,24 +460,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 1,
-    "pos": 28,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ARCADU_GRETA",
-    "cognome": "ARCADU",
-    "nome": "GRETA",
-    "team_id": "S_C_PATTADA",
-    "team_nome": "S.C. PATTADA",
-    "punti": 59,
-    "vittorie": 0,
-    "gare": 6,
-    "p1": 0,
-    "p2": 2,
-    "p3": 4,
-    "pout": 0,
     "pos": 29,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GIUSTI_NORA",
@@ -592,6 +592,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "PUTZU_EMMA",
+    "cognome": "PUTZU",
+    "nome": "EMMA",
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 40,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 3,
+    "p3": 1,
+    "pout": 0,
+    "pos": 38,
+    "trend": 6
+  },
+  {
     "atleta_id": "MORO_ELENA",
     "cognome": "MORO",
     "nome": "ELENA",
@@ -604,8 +620,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 9,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "BANDIZIOL_DILETTA",
@@ -620,8 +636,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "PASIN_GAIA",
@@ -636,8 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 40,
-    "trend": 0
+    "pos": 41,
+    "trend": -1
   },
   {
     "atleta_id": "BILLIATO_ARIANNA",
@@ -652,8 +668,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 7,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "TERIACA_ANNA",
@@ -668,8 +684,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 8,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "ALFANO_VITTORIA",
@@ -684,24 +700,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 43,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PUTZU_EMMA",
-    "cognome": "PUTZU",
-    "nome": "EMMA",
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 28,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 0,
     "pos": 44,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CAVADA_ANNA",
