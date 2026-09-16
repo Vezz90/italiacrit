@@ -8331,8 +8331,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8346,7 +8346,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 15
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8354,8 +8354,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8369,7 +8369,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 12
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8377,8 +8377,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8392,7 +8392,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 10
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8400,8 +8400,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8415,7 +8415,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 8
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8423,8 +8423,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8438,7 +8438,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 6
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8446,8 +8446,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8461,7 +8461,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 5
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8469,8 +8469,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8484,7 +8484,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 4
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8492,8 +8492,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8507,7 +8507,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 3
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8515,8 +8515,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8530,7 +8530,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 2
   },
   {
     "gara_id": "34_GIRO_DEL_VENETO_UNDER23_CRONOPROLOGO_2026-09-10_ELI_M",
@@ -8538,8 +8538,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -8553,7 +8553,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 1
   },
   {
     "gara_id": "5_GIRO_DELLA_LUNIGIANA_DONNE_JUNIORES_2026-09-09_JUN_F",
