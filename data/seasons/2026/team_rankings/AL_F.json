@@ -12,6 +12,18 @@
     "pos": 1
   },
   {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 441,
+    "vittorie": 12,
+    "p1": 12,
+    "p2": 5,
+    "p3": 5,
+    "pout": 23,
+    "n_atleti": 5,
+    "pos": 2
+  },
+  {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "punti": 441,
@@ -21,18 +33,6 @@
     "p3": 5,
     "pout": 25,
     "n_atleti": 6,
-    "pos": 2
-  },
-  {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 435,
-    "vittorie": 12,
-    "p1": 12,
-    "p2": 5,
-    "p3": 5,
-    "pout": 22,
-    "n_atleti": 5,
     "pos": 3
   },
   {
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 206,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 5,
+    "p3": 3,
+    "pout": 16,
+    "n_atleti": 2,
+    "pos": 8
+  },
+  {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
     "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
     "punti": 197,
@@ -93,18 +105,6 @@
     "p3": 2,
     "pout": 17,
     "n_atleti": 6,
-    "pos": 8
-  },
-  {
-    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
-    "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 194,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 3,
-    "pout": 16,
-    "n_atleti": 2,
     "pos": 9
   },
   {
@@ -146,11 +146,11 @@
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
-    "punti": 142,
+    "punti": 152,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
-    "p3": 1,
+    "p3": 2,
     "pout": 16,
     "n_atleti": 2,
     "pos": 13
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "BLU_TEAM",
+    "team_nome": "BLU TEAM",
+    "punti": 92,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 17
+  },
+  {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 85,
@@ -201,7 +213,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -213,18 +225,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 18
-  },
-  {
-    "team_id": "BLU_TEAM",
-    "team_nome": "BLU TEAM",
-    "punti": 77,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 1,
     "pos": 19
   },
   {
@@ -636,6 +636,18 @@
     "pos": 53
   },
   {
+    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
+    "team_nome": "G.S. LUPI VALLE D'AOSTA",
+    "punti": 11,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 54
+  },
+  {
     "team_id": "PIEMONTE",
     "team_nome": "PIEMONTE",
     "punti": 10,
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 0,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "RECANATI_BIKE_TEAM_ASD",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -705,23 +717,11 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "PIKA_TEAM_BY_MASTERCARD",
     "team_nome": "PIKA TEAM BY MASTERCARD",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 60
-  },
-  {
-    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
-    "team_nome": "G.S. LUPI VALLE D'AOSTA",
     "punti": 3,
     "vittorie": 0,
     "p1": 0,

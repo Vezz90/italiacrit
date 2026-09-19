@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 331,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 9,
+    "pout": 24,
+    "n_atleti": 7,
+    "pos": 7
+  },
+  {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
     "punti": 319,
@@ -81,18 +93,6 @@
     "p3": 3,
     "pout": 36,
     "n_atleti": 6,
-    "pos": 7
-  },
-  {
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 316,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 9,
-    "pout": 24,
-    "n_atleti": 7,
     "pos": 8
   },
   {
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "S_C_V_BIKE_CADORAGO_ASD",
+    "team_nome": "S.C.V. BIKE CADORAGO ASD",
+    "punti": 45,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 3,
+    "pos": 15
+  },
+  {
     "team_id": "GROUWELS_WATERSLEY_R_D",
     "team_nome": "GROUWELS - WATERSLEY R&D",
     "punti": 30,
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "BIESSE_CARRERA",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "CAMS_MAJACO",
@@ -201,18 +213,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 17
-  },
-  {
-    "team_id": "S_C_V_BIKE_CADORAGO_ASD",
-    "team_nome": "S.C.V. BIKE CADORAGO ASD",
-    "punti": 23,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 18
   },
   {
