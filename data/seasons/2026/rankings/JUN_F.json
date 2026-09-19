@@ -37,15 +37,31 @@
     "nome": "ELISA",
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 248,
+    "punti": 260,
     "vittorie": 0,
-    "gare": 19,
+    "gare": 20,
     "p1": 0,
-    "p2": 6,
+    "p2": 7,
     "p3": 8,
     "pout": 5,
     "pos": 3,
     "trend": 0
+  },
+  {
+    "atleta_id": "ORSI_ALESSIA",
+    "cognome": "ORSI",
+    "nome": "ALESSIA",
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 228,
+    "vittorie": 5,
+    "gare": 19,
+    "p1": 5,
+    "p2": 1,
+    "p3": 2,
+    "pout": 11,
+    "pos": 4,
+    "trend": 1
   },
   {
     "atleta_id": "BALLAN_AZZURRA",
@@ -60,24 +76,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 8,
-    "pos": 4,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ORSI_ALESSIA",
-    "cognome": "ORSI",
-    "nome": "ALESSIA",
-    "team_id": "BFT_BURZONI",
-    "team_nome": "BFT BURZONI",
-    "punti": 213,
-    "vittorie": 4,
-    "gare": 18,
-    "p1": 4,
-    "p2": 1,
-    "p3": 2,
-    "pout": 11,
     "pos": 5,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PETRIS_CARLOTTA",
@@ -85,13 +85,13 @@
     "nome": "CARLOTTA",
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 167,
+    "punti": 172,
     "vittorie": 0,
-    "gare": 13,
+    "gare": 14,
     "p1": 0,
     "p2": 3,
     "p3": 3,
-    "pout": 7,
+    "pout": 8,
     "pos": 6,
     "trend": 0
   },
@@ -117,15 +117,31 @@
     "nome": "REBECCA",
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 133,
+    "punti": 136,
     "vittorie": 1,
-    "gare": 19,
+    "gare": 20,
     "p1": 1,
     "p2": 1,
     "p3": 0,
-    "pout": 17,
+    "pout": 18,
     "pos": 8,
     "trend": 0
+  },
+  {
+    "atleta_id": "NOVOLODSKAIA_ANGELINA",
+    "cognome": "NOVOLODSKAIA",
+    "nome": "ANGELINA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 135,
+    "vittorie": 5,
+    "gare": 11,
+    "p1": 5,
+    "p2": 3,
+    "p3": 0,
+    "pout": 3,
+    "pos": 9,
+    "trend": 1
   },
   {
     "atleta_id": "BONASSI_ANNA",
@@ -140,24 +156,24 @@
     "p2": 3,
     "p3": 5,
     "pout": 7,
-    "pos": 9,
-    "trend": 0
+    "pos": 10,
+    "trend": -1
   },
   {
-    "atleta_id": "NOVOLODSKAIA_ANGELINA",
-    "cognome": "NOVOLODSKAIA",
-    "nome": "ANGELINA",
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 129,
-    "vittorie": 5,
-    "gare": 10,
-    "p1": 5,
-    "p2": 3,
-    "p3": 0,
-    "pout": 2,
-    "pos": 10,
-    "trend": 0
+    "atleta_id": "CAFUERI_RACHELE",
+    "cognome": "CAFUERI",
+    "nome": "RACHELE",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 130,
+    "vittorie": 0,
+    "gare": 18,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 16,
+    "pos": 11,
+    "trend": 1
   },
   {
     "atleta_id": "MINICHINO_MELANIA",
@@ -172,24 +188,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 7,
-    "pos": 11,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CAFUERI_RACHELE",
-    "cognome": "CAFUERI",
-    "nome": "RACHELE",
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 122,
-    "vittorie": 0,
-    "gare": 17,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 15,
     "pos": 12,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "ALHACH_SJOGREN_GAETTANA",
@@ -245,15 +245,31 @@
     "nome": "ELENA",
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 96,
+    "punti": 100,
     "vittorie": 2,
-    "gare": 9,
+    "gare": 10,
     "p1": 2,
     "p2": 0,
     "p3": 2,
-    "pout": 5,
+    "pout": 6,
     "pos": 16,
     "trend": 0
+  },
+  {
+    "atleta_id": "ORSI_MARTINA",
+    "cognome": "ORSI",
+    "nome": "MARTINA",
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 85,
+    "vittorie": 1,
+    "gare": 8,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "pos": 17,
+    "trend": 2
   },
   {
     "atleta_id": "BONISSI_EMMA",
@@ -268,8 +284,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 8,
-    "pos": 17,
-    "trend": 0
+    "pos": 18,
+    "trend": -1
   },
   {
     "atleta_id": "MASI_AURORA",
@@ -284,24 +300,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 5,
-    "pos": 18,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ORSI_MARTINA",
-    "cognome": "ORSI",
-    "nome": "MARTINA",
-    "team_id": "BFT_BURZONI",
-    "team_nome": "BFT BURZONI",
-    "punti": 75,
-    "vittorie": 1,
-    "gare": 7,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
     "pos": 19,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CORRADETTI_ELISA",
@@ -768,6 +768,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "PIRRONE_SILVIA",
+    "cognome": "PIRRONE",
+    "nome": "SILVIA",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 24,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 49,
+    "trend": 3
+  },
+  {
     "atleta_id": "ROCHE_ZOE",
     "cognome": "ROCHE",
     "nome": "ZOE",
@@ -780,8 +796,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "TINCHELLA_GINEVRA",
@@ -796,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "LAMPREA_MORALES_ZARA_SOFIA",
@@ -812,24 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 51,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PIRRONE_SILVIA",
-    "cognome": "PIRRONE",
-    "nome": "SILVIA",
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 22,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 52,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GARCIA_BARENO_DOMINGUEZ_NABYENKA",
@@ -992,6 +992,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BENUZZI_LAURA_ANNA",
+    "cognome": "BENUZZI",
+    "nome": "LAURA ANNA",
+    "team_id": "CANTURINO_1902_A_S_D",
+    "team_nome": "CANTURINO 1902 A.S.D.",
+    "punti": 12,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 63,
+    "trend": 1
+  },
+  {
     "atleta_id": "NERVO_GIORGIA",
     "cognome": "NERVO",
     "nome": "GIORGIA",
@@ -1004,24 +1020,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 63,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BENUZZI_LAURA_ANNA",
-    "cognome": "BENUZZI",
-    "nome": "LAURA ANNA",
-    "team_id": "CANTURINO_1902_A_S_D",
-    "team_nome": "CANTURINO 1902 A.S.D.",
-    "punti": 11,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
     "pos": 64,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MILESI_ALESSIA",
