@@ -38,12 +38,12 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 511,
+    "punti": 516,
     "vittorie": 9,
     "p1": 9,
     "p2": 8,
     "p3": 10,
-    "pout": 34,
+    "pout": 36,
     "n_atleti": 5,
     "pos": 4
   },
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "G_S_PREALPINO_A_S_D",
+    "team_nome": "G.S. PREALPINO A.S.D.",
+    "punti": 331,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 1,
+    "p3": 5,
+    "pout": 27,
+    "n_atleti": 4,
+    "pos": 13
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 328,
@@ -153,7 +165,7 @@
     "p3": 9,
     "pout": 26,
     "n_atleti": 3,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -165,7 +177,7 @@
     "p3": 7,
     "pout": 45,
     "n_atleti": 4,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
@@ -177,18 +189,6 @@
     "p3": 7,
     "pout": 23,
     "n_atleti": 5,
-    "pos": 15
-  },
-  {
-    "team_id": "G_S_PREALPINO_A_S_D",
-    "team_nome": "G.S. PREALPINO A.S.D.",
-    "punti": 308,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 1,
-    "p3": 5,
-    "pout": 26,
-    "n_atleti": 4,
     "pos": 16
   },
   {
@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 252,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 7,
+    "p3": 4,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 19
+  },
+  {
     "team_id": "GS_PIANELLO",
     "team_nome": "GS PIANELLO",
     "punti": 250,
@@ -225,7 +237,19 @@
     "p3": 8,
     "pout": 16,
     "n_atleti": 3,
-    "pos": 19
+    "pos": 20
+  },
+  {
+    "team_id": "VC_CREMONESE",
+    "team_nome": "VC CREMONESE",
+    "punti": 242,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 6,
+    "p3": 5,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 21
   },
   {
     "team_id": "VIGOR_CYCLING_TEAM",
@@ -237,19 +261,7 @@
     "p3": 6,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 20
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 233,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 6,
-    "p3": 4,
-    "pout": 15,
-    "n_atleti": 3,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -261,18 +273,6 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 4,
-    "pos": 22
-  },
-  {
-    "team_id": "VC_CREMONESE",
-    "team_nome": "VC CREMONESE",
-    "punti": 226,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 6,
-    "p3": 4,
-    "pout": 9,
-    "n_atleti": 2,
     "pos": 23
   },
   {
@@ -350,12 +350,12 @@
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
     "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
-    "punti": 170,
+    "punti": 173,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 1,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 4,
     "pos": 30
   },
