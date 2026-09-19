@@ -621,6 +621,11 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 #     farebbe comparire due volte lì.
 # ═══════════════════════════════════════════════════════════════
 
+# Id delle righe manual_results già sommate ai ranking (scritti in
+# data/rankings_extra_included.json): il client le esclude dal proprio delta
+# per non contarle due volte.
+EXTRA_MANUAL_IDS: list = []
+
 def fetch_pending_extra_results(races_map: dict) -> list[dict]:
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_SECRET")
@@ -629,6 +634,7 @@ def fetch_pending_extra_results(races_map: dict) -> list[dict]:
         return []
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
     extra = []
+    EXTRA_MANUAL_IDS.clear()
 
     # ── manual_results: admin "Aggiungi risultati" / foto ordine d'arrivo —
     # già con punti_effettivi/moltiplicatore/tipo/categoria corretti al
@@ -636,7 +642,7 @@ def fetch_pending_extra_results(races_map: dict) -> list[dict]:
     # nessun ricalcolo necessario.
     try:
         r = requests.get(f"{url}/rest/v1/manual_results",
-                          params={"select": "gara_id,posizione,cognome,nome,atleta_id,team,team_id,"
+                          params={"select": "id,gara_id,posizione,cognome,nome,atleta_id,team,team_id,"
                                              "data,categoria,genere,tipo,moltiplicatore,punti_effettivi,"
                                              "regione,km,media,nome_gara",
                                   "data": f"gte.{CURRENT_YEAR}-01-01"},
@@ -652,6 +658,8 @@ def fetch_pending_extra_results(races_map: dict) -> list[dict]:
             pts = row.get("punti_effettivi")
             if pts is None:
                 pts = BASE_PTS.get(pos, 0) * mult
+            if row.get("id") is not None:
+                EXTRA_MANUAL_IDS.append(row["id"])
             extra.append({
                 "gara_id": row["gara_id"], "nome_gara": row.get("nome_gara") or row["gara_id"],
                 "data": row.get("data") or "", "posizione": pos,
@@ -1100,6 +1108,7 @@ async def run_cycle():
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
+    wj(DATA_DIR/"rankings_extra_included.json", sorted(set(EXTRA_MANUAL_IDS)))
     wj(DATA_DIR/"results_raw.json", clean_results)
     wj(DATA_DIR/"athletes.json", athletes)
     wj(DATA_DIR/"teams.json", teams)

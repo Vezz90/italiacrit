@@ -1331,8 +1331,14 @@ function _addExclusionDelta(atletaId, r) {
 // caricamento iniziale per lo storico manuale, sia subito dopo ogni nuovo
 // salvataggio), applicato da loadRanking per la categoria giusta.
 let _manualRankDelta = new Map();
+// Id delle righe manuali che lo scraper ha GIÀ sommato nei file rankings/*.json
+// (vedi fetch_pending_extra_results / rankings_extra_included.json): sommarle
+// di nuovo qui le contava due volte in classifica (es. Arrighetti 355 invece
+// di 310 in home). Restano nel delta solo quelle inserite dopo l'ultimo giro.
+let _rankingsIncludedManualIds = new Set();
 function _addManualRankDelta(row) {
   if (!row.atleta_id || row.tipo === 'pista') return; // pista ha classifica a sé, non entra in quella stradale
+  if (row._manualId != null && _rankingsIncludedManualIds.has(row._manualId)) return;
   const code = getRankingFileCode(row);
   if (!code) return;
   let byAth = _manualRankDelta.get(code);
@@ -1659,7 +1665,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, manualAthletesRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, manualAthletesRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections, rankingsExtraIncluded] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1679,7 +1685,9 @@ async function loadAll() {
     getGaraCorrections(),
     getTeamNomeCorrections(),
     getRisultatoCorrections(),
+    loadJson('data/rankings_extra_included.json').catch(() => null),
   ]);
+  _rankingsIncludedManualIds = new Set(Array.isArray(rankingsExtraIncluded) ? rankingsExtraIncluded : []);
   const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
   applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
   applyRisultatoCorrections(resultsRaw, athletes, risultatoCorrections);
