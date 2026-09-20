@@ -117,13 +117,13 @@
     "nome": "GIULIA",
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 129,
+    "punti": 133,
     "vittorie": 3,
-    "gare": 13,
+    "gare": 14,
     "p1": 3,
     "p2": 0,
     "p3": 1,
-    "pout": 9,
+    "pout": 10,
     "pos": 8,
     "trend": 0
   },
@@ -176,6 +176,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "SIRI_IRMA",
+    "cognome": "SIRI",
+    "nome": "IRMA",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "team_nome": "TOP GIRLS - FASSA BORTOLO",
+    "punti": 103,
+    "vittorie": 1,
+    "gare": 7,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 4,
+    "pos": 12,
+    "trend": 1
+  },
+  {
     "atleta_id": "DE_GRANDIS_MICHELA",
     "cognome": "DE",
     "nome": "GRANDIS MICHELA",
@@ -188,24 +204,24 @@
     "p2": 2,
     "p3": 1,
     "pout": 5,
-    "pos": 12,
-    "trend": 0
+    "pos": 13,
+    "trend": -1
   },
   {
-    "atleta_id": "SIRI_IRMA",
-    "cognome": "SIRI",
-    "nome": "IRMA",
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
-    "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 100,
+    "atleta_id": "PEGOLO_CHANTAL",
+    "cognome": "PEGOLO",
+    "nome": "CHANTAL",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
+    "punti": 99,
     "vittorie": 1,
-    "gare": 6,
+    "gare": 9,
     "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 3,
-    "pos": 13,
-    "trend": 0
+    "p2": 0,
+    "p3": 2,
+    "pout": 6,
+    "pos": 14,
+    "trend": 1
   },
   {
     "atleta_id": "GILLESPIE_LARA",
@@ -220,24 +236,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 2,
-    "pos": 14,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PEGOLO_CHANTAL",
-    "cognome": "PEGOLO",
-    "nome": "CHANTAL",
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 93,
-    "vittorie": 1,
-    "gare": 8,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 5,
     "pos": 15,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CONSONNI_CHIARA",
@@ -304,6 +304,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "DANSHINA_POLINA",
+    "cognome": "DANSHINA",
+    "nome": "POLINA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 80,
+    "vittorie": 0,
+    "gare": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 4,
+    "pout": 5,
+    "pos": 20,
+    "trend": 6
+  },
+  {
     "atleta_id": "BASILICO_VALENTINA",
     "cognome": "BASILICO",
     "nome": "VALENTINA",
@@ -316,8 +332,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 20,
-    "trend": 0
+    "pos": 21,
+    "trend": -1
   },
   {
     "atleta_id": "PAVESI_MARTA",
@@ -325,15 +341,15 @@
     "nome": "MARTA",
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 74,
+    "punti": 75,
     "vittorie": 0,
-    "gare": 5,
+    "gare": 6,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 3,
-    "pos": 21,
-    "trend": 0
+    "pout": 4,
+    "pos": 22,
+    "trend": -1
   },
   {
     "atleta_id": "SEGATO_GAIA",
@@ -348,8 +364,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 22,
-    "trend": 0
+    "pos": 23,
+    "trend": -1
   },
   {
     "atleta_id": "BRAND_LUCINDA",
@@ -364,8 +380,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -1
   },
   {
     "atleta_id": "SWIERENGA_SIDNEY",
@@ -380,8 +396,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 24,
-    "trend": 0
+    "pos": 25,
+    "trend": -1
   },
   {
     "atleta_id": "VALTULINI_ELISA",
@@ -396,24 +412,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 4,
-    "pos": 25,
-    "trend": 0
-  },
-  {
-    "atleta_id": "DANSHINA_POLINA",
-    "cognome": "DANSHINA",
-    "nome": "POLINA",
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 70,
-    "vittorie": 0,
-    "gare": 8,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 5,
     "pos": 26,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "BERTEAU_VICTOIRE",
@@ -432,6 +432,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ZAMBELLI_ALESSIA",
+    "cognome": "ZAMBELLI",
+    "nome": "ALESSIA",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "team_nome": "TOP GIRLS - FASSA BORTOLO",
+    "punti": 65,
+    "vittorie": 1,
+    "gare": 8,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "pos": 28,
+    "trend": 18
+  },
+  {
     "atleta_id": "QUAGLIOTTO_NADIA",
     "cognome": "QUAGLIOTTO",
     "nome": "NADIA",
@@ -444,8 +460,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 2,
-    "pos": 28,
-    "trend": 0
+    "pos": 29,
+    "trend": -1
   },
   {
     "atleta_id": "EISEN_MALOU",
@@ -460,8 +476,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 1,
-    "pos": 29,
-    "trend": 0
+    "pos": 30,
+    "trend": -1
   },
   {
     "atleta_id": "REUSSER_MARLEN",
@@ -476,8 +492,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 30,
-    "trend": 0
+    "pos": 31,
+    "trend": -1
   },
   {
     "atleta_id": "REVELO_NATALIE",
@@ -492,8 +508,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 31,
-    "trend": 0
+    "pos": 32,
+    "trend": -1
   },
   {
     "atleta_id": "LUCCON_SARA",
@@ -508,8 +524,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 32,
-    "trend": 0
+    "pos": 33,
+    "trend": -1
   },
   {
     "atleta_id": "CASAGRANDA_ANDREA",
@@ -524,8 +540,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 33,
-    "trend": 0
+    "pos": 34,
+    "trend": -1
   },
   {
     "atleta_id": "TRINCA_COLONEL_MONICA",
@@ -540,8 +556,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 34,
-    "trend": 0
+    "pos": 35,
+    "trend": -1
   },
   {
     "atleta_id": "PIETERSE_PUCK",
@@ -556,8 +572,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 35,
-    "trend": 0
+    "pos": 36,
+    "trend": -1
   },
   {
     "atleta_id": "KINGMA_MAYA_YVETTE",
@@ -572,8 +588,24 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
+  },
+  {
+    "atleta_id": "CHIATTO_MARIA_PIA",
+    "cognome": "CHIATTO",
+    "nome": "MARIA PIA",
+    "team_id": "ZHIRAF",
+    "team_nome": "ZHIRAF",
+    "punti": 56,
+    "vittorie": 0,
+    "gare": 7,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 4,
+    "pos": 38,
+    "trend": 5
   },
   {
     "atleta_id": "VALLOTTO_GIULIA",
@@ -588,8 +620,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 7,
-    "pos": 37,
-    "trend": 0
+    "pos": 39,
+    "trend": -2
   },
   {
     "atleta_id": "IZOTOVA_ANNA",
@@ -604,8 +636,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 38,
-    "trend": 0
+    "pos": 40,
+    "trend": -2
   },
   {
     "atleta_id": "PIGOLOTTI_REBEKKA",
@@ -620,8 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 39,
-    "trend": 0
+    "pos": 41,
+    "trend": -2
   },
   {
     "atleta_id": "BAKER_GEORGIA",
@@ -636,8 +668,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 40,
-    "trend": 0
+    "pos": 42,
+    "trend": -2
   },
   {
     "atleta_id": "DE_LAURENTIIS_ELENA",
@@ -652,8 +684,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 41,
-    "trend": 0
+    "pos": 43,
+    "trend": -2
   },
   {
     "atleta_id": "GIULIANI_GIULIA",
@@ -668,24 +700,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 3,
-    "pos": 42,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CHIATTO_MARIA_PIA",
-    "cognome": "CHIATTO",
-    "nome": "MARIA PIA",
-    "team_id": "ZHIRAF",
-    "team_nome": "ZHIRAF",
-    "punti": 51,
-    "vittorie": 0,
-    "gare": 6,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 3,
-    "pos": 43,
-    "trend": 0
+    "pos": 44,
+    "trend": -2
   },
   {
     "atleta_id": "GASPARRINI_ELEONORA_CAMILLA",
@@ -700,8 +716,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 44,
-    "trend": 0
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "WILLIAMS_LILY",
@@ -716,24 +732,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 45,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ZAMBELLI_ALESSIA",
-    "cognome": "ZAMBELLI",
-    "nome": "ALESSIA",
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
-    "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 50,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
     "pos": 46,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "COLES_LYSTER_MAGGIE",
@@ -896,6 +896,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ONGARATO_LIVIELLE",
+    "cognome": "ONGARATO",
+    "nome": "LIVIELLE",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "team_nome": "HORIZONS CYCLING CLUB",
+    "punti": 44,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "pos": 57,
+    "trend": 15
+  },
+  {
     "atleta_id": "MWAMIKAZI_JAZILLA",
     "cognome": "MWAMIKAZI",
     "nome": "JAZILLA",
@@ -908,8 +924,24 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 57,
-    "trend": 0
+    "pos": 58,
+    "trend": -1
+  },
+  {
+    "atleta_id": "BONELLI_CONCETTA_GIULIA",
+    "cognome": "BONELLI",
+    "nome": "CONCETTA GIULIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 41,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "pos": 59,
+    "trend": 11
   },
   {
     "atleta_id": "VAN_SINAEY_XAYDEE",
@@ -924,8 +956,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 58,
-    "trend": 0
+    "pos": 60,
+    "trend": -2
   },
   {
     "atleta_id": "PIRRONE_ELENA",
@@ -940,8 +972,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 59,
-    "trend": 0
+    "pos": 61,
+    "trend": -2
   },
   {
     "atleta_id": "TORMENA_GAIA",
@@ -956,8 +988,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 60,
-    "trend": 0
+    "pos": 62,
+    "trend": -2
   },
   {
     "atleta_id": "BOBNAR_NIKA",
@@ -972,8 +1004,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 61,
-    "trend": 0
+    "pos": 63,
+    "trend": -2
   },
   {
     "atleta_id": "SOUREN_SCARLET",
@@ -988,8 +1020,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 62,
-    "trend": 0
+    "pos": 64,
+    "trend": -2
   },
   {
     "atleta_id": "LEIS_MAGDALENA",
@@ -1004,8 +1036,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 63,
-    "trend": 0
+    "pos": 65,
+    "trend": -2
   },
   {
     "atleta_id": "SWINKELS_KARLIJN",
@@ -1020,8 +1052,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 64,
-    "trend": 0
+    "pos": 66,
+    "trend": -2
   },
   {
     "atleta_id": "NIEWIADOMA_KASIA",
@@ -1036,8 +1068,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 65,
-    "trend": 0
+    "pos": 67,
+    "trend": -2
   },
   {
     "atleta_id": "DE_VALLIER_ELISA",
@@ -1052,8 +1084,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 66,
-    "trend": 0
+    "pos": 68,
+    "trend": -2
   },
   {
     "atleta_id": "UNEKEN_LONNEKE",
@@ -1068,8 +1100,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 67,
-    "trend": 0
+    "pos": 69,
+    "trend": -2
   },
   {
     "atleta_id": "KNIJNENBURG_ANNE",
@@ -1084,8 +1116,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 68,
-    "trend": 0
+    "pos": 70,
+    "trend": -2
   },
   {
     "atleta_id": "DICKSON_LAUREN",
@@ -1100,24 +1132,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 69,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BONELLI_CONCETTA_GIULIA",
-    "cognome": "BONELLI",
-    "nome": "CONCETTA GIULIA",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 33,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "pos": 70,
-    "trend": 0
+    "pos": 71,
+    "trend": -2
   },
   {
     "atleta_id": "SEMOLI_SERENA",
@@ -1132,24 +1148,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 2,
-    "pos": 71,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ONGARATO_LIVIELLE",
-    "cognome": "ONGARATO",
-    "nome": "LIVIELLE",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 32,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 72,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "ARICI_SOFIA",
@@ -1808,6 +1808,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "GRASSI_VITTORIA",
+    "cognome": "GRASSI",
+    "nome": "VITTORIA",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI - BEPINK",
+    "punti": 14,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 114,
+    "trend": 6
+  },
+  {
     "atleta_id": "ARLANDSON_GRACE",
     "cognome": "ARLANDSON",
     "nome": "GRACE",
@@ -1820,8 +1836,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 114,
-    "trend": 0
+    "pos": 115,
+    "trend": -1
   },
   {
     "atleta_id": "LA_BELLA_ELEONORA",
@@ -1836,8 +1852,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 115,
-    "trend": 0
+    "pos": 116,
+    "trend": -1
   },
   {
     "atleta_id": "SANARINI_LINDA",
@@ -1852,8 +1868,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 116,
-    "trend": 0
+    "pos": 117,
+    "trend": -1
   },
   {
     "atleta_id": "CAVALLAR_VALENTINA",
@@ -1868,8 +1884,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 117,
-    "trend": 0
+    "pos": 118,
+    "trend": -1
   },
   {
     "atleta_id": "BISSO_GIULIA",
@@ -1884,8 +1900,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 118,
-    "trend": 0
+    "pos": 119,
+    "trend": -1
   },
   {
     "atleta_id": "SHARP_IZZY",
@@ -1900,24 +1916,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 119,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GRASSI_VITTORIA",
-    "cognome": "GRASSI",
-    "nome": "VITTORIA",
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 12,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
     "pos": 120,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "HAUGSET_SIGRID_YTTERHUS",

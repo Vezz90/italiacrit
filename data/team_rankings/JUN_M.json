@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1802,
-    "vittorie": 26,
-    "p1": 26,
+    "punti": 1825,
+    "vittorie": 27,
+    "p1": 27,
     "p2": 17,
     "p3": 16,
-    "pout": 65,
+    "pout": 66,
     "n_atleti": 13,
     "pos": 1
   },
@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
+    "punti": 790,
+    "vittorie": 11,
+    "p1": 11,
+    "p2": 3,
+    "p3": 9,
+    "pout": 20,
+    "n_atleti": 3,
+    "pos": 5
+  },
+  {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
     "punti": 786,
@@ -57,18 +69,6 @@
     "p3": 6,
     "pout": 43,
     "n_atleti": 12,
-    "pos": 5
-  },
-  {
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 784,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 3,
-    "p3": 9,
-    "pout": 19,
-    "n_atleti": 3,
     "pos": 6
   },
   {
@@ -122,11 +122,11 @@
   {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
-    "punti": 573,
+    "punti": 583,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
-    "p3": 4,
+    "p3": 5,
     "pout": 36,
     "n_atleti": 9,
     "pos": 11
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "A_S_D_CICLISTICA_MONSELICE",
+    "team_nome": "A.S.D. CICLISTICA MONSELICE",
+    "punti": 263,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 5,
+    "p3": 6,
+    "pout": 19,
+    "n_atleti": 4,
+    "pos": 22
+  },
+  {
     "team_id": "GRENKE_AUTO_EDER",
     "team_nome": "GRENKE - AUTO EDER",
     "punti": 261,
@@ -260,18 +272,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "n_atleti": 4,
-    "pos": 22
-  },
-  {
-    "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 260,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 5,
-    "p3": 6,
-    "pout": 18,
     "n_atleti": 4,
     "pos": 23
   },
@@ -336,6 +336,18 @@
     "pos": 28
   },
   {
+    "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
+    "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+    "punti": 195,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 4,
+    "p3": 2,
+    "pout": 27,
+    "n_atleti": 10,
+    "pos": 29
+  },
+  {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
     "punti": 195,
@@ -345,18 +357,6 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 29
-  },
-  {
-    "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
-    "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-    "punti": 194,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 4,
-    "p3": 2,
-    "pout": 26,
-    "n_atleti": 10,
     "pos": 30
   },
   {
@@ -386,12 +386,12 @@
   {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
-    "punti": 147,
+    "punti": 151,
     "vittorie": 0,
     "p1": 0,
     "p2": 4,
     "p3": 2,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 6,
     "pos": 33
   },
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 118,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 15,
+    "n_atleti": 6,
+    "pos": 40
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 115,
@@ -477,7 +489,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "OLANDA",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -501,7 +513,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -513,7 +525,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "SS_AQUILA",
@@ -525,18 +537,6 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 44
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 101,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 14,
-    "n_atleti": 6,
     "pos": 45
   },
   {
@@ -1152,6 +1152,18 @@
     "pos": 96
   },
   {
+    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
+    "team_nome": "MEBLO JOGI PRO-CONCRETE",
+    "punti": 17,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 97
+  },
+  {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
     "team_nome": "S.C. TERRANOVA FANCELLO CICLI",
     "punti": 16,
@@ -1161,7 +1173,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 98
   },
   {
     "team_id": "NORWAY",
@@ -1173,7 +1185,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 99
   },
   {
     "team_id": "SLOVACCHIA",
@@ -1185,18 +1197,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 99
-  },
-  {
-    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
-    "team_nome": "MEBLO JOGI PRO-CONCRETE",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 100
   },
   {
