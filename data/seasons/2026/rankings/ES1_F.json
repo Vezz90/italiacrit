@@ -304,6 +304,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ABRIONI_ALESSIA",
+    "cognome": "ABRIONI",
+    "nome": "ALESSIA",
+    "team_id": "S_C_PATTADA",
+    "team_nome": "S.C. PATTADA",
+    "punti": 98,
+    "vittorie": 4,
+    "gare": 7,
+    "p1": 4,
+    "p2": 1,
+    "p3": 1,
+    "pout": 1,
+    "pos": 20,
+    "trend": 3
+  },
+  {
     "atleta_id": "STELLA_AURORA",
     "cognome": "STELLA",
     "nome": "AURORA",
@@ -316,8 +332,24 @@
     "p2": 0,
     "p3": 2,
     "pout": 12,
-    "pos": 20,
-    "trend": 0
+    "pos": 21,
+    "trend": -1
+  },
+  {
+    "atleta_id": "ARCADU_GRETA",
+    "cognome": "ARCADU",
+    "nome": "GRETA",
+    "team_id": "S_C_PATTADA",
+    "team_nome": "S.C. PATTADA",
+    "punti": 86,
+    "vittorie": 1,
+    "gare": 8,
+    "p1": 1,
+    "p2": 3,
+    "p3": 4,
+    "pout": 0,
+    "pos": 22,
+    "trend": 3
   },
   {
     "atleta_id": "BUTTARAZZI_GIULIA",
@@ -332,8 +364,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 21,
-    "trend": 0
+    "pos": 23,
+    "trend": -2
   },
   {
     "atleta_id": "POIDOMANI_ELENA",
@@ -348,24 +380,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 22,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ABRIONI_ALESSIA",
-    "cognome": "ABRIONI",
-    "nome": "ALESSIA",
-    "team_id": "S_C_PATTADA",
-    "team_nome": "S.C. PATTADA",
-    "punti": 83,
-    "vittorie": 3,
-    "gare": 6,
-    "p1": 3,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -2
   },
   {
     "atleta_id": "BUTTARAZZI_SOFIA",
@@ -380,24 +396,8 @@
     "p2": 5,
     "p3": 2,
     "pout": 1,
-    "pos": 24,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ARCADU_GRETA",
-    "cognome": "ARCADU",
-    "nome": "GRETA",
-    "team_id": "S_C_PATTADA",
-    "team_nome": "S.C. PATTADA",
-    "punti": 74,
-    "vittorie": 1,
-    "gare": 7,
-    "p1": 1,
-    "p2": 2,
-    "p3": 4,
-    "pout": 0,
     "pos": 25,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -560,6 +560,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "PUTZU_EMMA",
+    "cognome": "PUTZU",
+    "nome": "EMMA",
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 50,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 3,
+    "p3": 2,
+    "pout": 0,
+    "pos": 36,
+    "trend": 3
+  },
+  {
     "atleta_id": "GENTILI_PAOLA",
     "cognome": "GENTILI",
     "nome": "PAOLA",
@@ -572,8 +588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "D_EMILIO_VITTORIA",
@@ -588,8 +604,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "BACCI_SOFIA",
@@ -604,24 +620,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 38,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PUTZU_EMMA",
-    "cognome": "PUTZU",
-    "nome": "EMMA",
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 40,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 0,
     "pos": 39,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MORO_ELENA",

@@ -170,9 +170,9 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 492,
-    "vittorie": 9,
-    "p1": 9,
+    "punti": 507,
+    "vittorie": 10,
+    "p1": 10,
     "p2": 4,
     "p3": 6,
     "pout": 39,
@@ -420,6 +420,18 @@
     "pos": 35
   },
   {
+    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
+    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+    "punti": 123,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 36
+  },
+  {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
     "team_nome": "PC BAIX EBRE TORTOSA",
     "punti": 123,
@@ -429,7 +441,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -441,7 +453,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "TEAM_BELVEDERE",
@@ -465,7 +477,7 @@
     "p3": 3,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -477,18 +489,6 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 6,
-    "pos": 40
-  },
-  {
-    "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
-    "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti": 115,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 2,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 41
   },
   {
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "S_C_MONTEPONI_A_S_D",
+    "team_nome": "S.C. MONTEPONI A.S.D.",
+    "punti": 105,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 45
+  },
+  {
     "team_id": "SS_AQUILA",
     "team_nome": "SS AQUILA",
     "punti": 105,
@@ -537,7 +549,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 11,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "MASTROMARCO_FC_NIBALI",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "VELEKA_TEAM",
@@ -573,7 +585,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 6,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -585,18 +597,6 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 6,
-    "pos": 49
-  },
-  {
-    "team_id": "S_C_MONTEPONI_A_S_D",
-    "team_nome": "S.C. MONTEPONI A.S.D.",
-    "punti": 93,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 50
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "POOL_BIKE_SERRAMANNA",
+    "team_nome": "POOL BIKE SERRAMANNA",
+    "punti": 61,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 60
+  },
+  {
     "team_id": "PIEMONTE",
     "team_nome": "PIEMONTE",
     "punti": 60,
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "SVIZZERA",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "ARKITANO_MTB_CLUB",
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "JEGG_SKIL_DJR",
@@ -777,18 +789,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 65
-  },
-  {
-    "team_id": "POOL_BIKE_SERRAMANNA",
-    "team_nome": "POOL BIKE SERRAMANNA",
-    "punti": 51,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 5,
-    "n_atleti": 1,
     "pos": 66
   },
   {
