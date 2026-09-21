@@ -2,7 +2,7 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1577,
+    "punti": 1603,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
@@ -50,7 +50,7 @@
   {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 724,
+    "punti": 738,
     "vittorie": 7,
     "p1": 7,
     "p2": 4,
@@ -62,7 +62,7 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 691,
+    "punti": 695,
     "vittorie": 3,
     "p1": 3,
     "p2": 11,
@@ -254,7 +254,7 @@
   {
     "team_id": "V_C_MENDRISIO",
     "team_nome": "V.C.MENDRISIO",
-    "punti": 263,
+    "punti": 271,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
@@ -384,27 +384,27 @@
     "pos": 32
   },
   {
-    "team_id": "ASD_G_C_SISSIO_TEAM",
-    "team_nome": "ASD G.C. SISSIO TEAM",
-    "punti": 126,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 17,
-    "n_atleti": 8,
-    "pos": 33
-  },
-  {
     "team_id": "UCRAINA",
     "team_nome": "UCRAINA",
-    "punti": 119,
+    "punti": 129,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 4,
     "pout": 8,
     "n_atleti": 5,
+    "pos": 33
+  },
+  {
+    "team_id": "ASD_G_C_SISSIO_TEAM",
+    "team_nome": "ASD G.C. SISSIO TEAM",
+    "punti": 129,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 17,
+    "n_atleti": 8,
     "pos": 34
   },
   {
@@ -458,7 +458,7 @@
   {
     "team_id": "GOODSHOP_YOYOGURT",
     "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 90,
+    "punti": 91,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
