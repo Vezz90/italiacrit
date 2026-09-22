@@ -38,7 +38,7 @@
   {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 426,
+    "punti": 425,
     "vittorie": 8,
     "p1": 8,
     "p2": 8,
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "POOL_BIKE_SERRAMANNA",
+    "team_nome": "POOL BIKE SERRAMANNA",
+    "punti": 225,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 4,
+    "pout": 13,
+    "n_atleti": 2,
+    "pos": 20
+  },
+  {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
     "team_nome": "UC GODIGESE ABRA IRIDE",
     "punti": 222,
@@ -237,18 +249,6 @@
     "p3": 6,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 20
-  },
-  {
-    "team_id": "POOL_BIKE_SERRAMANNA",
-    "team_nome": "POOL BIKE SERRAMANNA",
-    "punti": 219,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 4,
-    "pout": 12,
-    "n_atleti": 2,
     "pos": 21
   },
   {
@@ -590,7 +590,7 @@
   {
     "team_id": "S_C_PATTADA",
     "team_nome": "S.C. PATTADA",
-    "punti": 141,
+    "punti": 140,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
@@ -974,7 +974,7 @@
   {
     "team_id": "U_C_GUSPINI_A_S_D",
     "team_nome": "U.C. GUSPINI A.S.D.",
-    "punti": 59,
+    "punti": 58,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,

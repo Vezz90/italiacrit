@@ -312,18 +312,6 @@
     "pos": 26
   },
   {
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 50,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 2,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 27
-  },
-  {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
     "team_nome": "KTM ACADEMY LE MARMOTTE",
     "punti": 48,
@@ -333,7 +321,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 27
   },
   {
     "team_id": "TOSCANA",
@@ -345,7 +333,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 29
+    "pos": 28
   },
   {
     "team_id": "LOMBARDIA",
@@ -357,7 +345,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 7,
-    "pos": 30
+    "pos": 29
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -368,6 +356,18 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 40,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 1,
+    "pout": 0,
     "n_atleti": 1,
     "pos": 31
   },

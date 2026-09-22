@@ -560,22 +560,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "PUTZU_EMMA",
-    "cognome": "PUTZU",
-    "nome": "EMMA",
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti": 50,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 3,
-    "p3": 2,
-    "pout": 0,
-    "pos": 36,
-    "trend": 0
-  },
-  {
     "atleta_id": "GENTILI_PAOLA",
     "cognome": "GENTILI",
     "nome": "PAOLA",
@@ -588,8 +572,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 37,
-    "trend": 0
+    "pos": 36,
+    "trend": 1
   },
   {
     "atleta_id": "D_EMILIO_VITTORIA",
@@ -604,8 +588,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 38,
-    "trend": 0
+    "pos": 37,
+    "trend": 1
   },
   {
     "atleta_id": "BACCI_SOFIA",
@@ -620,8 +604,24 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
+    "pos": 38,
+    "trend": 1
+  },
+  {
+    "atleta_id": "PUTZU_EMMA",
+    "cognome": "PUTZU",
+    "nome": "EMMA",
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "punti": 40,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 3,
+    "p3": 1,
+    "pout": 0,
     "pos": 39,
-    "trend": 0
+    "trend": -3
   },
   {
     "atleta_id": "MORO_ELENA",

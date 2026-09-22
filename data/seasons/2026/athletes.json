@@ -36626,6 +36626,83 @@
       }
     ]
   },
+  "LAI_MARCO": {
+    "id": "LAI_MARCO",
+    "nome": "MARCO",
+    "cognome": "LAI",
+    "team_attuale": "POOL BIKE SERRAMANNA",
+    "team_id": "POOL_BIKE_SERRAMANNA",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 23,
+    "risultati": [
+      {
+        "gara_id": "10_COPPA_CITTA_DI_SILIQUA_GARA_UNICA_2026-09-20_ES1_M",
+        "nome_gara": "10 COPPA CITTA' DI SILIQUA GARA UNICA",
+        "data": "2026-09-20",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "33.000",
+        "media": "39.312"
+      },
+      {
+        "gara_id": "COPPA_COMUNE_DI_BERCHIDDA_GARA_UNICA_2026-09-13_ES1_M",
+        "nome_gara": "COPPA COMUNE DI BERCHIDDA GARA UNICA",
+        "data": "2026-09-13",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "32.000",
+        "media": "30.968"
+      },
+      {
+        "gara_id": "TROFEO_FOLK_FESTA_2026_GARA_UNICA_2026-07-19_ES1_M",
+        "nome_gara": "TROFEO FOLK FESTA 2026 GARA UNICA",
+        "data": "2026-07-19",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "34.000",
+        "media": "34.580"
+      },
+      {
+        "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES1_M",
+        "nome_gara": "19 TROFEO MG TUNING GARA UNICA",
+        "data": "2026-04-26",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "26.400",
+        "media": "32.330"
+      },
+      {
+        "gara_id": "CAMPIONATO_REGIONALE_CRONOMETRO_MEMORIAL_MARIO_CERVO_2026-04-25_ES1_M",
+        "nome_gara": "CAMPIONATO REGIONALE CRONOMETRO MEMORIAL MARIO CERVO",
+        "data": "2026-04-25",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "10.000",
+        "media": ""
+      }
+    ]
+  },
   "SPANO_GABRIELE": {
     "id": "SPANO_GABRIELE",
     "nome": "GABRIELE",
@@ -36634,14 +36711,14 @@
     "team_id": "S_C_PATTADA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 136,
+    "punti_totali": 135,
     "risultati": [
       {
         "gara_id": "10_COPPA_CITTA_DI_SILIQUA_GARA_UNICA_2026-09-20_ES1_M",
         "nome_gara": "10 COPPA CITTA' DI SILIQUA GARA UNICA",
         "data": "2026-09-20",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "team": "S.C. PATTADA",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -36828,14 +36905,14 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 133,
+    "punti_totali": 132,
     "risultati": [
       {
         "gara_id": "10_COPPA_CITTA_DI_SILIQUA_GARA_UNICA_2026-09-20_ES1_M",
         "nome_gara": "10 COPPA CITTA' DI SILIQUA GARA UNICA",
         "data": "2026-09-20",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "team": "CRAZY WHEELS - CYCLING ACADEMY",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -37022,14 +37099,14 @@
     "team_id": "U_C_GUSPINI_A_S_D",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 47,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "10_COPPA_CITTA_DI_SILIQUA_GARA_UNICA_2026-09-20_ES1_M",
         "nome_gara": "10 COPPA CITTA' DI SILIQUA GARA UNICA",
         "data": "2026-09-20",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "team": "U.C. GUSPINI A.S.D.",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -37307,70 +37384,6 @@
         "regione": "SARDEGNA",
         "km": "26.000",
         "media": "35.455"
-      }
-    ]
-  },
-  "PUTZU_EMMA": {
-    "id": "PUTZU_EMMA",
-    "nome": "EMMA",
-    "cognome": "PUTZU",
-    "team_attuale": "CRAZY WHEELS - CYCLING ACADEMY",
-    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "categoria": "ES1_F",
-    "genere": "F",
-    "punti_totali": 44,
-    "risultati": [
-      {
-        "gara_id": "10_COPPA_CITTA_DI_SILIQUA_GARA_UNICA_2026-09-20_ES1_F",
-        "nome_gara": "10 COPPA CITTA' DI SILIQUA GARA UNICA",
-        "data": "2026-09-20",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CRAZY WHEELS - CYCLING ACADEMY",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "33.000",
-        "media": "39.312"
-      },
-      {
-        "gara_id": "COPPA_COMUNE_DI_BERCHIDDA_GARA_UNICA_2026-09-13_ES1_F",
-        "nome_gara": "COPPA COMUNE DI BERCHIDDA GARA UNICA",
-        "data": "2026-09-13",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "CRAZY WHEELS - CYCLING ACADEMY",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "32.000",
-        "media": "30.968"
-      },
-      {
-        "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_F",
-        "nome_gara": "1 COPPA DELLE BORGATE GARA UNICA",
-        "data": "2026-05-03",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "CRAZY WHEELS - CYCLING ACADEMY",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "27.800",
-        "media": "37.070"
-      },
-      {
-        "gara_id": "TROFEO_CITTA_DI_GUSPINI_GARA_UNICA_2026-04-12_ES1_F",
-        "nome_gara": "TROFEO CITTA' DI GUSPINI GARA UNICA",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CRAZY WHEELS - CYCLING ACADEMY",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "33.000",
-        "media": "33.000"
       }
     ]
   },
@@ -68429,70 +68442,6 @@
       }
     ]
   },
-  "LAI_MARCO": {
-    "id": "LAI_MARCO",
-    "nome": "MARCO",
-    "cognome": "LAI",
-    "team_attuale": "POOL BIKE SERRAMANNA",
-    "team_id": "POOL_BIKE_SERRAMANNA",
-    "categoria": "ES1_M",
-    "genere": "M",
-    "punti_totali": 17,
-    "risultati": [
-      {
-        "gara_id": "COPPA_COMUNE_DI_BERCHIDDA_GARA_UNICA_2026-09-13_ES1_M",
-        "nome_gara": "COPPA COMUNE DI BERCHIDDA GARA UNICA",
-        "data": "2026-09-13",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "POOL BIKE SERRAMANNA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "32.000",
-        "media": "30.968"
-      },
-      {
-        "gara_id": "TROFEO_FOLK_FESTA_2026_GARA_UNICA_2026-07-19_ES1_M",
-        "nome_gara": "TROFEO FOLK FESTA 2026 GARA UNICA",
-        "data": "2026-07-19",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "POOL BIKE SERRAMANNA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "34.000",
-        "media": "34.580"
-      },
-      {
-        "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES1_M",
-        "nome_gara": "19 TROFEO MG TUNING GARA UNICA",
-        "data": "2026-04-26",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "POOL BIKE SERRAMANNA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "26.400",
-        "media": "32.330"
-      },
-      {
-        "gara_id": "CAMPIONATO_REGIONALE_CRONOMETRO_MEMORIAL_MARIO_CERVO_2026-04-25_ES1_M",
-        "nome_gara": "CAMPIONATO REGIONALE CRONOMETRO MEMORIAL MARIO CERVO",
-        "data": "2026-04-25",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "POOL BIKE SERRAMANNA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "10.000",
-        "media": ""
-      }
-    ]
-  },
   "PIZZI_ALESSANDRO": {
     "id": "PIZZI_ALESSANDRO",
     "nome": "ALESSANDRO",
@@ -68632,6 +68581,57 @@
         "regione": "SARDEGNA",
         "km": "10.000",
         "media": ""
+      }
+    ]
+  },
+  "PUTZU_EMMA": {
+    "id": "PUTZU_EMMA",
+    "nome": "EMMA",
+    "cognome": "PUTZU",
+    "team_attuale": "CRAZY WHEELS - CYCLING ACADEMY",
+    "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
+    "categoria": "ES1_F",
+    "genere": "F",
+    "punti_totali": 34,
+    "risultati": [
+      {
+        "gara_id": "COPPA_COMUNE_DI_BERCHIDDA_GARA_UNICA_2026-09-13_ES1_F",
+        "nome_gara": "COPPA COMUNE DI BERCHIDDA GARA UNICA",
+        "data": "2026-09-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "32.000",
+        "media": "30.968"
+      },
+      {
+        "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_F",
+        "nome_gara": "1 COPPA DELLE BORGATE GARA UNICA",
+        "data": "2026-05-03",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "27.800",
+        "media": "37.070"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_GUSPINI_GARA_UNICA_2026-04-12_ES1_F",
+        "nome_gara": "TROFEO CITTA' DI GUSPINI GARA UNICA",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "33.000",
+        "media": "33.000"
       }
     ]
   },
