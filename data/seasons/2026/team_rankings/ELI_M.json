@@ -2,12 +2,12 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1579,
+    "punti": 1577,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
     "p3": 7,
-    "pout": 50,
+    "pout": 51,
     "n_atleti": 13,
     "pos": 1
   },
@@ -20,16 +20,16 @@
     "p2": 5,
     "p3": 5,
     "pout": 47,
-    "n_atleti": 16,
+    "n_atleti": 15,
     "pos": 2
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 1156,
+    "punti": 1192,
     "vittorie": 7,
     "p1": 7,
-    "p2": 13,
+    "p2": 14,
     "p3": 9,
     "pout": 41,
     "n_atleti": 13,
@@ -50,11 +50,11 @@
   {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 708,
+    "punti": 724,
     "vittorie": 7,
     "p1": 7,
     "p2": 4,
-    "p3": 7,
+    "p3": 8,
     "pout": 31,
     "n_atleti": 12,
     "pos": 5
@@ -62,7 +62,7 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 701,
+    "punti": 697,
     "vittorie": 3,
     "p1": 3,
     "p2": 11,
@@ -254,7 +254,7 @@
   {
     "team_id": "V_C_MENDRISIO",
     "team_nome": "V.C.MENDRISIO",
-    "punti": 275,
+    "punti": 267,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
@@ -384,27 +384,27 @@
     "pos": 32
   },
   {
-    "team_id": "UCRAINA",
-    "team_nome": "UCRAINA",
-    "punti": 129,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 4,
-    "pout": 8,
-    "n_atleti": 5,
-    "pos": 33
-  },
-  {
     "team_id": "ASD_G_C_SISSIO_TEAM",
     "team_nome": "ASD G.C. SISSIO TEAM",
-    "punti": 129,
+    "punti": 126,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 1,
     "pout": 17,
     "n_atleti": 8,
+    "pos": 33
+  },
+  {
+    "team_id": "UCRAINA",
+    "team_nome": "UCRAINA",
+    "punti": 119,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 4,
+    "pout": 8,
+    "n_atleti": 5,
     "pos": 34
   },
   {
@@ -446,7 +446,7 @@
   {
     "team_id": "GOODSHOP_YOYOGURT",
     "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 91,
+    "punti": 90,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
