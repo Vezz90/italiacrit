@@ -2,12 +2,12 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1577,
+    "punti": 1590,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
     "p3": 7,
-    "pout": 51,
+    "pout": 53,
     "n_atleti": 13,
     "pos": 1
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "team_nome": "GALLINA LUCCHINI ECOTEK",
+    "punti": 399,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 3,
+    "p3": 5,
+    "pout": 35,
+    "n_atleti": 9,
+    "pos": 12
+  },
+  {
     "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
     "team_nome": "UAE TEAM EMIRATES GEN-Z",
     "punti": 396,
@@ -140,18 +152,6 @@
     "p2": 4,
     "p3": 1,
     "pout": 13,
-    "n_atleti": 9,
-    "pos": 12
-  },
-  {
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 395,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 5,
-    "pout": 34,
     "n_atleti": 9,
     "pos": 13
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
+    "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+    "punti": 329,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 5,
+    "pout": 17,
+    "n_atleti": 7,
+    "pos": 16
+  },
+  {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
     "team_nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
     "punti": 322,
@@ -189,18 +201,6 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 16
-  },
-  {
-    "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
-    "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-    "punti": 317,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 2,
-    "p3": 5,
-    "pout": 17,
-    "n_atleti": 7,
     "pos": 17
   },
   {
@@ -254,12 +254,12 @@
   {
     "team_id": "V_C_MENDRISIO",
     "team_nome": "V.C.MENDRISIO",
-    "punti": 267,
+    "punti": 269,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 7,
     "pos": 22
   },
@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "RIME_DRALI",
+    "team_nome": "RIME DRALI",
+    "punti": 141,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 21,
+    "n_atleti": 7,
+    "pos": 31
+  },
+  {
     "team_id": "MULTICAR_GRUPPO_AMARU",
     "team_nome": "MULTICAR GRUPPO AMARU'",
     "punti": 135,
@@ -369,18 +381,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 31
-  },
-  {
-    "team_id": "RIME_DRALI",
-    "team_nome": "RIME DRALI",
-    "punti": 135,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 20,
-    "n_atleti": 7,
     "pos": 32
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "GOODSHOP_YOYOGURT",
+    "team_nome": "GOODSHOP YOYOGURT",
+    "punti": 105,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 4,
+    "pos": 37
+  },
+  {
     "team_id": "LOTTO_GROUPE_WANTY",
     "team_nome": "LOTTO -GROUPE WANTY",
     "punti": 97,
@@ -441,18 +453,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 37
-  },
-  {
-    "team_id": "GOODSHOP_YOYOGURT",
-    "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 90,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 4,
     "pos": 38
   },
   {
@@ -552,6 +552,18 @@
     "pos": 46
   },
   {
+    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "punti": 62,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 11,
+    "n_atleti": 3,
+    "pos": 47
+  },
+  {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
     "team_nome": "WWV HAGENS BERMAN - JAYCO",
     "punti": 62,
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
@@ -573,18 +585,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 48
-  },
-  {
-    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
-    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "punti": 61,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 3,
     "pos": 49
   },
   {
@@ -948,6 +948,18 @@
     "pos": 79
   },
   {
+    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
+    "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 80
+  },
+  {
     "team_id": "TUDOR_PRO_CYCLING_U23",
     "team_nome": "TUDOR PRO CYCLING U23",
     "punti": 10,
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "A_S_D_CATTOLI_ANDREA",
@@ -969,7 +981,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "TEAM_WSA_KTM_GRAZ",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "PETROLIKE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "ELITE_FONDATIONS_CYCLING_TEAM",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "ITALIA",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -1041,7 +1053,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "BIKE_ACADEMY_MARCHINI_COSTRUZIONI",
@@ -1053,7 +1065,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "VELOCE_CLUB_ISOLANO",
@@ -1065,7 +1077,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 89
+    "pos": 90
+  },
+  {
+    "team_id": "NAZIONALE_ROMANIA",
+    "team_nome": "NAZIONALE ROMANIA",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 91
   },
   {
     "team_id": "NMD_CYCLING_TEAM_S_S_D_A_R_L",
@@ -1077,7 +1101,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 90
+    "pos": 92
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -1089,7 +1113,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 93
   },
   {
     "team_id": "CAJA_RURAL_ALEA",
@@ -1101,7 +1125,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 92
+    "pos": 94
   },
   {
     "team_id": "TEAM_MAZZOLA_P_G_C_U23",
@@ -1113,7 +1137,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 93
+    "pos": 95
   },
   {
     "team_id": "G_S_PODENZANO_A_S_D",
@@ -1125,7 +1149,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 94
+    "pos": 96
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1137,7 +1161,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 95
+    "pos": 97
   },
   {
     "team_id": "DU_ACADEMY",
@@ -1149,7 +1173,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 96
+    "pos": 98
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -1161,6 +1185,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 99
   }
 ]
