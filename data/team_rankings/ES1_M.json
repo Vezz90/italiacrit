@@ -2,9 +2,9 @@
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 1121,
-    "vittorie": 35,
-    "p1": 35,
+    "punti": 1136,
+    "vittorie": 36,
+    "p1": 36,
     "p2": 18,
     "p3": 15,
     "pout": 38,
@@ -14,12 +14,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 661,
+    "punti": 679,
     "vittorie": 10,
     "p1": 10,
-    "p2": 13,
+    "p2": 14,
     "p3": 12,
-    "pout": 58,
+    "pout": 59,
     "n_atleti": 6,
     "pos": 2
   },
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "TEAM_SERIO",
+    "team_nome": "TEAM SERIO",
+    "punti": 194,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 4,
+    "p3": 5,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
     "punti": 193,
@@ -309,7 +321,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -321,7 +333,7 @@
     "p3": 4,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "A_S_D_GDS_TEAM_COMPETITION",
@@ -332,18 +344,6 @@
     "p2": 3,
     "p3": 3,
     "pout": 2,
-    "n_atleti": 1,
-    "pos": 28
-  },
-  {
-    "team_id": "TEAM_SERIO",
-    "team_nome": "TEAM SERIO",
-    "punti": 186,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 4,
-    "p3": 5,
-    "pout": 6,
     "n_atleti": 1,
     "pos": 29
   },
@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 184,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 6,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 31
+  },
+  {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
     "punti": 184,
@@ -369,19 +381,19 @@
     "p3": 1,
     "pout": 39,
     "n_atleti": 5,
-    "pos": 31
+    "pos": 32
   },
   {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 180,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 6,
-    "pout": 13,
-    "n_atleti": 3,
-    "pos": 32
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 182,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 26,
+    "n_atleti": 5,
+    "pos": 33
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -393,7 +405,7 @@
     "p3": 3,
     "pout": 19,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -405,19 +417,19 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 35
   },
   {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 172,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 26,
-    "n_atleti": 5,
-    "pos": 35
+    "team_id": "A_S_D_PEDALE_CASTELLANO",
+    "team_nome": "A.S.D. PEDALE CASTELLANO",
+    "punti": 169,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 5,
+    "pout": 16,
+    "n_atleti": 2,
+    "pos": 36
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -429,7 +441,7 @@
     "p3": 6,
     "pout": 17,
     "n_atleti": 3,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "G_S_AVIS_BIKE_AMELIA",
@@ -441,18 +453,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 37
-  },
-  {
-    "team_id": "A_S_D_PEDALE_CASTELLANO",
-    "team_nome": "A.S.D. PEDALE CASTELLANO",
-    "punti": 164,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 5,
-    "pout": 15,
-    "n_atleti": 2,
     "pos": 38
   },
   {
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
+    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "punti": 159,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 31,
+    "n_atleti": 3,
+    "pos": 43
+  },
+  {
     "team_id": "CAMB_KE",
     "team_nome": "CAMB!KE",
     "punti": 158,
@@ -513,18 +525,6 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 43
-  },
-  {
-    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 156,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 30,
-    "n_atleti": 3,
     "pos": 44
   },
   {
@@ -722,12 +722,12 @@
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
     "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 103,
+    "punti": 105,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 2,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 2,
     "pos": 61
   },
@@ -1238,12 +1238,12 @@
   {
     "team_id": "G_S_PREALPINO_A_S_D",
     "team_nome": "G.S. PREALPINO A.S.D.",
-    "punti": 32,
+    "punti": 33,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 1,
     "pos": 104
   },

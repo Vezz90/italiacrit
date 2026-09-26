@@ -26,38 +26,50 @@
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 1192,
+    "punti": 1218,
     "vittorie": 7,
     "p1": 7,
     "p2": 14,
-    "p3": 9,
-    "pout": 41,
+    "p3": 10,
+    "pout": 42,
     "n_atleti": 13,
     "pos": 3
   },
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 959,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 999,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 9,
     "p3": 7,
-    "pout": 51,
+    "pout": 52,
     "n_atleti": 9,
     "pos": 4
   },
   {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 724,
+    "punti": 726,
     "vittorie": 7,
     "p1": 7,
     "p2": 4,
     "p3": 8,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 12,
     "pos": 5
+  },
+  {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 726,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 6,
+    "p3": 4,
+    "pout": 42,
+    "n_atleti": 14,
+    "pos": 6
   },
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
@@ -69,18 +81,6 @@
     "p3": 7,
     "pout": 34,
     "n_atleti": 11,
-    "pos": 6
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 686,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 5,
-    "p3": 4,
-    "pout": 41,
-    "n_atleti": 14,
     "pos": 7
   },
   {
@@ -98,12 +98,12 @@
   {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 514,
+    "punti": 518,
     "vittorie": 0,
     "p1": 0,
     "p2": 6,
     "p3": 3,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 10,
     "pos": 9
   },
@@ -218,12 +218,12 @@
   {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
-    "punti": 297,
+    "punti": 309,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 6,
     "pos": 19
   },
@@ -350,12 +350,12 @@
   {
     "team_id": "ZAPPI_RACING_TEAM",
     "team_nome": "ZAPPI RACING TEAM",
-    "punti": 144,
+    "punti": 152,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 4,
     "pos": 30
   },

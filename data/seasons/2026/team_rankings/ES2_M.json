@@ -38,12 +38,12 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 516,
+    "punti": 539,
     "vittorie": 9,
     "p1": 9,
-    "p2": 8,
+    "p2": 9,
     "p3": 10,
-    "pout": 36,
+    "pout": 38,
     "n_atleti": 5,
     "pos": 4
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 366,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 3,
+    "p3": 11,
+    "pout": 27,
+    "n_atleti": 3,
+    "pos": 12
+  },
+  {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
     "team_nome": "S. C. MINCIO-CHIESE A.S.D",
     "punti": 357,
@@ -141,19 +153,19 @@
     "p3": 4,
     "pout": 29,
     "n_atleti": 4,
-    "pos": 12
+    "pos": 13
   },
   {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 350,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 3,
-    "p3": 10,
-    "pout": 26,
-    "n_atleti": 3,
-    "pos": 13
+    "team_id": "G_S_PREALPINO_A_S_D",
+    "team_nome": "G.S. PREALPINO A.S.D.",
+    "punti": 346,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 1,
+    "p3": 5,
+    "pout": 27,
+    "n_atleti": 4,
+    "pos": 14
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -164,18 +176,6 @@
     "p2": 2,
     "p3": 7,
     "pout": 48,
-    "n_atleti": 4,
-    "pos": 14
-  },
-  {
-    "team_id": "G_S_PREALPINO_A_S_D",
-    "team_nome": "G.S. PREALPINO A.S.D.",
-    "punti": 331,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 1,
-    "p3": 5,
-    "pout": 27,
     "n_atleti": 4,
     "pos": 15
   },
@@ -350,12 +350,12 @@
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
     "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
-    "punti": 173,
+    "punti": 177,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 1,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 4,
     "pos": 30
   },
@@ -614,12 +614,12 @@
   {
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
     "team_nome": "S.C. BRUGHERIO SPORTIVA ASD",
-    "punti": 111,
+    "punti": 113,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 0,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 2,
     "pos": 52
   },
@@ -864,6 +864,18 @@
     "pos": 72
   },
   {
+    "team_id": "OXYGEN_EBIKE_STORE_BRESCIA",
+    "team_nome": "OXYGEN EBIKE STORE BRESCIA",
+    "punti": 69,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 73
+  },
+  {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
     "punti": 66,
@@ -873,7 +885,7 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "POL_MILLELUCI_CICLISMO",
@@ -885,18 +897,6 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 74
-  },
-  {
-    "team_id": "OXYGEN_EBIKE_STORE_BRESCIA",
-    "team_nome": "OXYGEN EBIKE STORE BRESCIA",
-    "punti": 64,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 75
   },
   {
@@ -1008,6 +1008,18 @@
     "pos": 84
   },
   {
+    "team_id": "TEAM_SERIO",
+    "team_nome": "TEAM SERIO",
+    "punti": 48,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 85
+  },
+  {
     "team_id": "A_S_D_U_S_F_COPPI_MONTECCHIO_P",
     "team_nome": "A.S.D. U.S. F. COPPI MONTECCHIO P.",
     "punti": 48,
@@ -1017,7 +1029,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "S_C_TORRILE_PR",
@@ -1040,18 +1052,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 11,
-    "n_atleti": 2,
-    "pos": 87
-  },
-  {
-    "team_id": "TEAM_SERIO",
-    "team_nome": "TEAM SERIO",
-    "punti": 47,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 8,
     "n_atleti": 2,
     "pos": 88
   },

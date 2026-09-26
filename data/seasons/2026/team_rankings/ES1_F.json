@@ -38,21 +38,21 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 343,
+    "punti": 366,
     "vittorie": 4,
     "p1": 4,
-    "p2": 4,
+    "p2": 5,
     "p3": 8,
-    "pout": 38,
+    "pout": 40,
     "n_atleti": 5,
     "pos": 4
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 320,
-    "vittorie": 12,
-    "p1": 12,
+    "punti": 335,
+    "vittorie": 13,
+    "p1": 13,
     "p2": 2,
     "p3": 2,
     "pout": 18,
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 119,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 3,
+    "pout": 20,
+    "n_atleti": 3,
+    "pos": 15
+  },
+  {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
     "punti": 114,
@@ -177,30 +189,18 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 107,
+    "punti": 110,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 1,
-    "pos": 16
-  },
-  {
-    "team_id": "GS_CICLI_FIORIN_ASD",
-    "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 101,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 19,
-    "n_atleti": 3,
     "pos": 17
   },
   {
@@ -552,20 +552,20 @@
     "pos": 46
   },
   {
-    "team_id": "FRIULI_VENEZIA_GIULIA",
-    "team_nome": "FRIULI VENEZIA GIULIA",
-    "punti": 0,
+    "team_id": "UC_COSTAMASNAGA_ASD",
+    "team_nome": "UC COSTAMASNAGA ASD",
+    "punti": 4,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 0,
+    "pout": 2,
     "n_atleti": 1,
     "pos": 47
   },
   {
-    "team_id": "LIGURIA",
-    "team_nome": "LIGURIA",
+    "team_id": "FRIULI_VENEZIA_GIULIA",
+    "team_nome": "FRIULI VENEZIA GIULIA",
     "punti": 0,
     "vittorie": 0,
     "p1": 0,
@@ -576,14 +576,14 @@
     "pos": 48
   },
   {
-    "team_id": "UC_COSTAMASNAGA_ASD",
-    "team_nome": "UC COSTAMASNAGA ASD",
+    "team_id": "LIGURIA",
+    "team_nome": "LIGURIA",
     "punti": 0,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
+    "pout": 0,
     "n_atleti": 1,
     "pos": 49
   }
