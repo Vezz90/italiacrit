@@ -230,21 +230,21 @@
   {
     "team_id": "GCD_PEDALE_MANZANESE",
     "team_nome": "GCD PEDALE MANZANESE",
-    "punti": 384,
+    "punti": 400,
     "vittorie": 10,
     "p1": 10,
-    "p2": 7,
+    "p2": 8,
     "p3": 6,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 4,
     "pos": 20
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
-    "punti": 368,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 383,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 3,
     "p3": 7,
     "pout": 31,
@@ -276,6 +276,18 @@
     "pos": 23
   },
   {
+    "team_id": "U_S_MONTECORONA",
+    "team_nome": "U.S. MONTECORONA",
+    "punti": 324,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 6,
+    "pout": 56,
+    "n_atleti": 7,
+    "pos": 24
+  },
+  {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
     "punti": 322,
@@ -285,7 +297,7 @@
     "p3": 3,
     "pout": 31,
     "n_atleti": 8,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -297,18 +309,6 @@
     "p3": 6,
     "pout": 30,
     "n_atleti": 5,
-    "pos": 25
-  },
-  {
-    "team_id": "U_S_MONTECORONA",
-    "team_nome": "U.S. MONTECORONA",
-    "punti": 313,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 6,
-    "pout": 54,
-    "n_atleti": 7,
     "pos": 26
   },
   {
@@ -386,12 +386,12 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 236,
+    "punti": 237,
     "vittorie": 1,
     "p1": 1,
     "p2": 8,
     "p3": 2,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 3,
     "pos": 33
   },
@@ -446,12 +446,12 @@
   {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 187,
+    "punti": 189,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 6,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 5,
     "pos": 38
   },
@@ -480,6 +480,18 @@
     "pos": 40
   },
   {
+    "team_id": "CICLISTICA_DRO",
+    "team_nome": "CICLISTICA DRO",
+    "punti": 173,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 3,
+    "pout": 15,
+    "n_atleti": 3,
+    "pos": 41
+  },
+  {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
     "punti": 171,
@@ -489,7 +501,7 @@
     "p3": 1,
     "pout": 28,
     "n_atleti": 7,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
@@ -501,7 +513,7 @@
     "p3": 3,
     "pout": 21,
     "n_atleti": 5,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -513,7 +525,7 @@
     "p3": 2,
     "pout": 19,
     "n_atleti": 4,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "PIESSE_CYCLING_TEAM",
@@ -525,7 +537,7 @@
     "p3": 6,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -537,18 +549,6 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 45
-  },
-  {
-    "team_id": "CICLISTICA_DRO",
-    "team_nome": "CICLISTICA DRO",
-    "punti": 162,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 3,
-    "pout": 13,
-    "n_atleti": 3,
     "pos": 46
   },
   {
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "FDB_SPORT_CLUB",
+    "team_nome": "FDB SPORT CLUB",
+    "punti": 104,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 3,
+    "pout": 11,
+    "n_atleti": 3,
+    "pos": 58
+  },
+  {
     "team_id": "ASD_1D_UN_DENTE_IN_PIU",
     "team_nome": "ASD 1D+ UN DENTE IN PIU'",
     "punti": 98,
@@ -693,7 +705,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 6,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -705,18 +717,6 @@
     "p3": 1,
     "pout": 19,
     "n_atleti": 5,
-    "pos": 59
-  },
-  {
-    "team_id": "FDB_SPORT_CLUB",
-    "team_nome": "FDB SPORT CLUB",
-    "punti": 94,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 60
   },
   {

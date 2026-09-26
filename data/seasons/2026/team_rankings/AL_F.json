@@ -14,13 +14,13 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 468,
+    "punti": 484,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
     "p3": 11,
-    "pout": 16,
-    "n_atleti": 6,
+    "pout": 20,
+    "n_atleti": 7,
     "pos": 2
   },
   {
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 155,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 17,
+    "n_atleti": 6,
+    "pos": 13
+  },
+  {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
     "punti": 152,
@@ -153,18 +165,6 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 2,
-    "pos": 13
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 145,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 17,
-    "n_atleti": 6,
     "pos": 14
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 67,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 2,
+    "pos": 21
+  },
+  {
     "team_id": "A_S_D_AVIS_BIKE_RUVO",
     "team_nome": "A.S.D. AVIS BIKE RUVO",
     "punti": 53,
@@ -249,7 +261,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "ACS_OLIMPIC_ZARNESTI",
@@ -261,18 +273,6 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 22
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 47,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 2,
     "pos": 23
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 44,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 25
+  },
+  {
     "team_id": "TOSCANA",
     "team_nome": "TOSCANA",
     "punti": 44,
@@ -297,7 +309,19 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 25
+    "pos": 26
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 42,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 27
   },
   {
     "team_id": "A_S_D_G_C_EMIC",
@@ -309,7 +333,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 28
   },
   {
     "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
@@ -321,19 +345,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 39,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
@@ -345,7 +357,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "VENETO",
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 5,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -393,7 +405,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "G_C_NOVENTANA",
@@ -405,18 +417,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 34
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 27,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 35
   },
   {
