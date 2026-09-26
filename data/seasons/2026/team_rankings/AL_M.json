@@ -26,12 +26,12 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 647,
+    "punti": 656,
     "vittorie": 7,
     "p1": 7,
     "p2": 10,
     "p3": 9,
-    "pout": 45,
+    "pout": 47,
     "n_atleti": 10,
     "pos": 3
   },
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "S_C_COTIGNOLESE",
+    "team_nome": "S.C.COTIGNOLESE",
+    "punti": 515,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 8,
+    "p3": 6,
+    "pout": 30,
+    "n_atleti": 8,
+    "pos": 9
+  },
+  {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
     "punti": 490,
@@ -105,7 +117,7 @@
     "p3": 7,
     "pout": 49,
     "n_atleti": 7,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -117,18 +129,6 @@
     "p3": 6,
     "pout": 29,
     "n_atleti": 7,
-    "pos": 10
-  },
-  {
-    "team_id": "S_C_COTIGNOLESE",
-    "team_nome": "S.C.COTIGNOLESE",
-    "punti": 484,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 7,
-    "p3": 6,
-    "pout": 29,
-    "n_atleti": 8,
     "pos": 11
   },
   {
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 424,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 3,
+    "p3": 11,
+    "pout": 51,
+    "n_atleti": 10,
+    "pos": 16
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 416,
@@ -189,18 +201,6 @@
     "p3": 4,
     "pout": 29,
     "n_atleti": 6,
-    "pos": 16
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 411,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 3,
-    "p3": 10,
-    "pout": 50,
-    "n_atleti": 10,
     "pos": 17
   },
   {
@@ -602,14 +602,26 @@
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
-    "punti": 121,
+    "punti": 123,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 3,
     "pos": 51
+  },
+  {
+    "team_id": "ASD_MORENO_DI_BIASE",
+    "team_nome": "ASD MORENO DI BIASE",
+    "punti": 119,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pout": 19,
+    "n_atleti": 5,
+    "pos": 52
   },
   {
     "team_id": "MAZZANO_A_S_D",
@@ -621,18 +633,6 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 52
-  },
-  {
-    "team_id": "ASD_MORENO_DI_BIASE",
-    "team_nome": "ASD MORENO DI BIASE",
-    "punti": 114,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 18,
-    "n_atleti": 5,
     "pos": 53
   },
   {
@@ -1284,6 +1284,18 @@
     "pos": 107
   },
   {
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 33,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 108
+  },
+  {
     "team_id": "SPRINT_VIDOR_VALLATA_ASD",
     "team_nome": "SPRINT VIDOR VALLATA ASD",
     "punti": 32,
@@ -1293,7 +1305,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "CICLISTICA_PIERIS",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "SAN_MINIATO_CICLISMO_A_S_D",
@@ -1317,7 +1329,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -1329,7 +1341,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "MTB_ACADEMY_GIAVENO",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_A",
@@ -1353,7 +1365,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 0,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
@@ -1364,18 +1376,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "n_atleti": 3,
-    "pos": 114
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 27,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 3,
     "pos": 115
   },
