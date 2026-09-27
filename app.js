@@ -24810,6 +24810,89 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   const catKm        = Math.round(resultsRaw.reduce((s,r) => s+(parseFloat(r.km)||0), 0)).toLocaleString('it-IT');
   const catWins      = resultsRaw.filter(r => r.posizione === 1).length;
 
+  const cardBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center';
+  const tableBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:24px';
+
+  // ── STORIA DELLA CLASSIFICA — richiesto esplicitamente: la successione di
+  // chi ha guidato la classifica di questa categoria, gara dopo gara, non
+  // solo il totale dei cambi di leadership (già mostrato altrove in una
+  // riga di narrativa, mai nel dettaglio). rank_dopo_gara è già calcolato
+  // per ogni riga in processLoadedData (posizione in classifica cumulata
+  // subito dopo quella gara) — qui si isolano solo le gare in cui qualcuno
+  // ha chiuso al 1° posto in classifica, e si raggruppano le sequenze
+  // consecutive dello stesso atleta in "regni".
+  const _leaderGaraMap = {}; // gara_id -> {atleta_id, data, nome_gara}
+  resultsRaw.forEach(r => {
+    if (r.rank_dopo_gara === 1 && r.data && r.atleta_id && !_leaderGaraMap[r.gara_id]) {
+      _leaderGaraMap[r.gara_id] = { atleta_id: r.atleta_id, data: r.data, nome_gara: r.nome_gara, gara_id: r.gara_id };
+    }
+  });
+  const _leaderTimeline = Object.values(_leaderGaraMap)
+    .sort((a,b) => a.data.localeCompare(b.data) || a.gara_id.localeCompare(b.gara_id));
+  const _leaderReigns = [];
+  for (const ev of _leaderTimeline) {
+    const last = _leaderReigns[_leaderReigns.length - 1];
+    if (last && last.atleta_id === ev.atleta_id) {
+      last.toDate = ev.data; last.toGara = ev.nome_gara; last.races++;
+    } else {
+      _leaderReigns.push({ atleta_id: ev.atleta_id, fromDate: ev.data, fromGara: ev.nome_gara, toDate: ev.data, toGara: ev.nome_gara, races: 1 });
+    }
+  }
+  const _fmtItDate = d => d ? new Date(d).toLocaleDateString('it-IT', { day:'numeric', month:'short', year:'numeric' }) : '';
+  const leaderHistoryHtml = _leaderReigns.slice().reverse().map((reign, i) => {
+    const isCurrent = i === 0;
+    const nomeAth = (() => { const a = athletes[reign.atleta_id]; return a ? `${a.cognome} ${a.nome}` : reign.atleta_id.replace(/_/g,' '); })();
+    return `
+    <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border-subtle)">
+      <div style="width:8px;height:8px;border-radius:50%;background:${isCurrent?'#10b981':'var(--text-muted)'};flex-shrink:0"></div>
+      <div style="flex:1">
+        <a href="#/atleta/${esc(reign.atleta_id)}" style="font-weight:700;font-size:.9rem">${esc(nomeAth)}</a>
+        <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">dal ${_fmtItDate(reign.fromDate)} (${esc(reign.fromGara)})${isCurrent?' — tuttora in testa':` · fino al ${_fmtItDate(reign.toDate)}`}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:var(--font-display);font-size:1.1rem;color:${isCurrent?'#10b981':'var(--text-primary)'}">${reign.races}</div>
+        <div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">gare</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── CLASSIFICHE PER FORMATO DI GARA — richiesto esplicitamente: cronometro
+  // e gare a tappe riconosciute dal nome della gara (lo scraper non ha un
+  // campo dedicato al formato). "Classifica Generale" di un giro a tappe è
+  // esclusa dal conteggio vittorie di tappa (non è una tappa vinta sul
+  // percorso) e mostrata a parte come vittoria di classifica generale.
+  const _isCronoNome = n => /CRONOMETRO|CRONOSCALATA|CRONOPROLOGO|A CRONO\b/i.test(n||'');
+  const _isTappaNome = n => /\bTAPPA\b/i.test(n||'') && !/CLASSIFICA\s+GENERALE/i.test(n||'');
+  const _isClassGenNome = n => /CLASSIFICA\s+GENERALE/i.test(n||'');
+  const _fmtRunners = (filterFn, mode) => {
+    const map = {};
+    resultsRaw.forEach(r => {
+      if (r.posizione !== 1 || !r.atleta_id || !filterFn(r.nome_gara)) return;
+      map[r.atleta_id] = (map[r.atleta_id]||0) + 1;
+    });
+    return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  };
+  const _cronoTop = _fmtRunners(_isCronoNome);
+  const _tappaTop = _fmtRunners(_isTappaNome);
+  const _classGenTop = _fmtRunners(_isClassGenNome);
+  const _cronoRaceCount = new Set(resultsRaw.filter(r=>_isCronoNome(r.nome_gara)).map(r=>r.gara_id)).size;
+  const _tappaRaceCount = new Set(resultsRaw.filter(r=>_isTappaNome(r.nome_gara)).map(r=>r.gara_id)).size;
+  const _classGenRaceCount = new Set(resultsRaw.filter(r=>_isClassGenNome(r.nome_gara)).map(r=>r.gara_id)).size;
+  const _formatColHtml = (title, count, countLbl, top) => !count ? '' : `
+    <div style="${cardBase};text-align:left">
+      <div style="font-size:.7rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">${title}</div>
+      <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:10px">${count} ${countLbl}</div>
+      ${top.map(([id,w],i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;${i>0?'border-top:1px solid var(--border-subtle)':''}">
+        <a href="#/atleta/${esc(id)}" style="font-size:.82rem;font-weight:600">${esc((()=>{const a=athletes[id];return a?`${a.cognome} ${a.nome}`:id.replace(/_/g,' ');})())}</a>
+        <span style="font-family:var(--font-display);font-size:.95rem;color:var(--red-hot)">${w}🏆</span>
+      </div>`).join('') || '<div style="font-size:.78rem;color:var(--text-muted)">Nessun vincitore ripetuto</div>'}
+    </div>`;
+  const formatSectionsHtml = [
+    _formatColHtml('⏱️ Cronometro', _cronoRaceCount, 'crono disputate', _cronoTop),
+    _formatColHtml('🚵 Tappe', _tappaRaceCount, 'tappe disputate', _tappaTop),
+    _formatColHtml('🏆 Classifiche generali', _classGenRaceCount, 'giri a tappe conclusi', _classGenTop),
+  ].filter(Boolean).join('');
+
   // Top vincitore (più vittorie)
   const winsMap = {};
   const ptsMap  = {};
@@ -24984,9 +25067,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   }
   const _fmtSec = s => { const m=Math.floor(s/60), ss=s%60; return m>0?`${m}'${String(ss).padStart(2,'0')}"`:`${ss}"`; };
 
-  const cardBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center';
-  const tableBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:24px';
-
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📊 ANALISI & DATI</div>
@@ -25020,6 +25100,22 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       <span class="section-line"></span>
     </div>
     <div style="${tableBase}">${regCatHtml}</div>` : ''}
+
+    <!-- Storia della classifica: successione dei leader -->
+    ${_leaderReigns.length ? `
+    <div class="section-header">
+      <span class="section-title">STORIA DELLA CLASSIFICA</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="${tableBase}">${leaderHistoryHtml}</div>` : ''}
+
+    <!-- Classifiche per formato di gara: cronometro, tappe, classifiche generali -->
+    ${formatSectionsHtml ? `
+    <div class="section-header">
+      <span class="section-title">PER FORMATO DI GARA</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:28px">${formatSectionsHtml}</div>` : ''}
 
     <!-- Protagonisti -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px">
