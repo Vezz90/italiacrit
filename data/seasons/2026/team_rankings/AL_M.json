@@ -26,12 +26,12 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 656,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 692,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 10,
-    "p3": 9,
-    "pout": 47,
+    "p3": 10,
+    "pout": 49,
     "n_atleti": 10,
     "pos": 3
   },
@@ -182,12 +182,12 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 432,
+    "punti": 433,
     "vittorie": 5,
     "p1": 5,
     "p2": 3,
     "p3": 11,
-    "pout": 52,
+    "pout": 53,
     "n_atleti": 10,
     "pos": 16
   },
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "VELO_CLUB_CATTOLICA",
+    "team_nome": "VELO CLUB CATTOLICA",
+    "punti": 247,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 3,
+    "pout": 42,
+    "n_atleti": 11,
+    "pos": 32
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 241,
@@ -381,18 +393,6 @@
     "p3": 2,
     "pout": 24,
     "n_atleti": 3,
-    "pos": 32
-  },
-  {
-    "team_id": "VELO_CLUB_CATTOLICA",
-    "team_nome": "VELO CLUB CATTOLICA",
-    "punti": 241,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 3,
-    "pout": 41,
-    "n_atleti": 11,
     "pos": 33
   },
   {
@@ -614,12 +614,12 @@
   {
     "team_id": "ASD_MORENO_DI_BIASE",
     "team_nome": "ASD MORENO DI BIASE",
-    "punti": 119,
+    "punti": 121,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 5,
     "pos": 52
   },
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "POMORIE",
+    "team_nome": "POMORIE",
+    "punti": 89,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 63
+  },
+  {
     "team_id": "GS_CARTURA_NALIN",
     "team_nome": "GS CARTURA NALIN",
     "punti": 85,
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 5,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "E_VALTELLINA_PEDALE_MORBEGNESE",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "SS_AQUILA",
@@ -777,7 +789,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "PEDALE_OSSOLANO",
@@ -789,7 +801,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 5,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 18,
     "n_atleti": 5,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
@@ -813,7 +825,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -825,7 +837,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "ASD_ROBUR_BARCELLONA",
@@ -837,7 +849,7 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
@@ -849,18 +861,6 @@
     "p3": 3,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 71
-  },
-  {
-    "team_id": "POMORIE",
-    "team_nome": "POMORIE",
-    "punti": 72,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 72
   },
   {
@@ -1224,6 +1224,18 @@
     "pos": 102
   },
   {
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 37,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 103
+  },
+  {
     "team_id": "POOL_BIKE_SERRAMANNA",
     "team_nome": "POOL BIKE SERRAMANNA",
     "punti": 37,
@@ -1233,7 +1245,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 103
+    "pos": 104
   },
   {
     "team_id": "CICLISTICA_BORDIGHERA",
@@ -1245,7 +1257,7 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 104
+    "pos": 105
   },
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
@@ -1257,7 +1269,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 105
+    "pos": 106
   },
   {
     "team_id": "A_S_D_PEDALE_RONCHESE",
@@ -1269,7 +1281,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 106
+    "pos": 107
   },
   {
     "team_id": "S_C_CAVRIAGO",
@@ -1281,18 +1293,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 107
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 3,
     "pos": 108
   },
   {

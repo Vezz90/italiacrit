@@ -26,12 +26,12 @@
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
     "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 558,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 595,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 9,
-    "p3": 8,
-    "pout": 36,
+    "p3": 9,
+    "pout": 38,
     "n_atleti": 6,
     "pos": 3
   },
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 206,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 3,
+    "pout": 21,
+    "n_atleti": 4,
+    "pos": 26
+  },
+  {
     "team_id": "TEAM_SERIO",
     "team_nome": "TEAM SERIO",
     "punti": 194,
@@ -309,18 +321,6 @@
     "p3": 5,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 26
-  },
-  {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 194,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 3,
-    "pout": 21,
-    "n_atleti": 4,
     "pos": 27
   },
   {
@@ -648,6 +648,18 @@
     "pos": 54
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 133,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 3,
+    "pout": 18,
+    "n_atleti": 4,
+    "pos": 55
+  },
+  {
     "team_id": "STAR_CYCLING_LAB",
     "team_nome": "STAR CYCLING LAB",
     "punti": 133,
@@ -657,18 +669,6 @@
     "p3": 1,
     "pout": 21,
     "n_atleti": 3,
-    "pos": 55
-  },
-  {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 130,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 3,
-    "pout": 17,
-    "n_atleti": 4,
     "pos": 56
   },
   {
@@ -732,6 +732,18 @@
     "pos": 61
   },
   {
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 103,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 62
+  },
+  {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
     "punti": 101,
@@ -741,7 +753,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -753,18 +765,6 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 63
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 97,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 16,
-    "n_atleti": 3,
     "pos": 64
   },
   {
@@ -1080,6 +1080,18 @@
     "pos": 90
   },
   {
+    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
+    "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
+    "punti": 49,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 91
+  },
+  {
     "team_id": "UNIONE_CICLISTICA_MIRANO",
     "team_nome": "UNIONE CICLISTICA MIRANO",
     "punti": 49,
@@ -1089,7 +1101,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "U_P_O_L_PEDALE_LUNGAVILLA_A_S_D",
@@ -1101,7 +1113,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -1113,7 +1125,19 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
+  },
+  {
+    "team_id": "ABRUZZO_CYCLING_TEAM",
+    "team_nome": "ABRUZZO CYCLING TEAM",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 95
   },
   {
     "team_id": "S_C_OZIERESE",
@@ -1125,19 +1149,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 1,
-    "pos": 94
-  },
-  {
-    "team_id": "ABRUZZO_CYCLING_TEAM",
-    "team_nome": "ABRUZZO CYCLING TEAM",
-    "punti": 45,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 1,
-    "pos": 95
+    "pos": 96
   },
   {
     "team_id": "ALBA_BRA_LANGHE_ROERO",
@@ -1149,7 +1161,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 96
+    "pos": 97
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1161,18 +1173,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 97
-  },
-  {
-    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
-    "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti": 44,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 98
   },
   {
@@ -1536,6 +1536,18 @@
     "pos": 128
   },
   {
+    "team_id": "A_S_D_G_S_GULP_POOL_VAL_VIBRATA",
+    "team_nome": "A.S.D. G.S. GULP! POOL VAL VIBRATA",
+    "punti": 17,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 129
+  },
+  {
     "team_id": "U_S_AURORA_TRENTO",
     "team_nome": "U.S. AURORA TRENTO",
     "punti": 17,
@@ -1545,7 +1557,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 129
+    "pos": 130
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -1557,7 +1569,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 130
+    "pos": 131
   },
   {
     "team_id": "TRENTO",
@@ -1569,7 +1581,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 131
+    "pos": 132
   },
   {
     "team_id": "S_S_STELLA_ALPINA_RENAZZO",
@@ -1581,7 +1593,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 132
+    "pos": 133
   },
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
@@ -1593,18 +1605,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 133
-  },
-  {
-    "team_id": "A_S_D_G_S_GULP_POOL_VAL_VIBRATA",
-    "team_nome": "A.S.D. G.S. GULP! POOL VAL VIBRATA",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 2,
     "pos": 134
   },
   {
