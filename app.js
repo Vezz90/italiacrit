@@ -15319,6 +15319,11 @@ window.setRankRegion = (v) => { rankRegion = v; updateRankTable(); };
 window.setRankMonth  = (v) => { rankMonth = v; updateRankTable(); };
 window.setRankSort   = (s) => {
   rankSort = s;
+  // Nel pannello "Storia" rankSort decide anche la metrica cumulata
+  // (punti/vittorie): quel contenuto è calcolato una volta sola dentro
+  // renderClassifica(), quindi qui va rifatto un render completo, non solo
+  // aggiornata la tabella (che in quel pannello non è nemmeno visibile).
+  if (rankPanel !== 'classifica') { renderClassifica(); return; }
   // updateRankTable() aggiorna solo #rank-table-container: i pulsanti di
   // ordinamento sono fuori da quel container, quindi lo stato "attivo" va
   // sincronizzato qui a mano invece di richiedere un renderClassifica()
