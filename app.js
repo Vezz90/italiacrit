@@ -10438,6 +10438,84 @@ async function renderClassifica() {
 
   const _rkIsPista = rankDisciplina === 'pista';
 
+  // ── STORIA DELLA CLASSIFICA (corridori e team) — richiesto esplicitamente
+  // di stare sulla pagina Classifica (non Statistiche) e di mostrare
+  // entrambi, indipendentemente dal toggle Atleti/Team qui sopra. Stessa
+  // idea di rank_dopo_gara (punti cumulati per categoria, in ordine
+  // cronologico) ma calcolata al volo qui anche per team_id, che non ce
+  // l'ha precalcolato — raggruppa le sequenze consecutive dello stesso
+  // corridore/team in testa in "regni" con data di inizio/fine e numero
+  // di gare, così si vede a colpo d'occhio chi ha guidato quando.
+  const _buildLeaderReigns = (catResults, keyField) => {
+    const rows = catResults.filter(r => r.data && r[keyField]).slice();
+    rows.sort((a,b) => a.data.localeCompare(b.data) || (a.gara_id||'').localeCompare(b.gara_id||''));
+    const cumPts = {}, lastLabel = {}, leaderByGara = {};
+    let i = 0;
+    while (i < rows.length) {
+      const garaId = rows[i].gara_id;
+      let j = i;
+      while (j < rows.length && rows[j].gara_id === garaId) j++;
+      const slice = rows.slice(i, j);
+      for (const r of slice) {
+        cumPts[r[keyField]] = (cumPts[r[keyField]] || 0) + (r.punti_effettivi || 0);
+        lastLabel[r[keyField]] = keyField === 'atleta_id' ? `${r.cognome||''} ${r.nome||''}`.trim() : (r.team || r[keyField]);
+      }
+      const sorted = Object.entries(cumPts).sort(([,a],[,b]) => b-a);
+      if (sorted.length && !leaderByGara[garaId]) {
+        leaderByGara[garaId] = { key: sorted[0][0], data: rows[i].data, nome_gara: rows[i].nome_gara, gara_id: garaId };
+      }
+      i = j;
+    }
+    const timeline = Object.values(leaderByGara).sort((a,b) => a.data.localeCompare(b.data) || a.gara_id.localeCompare(b.gara_id));
+    const reigns = [];
+    for (const ev of timeline) {
+      const last = reigns[reigns.length-1];
+      if (last && last.key === ev.key) { last.toDate = ev.data; last.toGara = ev.nome_gara; last.races++; }
+      else reigns.push({ key: ev.key, fromDate: ev.data, fromGara: ev.nome_gara, toDate: ev.data, toGara: ev.nome_gara, races: 1 });
+    }
+    reigns.forEach(r => { r.label = lastLabel[r.key] || r.key; });
+    return reigns;
+  };
+  const _fmtItDate2 = d => d ? new Date(d).toLocaleDateString('it-IT', { day:'numeric', month:'short', year:'numeric' }) : '';
+  const _reignsHtml = (reigns, linkBase) => !reigns.length
+    ? '<div style="padding:16px;color:var(--text-muted);font-size:.82rem">Dati insufficienti per questa categoria.</div>'
+    : reigns.slice().reverse().map((r,i) => {
+      const isCurrent = i === 0;
+      return `
+      <div style="display:flex;align-items:center;gap:14px;padding:9px 16px;border-bottom:1px solid var(--border-subtle)">
+        <div style="width:8px;height:8px;border-radius:50%;background:${isCurrent?'#10b981':'var(--text-muted)'};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <a href="#/${linkBase}/${encodeURIComponent(r.key)}" style="font-weight:700;font-size:.85rem">${esc(r.label)}</a>
+          <div style="font-size:.68rem;color:var(--text-muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">dal ${_fmtItDate2(r.fromDate)} (${esc(r.fromGara)})${isCurrent?' — tuttora in testa':` · fino al ${_fmtItDate2(r.toDate)}`}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:var(--font-display);font-size:.95rem;color:${isCurrent?'#10b981':'var(--text-primary)'}">${r.races}</div>
+          <div style="font-size:.56rem;color:var(--text-muted);text-transform:uppercase">gare</div>
+        </div>
+      </div>`;
+    }).join('');
+  let leaderHistorySectionHtml = '';
+  if (!_rkIsPista) {
+    const _catResultsForLeader = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rankCat);
+    const _athReigns  = _buildLeaderReigns(_catResultsForLeader, 'atleta_id');
+    const _teamReigns = _buildLeaderReigns(_catResultsForLeader, 'team_id');
+    leaderHistorySectionHtml = `
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">STORIA DELLA CLASSIFICA</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px">
+      <div>
+        <div style="font-family:var(--font-heading);font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">🚴 Corridori</div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden">${_reignsHtml(_athReigns, 'atleta')}</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-heading);font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">🏆 Team</div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden">${_reignsHtml(_teamReigns, 'team')}</div>
+      </div>
+    </div>`;
+  }
+
   const _classCurYear = Number(_loadedSeasonYear());
   const _classYearPills = [];
   for (let y = _classCurYear; y >= 2007; y--) _classYearPills.push(y);
@@ -10491,6 +10569,7 @@ async function renderClassifica() {
     </div>
     <div class="ranking-table-wrap" id="rank-table-container"></div>
     <div id="rank-albo-doro"></div>
+    ${leaderHistorySectionHtml}
   `);
 
   // Classifiche parallele e albo d'oro storico: dati/file pensati per la
@@ -24813,49 +24892,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   const cardBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center';
   const tableBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:24px';
 
-  // ── STORIA DELLA CLASSIFICA — richiesto esplicitamente: la successione di
-  // chi ha guidato la classifica di questa categoria, gara dopo gara, non
-  // solo il totale dei cambi di leadership (già mostrato altrove in una
-  // riga di narrativa, mai nel dettaglio). rank_dopo_gara è già calcolato
-  // per ogni riga in processLoadedData (posizione in classifica cumulata
-  // subito dopo quella gara) — qui si isolano solo le gare in cui qualcuno
-  // ha chiuso al 1° posto in classifica, e si raggruppano le sequenze
-  // consecutive dello stesso atleta in "regni".
-  const _leaderGaraMap = {}; // gara_id -> {atleta_id, data, nome_gara}
-  resultsRaw.forEach(r => {
-    if (r.rank_dopo_gara === 1 && r.data && r.atleta_id && !_leaderGaraMap[r.gara_id]) {
-      _leaderGaraMap[r.gara_id] = { atleta_id: r.atleta_id, data: r.data, nome_gara: r.nome_gara, gara_id: r.gara_id };
-    }
-  });
-  const _leaderTimeline = Object.values(_leaderGaraMap)
-    .sort((a,b) => a.data.localeCompare(b.data) || a.gara_id.localeCompare(b.gara_id));
-  const _leaderReigns = [];
-  for (const ev of _leaderTimeline) {
-    const last = _leaderReigns[_leaderReigns.length - 1];
-    if (last && last.atleta_id === ev.atleta_id) {
-      last.toDate = ev.data; last.toGara = ev.nome_gara; last.races++;
-    } else {
-      _leaderReigns.push({ atleta_id: ev.atleta_id, fromDate: ev.data, fromGara: ev.nome_gara, toDate: ev.data, toGara: ev.nome_gara, races: 1 });
-    }
-  }
-  const _fmtItDate = d => d ? new Date(d).toLocaleDateString('it-IT', { day:'numeric', month:'short', year:'numeric' }) : '';
-  const leaderHistoryHtml = _leaderReigns.slice().reverse().map((reign, i) => {
-    const isCurrent = i === 0;
-    const nomeAth = (() => { const a = athletes[reign.atleta_id]; return a ? `${a.cognome} ${a.nome}` : reign.atleta_id.replace(/_/g,' '); })();
-    return `
-    <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border-subtle)">
-      <div style="width:8px;height:8px;border-radius:50%;background:${isCurrent?'#10b981':'var(--text-muted)'};flex-shrink:0"></div>
-      <div style="flex:1">
-        <a href="#/atleta/${esc(reign.atleta_id)}" style="font-weight:700;font-size:.9rem">${esc(nomeAth)}</a>
-        <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">dal ${_fmtItDate(reign.fromDate)} (${esc(reign.fromGara)})${isCurrent?' — tuttora in testa':` · fino al ${_fmtItDate(reign.toDate)}`}</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-family:var(--font-display);font-size:1.1rem;color:${isCurrent?'#10b981':'var(--text-primary)'}">${reign.races}</div>
-        <div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase">gare</div>
-      </div>
-    </div>`;
-  }).join('');
-
   // ── CLASSIFICHE PER FORMATO DI GARA — richiesto esplicitamente: cronometro
   // e gare a tappe riconosciute dal nome della gara (lo scraper non ha un
   // campo dedicato al formato). "Classifica Generale" di un giro a tappe è
@@ -25100,14 +25136,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       <span class="section-line"></span>
     </div>
     <div style="${tableBase}">${regCatHtml}</div>` : ''}
-
-    <!-- Storia della classifica: successione dei leader -->
-    ${_leaderReigns.length ? `
-    <div class="section-header">
-      <span class="section-title">STORIA DELLA CLASSIFICA</span>
-      <span class="section-line"></span>
-    </div>
-    <div style="${tableBase}">${leaderHistoryHtml}</div>` : ''}
 
     <!-- Classifiche per formato di gara: cronometro, tappe, classifiche generali -->
     ${formatSectionsHtml ? `
