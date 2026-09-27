@@ -10349,6 +10349,12 @@ let rankRegion = '';
 let rankMonth  = '';
 let rankSort   = 'punti';  // 'punti' | 'momentum' | 'form'
 let rankDisciplina = 'strada'; // 'strada' | 'pista' — quale tipo di risultati conta in classifica
+// Quale pannello mostrare sotto i controlli — richiesto esplicitamente di
+// portare "Storia della classifica" e "Albo d'oro" in alto, accanto al
+// selettore Atleti/Team, invece che in fondo alla pagina: cliccando si apre
+// il pannello al posto della tabella, non sotto.
+let rankPanel  = 'classifica'; // 'classifica' | 'storia' | 'albo'
+window.setRankPanel = (p) => { rankPanel = p; renderClassifica(); };
 
 // Anni storici (ciclismo.info, fino al 2007) sulla pagina Classifica —
 // stessa idea di Risultati: fila di anni in alto, poi si sceglie la
@@ -10371,6 +10377,7 @@ window.classSetYear = (y) => {
 };
 
 async function renderClassifica() {
+  const _rkIsPista = rankDisciplina === 'pista';
   if ((rankGender === 'M' && rankCat.endsWith('_F')) ||
       (rankGender === 'F' && !rankCat.endsWith('_F'))) {
     rankCat = rankGender === 'M' ? 'ES1_M' : 'ES1_F';
@@ -10386,6 +10393,14 @@ async function renderClassifica() {
   const catTabs = currentCats.map(c => `
     <button class="tab-btn ${rankCat===c?'active-cat':''}" id="tab-cat-${c}" onclick="setRankCat('${c}')">${catLabel(c)}</button>
   `).join('');
+  // "Storia" e "Albo d'oro" richiesti esplicitamente accanto al selettore
+  // Atleti/Team: cliccando aprono un pannello al posto della tabella (vedi
+  // rankPanel sopra), invece di stare sepolti in fondo alla pagina.
+  const panelTabs = _rkIsPista ? '' : `
+    <div class="tab-group" role="tablist" aria-label="Pannello" style="margin-left:8px">
+      <button class="tab-btn ${rankPanel==='storia'?'active-cat':''}" onclick="setRankPanel(${rankPanel==='storia'?"'classifica'":"'storia'"})">📜 STORIA</button>
+      <button class="tab-btn ${rankPanel==='albo'?'active-cat':''}" onclick="setRankPanel(${rankPanel==='albo'?"'classifica'":"'albo'"})">🥇 ALBO D'ORO</button>
+    </div>`;
   const viewTabs = `
     <div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
       <button class="tab-btn ${rankView==='atleti'?'active-cat':''}" onclick="setRankView('atleti')">ATLETI</button>
@@ -10436,8 +10451,6 @@ async function renderClassifica() {
     ? '<p class="rk-intel-line">' + _rkIntelParts.join(' &middot; ') + '</p>'
     : '';
 
-  const _rkIsPista = rankDisciplina === 'pista';
-
   // ── STORIA DELLA CLASSIFICA (corridori e team) — richiesto esplicitamente
   // di stare sulla pagina Classifica (non Statistiche) e di mostrare
   // entrambi, indipendentemente dal toggle Atleti/Team qui sopra. Stessa
@@ -10477,10 +10490,17 @@ async function renderClassifica() {
     return reigns;
   };
   const _fmtItDate2 = d => d ? new Date(d).toLocaleDateString('it-IT', { day:'numeric', month:'short', year:'numeric' }) : '';
+  // Durata del "regno" in SETTIMANE (richiesto esplicitamente, non più in
+  // numero di gare) — dalla data della gara che ha portato in testa a
+  // quella dell'ultima gara disputata in quella posizione (per il regno
+  // attuale, l'ultima gara nota della categoria). Minimo 1: un cambio
+  // avvenuto e poi subito ripreso nella stessa settimana non deve mostrare 0.
+  const _weeksBetween = (from, to) => Math.max(1, Math.round((new Date(to) - new Date(from)) / (7*86400000)));
   const _reignsHtml = (reigns, linkBase) => !reigns.length
     ? '<div style="padding:16px;color:var(--text-muted);font-size:.82rem">Dati insufficienti per questa categoria.</div>'
     : reigns.slice().reverse().map((r,i) => {
       const isCurrent = i === 0;
+      const weeks = _weeksBetween(r.fromDate, r.toDate);
       return `
       <div style="display:flex;align-items:center;gap:14px;padding:9px 16px;border-bottom:1px solid var(--border-subtle)">
         <div style="width:8px;height:8px;border-radius:50%;background:${isCurrent?'#10b981':'var(--text-muted)'};flex-shrink:0"></div>
@@ -10489,8 +10509,8 @@ async function renderClassifica() {
           <div style="font-size:.68rem;color:var(--text-muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">dal ${_fmtItDate2(r.fromDate)} (${esc(r.fromGara)})${isCurrent?' — tuttora in testa':` · fino al ${_fmtItDate2(r.toDate)}`}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:var(--font-display);font-size:.95rem;color:${isCurrent?'#10b981':'var(--text-primary)'}">${r.races}</div>
-          <div style="font-size:.56rem;color:var(--text-muted);text-transform:uppercase">gare</div>
+          <div style="font-family:var(--font-display);font-size:.95rem;color:${isCurrent?'#10b981':'var(--text-primary)'}">${weeks}</div>
+          <div style="font-size:.56rem;color:var(--text-muted);text-transform:uppercase">sett.</div>
         </div>
       </div>`;
     }).join('');
@@ -10560,27 +10580,43 @@ async function renderClassifica() {
         <span class="ranking-count" id="rank-count-label">Caricamento...</span>
         ${sortTabs}
         ${viewTabs}
+        ${panelTabs}
       </div>
     </div>
-    <div style="padding: 0 0 16px">
+    <div style="padding: 0 0 16px; display:${rankPanel==='classifica'?'block':'none'}">
       <button class="btn-share" onclick="window.shareClassifica()" id="btn-share-class">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Classifica
       </button>
     </div>
-    <div class="ranking-table-wrap" id="rank-table-container"></div>
-    <div id="rank-albo-doro"></div>
-    ${leaderHistorySectionHtml}
+    <div class="ranking-table-wrap" id="rank-table-container" style="display:${rankPanel==='classifica'?'':'none'}"></div>
+    ${rankPanel==='albo' ? `<div id="rank-albo-panel"></div>` : ''}
+    ${rankPanel==='storia' ? leaderHistorySectionHtml : ''}
   `);
 
-  // Classifiche parallele e albo d'oro storico: dati/file pensati per la
-  // classifica strada (stagioni passate, altre categorie strada) — non
-  // hanno senso per la pista, ancora al suo primo anno.
-  if (rankDisciplina !== 'pista') {
+  // Classifiche parallele: dati pensati per la classifica strada (stagioni
+  // passate, altre categorie strada) — non hanno senso per la pista, ancora
+  // al suo primo anno. Restano legate al pannello "classifica" (la tabella),
+  // non tirate su per gli altri pannelli.
+  if (rankDisciplina !== 'pista' && rankPanel === 'classifica') {
     renderParallelRankings();
-    _injectClassificaAlboDoro();
   }
 
-  await updateRankTable();
+  if (rankPanel === 'classifica') {
+    await updateRankTable();
+  } else if (rankPanel === 'albo' && rankDisciplina !== 'pista') {
+    // Albo d'oro spostato qui su richiesta esplicita (prima una card fissa
+    // sempre visibile sotto la tabella, ora un pannello a sé accanto al
+    // selettore Atleti/Team) — stessa funzione già usata per quella card,
+    // qui a piena pagina invece che in formato ridotto.
+    const host = document.getElementById('rank-albo-panel');
+    if (host) {
+      const isTeam = rankView === 'team';
+      const valid = await _alboDoroRows(rankCat, isTeam);
+      if (document.getElementById('rank-albo-panel') === host) {
+        host.innerHTML = _alboDoroCardHtml(rankCat, isTeam, valid, { eyebrow: true, showEmpty: true });
+      }
+    }
+  }
 }
 
 // Classifica storica ciclismo.info (fila anni + categoria sotto, stessa
@@ -10906,17 +10942,6 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
     </div>`;
   }).join('');
   return `<section class="albo-doro-card">${head}<div class="albo-doro-list">${seasonsHtml}</div></section>`;
-}
-
-async function _injectClassificaAlboDoro() {
-  const host = document.getElementById('rank-albo-doro');
-  if (!host) return;
-  const code = rankCat;
-  const isTeam = rankView === 'team';
-  const valid = await _alboDoroRows(code, isTeam);
-  // Se l'host nel frattempo è cambiato (l'utente ha cambiato categoria/vista), esci
-  if (document.getElementById('rank-albo-doro') !== host) return;
-  host.innerHTML = _alboDoroCardHtml(code, isTeam, valid, { eyebrow: true });
 }
 
 // ── PAGINA ALBO D'ORO (menu Classifiche) ──────────────────────────
