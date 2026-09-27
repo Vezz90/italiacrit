@@ -467,9 +467,18 @@ function readDataJson(file) {
 // (redeploy forzato per svuotare subito la cache dopo il fix genere gare miste)
 const _ghCache = {};
 const GH_CACHE_TTL = 30 * 60 * 1000;
-async function readDataJsonFromGH(file) {
+// fresh=true salta la cache e va sempre a prendere il dato più recente —
+// usato SOLO quando l'admin preme esplicitamente "Rigenera" nella modale di
+// condivisione: una gara appena scrapata poteva restare fino a 30 minuti
+// senza risultati nel racconto/testo social (il server serviva ancora la
+// copia in cache di risultati precedente alla pubblicazione), bloccando chi
+// deve condividere subito a gara appena conclusa — segnalato dal vivo
+// ("non si può accelerare? io devo pubblicare subito"). Mai il default: gli
+// altri utilizzi (pagina gara pubblica, sweep periodico) restano sulla
+// cache per non moltiplicare le richieste ad ogni visita.
+async function readDataJsonFromGH(file, { fresh = false } = {}) {
   const cached = _ghCache[file];
-  if (cached && (Date.now() - cached.ts) < GH_CACHE_TTL) return cached.data;
+  if (!fresh && cached && (Date.now() - cached.ts) < GH_CACHE_TTL) return cached.data;
   try {
     const url = `${SITE_URL}/data/${encodeURIComponent(file)}`;
     const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(8000) });
@@ -1311,17 +1320,21 @@ ${JSON.stringify(dataForPrompt, null, 2)}`
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
+    // forceRegen (bottone "Rigenera") forza anche dati freschi: vedi
+    // commento su readDataJsonFromGH — senza "fresh" qui, rigenerare subito
+    // dopo che lo scraper pubblica avrebbe comunque riletto risultati vecchi
+    // fino a 30 minuti dalla cache, vanificando il bottone.
+    const forceRegen = req.query.regen === '1';
+    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id, { fresh: forceRegen });
 
     // Stessa tabella persistita usata dalla pagina gara pubblica (vedi
     // _generateAndStoreGaraNarrative) — un'unica generazione serve sia il
     // testo copiabile per i social sia il racconto sulla pagina, invece di
     // due cache separate che pagavano due volte la stessa chiamata Claude.
-    const forceRegen = req.query.regen === '1';
     const stored = forceRegen ? null : await queries.getGaraNarrative(id).catch(() => null);
     let aiText = stored?.text || null;
     if (!aiText) {
-      aiText = await _generateAndStoreGaraNarrative(id).catch(() => null);
+      aiText = await _generateAndStoreGaraNarrative(id, { fresh: forceRegen }).catch(() => null);
     }
     if (aiText) {
       const credit = await _photoCreditFor(id, cal).catch(() => null);
@@ -1363,10 +1376,10 @@ function _stripSocialExtrasForPage(text) {
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
-async function _fetchCalAndResultsFor(id) {
+async function _fetchCalAndResultsFor(id, { fresh = false } = {}) {
   const [calRaw, resultsRaw] = await Promise.all([
-    readDataJsonFromGH('calendar.json'),
-    readDataJsonFromGH('results_raw.json'),
+    readDataJsonFromGH('calendar.json', { fresh }),
+    readDataJsonFromGH('results_raw.json', { fresh }),
   ]);
   const cal = _findCalEntryForNativeGaraId(calRaw, id);
   return { cal, resultsRaw, calendar: calRaw };
@@ -1376,8 +1389,8 @@ async function _fetchCalAndResultsFor(id) {
 // gara — condiviso da: generazione lazy al primo visitatore della pagina
 // gara, sweep periodico (vedi _sweepGaraNarratives), backfill storico, e il
 // bottone admin "Rigenera" nella modale di condivisione social.
-async function _generateAndStoreGaraNarrative(id) {
-  const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
+async function _generateAndStoreGaraNarrative(id, { fresh = false } = {}) {
+  const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id, { fresh });
   const text = await _buildGaraAiCaption(id, cal, resultsRaw, calendar);
   if (text) await queries.upsertGaraNarrative(id, text);
   return text;
