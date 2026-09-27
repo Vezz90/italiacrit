@@ -14,34 +14,34 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 435,
+    "punti": 441,
     "vittorie": 13,
     "p1": 13,
     "p2": 8,
     "p3": 5,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 4,
     "pos": 2
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 429,
+    "punti": 435,
     "vittorie": 7,
     "p1": 7,
     "p2": 12,
     "p3": 5,
-    "pout": 29,
+    "pout": 31,
     "n_atleti": 5,
     "pos": 3
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 366,
+    "punti": 378,
     "vittorie": 4,
     "p1": 4,
-    "p2": 5,
+    "p2": 6,
     "p3": 8,
     "pout": 40,
     "n_atleti": 5,
@@ -50,9 +50,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 335,
-    "vittorie": 13,
-    "p1": 13,
+    "punti": 350,
+    "vittorie": 14,
+    "p1": 14,
     "p2": 2,
     "p3": 2,
     "pout": 18,
@@ -86,12 +86,12 @@
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 213,
+    "punti": 217,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 5,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 2,
     "pos": 8
   },
@@ -134,14 +134,26 @@
   {
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
+    "punti": 141,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 1,
+    "pos": 12
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
     "punti": 139,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 13,
+    "pout": 16,
     "n_atleti": 1,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -152,18 +164,6 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "n_atleti": 1,
-    "pos": 13
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 129,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 16,
     "n_atleti": 1,
     "pos": 14
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 118,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 16
+  },
+  {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
     "punti": 114,
@@ -188,18 +200,6 @@
     "p2": 3,
     "p3": 0,
     "pout": 10,
-    "n_atleti": 1,
-    "pos": 16
-  },
-  {
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 110,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 2,
-    "pout": 9,
     "n_atleti": 1,
     "pos": 17
   },
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "KTM_ACADEMY_LE_MARMOTTE",
+    "team_nome": "KTM ACADEMY LE MARMOTTE",
+    "punti": 51,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
     "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
     "punti": 50,
@@ -309,18 +321,6 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 26
-  },
-  {
-    "team_id": "KTM_ACADEMY_LE_MARMOTTE",
-    "team_nome": "KTM ACADEMY LE MARMOTTE",
-    "punti": 48,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 27
   },
   {

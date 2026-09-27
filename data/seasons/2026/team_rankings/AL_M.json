@@ -2,10 +2,10 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 1058,
-    "vittorie": 27,
-    "p1": 27,
-    "p2": 12,
+    "punti": 1085,
+    "vittorie": 28,
+    "p1": 28,
+    "p2": 13,
     "p3": 9,
     "pout": 48,
     "n_atleti": 9,
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "FERALPI_MONTECLARENSE_ASD",
+    "team_nome": "FERALPI MONTECLARENSE ASD",
+    "punti": 548,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 9,
+    "p3": 7,
+    "pout": 52,
+    "n_atleti": 11,
+    "pos": 6
+  },
+  {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "punti": 544,
@@ -69,7 +81,7 @@
     "p3": 10,
     "pout": 32,
     "n_atleti": 8,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
@@ -81,18 +93,6 @@
     "p3": 7,
     "pout": 33,
     "n_atleti": 8,
-    "pos": 7
-  },
-  {
-    "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "team_nome": "FERALPI MONTECLARENSE ASD",
-    "punti": 535,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 9,
-    "p3": 7,
-    "pout": 50,
-    "n_atleti": 11,
     "pos": 8
   },
   {
@@ -254,12 +254,12 @@
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 352,
+    "punti": 357,
     "vittorie": 5,
     "p1": 5,
     "p2": 5,
     "p3": 3,
-    "pout": 41,
+    "pout": 43,
     "n_atleti": 7,
     "pos": 22
   },
@@ -278,12 +278,12 @@
   {
     "team_id": "U_S_MONTECORONA",
     "team_nome": "U.S. MONTECORONA",
-    "punti": 324,
+    "punti": 333,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 6,
-    "pout": 56,
+    "pout": 58,
     "n_atleti": 7,
     "pos": 24
   },
@@ -398,11 +398,11 @@
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 215,
+    "punti": 225,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
-    "p3": 6,
+    "p3": 7,
     "pout": 20,
     "n_atleti": 3,
     "pos": 34
@@ -734,12 +734,12 @@
   {
     "team_id": "PEDALE_BREMBILLESE",
     "team_nome": "PEDALE BREMBILLESE",
-    "punti": 88,
+    "punti": 90,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 3,
     "pos": 62
   },

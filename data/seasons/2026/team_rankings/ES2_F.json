@@ -2,9 +2,9 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 478,
-    "vittorie": 13,
-    "p1": 13,
+    "punti": 493,
+    "vittorie": 14,
+    "p1": 14,
     "p2": 7,
     "p3": 3,
     "pout": 32,
@@ -14,10 +14,10 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 452,
+    "punti": 464,
     "vittorie": 13,
     "p1": 13,
-    "p2": 7,
+    "p2": 8,
     "p3": 8,
     "pout": 20,
     "n_atleti": 3,
@@ -26,12 +26,12 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 424,
+    "punti": 428,
     "vittorie": 8,
     "p1": 8,
     "p2": 7,
     "p3": 8,
-    "pout": 32,
+    "pout": 33,
     "n_atleti": 4,
     "pos": 3
   },
@@ -98,12 +98,12 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 150,
+    "punti": 156,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 3,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 3,
     "pos": 9
   },
@@ -206,12 +206,12 @@
   {
     "team_id": "ALLGOR_TATOBIKE",
     "team_nome": "ALLGOR TATOBIKE",
-    "punti": 87,
+    "punti": 88,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 13,
+    "pout": 14,
     "n_atleti": 2,
     "pos": 18
   },
@@ -302,12 +302,12 @@
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
     "team_nome": "G.S. LUPI VALLE D'AOSTA",
-    "punti": 32,
+    "punti": 35,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 1,
     "pos": 26
   },
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
+    "team_nome": "BIKERS PETOSINO SCUOLA MTB",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
     "team_id": "CALDERARA_STM_RIDUTTORI",
     "team_nome": "CALDERARA STM RIDUTTORI",
     "punti": 18,
@@ -417,7 +429,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "LOMBARDIA",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 6,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "GS_CICLI_FIORIN_ASD",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA",
@@ -453,7 +465,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
+  },
+  {
+    "team_id": "A_S_D_ORANGE_BIKE_TEAM",
+    "team_nome": "A.S.D. ORANGE BIKE TEAM",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 40
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -465,7 +489,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 41
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -477,7 +501,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 42
   },
   {
     "team_id": "CARISMA_TEAM",
@@ -489,19 +513,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 43
   },
   {
-    "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
-    "team_nome": "BIKERS PETOSINO SCUOLA MTB",
-    "punti": 11,
+    "team_id": "SANTA_CRUZ_TSA_BELTRAMI",
+    "team_nome": "SANTA CRUZ TSA BELTRAMI",
+    "punti": 10,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 1,
+    "pout": 0,
     "n_atleti": 1,
-    "pos": 42
+    "pos": 44
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -513,7 +537,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 45
   },
   {
     "team_id": "UMBRIA",
@@ -525,7 +549,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 44
+    "pos": 46
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
@@ -537,7 +561,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 47
   },
   {
     "team_id": "V_C_SOMMESE",
@@ -549,19 +573,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 46
-  },
-  {
-    "team_id": "A_S_D_ORANGE_BIKE_TEAM",
-    "team_nome": "A.S.D. ORANGE BIKE TEAM",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "KK_TROPOVCI",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "PIEMONTE",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "CAMPANIA",
@@ -621,7 +633,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
+  },
+  {
+    "team_id": "CICLISTICA_ROSTESE",
+    "team_nome": "CICLISTICA ROSTESE",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 54
   },
   {
     "team_id": "MARCHE",
@@ -633,7 +657,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 55
   },
   {
     "team_id": "S_S_STELLA_ALPINA_RENAZZO",
@@ -645,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 56
   },
   {
     "team_id": "SAMABIKE",
@@ -657,7 +681,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 55
+    "pos": 57
   },
   {
     "team_id": "SARDEGNA",
@@ -669,7 +693,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 58
   },
   {
     "team_id": "SICILIA",
@@ -681,6 +705,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 59
   }
 ]

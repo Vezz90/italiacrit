@@ -5,11 +5,11 @@
     "nome": "EMMA",
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 368,
+    "punti": 380,
     "vittorie": 13,
-    "gare": 28,
+    "gare": 29,
     "p1": 13,
-    "p2": 5,
+    "p2": 6,
     "p3": 5,
     "pout": 5,
     "pos": 1,
@@ -53,13 +53,13 @@
     "nome": "TEODORA",
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 286,
+    "punti": 287,
     "vittorie": 7,
-    "gare": 21,
+    "gare": 22,
     "p1": 7,
     "p2": 4,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "pos": 4,
     "trend": 0
   },
@@ -85,13 +85,13 @@
     "nome": "NICOLE",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 231,
+    "punti": 235,
     "vittorie": 5,
-    "gare": 25,
+    "gare": 26,
     "p1": 5,
     "p2": 4,
     "p3": 4,
-    "pout": 11,
+    "pout": 12,
     "pos": 6,
     "trend": 0
   },
@@ -101,10 +101,10 @@
     "nome": "OLIVIA",
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 211,
-    "vittorie": 2,
-    "gare": 21,
-    "p1": 2,
+    "punti": 226,
+    "vittorie": 3,
+    "gare": 22,
+    "p1": 3,
     "p2": 6,
     "p3": 3,
     "pout": 10,
@@ -133,12 +133,12 @@
     "nome": "GINEVRA",
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 185,
+    "punti": 195,
     "vittorie": 1,
-    "gare": 19,
+    "gare": 20,
     "p1": 1,
     "p2": 2,
-    "p3": 3,
+    "p3": 4,
     "pout": 13,
     "pos": 9,
     "trend": 0
@@ -149,13 +149,13 @@
     "nome": "PAIUSCO ELISA",
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
-    "punti": 154,
+    "punti": 162,
     "vittorie": 3,
-    "gare": 19,
+    "gare": 20,
     "p1": 3,
     "p2": 2,
     "p3": 2,
-    "pout": 12,
+    "pout": 13,
     "pos": 10,
     "trend": 0
   },
@@ -277,13 +277,13 @@
     "nome": "ELISA",
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
     "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 69,
+    "punti": 72,
     "vittorie": 0,
-    "gare": 9,
+    "gare": 10,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 6,
+    "pout": 7,
     "pos": 18,
     "trend": 0
   },
@@ -432,6 +432,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "PERSOIU_TARATU_MARA",
+    "cognome": "PERSOIU-TARATU",
+    "nome": "MARA",
+    "team_id": "ACS_OLIMPIC_ZARNESTI",
+    "team_nome": "ACS OLIMPIC ZARNESTI",
+    "punti": 53,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 4,
+    "pos": 28,
+    "trend": 5
+  },
+  {
     "atleta_id": "DEL_GROSSO_SERENA",
     "cognome": "DEL",
     "nome": "GROSSO SERENA",
@@ -444,8 +460,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 28,
-    "trend": 0
+    "pos": 29,
+    "trend": -1
   },
   {
     "atleta_id": "MIGLIORANZA_ELENA",
@@ -460,8 +476,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 3,
-    "pos": 29,
-    "trend": 0
+    "pos": 30,
+    "trend": -1
   },
   {
     "atleta_id": "ANDREOLI_ANITA",
@@ -476,8 +492,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 30,
-    "trend": 0
+    "pos": 31,
+    "trend": -1
   },
   {
     "atleta_id": "BATTAGLIN_SARA",
@@ -492,8 +508,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 9,
-    "pos": 31,
-    "trend": 0
+    "pos": 32,
+    "trend": -1
   },
   {
     "atleta_id": "TASCA_NICOLE",
@@ -508,24 +524,24 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 32,
-    "trend": 0
+    "pos": 33,
+    "trend": -1
   },
   {
-    "atleta_id": "PERSOIU_TARATU_MARA",
-    "cognome": "PERSOIU-TARATU",
-    "nome": "MARA",
-    "team_id": "ACS_OLIMPIC_ZARNESTI",
-    "team_nome": "ACS OLIMPIC ZARNESTI",
-    "punti": 47,
+    "atleta_id": "MOMBELLO_ANNA",
+    "cognome": "MOMBELLO",
+    "nome": "ANNA",
+    "team_id": "I_CINGHIALI_EVO",
+    "team_nome": "I CINGHIALI EVO",
+    "punti": 48,
     "vittorie": 0,
-    "gare": 5,
+    "gare": 9,
     "p1": 0,
     "p2": 0,
-    "p3": 2,
-    "pout": 3,
-    "pos": 33,
-    "trend": 0
+    "p3": 0,
+    "pout": 9,
+    "pos": 34,
+    "trend": 5
   },
   {
     "atleta_id": "TOAIARI_NOEMI",
@@ -540,8 +556,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 34,
-    "trend": 0
+    "pos": 35,
+    "trend": -1
   },
   {
     "atleta_id": "GRASSI_MARTA",
@@ -556,8 +572,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 35,
-    "trend": 0
+    "pos": 36,
+    "trend": -1
   },
   {
     "atleta_id": "TRABUCCHI_BEATRICE",
@@ -572,8 +588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 9,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "FERRETTI_SOFIA",
@@ -588,8 +604,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "REBULI_SOFIA",
@@ -604,24 +620,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 3,
-    "pos": 38,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MOMBELLO_ANNA",
-    "cognome": "MOMBELLO",
-    "nome": "ANNA",
-    "team_id": "I_CINGHIALI_EVO",
-    "team_nome": "I CINGHIALI EVO",
-    "punti": 43,
-    "vittorie": 0,
-    "gare": 8,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
     "pos": 39,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "BANI_GIULIA",
@@ -1344,6 +1344,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "FERRI_ANASTASIA",
+    "cognome": "FERRI",
+    "nome": "ANASTASIA",
+    "team_id": "VANGI_LADIES_CYCLING_TEAM",
+    "team_nome": "VANGI LADIES CYCLING TEAM",
+    "punti": 15,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "pos": 85,
+    "trend": 7
+  },
+  {
     "atleta_id": "FOSCARI_SOFIA",
     "cognome": "FOSCARI",
     "nome": "SOFIA",
@@ -1356,8 +1372,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 85,
-    "trend": 0
+    "pos": 86,
+    "trend": -1
   },
   {
     "atleta_id": "VALENTI_SIRIA",
@@ -1372,8 +1388,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 86,
-    "trend": 0
+    "pos": 87,
+    "trend": -1
   },
   {
     "atleta_id": "BOLLETTA_AURORA",
@@ -1388,8 +1404,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 87,
-    "trend": 0
+    "pos": 88,
+    "trend": -1
   },
   {
     "atleta_id": "ZALIG_MASA",
@@ -1404,8 +1420,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 88,
-    "trend": 0
+    "pos": 89,
+    "trend": -1
   },
   {
     "atleta_id": "MORALES_NAVARRO_ANA_REGINA",
@@ -1420,8 +1436,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 89,
-    "trend": 0
+    "pos": 90,
+    "trend": -1
   },
   {
     "atleta_id": "FERRUSI_NOEMY",
@@ -1436,8 +1452,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 90,
-    "trend": 0
+    "pos": 91,
+    "trend": -1
   },
   {
     "atleta_id": "ANZISI_REBECCA",
@@ -1452,24 +1468,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 91,
-    "trend": 0
-  },
-  {
-    "atleta_id": "FERRI_ANASTASIA",
-    "cognome": "FERRI",
-    "nome": "ANASTASIA",
-    "team_id": "VANGI_LADIES_CYCLING_TEAM",
-    "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 13,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "pos": 92,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GENOVESE_SIRIA",
