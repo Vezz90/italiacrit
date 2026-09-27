@@ -24376,7 +24376,7 @@ async function renderStatistiche(selectedCatKey) {
 
   // Se categoria di contesto → mostra vista dedicata
   if (ctxCat) {
-    return _renderStatisticheCat(ctxCat, resultsRaw, athletes, calendar, catTabsHtml);
+    return _renderStatisticheCat(ctxCat, resultsRaw, athletes, calendar, catTabsHtml, allResults);
   }
 
   // KPI globali (ridotto)
@@ -24739,9 +24739,65 @@ async function renderStatistiche(selectedCatKey) {
 }
 
 // ── STATISTICHE CATEGORIA SINGOLA ────────────────────────────
-function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml) {
+function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml, allResults) {
   // catKey è un codice classifica (es. ES1_M)
   const label = catLabel(catKey);
+
+  // ── CONFRONTO CATEGORIE — richiesto esplicitamente: la vista per singola
+  // categoria mostrava solo i propri numeri, senza modo di capire come si
+  // colloca rispetto alle altre (gare/atleti/equilibrio) — la stessa tabella
+  // già presente nella vista generale, qui ristretta e con la riga di questa
+  // categoria evidenziata.
+  const _catCompareAll = {};
+  (allResults || []).forEach(r => {
+    const key = getRankingFileCode(r); if (!key) return;
+    if (!_catCompareAll[key]) _catCompareAll[key] = { gare: new Set(), atleti: new Set(), pts: {} };
+    const c = _catCompareAll[key];
+    if (r.gara_id) c.gare.add(r.gara_id);
+    if (r.punti_effettivi > 0) c.atleti.add(r.atleta_id);
+    c.pts[r.atleta_id] = (c.pts[r.atleta_id]||0) + (r.punti_effettivi||0);
+  });
+  const _catRowsAll = RANKING_CODES.filter(c => _catCompareAll[c]).map(key => {
+    const c = _catCompareAll[key];
+    const top = Object.values(c.pts).sort((a,b)=>b-a);
+    const equil = top.length >= 2 ? Math.round((top[Math.min(9,top.length-1)] / top[0]) * 100) : 0;
+    return { key, label: catLabel(key), gare: c.gare.size, atleti: c.atleti.size, equil };
+  });
+  const _maxGareCatAll = Math.max(..._catRowsAll.map(r=>r.gare), 1);
+  const _maxAtlCatAll  = Math.max(..._catRowsAll.map(r=>r.atleti), 1);
+  const catCompareHtml = _catRowsAll.map(r => `
+    <div onclick="location.hash='#/statistiche/${encodeURIComponent(r.key)}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;background:${r.key===catKey?'var(--bg-elevated)':''};transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background='${r.key===catKey?'var(--bg-elevated)':''}'">
+      <div style="font-family:var(--font-heading);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;${r.key===catKey?'color:var(--red-hot)':''}">${r.label}${r.key===catKey?' •':''}</div>
+      <div title="${r.gare} gare"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.gare/_maxGareCatAll*100)}%;background:var(--accent);border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.gare} gare</div></div>
+      <div title="${r.atleti} atleti"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.atleti/_maxAtlCatAll*100)}%;background:#6366f1;border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.atleti} atleti</div></div>
+      <div style="text-align:right"><span style="font-family:var(--font-display);font-size:1.1rem;color:${r.equil>=60?'#10b981':r.equil>=35?'#f59e0b':'#ef4444'}">${r.equil}%</span><div style="font-size:.6rem;color:var(--text-muted)">equilibrio</div></div>
+    </div>`).join('');
+
+  // ── ATTIVITÀ PER REGIONE — richiesto esplicitamente: in ordine di
+  // attività svolte (gare disputate), stile classifica — stessa logica già
+  // usata nella vista generale, qui filtrata a questa sola categoria.
+  const _regCatCount = {};
+  const _calByRegCat = {};
+  (calendar || []).forEach(g => {
+    const reg = normalizeRegion(g.regione||'');
+    if (isRealRegion(reg)) _calByRegCat[reg] = (_calByRegCat[reg]||0)+1;
+  });
+  resultsRaw.forEach(r => {
+    const reg = normalizeRegion(r.regione||'');
+    if (!isRealRegion(reg)) return;
+    (_regCatCount[reg] ||= new Set()).add(r.gara_id);
+  });
+  const _topRegCat = Object.entries(_regCatCount)
+    .map(([r,s]) => ({ r, scraped: s.size, cal: _calByRegCat[r]||0 }))
+    .sort((a,b) => b.scraped - a.scraped);
+  const _maxRegCat = Math.max(..._topRegCat.map(x=>x.scraped), 1);
+  const regCatHtml = _topRegCat.map((x,i) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 16px;border-bottom:1px solid var(--border-subtle)">
+      <div style="width:22px;font-family:var(--font-display);font-size:.85rem;color:var(--text-muted);text-align:right">${i+1}</div>
+      <div style="min-width:130px;font-family:var(--font-heading);font-weight:700;font-size:.85rem">${esc(x.r)}</div>
+      <div style="flex:1;height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(x.scraped/_maxRegCat*100)}%;background:linear-gradient(90deg,var(--red-hot),var(--yellow-race));border-radius:4px"></div></div>
+      <div style="min-width:80px;text-align:right;font-size:.78rem;color:var(--text-muted)">${x.scraped} gare</div>
+    </div>`).join('');
 
   if (!resultsRaw.length) {
     setPage(`<div class="pg-header"><h1 class="pg-title">STATISTICHE — ${esc(label)}</h1></div>${catTabsHtml}<p style="color:var(--text-muted)">Nessun dato per questa categoria.</p>`);
@@ -24948,6 +25004,22 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
           <div style="font-family:var(--font-heading);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">${lbl}</div>
         </div>`).join('')}
     </div>
+
+    <!-- Confronto categorie (questa categoria evidenziata) -->
+    ${_catRowsAll.length > 1 ? `
+    <div class="section-header">
+      <span class="section-title">CONFRONTO CATEGORIE</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="${tableBase}">${catCompareHtml}</div>` : ''}
+
+    <!-- Attività per regione, in ordine di gare disputate -->
+    ${_topRegCat.length ? `
+    <div class="section-header">
+      <span class="section-title">ATTIVITÀ PER REGIONE</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="${tableBase}">${regCatHtml}</div>` : ''}
 
     <!-- Protagonisti -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px">
