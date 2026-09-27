@@ -1779,7 +1779,10 @@ textarea.pf-input { resize: vertical; }
   align-items: center;
   justify-content: center;
   gap: 22px;
-  background: var(--bg-primary);
+  /* Fisso (non var(--bg-primary)): il logo è bianco, pensato per lo sfondo
+     scuro della navbar (#111827, sempre uguale nei due temi) — con lo
+     sfondo del tema chiaro spariva (bianco su bianco), segnalato dal vivo. */
+  background: #111827;
 }
 .initial-loader-logo {
   height: 52px;
@@ -1790,7 +1793,10 @@ textarea.pf-input { resize: vertical; }
   width: 120px;
   height: 3px;
   border-radius: 3px;
-  background: var(--border-subtle);
+  /* Fisso, stesso motivo dello sfondo sopra: var(--border-subtle) in tema
+     chiaro è quasi nero (pensato per uno sfondo chiaro), invisibile sullo
+     sfondo scuro fisso qui sotto. */
+  background: rgba(255,255,255,0.14);
   overflow: hidden;
   position: relative;
 }
