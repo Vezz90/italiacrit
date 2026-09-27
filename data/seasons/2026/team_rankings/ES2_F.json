@@ -38,10 +38,10 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 317,
+    "punti": 329,
     "vittorie": 5,
     "p1": 5,
-    "p2": 8,
+    "p2": 9,
     "p3": 3,
     "pout": 21,
     "n_atleti": 3,
@@ -62,12 +62,12 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 202,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 221,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 3,
     "p3": 4,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 2,
     "pos": 6
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
-    "punti": 177,
+    "punti": 191,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 5,
-    "pout": 27,
+    "pout": 29,
     "n_atleti": 6,
     "pos": 8
   },
@@ -134,24 +134,24 @@
   {
     "team_id": "G_C_NOVENTANA",
     "team_nome": "G.C. NOVENTANA",
-    "punti": 118,
+    "punti": 126,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 2,
-    "pout": 15,
+    "pout": 17,
     "n_atleti": 2,
     "pos": 12
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 112,
+    "punti": 123,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
-    "p3": 2,
-    "pout": 19,
+    "p3": 3,
+    "pout": 20,
     "n_atleti": 4,
     "pos": 13
   },
@@ -552,6 +552,18 @@
     "pos": 46
   },
   {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 47
+  },
+  {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
     "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
     "punti": 9,
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "V_C_SOMMESE",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -585,18 +597,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 49
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 7,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 50
   },
   {

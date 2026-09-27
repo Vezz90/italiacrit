@@ -2,12 +2,12 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 544,
+    "punti": 569,
     "vittorie": 11,
     "p1": 11,
-    "p2": 11,
+    "p2": 12,
     "p3": 9,
-    "pout": 34,
+    "pout": 36,
     "n_atleti": 7,
     "pos": 1
   },
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "G_S_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 247,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 6,
+    "pout": 31,
+    "n_atleti": 2,
+    "pos": 6
+  },
+  {
     "team_id": "A_S_A_C_I_EVONACICLI",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
     "punti": 236,
@@ -69,18 +81,6 @@
     "p3": 4,
     "pout": 7,
     "n_atleti": 6,
-    "pos": 6
-  },
-  {
-    "team_id": "G_S_MOSOLE",
-    "team_nome": "G.S. MOSOLE",
-    "punti": 231,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 5,
-    "pout": 30,
-    "n_atleti": 2,
     "pos": 7
   },
   {
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 129,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 15
+  },
+  {
     "team_id": "GS_CICLI_FIORIN_ASD",
     "team_nome": "GS CICLI FIORIN ASD",
     "punti": 119,
@@ -177,7 +189,7 @@
     "p3": 3,
     "pout": 20,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
@@ -187,18 +199,6 @@
     "p1": 2,
     "p2": 1,
     "p3": 2,
-    "pout": 10,
-    "n_atleti": 1,
-    "pos": 16
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 114,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 0,
     "pout": 10,
     "n_atleti": 1,
     "pos": 17
@@ -242,37 +242,37 @@
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 66,
+    "punti": 68,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 3,
     "pos": 21
   },
   {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 60,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
-    "pos": 22
-  },
-  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
-    "punti": 59,
+    "punti": 63,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 1,
+    "pos": 22
+  },
+  {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 61,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
     "pos": 23
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 53,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 2,
+    "pos": 25
+  },
+  {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
     "punti": 53,
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -309,18 +321,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 26
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 50,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 2,
     "pos": 27
   },
   {
