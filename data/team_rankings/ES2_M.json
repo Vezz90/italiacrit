@@ -14,11 +14,11 @@
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti": 747,
-    "vittorie": 25,
-    "p1": 25,
-    "p2": 14,
-    "p3": 9,
+    "punti": 784,
+    "vittorie": 26,
+    "p1": 26,
+    "p2": 15,
+    "p3": 10,
     "pout": 24,
     "n_atleti": 3,
     "pos": 2
@@ -170,12 +170,12 @@
   {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 339,
+    "punti": 354,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 7,
-    "pout": 48,
+    "pout": 51,
     "n_atleti": 4,
     "pos": 15
   },
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "GS_BERTI_MOBILI_BENASSI",
+    "team_nome": "GS BERTI MOBILI BENASSI",
+    "punti": 153,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 4,
+    "p3": 0,
+    "pout": 21,
+    "n_atleti": 2,
+    "pos": 35
+  },
+  {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
     "team_nome": "U.C.S. OTTAVIO ZULIANI A.S.D.",
     "punti": 152,
@@ -417,18 +429,6 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 35
-  },
-  {
-    "team_id": "GS_BERTI_MOBILI_BENASSI",
-    "team_nome": "GS BERTI MOBILI BENASSI",
-    "punti": 148,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 4,
-    "p3": 0,
-    "pout": 20,
-    "n_atleti": 2,
     "pos": 36
   },
   {
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 127,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 4,
+    "pout": 22,
+    "n_atleti": 4,
+    "pos": 44
+  },
+  {
     "team_id": "I_CINGHIALI_EVO",
     "team_nome": "I CINGHIALI EVO",
     "punti": 126,
@@ -525,7 +537,7 @@
     "p3": 4,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
@@ -537,18 +549,6 @@
     "p3": 3,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 45
-  },
-  {
-    "team_id": "UC_DONORATICO",
-    "team_nome": "UC DONORATICO",
-    "punti": 125,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 4,
-    "pout": 21,
-    "n_atleti": 4,
     "pos": 46
   },
   {
@@ -648,6 +648,18 @@
     "pos": 54
   },
   {
+    "team_id": "PEDALE_SARZANESE",
+    "team_nome": "PEDALE SARZANESE",
+    "punti": 104,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 24,
+    "n_atleti": 3,
+    "pos": 55
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 104,
@@ -657,18 +669,6 @@
     "p3": 3,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 55
-  },
-  {
-    "team_id": "PEDALE_SARZANESE",
-    "team_nome": "PEDALE SARZANESE",
-    "punti": 97,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 22,
-    "n_atleti": 3,
     "pos": 56
   },
   {

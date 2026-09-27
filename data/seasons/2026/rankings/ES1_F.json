@@ -317,7 +317,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 20,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "ABRIONI_ALESSIA",
@@ -333,7 +333,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 21,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -349,7 +349,7 @@
     "p3": 2,
     "pout": 12,
     "pos": 22,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ARCADU_GRETA",
@@ -365,7 +365,7 @@
     "p3": 4,
     "pout": 0,
     "pos": 23,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "POIDOMANI_ELENA",
