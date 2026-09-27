@@ -54,15 +54,21 @@ self.addEventListener('fetch', event => {
   }
 
   // ── STRATEGIA NETWORK-FIRST per i file JSON (dati dinamici) ──
-  // Garantisce che gli aggiornamenti dal server siano sempre visibili.
-  // cache:'reload' è essenziale: senza, Cloudflare/GitHub Pages mandano
-  // Cache-Control su questi JSON e la fetch "network-first" può comunque
-  // essere soddisfatta dalla cache HTTP del browser invece di andare
-  // davvero in rete, facendo apparire i dati invariati anche dopo un
-  // deploy con dati corretti (stesso bug già risolto per app.js sotto).
+  // Garantisce che gli aggiornamenti dal server siano sempre visibili, ma
+  // 'no-cache' (non 'reload'): invia comunque una richiesta condizionale
+  // (If-None-Match) ad ogni caricamento — mai dati stantii — però quando il
+  // contenuto non è cambiato (il caso più comune: lo scraper aggiorna questi
+  // file ogni 30 min, non ad ogni visita) il server risponde 304 Not
+  // Modified invece di rimandare tutto il body: per i file grandi di questo
+  // sito (results_raw.json/teams.json/athletes.json/race_details.json,
+  // insieme ~29MB non compressi, ~2,8MB gzip) questo evita di riscaricare
+  // megabyte identici ad ogni apertura del sito — causa principale della
+  // pagina bianca prolungata segnalata dal vivo ("ci mette tanto a
+  // caricare"). 'reload' ignorava completamente Cache-Control/ETag,
+  // forzando SEMPRE il download integro anche a dati identici.
   if (url.includes('/data/') && url.endsWith('.json')) {
     event.respondWith(
-      fetch(event.request, { cache: 'reload' })
+      fetch(event.request, { cache: 'no-cache' })
         .then(networkResponse => {
           // Aggiorna la cache con la versione fresca
           const clone = networkResponse.clone();
@@ -78,9 +84,10 @@ self.addEventListener('fetch', event => {
   }
 
   // ── STRATEGIA NETWORK-FIRST per i file di ranking (JSON nelle sottocartelle) ──
+  // Stesso motivo di 'no-cache' spiegato sopra per i file JSON principali.
   if (url.includes('/rankings/') || url.includes('/team_rankings/')) {
     event.respondWith(
-      fetch(event.request, { cache: 'reload' })
+      fetch(event.request, { cache: 'no-cache' })
         .then(networkResponse => {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
