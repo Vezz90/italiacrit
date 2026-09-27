@@ -1450,17 +1450,27 @@ app.post('/api/admin/gara-narrative/:id/regenerate', requireAdmin, async (req, r
 app.get('/api/gara-narrative/:id', async (req, res) => {
   try {
     const id = req.params.id;
+    // Credito fotografo: presente da sempre nel testo copiabile per i social
+    // (/api/admin/gara-share-text) ma MAI su questa pagina pubblica — chi
+    // legge il racconto sul sito non vedeva mai chi aveva scattato la foto,
+    // segnalato dal vivo ("non mette il tag di chi ha messo la foto... lo
+    // mette solo nella condivisione social"). cal serve solo per questo,
+    // quindi va recuperato anche quando il racconto è già in cache.
+    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
+    const credit = await _photoCreditFor(id, cal).catch(() => null);
     const stored = await queries.getGaraNarrative(id).catch(() => null);
     if (stored?.text) {
-      return res.json({ text: _stripSocialExtrasForPage(stored.text), ai: true });
+      let text = _stripSocialExtrasForPage(stored.text);
+      if (credit) text += `\n\n📷 Foto: ${credit}`;
+      return res.json({ text, ai: true });
     }
     // Nessun racconto AI ancora pronto per questa gara: la genera in
     // background per la prossima visita, intanto risponde subito con la
     // vecchia narrazione a template così la pagina non resta mai vuota.
     _scheduleGaraNarrativeGeneration(id);
-    const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
     const { top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw, calendar);
-    const text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
+    let text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
+    if (credit) text += `\n\n📷 Foto: ${credit}`;
     res.json({ text, top3, podiumText: podiumLines.join(' '), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
