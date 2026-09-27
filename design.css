@@ -1762,6 +1762,60 @@ textarea.pf-input { resize: vertical; }
   border-radius: 0;
 }
 
+/* ── LOADER INIZIALE (primo caricamento, prima che i dati siano pronti) ──
+   Sostituisce la sottile barra rossa in cima (facile da non notare) con
+   logo + animazione a schermo pieno, sopra il colore di sfondo del tema
+   corrente — niente flash bianco durante il fetch/parse dei dati (può
+   richiedere qualche secondo su rete lenta o al risveglio "a freddo" del
+   backend), segnalato dal vivo ("ci mette tanto a caricare con una pagina
+   bianca"). Rimosso da app.js non appena route() è pronta a disegnare la
+   pagina vera (vedi DOMContentLoaded). */
+.initial-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: var(--bg-primary);
+}
+.initial-loader-logo {
+  height: 52px;
+  width: auto;
+  animation: initial-loader-pulse 1.4s ease-in-out infinite;
+}
+.initial-loader-bar {
+  width: 120px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+}
+.initial-loader-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: 3px;
+  background: var(--red-hot);
+  animation: initial-loader-sweep 1.1s ease-in-out infinite;
+}
+@keyframes initial-loader-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .6; transform: scale(.94); }
+}
+@keyframes initial-loader-sweep {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .initial-loader-logo { animation: none; }
+  .initial-loader-bar::after { animation: none; left: 0; width: 100%; }
+}
+
 /* ── FOOTER ─────────────────────────────────────────────────────── */
 footer {
   background: var(--bg-card);
