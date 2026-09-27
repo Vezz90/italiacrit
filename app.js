@@ -10464,7 +10464,11 @@ async function renderClassifica() {
   // l'ha precalcolato — raggruppa le sequenze consecutive dello stesso
   // corridore/team in testa in "regni" con data di inizio/fine e numero
   // di gare, così si vede a colpo d'occhio chi ha guidato quando.
-  const _buildLeaderReigns = (catResults, keyField) => {
+  // metric: 'punti' (punti_effettivi cumulati, come la classifica ufficiale)
+  // o 'vittorie' (numero di vittorie cumulate) — richiesto esplicitamente,
+  // riusa lo stesso stato rankSort già presente nei controlli (PUNTI /
+  // 🏆 VITTORIE), condiviso con l'ordinamento della tabella.
+  const _buildLeaderReigns = (catResults, keyField, metric) => {
     const rows = catResults.filter(r => r.data && r[keyField]).slice();
     rows.sort((a,b) => a.data.localeCompare(b.data) || (a.gara_id||'').localeCompare(b.gara_id||''));
     const cumPts = {}, lastLabel = {}, leaderByGara = {};
@@ -10475,11 +10479,16 @@ async function renderClassifica() {
       while (j < rows.length && rows[j].gara_id === garaId) j++;
       const slice = rows.slice(i, j);
       for (const r of slice) {
-        cumPts[r[keyField]] = (cumPts[r[keyField]] || 0) + (r.punti_effettivi || 0);
+        const inc = metric === 'vittorie' ? (r.posizione === 1 ? 1 : 0) : (r.punti_effettivi || 0);
+        cumPts[r[keyField]] = (cumPts[r[keyField]] || 0) + inc;
         lastLabel[r[keyField]] = keyField === 'atleta_id' ? `${r.cognome||''} ${r.nome||''}`.trim() : (r.team || r[keyField]);
       }
       const sorted = Object.entries(cumPts).sort(([,a],[,b]) => b-a);
-      if (sorted.length && !leaderByGara[garaId]) {
+      // sorted[0][1] > 0: con metric='vittorie', prima che qualcuno vinca la
+      // prima gara stagionale tutti sono fermi a 0 — assegnare comunque un
+      // "leader" a quel punto (il primo per ordine casuale a 0 vittorie)
+      // sarebbe un dato senza senso, non un vero primato.
+      if (sorted.length && sorted[0][1] > 0 && !leaderByGara[garaId]) {
         leaderByGara[garaId] = { key: sorted[0][0], data: rows[i].data, nome_gara: rows[i].nome_gara, gara_id: garaId };
       }
       i = j;
@@ -10522,11 +10531,11 @@ async function renderClassifica() {
   let leaderHistorySectionHtml = '';
   if (!_rkIsPista) {
     const _catResultsForLeader = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rankCat);
-    const _athReigns  = _buildLeaderReigns(_catResultsForLeader, 'atleta_id');
-    const _teamReigns = _buildLeaderReigns(_catResultsForLeader, 'team_id');
+    const _athReigns  = _buildLeaderReigns(_catResultsForLeader, 'atleta_id', rankSort);
+    const _teamReigns = _buildLeaderReigns(_catResultsForLeader, 'team_id', rankSort);
     leaderHistorySectionHtml = `
     <div class="section-header" style="margin-top:28px">
-      <span class="section-title">STORIA DELLA CLASSIFICA</span>
+      <span class="section-title">STORIA DELLA CLASSIFICA — ${rankSort==='vittorie'?'🏆 VITTORIE':'PUNTI'}</span>
       <span class="section-line"></span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px">
