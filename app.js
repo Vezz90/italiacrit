@@ -10395,11 +10395,16 @@ async function renderClassifica() {
   `).join('');
   // "Storia" e "Albo d'oro" richiesti esplicitamente accanto al selettore
   // Atleti/Team: cliccando aprono un pannello al posto della tabella (vedi
-  // rankPanel sopra), invece di stare sepolti in fondo alla pagina.
+  // rankPanel sopra), invece di stare sepolti in fondo alla pagina. Tre
+  // pulsanti sempre visibili (non un toggle nascosto sullo stesso pulsante):
+  // così è sempre chiaro dove ci si trova e come tornare alla tabella —
+  // segnalato dal vivo come confusionario quando "Classifica" non compariva
+  // affatto tra le opzioni.
   const panelTabs = _rkIsPista ? '' : `
     <div class="tab-group" role="tablist" aria-label="Pannello" style="margin-left:8px">
-      <button class="tab-btn ${rankPanel==='storia'?'active-cat':''}" onclick="setRankPanel(${rankPanel==='storia'?"'classifica'":"'storia'"})">📜 STORIA</button>
-      <button class="tab-btn ${rankPanel==='albo'?'active-cat':''}" onclick="setRankPanel(${rankPanel==='albo'?"'classifica'":"'albo'"})">🥇 ALBO D'ORO</button>
+      <button class="tab-btn ${rankPanel==='classifica'?'active-cat':''}" onclick="setRankPanel('classifica')">📊 CLASSIFICA</button>
+      <button class="tab-btn ${rankPanel==='storia'?'active-cat':''}" onclick="setRankPanel('storia')">📜 STORIA</button>
+      <button class="tab-btn ${rankPanel==='albo'?'active-cat':''}" onclick="setRankPanel('albo')">🥇 ALBO D'ORO</button>
     </div>`;
   const viewTabs = `
     <div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
