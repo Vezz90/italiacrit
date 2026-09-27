@@ -994,6 +994,26 @@ async def run_cycle():
     SESSION = requests.Session()
     SESSION.headers.update({"User-Agent": "Mozilla/5.0", "Accept-Language": "it-IT"})
 
+    # Ordine STABILE di prima comparsa di ogni gara (gara_id → numero
+    # progressivo, assegnato una sola volta e mai più cambiato). Senza
+    # questo, l'ordine "di scraping" percepito dall'utente cambiava ad ogni
+    # ciclo: ogni pagina RISULTATI_URLS viene ri-scaricata per intero ad ogni
+    # giro (necessario per recepire correzioni/risultati arrivati in
+    # ritardo — vedi sotto), e la gara toccata viene rimossa e riaggiunta in
+    # coda ad all_results, perdendo la sua posizione originale anche se i
+    # suoi dati non sono affatto cambiati. Usato solo per riordinare in modo
+    # stabile a parità di data (vedi sort_key sotto), MAI per determinare
+    # quali risultati sono nuovi (quello resta races_map/new_gara_ids).
+    scrape_order_path = DATA_DIR / "gara_scrape_order.json"
+    gara_scrape_order: dict[str, int] = {}
+    if scrape_order_path.exists():
+        try:
+            with open(scrape_order_path, "r", encoding="utf-8") as f:
+                gara_scrape_order = json.load(f)
+        except Exception:
+            gara_scrape_order = {}
+    _next_scrape_seq = (max(gara_scrape_order.values()) + 1) if gara_scrape_order else 1
+
     # 1. Caricamento risultati esistenti per scraping incrementale
     results_path = DATA_DIR / "results_raw.json"
     all_results = []
@@ -1033,6 +1053,15 @@ async def run_cycle():
                     r["regione"] = extract_region(r["regione"])
         except Exception as e:
             print(f"Errore caricamento risultati: {e}, inizio da zero.")
+
+    # Migrazione una tantum: assegna un numero d'ordine alle gare già presenti
+    # da PRIMA che questo tracciamento esistesse, nell'ordine in cui si
+    # trovano oggi (diventa la base stabile da qui in avanti).
+    for r in all_results:
+        gid = r.get("gara_id")
+        if gid and gid not in gara_scrape_order:
+            gara_scrape_order[gid] = _next_scrape_seq
+            _next_scrape_seq += 1
 
     # NON riempiamo existing_ids con le vecchie gare, altrimenti le gare aggiornate verrebbero ignorate!
     existing_ids = set()
@@ -1074,6 +1103,10 @@ async def run_cycle():
                 print(f"  [Purge estero] Rimossi {_purged} risultati residui di gare estere già in archivio.")
 
         all_results.extend(new_results)
+        for gid in new_gara_ids:
+            if gid not in gara_scrape_order:
+                gara_scrape_order[gid] = _next_scrape_seq
+                _next_scrape_seq += 1
         for res in new_results:
             gid = res["gara_id"]
             if gid not in races_map:
@@ -1092,6 +1125,17 @@ async def run_cycle():
             g["campionato_regionale"] = cr
             g["campionato_italiano"] = ci
             races_map[g["id"]] = g
+
+    # Applica a ogni riga il numero d'ordine stabile della SUA gara (mai
+    # quello di scraping di questo giro): così il campo riflette quando la
+    # gara è stata vista la prima volta, non l'ultima volta che è stata
+    # ritoccata — vedi commento su gara_scrape_order sopra.
+    for r in all_results:
+        seq = gara_scrape_order.get(r.get("gara_id"))
+        if seq is not None:
+            r["_scrape_seq"] = seq
+    with open(scrape_order_path, "w", encoding="utf-8") as f:
+        json.dump(gara_scrape_order, f)
 
     athletes, teams, a_rank, t_rank, clean_results = aggregate(all_results)
 

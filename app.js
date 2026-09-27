@@ -24210,11 +24210,22 @@ async function renderGare() {
     const base = _raceBaseName(r.nome_gara);
     if (!base) continue;
     const key = base + '|' + r.data;
-    if (!groups[key]) groups[key] = { base, data: r.data, regione: r.regione || '', cats: {} };
+    // _scrape_seq (scraper/fci_complete_scraper.py): numero d'ordine
+    // assegnato la PRIMA volta che la gara è comparsa, mai più cambiato —
+    // usato sotto come spareggio stabile a parità di data. Senza questo,
+    // l'ordine a parità di data seguiva la posizione grezza in resultsRaw,
+    // che cambia ad ogni ciclo di scraping (ogni pagina viene riscaricata
+    // per intero per recepire correzioni: la gara toccata viene rimossa e
+    // riaggiunta in coda anche se i suoi dati non sono affatto cambiati),
+    // confondendo chi tiene traccia manualmente di quali gare ha già
+    // condiviso sui social (segnalato dal vivo: "non so mai dove sono
+    // arrivato" per le condivisioni FB).
+    if (!groups[key]) groups[key] = { base, data: r.data, regione: r.regione || '', cats: {}, _seq: r._scrape_seq ?? 0 };
+    else if (r._scrape_seq != null && r._scrape_seq < groups[key]._seq) groups[key]._seq = r._scrape_seq;
     const code = getRankingFileCode(r);
     if (code && !groups[key].cats[code]) groups[key].cats[code] = r.gara_id;
   }
-  window._gareEvents = Object.values(groups).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  window._gareEvents = Object.values(groups).sort((a, b) => (b.data || '').localeCompare(a.data || '') || (b._seq - a._seq));
   const _inpStyle = 'width:100%;max-width:420px;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem';
   setPageMeta('Gare', `${window._gareEvents.length} gare di ciclismo agonistico italiano — cerca per nome, categoria, regione.`);
   setPage(`
@@ -26863,7 +26874,11 @@ async function renderRisultati() {
         genere: r.genere,
         tipo: r.tipo,
         regione: r.regione,
-        byCategory: {}
+        byCategory: {},
+        // Vedi commento in renderGare: spareggio stabile a parità di data,
+        // indipendente dalla posizione (instabile) del risultato in
+        // resultsRaw.json.
+        _seq: r._scrape_seq ?? 0,
       };
     }
     // Chiave di raggruppamento normalizzata: le righe scrapate dalla FCI hanno
@@ -27012,7 +27027,7 @@ async function renderRisultati() {
 
   let races = risShowMissing
     ? missingRaces
-    : [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''))];
+    : [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||'') || (b._seq - a._seq))];
 
   // Extract all regions, filtering out category false positives
   const badRegions = ['JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
