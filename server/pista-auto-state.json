@@ -173,7 +173,7 @@
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-22T05:00:43.798Z"
+    "lastChecked": "2026-09-28T05:00:53.422Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -187,7 +187,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-09-22T05:00:43.229Z"
+    "lastChecked": "2026-09-28T05:00:52.843Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -490,7 +490,7 @@
     "nome": "2° TROFEO SANT'EGIDIO",
     "data": "2 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-22T05:00:44.939Z"
+    "lastChecked": "2026-09-28T05:00:53.994Z"
   },
   "182813": {
     "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
@@ -502,6 +502,6 @@
     "nome": "1° MEMORIAL GIUSEPPE LO PICCOLO",
     "data": "13 Settembre 2026",
     "status": "pending",
-    "lastChecked": "2026-09-22T05:00:45.503Z"
+    "lastChecked": "2026-09-28T05:00:54.561Z"
   }
 }
