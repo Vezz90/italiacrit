@@ -31229,8 +31229,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31244,7 +31244,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 15,
-    "punti_effettivi": 30,
+    "punti_effettivi": 15,
     "_scrape_seq": 110
   },
   {
@@ -31253,8 +31253,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31268,7 +31268,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 12,
-    "punti_effettivi": 24,
+    "punti_effettivi": 12,
     "_scrape_seq": 110
   },
   {
@@ -31277,8 +31277,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31292,7 +31292,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 10,
-    "punti_effettivi": 20,
+    "punti_effettivi": 10,
     "_scrape_seq": 110
   },
   {
@@ -31301,8 +31301,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31316,7 +31316,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 8,
-    "punti_effettivi": 16,
+    "punti_effettivi": 8,
     "_scrape_seq": 110
   },
   {
@@ -31325,8 +31325,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31340,7 +31340,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 6,
-    "punti_effettivi": 12,
+    "punti_effettivi": 6,
     "_scrape_seq": 110
   },
   {
@@ -31349,8 +31349,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31364,7 +31364,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 5,
-    "punti_effettivi": 10,
+    "punti_effettivi": 5,
     "_scrape_seq": 110
   },
   {
@@ -31373,8 +31373,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31388,7 +31388,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 4,
-    "punti_effettivi": 8,
+    "punti_effettivi": 4,
     "_scrape_seq": 110
   },
   {
@@ -31397,8 +31397,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31412,7 +31412,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 3,
-    "punti_effettivi": 6,
+    "punti_effettivi": 3,
     "_scrape_seq": 110
   },
   {
@@ -31421,8 +31421,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31436,7 +31436,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 2,
-    "punti_effettivi": 4,
+    "punti_effettivi": 2,
     "_scrape_seq": 110
   },
   {
@@ -31445,8 +31445,8 @@
     "data": "2026-09-10",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
+    "tipo": "regionale",
+    "moltiplicatore": 1,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -31460,7 +31460,7 @@
     "km": "1.000",
     "media": "",
     "punti_base": 1,
-    "punti_effettivi": 2,
+    "punti_effettivi": 1,
     "_scrape_seq": 110
   },
   {
