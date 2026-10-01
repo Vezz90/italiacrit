@@ -16591,12 +16591,14 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>` : '';
 
   // Build badge strip
-  const _badges = getAthleteBadges(atleta_id, _siRaw, rCode, aRankObj);
+  let _badges = getAthleteBadges(atleta_id, _siRaw, rCode, aRankObj);
   // Badge "leader della classifica" — quante settimane in testa alla
   // categoria attuale (stessa logica/dato della Storia della classifica in
   // Classifica, qui solo un riepilogo cliccabile che apre quel pannello).
   // Mostrato solo sulla stagione corrente: su una stagione storica
   // globalData.resultsRaw non la rappresenta più (è sempre la corrente).
+  // Sostituisce il generico "👑 LEADER" (stesso cls badge-leader) già
+  // calcolato da getAthleteBadges, altrimenti i due finiscono doppi in fila.
   let _leaderBadgeHtml = '';
   if (_isLoadedYear && rCode) {
     const _catResultsForBadge = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rCode);
@@ -16607,6 +16609,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       const _isCurrentLeader = _allReignsForBadge.length && _allReignsForBadge[_allReignsForBadge.length - 1].key === atleta_id;
       const _leaderHref = `#/classifica/${encodeURIComponent(rCode)}/atleti/punti/storia`;
       _leaderBadgeHtml = `<a href="${_leaderHref}" class="ath-badge ath-badge--badge-leader" style="text-decoration:none">👑 ${_isCurrentLeader ? 'LEADER DA' : 'LEADER PER'} ${_myWeeks} SETT.</a>`;
+      _badges = _badges.filter(b => b.label !== 'LEADER');
     }
   }
   // Badge "Campione Regionale" — assegnato a mano da un admin (vedi
