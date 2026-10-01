@@ -23476,7 +23476,7 @@
     "luogo": "SINISCOLA"
   },
   {
-    "id": "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ESORDIENTI_1_2_ANNO",
+    "id": "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ESORDIENTI_1_ANNO",
     "fci_id": "181819",
     "nome": "9° TROFEO COMUNE DI MARCARIA",
     "data": "2026-10-11",
@@ -23485,7 +23485,7 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LOMBARDIA",
-    "categoria": "Esordienti 1°/2° anno",
+    "categoria": "Esordienti 1° anno",
     "luogo": "MARCARIA"
   },
   {
@@ -23690,5 +23690,18 @@
     "regione": "ABRUZZO",
     "categoria": "A tappe Classe 1 pro",
     "luogo": "VARIE LOCALITà"
+  },
+  {
+    "id": "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ESORDIENTI_2_ANNO",
+    "fci_id": "183109",
+    "nome": "9° TROFEO COMUNE DI MARCARIA",
+    "data": "2026-10-11",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "LOMBARDIA",
+    "categoria": "Esordienti 2° anno",
+    "luogo": "MARCARIA"
   }
 ]
