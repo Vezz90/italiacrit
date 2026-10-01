@@ -2377,6 +2377,45 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Titoli di Campione Regionale — a differenza del Campionato Italiano
+// (rilevabile in automatico dal nome gara, vedi isCampIt lato client), chi
+// vince la gara regionale non è sempre il campione regionale titolato
+// (categorie/annate di nascita, selezioni ecc.): va assegnato a mano da un
+// admin, poi il badge appare da solo sul profilo di chi è in questa tabella.
+let _regionalChampionsCache = null, _regionalChampionsCacheTs = 0;
+app.get('/api/regional-champions', async (req, res) => {
+  try {
+    if (_regionalChampionsCache && (Date.now() - _regionalChampionsCacheTs) < 5 * 60 * 1000) {
+      return res.json({ titles: _regionalChampionsCache });
+    }
+    const { data, error } = await supabase.from('regional_champion_titles')
+      .select('id, atleta_id, anno, categoria, regione, note').order('anno', { ascending: false });
+    if (error) throw error;
+    _regionalChampionsCache = data || [];
+    _regionalChampionsCacheTs = Date.now();
+    res.json({ titles: _regionalChampionsCache });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
+  try {
+    const { atleta_id, anno, categoria, regione, note } = req.body || {};
+    if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
+    const { error } = await supabase.from('regional_champion_titles')
+      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, regione: regione || null, note: note || null, created_by: req.user.id });
+    if (error) throw error;
+    _regionalChampionsCache = null;
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.delete('/api/admin/regional-champions/:id', requireAdmin, async (req, res) => {
+  try {
+    const { error } = await supabase.from('regional_champion_titles').delete().eq('id', parseInt(req.params.id, 10));
+    if (error) throw error;
+    _regionalChampionsCache = null;
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Storico squadre: coda di conferma per i collegamenti anno-per-anno
 // proposti da server/detect-team-lineage.js (vedi migrazione team_lineage
 // in db.js) — mai auto-collegati, un admin conferma/rifiuta ogni proposta.

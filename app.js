@@ -1336,6 +1336,8 @@ let _manualRankDelta = new Map();
 // di nuovo qui le contava due volte in classifica (es. Arrighetti 355 invece
 // di 310 in home). Restano nel delta solo quelle inserite dopo l'ultimo giro.
 let _rankingsIncludedManualIds = new Set();
+// Titoli di Campione Regionale assegnati a mano da un admin — {atleta_id: [{anno,categoria,regione,note},...]}
+let _regionalChampionTitles = {};
 function _addManualRankDelta(row) {
   if (!row.atleta_id || row.tipo === 'pista') return; // pista ha classifica a sé, non entra in quella stradale
   if (row._manualId != null && _rankingsIncludedManualIds.has(row._manualId)) return;
@@ -1665,7 +1667,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, manualAthletesRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections, rankingsExtraIncluded] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, manualAthletesRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections, rankingsExtraIncluded, regionalChampions] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1686,8 +1688,15 @@ async function loadAll() {
     getTeamNomeCorrections(),
     getRisultatoCorrections(),
     loadJson('data/rankings_extra_included.json').catch(() => null),
+    apiCall('/regional-champions').catch(() => ({ titles: [] })),
   ]);
   _rankingsIncludedManualIds = new Set(Array.isArray(rankingsExtraIncluded) ? rankingsExtraIncluded : []);
+  // Titoli di Campione Regionale assegnati a mano da un admin (vedi badge sul
+  // profilo atleta) — raggruppati per atleta_id, un atleta può averne più di uno.
+  _regionalChampionTitles = {};
+  for (const t of ((regionalChampions && regionalChampions.titles) || [])) {
+    (_regionalChampionTitles[t.atleta_id] = _regionalChampionTitles[t.atleta_id] || []).push(t);
+  }
   const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
   applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
   applyRisultatoCorrections(resultsRaw, athletes, risultatoCorrections);
@@ -3242,6 +3251,46 @@ function getRankingFileCode(obj) {
   return null;
 }
 
+// ── buildLeaderReigns — cronologia di chi ha guidato la classifica di
+// categoria (per punti o vittorie), raggruppata per "regni" consecutivi.
+// Estratta a livello globale (prima era una closure dentro renderClassifica)
+// per essere riusabile anche dal badge "leader della classifica" nel
+// profilo atleta — stessa identica logica, nessun comportamento cambiato.
+function buildLeaderReigns(catResults, keyField, metric) {
+  const rows = catResults.filter(r => r.data && r[keyField]).slice();
+  rows.sort((a,b) => a.data.localeCompare(b.data) || (a.gara_id||'').localeCompare(b.gara_id||''));
+  const cumPts = {}, lastLabel = {}, leaderByGara = {};
+  let i = 0;
+  while (i < rows.length) {
+    const garaId = rows[i].gara_id;
+    let j = i;
+    while (j < rows.length && rows[j].gara_id === garaId) j++;
+    const slice = rows.slice(i, j);
+    for (const r of slice) {
+      const inc = metric === 'vittorie' ? (r.posizione === 1 ? 1 : 0) : (r.punti_effettivi || 0);
+      cumPts[r[keyField]] = (cumPts[r[keyField]] || 0) + inc;
+      lastLabel[r[keyField]] = keyField === 'atleta_id' ? `${r.cognome||''} ${r.nome||''}`.trim() : (r.team || r[keyField]);
+    }
+    const sorted = Object.entries(cumPts).sort(([,a],[,b]) => b-a);
+    if (sorted.length && sorted[0][1] > 0 && !leaderByGara[garaId]) {
+      leaderByGara[garaId] = { key: sorted[0][0], data: rows[i].data, nome_gara: rows[i].nome_gara, gara_id: garaId };
+    }
+    i = j;
+  }
+  const timeline = Object.values(leaderByGara).sort((a,b) => a.data.localeCompare(b.data) || a.gara_id.localeCompare(b.gara_id));
+  const reigns = [];
+  for (const ev of timeline) {
+    const last = reigns[reigns.length-1];
+    if (last && last.key === ev.key) { last.toDate = ev.data; last.toGara = ev.nome_gara; last.races++; }
+    else reigns.push({ key: ev.key, fromDate: ev.data, fromGara: ev.nome_gara, toDate: ev.data, toGara: ev.nome_gara, races: 1 });
+  }
+  reigns.forEach(r => { r.label = lastLabel[r.key] || r.key; });
+  return reigns;
+}
+function weeksBetween(from, to) {
+  return Math.max(1, Math.round((new Date(to) - new Date(from)) / (7*86400000)));
+}
+
 // ── Weekend key: returns the Saturday ISO date for Sa+Su grouping ──
 function weekendKey(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
@@ -3320,6 +3369,39 @@ function adminEditBtn(entityType, entityId) {
   if (authUser()?.role !== 'admin') return '';
   return `<button class="admin-edit-btn" onclick="openAdminEdit('${esc(entityType)}','${esc(entityId)}')">✏ Modifica</button>`;
 }
+
+// ── Titoli di Campione Regionale — assegnazione manuale da admin ─────
+// Vincere la gara regionale non equivale sempre al titolo (categorie di
+// nascita, selezioni ecc.), quindi niente rilevamento automatico come per
+// il Campionato Italiano: l'admin lo aggiunge a mano una volta, poi il
+// badge compare da solo sul profilo (vedi _regionalChampionTitles in loadAll).
+async function _refreshRegionalChampions() {
+  try {
+    const { titles } = await apiCall('/regional-champions');
+    _regionalChampionTitles = {};
+    for (const t of (titles || [])) (_regionalChampionTitles[t.atleta_id] = _regionalChampionTitles[t.atleta_id] || []).push(t);
+  } catch (_) {}
+}
+window.adminAddRegionalTitle = async function(atletaId, defaultCat) {
+  const anno = window.prompt('Anno del titolo:', String(new Date().getFullYear()));
+  if (!anno) return;
+  const categoria = window.prompt('Categoria (es. JUN_M, AL_F, ELI_M):', defaultCat || '');
+  if (!categoria) return;
+  const regione = window.prompt('Regione (opzionale):', '') || '';
+  try {
+    await apiCall('/admin/regional-champions', { method: 'POST', body: { atleta_id: atletaId, anno, categoria: categoria.toUpperCase(), regione } });
+    await _refreshRegionalChampions();
+    route();
+  } catch (e) { alert('Errore: ' + e.message); }
+};
+window.adminDeleteRegionalTitle = async function(id) {
+  if (!confirm('Rimuovere questo titolo di Campione Regionale?')) return;
+  try {
+    await apiCall(`/admin/regional-champions/${id}`, { method: 'DELETE' });
+    await _refreshRegionalChampions();
+    route();
+  } catch (e) { alert('Errore: ' + e.message); }
+};
 
 window.openAdminEdit = async function(entityType, entityId) {
   const fields = ADMIN_EDIT_FIELDS[entityType] || [];
@@ -4480,6 +4562,21 @@ function route() {
   // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
   // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
   // invece di tornare sempre a Punti/Atleti.
+  // Link diretto a un pannello (storia/albo) di una categoria — usato dai
+  // badge nel profilo atleta/team ("leader della classifica da X sett.")
+  // per aprire la pagina già sul pannello giusto invece che sulla tabella.
+  const _mClassCatViewSortPanel = match('/classifica/:cat/:view/:sort/:panel');
+  if (_mClassCatViewSortPanel) {
+    rankDisciplina = 'strada';
+    rankCat    = decodeURIComponent(_mClassCatViewSortPanel[1]);
+    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
+    rankView   = _mClassCatViewSortPanel[2] || 'atleti';
+    rankSort   = _mClassCatViewSortPanel[3] === 'vittorie' ? 'vittorie' : 'punti';
+    rankPanel  = ['storia','albo'].includes(_mClassCatViewSortPanel[4]) ? _mClassCatViewSortPanel[4] : 'classifica';
+    rankFilter = ''; rankRegion = ''; rankMonth = '';
+    _classHistoricalYear = null;
+    return renderClassifica();
+  }
   const _mClassCatViewSort = match('/classifica/:cat/:view/:sort');
   if (_mClassCatViewSort) {
     rankDisciplina = 'strada';
@@ -4487,6 +4584,7 @@ function route() {
     rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
     rankView   = _mClassCatViewSort[2] || 'atleti';
     rankSort   = _mClassCatViewSort[3] === 'vittorie' ? 'vittorie' : 'punti';
+    rankPanel  = 'classifica';
     rankFilter = ''; rankRegion = ''; rankMonth = '';
     _classHistoricalYear = null;
     return renderClassifica();
@@ -4497,6 +4595,7 @@ function route() {
     rankCat    = decodeURIComponent(_mClassCatView[1]);
     rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
     rankView   = _mClassCatView[2] || 'atleti';
+    rankPanel  = 'classifica';
     rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
     _classHistoricalYear = null;
     return renderClassifica();
@@ -4507,6 +4606,7 @@ function route() {
     rankCat    = decodeURIComponent(_mClassCat[1]);
     rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
     rankView   = 'atleti';
+    rankPanel  = 'classifica';
     rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
     _classHistoricalYear = null;
     return renderClassifica();
@@ -4517,6 +4617,7 @@ function route() {
     // precedente (altrimenti "Classifica" dal menu riportava sempre a
     // Esordienti invece di restare sulla categoria che si stava guardando).
     rankDisciplina = 'strada';
+    rankPanel = 'classifica';
     if (activeHub) applyHubFilters(activeHub);
     _classHistoricalYear = null;
     return renderClassifica();
@@ -10468,48 +10569,12 @@ async function renderClassifica() {
   // o 'vittorie' (numero di vittorie cumulate) — richiesto esplicitamente,
   // riusa lo stesso stato rankSort già presente nei controlli (PUNTI /
   // 🏆 VITTORIE), condiviso con l'ordinamento della tabella.
-  const _buildLeaderReigns = (catResults, keyField, metric) => {
-    const rows = catResults.filter(r => r.data && r[keyField]).slice();
-    rows.sort((a,b) => a.data.localeCompare(b.data) || (a.gara_id||'').localeCompare(b.gara_id||''));
-    const cumPts = {}, lastLabel = {}, leaderByGara = {};
-    let i = 0;
-    while (i < rows.length) {
-      const garaId = rows[i].gara_id;
-      let j = i;
-      while (j < rows.length && rows[j].gara_id === garaId) j++;
-      const slice = rows.slice(i, j);
-      for (const r of slice) {
-        const inc = metric === 'vittorie' ? (r.posizione === 1 ? 1 : 0) : (r.punti_effettivi || 0);
-        cumPts[r[keyField]] = (cumPts[r[keyField]] || 0) + inc;
-        lastLabel[r[keyField]] = keyField === 'atleta_id' ? `${r.cognome||''} ${r.nome||''}`.trim() : (r.team || r[keyField]);
-      }
-      const sorted = Object.entries(cumPts).sort(([,a],[,b]) => b-a);
-      // sorted[0][1] > 0: con metric='vittorie', prima che qualcuno vinca la
-      // prima gara stagionale tutti sono fermi a 0 — assegnare comunque un
-      // "leader" a quel punto (il primo per ordine casuale a 0 vittorie)
-      // sarebbe un dato senza senso, non un vero primato.
-      if (sorted.length && sorted[0][1] > 0 && !leaderByGara[garaId]) {
-        leaderByGara[garaId] = { key: sorted[0][0], data: rows[i].data, nome_gara: rows[i].nome_gara, gara_id: garaId };
-      }
-      i = j;
-    }
-    const timeline = Object.values(leaderByGara).sort((a,b) => a.data.localeCompare(b.data) || a.gara_id.localeCompare(b.gara_id));
-    const reigns = [];
-    for (const ev of timeline) {
-      const last = reigns[reigns.length-1];
-      if (last && last.key === ev.key) { last.toDate = ev.data; last.toGara = ev.nome_gara; last.races++; }
-      else reigns.push({ key: ev.key, fromDate: ev.data, fromGara: ev.nome_gara, toDate: ev.data, toGara: ev.nome_gara, races: 1 });
-    }
-    reigns.forEach(r => { r.label = lastLabel[r.key] || r.key; });
-    return reigns;
-  };
+  // Logica estratta a livello globale (buildLeaderReigns/weeksBetween in
+  // cima al file) per essere riusabile anche dal badge "leader della
+  // classifica" nel profilo atleta — stesso comportamento di prima.
+  const _buildLeaderReigns = buildLeaderReigns;
   const _fmtItDate2 = d => d ? new Date(d).toLocaleDateString('it-IT', { day:'numeric', month:'short', year:'numeric' }) : '';
-  // Durata del "regno" in SETTIMANE (richiesto esplicitamente, non più in
-  // numero di gare) — dalla data della gara che ha portato in testa a
-  // quella dell'ultima gara disputata in quella posizione (per il regno
-  // attuale, l'ultima gara nota della categoria). Minimo 1: un cambio
-  // avvenuto e poi subito ripreso nella stessa settimana non deve mostrare 0.
-  const _weeksBetween = (from, to) => Math.max(1, Math.round((new Date(to) - new Date(from)) / (7*86400000)));
+  const _weeksBetween = weeksBetween;
   const _reignsHtml = (reigns, linkBase) => !reigns.length
     ? '<div style="padding:16px;color:var(--text-muted);font-size:.82rem">Dati insufficienti per questa categoria.</div>'
     : reigns.slice().reverse().map((r,i) => {
@@ -16527,10 +16592,43 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   // Build badge strip
   const _badges = getAthleteBadges(atleta_id, _siRaw, rCode, aRankObj);
-  const _badgeStripHtml = _badges.length ? `
+  // Badge "leader della classifica" — quante settimane in testa alla
+  // categoria attuale (stessa logica/dato della Storia della classifica in
+  // Classifica, qui solo un riepilogo cliccabile che apre quel pannello).
+  // Mostrato solo sulla stagione corrente: su una stagione storica
+  // globalData.resultsRaw non la rappresenta più (è sempre la corrente).
+  let _leaderBadgeHtml = '';
+  if (_isLoadedYear && rCode) {
+    const _catResultsForBadge = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rCode);
+    const _allReignsForBadge = buildLeaderReigns(_catResultsForBadge, 'atleta_id', 'punti');
+    const _myReignsForBadge = _allReignsForBadge.filter(r => r.key === atleta_id);
+    if (_myReignsForBadge.length) {
+      const _myWeeks = _myReignsForBadge.reduce((s, r) => s + weeksBetween(r.fromDate, r.toDate), 0);
+      const _isCurrentLeader = _allReignsForBadge.length && _allReignsForBadge[_allReignsForBadge.length - 1].key === atleta_id;
+      const _leaderHref = `#/classifica/${encodeURIComponent(rCode)}/atleti/punti/storia`;
+      _leaderBadgeHtml = `<a href="${_leaderHref}" class="ath-badge ath-badge--badge-leader" style="text-decoration:none">👑 ${_isCurrentLeader ? 'LEADER DA' : 'LEADER PER'} ${_myWeeks} SETT.</a>`;
+    }
+  }
+  // Badge "Campione Regionale" — assegnato a mano da un admin (vedi
+  // endpoint /api/admin/regional-champions), non rilevabile in automatico
+  // come il Campionato Italiano perché vincere la gara regionale non
+  // coincide sempre col titolo (categorie di nascita, selezioni ecc.).
+  const _rcTitles = _regionalChampionTitles[atleta_id] || [];
+  const _isAdminForRc = authUser()?.role === 'admin';
+  const _rcBadgeHtml = _rcTitles.map(t => `
+    <span class="ath-badge ath-badge--badge-regional" title="${esc(`${catLabel(t.categoria)} ${t.anno}${t.regione ? ' — '+t.regione : ''}`)}">
+      🥇 CAMPIONE REGIONALE ${t.anno}${_isAdminForRc ? ` <span style="cursor:pointer;opacity:.6" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${t.id})" title="Rimuovi">✕</span>` : ''}
+    </span>`).join('');
+  const _rcAdminHtml = _isAdminForRc ? `
+    <span class="ath-badge ath-badge--default" style="cursor:pointer" onclick="window.adminAddRegionalTitle('${esc(atleta_id)}','${esc(rCode||'')}')" title="Aggiungi titolo di Campione Regionale">🥇 + Titolo Regionale</span>` : '';
+  const _badgeStripHtml = `
     <div class="ath-badge-strip">
       ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
-    </div>` : '';
+      ${_leaderBadgeHtml}
+      ${_rcBadgeHtml}
+      ${_rcAdminHtml}
+      <span id="atleta-special-badges" style="display:contents"></span>
+    </div>`;
 
   // Watch button state
   const _watched = isWatched(atleta_id);
@@ -17440,6 +17538,23 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (!prev || sourceRank[r.source] < sourceRank[prev.source]) seen.set(key, r);
   }
   const dedupedMerged = [...seen.values()];
+
+  // Badge "Campione Italiano" — qualunque vittoria di una gara il cui nome
+  // contenga "Campionato Italiano", su tutta la carriera (fonti native +
+  // ciclismo.info + PCS, già unite sopra), non solo la stagione selezionata.
+  // Iniettato qui (non nel badge-strip sincrono) perché richiede gli stessi
+  // dati esterni già scaricati per il widget Top results qui sotto, senza
+  // chiamate API aggiuntive — stesso pattern "aggiorna dopo" già usato per
+  // MEDIA/video in questa pagina.
+  const _ciBadgeHost = document.getElementById('atleta-special-badges');
+  if (_ciBadgeHost) {
+    const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || ''));
+    if (_ciWins.length) {
+      const _ciYears = [...new Set(_ciWins.map(r => r.anno))].filter(Boolean).sort((a, b) => b - a);
+      const _ciTitle = _ciWins.map(r => `${r.nome_gara} (${r.anno})`).join(' · ');
+      _ciBadgeHost.innerHTML = `<span class="ath-badge ath-badge--badge-tricolore" title="${esc(_ciTitle)}">🇮🇹 CAMPIONE ITALIANO${_ciYears.length > 1 ? ` ×${_ciYears.length}` : ''}</span>`;
+    }
+  }
 
   // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una
   // priorità di visualizzazione). Prima trattava OGNI vittoria allo stesso
