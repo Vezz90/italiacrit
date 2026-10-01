@@ -11598,12 +11598,25 @@ main.page:has(.itc-dash) {
 .ath-badge--default {
   background: var(--bg-elevated); border-color: var(--border-subtle); color: var(--text-secondary);
 }
-.ath-badge--badge-tricolore {
-  background: linear-gradient(90deg, rgba(0,140,69,.14), rgba(255,255,255,.06) 50%, rgba(205,33,42,.14));
-  border-color: rgba(205,33,42,.35); color: var(--text-primary);
-}
 .ath-badge--badge-regional {
   background: rgba(59,130,246,.1); border-color: rgba(59,130,246,.3); color: #3B82F6;
+}
+
+/* Badge "Campione Italiano" — vicino al nome atleta, non nella badge-strip:
+   più grande e con l'icona della maglia tricolore per risaltare subito. */
+.ci-jersey-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 14px 5px 10px; border-radius: 22px;
+  font-family: var(--font-heading); font-size: .82rem; font-weight: 800;
+  letter-spacing: .04em; color: #1a1a1a;
+  background: linear-gradient(90deg, #fff 0 38%, #f4f4f4 38% 62%, #fff 62%);
+  border: 1.5px solid transparent;
+  background-image:
+    linear-gradient(#fff, #fff),
+    linear-gradient(90deg, #008C45, #fff 50%, #CD212A);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 1px 6px rgba(205,33,42,.25), 0 0 0 1px rgba(0,0,0,.03);
 }
 
 /* ── Weekly Digest Card ──────────────────────────────────────── */

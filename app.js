@@ -16426,6 +16426,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
+            <span id="atleta-ci-badge-host" style="display:contents"></span>
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
           </div>
@@ -16630,7 +16631,6 @@ async function renderAtleta(atleta_id, opts = {}) {
       ${_leaderBadgeHtml}
       ${_rcBadgeHtml}
       ${_rcAdminHtml}
-      <span id="atleta-special-badges" style="display:contents"></span>
     </div>`;
 
   // Watch button state
@@ -17548,14 +17548,23 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // Iniettato qui (non nel badge-strip sincrono) perché richiede gli stessi
   // dati esterni già scaricati per il widget Top results qui sotto, senza
   // chiamate API aggiuntive — stesso pattern "aggiorna dopo" già usato per
-  // MEDIA/video in questa pagina.
-  const _ciBadgeHost = document.getElementById('atleta-special-badges');
+  // MEDIA/video in questa pagina. Messo vicino al nome (non in mezzo agli
+  // altri badge piccoli della strip) e con l'icona della maglia tricolore
+  // per essere subito riconoscibile — richiesto esplicitamente ("più
+  // visibile ... con una maglia tricolore").
+  const _ciBadgeHost = document.getElementById('atleta-ci-badge-host');
   if (_ciBadgeHost) {
     const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || ''));
     if (_ciWins.length) {
       const _ciYears = [...new Set(_ciWins.map(r => r.anno))].filter(Boolean).sort((a, b) => b - a);
       const _ciTitle = _ciWins.map(r => `${r.nome_gara} (${r.anno})`).join(' · ');
-      _ciBadgeHost.innerHTML = `<span class="ath-badge ath-badge--badge-tricolore" title="${esc(_ciTitle)}">🇮🇹 CAMPIONE ITALIANO${_ciYears.length > 1 ? ` ×${_ciYears.length}` : ''}</span>`;
+      const _jerseyIcon = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width="0.6"/>
+        <rect x="6.1" y="10.4" width="11.8" height="2.1" fill="#008C45"/>
+        <rect x="6.1" y="12.5" width="11.8" height="2.1" fill="#fff" stroke="rgba(0,0,0,.08)" stroke-width="0.3"/>
+        <rect x="6.1" y="14.6" width="11.8" height="2.1" fill="#CD212A"/>
+      </svg>`;
+      _ciBadgeHost.innerHTML = `<span class="ci-jersey-badge" title="${esc(_ciTitle)}">${_jerseyIcon}<span>CAMPIONE ITALIANO${_ciYears.length > 1 ? ` ×${_ciYears.length}` : ''}</span></span>`;
     }
   }
 
