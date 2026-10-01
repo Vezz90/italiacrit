@@ -15411,7 +15411,7 @@ async function renderParallelRankings() {
 // videos:    { [gara_id]: [videoObj] } (globalData.videos)
 // opts.showAthleteName: mostra nome atleta su ogni card (per profili team)
 function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
-  const { showAthleteName = false, maxItems = 8 } = opts;
+  const { showAthleteName = false, maxItems = 30 } = opts;
   const _vids = videos || {};
   const _photos = photosMap || {};
 
