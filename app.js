@@ -17558,11 +17558,10 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (_ciWins.length) {
       const _ciYears = [...new Set(_ciWins.map(r => r.anno))].filter(Boolean).sort((a, b) => b - a);
       const _ciTitle = _ciWins.map(r => `${r.nome_gara} (${r.anno})`).join(' · ');
-      const _jerseyIcon = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-        <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width="0.6"/>
-        <rect x="6.1" y="10.4" width="11.8" height="2.1" fill="#008C45"/>
-        <rect x="6.1" y="12.5" width="11.8" height="2.1" fill="#fff" stroke="rgba(0,0,0,.08)" stroke-width="0.3"/>
-        <rect x="6.1" y="14.6" width="11.8" height="2.1" fill="#CD212A"/>
+      const _jerseyIcon = `<svg width="21" height="21" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>
+        <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="#008C45"/>
+        <rect x="6.1" y="14.6" width="11.8" height="2.3" fill="#CD212A"/>
       </svg>`;
       _ciBadgeHost.innerHTML = `<span class="ci-jersey-badge" title="${esc(_ciTitle)}">${_jerseyIcon}<span>CAMPIONE ITALIANO${_ciYears.length > 1 ? ` ×${_ciYears.length}` : ''}</span></span>`;
     }

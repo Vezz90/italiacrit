@@ -11603,20 +11603,22 @@ main.page:has(.itc-dash) {
 }
 
 /* Badge "Campione Italiano" — vicino al nome atleta, non nella badge-strip:
-   più grande e con l'icona della maglia tricolore per risaltare subito. */
+   più grande e con l'icona della maglia tricolore per risaltare subito.
+   Sfondo scuro (non bianco) apposta: la maglia stessa è bianca con le due
+   bande verde/rossa, su uno sfondo chiaro si perdeva tutto nel bianco. */
 .ci-jersey-badge {
   display: inline-flex; align-items: center; gap: 7px;
-  padding: 5px 14px 5px 10px; border-radius: 22px;
-  font-family: var(--font-heading); font-size: .82rem; font-weight: 800;
-  letter-spacing: .04em; color: #1a1a1a;
-  background: linear-gradient(90deg, #fff 0 38%, #f4f4f4 38% 62%, #fff 62%);
+  padding: 5px 14px 5px 9px; border-radius: 22px;
+  font-family: var(--font-heading); font-size: .8rem; font-weight: 800;
+  letter-spacing: .04em; color: #fff;
+  background: linear-gradient(135deg, #0f2a1c, #1c1c1c 55%, #2e0f12);
   border: 1.5px solid transparent;
   background-image:
-    linear-gradient(#fff, #fff),
+    linear-gradient(135deg, #0f2a1c, #1c1c1c 55%, #2e0f12),
     linear-gradient(90deg, #008C45, #fff 50%, #CD212A);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  box-shadow: 0 1px 6px rgba(205,33,42,.25), 0 0 0 1px rgba(0,0,0,.03);
+  box-shadow: 0 2px 10px rgba(205,33,42,.3), 0 0 0 1px rgba(0,0,0,.15);
 }
 
 /* ── Weekly Digest Card ──────────────────────────────────────── */
