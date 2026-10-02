@@ -2,7 +2,7 @@
   "XDS_ASTANA_DEVELOPMENT_TEAM": {
     "id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti_totali": 564,
+    "punti_totali": 634,
     "atleti": [
       "NEGRENTE_MATTIA",
       "MELLANO_LUDOVICO_MARIA",
@@ -360,6 +360,51 @@
         "media": ""
       },
       {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "atleta_id": "MELLANO_LUDOVICO_MARIA",
+        "atleta_cognome": "MELLANO",
+        "atleta_nome": "LUDOVICO MARIA",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "atleta_id": "NEGRENTE_MATTIA",
+        "atleta_cognome": "NEGRENTE",
+        "atleta_nome": "MATTIA",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "atleta_id": "ZANUTTA_DAVID",
+        "atleta_cognome": "ZANUTTA",
+        "atleta_nome": "DAVID",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
         "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
         "data": "2026-05-17",
@@ -481,7 +526,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 564
+      "ELI_M": 634
     }
   },
   "AVC_AIX_EN_PROVENCE_DOLE": {
@@ -577,7 +622,7 @@
   "TEAM_TECHNIPES_INEMILIAROMAGNA": {
     "id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti_totali": 1123,
+    "punti_totali": 1187,
     "atleti": [
       "PIZZI_NICOLO",
       "BAMBAGIONI_TOMMASO",
@@ -1225,6 +1270,21 @@
         "media": "41.571"
       },
       {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "atleta_id": "BALLERINI_MATTIA",
+        "atleta_cognome": "BALLERINI",
+        "atleta_nome": "MATTIA",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
         "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
         "data": "2026-05-17",
@@ -1510,6 +1570,21 @@
         "media": "48.204"
       },
       {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "atleta_id": "MENGHINI_ALESSIO",
+        "atleta_cognome": "MENGHINI",
+        "atleta_nome": "ALESSIO",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
         "nome_gara": "109 POPOLARISSIMA",
         "data": "2026-03-15",
@@ -1568,6 +1643,21 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "45.630"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "atleta_id": "MENGHINI_ALESSIO",
+        "atleta_cognome": "MENGHINI",
+        "atleta_nome": "ALESSIO",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "5_MISANO_100_OPEN_GAMES_2026-02-22_ELI_M",
@@ -1676,7 +1766,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1123
+      "ELI_M": 1187
     }
   },
   "TEAM_COLOQUICK": {
@@ -49883,7 +49973,7 @@
   "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
     "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti_totali": 1269,
+    "punti_totali": 1284,
     "atleti": [
       "SAMBI_CORINNA",
       "SAMBI_GINEVRA",
@@ -51633,6 +51723,21 @@
         "media": "41.863"
       },
       {
+        "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_AL_F",
+        "nome_gara": "25 MEMORIAL DIRIGENTI DEL PEDALE RIMINESE",
+        "data": "2026-05-10",
+        "atleta_id": "MASINI_GRETA",
+        "atleta_cognome": "MASINI",
+        "atleta_nome": "GRETA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "35.700",
+        "media": "41.863"
+      },
+      {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
         "nome_gara": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
         "data": "2026-05-03",
@@ -52280,7 +52385,7 @@
     ],
     "punti_per_cat": {
       "ES1_F": 434,
-      "AL_F": 307,
+      "AL_F": 322,
       "AL_M": 416,
       "ES2_F": 102,
       "ES1_M": 10
@@ -187250,7 +187355,7 @@
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
     "id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti_totali": 1041,
+    "punti_totali": 1131,
     "atleti": [
       "ARRIGHETTI_NICOLO",
       "NEMBRINI_DIEGO",
@@ -188214,6 +188319,36 @@
         "media": "47.032"
       },
       {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "atleta_id": "D_AIUTO_FILIPPO",
+        "atleta_cognome": "D'AIUTO",
+        "atleta_nome": "FILIPPO",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "atleta_id": "ARRIGHETTI_NICOLO",
+        "atleta_cognome": "ARRIGHETTI",
+        "atleta_nome": "NICOLO'",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
         "nome_gara": "109 POPOLARISSIMA",
         "data": "2026-03-15",
@@ -188259,6 +188394,21 @@
         "media": "40.281"
       },
       {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "atleta_id": "ARRIGHETTI_NICOLO",
+        "atleta_cognome": "ARRIGHETTI",
+        "atleta_nome": "NICOLO'",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "32_MEMORIAL_POLESE_2026-02-28_ELI_M",
         "nome_gara": "32 MEMORIAL POLESE",
         "data": "2026-02-28",
@@ -188272,6 +188422,21 @@
         "regione": "VENETO",
         "km": "168.080",
         "media": "43.466"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
+        "data": "2026-02-26",
+        "atleta_id": "BORTOLUZZI_GIOVANNI",
+        "atleta_cognome": "BORTOLUZZI",
+        "atleta_nome": "GIOVANNI",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
@@ -188305,7 +188470,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1041
+      "ELI_M": 1131
     }
   },
   "ELITE_FONDATIONS_CYCLING_TEAM": {
@@ -209817,14 +209982,15 @@
   "RED_BULL_BORA_HANSGROHE_ROOKIES": {
     "id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
     "nome": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "punti_totali": 589,
+    "punti_totali": 673,
     "atleti": [
       "BOCK_MAX",
       "FRIEDL_ANATOL",
       "BLANC_GUSTAVE",
       "FINN_LORENZO_MARK",
       "DONATI_DAVIDE",
-      "FIETZKE_PAUL"
+      "FIETZKE_PAUL",
+      "MAGAGNOTTI_ALESSIO"
     ],
     "risultati": [
       {
@@ -210171,10 +210337,55 @@
         "regione": "VENETO",
         "km": "179.800",
         "media": "40.304"
+      },
+      {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "atleta_id": "MAGAGNOTTI_ALESSIO",
+        "atleta_cognome": "MAGAGNOTTI",
+        "atleta_nome": "ALESSIO",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "atleta_id": "DONATI_DAVIDE",
+        "atleta_cognome": "DONATI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
+        "data": "2026-02-26",
+        "atleta_id": "DONATI_DAVIDE",
+        "atleta_cognome": "DONATI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 589
+      "ELI_M": 673
     }
   },
   "ARKITANO_MTB_CLUB": {

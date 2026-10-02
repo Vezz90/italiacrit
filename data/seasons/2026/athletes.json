@@ -7,7 +7,7 @@
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 125,
+    "punti_totali": 149,
     "risultati": [
       {
         "gara_id": "56_RUOTA_D_ORO_94_GRAN_PREMIO_FESTA_DEL_PERDONO_UNDER23_2026-09-29_ELI_M",
@@ -73,6 +73,19 @@
         "regione": "CALABRIA",
         "km": "166.000",
         "media": "39.716"
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
@@ -302,7 +315,7 @@
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 71,
+    "punti_totali": 101,
     "risultati": [
       {
         "gara_id": "56_RUOTA_D_ORO_94_GRAN_PREMIO_FESTA_DEL_PERDONO_UNDER23_2026-09-29_ELI_M",
@@ -342,6 +355,19 @@
         "regione": "CALABRIA",
         "km": "166.000",
         "media": "39.716"
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
@@ -66652,7 +66678,7 @@
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 14,
+    "punti_totali": 34,
     "risultati": [
       {
         "gara_id": "90_COPPA_COLLECCHIO_2026-09-22_ELI_M",
@@ -66666,6 +66692,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "137.900",
         "media": "42.178"
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "65_GRAN_PREMIO_SAN_GIUSEPPE_UNDER23_2026-03-15_ELI_M",
@@ -113504,7 +113543,7 @@
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 265,
+    "punti_totali": 301,
     "risultati": [
       {
         "gara_id": "62_GIRO_DEL_FRIULI_VENEZIA_GIULIA_QUARTA_TAPPA_2026-09-06_ELI_M",
@@ -113650,6 +113689,19 @@
         "media": "42.898"
       },
       {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "65_GRAN_PREMIO_SAN_GIUSEPPE_UNDER23_2026-03-15_ELI_M",
         "nome_gara": "65 GRAN PREMIO SAN GIUSEPPE UNDER23",
         "data": "2026-03-15",
@@ -113661,6 +113713,19 @@
         "regione": "MARCHE",
         "km": "153.000",
         "media": "40.281"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
@@ -128324,7 +128389,7 @@
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 157,
+    "punti_totali": 201,
     "risultati": [
       {
         "gara_id": "62_GIRO_DELLA_REGIONE_FRIULI_VENEZIA_GIULIA_PRIMA_TAPPA_2026-09-03_ELI_M",
@@ -128392,6 +128457,19 @@
         "media": "42.225"
       },
       {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
+      },
+      {
         "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
         "nome_gara": "109 POPOLARISSIMA",
         "data": "2026-03-15",
@@ -128416,6 +128494,19 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "45.630"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "5_MISANO_100_OPEN_GAMES_2026-02-22_ELI_M",
@@ -158394,7 +158485,7 @@
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 95,
+    "punti_totali": 110,
     "risultati": [
       {
         "gara_id": "7_TROFEO_SANTUARIO_MADONNA_DEL_BODEN_2026-08-08_AL_F",
@@ -158476,6 +158567,19 @@
       },
       {
         "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ES2_F",
+        "nome_gara": "25 MEMORIAL DIRIGENTI DEL PEDALE RIMINESE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "35.700",
+        "media": "41.863"
+      },
+      {
+        "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_AL_F",
         "nome_gara": "25 MEMORIAL DIRIGENTI DEL PEDALE RIMINESE",
         "data": "2026-05-10",
         "posizione": 1,
@@ -158817,7 +158921,7 @@
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 72,
+    "punti_totali": 96,
     "risultati": [
       {
         "gara_id": "43_TROFEO_SPORTIVI_DI_BRIGA_2026-08-06_ELI_M",
@@ -158857,6 +158961,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "148.300",
         "media": "41.788"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
+        "data": "2026-02-26",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
@@ -188681,7 +188798,7 @@
     "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 105,
+    "punti_totali": 165,
     "risultati": [
       {
         "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
@@ -188721,6 +188838,32 @@
         "regione": "CALABRIA",
         "km": "168.000",
         "media": "45.236"
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
+        "data": "2026-03-01",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
+        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
+        "data": "2026-02-26",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SARDEGNA",
+        "km": "",
+        "media": ""
       }
     ]
   },
@@ -193100,7 +193243,7 @@
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 39,
+    "punti_totali": 55,
     "risultati": [
       {
         "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
@@ -193114,6 +193257,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "173.900",
         "media": "42.200"
+      },
+      {
+        "gara_id": "48_RONDE_DE_L_ISARD_PRIMA_TAPPA_2026-05-20_ELI_M",
+        "nome_gara": "48 RONDE DE L'ISARD PRIMA TAPPA",
+        "data": "2026-05-20",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       },
       {
         "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
@@ -195027,7 +195183,7 @@
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 47,
+    "punti_totali": 77,
     "risultati": [
       {
         "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
@@ -195054,6 +195210,19 @@
         "regione": "TOSCANA",
         "km": "166.000",
         "media": "43.816"
+      },
+      {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       }
     ]
   },
@@ -209073,6 +209242,31 @@
         "regione": "EMILIA ROMAGNA",
         "km": "117.600",
         "media": "45.435"
+      }
+    ]
+  },
+  "MAGAGNOTTI_ALESSIO": {
+    "id": "MAGAGNOTTI_ALESSIO",
+    "nome": "ALESSIO",
+    "cognome": "MAGAGNOTTI",
+    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
+        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
+        "data": "2026-03-26",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "UNDER",
+        "km": "",
+        "media": ""
       }
     ]
   },

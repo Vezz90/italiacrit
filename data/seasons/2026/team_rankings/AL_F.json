@@ -24,6 +24,18 @@
     "pos": 2
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 466,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 6,
+    "p3": 6,
+    "pout": 25,
+    "n_atleti": 6,
+    "pos": 3
+  },
+  {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
     "punti": 463,
@@ -33,18 +45,6 @@
     "p3": 5,
     "pout": 25,
     "n_atleti": 5,
-    "pos": 3
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 451,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 6,
-    "p3": 6,
-    "pout": 25,
-    "n_atleti": 6,
     "pos": 4
   },
   {
