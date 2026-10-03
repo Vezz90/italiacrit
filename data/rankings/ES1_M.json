@@ -381,7 +381,7 @@
     "p3": 2,
     "pout": 17,
     "pos": 24,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "FRANCHIN_EDOARDO",
@@ -397,7 +397,7 @@
     "p3": 2,
     "pout": 8,
     "pos": 25,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "STOCCO_NICCOLO",
@@ -413,7 +413,7 @@
     "p3": 4,
     "pout": 15,
     "pos": 26,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MANCUSO_ALESSIO",
