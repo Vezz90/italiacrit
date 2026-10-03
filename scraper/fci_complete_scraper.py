@@ -297,6 +297,53 @@ CAT_CODES_RAW = {
 CAT_CODES = { (norm_cat(k), g): v for (k, g), v in CAT_CODES_RAW.items() }
 ALL_CODES = ["ELI_M","JUN_M","AL_M","ES1_M","ES2_M","ELI_F","JUN_F","AL_F","ES1_F","ES2_F"]
 
+# ── Gare di validità Pro o superiore: non entrano in classifica ───────────
+# Gare UCI 1.Pro / ProSeries / WorldTour (e relative femminili): non tutti
+# possono parteciparvi (inviti, squadre selezionate), quindi sfalsano il
+# confronto con gli altri atleti (richiesto esplicitamente). La validità sta
+# nel campo "categoria" del calendario FCI ("Classe 1 pro", "UCI ProSeries",
+# "World Tour", "DONNE ELITE 1.PRO"...). Il Giro d'Italia Next Gen NON è tra
+# queste (è "Under 23") e resta conteggiato.
+PRO_VALIDITY_RE = re.compile(r"\bclasse\s*1\s*pro\b|\b1\.pro\b|proseries|world\s*tour", re.I)
+
+def _pro_core_name(nome):
+    """Nome gara del calendario ridotto al nucleo confrontabile con i risultati."""
+    x = match_norm(nome)
+    x = re.sub(r"^\d+\w*\s+", "", x)                    # "63° ", "109° "...
+    x = re.sub(r"^settimana internazionale\s+", "", x)  # i risultati usano "COPPI E BARTALI" nudo
+    return x.strip()
+
+def collect_pro_calendar_entries(calendar_map: dict) -> list:
+    pro = []
+    for entries in calendar_map.values():
+        for e in entries:
+            if PRO_VALIDITY_RE.search(e.get("categoria") or ""):
+                core = _pro_core_name(e.get("nome") or "")
+                if len(core) >= 8:  # evita nuclei così corti da fare falsi positivi
+                    pro.append({"core": core, "data": e["data"], "tappe": bool(re.search(r"tapp", e.get("categoria") or "", re.I))})
+    return pro
+
+def is_pro_validity_race(race_name_raw: str, race_date: str, pro_entries: list) -> bool:
+    """True se la gara è una di quelle di validità Pro+ del calendario.
+
+    Confronto per nome contenuto nel nome del risultato (le tappe successive
+    alla prima di un giro a tappe non hanno una riga propria nel calendario,
+    solo la prima: es. "GIRO DI SARDEGNA QUINTA TAPPA" vs "GIRO DI SARDEGNA"),
+    con finestra di 10 giorni dalla data di inizio per i giri a tappe e data
+    identica per le corse di un giorno."""
+    rn = " " + match_norm(race_name_raw) + " "
+    try:
+        rd = datetime.strptime(race_date, "%Y-%m-%d")
+    except ValueError:
+        return False
+    for p in pro_entries:
+        if f" {p['core']} " not in rn:
+            continue
+        delta = (rd - datetime.strptime(p["data"], "%Y-%m-%d")).days
+        if (not p["tappe"] and delta == 0) or (p["tappe"] and 0 <= delta <= 10):
+            return True
+    return False
+
 # ═══════════════════════════════════════════════════════════════
 # 2. RISULTATI GARE via requests (pagine statiche)
 # ═══════════════════════════════════════════════════════════════
@@ -311,6 +358,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
     results = []
     excluded_gara_ids = set()
     new_races_count = 0
+    pro_entries = collect_pro_calendar_entries(calendar_map)
 
     h4_races = soup.find_all("h4")
 
@@ -431,6 +479,12 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         # poterlo aggiungere a excluded_gara_ids e permettere al chiamante di
         # purgare anche eventuali righe residue di scrape precedenti.
         if is_foreign_location(location_text) and match_type not in ("exact_match", "fuzzy_match", "user_override"):
+            excluded_gara_ids.add(gara_id)
+            continue
+
+        # Gare di validità Pro+ (UCI 1.Pro/ProSeries/WorldTour): fuori classifica,
+        # purgate anche dall'archivio come le estere (vedi PRO_VALIDITY_RE).
+        if is_pro_validity_race(race_name_raw, race_date, pro_entries):
             excluded_gara_ids.add(gara_id)
             continue
 
