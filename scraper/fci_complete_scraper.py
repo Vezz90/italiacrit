@@ -344,6 +344,32 @@ def is_pro_validity_race(race_name_raw: str, race_date: str, pro_entries: list) 
             return True
     return False
 
+# ── Gare diventate "Campionato Regionale" perché l'admin ci ha proclamato un
+# campione regionale (pagina gara → tabella regional_champion_titles su
+# Supabase, colonna gara_id). Non tutte le gare di campionato lo riportano nel
+# nome (es. GP Città di San Mauro Pascoli Donne Esordienti): finché c'è un
+# campione assegnato, la gara vale come Campionato Regionale (x2, tipo
+# regionale); se il titolo viene tolto, torna al coefficiente normale al giro
+# successivo.
+FORCED_CR_GARA_IDS: set = set()
+
+def load_forced_regional_gara_ids():
+    FORCED_CR_GARA_IDS.clear()
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_SECRET")
+    if not url or not key:
+        print("  [CR-forzato] SUPABASE_URL/SUPABASE_SECRET assenti — nessuna gara forzata a Campionato Regionale")
+        return
+    try:
+        r = requests.get(f"{url}/rest/v1/regional_champion_titles",
+                         params={"select": "gara_id", "gara_id": "not.is.null"},
+                         headers={"apikey": key, "Authorization": f"Bearer {key}"}, timeout=30)
+        r.raise_for_status()
+        FORCED_CR_GARA_IDS.update(x["gara_id"] for x in r.json() if x.get("gara_id"))
+        print(f"  [CR-forzato] {len(FORCED_CR_GARA_IDS)} gare con campione regionale assegnato")
+    except Exception as e:
+        print(f"  [CR-forzato] errore lettura regional_champion_titles: {e}")
+
 # ═══════════════════════════════════════════════════════════════
 # 2. RISULTATI GARE via requests (pagine statiche)
 # ═══════════════════════════════════════════════════════════════
@@ -626,18 +652,23 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             ("M", male_rows, gara_id, cat_code),
             ("F", female_rows, (slug(race_name_raw) + "_" + race_date + "_" + _cat_code_for("F")) if female_rows else None, _cat_code_for("F")),
         ):
+            # Campione regionale assegnato a mano su questa gara (per gara_id,
+            # quindi anche per la sola sezione femminile di una gara mista) →
+            # vale come Campionato Regionale anche se nome/calendario non lo
+            # dicono: x2, tipo regionale.
+            row_mult, row_tipo, row_is_cr = (2, "regionale", True) if (gid in FORCED_CR_GARA_IDS and not is_ci) else (mult, tipo, is_cr)
             for i, r in enumerate(rows, start=1):
                 pts_base = BASE_PTS.get(i, 0)
-                pts_eff  = pts_base * mult
+                pts_eff  = pts_base * row_mult
                 results.append({
                     "gara_id":   gid,
                     "nome_gara": race_name_raw,
                     "data":      race_date,
                     "categoria": extracted_cat,
                     "genere":    gender,
-                    "tipo":      tipo,
-                    "moltiplicatore":      mult,
-                    "campionato_regionale": is_cr,
+                    "tipo":      row_tipo,
+                    "moltiplicatore":      row_mult,
+                    "campionato_regionale": row_is_cr,
                     "campionato_italiano":  is_ci,
                     "regione": reg,
                     "posizione": i,
@@ -1068,6 +1099,8 @@ async def run_cycle():
             gara_scrape_order = {}
     _next_scrape_seq = (max(gara_scrape_order.values()) + 1) if gara_scrape_order else 1
 
+    load_forced_regional_gara_ids()
+
     # 1. Caricamento risultati esistenti per scraping incrementale
     results_path = DATA_DIR / "results_raw.json"
     all_results = []
@@ -1098,6 +1131,9 @@ async def run_cycle():
                 if r["genere"] == "F": r["team_id"] += "_F" # preserva distinzione genere se presente
                 
                 m, t, cr, ci, reg, reason = resolve_multiplier(r["nome_gara"], r["data"], cal_by_date)
+                if r.get("gara_id") in FORCED_CR_GARA_IDS and not ci:
+                    m, t, cr = 2, "regionale", True
+                    r["campionato_regionale"] = True
                 if r.get("moltiplicatore") != m or r.get("tipo") != t:
                     r["moltiplicatore"] = m
                     r["tipo"] = t

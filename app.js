@@ -3430,7 +3430,14 @@ async function _refreshRegionalChampions() {
 // della gara (il campione regionale non è detto sia tra i primi 10).
 async function _postRegionalChampion(garaRow, atletaId, nome) {
   const disciplina = championDisciplina(garaRow.nome_gara);
-  if (!confirm(`Proclamare ${nome} Campione Regionale (${disciplina.toLowerCase()}) in questa gara?\nSostituisce l'eventuale campione già indicato per la gara.`)) return;
+  // Una gara senza la dicitura "campionato regionale" (nome/calendario) lo
+  // diventa nel momento in cui le si assegna un campione: lo scraper la
+  // ricalcola a x2 al giro successivo (vedi FORCED_CR_GARA_IDS).
+  const diventaCR = !garaRow.campionato_regionale;
+  const avviso = diventaCR
+    ? `\n\nATTENZIONE: questa gara oggi NON è un Campionato Regionale. Proclamando il campione lo diventa e il coefficiente passa a x2: i punteggi vengono ricalcolati al prossimo aggiornamento dati (entro ~30 minuti).`
+    : '';
+  if (!confirm(`Proclamare ${nome} Campione Regionale (${disciplina.toLowerCase()}) in questa gara?\nSostituisce l'eventuale campione già indicato per la gara.${avviso}`)) return;
   try {
     await apiCall('/admin/regional-champions', { method: 'POST', body: {
       atleta_id: atletaId, atleta_nome: nome, gara_id: garaRow.gara_id,
@@ -3439,6 +3446,7 @@ async function _postRegionalChampion(garaRow, atletaId, nome) {
     } });
     await _refreshRegionalChampions();
     document.getElementById('rc-picker-overlay')?.remove();
+    if (diventaCR) showToast('✓ Campione salvato. La gara diventa Campionato Regionale (x2) al prossimo aggiornamento dati.');
     route();
   } catch (e) { alert('Errore: ' + e.message); }
 }
@@ -22929,7 +22937,6 @@ async function renderGara(gara_id) {
     }).join('');
   };
 
-  const _isCRrace = !!(results[0]?.campionato_regionale || calEntry?.campionato_regionale);
   const _buildRows = (arr) => {
     const _rowIsAdmin = authUser()?.role === 'admin';
     let _prevTempo = null;
@@ -22975,7 +22982,7 @@ async function renderGara(gara_id) {
       const _rcTitle = (_regionalChampionByGara[r.gara_id] || []).find(t => t.atleta_id === r.atleta_id);
       const _isRegChamp = !!_rcTitle;
       const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
-      const _rcBtn = (_rowIsAdmin && _isCRrace && r.atleta_id && !_isRegChamp)
+      const _rcBtn = (_rowIsAdmin && r.atleta_id && !_isRegChamp)
         ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${esc(r.gara_id)}','${esc(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
       return `<tr${_isRegChamp ? ' class="rc-row"' : ''}>
         <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
@@ -23485,7 +23492,7 @@ async function renderGara(gara_id) {
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-        ${_isAdmin && _isCRrace && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
+        ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
         ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
         ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
