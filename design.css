@@ -11616,6 +11616,10 @@ main.page:has(.itc-dash) {
   background-clip: padding-box, border-box;
   box-shadow: 0 2px 10px rgba(205,33,42,.3), 0 0 0 1px rgba(0,0,0,.15);
 }
+.rc-out-banner {
+  margin: 10px 0; padding: 8px 12px; border-radius: 6px; font-size: .85rem;
+  background: rgba(47,127,216,.10); border-left: 3px solid #2F7FD8;
+}
 /* Campione regionale nella tabella risultati di una gara */
 .rc-row { background: rgba(47,127,216,.10); box-shadow: inset 3px 0 0 #2F7FD8; }
 .rc-row-badge {

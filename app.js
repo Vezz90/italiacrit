@@ -3425,21 +3425,68 @@ async function _refreshRegionalChampions() {
 // Dalla pagina gara: l'admin proclama campione regionale un corridore della
 // tabella. Anno/categoria/prova/regione si ricavano dalla gara stessa; il
 // titolo finisce sul profilo atleta, in tabella e nel racconto della gara.
-window.adminSetRegionalChampion = async function(garaId, atletaId) {
-  const row = (globalData.resultsRaw || []).find(r => r.gara_id === garaId && r.atleta_id === atletaId);
-  if (!row) { alert('Risultato non trovato per questo atleta.'); return; }
-  const disciplina = championDisciplina(row.nome_gara);
-  const nome = `${row.cognome || ''} ${row.nome || ''}`.trim();
+// garaRow = una riga di risultato della gara (dà nome gara, data, categoria,
+// regione); atletaId/nome = chi proclamare, anche se NON è nella classifica
+// della gara (il campione regionale non è detto sia tra i primi 10).
+async function _postRegionalChampion(garaRow, atletaId, nome) {
+  const disciplina = championDisciplina(garaRow.nome_gara);
   if (!confirm(`Proclamare ${nome} Campione Regionale (${disciplina.toLowerCase()}) in questa gara?\nSostituisce l'eventuale campione già indicato per la gara.`)) return;
   try {
     await apiCall('/admin/regional-champions', { method: 'POST', body: {
-      atleta_id: atletaId, atleta_nome: nome, gara_id: garaId,
-      anno: String(row.data || '').slice(0, 4), categoria: getRankingFileCode(row) || '',
-      disciplina, regione: row.regione || '',
+      atleta_id: atletaId, atleta_nome: nome, gara_id: garaRow.gara_id,
+      anno: String(garaRow.data || '').slice(0, 4), categoria: getRankingFileCode(garaRow) || '',
+      disciplina, regione: garaRow.regione || '',
     } });
     await _refreshRegionalChampions();
+    document.getElementById('rc-picker-overlay')?.remove();
     route();
   } catch (e) { alert('Errore: ' + e.message); }
+}
+window.adminSetRegionalChampion = function(garaId, atletaId) {
+  const row = (globalData.resultsRaw || []).find(r => r.gara_id === garaId && r.atleta_id === atletaId);
+  if (!row) { alert('Risultato non trovato per questo atleta.'); return; }
+  return _postRegionalChampion(row, atletaId, `${row.cognome || ''} ${row.nome || ''}`.trim());
+};
+// Selettore per proclamare un atleta che non è tra i risultati mostrati.
+window.openRegionalChampionPicker = function() {
+  const garaRow = (window._lastGaraResults || [])[0];
+  if (!garaRow) { alert('Nessun risultato per questa gara.'); return; }
+  window._rcPickerGaraRow = garaRow;
+  const overlay = document.createElement('div');
+  overlay.id = 'rc-picker-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:22px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <strong>🥇 Campione Regionale</strong>
+        <button onclick="document.getElementById('rc-picker-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px">${esc(garaRow.nome_gara || '')} — cerca l'atleta anche se non è in classifica.</div>
+      <input type="text" id="rc-picker-q" class="auth-input" placeholder="Cognome o nome…" autocomplete="off" oninput="window._rcPickerSearch(this.value)" style="width:100%;box-sizing:border-box" />
+      <div id="rc-picker-list" style="margin-top:8px;max-height:260px;overflow:auto"></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('rc-picker-q').focus();
+};
+window._rcPickerSearch = function(q) {
+  const list = document.getElementById('rc-picker-list');
+  const needle = String(q || '').trim().toLowerCase();
+  if (needle.length < 2) { list.innerHTML = ''; return; }
+  const cat = getRankingFileCode(window._rcPickerGaraRow);
+  const matches = Object.entries(globalData.athletes || {})
+    .filter(([, a]) => `${a.cognome || ''} ${a.nome || ''}`.toLowerCase().includes(needle))
+    .sort(([, a], [, b]) => (b.categoria === cat) - (a.categoria === cat))
+    .slice(0, 12);
+  list.innerHTML = matches.length ? matches.map(([id, a]) => `
+    <div onclick="window._rcPickerPick('${esc(id)}')" style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);cursor:pointer;font-size:.86rem">
+      <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
+      <span style="color:var(--text-muted);font-size:.74rem"> · ${esc(a.team || '')} · ${esc(catLabel(a.categoria) || '')}</span>
+    </div>`).join('') : '<div style="padding:10px;color:var(--text-muted);font-size:.82rem">Nessun atleta trovato.</div>';
+};
+window._rcPickerPick = function(id) {
+  const a = globalData.athletes[id];
+  if (!a) return;
+  return _postRegionalChampion(window._rcPickerGaraRow, id, `${a.cognome || ''} ${a.nome || ''}`.trim());
 };
 window.adminAddRegionalTitle = async function(atletaId, defaultCat) {
   const anno = window.prompt('Anno del titolo:', String(new Date().getFullYear()));
@@ -22950,6 +22997,12 @@ async function renderGara(gara_id) {
     }).join('');
   };
   const tableRows = isSquadre ? _buildSquadreRows(results, gara_id) : _buildRows(results);
+  // Campione regionale NON presente in classifica (non è detto sia tra i
+  // primi classificati): non ha una riga da evidenziare, quindi lo si mostra
+  // sopra la tabella, linkato al profilo.
+  const _champOutBanner = (_regionalChampionByGara[results[0]?.gara_id] || [])
+    .filter(t => !results.some(r => r.atleta_id === t.atleta_id))
+    .map(t => `<div class="rc-out-banner">🥇 <strong>CAMPIONE REGIONALE</strong> · <a href="#/atleta/${esc(t.atleta_id)}">${esc(t.atleta_nome || t.atleta_id)}</a>${t.regione ? ` · ${esc(t.regione)}` : ''} <span style="opacity:.7">(non in classifica)</span>${authUser()?.role === 'admin' ? ` <span style="cursor:pointer;opacity:.7" onclick="window.adminDeleteRegionalTitle(${t.id})" title="Rimuovi">✕</span>` : ''}</div>`).join('');
 
   const _calId = (globalData.garaToCalId || {})[primaryGaraId] || (globalData.garaToCalId || {})[gara_id] || primaryGaraId;
 
@@ -23432,6 +23485,7 @@ async function renderGara(gara_id) {
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
+        ${_isAdmin && _isCRrace && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
         ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
         ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
@@ -23451,6 +23505,7 @@ async function renderGara(gara_id) {
         <input type="search" id="gara-results-search" placeholder="Cerca atleta o team…"
           oninput="window.filterGaraResults(this.value)" aria-label="Cerca nei risultati" />
       </div>` : ''}
+      ${_champOutBanner}
       <div class="results-table-wrap">
         <table class="results-table">
           <thead><tr>
@@ -27750,6 +27805,11 @@ async function renderRisultati() {
           mediaVal ? esc(mediaVal) + ' km/h' : ''
         ].filter(Boolean).join(' · ');
 
+        // Campione regionale fuori dal podio (anche fuori classifica): una riga
+        // sotto il podio, altrimenti sulla scheda non comparirebbe affatto.
+        const champExtraRows = (_regionalChampionByGara[catGaraId] || [])
+          .filter(t => !top3.some(r => r.atleta_id === t.atleta_id))
+          .map(t => '<div class="rc-out-banner" style="margin:6px 0 0;font-size:.78rem">🥇 <strong>CAMPIONE REGIONALE</strong> · <a href="#/atleta/' + esc(t.atleta_id) + '">' + esc(t.atleta_nome || t.atleta_id) + '</a></div>').join('');
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
           // rank_dopo_gara è calcolato in loadAll() per ogni risultato
@@ -27803,6 +27863,7 @@ async function renderRisultati() {
             <div class="ris-cat-label">${cLabel}</div>
             ${techBit ? `<div class="ris-tech-bit">${techBit}</div>` : ''}
             ${podioRows}
+            ${champExtraRows}
             ${impactStrip}
             <div class="ris-full-link" style="display:flex;gap:8px;align-items:stretch">
               <a href="/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
