@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1909,
+    "punti": 1929,
     "vittorie": 29,
     "p1": 29,
-    "p2": 17,
+    "p2": 18,
     "p3": 16,
-    "pout": 74,
+    "pout": 75,
     "n_atleti": 14,
     "pos": 1
   },
@@ -134,11 +134,11 @@
   {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
-    "punti": 584,
-    "vittorie": 6,
-    "p1": 6,
+    "punti": 609,
+    "vittorie": 7,
+    "p1": 7,
     "p2": 4,
-    "p3": 8,
+    "p3": 9,
     "pout": 31,
     "n_atleti": 7,
     "pos": 12
@@ -146,36 +146,36 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 576,
+    "punti": 582,
     "vittorie": 9,
     "p1": 9,
     "p2": 10,
     "p3": 5,
-    "pout": 27,
+    "pout": 28,
     "n_atleti": 6,
     "pos": 13
   },
   {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 560,
+    "punti": 566,
     "vittorie": 5,
     "p1": 5,
     "p2": 9,
     "p3": 4,
-    "pout": 44,
+    "pout": 46,
     "n_atleti": 8,
     "pos": 14
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 518,
+    "punti": 519,
     "vittorie": 10,
     "p1": 10,
     "p2": 4,
     "p3": 7,
-    "pout": 40,
+    "pout": 41,
     "n_atleti": 10,
     "pos": 15
   },
@@ -996,6 +996,18 @@
     "pos": 83
   },
   {
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "team_nome": "CICLISTICA OMNIA IMOLA",
+    "punti": 27,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 84
+  },
+  {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
     "team_nome": "WWV HAGENS BERMAN - JAYCO",
     "punti": 27,
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "G_S_BAREGGESE_A_S_D",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1029,18 +1041,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 5,
-    "pos": 86
-  },
-  {
-    "team_id": "CICLISTICA_OMNIA_IMOLA",
-    "team_nome": "CICLISTICA OMNIA IMOLA",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 87
   },
   {
@@ -1500,6 +1500,18 @@
     "pos": 125
   },
   {
+    "team_id": "ASD_TEAM_PIERI",
+    "team_nome": "ASD TEAM PIERI",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 126
+  },
+  {
     "team_id": "PUGLIA",
     "team_nome": "PUGLIA",
     "punti": 3,
@@ -1509,7 +1521,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 126
+    "pos": 127
   },
   {
     "team_id": "VILLADOSE_ANGELO_GOMME",
@@ -1521,7 +1533,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 127
+    "pos": 128
   },
   {
     "team_id": "TSCHERNING_CYCLING_ACADEMY",
@@ -1533,7 +1545,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 128
+    "pos": 129
   },
   {
     "team_id": "AUDAX_FIORMONTI",
@@ -1545,7 +1557,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 129
+    "pos": 130
   },
   {
     "team_id": "UCRAINA",
@@ -1557,7 +1569,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 130
+    "pos": 131
   },
   {
     "team_id": "A_S_D_FORTEBRACCIO_DA_MONTONE",
@@ -1569,7 +1581,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 131
+    "pos": 132
   },
   {
     "team_id": "TEAM_TRAVEL_SERVICE",
@@ -1581,7 +1593,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 132
+    "pos": 133
   },
   {
     "team_id": "E_VALTELLINA_PEDALE_MORBEGNESE",
@@ -1593,7 +1605,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 133
+    "pos": 134
   },
   {
     "team_id": "SC_ROMANESE_CYCLING_TEAM",
@@ -1605,6 +1617,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 134
+    "pos": 135
   }
 ]
