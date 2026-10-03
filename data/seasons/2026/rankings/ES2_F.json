@@ -21,7 +21,7 @@
     "nome": "ALESSANDRA",
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 332,
+    "punti": 337,
     "vittorie": 7,
     "gare": 32,
     "p1": 7,
@@ -37,7 +37,7 @@
     "nome": "AURORA",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 283,
+    "punti": 298,
     "vittorie": 9,
     "gare": 27,
     "p1": 9,
@@ -69,7 +69,7 @@
     "nome": "MARGHERITA",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 226,
+    "punti": 234,
     "vittorie": 3,
     "gare": 22,
     "p1": 3,
@@ -85,7 +85,7 @@
     "nome": "GIORGIA",
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 199,
+    "punti": 203,
     "vittorie": 2,
     "gare": 28,
     "p1": 2,
@@ -101,7 +101,7 @@
     "nome": "MICHELLE",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 176,
+    "punti": 182,
     "vittorie": 4,
     "gare": 22,
     "p1": 4,
@@ -165,7 +165,7 @@
     "nome": "GIULIA",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 115,
+    "punti": 118,
     "vittorie": 2,
     "gare": 15,
     "p1": 2,
@@ -224,6 +224,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "SELLA_ANNA",
+    "cognome": "SELLA",
+    "nome": "ANNA",
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 101,
+    "vittorie": 0,
+    "gare": 14,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pout": 11,
+    "pos": 15,
+    "trend": 1
+  },
+  {
     "atleta_id": "CECCARELLI_ILARY",
     "cognome": "CECCARELLI",
     "nome": "ILARY",
@@ -236,24 +252,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 1,
-    "pos": 15,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SELLA_ANNA",
-    "cognome": "SELLA",
-    "nome": "ANNA",
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 91,
-    "vittorie": 0,
-    "gare": 14,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 11,
     "pos": 16,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MARZETTI_MICHELLE",
@@ -565,7 +565,7 @@
     "nome": "EMMA",
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 37,
+    "punti": 38,
     "vittorie": 0,
     "gare": 8,
     "p1": 0,
@@ -592,6 +592,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BORGATO_NOEMI",
+    "cognome": "BORGATO",
+    "nome": "NOEMI",
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 35,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "pos": 38,
+    "trend": 6
+  },
+  {
     "atleta_id": "D_APOLLONIO_ALESSIA",
     "cognome": "D'APOLLONIO",
     "nome": "ALESSIA",
@@ -604,8 +620,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 5,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "ACCOTO_SOFIA",
@@ -620,8 +636,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "BULDORINI_ISABEL",
@@ -636,8 +652,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 40,
-    "trend": 0
+    "pos": 41,
+    "trend": -1
   },
   {
     "atleta_id": "POCHI_GAIA",
@@ -652,8 +668,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "PLAINO_MELISSA",
@@ -668,8 +684,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "PRINCIPATO_SERENA",
@@ -684,24 +700,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 43,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BORGATO_NOEMI",
-    "cognome": "BORGATO",
-    "nome": "NOEMI",
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 23,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
     "pos": 44,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PESSINA_ELENA",
@@ -736,6 +736,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "SPERI_CHIARA",
+    "cognome": "SPERI",
+    "nome": "CHIARA",
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 21,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 47,
+    "trend": 2
+  },
+  {
     "atleta_id": "BREDA_ILARIA",
     "cognome": "BREDA",
     "nome": "ILARIA",
@@ -748,8 +764,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 47,
-    "trend": 0
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "ROTA_MARTINA",
@@ -764,24 +780,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 48,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SPERI_CHIARA",
-    "cognome": "SPERI",
-    "nome": "CHIARA",
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 19,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "pos": 49,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "FRANCESCHINI_VIOLA",

@@ -99630,8 +99630,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 1,
@@ -99644,7 +99644,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 405
   },
   {
@@ -99654,8 +99654,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 2,
@@ -99668,7 +99668,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 405
   },
   {
@@ -99678,8 +99678,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 3,
@@ -99692,7 +99692,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 405
   },
   {
@@ -99702,8 +99702,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 4,
@@ -99716,7 +99716,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 405
   },
   {
@@ -99726,8 +99726,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 5,
@@ -99740,7 +99740,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 405
   },
   {
@@ -99750,8 +99750,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 6,
@@ -99764,7 +99764,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 405
   },
   {
@@ -99774,8 +99774,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 7,
@@ -99788,7 +99788,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 405
   },
   {
@@ -99798,8 +99798,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 8,
@@ -99812,7 +99812,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 405
   },
   {
@@ -99822,8 +99822,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 9,
@@ -99836,7 +99836,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 405
   },
   {
@@ -99846,8 +99846,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 10,
@@ -99860,7 +99860,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 405
   },
   {
@@ -99870,8 +99870,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 1,
@@ -99884,7 +99884,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 406
   },
   {
@@ -99894,8 +99894,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 2,
@@ -99908,7 +99908,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 406
   },
   {
@@ -99918,8 +99918,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 3,
@@ -99932,7 +99932,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 406
   },
   {
@@ -99942,8 +99942,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 4,
@@ -99956,7 +99956,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 406
   },
   {
@@ -99966,8 +99966,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 5,
@@ -99980,7 +99980,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 406
   },
   {
@@ -99990,8 +99990,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 6,
@@ -100004,7 +100004,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 406
   },
   {
@@ -100014,8 +100014,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 7,
@@ -100028,7 +100028,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 406
   },
   {
@@ -100038,8 +100038,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 8,
@@ -100052,7 +100052,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 406
   },
   {
@@ -100062,8 +100062,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 9,
@@ -100076,7 +100076,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 406
   },
   {
@@ -100086,8 +100086,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 10,
@@ -100100,7 +100100,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 406
   },
   {

@@ -39897,7 +39897,7 @@
   "BREGANZE_MILLENIUM": {
     "id": "BREGANZE_MILLENIUM",
     "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 619,
+    "punti_totali": 622,
     "atleti": [
       "LAGHI_CLARISSA",
       "BAUCE_MARIA_VITTORIA",
@@ -40479,8 +40479,8 @@
         "atleta_cognome": "MORO",
         "atleta_nome": "ELENA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -41284,7 +41284,7 @@
     ],
     "punti_per_cat": {
       "JUN_F": 388,
-      "ES1_F": 68,
+      "ES1_F": 71,
       "ES2_F": 116,
       "AL_F": 47
     }
@@ -43167,7 +43167,7 @@
   "SCUOLA_CICLISMO_VERSO_L_IRIDE": {
     "id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti_totali": 796,
+    "punti_totali": 801,
     "atleti": [
       "KUCHYNSKAYA_EVA",
       "LUNA_ALESSANDRA",
@@ -43565,8 +43565,8 @@
         "atleta_cognome": "LUNA",
         "atleta_nome": "ALESSANDRA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -44625,14 +44625,14 @@
     ],
     "punti_per_cat": {
       "ES1_F": 346,
-      "ES2_F": 434,
+      "ES2_F": 439,
       "AL_F": 16
     }
   },
   "S_C_CESANO_MADERNO": {
     "id": "S_C_CESANO_MADERNO",
     "nome": "S.C. CESANO MADERNO",
-    "punti_totali": 1197,
+    "punti_totali": 1229,
     "atleti": [
       "SFORZINI_SELENE",
       "CERAME_AURORA",
@@ -45333,8 +45333,8 @@
         "atleta_cognome": "MARIANI",
         "atleta_nome": "MARGHERITA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -45348,8 +45348,8 @@
         "atleta_cognome": "SANNA",
         "atleta_nome": "ELISA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -45363,8 +45363,8 @@
         "atleta_cognome": "CERAME",
         "atleta_nome": "AURORA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -45378,8 +45378,8 @@
         "atleta_cognome": "SPINONI",
         "atleta_nome": "MICHELLE",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -47037,8 +47037,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 373,
-      "ES2_F": 452,
+      "ES1_F": 384,
+      "ES2_F": 473,
       "AL_F": 372
     }
   },
@@ -49868,7 +49868,7 @@
   "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
     "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti_totali": 1308,
+    "punti_totali": 1323,
     "atleti": [
       "SAMBI_CORINNA",
       "SAMBI_GINEVRA",
@@ -50695,8 +50695,8 @@
         "atleta_cognome": "DI",
         "atleta_nome": "PARDO BEATRICE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -52279,7 +52279,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 456,
+      "ES1_F": 471,
       "AL_F": 322,
       "AL_M": 416,
       "ES2_F": 104,
@@ -57661,7 +57661,7 @@
   "SPORT_CLUB_BRESCIA_FLANDRES_LOVE": {
     "id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti_totali": 776,
+    "punti_totali": 777,
     "atleti": [
       "DASOLI_EMMA",
       "COCCA_EMMA",
@@ -58087,8 +58087,8 @@
         "atleta_cognome": "DASOLI",
         "atleta_nome": "EMMA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -59056,7 +59056,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 156,
+      "ES2_F": 157,
       "AL_F": 463,
       "ES1_F": 157
     }
@@ -63157,7 +63157,7 @@
   "U_C_GIORGIONE": {
     "id": "U_C_GIORGIONE",
     "nome": "U.C. GIORGIONE",
-    "punti_totali": 1147,
+    "punti_totali": 1169,
     "atleti": [
       "BASSO_GAIA",
       "MOCELLIN_GRETA",
@@ -63860,8 +63860,8 @@
         "atleta_cognome": "BASSO",
         "atleta_nome": "GAIA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -63875,8 +63875,8 @@
         "atleta_cognome": "STELLA",
         "atleta_nome": "AURORA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -63890,8 +63890,8 @@
         "atleta_cognome": "GUIDOLIN",
         "atleta_nome": "GIORGIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -65234,15 +65234,15 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 552,
-      "ES2_F": 207,
+      "ES1_F": 570,
+      "ES2_F": 211,
       "AL_F": 388
     }
   },
   "G_S_MOSOLE": {
     "id": "G_S_MOSOLE",
     "nome": "G.S. MOSOLE",
-    "punti_totali": 373,
+    "punti_totali": 386,
     "atleti": [
       "GUIDOLIN_GIOIA",
       "MOINO_ALESSIA",
@@ -65423,8 +65423,8 @@
         "atleta_cognome": "GUIDOLIN",
         "atleta_nome": "GIOIA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -65438,8 +65438,8 @@
         "atleta_cognome": "MOINO",
         "atleta_nome": "ALESSIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -66167,7 +66167,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 247,
+      "ES1_F": 260,
       "ES1_M": 101,
       "ES2_M": 25
     }
@@ -66175,7 +66175,7 @@
   "G_C_SOSSANO_1975": {
     "id": "G_C_SOSSANO_1975",
     "nome": "G.C. SOSSANO 1975",
-    "punti_totali": 458,
+    "punti_totali": 480,
     "atleti": [
       "BOTTARO_SOFIA",
       "SELLA_ANNA",
@@ -66591,8 +66591,8 @@
         "atleta_cognome": "BORGATO",
         "atleta_nome": "NOEMI",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -66606,8 +66606,8 @@
         "atleta_cognome": "SELLA",
         "atleta_nome": "ANNA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -67471,7 +67471,7 @@
     ],
     "punti_per_cat": {
       "ES1_F": 63,
-      "ES2_F": 191,
+      "ES2_F": 213,
       "AL_F": 44,
       "ES1_M": 75,
       "ES2_M": 85
@@ -67982,7 +67982,7 @@
   "ASS_NE_CICLISTICA_DILETT_VALVASONE": {
     "id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti_totali": 188,
+    "punti_totali": 192,
     "atleti": [
       "PASIN_GAIA",
       "DEOTTO_EMMA",
@@ -68151,8 +68151,8 @@
         "atleta_cognome": "PASIN",
         "atleta_nome": "GAIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -68475,7 +68475,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 54,
+      "ES1_F": 58,
       "AL_F": 115,
       "ES2_F": 19
     }
@@ -68483,7 +68483,7 @@
   "ASD_VELOCE_CLUB_BORGO": {
     "id": "ASD_VELOCE_CLUB_BORGO",
     "nome": "ASD VELOCE CLUB BORGO",
-    "punti_totali": 1174,
+    "punti_totali": 1185,
     "atleti": [
       "DONANZAN_MARGHERITA",
       "FERRETTI_SOFIA",
@@ -69482,8 +69482,8 @@
         "atleta_cognome": "DONANZAN",
         "atleta_nome": "MARGHERITA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -69497,8 +69497,8 @@
         "atleta_cognome": "PELLEGRINI",
         "atleta_nome": "GIULIA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -70886,7 +70886,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 329,
+      "ES2_F": 340,
       "AL_F": 73,
       "AL_M": 241,
       "ES2_M": 359,
@@ -146511,7 +146511,7 @@
   "ASD_TEAM_PETRUCCI": {
     "id": "ASD_TEAM_PETRUCCI",
     "nome": "ASD TEAM PETRUCCI",
-    "punti_totali": 544,
+    "punti_totali": 546,
     "atleti": [
       "YAKOV_KRISTIYAN_IVANOV",
       "MARTINELLI_GIACOMO",
@@ -146837,8 +146837,8 @@
         "atleta_cognome": "SPERI",
         "atleta_nome": "CHIARA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -147988,7 +147988,7 @@
     "punti_per_cat": {
       "AL_M": 189,
       "ES2_M": 141,
-      "ES2_F": 30,
+      "ES2_F": 32,
       "ES1_M": 184
     }
   },
@@ -198689,7 +198689,7 @@
   "U_S_C_S_I_RUBANO": {
     "id": "U_S_C_S_I_RUBANO",
     "nome": "U.S. C.S.I. RUBANO",
-    "punti_totali": 37,
+    "punti_totali": 39,
     "atleti": [
       "BILLIATO_ARIANNA"
     ],
@@ -198747,8 +198747,8 @@
         "atleta_cognome": "BILLIATO",
         "atleta_nome": "ARIANNA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -198816,7 +198816,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 37
+      "ES1_F": 39
     }
   },
   "CICLISTICA_BORDIGHERA": {
