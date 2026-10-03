@@ -3394,7 +3394,62 @@ function championDisciplina(nome) {
 }
 // Chip "campione" accanto al nome dell'atleta: maglia + titolo + prova/anno.
 // kind 'it' = Campione Italiano (maglia tricolore), 'reg' = Campione Regionale (maglia azzurra).
-function championChipHtml({ kind, disciplina, anno, extra, title, deleteId }) {
+// Raccoglie i titoli di campione per la stagione corrente caricata:
+//  - italiani: ogni vittoria in una gara "Campionato Italiano" (per i
+//    cronometri a squadre la riga vincente è del TEAM, senza atleta_id);
+//  - regionali: i titoli assegnati a mano dall'admin (regional_champion_titles).
+// Un risultato ai campionati è registrato dalla FCI spesso sotto la selezione
+// regionale/nazionale (r.team = "LIGURIA"...), non sul club vero: in quel
+// caso la squadra è quella attuale dell'atleta (stessa regola già usata per
+// i media nella pagina team). Filtri opzionali: anno, categoria (codice tipo
+// JUN_M), team_id. Dedup: stesso atleta/team + prova + anno + categoria.
+function collectChampions({ year, catCode, teamId } = {}) {
+  const out = [], seen = new Set();
+  const athletes = globalData?.athletes || {};
+  const teamOf = (r) => {
+    const a = athletes[r.atleta_id];
+    const sel = typeof isSelectionTeamName === 'function' && isSelectionTeamName(r.team);
+    const tid = (!sel && r.team_id) ? r.team_id : (a?.team_id || r.team_id);
+    const tnome = (!sel && r.team) ? r.team : (a?.team_attuale || r.team);
+    return { team_id: tid, team: tnome };
+  };
+  const push = (c) => {
+    if (year && String(c.anno) !== String(year)) return;
+    if (catCode && c.categoria !== catCode) return;
+    if (teamId && c.team_id !== teamId) return;
+    const k = `${c.kind}|${c.atleta_id || c.team_id}|${c.disciplina}|${c.anno}|${c.categoria}`;
+    if (seen.has(k)) return;
+    seen.add(k); out.push(c);
+  };
+  for (const r of (globalData?.resultsRaw || [])) {
+    if (r.posizione !== 1 || !/campionato\s+italiano/i.test(r.nome_gara || '')) continue;
+    const a = athletes[r.atleta_id];
+    const t = teamOf(r);
+    push({
+      kind: 'it', atleta_id: r.atleta_id || null,
+      nome: r.atleta_id ? `${a?.cognome || r.cognome || ''} ${a?.nome || r.nome || ''}`.trim() : (t.team || ''),
+      team_id: t.team_id, team: t.team, disciplina: championDisciplina(r.nome_gara),
+      anno: String(r.data || '').slice(0, 4), categoria: getRankingFileCode(r), regione: '',
+      gara_id: r.gara_id, nome_gara: r.nome_gara,
+    });
+  }
+  for (const list of Object.values(_regionalChampionTitles || {})) {
+    for (const t of list) {
+      const a = athletes[t.atleta_id];
+      const row = t.gara_id ? (globalData?.resultsRaw || []).find(r => r.gara_id === t.gara_id && r.atleta_id === t.atleta_id) : null;
+      const tm = row ? teamOf(row) : { team_id: a?.team_id, team: a?.team_attuale };
+      push({
+        kind: 'reg', atleta_id: t.atleta_id,
+        nome: t.atleta_nome || `${a?.cognome || ''} ${a?.nome || ''}`.trim() || t.atleta_id,
+        team_id: tm.team_id, team: tm.team, disciplina: t.disciplina || 'STRADA',
+        anno: String(t.anno), categoria: t.categoria, regione: t.regione || '',
+        gara_id: t.gara_id || null, nome_gara: '',
+      });
+    }
+  }
+  return out;
+}
+function championChipHtml({ kind, disciplina, anno, extra, title, deleteId, href }) {
   const bands = kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
   const jersey = `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
     <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>
@@ -3403,7 +3458,8 @@ function championChipHtml({ kind, disciplina, anno, extra, title, deleteId }) {
   </svg>`;
   const sub = [disciplina, anno, extra].filter(Boolean).join(' · ');
   const del = deleteId != null ? `<span style="cursor:pointer;opacity:.6;margin-left:2px" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${deleteId})" title="Rimuovi">✕</span>` : '';
-  return `<span class="ci-jersey-badge ${kind === 'reg' ? 'ci-jersey-badge--reg' : ''}" title="${esc(title || '')}">${jersey}<span class="ci-jersey-text"><span class="ci-jersey-main">CAMPIONE ${kind === 'it' ? 'ITALIANO' : 'REGIONALE'}</span><span class="ci-jersey-sub">${esc(sub)}</span></span>${del}</span>`;
+  const chip = `<span class="ci-jersey-badge ${kind === 'reg' ? 'ci-jersey-badge--reg' : ''}" title="${esc(title || '')}">${jersey}<span class="ci-jersey-text"><span class="ci-jersey-main">CAMPIONE ${kind === 'it' ? 'ITALIANO' : 'REGIONALE'}</span><span class="ci-jersey-sub">${esc(sub)}</span></span>${del}</span>`;
+  return href ? `<a href="${href}" style="text-decoration:none;color:inherit">${chip}</a>` : chip;
 }
 function regionalChampionChipsHtml(atletaId) {
   const isAdmin = authUser()?.role === 'admin';
@@ -11142,9 +11198,52 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
 
 // ── PAGINA ALBO D'ORO (menu Classifiche) ──────────────────────────
 let alboGender = 'M', alboCat = 'ES1_M', alboView = 'atleti';
+let alboProva = '', alboReg = ''; // filtri della scheda Campioni
 window.setAlboGender = (g) => { alboGender = g; alboCat = g === 'M' ? 'ES1_M' : 'ES1_F'; renderAlboDoro(); };
 window.setAlboCat    = (c) => { alboCat = c; renderAlboDoro(); };
 window.setAlboView   = (v) => { alboView = v; renderAlboDoro(); };
+window.setAlboProva  = (p) => { alboProva = p; renderAlboDoro(); };
+window.setAlboReg    = (r) => { alboReg = r; renderAlboDoro(); };
+
+// Scheda "Campioni" dell'Albo d'Oro: campioni italiani (dai risultati della
+// stagione caricata) e regionali (assegnati a mano dall'admin), anno per anno.
+// Il filtro regione vale solo per i regionali (gli italiani non hanno regione).
+function _alboCampioniHtml(code) {
+  const all = collectChampions({ catCode: code });
+  const PROVE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
+  const regioni = [...new Set(all.filter(c => c.kind === 'reg' && c.regione).map(c => c.regione))].sort();
+  let list = all;
+  if (alboProva) list = list.filter(c => c.disciplina === alboProva);
+  if (alboReg) list = list.filter(c => c.kind === 'reg' && c.regione === alboReg);
+  const filters = `<div class="ranking-filter-bar" style="margin:8px 0 14px;gap:10px">
+      <select class="auth-input" style="max-width:240px" onchange="setAlboProva(this.value)">
+        <option value="">Tutte le prove</option>${PROVE.map(p => `<option value="${p}" ${alboProva === p ? 'selected' : ''}>${p.charAt(0) + p.slice(1).toLowerCase()}</option>`).join('')}
+      </select>
+      <select class="auth-input" style="max-width:240px" onchange="setAlboReg(this.value)">
+        <option value="">Tutte le regioni</option>${regioni.map(r => `<option value="${esc(r)}" ${alboReg === r ? 'selected' : ''}>${esc(r)}</option>`).join('')}
+      </select>
+    </div>`;
+  const head = `<div class="albo-doro-head">
+      <h2>Campioni · ${esc(catLabel(code))}</h2>
+      <p>Campioni italiani (dai risultati) e regionali (assegnati dal pannello admin). Gli anni precedenti si completano man mano.</p>
+    </div>`;
+  if (!list.length) return `<section class="albo-doro-card">${head}${filters}<div style="padding:16px;color:var(--text-muted)">Nessun campione per i filtri scelti.</div></section>`;
+  const byYear = {};
+  list.forEach(c => (byYear[c.anno] = byYear[c.anno] || []).push(c));
+  const seasons = Object.keys(byYear).sort((a, b) => b - a).map(y => {
+    const rows = byYear[y].sort((a, b) => (a.kind === b.kind ? (a.regione || '').localeCompare(b.regione || '') : (a.kind === 'it' ? -1 : 1))).map(c => {
+      const href = c.atleta_id ? '#/atleta/' + encodeURIComponent(c.atleta_id) : (c.team_id ? '#/team/' + encodeURIComponent(c.team_id) : '#');
+      const titolo = c.kind === 'it' ? 'Campione Italiano' : `Campione Regionale${c.regione ? ' ' + c.regione : ''}`;
+      const sub = [titolo, c.disciplina.charAt(0) + c.disciplina.slice(1).toLowerCase(), c.atleta_id ? c.team : ''].filter(Boolean).join(' · ');
+      return `<a class="albo-pod albo-pod-1" href="${href}">
+        <span class="albo-medal">${c.kind === 'it' ? '🇮🇹' : '🥇'}</span>
+        <span class="albo-pod-main"><span class="albo-name">${esc(c.nome)}</span><span class="albo-sub">${esc(sub)}</span></span>
+      </a>`;
+    }).join('');
+    return `<div class="albo-season"><div class="albo-season-year">${y}</div><div class="albo-podium">${rows}</div></div>`;
+  }).join('');
+  return `<section class="albo-doro-card">${head}${filters}<div class="albo-doro-list">${seasons}</div></section>`;
+}
 
 async function renderAlboDoro() {
   if (!globalData) return;
@@ -11164,6 +11263,7 @@ async function renderAlboDoro() {
   const viewTabs = `<div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
       <button class="tab-btn ${alboView==='atleti'?'active-cat':''}" onclick="setAlboView('atleti')">ATLETI</button>
       <button class="tab-btn ${alboView==='team'?'active-cat':''}" onclick="setAlboView('team')">TEAM</button>
+      <button class="tab-btn ${alboView==='campioni'?'active-cat':''}" onclick="setAlboView('campioni')">🏅 CAMPIONI</button>
     </div>`;
 
   setPageMeta("Albo d'Oro", "Albo d'oro delle gare di ciclismo agonistico italiano: vincitori per categoria, anno e genere.");
@@ -11181,8 +11281,12 @@ async function renderAlboDoro() {
     <div id="albo-page-host"><p style="color:var(--text-muted)">Caricamento…</p></div>
   `);
 
-  const valid = await _alboDoroRows(alboCat, alboView === 'team');
   const hostEl = document.getElementById('albo-page-host');
+  if (alboView === 'campioni') {
+    if (hostEl) hostEl.innerHTML = _alboCampioniHtml(alboCat);
+    return;
+  }
+  const valid = await _alboDoroRows(alboCat, alboView === 'team');
   if (hostEl) hostEl.innerHTML = _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true });
 }
 
@@ -20163,6 +20267,16 @@ async function renderTeam(team_id, opts = {}) {
 
   window._shareTeamData = {_id:team_id,nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,p2:p2,p3:p3,p4_10:pout,atleti:atletiList.slice(0,5)};
   const _teamWatched = isWatched(team_id);
+  // Campioni del team (italiani e regionali) per la stagione/categoria
+  // mostrata: gli stessi chip del profilo atleta, uno per titolo, col nome
+  // del corridore (cliccabile).
+  const _teamChamps = collectChampions({ year: selYear, catCode: teamViewCat, teamId: team_id });
+  const teamChampionsHtml = _teamChamps.length ? `<div class="team-champions">${_teamChamps.map(c => championChipHtml({
+    kind: c.kind, disciplina: c.disciplina, anno: c.anno,
+    extra: c.atleta_id ? c.nome : '',
+    title: `${c.nome}${c.nome_gara ? ' — ' + c.nome_gara : ''}${c.regione ? ' — ' + c.regione : ''}`,
+    href: c.atleta_id ? `#/atleta/${encodeURIComponent(c.atleta_id)}` : null,
+  })).join('')}</div>` : '';
   setPageMeta(t.nome, `${atletiList.length} atleti${catPuntiTotali ? ' · ' + catPuntiTotali + ' pt' : ''} — Italia Cycling Stats`);
   setSchemaOrg({ '@context':'https://schema.org','@type':'SportsTeam', name:t.nome, identifier:team_id, url:window.location.href });
   setPage(`
@@ -20180,6 +20294,7 @@ async function renderTeam(team_id, opts = {}) {
       <div id="team-stats-estero" style="display:none;margin-top:6px"></div>
     </div>
     <div id="team-lineage-bar"></div>
+    ${teamChampionsHtml}
     ${profileYearRow('team', team_id, selYear)}
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
