@@ -3375,6 +3375,39 @@ function adminEditBtn(entityType, entityId) {
 // nascita, selezioni ecc.), quindi niente rilevamento automatico come per
 // il Campionato Italiano: l'admin lo aggiunge a mano una volta, poi il
 // badge compare da solo sul profilo (vedi _regionalChampionTitles in loadAll).
+// Tipo di prova di un titolo (strada / cronometro / cronometro a squadre /
+// cronoscalata), ricavato dal nome della gara di campionato.
+function championDisciplina(nome) {
+  const n = String(nome || '');
+  if (/cronometro.*squadre|a\s+squadre/i.test(n)) return 'CRONOMETRO A SQUADRE';
+  if (/cronoscalata/i.test(n)) return 'CRONOSCALATA';
+  if (/cronometro/i.test(n)) return 'CRONOMETRO';
+  return 'STRADA';
+}
+// Chip "campione" accanto al nome dell'atleta: maglia + titolo + prova/anno.
+// kind 'it' = Campione Italiano (maglia tricolore), 'reg' = Campione Regionale (maglia azzurra).
+function championChipHtml({ kind, disciplina, anno, extra, title, deleteId }) {
+  const bands = kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
+  const jersey = `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+    <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>
+    <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${bands[0]}"/>
+    <rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${bands[1]}"/>
+  </svg>`;
+  const sub = [disciplina, anno, extra].filter(Boolean).join(' · ');
+  const del = deleteId != null ? `<span style="cursor:pointer;opacity:.6;margin-left:2px" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${deleteId})" title="Rimuovi">✕</span>` : '';
+  return `<span class="ci-jersey-badge ${kind === 'reg' ? 'ci-jersey-badge--reg' : ''}" title="${esc(title || '')}">${jersey}<span class="ci-jersey-text"><span class="ci-jersey-main">CAMPIONE ${kind === 'it' ? 'ITALIANO' : 'REGIONALE'}</span><span class="ci-jersey-sub">${esc(sub)}</span></span>${del}</span>`;
+}
+function regionalChampionChipsHtml(atletaId) {
+  const isAdmin = authUser()?.role === 'admin';
+  return (_regionalChampionTitles[atletaId] || []).map(t => championChipHtml({
+    kind: 'reg',
+    disciplina: t.disciplina || 'STRADA',
+    anno: t.anno,
+    extra: t.regione || '',
+    title: `${catLabel(t.categoria)} ${t.anno}${t.regione ? ' — ' + t.regione : ''}`,
+    deleteId: isAdmin ? t.id : null,
+  })).join('');
+}
 async function _refreshRegionalChampions() {
   try {
     const { titles } = await apiCall('/regional-champions');
@@ -3387,9 +3420,12 @@ window.adminAddRegionalTitle = async function(atletaId, defaultCat) {
   if (!anno) return;
   const categoria = window.prompt('Categoria (es. JUN_M, AL_F, ELI_M):', defaultCat || '');
   if (!categoria) return;
+  const discChoice = window.prompt('Prova: 1 = Strada, 2 = Cronometro, 3 = Cronometro a squadre, 4 = Cronoscalata', '1');
+  if (!discChoice) return;
+  const disciplina = ({ '1': 'STRADA', '2': 'CRONOMETRO', '3': 'CRONOMETRO A SQUADRE', '4': 'CRONOSCALATA' })[discChoice.trim()] || 'STRADA';
   const regione = window.prompt('Regione (opzionale):', '') || '';
   try {
-    await apiCall('/admin/regional-champions', { method: 'POST', body: { atleta_id: atletaId, anno, categoria: categoria.toUpperCase(), regione } });
+    await apiCall('/admin/regional-champions', { method: 'POST', body: { atleta_id: atletaId, anno, categoria: categoria.toUpperCase(), disciplina, regione } });
     await _refreshRegionalChampions();
     route();
   } catch (e) { alert('Errore: ' + e.message); }
@@ -16427,6 +16463,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
             <span id="atleta-ci-badge-host" style="display:contents"></span>
+            ${regionalChampionChipsHtml(atleta_id)}
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
           </div>
@@ -16617,19 +16654,14 @@ async function renderAtleta(atleta_id, opts = {}) {
   // endpoint /api/admin/regional-champions), non rilevabile in automatico
   // come il Campionato Italiano perché vincere la gara regionale non
   // coincide sempre col titolo (categorie di nascita, selezioni ecc.).
-  const _rcTitles = _regionalChampionTitles[atleta_id] || [];
-  const _isAdminForRc = authUser()?.role === 'admin';
-  const _rcBadgeHtml = _rcTitles.map(t => `
-    <span class="ath-badge ath-badge--badge-regional" title="${esc(`${catLabel(t.categoria)} ${t.anno}${t.regione ? ' — '+t.regione : ''}`)}">
-      🥇 CAMPIONE REGIONALE ${t.anno}${_isAdminForRc ? ` <span style="cursor:pointer;opacity:.6" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${t.id})" title="Rimuovi">✕</span>` : ''}
-    </span>`).join('');
-  const _rcAdminHtml = _isAdminForRc ? `
+  // I chip dei titoli regionali stanno in alto accanto al nome (vedi
+  // regionalChampionChipsHtml nell'header); qui resta solo il pulsante admin.
+  const _rcAdminHtml = (authUser()?.role === 'admin') ? `
     <span class="ath-badge ath-badge--default" style="cursor:pointer" onclick="window.adminAddRegionalTitle('${esc(atleta_id)}','${esc(rCode||'')}')" title="Aggiungi titolo di Campione Regionale">🥇 + Titolo Regionale</span>` : '';
   const _badgeStripHtml = `
     <div class="ath-badge-strip">
       ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
       ${_leaderBadgeHtml}
-      ${_rcBadgeHtml}
       ${_rcAdminHtml}
     </div>`;
 
@@ -17555,16 +17587,19 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const _ciBadgeHost = document.getElementById('atleta-ci-badge-host');
   if (_ciBadgeHost) {
     const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || ''));
-    if (_ciWins.length) {
-      const _ciYears = [...new Set(_ciWins.map(r => r.anno))].filter(Boolean).sort((a, b) => b - a);
-      const _ciTitle = _ciWins.map(r => `${r.nome_gara} (${r.anno})`).join(' · ');
-      const _jerseyIcon = `<svg width="21" height="21" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-        <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>
-        <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="#008C45"/>
-        <rect x="6.1" y="14.6" width="11.8" height="2.3" fill="#CD212A"/>
-      </svg>`;
-      _ciBadgeHost.innerHTML = `<span class="ci-jersey-badge" title="${esc(_ciTitle)}">${_jerseyIcon}<span>CAMPIONE ITALIANO${_ciYears.length > 1 ? ` ×${_ciYears.length}` : ''}</span></span>`;
-    }
+    // Un chip per ogni titolo, con la prova (strada / cronometro / a squadre /
+    // cronoscalata) — richiesto esplicitamente. Stessa prova+anno in più
+    // categorie (es. due titoli nello stesso anno) conta una volta sola.
+    const _ciSeen = new Set();
+    _ciBadgeHost.innerHTML = _ciWins
+      .slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+      .map(r => {
+        const disciplina = championDisciplina(r.nome_gara);
+        const k = `${disciplina}|${r.anno}`;
+        if (_ciSeen.has(k)) return '';
+        _ciSeen.add(k);
+        return championChipHtml({ kind: 'it', disciplina, anno: r.anno, title: `${r.nome_gara} (${r.anno})` });
+      }).join('');
   }
 
   // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una

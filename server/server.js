@@ -2389,7 +2389,7 @@ app.get('/api/regional-champions', async (req, res) => {
       return res.json({ titles: _regionalChampionsCache });
     }
     const { data, error } = await supabase.from('regional_champion_titles')
-      .select('id, atleta_id, anno, categoria, regione, note').order('anno', { ascending: false });
+      .select('id, atleta_id, anno, categoria, disciplina, regione, note').order('anno', { ascending: false });
     if (error) throw error;
     _regionalChampionsCache = data || [];
     _regionalChampionsCacheTs = Date.now();
@@ -2398,10 +2398,12 @@ app.get('/api/regional-champions', async (req, res) => {
 });
 app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
   try {
-    const { atleta_id, anno, categoria, regione, note } = req.body || {};
+    const { atleta_id, anno, categoria, disciplina, regione, note } = req.body || {};
     if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
+    const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
+    const disc = DISCIPLINE.includes(String(disciplina || '').toUpperCase()) ? String(disciplina).toUpperCase() : 'STRADA';
     const { error } = await supabase.from('regional_champion_titles')
-      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, regione: regione || null, note: note || null, created_by: req.user.id });
+      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, created_by: req.user.id });
     if (error) throw error;
     _regionalChampionsCache = null;
     res.json({ ok: true });
