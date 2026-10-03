@@ -39897,7 +39897,7 @@
   "BREGANZE_MILLENIUM": {
     "id": "BREGANZE_MILLENIUM",
     "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 615,
+    "punti_totali": 619,
     "atleti": [
       "LAGHI_CLARISSA",
       "BAUCE_MARIA_VITTORIA",
@@ -41229,8 +41229,8 @@
         "atleta_cognome": "CRESTANI",
         "atleta_nome": "ELISA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -41285,14 +41285,14 @@
     "punti_per_cat": {
       "JUN_F": 388,
       "ES1_F": 68,
-      "ES2_F": 112,
+      "ES2_F": 116,
       "AL_F": 47
     }
   },
   "U_C_CONSCIO_PEDALE_DEL_SILE": {
     "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 934,
+    "punti_totali": 943,
     "atleti": [
       "FERRANTE_MAYA",
       "D_APOLLONIO_REBECCA",
@@ -43074,8 +43074,8 @@
         "atleta_cognome": "PIN",
         "atleta_nome": "MATILDE",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -43089,8 +43089,8 @@
         "atleta_cognome": "VETTORELLO",
         "atleta_nome": "GAIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -43159,15 +43159,15 @@
     ],
     "punti_per_cat": {
       "JUN_F": 325,
-      "ES1_F": 116,
+      "ES1_F": 120,
       "AL_F": 338,
-      "ES2_F": 155
+      "ES2_F": 160
     }
   },
   "SCUOLA_CICLISMO_VERSO_L_IRIDE": {
     "id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti_totali": 784,
+    "punti_totali": 796,
     "atleti": [
       "KUCHYNSKAYA_EVA",
       "LUNA_ALESSANDRA",
@@ -44525,8 +44525,8 @@
         "atleta_cognome": "LUNA",
         "atleta_nome": "ALESSANDRA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -44625,14 +44625,14 @@
     ],
     "punti_per_cat": {
       "ES1_F": 346,
-      "ES2_F": 422,
+      "ES2_F": 434,
       "AL_F": 16
     }
   },
   "S_C_CESANO_MADERNO": {
     "id": "S_C_CESANO_MADERNO",
     "nome": "S.C. CESANO MADERNO",
-    "punti_totali": 1196,
+    "punti_totali": 1197,
     "atleti": [
       "SFORZINI_SELENE",
       "CERAME_AURORA",
@@ -46863,8 +46863,8 @@
         "atleta_cognome": "SFORZINI",
         "atleta_nome": "SELENE",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -47037,7 +47037,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 372,
+      "ES1_F": 373,
       "ES2_F": 452,
       "AL_F": 372
     }
@@ -47045,7 +47045,7 @@
   "BUSTO_GAROLFO": {
     "id": "BUSTO_GAROLFO",
     "nome": "BUSTO GAROLFO",
-    "punti_totali": 948,
+    "punti_totali": 953,
     "atleti": [
       "NARDELLI_GIORGIA",
       "VANELLI_FILIPPO",
@@ -48959,8 +48959,8 @@
         "atleta_cognome": "NARDELLI",
         "atleta_nome": "GIORGIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -49103,7 +49103,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 134,
+      "ES1_F": 139,
       "ES1_M": 192,
       "ES2_M": 540,
       "ES2_F": 82
@@ -49868,7 +49868,7 @@
   "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
     "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti_totali": 1284,
+    "punti_totali": 1308,
     "atleti": [
       "SAMBI_CORINNA",
       "SAMBI_GINEVRA",
@@ -52105,8 +52105,8 @@
         "atleta_cognome": "DI",
         "atleta_nome": "PARDO BEATRICE",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -52120,8 +52120,8 @@
         "atleta_cognome": "SAMBI",
         "atleta_nome": "CORINNA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -52135,8 +52135,8 @@
         "atleta_cognome": "ANDREOLI",
         "atleta_nome": "ALICE",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -52279,17 +52279,17 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 434,
+      "ES1_F": 456,
       "AL_F": 322,
       "AL_M": 416,
-      "ES2_F": 102,
+      "ES2_F": 104,
       "ES1_M": 10
     }
   },
   "GS_CAPANNORI": {
     "id": "GS_CAPANNORI",
     "nome": "GS CAPANNORI",
-    "punti_totali": 463,
+    "punti_totali": 480,
     "atleti": [
       "MANNELLI_MATILDE",
       "CIANTI_NOEMI",
@@ -53135,8 +53135,8 @@
         "atleta_cognome": "MANNELLI",
         "atleta_nome": "MATILDE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -53150,8 +53150,8 @@
         "atleta_cognome": "VOLLERO",
         "atleta_nome": "SUSANNA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -53249,7 +53249,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 435,
+      "ES1_F": 452,
       "AL_F": 15,
       "ES2_F": 8,
       "ES1_M": 5
@@ -53258,7 +53258,7 @@
   "UC_DONORATICO": {
     "id": "UC_DONORATICO",
     "nome": "UC DONORATICO",
-    "punti_totali": 828,
+    "punti_totali": 835,
     "atleti": [
       "GORGA_GRETA",
       "MORICONI_EDOARDO",
@@ -54827,8 +54827,8 @@
         "atleta_cognome": "GORGA",
         "atleta_nome": "GRETA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -54842,8 +54842,8 @@
         "atleta_cognome": "LEPORE",
         "atleta_nome": "EMMA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -54986,10 +54986,10 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 217,
+      "ES1_F": 223,
       "ES1_M": 395,
       "ES2_M": 127,
-      "ES2_F": 89
+      "ES2_F": 90
     }
   },
   "KTM_ACADEMY_LE_MARMOTTE": {
@@ -55317,7 +55317,7 @@
   "BICIFESTIVAL": {
     "id": "BICIFESTIVAL",
     "nome": "BICIFESTIVAL",
-    "punti_totali": 253,
+    "punti_totali": 261,
     "atleti": [
       "NERI_SARA",
       "BOGA_MELISSA_MAIA",
@@ -55817,8 +55817,8 @@
         "atleta_cognome": "NERI",
         "atleta_nome": "SARA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -55886,7 +55886,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 135,
+      "ES1_F": 143,
       "AL_F": 83,
       "ES2_F": 35
     }
@@ -55894,7 +55894,7 @@
   "HG_CYCLING_TEAM": {
     "id": "HG_CYCLING_TEAM",
     "nome": "HG CYCLING TEAM",
-    "punti_totali": 940,
+    "punti_totali": 961,
     "atleti": [
       "DAZZANI_MYA",
       "SFERRAGATTA_EMANUELA",
@@ -57388,8 +57388,8 @@
         "atleta_cognome": "DAZZANI",
         "atleta_nome": "MYA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -57403,8 +57403,8 @@
         "atleta_cognome": "SFERRAGATTA",
         "atleta_nome": "EMANUELA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -57502,7 +57502,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 493,
+      "ES2_F": 514,
       "ES1_M": 238,
       "AL_F": 155,
       "ES1_F": 54
@@ -70896,7 +70896,7 @@
   "G_C_NOVENTANA": {
     "id": "G_C_NOVENTANA",
     "nome": "G.C. NOVENTANA",
-    "punti_totali": 155,
+    "punti_totali": 158,
     "atleti": [
       "CLEMENTE_GINEVRA",
       "BORSETTO_LINDA",
@@ -71332,8 +71332,8 @@
         "atleta_cognome": "CLEMENTE",
         "atleta_nome": "GINEVRA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -71341,7 +71341,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 126,
+      "ES2_F": 129,
       "AL_F": 29
     }
   },
@@ -114666,7 +114666,7 @@
   "OFF_ALBERTI_U_C_VAL_D_ILLASI": {
     "id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti_totali": 640,
+    "punti_totali": 650,
     "atleti": [
       "FASOLI_TOMMASO",
       "CASAROTTI_CARLOTTA",
@@ -115585,8 +115585,8 @@
         "atleta_cognome": "CASAROTTI",
         "atleta_nome": "CARLOTTA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -115670,7 +115670,7 @@
     ],
     "punti_per_cat": {
       "ES2_M": 324,
-      "ES2_F": 313,
+      "ES2_F": 323,
       "AL_M": 3
     }
   },
@@ -179987,7 +179987,7 @@
   "C_C_APPENNINICO_1907": {
     "id": "C_C_APPENNINICO_1907",
     "nome": "C.C. APPENNINICO 1907",
-    "punti_totali": 165,
+    "punti_totali": 173,
     "atleti": [
       "VELAJ_CHRISTIAN",
       "CECCARELLI_ILARY"
@@ -180211,8 +180211,8 @@
         "atleta_cognome": "CECCARELLI",
         "atleta_nome": "ILARY",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -180251,7 +180251,7 @@
     ],
     "punti_per_cat": {
       "ES1_M": 105,
-      "ES2_F": 60
+      "ES2_F": 68
     }
   },
   "LOCO_BIKERS": {
@@ -214517,7 +214517,7 @@
   "A_S_D_CICLISTICA_G_BONZAGNI": {
     "id": "A_S_D_CICLISTICA_G_BONZAGNI",
     "nome": "A.S.D CICLISTICA G.BONZAGNI",
-    "punti_totali": 10,
+    "punti_totali": 13,
     "atleti": [
       "LODI_ATENA"
     ],
@@ -214560,8 +214560,8 @@
         "atleta_cognome": "LODI",
         "atleta_nome": "ATENA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -214569,7 +214569,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 10
+      "ES1_F": 13
     }
   },
   "TEAM_GO_FAST_PUGLIA_ARADEO": {

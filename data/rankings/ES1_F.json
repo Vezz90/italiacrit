@@ -1,5 +1,21 @@
 [
   {
+    "atleta_id": "DI_PARDO_BEATRICE",
+    "cognome": "DI",
+    "nome": "PARDO BEATRICE",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 321,
+    "vittorie": 13,
+    "gare": 22,
+    "p1": 13,
+    "p2": 6,
+    "p3": 1,
+    "pout": 2,
+    "pos": 1,
+    "trend": 1
+  },
+  {
     "atleta_id": "KUCHYNSKAYA_EVA",
     "cognome": "KUCHYNSKAYA",
     "nome": "EVA",
@@ -12,24 +28,24 @@
     "p2": 2,
     "p3": 1,
     "pout": 11,
-    "pos": 1,
-    "trend": 0
+    "pos": 2,
+    "trend": -1
   },
   {
-    "atleta_id": "DI_PARDO_BEATRICE",
-    "cognome": "DI",
-    "nome": "PARDO BEATRICE",
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 309,
-    "vittorie": 13,
-    "gare": 22,
-    "p1": 13,
-    "p2": 6,
+    "atleta_id": "MANNELLI_MATILDE",
+    "cognome": "MANNELLI",
+    "nome": "MATILDE",
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 266,
+    "vittorie": 5,
+    "gare": 20,
+    "p1": 5,
+    "p2": 10,
     "p3": 1,
-    "pout": 2,
-    "pos": 2,
-    "trend": 0
+    "pout": 4,
+    "pos": 3,
+    "trend": 1
   },
   {
     "atleta_id": "BASSO_GAIA",
@@ -44,24 +60,24 @@
     "p2": 8,
     "p3": 6,
     "pout": 7,
-    "pos": 3,
-    "trend": 0
+    "pos": 4,
+    "trend": -1
   },
   {
-    "atleta_id": "MANNELLI_MATILDE",
-    "cognome": "MANNELLI",
-    "nome": "MATILDE",
-    "team_id": "GS_CAPANNORI",
-    "team_nome": "GS CAPANNORI",
-    "punti": 251,
-    "vittorie": 5,
-    "gare": 20,
-    "p1": 5,
-    "p2": 10,
-    "p3": 1,
-    "pout": 4,
-    "pos": 4,
-    "trend": 0
+    "atleta_id": "GORGA_GRETA",
+    "cognome": "GORGA",
+    "nome": "GRETA",
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 188,
+    "vittorie": 1,
+    "gare": 22,
+    "p1": 1,
+    "p2": 3,
+    "p3": 4,
+    "pout": 14,
+    "pos": 5,
+    "trend": 1
   },
   {
     "atleta_id": "BICELLI_EMMA",
@@ -76,24 +92,8 @@
     "p2": 3,
     "p3": 4,
     "pout": 11,
-    "pos": 5,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GORGA_GRETA",
-    "cognome": "GORGA",
-    "nome": "GRETA",
-    "team_id": "UC_DONORATICO",
-    "team_nome": "UC DONORATICO",
-    "punti": 182,
-    "vittorie": 1,
-    "gare": 22,
-    "p1": 1,
-    "p2": 3,
-    "p3": 4,
-    "pout": 14,
     "pos": 6,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PODDA_MATILDE",
@@ -128,6 +128,38 @@
     "trend": 0
   },
   {
+    "atleta_id": "NARDELLI_GIORGIA",
+    "cognome": "NARDELLI",
+    "nome": "GIORGIA",
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 154,
+    "vittorie": 1,
+    "gare": 22,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 17,
+    "pos": 9,
+    "trend": 1
+  },
+  {
+    "atleta_id": "SAMBI_CORINNA",
+    "cognome": "SAMBI",
+    "nome": "CORINNA",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 152,
+    "vittorie": 0,
+    "gare": 20,
+    "p1": 0,
+    "p2": 2,
+    "p3": 3,
+    "pout": 14,
+    "pos": 10,
+    "trend": 2
+  },
+  {
     "atleta_id": "MARIANI_MARGHERITA",
     "cognome": "MARIANI",
     "nome": "MARGHERITA",
@@ -140,56 +172,8 @@
     "p2": 1,
     "p3": 3,
     "pout": 15,
-    "pos": 9,
-    "trend": 0
-  },
-  {
-    "atleta_id": "NARDELLI_GIORGIA",
-    "cognome": "NARDELLI",
-    "nome": "GIORGIA",
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 149,
-    "vittorie": 1,
-    "gare": 22,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 17,
-    "pos": 10,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SFORZINI_SELENE",
-    "cognome": "SFORZINI",
-    "nome": "SELENE",
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 142,
-    "vittorie": 1,
-    "gare": 18,
-    "p1": 1,
-    "p2": 3,
-    "p3": 4,
-    "pout": 10,
     "pos": 11,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SAMBI_CORINNA",
-    "cognome": "SAMBI",
-    "nome": "CORINNA",
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 142,
-    "vittorie": 0,
-    "gare": 20,
-    "p1": 0,
-    "p2": 2,
-    "p3": 3,
-    "pout": 14,
-    "pos": 12,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "NERI_SARA",
@@ -197,15 +181,47 @@
     "nome": "SARA",
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
-    "punti": 141,
+    "punti": 149,
     "vittorie": 1,
     "gare": 20,
     "p1": 1,
     "p2": 2,
     "p3": 2,
     "pout": 14,
+    "pos": 12,
+    "trend": 1
+  },
+  {
+    "atleta_id": "SFORZINI_SELENE",
+    "cognome": "SFORZINI",
+    "nome": "SELENE",
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 143,
+    "vittorie": 1,
+    "gare": 18,
+    "p1": 1,
+    "p2": 3,
+    "p3": 4,
+    "pout": 10,
     "pos": 13,
-    "trend": 0
+    "trend": -2
+  },
+  {
+    "atleta_id": "PIN_MATILDE",
+    "cognome": "PIN",
+    "nome": "MATILDE",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 133,
+    "vittorie": 3,
+    "gare": 16,
+    "p1": 3,
+    "p2": 3,
+    "p3": 0,
+    "pout": 10,
+    "pos": 14,
+    "trend": 1
   },
   {
     "atleta_id": "CINQUEGRANI_FEDERICA",
@@ -220,24 +236,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 14,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PIN_MATILDE",
-    "cognome": "PIN",
-    "nome": "MATILDE",
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 129,
-    "vittorie": 3,
-    "gare": 16,
-    "p1": 3,
-    "p2": 3,
-    "p3": 0,
-    "pout": 10,
     "pos": 15,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GUIDOLIN_GIOIA",
@@ -293,7 +293,7 @@
     "nome": "SUSANNA",
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 102,
+    "punti": 104,
     "vittorie": 2,
     "gare": 12,
     "p1": 2,
@@ -992,6 +992,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "LODI_ATENA",
+    "cognome": "LODI",
+    "nome": "ATENA",
+    "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
+    "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
+    "punti": 13,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 63,
+    "trend": 4
+  },
+  {
     "atleta_id": "GUERRIERI_CAMILLA",
     "cognome": "GUERRIERI",
     "nome": "CAMILLA",
@@ -1004,8 +1020,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 63,
-    "trend": 0
+    "pos": 64,
+    "trend": -1
   },
   {
     "atleta_id": "STEFANONI_GIADA",
@@ -1020,8 +1036,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 64,
-    "trend": 0
+    "pos": 65,
+    "trend": -1
   },
   {
     "atleta_id": "SGROI_GIADA",
@@ -1036,8 +1052,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 65,
-    "trend": 0
+    "pos": 66,
+    "trend": -1
   },
   {
     "atleta_id": "GEROMETTA_GIORGIA",
@@ -1052,24 +1068,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 66,
-    "trend": 0
-  },
-  {
-    "atleta_id": "LODI_ATENA",
-    "cognome": "LODI",
-    "nome": "ATENA",
-    "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
-    "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
-    "punti": 10,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 67,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "BURGER_FENNA",

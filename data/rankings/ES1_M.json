@@ -368,6 +368,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "SFERRAGATTA_EMANUELA",
+    "cognome": "SFERRAGATTA",
+    "nome": "EMANUELA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 178,
+    "vittorie": 3,
+    "gare": 22,
+    "p1": 3,
+    "p2": 0,
+    "p3": 2,
+    "pout": 17,
+    "pos": 24,
+    "trend": 2
+  },
+  {
     "atleta_id": "FRANCHIN_EDOARDO",
     "cognome": "FRANCHIN",
     "nome": "EDOARDO",
@@ -380,8 +396,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 8,
-    "pos": 24,
-    "trend": 0
+    "pos": 25,
+    "trend": -1
   },
   {
     "atleta_id": "STOCCO_NICCOLO",
@@ -396,24 +412,8 @@
     "p2": 4,
     "p3": 4,
     "pout": 15,
-    "pos": 25,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SFERRAGATTA_EMANUELA",
-    "cognome": "SFERRAGATTA",
-    "nome": "EMANUELA",
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 172,
-    "vittorie": 3,
-    "gare": 22,
-    "p1": 3,
-    "p2": 0,
-    "p3": 2,
-    "pout": 17,
     "pos": 26,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MANCUSO_ALESSIO",
