@@ -622,7 +622,7 @@
   "TEAM_TECHNIPES_INEMILIAROMAGNA": {
     "id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti_totali": 1187,
+    "punti_totali": 1143,
     "atleti": [
       "PIZZI_NICOLO",
       "BAMBAGIONI_TOMMASO",
@@ -1570,21 +1570,6 @@
         "media": "48.204"
       },
       {
-        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
-        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
-        "data": "2026-03-26",
-        "atleta_id": "MENGHINI_ALESSIO",
-        "atleta_cognome": "MENGHINI",
-        "atleta_nome": "ALESSIO",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
         "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
         "nome_gara": "109 POPOLARISSIMA",
         "data": "2026-03-15",
@@ -1643,21 +1628,6 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "45.630"
-      },
-      {
-        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
-        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
-        "data": "2026-03-01",
-        "atleta_id": "MENGHINI_ALESSIO",
-        "atleta_cognome": "MENGHINI",
-        "atleta_nome": "ALESSIO",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SARDEGNA",
-        "km": "",
-        "media": ""
       },
       {
         "gara_id": "5_MISANO_100_OPEN_GAMES_2026-02-22_ELI_M",
@@ -1766,7 +1736,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1187
+      "ELI_M": 1143
     }
   },
   "TEAM_COLOQUICK": {
@@ -34169,7 +34139,7 @@
   "ISOLMANT_PREMAC_VITTORIA": {
     "id": "ISOLMANT_PREMAC_VITTORIA",
     "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 465,
+    "punti_totali": 435,
     "atleti": [
       "CRESTANELLO_LARA",
       "PEGOLO_CHANTAL",
@@ -34632,21 +34602,6 @@
         "media": "39.003"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "PEGOLO_CHANTAL",
-        "atleta_cognome": "PEGOLO",
-        "atleta_nome": "CHANTAL",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
         "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
         "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
         "data": "2026-05-24",
@@ -34873,7 +34828,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 461,
+      "ELI_F": 431,
       "JUN_F": 4
     }
   },
@@ -37644,7 +37599,7 @@
   "VINI_FANTINI_BEPINK": {
     "id": "VINI_FANTINI_BEPINK",
     "nome": "VINI FANTINI - BEPINK",
-    "punti_totali": 211,
+    "punti_totali": 196,
     "atleti": [
       "VALTULINI_ELISA",
       "ARICI_SOFIA",
@@ -37972,21 +37927,6 @@
         "media": "42.490"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "SEGATO_GAIA",
-        "atleta_cognome": "SEGATO",
-        "atleta_nome": "GAIA",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
         "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
         "nome_gara": "GRAN PREMIO DELLA LIBERAZIONE DONNE",
         "data": "2026-04-25",
@@ -38078,13 +38018,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 211
+      "ELI_F": 196
     }
   },
   "TOP_GIRLS_FASSA_BORTOLO": {
     "id": "TOP_GIRLS_FASSA_BORTOLO",
     "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 282,
+    "punti_totali": 264,
     "atleti": [
       "SIRI_IRMA",
       "PAVESI_MARTA",
@@ -38337,51 +38277,6 @@
         "media": "36.269"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "ZAMBELLI_ALESSIA",
-        "atleta_cognome": "ZAMBELLI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "ZAMBELLI_ALESSIA",
-        "atleta_cognome": "ZAMBELLI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "ZAMBELLI_ALESSIA",
-        "atleta_cognome": "ZAMBELLI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
         "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
         "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
         "data": "2026-05-24",
@@ -38593,7 +38488,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 282
+      "ELI_F": 264
     }
   },
   "TEAM_MENDELSPECK_E_WORK": {
@@ -187355,7 +187250,7 @@
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
     "id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti_totali": 1131,
+    "punti_totali": 1041,
     "atleti": [
       "ARRIGHETTI_NICOLO",
       "NEMBRINI_DIEGO",
@@ -188319,36 +188214,6 @@
         "media": "47.032"
       },
       {
-        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
-        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
-        "data": "2026-03-26",
-        "atleta_id": "D_AIUTO_FILIPPO",
-        "atleta_cognome": "D'AIUTO",
-        "atleta_nome": "FILIPPO",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
-        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
-        "data": "2026-03-26",
-        "atleta_id": "ARRIGHETTI_NICOLO",
-        "atleta_cognome": "ARRIGHETTI",
-        "atleta_nome": "NICOLO'",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
         "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
         "nome_gara": "109 POPOLARISSIMA",
         "data": "2026-03-15",
@@ -188394,21 +188259,6 @@
         "media": "40.281"
       },
       {
-        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
-        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
-        "data": "2026-03-01",
-        "atleta_id": "ARRIGHETTI_NICOLO",
-        "atleta_cognome": "ARRIGHETTI",
-        "atleta_nome": "NICOLO'",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SARDEGNA",
-        "km": "",
-        "media": ""
-      },
-      {
         "gara_id": "32_MEMORIAL_POLESE_2026-02-28_ELI_M",
         "nome_gara": "32 MEMORIAL POLESE",
         "data": "2026-02-28",
@@ -188422,21 +188272,6 @@
         "regione": "VENETO",
         "km": "168.080",
         "media": "43.466"
-      },
-      {
-        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
-        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
-        "data": "2026-02-26",
-        "atleta_id": "BORTOLUZZI_GIOVANNI",
-        "atleta_cognome": "BORTOLUZZI",
-        "atleta_nome": "GIOVANNI",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SARDEGNA",
-        "km": "",
-        "media": ""
       },
       {
         "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
@@ -188470,7 +188305,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1131
+      "ELI_M": 1041
     }
   },
   "ELITE_FONDATIONS_CYCLING_TEAM": {
@@ -194028,13 +193863,12 @@
   "FENIX_PREMIER_TECH": {
     "id": "FENIX_PREMIER_TECH",
     "nome": "FENIX-PREMIER TECH",
-    "punti_totali": 172,
+    "punti_totali": 79,
     "atleti": [
       "VAN_SINAEY_XAYDEE",
       "VANDERAERDEN_ANNA",
-      "COUZENS_MILLIE",
-      "KOOL_CHARLOTTE",
-      "PIETERSE_PUCK"
+      "PIETERSE_PUCK",
+      "COUZENS_MILLIE"
     ],
     "risultati": [
       {
@@ -194098,81 +193932,6 @@
         "media": "49.979"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "COUZENS_MILLIE",
-        "atleta_cognome": "COUZENS",
-        "atleta_nome": "MILLIE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "KOOL_CHARLOTTE",
-        "atleta_cognome": "KOOL",
-        "atleta_nome": "CHARLOTTE",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "KOOL_CHARLOTTE",
-        "atleta_cognome": "KOOL",
-        "atleta_nome": "CHARLOTTE",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "PIETERSE_PUCK",
-        "atleta_cognome": "PIETERSE",
-        "atleta_nome": "PUCK",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "KOOL_CHARLOTTE",
-        "atleta_cognome": "KOOL",
-        "atleta_nome": "CHARLOTTE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
         "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
         "nome_gara": "ORO IN EURO",
         "data": "2026-03-08",
@@ -194201,25 +193960,10 @@
         "regione": "TOSCANA",
         "km": "106.400",
         "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "PIETERSE_PUCK",
-        "atleta_cognome": "PIETERSE",
-        "atleta_nome": "PUCK",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 172
+      "ELI_F": 79
     }
   },
   "VOLKERWESSELS_CYCLING_TEAM": {
@@ -194407,14 +194151,10 @@
   "CANYON_SRAM_ZONDACRYPTO": {
     "id": "CANYON_SRAM_ZONDACRYPTO",
     "nome": "CANYON SRAM ZONDACRYPTO",
-    "punti_totali": 322,
+    "punti_totali": 24,
     "atleti": [
       "DIXON_EMILY",
-      "PALADIN_SORAYA",
-      "NIEDERMAIER_ANTONIA",
-      "CONSONNI_CHIARA",
-      "LUDWIG_UTTRUP_CECILIE",
-      "NIEWIADOMA_KASIA"
+      "PALADIN_SORAYA"
     ],
     "risultati": [
       {
@@ -194461,200 +194201,19 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "116.200",
         "media": "41.222"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "NIEDERMAIER_ANTONIA",
-        "atleta_cognome": "NIEDERMAIER",
-        "atleta_nome": "ANTONIA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "NIEDERMAIER_ANTONIA",
-        "atleta_cognome": "NIEDERMAIER",
-        "atleta_nome": "ANTONIA",
-        "posizione": 2,
-        "punti_effettivi": 60,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "NIEDERMAIER_ANTONIA",
-        "atleta_cognome": "NIEDERMAIER",
-        "atleta_nome": "ANTONIA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "CONSONNI_CHIARA",
-        "atleta_cognome": "CONSONNI",
-        "atleta_nome": "CHIARA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "CONSONNI_CHIARA",
-        "atleta_cognome": "CONSONNI",
-        "atleta_nome": "CHIARA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "NIEDERMAIER_ANTONIA",
-        "atleta_cognome": "NIEDERMAIER",
-        "atleta_nome": "ANTONIA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "NIEDERMAIER_ANTONIA",
-        "atleta_cognome": "NIEDERMAIER",
-        "atleta_nome": "ANTONIA",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "LUDWIG_UTTRUP_CECILIE",
-        "atleta_cognome": "LUDWIG",
-        "atleta_nome": "UTTRUP CECILIE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "CONSONNI_CHIARA",
-        "atleta_cognome": "CONSONNI",
-        "atleta_nome": "CHIARA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "CONSONNI_CHIARA",
-        "atleta_cognome": "CONSONNI",
-        "atleta_nome": "CHIARA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "CONSONNI_CHIARA",
-        "atleta_cognome": "CONSONNI",
-        "atleta_nome": "CHIARA",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "NIEWIADOMA_KASIA",
-        "atleta_cognome": "NIEWIADOMA",
-        "atleta_nome": "KASIA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 322
+      "ELI_F": 24
     }
   },
   "LIV_ALULA_JAYCO": {
     "id": "LIV_ALULA_JAYCO",
     "nome": "LIV-ALULA JAYCO",
-    "punti_totali": 181,
+    "punti_totali": 106,
     "atleti": [
       "SWIERENGA_SIDNEY",
-      "TRINCA_COLONEL_MONICA",
-      "BAKER_GEORGIA"
+      "TRINCA_COLONEL_MONICA"
     ],
     "risultati": [
       {
@@ -194718,51 +194277,6 @@
         "media": "41.222"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "BAKER_GEORGIA",
-        "atleta_cognome": "BAKER",
-        "atleta_nome": "GEORGIA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "TRINCA_COLONEL_MONICA",
-        "atleta_cognome": "TRINCA COLONEL",
-        "atleta_nome": "MONICA",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "BAKER_GEORGIA",
-        "atleta_cognome": "BAKER",
-        "atleta_nome": "GEORGIA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
         "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
         "nome_gara": "GIRO DELL'APPENNINO DONNE",
         "data": "2026-03-22",
@@ -194776,25 +194290,10 @@
         "regione": "LIGURIA",
         "km": "111.000",
         "media": "40.583"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "TRINCA_COLONEL_MONICA",
-        "atleta_cognome": "TRINCA COLONEL",
-        "atleta_nome": "MONICA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 181
+      "ELI_F": 106
     }
   },
   "ENEICAT_BE_CALL": {
@@ -209982,15 +209481,14 @@
   "RED_BULL_BORA_HANSGROHE_ROOKIES": {
     "id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
     "nome": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "punti_totali": 673,
+    "punti_totali": 589,
     "atleti": [
       "BOCK_MAX",
       "FRIEDL_ANATOL",
       "BLANC_GUSTAVE",
       "FINN_LORENZO_MARK",
       "DONATI_DAVIDE",
-      "FIETZKE_PAUL",
-      "MAGAGNOTTI_ALESSIO"
+      "FIETZKE_PAUL"
     ],
     "risultati": [
       {
@@ -210337,55 +209835,10 @@
         "regione": "VENETO",
         "km": "179.800",
         "media": "40.304"
-      },
-      {
-        "gara_id": "41_COPPI_E_BARTALI_SECONDA_TAPPA_2026-03-26_ELI_M",
-        "nome_gara": "41 COPPI E BARTALI SECONDA TAPPA",
-        "data": "2026-03-26",
-        "atleta_id": "MAGAGNOTTI_ALESSIO",
-        "atleta_cognome": "MAGAGNOTTI",
-        "atleta_nome": "ALESSIO",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_DI_SARDEGNA_QUINTA_TAPPA_2026-03-01_ELI_M",
-        "nome_gara": "GIRO DI SARDEGNA QUINTA TAPPA",
-        "data": "2026-03-01",
-        "atleta_id": "DONATI_DAVIDE",
-        "atleta_cognome": "DONATI",
-        "atleta_nome": "DAVIDE",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SARDEGNA",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_DI_SARDEGNA_SECONDA_TAPPA_2026-02-26_ELI_M",
-        "nome_gara": "GIRO DI SARDEGNA SECONDA TAPPA",
-        "data": "2026-02-26",
-        "atleta_id": "DONATI_DAVIDE",
-        "atleta_cognome": "DONATI",
-        "atleta_nome": "DAVIDE",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SARDEGNA",
-        "km": "",
-        "media": ""
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 673
+      "ELI_M": 589
     }
   },
   "ARKITANO_MTB_CLUB": {
@@ -210969,12 +210422,10 @@
   "MOVISTAR_TEAM_ACADEMY": {
     "id": "MOVISTAR_TEAM_ACADEMY",
     "nome": "MOVISTAR TEAM ACADEMY",
-    "punti_totali": 112,
+    "punti_totali": 34,
     "atleti": [
       "CUBILLAS_SALVADOR_JAVIER",
-      "PARETA_SALA_ROGER",
-      "REUSSER_MARLEN",
-      "SIERRA_ARLENIS"
+      "PARETA_SALA_ROGER"
     ],
     "risultati": [
       {
@@ -211051,86 +210502,10 @@
         "regione": "BASILICATA",
         "km": "154.000",
         "media": "47.600"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "SIERRA_ARLENIS",
-        "atleta_cognome": "SIERRA",
-        "atleta_nome": "ARLENIS",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 34,
-      "ELI_F": 78
+      "ELI_M": 34
     }
   },
   "DEVELOPMENT_TEAM_PICNIC_POSTNL": {
@@ -212673,14 +212048,13 @@
   "UAE_TEAM_ADQ": {
     "id": "UAE_TEAM_ADQ",
     "nome": "UAE TEAM ADQ",
-    "punti_totali": 586,
+    "punti_totali": 240,
     "atleti": [
       "LONGO_BORGHINI_ELISA",
       "GASPARRINI_ELEONORA_CAMILLA",
-      "GILLESPIE_LARA",
       "PERSICO_SILVIA",
-      "WLODARCZYK_DOMINIKA",
       "SWINKELS_KARLIJN",
+      "WLODARCZYK_DOMINIKA",
       "BLASI_CAIROL_PAULA",
       "MAGNALDI_ERICA"
     ],
@@ -212716,186 +212090,6 @@
         "media": "41.222"
       },
       {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 4,
-        "punti_effettivi": 40,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "GILLESPIE_LARA",
-        "atleta_cognome": "GILLESPIE",
-        "atleta_nome": "LARA",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "GILLESPIE_LARA",
-        "atleta_cognome": "GILLESPIE",
-        "atleta_nome": "LARA",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "PERSICO_SILVIA",
-        "atleta_cognome": "PERSICO",
-        "atleta_nome": "SILVIA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "GILLESPIE_LARA",
-        "atleta_cognome": "GILLESPIE",
-        "atleta_nome": "LARA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "GILLESPIE_LARA",
-        "atleta_cognome": "GILLESPIE",
-        "atleta_nome": "LARA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
         "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
         "nome_gara": "GIRO DELL'APPENNINO DONNE",
         "data": "2026-03-22",
@@ -212924,36 +212118,6 @@
         "regione": "LIGURIA",
         "km": "111.000",
         "media": "40.583"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "GASPARRINI_ELEONORA_CAMILLA",
-        "atleta_cognome": "GASPARRINI",
-        "atleta_nome": "ELEONORA CAMILLA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "WLODARCZYK_DOMINIKA",
-        "atleta_cognome": "WLODARCZYK",
-        "atleta_nome": "DOMINIKA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
       },
       {
         "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
@@ -213044,37 +212208,20 @@
         "regione": "TOSCANA",
         "km": "106.400",
         "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "LONGO_BORGHINI_ELISA",
-        "atleta_cognome": "LONGO",
-        "atleta_nome": "BORGHINI ELISA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 586
+      "ELI_F": 240
     }
   },
   "LIDL_TREK": {
     "id": "LIDL_TREK",
     "nome": "LIDL - TREK",
-    "punti_totali": 483,
+    "punti_totali": 74,
     "atleti": [
       "BALSAMO_ELISA",
-      "FISHER_BLACK_NIAMH",
-      "HOLMGREN_ISABELLA",
       "BRAND_LUCINDA",
-      "VAN_ANROOIJ_SHIRIN"
+      "FISHER_BLACK_NIAMH"
     ],
     "risultati": [
       {
@@ -213091,216 +212238,6 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "116.200",
         "media": "41.222"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "FISHER_BLACK_NIAMH",
-        "atleta_cognome": "FISHER-BLACK",
-        "atleta_nome": "NIAMH",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "HOLMGREN_ISABELLA",
-        "atleta_cognome": "HOLMGREN",
-        "atleta_nome": "ISABELLA",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "FISHER_BLACK_NIAMH",
-        "atleta_cognome": "FISHER-BLACK",
-        "atleta_nome": "NIAMH",
-        "posizione": 5,
-        "punti_effettivi": 30,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "HOLMGREN_ISABELLA",
-        "atleta_cognome": "HOLMGREN",
-        "atleta_nome": "ISABELLA",
-        "posizione": 7,
-        "punti_effettivi": 20,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "HOLMGREN_ISABELLA",
-        "atleta_cognome": "HOLMGREN",
-        "atleta_nome": "ISABELLA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "FISHER_BLACK_NIAMH",
-        "atleta_cognome": "FISHER-BLACK",
-        "atleta_nome": "NIAMH",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "BRAND_LUCINDA",
-        "atleta_cognome": "BRAND",
-        "atleta_nome": "LUCINDA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "BALSAMO_ELISA",
-        "atleta_cognome": "BALSAMO",
-        "atleta_nome": "ELISA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "HOLMGREN_ISABELLA",
-        "atleta_cognome": "HOLMGREN",
-        "atleta_nome": "ISABELLA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "FISHER_BLACK_NIAMH",
-        "atleta_cognome": "FISHER-BLACK",
-        "atleta_nome": "NIAMH",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "HOLMGREN_ISABELLA",
-        "atleta_cognome": "HOLMGREN",
-        "atleta_nome": "ISABELLA",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "BALSAMO_ELISA",
-        "atleta_cognome": "BALSAMO",
-        "atleta_nome": "ELISA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "BALSAMO_ELISA",
-        "atleta_cognome": "BALSAMO",
-        "atleta_nome": "ELISA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "BALSAMO_ELISA",
-        "atleta_cognome": "BALSAMO",
-        "atleta_nome": "ELISA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
       },
       {
         "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
@@ -213331,55 +212268,10 @@
         "regione": "LIGURIA",
         "km": "111.000",
         "media": "40.583"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "BALSAMO_ELISA",
-        "atleta_cognome": "BALSAMO",
-        "atleta_nome": "ELISA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "VAN_ANROOIJ_SHIRIN",
-        "atleta_cognome": "VAN",
-        "atleta_nome": "ANROOIJ SHIRIN",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "FISHER_BLACK_NIAMH",
-        "atleta_cognome": "FISHER-BLACK",
-        "atleta_nome": "NIAMH",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 483
+      "ELI_F": 74
     }
   },
   "FIAMME_ORO": {
@@ -214942,914 +213834,6 @@
       "ELI_F": 18
     }
   },
-  "FDJ_UNITED_SUEZ": {
-    "id": "FDJ_UNITED_SUEZ",
-    "nome": "FDJ UNITED - SUEZ",
-    "punti_totali": 441,
-    "atleti": [
-      "VOLLERING_DEMI",
-      "DICKSON_LAUREN",
-      "GERY_CELIA",
-      "WOLLASTON_ALLY",
-      "CHABBEY_ELISE",
-      "KOCH_FRANZISKA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "VOLLERING_DEMI",
-        "atleta_cognome": "VOLLERING",
-        "atleta_nome": "DEMI",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "DICKSON_LAUREN",
-        "atleta_cognome": "DICKSON",
-        "atleta_nome": "LAUREN",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "VOLLERING_DEMI",
-        "atleta_cognome": "VOLLERING",
-        "atleta_nome": "DEMI",
-        "posizione": 1,
-        "punti_effettivi": 75,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "VOLLERING_DEMI",
-        "atleta_cognome": "VOLLERING",
-        "atleta_nome": "DEMI",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "DICKSON_LAUREN",
-        "atleta_cognome": "DICKSON",
-        "atleta_nome": "LAUREN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "GERY_CELIA",
-        "atleta_cognome": "GERY",
-        "atleta_nome": "CELIA",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "GERY_CELIA",
-        "atleta_cognome": "GERY",
-        "atleta_nome": "CELIA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "VOLLERING_DEMI",
-        "atleta_cognome": "VOLLERING",
-        "atleta_nome": "DEMI",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "VOLLERING_DEMI",
-        "atleta_cognome": "VOLLERING",
-        "atleta_nome": "DEMI",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "DICKSON_LAUREN",
-        "atleta_cognome": "DICKSON",
-        "atleta_nome": "LAUREN",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "GERY_CELIA",
-        "atleta_cognome": "GERY",
-        "atleta_nome": "CELIA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "GERY_CELIA",
-        "atleta_cognome": "GERY",
-        "atleta_nome": "CELIA",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "atleta_id": "GERY_CELIA",
-        "atleta_cognome": "GERY",
-        "atleta_nome": "CELIA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "atleta_id": "DICKSON_LAUREN",
-        "atleta_cognome": "DICKSON",
-        "atleta_nome": "LAUREN",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "WOLLASTON_ALLY",
-        "atleta_cognome": "WOLLASTON",
-        "atleta_nome": "ALLY",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "CHABBEY_ELISE",
-        "atleta_cognome": "CHABBEY",
-        "atleta_nome": "ELISE",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "KOCH_FRANZISKA",
-        "atleta_cognome": "KOCH",
-        "atleta_nome": "FRANZISKA",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 441
-    }
-  },
-  "TEAM_VISMA_LEASE_A_BIKE": {
-    "id": "TEAM_VISMA_LEASE_A_BIKE",
-    "nome": "TEAM VISMA LEASE A BIKE",
-    "punti_totali": 144,
-    "atleti": [
-      "DE_VRIES_FEMKE",
-      "VEENHOVEN_NIENKE",
-      "VAN_DAM_SARAH",
-      "CHLADONOVA_VIKTORIA",
-      "VOS_MARIANNE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 6,
-        "punti_effettivi": 25,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "VEENHOVEN_NIENKE",
-        "atleta_cognome": "VEENHOVEN",
-        "atleta_nome": "NIENKE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "atleta_id": "VAN_DAM_SARAH",
-        "atleta_cognome": "VAN DAM",
-        "atleta_nome": "SARAH",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "atleta_id": "CHLADONOVA_VIKTORIA",
-        "atleta_cognome": "CHLADONOVA",
-        "atleta_nome": "VIKTORIA",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "atleta_id": "DE_VRIES_FEMKE",
-        "atleta_cognome": "DE",
-        "atleta_nome": "VRIES FEMKE",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "VOS_MARIANNE",
-        "atleta_cognome": "VOS",
-        "atleta_nome": "MARIANNE",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 144
-    }
-  },
-  "TEAM_SD_WORX_PROTIME": {
-    "id": "TEAM_SD_WORX_PROTIME",
-    "nome": "TEAM SD WORX-PROTIME",
-    "punti_totali": 276,
-    "atleti": [
-      "VAN_DER_BREGGEN_ANNA",
-      "CAVALLAR_VALENTINA",
-      "GERRITSE_FEMKE",
-      "GUARISCHI_BARBARA",
-      "KOPECKY_LOTTE",
-      "WIEBES_LORENA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "VAN_DER_BREGGEN_ANNA",
-        "atleta_cognome": "VAN DER BREGGEN",
-        "atleta_nome": "ANNA",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "VAN_DER_BREGGEN_ANNA",
-        "atleta_cognome": "VAN DER BREGGEN",
-        "atleta_nome": "ANNA",
-        "posizione": 3,
-        "punti_effettivi": 50,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "CAVALLAR_VALENTINA",
-        "atleta_cognome": "CAVALLAR",
-        "atleta_nome": "VALENTINA",
-        "posizione": 9,
-        "punti_effettivi": 10,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "VAN_DER_BREGGEN_ANNA",
-        "atleta_cognome": "VAN DER BREGGEN",
-        "atleta_nome": "ANNA",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "CAVALLAR_VALENTINA",
-        "atleta_cognome": "CAVALLAR",
-        "atleta_nome": "VALENTINA",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "VAN_DER_BREGGEN_ANNA",
-        "atleta_cognome": "VAN DER BREGGEN",
-        "atleta_nome": "ANNA",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "VAN_DER_BREGGEN_ANNA",
-        "atleta_cognome": "VAN DER BREGGEN",
-        "atleta_nome": "ANNA",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "GERRITSE_FEMKE",
-        "atleta_cognome": "GERRITSE",
-        "atleta_nome": "FEMKE",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "GUARISCHI_BARBARA",
-        "atleta_cognome": "GUARISCHI",
-        "atleta_nome": "BARBARA",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "KOPECKY_LOTTE",
-        "atleta_cognome": "KOPECKY",
-        "atleta_nome": "LOTTE",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "WIEBES_LORENA",
-        "atleta_cognome": "WIEBES",
-        "atleta_nome": "LORENA",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 276
-    }
-  },
-  "UNO_X_MOBILITY": {
-    "id": "UNO_X_MOBILITY",
-    "nome": "UNO-X MOBILITY",
-    "punti_totali": 39,
-    "atleti": [
-      "HAUGSET_SIGRID_YTTERHUS",
-      "ZANETTI_LINDA",
-      "OTTESTAD_MIE_BJORNDAL"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "HAUGSET_SIGRID_YTTERHUS",
-        "atleta_cognome": "HAUGSET",
-        "atleta_nome": "SIGRID YTTERHUS",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "ZANETTI_LINDA",
-        "atleta_cognome": "ZANETTI",
-        "atleta_nome": "LINDA",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "ZANETTI_LINDA",
-        "atleta_cognome": "ZANETTI",
-        "atleta_nome": "LINDA",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "atleta_id": "OTTESTAD_MIE_BJORNDAL",
-        "atleta_cognome": "OTTESTAD",
-        "atleta_nome": "MIE BJORNDAL",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 39
-    }
-  },
-  "EF_EDUCATION_OATLY": {
-    "id": "EF_EDUCATION_OATLY",
-    "nome": "EF EDUCATION OATLY",
-    "punti_totali": 81,
-    "atleti": [
-      "VALLIERES_MAGDELEINE",
-      "VOLSTAD_ALEXANDRA",
-      "RUEGG_NOEMI"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN NONA TAPPA",
-        "data": "2026-06-07",
-        "atleta_id": "VALLIERES_MAGDELEINE",
-        "atleta_cognome": "VALLIERES",
-        "atleta_nome": "MAGDELEINE",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "VOLSTAD_ALEXANDRA",
-        "atleta_cognome": "VOLSTAD",
-        "atleta_nome": "ALEXANDRA",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "VALLIERES_MAGDELEINE",
-        "atleta_cognome": "VALLIERES",
-        "atleta_nome": "MAGDELEINE",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "atleta_id": "RUEGG_NOEMI",
-        "atleta_cognome": "RUEGG",
-        "atleta_nome": "NOEMI",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "atleta_id": "RUEGG_NOEMI",
-        "atleta_cognome": "RUEGG",
-        "atleta_nome": "NOEMI",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "atleta_id": "VALLIERES_MAGDELEINE",
-        "atleta_cognome": "VALLIERES",
-        "atleta_nome": "MAGDELEINE",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 81
-    }
-  },
-  "AG_INSURANCE_SOUDAL": {
-    "id": "AG_INSURANCE_SOUDAL",
-    "nome": "AG INSURANCE SOUDAL",
-    "punti_totali": 54,
-    "atleti": [
-      "ZIGART_URSKA",
-      "DE_SCHEPPER_LORE",
-      "VERHULST_WILD_GLADYS"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "ZIGART_URSKA",
-        "atleta_cognome": "ZIGART",
-        "atleta_nome": "URSKA",
-        "posizione": 8,
-        "punti_effettivi": 15,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-        "data": "2026-06-07",
-        "atleta_id": "DE_SCHEPPER_LORE",
-        "atleta_cognome": "DE SCHEPPER",
-        "atleta_nome": "LORE",
-        "posizione": 10,
-        "punti_effettivi": 5,
-        "moltiplicatore": 5,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "VERHULST_WILD_GLADYS",
-        "atleta_cognome": "VERHULST-WILD",
-        "atleta_nome": "GLADYS",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "DE_SCHEPPER_LORE",
-        "atleta_cognome": "DE SCHEPPER",
-        "atleta_nome": "LORE",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "ZIGART_URSKA",
-        "atleta_cognome": "ZIGART",
-        "atleta_nome": "URSKA",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "VERHULST_WILD_GLADYS",
-        "atleta_cognome": "VERHULST-WILD",
-        "atleta_nome": "GLADYS",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 54
-    }
-  },
   "SVIZZERA": {
     "id": "SVIZZERA",
     "nome": "SVIZZERA",
@@ -216311,183 +214295,6 @@
     ],
     "punti_per_cat": {
       "AL_M": 5
-    }
-  },
-  "ST_MICHEL_PREFERENCE_HOME_AUBER93": {
-    "id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
-    "nome": "ST MICHEL-PREFERENCE HOME-AUBER93",
-    "punti_totali": 27,
-    "atleti": [
-      "JACKSON_ALISON",
-      "MORIER_EMILIE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "JACKSON_ALISON",
-        "atleta_cognome": "JACKSON",
-        "atleta_nome": "ALISON",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "MORIER_EMILIE",
-        "atleta_cognome": "MORIER",
-        "atleta_nome": "EMILIE",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 27
-    }
-  },
-  "TEAM_PICNIC_POSTNL": {
-    "id": "TEAM_PICNIC_POSTNL",
-    "nome": "TEAM PICNIC POSTNL",
-    "punti_totali": 18,
-    "atleti": [
-      "NELSON_JOSIE",
-      "GEORGI_PFEIFFER"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-        "data": "2026-06-05",
-        "atleta_id": "NELSON_JOSIE",
-        "atleta_cognome": "NELSON",
-        "atleta_nome": "JOSIE",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "GEORGI_PFEIFFER",
-        "atleta_cognome": "GEORGI",
-        "atleta_nome": "PFEIFFER",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 18
-    }
-  },
-  "HUMAN_POWERED_HEALTH": {
-    "id": "HUMAN_POWERED_HEALTH",
-    "nome": "HUMAN POWERED HEALTH",
-    "punti_totali": 99,
-    "atleti": [
-      "COLES_LYSTER_MAGGIE",
-      "WILLIAMS_LILY"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "COLES_LYSTER_MAGGIE",
-        "atleta_cognome": "COLES-LYSTER",
-        "atleta_nome": "MAGGIE",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "atleta_id": "WILLIAMS_LILY",
-        "atleta_cognome": "WILLIAMS",
-        "atleta_nome": "LILY",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "WILLIAMS_LILY",
-        "atleta_cognome": "WILLIAMS",
-        "atleta_nome": "LILY",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "COLES_LYSTER_MAGGIE",
-        "atleta_cognome": "COLES-LYSTER",
-        "atleta_nome": "MAGGIE",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "atleta_id": "WILLIAMS_LILY",
-        "atleta_cognome": "WILLIAMS",
-        "atleta_nome": "LILY",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 99
     }
   },
   "MBH_BANK_CYCLING_TEAM_JUNIOR": {
@@ -218080,6 +215887,110 @@
       "JUN_M": 5
     }
   },
+  "TEAM_VISMA_LEASE_A_BIKE": {
+    "id": "TEAM_VISMA_LEASE_A_BIKE",
+    "nome": "TEAM VISMA LEASE A BIKE",
+    "punti_totali": 51,
+    "atleti": [
+      "VAN_DAM_SARAH",
+      "CHLADONOVA_VIKTORIA",
+      "DE_VRIES_FEMKE"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "atleta_id": "VAN_DAM_SARAH",
+        "atleta_cognome": "VAN DAM",
+        "atleta_nome": "SARAH",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "atleta_id": "CHLADONOVA_VIKTORIA",
+        "atleta_cognome": "CHLADONOVA",
+        "atleta_nome": "VIKTORIA",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "atleta_id": "DE_VRIES_FEMKE",
+        "atleta_cognome": "DE",
+        "atleta_nome": "VRIES FEMKE",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 51
+    }
+  },
+  "FDJ_UNITED_SUEZ": {
+    "id": "FDJ_UNITED_SUEZ",
+    "nome": "FDJ UNITED - SUEZ",
+    "punti_totali": 27,
+    "atleti": [
+      "GERY_CELIA",
+      "DICKSON_LAUREN"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "atleta_id": "GERY_CELIA",
+        "atleta_cognome": "GERY",
+        "atleta_nome": "CELIA",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "atleta_id": "DICKSON_LAUREN",
+        "atleta_cognome": "DICKSON",
+        "atleta_nome": "LAUREN",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 27
+    }
+  },
   "AIRTOX_CARL_RAS": {
     "id": "AIRTOX_CARL_RAS",
     "nome": "AIRTOX - CARL RAS",
@@ -218262,6 +216173,62 @@
     ],
     "punti_per_cat": {
       "JUN_F": 4
+    }
+  },
+  "EF_EDUCATION_OATLY": {
+    "id": "EF_EDUCATION_OATLY",
+    "nome": "EF EDUCATION OATLY",
+    "punti_totali": 12,
+    "atleti": [
+      "RUEGG_NOEMI"
+    ],
+    "risultati": [
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "atleta_id": "RUEGG_NOEMI",
+        "atleta_cognome": "RUEGG",
+        "atleta_nome": "NOEMI",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 12
+    }
+  },
+  "UNO_X_MOBILITY": {
+    "id": "UNO_X_MOBILITY",
+    "nome": "UNO-X MOBILITY",
+    "punti_totali": 9,
+    "atleti": [
+      "OTTESTAD_MIE_BJORNDAL"
+    ],
+    "risultati": [
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "atleta_id": "OTTESTAD_MIE_BJORNDAL",
+        "atleta_cognome": "OTTESTAD",
+        "atleta_nome": "MIE BJORNDAL",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 9
     }
   },
   "ASD_TEAM_MOOVEO": {

@@ -33,10 +33,10 @@
   },
   {
     "atleta_id": "VOLLERING_DEMI",
-    "cognome": "VOLLERING",
-    "nome": "DEMI",
+    "cognome": "Vollering",
+    "nome": "Demi",
     "team_id": "FDJ_UNITED_SUEZ",
-    "team_nome": "FDJ UNITED - SUEZ",
+    "team_nome": "FDJ United - SUEZ",
     "punti": 209,
     "vittorie": 3,
     "gare": 5,
@@ -49,10 +49,10 @@
   },
   {
     "atleta_id": "NIEDERMAIER_ANTONIA",
-    "cognome": "NIEDERMAIER",
-    "nome": "ANTONIA",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "team_nome": "CANYON SRAM ZONDACRYPTO",
+    "cognome": "Niedermaier",
+    "nome": "Antonia",
+    "team_id": "CANYON_SRAM",
+    "team_nome": "CANYON//SRAM",
     "punti": 166,
     "vittorie": 0,
     "gare": 5,
@@ -81,10 +81,10 @@
   },
   {
     "atleta_id": "VAN_DER_BREGGEN_ANNA",
-    "cognome": "VAN DER BREGGEN",
-    "nome": "ANNA",
+    "cognome": "van",
+    "nome": "der Breggen Anna",
     "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
+    "team_nome": "Team SD Worx - Protime",
     "punti": 155,
     "vittorie": 1,
     "gare": 5,
@@ -225,11 +225,11 @@
   },
   {
     "atleta_id": "GILLESPIE_LARA",
-    "cognome": "GILLESPIE",
-    "nome": "LARA",
+    "cognome": "Gillespie",
+    "nome": "Lara",
     "team_id": "UAE_TEAM_ADQ",
-    "team_nome": "UAE TEAM ADQ",
-    "punti": 96,
+    "team_nome": "UAE Team ADQ",
+    "punti": 99,
     "vittorie": 0,
     "gare": 4,
     "p1": 0,
@@ -241,10 +241,10 @@
   },
   {
     "atleta_id": "CONSONNI_CHIARA",
-    "cognome": "CONSONNI",
-    "nome": "CHIARA",
+    "cognome": "Consonni",
+    "nome": "Chiara",
     "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "team_nome": "CANYON SRAM ZONDACRYPTO",
+    "team_nome": "CANYON//SRAM zondacrypto",
     "punti": 90,
     "vittorie": 0,
     "gare": 5,
@@ -257,10 +257,10 @@
   },
   {
     "atleta_id": "HOLMGREN_ISABELLA",
-    "cognome": "HOLMGREN",
-    "nome": "ISABELLA",
+    "cognome": "Holmgren",
+    "nome": "Isabella",
     "team_id": "LIDL_TREK",
-    "team_nome": "LIDL - TREK",
+    "team_nome": "Lidl - Trek",
     "punti": 88,
     "vittorie": 0,
     "gare": 5,
@@ -368,22 +368,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "SEGATO_GAIA",
-    "cognome": "SEGATO",
-    "nome": "GAIA",
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 72,
-    "vittorie": 1,
-    "gare": 4,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "pos": 24,
-    "trend": 0
-  },
-  {
     "atleta_id": "BRAND_LUCINDA",
     "cognome": "BRAND",
     "nome": "LUCINDA",
@@ -396,8 +380,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 25,
-    "trend": 0
+    "pos": 24,
+    "trend": 1
   },
   {
     "atleta_id": "SWIERENGA_SIDNEY",
@@ -412,8 +396,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
+    "pos": 25,
+    "trend": 1
+  },
+  {
+    "atleta_id": "SEGATO_GAIA",
+    "cognome": "SEGATO",
+    "nome": "GAIA",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI - BEPINK",
+    "punti": 69,
+    "vittorie": 1,
+    "gare": 4,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
     "pos": 26,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "BERTEAU_VICTOIRE",
@@ -497,10 +497,10 @@
   },
   {
     "atleta_id": "REUSSER_MARLEN",
-    "cognome": "REUSSER",
-    "nome": "MARLEN",
-    "team_id": "MOVISTAR_TEAM_ACADEMY",
-    "team_nome": "MOVISTAR TEAM ACADEMY",
+    "cognome": "Reusser",
+    "nome": "Marlen",
+    "team_id": "MOVISTAR_TEAM",
+    "team_nome": "Movistar Team",
     "punti": 63,
     "vittorie": 0,
     "gare": 4,
@@ -657,10 +657,10 @@
   },
   {
     "atleta_id": "BAKER_GEORGIA",
-    "cognome": "BAKER",
-    "nome": "GEORGIA",
+    "cognome": "Baker",
+    "nome": "Georgia",
     "team_id": "LIV_ALULA_JAYCO",
-    "team_nome": "LIV-ALULA JAYCO",
+    "team_nome": "Liv AlUla Jayco",
     "punti": 54,
     "vittorie": 0,
     "gare": 2,
@@ -721,10 +721,10 @@
   },
   {
     "atleta_id": "WILLIAMS_LILY",
-    "cognome": "WILLIAMS",
-    "nome": "LILY",
+    "cognome": "Williams",
+    "nome": "Lily",
     "team_id": "HUMAN_POWERED_HEALTH",
-    "team_nome": "HUMAN POWERED HEALTH",
+    "team_nome": "Human Powered Health",
     "punti": 51,
     "vittorie": 0,
     "gare": 3,
@@ -733,38 +733,6 @@
     "p3": 0,
     "pout": 2,
     "pos": 46,
-    "trend": 0
-  },
-  {
-    "atleta_id": "COLES_LYSTER_MAGGIE",
-    "cognome": "COLES-LYSTER",
-    "nome": "MAGGIE",
-    "team_id": "HUMAN_POWERED_HEALTH",
-    "team_nome": "HUMAN POWERED HEALTH",
-    "punti": 48,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "pos": 47,
-    "trend": 0
-  },
-  {
-    "atleta_id": "KOOL_CHARLOTTE",
-    "cognome": "KOOL",
-    "nome": "CHARLOTTE",
-    "team_id": "FENIX_PREMIER_TECH",
-    "team_nome": "FENIX-PREMIER TECH",
-    "punti": 48,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "pos": 48,
     "trend": 0
   },
   {
@@ -780,24 +748,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
-    "trend": 0
-  },
-  {
-    "atleta_id": "WLODARCZYK_DOMINIKA",
-    "cognome": "WLODARCZYK",
-    "nome": "DOMINIKA",
-    "team_id": "UAE_TEAM_ADQ",
-    "team_nome": "UAE TEAM ADQ",
-    "punti": 48,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "pos": 50,
-    "trend": 0
+    "pos": 47,
+    "trend": 2
   },
   {
     "atleta_id": "W_ODARCZYK_DOMINIKA",
@@ -812,8 +764,40 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 51,
-    "trend": 0
+    "pos": 48,
+    "trend": 3
+  },
+  {
+    "atleta_id": "KOOL_CHARLOTTE",
+    "cognome": "Kool",
+    "nome": "Charlotte",
+    "team_id": "FENIX_PREMIER_TECH",
+    "team_nome": "Fenix-Premier Tech",
+    "punti": 48,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 49,
+    "trend": -1
+  },
+  {
+    "atleta_id": "COLES_LYSTER_MAGGIE",
+    "cognome": "Coles-Lyster",
+    "nome": "Maggie",
+    "team_id": "HUMAN_POWERED_HEALTH",
+    "team_nome": "Human Powered Health",
+    "punti": 48,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "pos": 50,
+    "trend": -3
   },
   {
     "atleta_id": "BANI_DESIREE",
@@ -828,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 52,
-    "trend": 0
+    "pos": 51,
+    "trend": 1
   },
   {
     "atleta_id": "ARICI_SOFIA",
@@ -844,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 53,
-    "trend": 0
+    "pos": 52,
+    "trend": 1
   },
   {
     "atleta_id": "LIECHTI_JASMIN",
@@ -860,15 +844,31 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
+    "pos": 53,
+    "trend": 1
+  },
+  {
+    "atleta_id": "CHABBEY_ELISE",
+    "cognome": "Chabbey",
+    "nome": "Elise",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "team_nome": "FDJ United - SUEZ",
+    "punti": 45,
+    "vittorie": 1,
+    "gare": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
     "pos": 54,
-    "trend": 0
+    "trend": 2
   },
   {
     "atleta_id": "KOPECKY_LOTTE",
-    "cognome": "KOPECKY",
-    "nome": "LOTTE",
+    "cognome": "Kopecky",
+    "nome": "Lotte",
     "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
+    "team_nome": "Team SD Worx - Protime",
     "punti": 45,
     "vittorie": 1,
     "gare": 1,
@@ -877,22 +877,6 @@
     "p3": 0,
     "pout": 0,
     "pos": 55,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CHABBEY_ELISE",
-    "cognome": "CHABBEY",
-    "nome": "ELISE",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "team_nome": "FDJ UNITED - SUEZ",
-    "punti": 45,
-    "vittorie": 1,
-    "gare": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "pos": 56,
     "trend": 0
   },
   {
@@ -908,8 +892,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 3,
-    "pos": 57,
-    "trend": 0
+    "pos": 56,
+    "trend": 1
   },
   {
     "atleta_id": "GOTTOLI_EMMA",
@@ -924,8 +908,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 58,
-    "trend": 0
+    "pos": 57,
+    "trend": 1
   },
   {
     "atleta_id": "ONGARATO_LIVIELLE",
@@ -940,8 +924,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 59,
-    "trend": 0
+    "pos": 58,
+    "trend": 1
   },
   {
     "atleta_id": "MWAMIKAZI_JAZILLA",
@@ -956,8 +940,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 60,
-    "trend": 0
+    "pos": 59,
+    "trend": 1
   },
   {
     "atleta_id": "SEMOLI_SERENA",
@@ -972,8 +956,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 2,
-    "pos": 61,
-    "trend": 0
+    "pos": 60,
+    "trend": 1
   },
   {
     "atleta_id": "BONELLI_CONCETTA_GIULIA",
@@ -988,8 +972,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 62,
-    "trend": 0
+    "pos": 61,
+    "trend": 1
   },
   {
     "atleta_id": "VAN_SINAEY_XAYDEE",
@@ -1004,8 +988,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 63,
-    "trend": 0
+    "pos": 62,
+    "trend": 1
   },
   {
     "atleta_id": "PIRRONE_ELENA",
@@ -1020,8 +1004,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 64,
-    "trend": 0
+    "pos": 63,
+    "trend": 1
   },
   {
     "atleta_id": "TORMENA_GAIA",
@@ -1036,8 +1020,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 65,
-    "trend": 0
+    "pos": 64,
+    "trend": 1
   },
   {
     "atleta_id": "BOBNAR_NIKA",
@@ -1052,8 +1036,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 66,
-    "trend": 0
+    "pos": 65,
+    "trend": 1
   },
   {
     "atleta_id": "SOUREN_SCARLET",
@@ -1068,8 +1052,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 67,
-    "trend": 0
+    "pos": 66,
+    "trend": 1
   },
   {
     "atleta_id": "LEIS_MAGDALENA",
@@ -1084,8 +1068,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 68,
-    "trend": 0
+    "pos": 67,
+    "trend": 1
   },
   {
     "atleta_id": "SWINKELS_KARLIJN",
@@ -1100,24 +1084,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 69,
-    "trend": 0
-  },
-  {
-    "atleta_id": "NIEWIADOMA_KASIA",
-    "cognome": "NIEWIADOMA",
-    "nome": "KASIA",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 36,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "pos": 70,
-    "trend": 0
+    "pos": 68,
+    "trend": 1
   },
   {
     "atleta_id": "DE_VALLIER_ELISA",
@@ -1132,7 +1100,23 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 71,
+    "pos": 69,
+    "trend": 2
+  },
+  {
+    "atleta_id": "NIEWIADOMA_KASIA",
+    "cognome": "Niewiadoma",
+    "nome": "Kasia",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "team_nome": "CANYON//SRAM zondacrypto",
+    "punti": 36,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "pos": 70,
     "trend": 0
   },
   {
@@ -1148,8 +1132,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 72,
-    "trend": 0
+    "pos": 71,
+    "trend": 1
   },
   {
     "atleta_id": "KNIJNENBURG_ANNE",
@@ -1164,8 +1148,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 73,
-    "trend": 0
+    "pos": 72,
+    "trend": 1
   },
   {
     "atleta_id": "DICKSON_LAUREN",
@@ -1180,8 +1164,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 74,
-    "trend": 0
+    "pos": 73,
+    "trend": 1
   },
   {
     "atleta_id": "CURNIS_VALERIA",
@@ -1196,8 +1180,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 75,
-    "trend": 0
+    "pos": 74,
+    "trend": 1
   },
   {
     "atleta_id": "ALZINI_MARTINA",
@@ -1212,8 +1196,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 76,
-    "trend": 0
+    "pos": 75,
+    "trend": 1
   },
   {
     "atleta_id": "KINGMA_MAYA",
@@ -1228,40 +1212,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 77,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VALLIERES_MAGDELEINE",
-    "cognome": "VALLIERES",
-    "nome": "MAGDELEINE",
-    "team_id": "EF_EDUCATION_OATLY",
-    "team_nome": "EF EDUCATION OATLY",
-    "punti": 30,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "pos": 78,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GERRITSE_FEMKE",
-    "cognome": "GERRITSE",
-    "nome": "FEMKE",
-    "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
-    "punti": 30,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 0,
-    "pos": 79,
-    "trend": 0
+    "pos": 76,
+    "trend": 1
   },
   {
     "atleta_id": "KESSLER_NINA",
@@ -1276,8 +1228,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 80,
-    "trend": 0
+    "pos": 77,
+    "trend": 3
   },
   {
     "atleta_id": "VAN_DAM_SARAH",
@@ -1292,15 +1244,15 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 81,
-    "trend": 0
+    "pos": 78,
+    "trend": 3
   },
   {
-    "atleta_id": "KOCH_FRANZISKA",
-    "cognome": "KOCH",
-    "nome": "FRANZISKA",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "team_nome": "FDJ UNITED - SUEZ",
+    "atleta_id": "WLODARCZYK_DOMINIKA",
+    "cognome": "WLODARCZYK",
+    "nome": "DOMINIKA",
+    "team_id": "UAE_TEAM_ADQ",
+    "team_nome": "UAE TEAM ADQ",
     "punti": 30,
     "vittorie": 0,
     "gare": 1,
@@ -1308,8 +1260,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 82,
-    "trend": 0
+    "pos": 79,
+    "trend": -29
   },
   {
     "atleta_id": "SERENA_GIORGIA",
@@ -1324,8 +1276,56 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
+    "pos": 80,
+    "trend": 3
+  },
+  {
+    "atleta_id": "KOCH_FRANZISKA",
+    "cognome": "Koch",
+    "nome": "Franziska",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "team_nome": "FDJ United - SUEZ",
+    "punti": 30,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "pos": 81,
+    "trend": 1
+  },
+  {
+    "atleta_id": "VALLIERES_MAGDELEINE",
+    "cognome": "Vallieres",
+    "nome": "Magdeleine",
+    "team_id": "EF_EDUCATION_OATLY",
+    "team_nome": "EF Education-Oatly",
+    "punti": 30,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 82,
+    "trend": -4
+  },
+  {
+    "atleta_id": "GERRITSE_FEMKE",
+    "cognome": "Gerritse",
+    "nome": "Femke",
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "team_nome": "Team SD Worx - Protime",
+    "punti": 30,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
     "pos": 83,
-    "trend": 0
+    "trend": -4
   },
   {
     "atleta_id": "ZAMUDIO_GARCIA_MAYTE",
@@ -1361,10 +1361,10 @@
   },
   {
     "atleta_id": "VERHULST_WILD_GLADYS",
-    "cognome": "VERHULST-WILD",
-    "nome": "GLADYS",
-    "team_id": "AG_INSURANCE_SOUDAL",
-    "team_nome": "AG INSURANCE SOUDAL",
+    "cognome": "Verhulst-Wild",
+    "nome": "Gladys",
+    "team_id": "AG_INSURANCE_SOUDAL_TEAM",
+    "team_nome": "AG Insurance - Soudal Team",
     "punti": 27,
     "vittorie": 0,
     "gare": 2,
@@ -1441,10 +1441,10 @@
   },
   {
     "atleta_id": "JACKSON_ALISON",
-    "cognome": "JACKSON",
-    "nome": "ALISON",
+    "cognome": "Jackson",
+    "nome": "Alison",
     "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
-    "team_nome": "ST MICHEL-PREFERENCE HOME-AUBER93",
+    "team_nome": "St Michel - Preference Home - Auber93",
     "punti": 24,
     "vittorie": 0,
     "gare": 1,
@@ -1601,10 +1601,10 @@
   },
   {
     "atleta_id": "ZIGART_URSKA",
-    "cognome": "ZIGART",
-    "nome": "URSKA",
-    "team_id": "AG_INSURANCE_SOUDAL",
-    "team_nome": "AG INSURANCE SOUDAL",
+    "cognome": "Žigart",
+    "nome": "Urška",
+    "team_id": "AG_INSURANCE_SOUDAL_TEAM",
+    "team_nome": "AG Insurance - Soudal Team",
     "punti": 19,
     "vittorie": 0,
     "gare": 2,
@@ -1648,38 +1648,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "GUARISCHI_BARBARA",
-    "cognome": "GUARISCHI",
-    "nome": "BARBARA",
-    "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
-    "punti": 18,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 104,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ZANETTI_LINDA",
-    "cognome": "ZANETTI",
-    "nome": "LINDA",
-    "team_id": "UNO_X_MOBILITY",
-    "team_nome": "UNO-X MOBILITY",
-    "punti": 18,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "pos": 105,
-    "trend": 0
-  },
-  {
     "atleta_id": "NICHOLSON_KATELYN_MARIE_JANETTE",
     "cognome": "NICHOLSON",
     "nome": "KATELYN MARIE JANETTE",
@@ -1692,8 +1660,40 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 106,
+    "pos": 104,
+    "trend": 2
+  },
+  {
+    "atleta_id": "ZANETTI_LINDA",
+    "cognome": "Zanetti",
+    "nome": "Linda",
+    "team_id": "UNO_X_MOBILITY",
+    "team_nome": "Uno-X Mobility",
+    "punti": 18,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 105,
     "trend": 0
+  },
+  {
+    "atleta_id": "GUARISCHI_BARBARA",
+    "cognome": "Guarischi",
+    "nome": "Barbara",
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "team_nome": "Team SD Worx - Protime",
+    "punti": 18,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 106,
+    "trend": -2
   },
   {
     "atleta_id": "RABBIA_ASIA",
@@ -1792,38 +1792,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "GEORGI_PFEIFFER",
-    "cognome": "GEORGI",
-    "nome": "PFEIFFER",
-    "team_id": "TEAM_PICNIC_POSTNL",
-    "team_nome": "TEAM PICNIC POSTNL",
-    "punti": 15,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 113,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SIERRA_ARLENIS",
-    "cognome": "SIERRA",
-    "nome": "ARLENIS",
-    "team_id": "MOVISTAR_TEAM_ACADEMY",
-    "team_nome": "MOVISTAR TEAM ACADEMY",
-    "punti": 15,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 114,
-    "trend": 0
-  },
-  {
     "atleta_id": "CHLADONOVA_VIKTORIA",
     "cognome": "CHLADONOVA",
     "nome": "VIKTORIA",
@@ -1836,15 +1804,47 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 115,
-    "trend": 0
+    "pos": 113,
+    "trend": 2
   },
   {
     "atleta_id": "WIEBES_LORENA",
-    "cognome": "WIEBES",
-    "nome": "LORENA",
+    "cognome": "Wiebes",
+    "nome": "Lorena",
     "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
+    "team_nome": "Team SD Worx - Protime",
+    "punti": 15,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 114,
+    "trend": 2
+  },
+  {
+    "atleta_id": "SIERRA_ARLENIS",
+    "cognome": "Sierra",
+    "nome": "Arlenis",
+    "team_id": "MOVISTAR_TEAM",
+    "team_nome": "Movistar Team",
+    "punti": 15,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 115,
+    "trend": -1
+  },
+  {
+    "atleta_id": "GEORGI_PFEIFFER",
+    "cognome": "Georgi",
+    "nome": "Pfeiffer",
+    "team_id": "TEAM_PICNIC_POSTNL",
+    "team_nome": "Team Picnic PostNL",
     "punti": 15,
     "vittorie": 0,
     "gare": 1,
@@ -1853,7 +1853,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 116,
-    "trend": 0
+    "trend": -3
   },
   {
     "atleta_id": "GRASSI_VITTORIA",
@@ -1921,10 +1921,10 @@
   },
   {
     "atleta_id": "CAVALLAR_VALENTINA",
-    "cognome": "CAVALLAR",
-    "nome": "VALENTINA",
+    "cognome": "Cavallar",
+    "nome": "Valentina",
     "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
+    "team_nome": "Team SD Worx - Protime",
     "punti": 13,
     "vittorie": 0,
     "gare": 2,
@@ -1968,11 +1968,11 @@
     "trend": 0
   },
   {
-    "atleta_id": "HAUGSET_SIGRID_YTTERHUS",
-    "cognome": "HAUGSET",
-    "nome": "SIGRID YTTERHUS",
-    "team_id": "UNO_X_MOBILITY",
-    "team_nome": "UNO-X MOBILITY",
+    "atleta_id": "VOS_MARIANNE",
+    "cognome": "Vos",
+    "nome": "Marianne",
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
+    "team_nome": "Team Visma | Lease a Bike",
     "punti": 12,
     "vittorie": 0,
     "gare": 1,
@@ -1981,14 +1981,14 @@
     "p3": 0,
     "pout": 1,
     "pos": 124,
-    "trend": 0
+    "trend": 2
   },
   {
     "atleta_id": "WOLLASTON_ALLY",
-    "cognome": "WOLLASTON",
-    "nome": "ALLY",
+    "cognome": "Wollaston",
+    "nome": "Ally",
     "team_id": "FDJ_UNITED_SUEZ",
-    "team_nome": "FDJ UNITED - SUEZ",
+    "team_nome": "FDJ United - SUEZ",
     "punti": 12,
     "vittorie": 0,
     "gare": 1,
@@ -2000,11 +2000,11 @@
     "trend": 0
   },
   {
-    "atleta_id": "VOS_MARIANNE",
-    "cognome": "VOS",
-    "nome": "MARIANNE",
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
-    "team_nome": "TEAM VISMA LEASE A BIKE",
+    "atleta_id": "HAUGSET_SIGRID_YTTERHUS",
+    "cognome": "Haugset",
+    "nome": "Sigrid Ytterhus",
+    "team_id": "UNO_X_MOBILITY",
+    "team_nome": "Uno-X Mobility",
     "punti": 12,
     "vittorie": 0,
     "gare": 1,
@@ -2013,7 +2013,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 126,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "FUCILLI_ALESSIA_LILIANA",
@@ -2257,10 +2257,10 @@
   },
   {
     "atleta_id": "DE_SCHEPPER_LORE",
-    "cognome": "DE SCHEPPER",
-    "nome": "LORE",
-    "team_id": "AG_INSURANCE_SOUDAL",
-    "team_nome": "AG INSURANCE SOUDAL",
+    "cognome": "De",
+    "nome": "Schepper Lore",
+    "team_id": "AG_INSURANCE_SOUDAL_TEAM",
+    "team_nome": "AG Insurance - Soudal Team",
     "punti": 8,
     "vittorie": 0,
     "gare": 2,
@@ -2336,38 +2336,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "LUDWIG_UTTRUP_CECILIE",
-    "cognome": "LUDWIG",
-    "nome": "UTTRUP CECILIE",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 6,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 147,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VEENHOVEN_NIENKE",
-    "cognome": "VEENHOVEN",
-    "nome": "NIENKE",
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
-    "team_nome": "TEAM VISMA LEASE A BIKE",
-    "punti": 6,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 148,
-    "trend": 0
-  },
-  {
     "atleta_id": "BLASI_CAIROL_PAULA",
     "cognome": "BLASI",
     "nome": "CAIROL PAULA",
@@ -2380,24 +2348,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 149,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VAN_ANROOIJ_SHIRIN",
-    "cognome": "VAN",
-    "nome": "ANROOIJ SHIRIN",
-    "team_id": "LIDL_TREK",
-    "team_nome": "LIDL - TREK",
-    "punti": 6,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 150,
-    "trend": 0
+    "pos": 147,
+    "trend": 2
   },
   {
     "atleta_id": "MILAKI_ARGYRO",
@@ -2412,8 +2364,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 151,
-    "trend": 0
+    "pos": 148,
+    "trend": 3
   },
   {
     "atleta_id": "BARDIERU_ELISA",
@@ -2428,8 +2380,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 152,
-    "trend": 0
+    "pos": 149,
+    "trend": 3
   },
   {
     "atleta_id": "VENDITTO_ANNA",
@@ -2444,8 +2396,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 153,
-    "trend": 0
+    "pos": 150,
+    "trend": 3
   },
   {
     "atleta_id": "MILAKI_ARGIRO",
@@ -2460,8 +2412,56 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
+    "pos": 151,
+    "trend": 3
+  },
+  {
+    "atleta_id": "VAN_ANROOIJ_SHIRIN",
+    "cognome": "van",
+    "nome": "Anrooij Shirin",
+    "team_id": "LIDL_TREK",
+    "team_nome": "Lidl - Trek",
+    "punti": 6,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 152,
+    "trend": -2
+  },
+  {
+    "atleta_id": "VEENHOVEN_NIENKE",
+    "cognome": "Veenhoven",
+    "nome": "Nienke",
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
+    "team_nome": "Team Visma | Lease a Bike",
+    "punti": 6,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 153,
+    "trend": -5
+  },
+  {
+    "atleta_id": "LUDWIG_UTTRUP_CECILIE",
+    "cognome": "Ludwig",
+    "nome": "Cecilie Uttrup",
+    "team_id": "CANYON_SRAM",
+    "team_nome": "CANYON//SRAM",
+    "punti": 6,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
     "pos": 154,
-    "trend": 0
+    "trend": -7
   },
   {
     "atleta_id": "BELOTTI_MISIA",
@@ -2720,54 +2720,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "NELSON_JOSIE",
-    "cognome": "NELSON",
-    "nome": "JOSIE",
-    "team_id": "TEAM_PICNIC_POSTNL",
-    "team_nome": "TEAM PICNIC POSTNL",
-    "punti": 3,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 171,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VOLSTAD_ALEXANDRA",
-    "cognome": "VOLSTAD",
-    "nome": "ALEXANDRA",
-    "team_id": "EF_EDUCATION_OATLY",
-    "team_nome": "EF EDUCATION OATLY",
-    "punti": 3,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 172,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MORIER_EMILIE",
-    "cognome": "MORIER",
-    "nome": "EMILIE",
-    "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
-    "team_nome": "ST MICHEL-PREFERENCE HOME-AUBER93",
-    "punti": 3,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 173,
-    "trend": 0
-  },
-  {
     "atleta_id": "MARROCU_AURORA",
     "cognome": "MARROCU",
     "nome": "AURORA",
@@ -2780,8 +2732,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 174,
-    "trend": 0
+    "pos": 171,
+    "trend": 3
   },
   {
     "atleta_id": "NAHULIAK_DARYNA",
@@ -2796,8 +2748,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 175,
-    "trend": 0
+    "pos": 172,
+    "trend": 3
   },
   {
     "atleta_id": "SILO_GIADA",
@@ -2812,8 +2764,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 176,
-    "trend": 0
+    "pos": 173,
+    "trend": 3
   },
   {
     "atleta_id": "MAGNALDI_ERICA",
@@ -2828,8 +2780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 177,
-    "trend": 0
+    "pos": 174,
+    "trend": 3
   },
   {
     "atleta_id": "BRADU_TEODORA",
@@ -2844,8 +2796,56 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
+    "pos": 175,
+    "trend": 3
+  },
+  {
+    "atleta_id": "MORIER_EMILIE",
+    "cognome": "Morier",
+    "nome": "Émilie",
+    "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
+    "team_nome": "St Michel - Preference Home - Auber93",
+    "punti": 3,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 176,
+    "trend": -3
+  },
+  {
+    "atleta_id": "VOLSTAD_ALEXANDRA",
+    "cognome": "Volstad",
+    "nome": "Alexandra",
+    "team_id": "EF_EDUCATION_OATLY",
+    "team_nome": "EF Education-Oatly",
+    "punti": 3,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 177,
+    "trend": -5
+  },
+  {
+    "atleta_id": "NELSON_JOSIE",
+    "cognome": "Nelson",
+    "nome": "Josie",
+    "team_id": "TEAM_PICNIC_POSTNL",
+    "team_nome": "Team Picnic PostNL",
+    "punti": 3,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
     "pos": 178,
-    "trend": 0
+    "trend": -7
   },
   {
     "atleta_id": "STEINMANN_LIVIA",
