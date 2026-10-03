@@ -8107,29 +8107,42 @@ app.get('/api/ic-image', async (req, res) => {
       res.set('Cache-Control', 'public, max-age=86400');
       return res.send(cached.buf);
     }
-    const lib = target.startsWith('https') ? require('https') : require('http');
-    const u = new URL(target);
-    const proxyReq = lib.request(
-      { hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
-        rejectUnauthorized: false, headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 },
-      proxyRes => {
-        if (proxyRes.statusCode !== 200) { res.status(502).send('fetch fallito'); proxyRes.resume(); return; }
-        const chunks = [];
-        proxyRes.on('data', c => chunks.push(c));
-        proxyRes.on('end', () => {
-          const buf = Buffer.concat(chunks);
-          const ct = proxyRes.headers['content-type'] || 'image/jpeg';
-          _icImgCache.set(target, { buf, ct, ts: Date.now() });
-          if (_icImgCache.size > 500) _icImgCache.delete(_icImgCache.keys().next().value);
-          res.set('Content-Type', ct);
-          res.set('Cache-Control', 'public, max-age=86400');
-          res.send(buf);
-        });
-      }
-    );
-    proxyReq.on('error', () => res.status(502).send('errore proxy'));
-    proxyReq.on('timeout', () => { proxyReq.destroy(); res.status(504).send('timeout'); });
-    proxyReq.end();
+    // ciclismo.info ora risponde 301 http→https: senza seguire il redirect
+    // ogni foto (tutte salvate con URL http://) tornava 502 e restava rotta.
+    // Segue fino a 3 redirect, solo verso altri sottodomini ciclismo.info.
+    const fetchImg = (urlStr, hops) => {
+      const lib = urlStr.startsWith('https') ? require('https') : require('http');
+      const u = new URL(urlStr);
+      const proxyReq = lib.request(
+        { hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
+          rejectUnauthorized: false, headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 },
+        proxyRes => {
+          const loc = proxyRes.headers.location;
+          if ([301, 302, 307, 308].includes(proxyRes.statusCode) && loc && hops < 3) {
+            proxyRes.resume();
+            const next = new URL(loc, urlStr).toString();
+            if (!/^https?:\/\/[a-z]+\.ciclismo\.info\//i.test(next)) { res.status(502).send('redirect non consentito'); return; }
+            return fetchImg(next, hops + 1);
+          }
+          if (proxyRes.statusCode !== 200) { res.status(502).send('fetch fallito'); proxyRes.resume(); return; }
+          const chunks = [];
+          proxyRes.on('data', c => chunks.push(c));
+          proxyRes.on('end', () => {
+            const buf = Buffer.concat(chunks);
+            const ct = proxyRes.headers['content-type'] || 'image/jpeg';
+            _icImgCache.set(target, { buf, ct, ts: Date.now() });
+            if (_icImgCache.size > 500) _icImgCache.delete(_icImgCache.keys().next().value);
+            res.set('Content-Type', ct);
+            res.set('Cache-Control', 'public, max-age=86400');
+            res.send(buf);
+          });
+        }
+      );
+      proxyReq.on('error', () => { if (!res.headersSent) res.status(502).send('errore proxy'); });
+      proxyReq.on('timeout', () => { proxyReq.destroy(); if (!res.headersSent) res.status(504).send('timeout'); });
+      proxyReq.end();
+    };
+    fetchImg(target, 0);
   } catch (e) { res.status(500).send(e.message); }
 });
 
