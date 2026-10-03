@@ -743,6 +743,13 @@ def fetch_pending_extra_results(races_map: dict) -> list[dict]:
             pts = row.get("punti_effettivi")
             if pts is None:
                 pts = BASE_PTS.get(pos, 0) * mult
+            # Gara diventata Campionato Regionale per via del campione assegnato
+            # dall'admin: anche le righe inserite a mano seguono il nuovo x2
+            # (i loro punti_effettivi erano calcolati col coefficiente di allora).
+            row_tipo = row.get("tipo") or "regionale"
+            if row.get("gara_id") in FORCED_CR_GARA_IDS and mult < 2:
+                mult, row_tipo = 2, "regionale"
+                pts = BASE_PTS.get(pos, 0) * mult
             if row.get("id") is not None:
                 EXTRA_MANUAL_IDS.append(row["id"])
             extra.append({
@@ -752,7 +759,7 @@ def fetch_pending_extra_results(races_map: dict) -> list[dict]:
                 "atleta_id": row["atleta_id"], "team": row.get("team") or "",
                 "team_id": row.get("team_id") or slug(row.get("team") or ""),
                 "categoria": cat_code, "genere": genere,
-                "tipo": row.get("tipo") or "regionale", "moltiplicatore": mult,
+                "tipo": row_tipo, "moltiplicatore": mult,
                 "punti_effettivi": pts,
                 "regione": row.get("regione") or "ITALIA",
                 "km": row.get("km") or "", "media": row.get("media") or "",
