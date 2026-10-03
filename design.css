@@ -11616,6 +11616,13 @@ main.page:has(.itc-dash) {
   background-clip: padding-box, border-box;
   box-shadow: 0 2px 10px rgba(205,33,42,.3), 0 0 0 1px rgba(0,0,0,.15);
 }
+/* Campione regionale nella tabella risultati di una gara */
+.rc-row { background: rgba(47,127,216,.10); box-shadow: inset 3px 0 0 #2F7FD8; }
+.rc-row-badge {
+  display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 10px;
+  font-family: var(--font-heading); font-size: .6rem; font-weight: 800; letter-spacing: .05em;
+  color: #fff; background: #2F7FD8; vertical-align: middle; white-space: nowrap;
+}
 .ci-jersey-text { display: flex; flex-direction: column; line-height: 1.15; }
 .ci-jersey-main { font-size: .8rem; }
 .ci-jersey-sub { font-size: .62rem; font-weight: 700; letter-spacing: .06em; opacity: .8; }

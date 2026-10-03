@@ -1338,6 +1338,17 @@ let _manualRankDelta = new Map();
 let _rankingsIncludedManualIds = new Set();
 // Titoli di Campione Regionale assegnati a mano da un admin — {atleta_id: [{anno,categoria,regione,note},...]}
 let _regionalChampionTitles = {};
+// Stessi titoli indicizzati per gara (quelli assegnati dalla pagina gara) —
+// {gara_id: [titolo,...]} — per evidenziare il campione nella tabella risultati.
+let _regionalChampionByGara = {};
+function _indexRegionalChampions(titles) {
+  _regionalChampionTitles = {};
+  _regionalChampionByGara = {};
+  for (const t of (titles || [])) {
+    (_regionalChampionTitles[t.atleta_id] = _regionalChampionTitles[t.atleta_id] || []).push(t);
+    if (t.gara_id) (_regionalChampionByGara[t.gara_id] = _regionalChampionByGara[t.gara_id] || []).push(t);
+  }
+}
 function _addManualRankDelta(row) {
   if (!row.atleta_id || row.tipo === 'pista') return; // pista ha classifica a sé, non entra in quella stradale
   if (row._manualId != null && _rankingsIncludedManualIds.has(row._manualId)) return;
@@ -1693,10 +1704,7 @@ async function loadAll() {
   _rankingsIncludedManualIds = new Set(Array.isArray(rankingsExtraIncluded) ? rankingsExtraIncluded : []);
   // Titoli di Campione Regionale assegnati a mano da un admin (vedi badge sul
   // profilo atleta) — raggruppati per atleta_id, un atleta può averne più di uno.
-  _regionalChampionTitles = {};
-  for (const t of ((regionalChampions && regionalChampions.titles) || [])) {
-    (_regionalChampionTitles[t.atleta_id] = _regionalChampionTitles[t.atleta_id] || []).push(t);
-  }
+  _indexRegionalChampions((regionalChampions && regionalChampions.titles) || []);
   const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
   applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
   applyRisultatoCorrections(resultsRaw, athletes, risultatoCorrections);
@@ -3411,10 +3419,28 @@ function regionalChampionChipsHtml(atletaId) {
 async function _refreshRegionalChampions() {
   try {
     const { titles } = await apiCall('/regional-champions');
-    _regionalChampionTitles = {};
-    for (const t of (titles || [])) (_regionalChampionTitles[t.atleta_id] = _regionalChampionTitles[t.atleta_id] || []).push(t);
+    _indexRegionalChampions(titles);
   } catch (_) {}
 }
+// Dalla pagina gara: l'admin proclama campione regionale un corridore della
+// tabella. Anno/categoria/prova/regione si ricavano dalla gara stessa; il
+// titolo finisce sul profilo atleta, in tabella e nel racconto della gara.
+window.adminSetRegionalChampion = async function(garaId, atletaId) {
+  const row = (globalData.resultsRaw || []).find(r => r.gara_id === garaId && r.atleta_id === atletaId);
+  if (!row) { alert('Risultato non trovato per questo atleta.'); return; }
+  const disciplina = championDisciplina(row.nome_gara);
+  const nome = `${row.cognome || ''} ${row.nome || ''}`.trim();
+  if (!confirm(`Proclamare ${nome} Campione Regionale (${disciplina.toLowerCase()}) in questa gara?\nSostituisce l'eventuale campione già indicato per la gara.`)) return;
+  try {
+    await apiCall('/admin/regional-champions', { method: 'POST', body: {
+      atleta_id: atletaId, atleta_nome: nome, gara_id: garaId,
+      anno: String(row.data || '').slice(0, 4), categoria: getRankingFileCode(row) || '',
+      disciplina, regione: row.regione || '',
+    } });
+    await _refreshRegionalChampions();
+    route();
+  } catch (e) { alert('Errore: ' + e.message); }
+};
 window.adminAddRegionalTitle = async function(atletaId, defaultCat) {
   const anno = window.prompt('Anno del titolo:', String(new Date().getFullYear()));
   if (!anno) return;
@@ -22856,6 +22882,7 @@ async function renderGara(gara_id) {
     }).join('');
   };
 
+  const _isCRrace = !!(results[0]?.campionato_regionale || calEntry?.campionato_regionale);
   const _buildRows = (arr) => {
     const _rowIsAdmin = authUser()?.role === 'admin';
     let _prevTempo = null;
@@ -22895,13 +22922,21 @@ async function renderGara(gara_id) {
         }
       }
       if (r.posizione > 1) _prevTempo = r.tempo || null;
-      return `<tr>
+      // Campione regionale di questa gara (assegnato dall'admin): riga
+      // evidenziata + badge accanto al nome; l'admin vede anche il pulsante
+      // per proclamarlo (solo nelle gare di campionato regionale).
+      const _rcTitle = (_regionalChampionByGara[r.gara_id] || []).find(t => t.atleta_id === r.atleta_id);
+      const _isRegChamp = !!_rcTitle;
+      const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
+      const _rcBtn = (_rowIsAdmin && _isCRrace && r.atleta_id && !_isRegChamp)
+        ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${esc(r.gara_id)}','${esc(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
+      return `<tr${_isRegChamp ? ' class="rc-row"' : ''}>
         <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
         <td style="font-family:var(--font-heading);font-weight:700">
           <div style="display:flex;align-items:center">
             <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
             <div>
-              <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+              <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>${_rcBadge}${_rcBtn}
               <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
             </div>
           </div>
@@ -27720,10 +27755,13 @@ async function renderRisultati() {
           // rank_dopo_gara è calcolato in loadAll() per ogni risultato
           const rkPos = r.rank_dopo_gara;
           const rkHtml = rkPos ? '<span class="ris-rank-pos">' + rkPos + '° class.</span>' : '';
+          // Campione regionale della gara (assegnato dall'admin sulla pagina gara)
+          const rcHtml = (_regionalChampionByGara[r.gara_id] || []).some(t => t.atleta_id === r.atleta_id)
+            ? '<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE</span>' : '';
           return '<div class="hero-podio-row ris-podio-row" style="animation-delay:' + (i*60) + 'ms">' +
             '<div class="hero-pos ' + pClass + '">' + r.posizione + '&#176;</div>' +
             '<div class="ris-podio-info">' +
-              '<div class="hero-name"><a href="#/atleta/' + esc(r.atleta_id) + '">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a>' + rkHtml + '</div>' +
+              '<div class="hero-name"><a href="#/atleta/' + esc(r.atleta_id) + '">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a>' + rcHtml + rkHtml + '</div>' +
               '<div class="hero-team"><a href="#/team/' + esc(r.team_id) + '" style="color:var(--text-secondary)">' + esc(r.team) + '</a></div>' +
             '</div>' +
           '</div>';

@@ -1317,6 +1317,22 @@ ${JSON.stringify(dataForPrompt, null, 2)}`
   }
 }
 
+// Riga "Campione Regionale" per la gara (assegnato a mano da un admin sulla
+// pagina gara, vedi /api/admin/regional-champions): aggiunta in coda al
+// racconto pubblico e al testo social, così il titolo viene sottolineato
+// anche nel commento della gara oltre che in tabella e sul profilo.
+async function _regionalChampionLineFor(garaId) {
+  try {
+    const { data } = await supabase.from('regional_champion_titles')
+      .select('atleta_nome, anno, disciplina, regione').eq('gara_id', garaId);
+    if (!data || !data.length) return null;
+    return data.map(t => {
+      const prova = t.disciplina && t.disciplina !== 'STRADA' ? ` (${t.disciplina.toLowerCase()})` : '';
+      return `🥇 Campione Regionale${t.regione ? ' ' + t.regione : ''} ${t.anno}${prova}: ${t.atleta_nome || 'atleta'}`;
+    }).join('\n');
+  } catch { return null; }
+}
+
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
@@ -1336,9 +1352,11 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
     if (!aiText) {
       aiText = await _generateAndStoreGaraNarrative(id, { fresh: forceRegen }).catch(() => null);
     }
+    const champLine = await _regionalChampionLineFor(id);
     if (aiText) {
       const credit = await _photoCreditFor(id, cal).catch(() => null);
-      const text = credit ? `${aiText}\n\n📷 Foto: ${credit}` : aiText;
+      let text = champLine ? `${aiText}\n\n${champLine}` : aiText;
+      if (credit) text += `\n\n📷 Foto: ${credit}`;
       return res.json({ text, ai: true });
     }
 
@@ -1355,6 +1373,8 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
       top3,
       '',
       podiumLines.join(' '),
+      champLine ? '' : undefined,
+      champLine || undefined,
       credit ? '' : undefined,
       credit ? `📷 Foto: ${credit}` : undefined,
     ].filter(l => l !== undefined && l !== null);
@@ -1472,8 +1492,10 @@ app.get('/api/gara-narrative/:id', async (req, res) => {
     const { cal, resultsRaw, calendar } = await _fetchCalAndResultsFor(id);
     const credit = await _photoCreditFor(id, cal).catch(() => null);
     const stored = await queries.getGaraNarrative(id).catch(() => null);
+    const champLine = await _regionalChampionLineFor(id);
     if (stored?.text) {
       let text = _stripSocialExtrasForPage(stored.text);
+      if (champLine) text += `\n\n${champLine}`;
       if (credit) text += `\n\n📷 Foto: ${credit}`;
       return res.json({ text, ai: true });
     }
@@ -1483,6 +1505,7 @@ app.get('/api/gara-narrative/:id', async (req, res) => {
     _scheduleGaraNarrativeGeneration(id);
     const { top3, podiumLines } = await _buildGaraNarrative(id, cal, resultsRaw, calendar);
     let text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
+    if (champLine) text += `\n\n${champLine}`;
     if (credit) text += `\n\n📷 Foto: ${credit}`;
     res.json({ text, top3, podiumText: podiumLines.join(' '), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -2389,7 +2412,7 @@ app.get('/api/regional-champions', async (req, res) => {
       return res.json({ titles: _regionalChampionsCache });
     }
     const { data, error } = await supabase.from('regional_champion_titles')
-      .select('id, atleta_id, anno, categoria, disciplina, regione, note').order('anno', { ascending: false });
+      .select('id, atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome').order('anno', { ascending: false });
     if (error) throw error;
     _regionalChampionsCache = data || [];
     _regionalChampionsCacheTs = Date.now();
@@ -2398,12 +2421,18 @@ app.get('/api/regional-champions', async (req, res) => {
 });
 app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
   try {
-    const { atleta_id, anno, categoria, disciplina, regione, note } = req.body || {};
+    const { atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome } = req.body || {};
     if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
     const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
     const disc = DISCIPLINE.includes(String(disciplina || '').toUpperCase()) ? String(disciplina).toUpperCase() : 'STRADA';
+    // Assegnato dalla pagina gara: un solo campione per gara, il nuovo
+    // sostituisce l'eventuale precedente (es. correzione di un errore).
+    if (gara_id) {
+      const { error: delErr } = await supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id);
+      if (delErr) throw delErr;
+    }
     const { error } = await supabase.from('regional_champion_titles')
-      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, created_by: req.user.id });
+      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, gara_id: gara_id || null, atleta_nome: atleta_nome || null, created_by: req.user.id });
     if (error) throw error;
     _regionalChampionsCache = null;
     res.json({ ok: true });
