@@ -3480,7 +3480,7 @@ window._rcPickerSearch = function(q) {
   list.innerHTML = matches.length ? matches.map(([id, a]) => `
     <div onclick="window._rcPickerPick('${esc(id)}')" style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);cursor:pointer;font-size:.86rem">
       <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
-      <span style="color:var(--text-muted);font-size:.74rem"> · ${esc(a.team || '')} · ${esc(catLabel(a.categoria) || '')}</span>
+      <span style="color:var(--text-muted);font-size:.74rem"> · ${esc(a.team_attuale || '')} · ${esc(catLabel(a.categoria) || '')}</span>
     </div>`).join('') : '<div style="padding:10px;color:var(--text-muted);font-size:.82rem">Nessun atleta trovato.</div>';
 };
 window._rcPickerPick = function(id) {
