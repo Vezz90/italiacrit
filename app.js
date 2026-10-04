@@ -3459,7 +3459,7 @@ function championJerseysHtml(champs) {
   return sorted.map(c => {
     const bands = c.kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
     const tip = [c.kind === 'it' ? 'Campione Italiano' : `Campione Regionale${c.regione ? ' ' + _titleCase(c.regione) : ''}`,
-      _titleCase(c.disciplina), FASCIA_LABEL[c.fascia] || '', catLabel(c.categoria) || '', c.anno].filter(Boolean).join(' · ');
+      _titleCase(c.disciplina).replace(' A ', ' a '), FASCIA_LABEL[c.fascia] || '', catLabel(c.categoria) || '', c.anno].filter(Boolean).join(' · ');
     return `<span class="champ-jersey" title="${esc(tip)}"><svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.5)" stroke-width="0.9" stroke-linejoin="round"/>
       <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${bands[0]}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${bands[1]}"/></svg></span>`;
@@ -11411,7 +11411,13 @@ async function updateRankTable() {
   const _champByAth = {}, _champByTeam = {};
   for (const c of _champsNow) {
     if (c.atleta_id) (_champByAth[c.atleta_id] = _champByAth[c.atleta_id] || []).push(c);
-    if (c.team_id && c.categoria === rankCat) (_champByTeam[c.team_id] = _champByTeam[c.team_id] || []).push(c);
+    // Per il team lo stesso titolo conta una volta sola (un cronometro a
+    // squadre è vinto da più corridori dello stesso team: non quattro maglie).
+    if (c.team_id && c.categoria === rankCat) {
+      const list = (_champByTeam[c.team_id] = _champByTeam[c.team_id] || []);
+      const k = `${c.kind}|${c.disciplina}|${c.fascia || ''}|${c.regione || ''}`;
+      if (!list.some(x => `${x.kind}|${x.disciplina}|${x.fascia || ''}|${x.regione || ''}` === k)) list.push(c);
+    }
   }
 
   // Se i filtri regione/mese sono attivi, ricalcoliamo dinamicamente dai risultati raw
