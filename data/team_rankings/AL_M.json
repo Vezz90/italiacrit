@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
+    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
+    "punti": 518,
+    "vittorie": 10,
+    "p1": 10,
+    "p2": 7,
+    "p3": 6,
+    "pout": 32,
+    "n_atleti": 8,
+    "pos": 11
+  },
+  {
     "team_id": "G_S_IPERFINISH_STABBIA",
     "team_nome": "G.S. IPERFINISH STABBIA",
     "punti": 509,
@@ -129,18 +141,6 @@
     "p3": 6,
     "pout": 37,
     "n_atleti": 8,
-    "pos": 11
-  },
-  {
-    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti": 496,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 7,
-    "p3": 6,
-    "pout": 30,
-    "n_atleti": 7,
     "pos": 12
   },
   {
@@ -338,12 +338,12 @@
   {
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
     "team_nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti": 287,
+    "punti": 295,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
     "p3": 4,
-    "pout": 26,
+    "pout": 27,
     "n_atleti": 4,
     "pos": 29
   },
@@ -398,13 +398,13 @@
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 225,
+    "punti": 243,
     "vittorie": 2,
     "p1": 2,
-    "p2": 2,
+    "p2": 3,
     "p3": 7,
-    "pout": 20,
-    "n_atleti": 3,
+    "pout": 22,
+    "n_atleti": 4,
     "pos": 34
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "UC_EMPOLESE",
+    "team_nome": "UC EMPOLESE",
+    "punti": 207,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 5,
+    "p3": 2,
+    "pout": 29,
+    "n_atleti": 7,
+    "pos": 37
+  },
+  {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
     "punti": 199,
@@ -441,7 +453,7 @@
     "p3": 7,
     "pout": 15,
     "n_atleti": 5,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
@@ -453,7 +465,7 @@
     "p3": 4,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "CICLISTICA_DRO",
@@ -465,18 +477,6 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 3,
-    "pos": 39
-  },
-  {
-    "team_id": "UC_EMPOLESE",
-    "team_nome": "UC EMPOLESE",
-    "punti": 192,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 5,
-    "p3": 1,
-    "pout": 28,
-    "n_atleti": 7,
     "pos": 40
   },
   {
@@ -506,12 +506,12 @@
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti": 178,
+    "punti": 181,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 2,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 4,
     "pos": 43
   },

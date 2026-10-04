@@ -2,10 +2,10 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 1019,
-    "vittorie": 21,
-    "p1": 21,
-    "p2": 17,
+    "punti": 1046,
+    "vittorie": 22,
+    "p1": 22,
+    "p2": 18,
     "p3": 8,
     "pout": 65,
     "n_atleti": 6,
@@ -74,23 +74,23 @@
   {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
-    "punti": 451,
+    "punti": 457,
     "vittorie": 8,
     "p1": 8,
     "p2": 9,
     "p3": 7,
-    "pout": 29,
+    "pout": 30,
     "n_atleti": 6,
     "pos": 7
   },
   {
     "team_id": "S_C_COTIGNOLESE",
     "team_nome": "S.C.COTIGNOLESE",
-    "punti": 446,
+    "punti": 456,
     "vittorie": 15,
     "p1": 15,
     "p2": 6,
-    "p3": 4,
+    "p3": 5,
     "pout": 16,
     "n_atleti": 2,
     "pos": 8
@@ -194,12 +194,12 @@
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 292,
+    "punti": 297,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
     "p3": 4,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 5,
     "pos": 17
   },
@@ -446,12 +446,12 @@
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
     "team_nome": "UC GODIGESE ABRA IRIDE",
-    "punti": 144,
+    "punti": 147,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 4,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 2,
     "pos": 38
   },
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "UNIONE_CICLISTICA_MIRANO",
+    "team_nome": "UNIONE CICLISTICA MIRANO",
+    "punti": 130,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 1,
+    "pos": 43
+  },
+  {
     "team_id": "SESTU_BIKE_A_S_D",
     "team_nome": "SESTU BIKE A.S.D.",
     "punti": 128,
@@ -513,7 +525,7 @@
     "p3": 1,
     "pout": 23,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -525,7 +537,7 @@
     "p3": 2,
     "pout": 22,
     "n_atleti": 4,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "UC_DONORATICO",
@@ -537,7 +549,7 @@
     "p3": 4,
     "pout": 22,
     "n_atleti": 4,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -549,7 +561,7 @@
     "p3": 4,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "PEDALE_TOSCANO_PONTICINO",
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -573,18 +585,6 @@
     "p3": 1,
     "pout": 22,
     "n_atleti": 4,
-    "pos": 48
-  },
-  {
-    "team_id": "UNIONE_CICLISTICA_MIRANO",
-    "team_nome": "UNIONE CICLISTICA MIRANO",
-    "punti": 122,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 1,
     "pos": 49
   },
   {
@@ -674,12 +674,12 @@
   {
     "team_id": "G_C_POSTIOMA",
     "team_nome": "G.C.POSTIOMA",
-    "punti": 97,
+    "punti": 98,
     "vittorie": 0,
     "p1": 0,
     "p2": 4,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 1,
     "pos": 57
   },
@@ -996,6 +996,30 @@
     "pos": 83
   },
   {
+    "team_id": "A_S_D_SACILESE",
+    "team_nome": "A.S.D. SACILESE",
+    "punti": 50,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 4,
+    "pos": 84
+  },
+  {
+    "team_id": "KD_SLOGA_1902_IDRIJA",
+    "team_nome": "KD SLOGA 1902 IDRIJA",
+    "punti": 50,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 85
+  },
+  {
     "team_id": "G_S_TAVO_BONIN_BIKE",
     "team_nome": "G.S. TAVO BONIN BIKE",
     "punti": 50,
@@ -1005,7 +1029,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 84
+    "pos": 86
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -1017,7 +1041,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 85
+    "pos": 87
   },
   {
     "team_id": "A_S_D_U_S_F_COPPI_MONTECCHIO_P",
@@ -1029,19 +1053,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 86
-  },
-  {
-    "team_id": "KD_SLOGA_1902_IDRIJA",
-    "team_nome": "KD SLOGA 1902 IDRIJA",
-    "punti": 48,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "S_C_TORRILE_PR",
@@ -1053,18 +1065,6 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 88
-  },
-  {
-    "team_id": "A_S_D_SACILESE",
-    "team_nome": "A.S.D. SACILESE",
-    "punti": 46,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 4,
     "pos": 89
   },
   {

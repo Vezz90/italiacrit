@@ -24,28 +24,40 @@
     "pos": 2
   },
   {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 473,
+    "vittorie": 12,
+    "p1": 12,
+    "p2": 6,
+    "p3": 6,
+    "pout": 25,
+    "n_atleti": 5,
+    "pos": 3
+  },
+  {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 466,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 451,
+    "vittorie": 0,
+    "p1": 0,
     "p2": 6,
     "p3": 6,
     "pout": 25,
     "n_atleti": 6,
-    "pos": 3
+    "pos": 4
   },
   {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 463,
-    "vittorie": 12,
-    "p1": 12,
-    "p2": 6,
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 382,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
     "p3": 5,
-    "pout": 25,
-    "n_atleti": 5,
-    "pos": 4
+    "pout": 43,
+    "n_atleti": 7,
+    "pos": 5
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
@@ -57,26 +69,14 @@
     "p3": 5,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 5
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 372,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 5,
-    "p3": 5,
-    "pout": 40,
-    "n_atleti": 7,
     "pos": 6
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 297,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 312,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 3,
     "p3": 1,
     "pout": 11,
@@ -86,12 +86,12 @@
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 226,
+    "punti": 244,
     "vittorie": 3,
     "p1": 3,
-    "p2": 5,
+    "p2": 6,
     "p3": 3,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 2,
     "pos": 8
   },
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 178,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 30,
+    "n_atleti": 6,
+    "pos": 10
+  },
+  {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
     "punti": 175,
@@ -117,18 +129,6 @@
     "p3": 2,
     "pout": 17,
     "n_atleti": 2,
-    "pos": 10
-  },
-  {
-    "team_id": "GS_CICLI_FIORIN_ASD",
-    "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 174,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 29,
-    "n_atleti": 6,
     "pos": 11
   },
   {
@@ -194,12 +194,12 @@
   {
     "team_id": "BLU_TEAM",
     "team_nome": "BLU TEAM",
-    "punti": 96,
+    "punti": 104,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 1,
     "pos": 17
   },
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA_F",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 45
+  },
+  {
     "team_id": "TEAM_SWORD",
     "team_nome": "TEAM SWORD",
     "punti": 15,
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -549,7 +561,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
+  },
+  {
+    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
+    "team_nome": "FOLIGNO CYCLING TEAM ASD",
+    "punti": 15,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 48
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE",
@@ -561,7 +585,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 49
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -573,7 +597,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 50
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
@@ -585,19 +609,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 49
-  },
-  {
-    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
-    "team_nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "KK_TROPOVCI",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "ASD_ABRACALABRIA",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "PIEMONTE",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 0,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "RECANATI_BIKE_TEAM_ASD",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "PIKA_TEAM_BY_MASTERCARD",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "GERMANIA",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "LIGURIA",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "VALLE_D_AOSTA",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "MARCHE",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "FRIULI_VENEZIA_GIULIA",
@@ -789,6 +801,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 66
+    "pos": 67
   }
 ]

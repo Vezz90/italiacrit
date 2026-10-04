@@ -110,10 +110,10 @@
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
     "team_nome": "G.S. TAVO BONIN BIKE",
-    "punti": 291,
+    "punti": 303,
     "vittorie": 4,
     "p1": 4,
-    "p2": 10,
+    "p2": 11,
     "p3": 3,
     "pout": 14,
     "n_atleti": 3,
@@ -170,14 +170,38 @@
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 247,
+    "punti": 250,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
     "p3": 2,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 2,
     "pos": 15
+  },
+  {
+    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "punti": 250,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 3,
+    "pout": 29,
+    "n_atleti": 3,
+    "pos": 16
+  },
+  {
+    "team_id": "UC_GODIGESE_ABRA_IRIDE",
+    "team_nome": "UC GODIGESE ABRA IRIDE",
+    "punti": 249,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 4,
+    "p3": 7,
+    "pout": 16,
+    "n_atleti": 3,
+    "pos": 17
   },
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
@@ -189,7 +213,7 @@
     "p3": 2,
     "pout": 23,
     "n_atleti": 2,
-    "pos": 16
+    "pos": 18
   },
   {
     "team_id": "A_S_D_SPORTEVEN_CYCLING_GROUP",
@@ -201,19 +225,7 @@
     "p3": 4,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 17
-  },
-  {
-    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 241,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 2,
-    "p3": 3,
-    "pout": 27,
-    "n_atleti": 3,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "VC_SAN_VENDEMIANO",
@@ -225,7 +237,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -237,7 +249,7 @@
     "p3": 5,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -249,19 +261,19 @@
     "p3": 4,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 21
+    "pos": 22
   },
   {
-    "team_id": "UC_GODIGESE_ABRA_IRIDE",
-    "team_nome": "UC GODIGESE ABRA IRIDE",
-    "punti": 224,
+    "team_id": "A_S_D_SACILESE",
+    "team_nome": "A.S.D. SACILESE",
+    "punti": 219,
     "vittorie": 3,
     "p1": 3,
-    "p2": 4,
-    "p3": 6,
-    "pout": 16,
-    "n_atleti": 3,
-    "pos": 22
+    "p2": 7,
+    "p3": 3,
+    "pout": 22,
+    "n_atleti": 5,
+    "pos": 23
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -273,18 +285,6 @@
     "p3": 7,
     "pout": 18,
     "n_atleti": 4,
-    "pos": 23
-  },
-  {
-    "team_id": "A_S_D_SACILESE",
-    "team_nome": "A.S.D. SACILESE",
-    "punti": 217,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 7,
-    "p3": 3,
-    "pout": 21,
-    "n_atleti": 5,
     "pos": 24
   },
   {
@@ -336,6 +336,18 @@
     "pos": 28
   },
   {
+    "team_id": "A_S_D_CICLISTICA_MONSELICE",
+    "team_nome": "A.S.D. CICLISTICA MONSELICE",
+    "punti": 197,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 4,
+    "p3": 4,
+    "pout": 20,
+    "n_atleti": 2,
+    "pos": 29
+  },
+  {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
     "punti": 193,
@@ -345,7 +357,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -357,7 +369,7 @@
     "p3": 1,
     "pout": 41,
     "n_atleti": 5,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -369,7 +381,7 @@
     "p3": 3,
     "pout": 26,
     "n_atleti": 5,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -381,18 +393,6 @@
     "p3": 4,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 32
-  },
-  {
-    "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 189,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 4,
-    "pout": 19,
-    "n_atleti": 2,
     "pos": 33
   },
   {
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "C_S_LIBERTAS_SCORZE",
+    "team_nome": "C.S. LIBERTAS SCORZE'",
+    "punti": 101,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 11,
+    "n_atleti": 2,
+    "pos": 63
+  },
+  {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
     "punti": 101,
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -777,7 +789,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -789,7 +801,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -801,18 +813,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 67
-  },
-  {
-    "team_id": "C_S_LIBERTAS_SCORZE",
-    "team_nome": "C.S. LIBERTAS SCORZE'",
-    "punti": 95,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 2,
     "pos": 68
   },
   {
@@ -1634,12 +1634,12 @@
   {
     "team_id": "LA_TERMOPIAVE_VALCAVASIA_JUNIOR_TEAM",
     "team_nome": "LA TERMOPIAVE VALCAVASIA JUNIOR TEAM",
-    "punti": 13,
+    "punti": 14,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 2,
     "pos": 137
   },
