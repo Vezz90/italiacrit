@@ -1324,11 +1324,12 @@ ${JSON.stringify(dataForPrompt, null, 2)}`
 async function _regionalChampionLineFor(garaId) {
   try {
     const { data } = await supabase.from('regional_champion_titles')
-      .select('atleta_nome, anno, disciplina, regione').eq('gara_id', garaId);
+      .select('atleta_nome, anno, disciplina, regione, fascia').eq('gara_id', garaId);
     if (!data || !data.length) return null;
     return data.map(t => {
       const prova = t.disciplina && t.disciplina !== 'STRADA' ? ` (${t.disciplina.toLowerCase()})` : '';
-      return `🥇 Campione Regionale${t.regione ? ' ' + t.regione : ''} ${t.anno}${prova}: ${t.atleta_nome || 'atleta'}`;
+      const fascia = t.fascia === 'UNDER23' ? ' Under 23' : t.fascia === 'ELITE' ? ' Elite' : '';
+      return `🥇 Campione Regionale${fascia}${t.regione ? ' ' + t.regione : ''} ${t.anno}${prova}: ${t.atleta_nome || 'atleta'}`;
     }).join('\n');
   } catch { return null; }
 }
@@ -2412,7 +2413,7 @@ app.get('/api/regional-champions', async (req, res) => {
       return res.json({ titles: _regionalChampionsCache });
     }
     const { data, error } = await supabase.from('regional_champion_titles')
-      .select('id, atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome').order('anno', { ascending: false });
+      .select('id, atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome, fascia').order('anno', { ascending: false });
     if (error) throw error;
     _regionalChampionsCache = data || [];
     _regionalChampionsCacheTs = Date.now();
@@ -2421,18 +2422,23 @@ app.get('/api/regional-champions', async (req, res) => {
 });
 app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
   try {
-    const { atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome } = req.body || {};
+    const { atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome, fascia } = req.body || {};
     if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
     const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
     const disc = DISCIPLINE.includes(String(disciplina || '').toUpperCase()) ? String(disciplina).toUpperCase() : 'STRADA';
     // Assegnato dalla pagina gara: un solo campione per gara, il nuovo
     // sostituisce l'eventuale precedente (es. correzione di un errore).
+    // Nelle gare dilettanti Under 23 ed Elite corrono insieme e il titolo è
+    // doppio: l'unicità è per gara + fascia (UNDER23 / ELITE / nessuna).
+    const fas = ['UNDER23', 'ELITE'].includes(String(fascia || '').toUpperCase()) ? String(fascia).toUpperCase() : null;
     if (gara_id) {
-      const { error: delErr } = await supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id);
+      let del = supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id);
+      del = fas ? del.eq('fascia', fas) : del.is('fascia', null);
+      const { error: delErr } = await del;
       if (delErr) throw delErr;
     }
     const { error } = await supabase.from('regional_champion_titles')
-      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, gara_id: gara_id || null, atleta_nome: atleta_nome || null, created_by: req.user.id });
+      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, gara_id: gara_id || null, atleta_nome: atleta_nome || null, fascia: fas, created_by: req.user.id });
     if (error) throw error;
     _regionalChampionsCache = null;
     res.json({ ok: true });
