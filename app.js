@@ -11233,7 +11233,7 @@ window.setAlboYear   = (y) => { alboYear = y; renderAlboDoro(); };
 const ALBO_REGIONI = ['ABRUZZO','BASILICATA','BOLZANO','CALABRIA','CAMPANIA','EMILIA ROMAGNA','FRIULI VENEZIA GIULIA',
   'LAZIO','LIGURIA','LOMBARDIA','MARCHE','MOLISE','PIEMONTE','PUGLIA','SARDEGNA','SICILIA','TOSCANA','TRENTO','UMBRIA','VALLE D AOSTA','VENETO'];
 const ALBO_PROVE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
-const _titleCase = (t) => String(t || '').toLowerCase().replace(/(^|\s)(\S)/g, (_, a, b) => a + b.toUpperCase());
+const _titleCase = (t) => String(t || '').toLowerCase().replace(/(^|\s)(\S)/g, (_, a, b) => a + b.toUpperCase()).replace('Valle D Aosta', "Valle d'Aosta");
 function _alboCampioniHtml(code) {
   const all = collectChampions({ catCode: code });
   const years = [...new Set(all.map(c => c.anno))].sort((a, b) => b - a);
@@ -11301,7 +11301,7 @@ function _alboCampioniHtml(code) {
     const itaRow = ita.length
       ? `<div class="albo-season"><div class="albo-season-year" style="min-width:150px">Campione italiano</div><div class="albo-podium">${ita.map(chipLink).join('')}</div></div>` : '';
     return `<div class="albo-prova-title" style="margin:18px 0 6px;font-family:var(--font-heading);font-weight:800;letter-spacing:.05em">${esc(p)}
-        <span class="albo-missing" style="font-weight:400;letter-spacing:0;margin-left:8px">${assegnate} di ${regions.length} regioni con titolare</span></div>
+        ${regions.length ? `<span class="albo-missing" style="font-weight:400;letter-spacing:0;margin-left:8px">${assegnate} di ${regions.length} regioni con titolare</span>` : ''}</div>
       <div class="albo-doro-list">${itaRow}${regionRows}</div>`;
   }).join('');
 
