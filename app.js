@@ -21294,7 +21294,7 @@ function _mrAutoMatchAthlete(rawCognome, rawNome, rawTeam, meta) {
   return best;
 }
 
-window.openManualResultBulkForm = (garaId, prefilledRows) => {
+window.openManualResultBulkForm = (garaId, prefilledRows, catHint) => {
   const user = authUser();
   // Aperto a chiunque sia loggato, non solo admin — richiesta esplicita
   // dell'utente 2026-09-03: gli appassionati devono poter inserire risultati
@@ -21303,6 +21303,19 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
   const allRows = (globalData?.resultsRaw || []).filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
   const sample = allRows[0];
   window._mrMeta = _mrDeriveMeta(garaId, sample);
+  // Suggerimento di categoria dalla pagina da cui si è aperto il form: serve
+  // quando l'id di calendario "nudo" appartiene a un'ALTRA categoria dello
+  // stesso evento (es. il calendario ha una voce "Juniores" con l'id nudo e
+  // voci separate per Allievi/Esordienti): senza, il form deduceva la
+  // categoria dalla voce Juniores anche aprendolo dalla pagina Allievi, e il
+  // risultato finiva in una gara Juniores creata dal nulla.
+  window._mrBulkCatHint = catHint || '';
+  if (catHint && /^(ELI|JUN|AL|ES1|ES2)_[MF]$/.test(catHint) && !/_(ELI|JUN|AL|ES1|ES2)_[MF]$/.test(garaId)) {
+    window._mrMeta.categoria = catHint;
+    window._mrMeta.genere = catHint.slice(-1);
+    window._mrMeta.esordientiAmbiguous = false;
+    window._mrMeta.categoriaUnresolved = false;
+  }
   window._mrBulkGaraId = garaId;
   window._mrBulkFromOcr = !!(prefilledRows && prefilledRows.length);
   if (prefilledRows && prefilledRows.length) {
@@ -21343,7 +21356,7 @@ window.openManualResultBulkForm = (garaId, prefilledRows) => {
       <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.${prefilledRows && prefilledRows.length ? ' <strong style="color:var(--accent)">Righe estratte dalla foto — controlla nomi e team prima di salvare, l\'OCR può sbagliare su scritte poco chiare o tagliate.</strong>' : ''}</p>
       ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-bulk-anno') : ''}
       ${window._mrMeta?.categoriaUnresolved ? _mrCategoriaPicker('mr-bulk-cat') : ''}
-      ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
+      ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}','${esc(window._mrBulkCatHint || '')}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
       <div id="mr-bulk-rows"></div>
       <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
       <div id="mr-bulk-err" style="color:#EF4444;font-size:0.8rem;margin:8px 0;display:none"></div>
@@ -21587,7 +21600,7 @@ window._mrBulkSubmitCreateAthlete = async (idx) => {
 // corregge quel che l'OCR ha letto male (nomi/team tagliati dal bordo della
 // foto sono un caso reale, segnalato dall'utente) e salva con lo stesso
 // meccanismo di sempre. Aperto a chiunque sia loggato, non solo admin.
-window.openOcrArrivoUpload = (garaId) => {
+window.openOcrArrivoUpload = (garaId, catHint) => {
   const user = authUser();
   if (!user) { showToast('Accedi per inserire un risultato da foto', 'info'); return; }
   const input = document.createElement('input');
@@ -21615,7 +21628,7 @@ window.openOcrArrivoUpload = (garaId) => {
         method: 'POST', body: { image: base64, media_type: mediaType },
       });
       if (!rows || !rows.length) { showToast('Non ho trovato una tabella di arrivo leggibile in questa foto — prova con un\'altra foto o inserisci a mano', 'error'); return; }
-      window.openManualResultBulkForm(garaId, rows);
+      window.openManualResultBulkForm(garaId, rows, catHint);
       showToast(`✓ ${rows.length} righe estratte — controllale prima di salvare`);
     } catch (e) { showToast('Errore lettura foto: ' + e.message, 'error'); }
     finally { cleanup(); }
@@ -22792,6 +22805,13 @@ async function renderGara(gara_id) {
   // selettore categoria; la MODIFICA di una riga già inserita resta
   // invariata (usa sempre il gara_id reale della riga, dai bottoni ✏️).
   const _calBareId = calEntry?.id || toCalId(gara_id);
+  // Se questa gara (con la sua categoria nel gara_id) è agganciata a una voce
+  // di calendario DIVERSA dall'id nudo, l'id nudo appartiene a un'altra
+  // categoria dello stesso evento: il form deve partire dalla categoria di
+  // questa pagina, non da quella della voce nuda.
+  const _mappedCalForPage = (globalData.garaToCalId || {})[gara_id];
+  const _pageCatHint = (_mappedCalForPage && _mappedCalForPage !== _calBareId)
+    ? ((gara_id.match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/) || [])[1] || '') : '';
   let results = resultsRaw.filter(r => r.gara_id === gara_id);
   // Fallback quando gara_id è l'id "nudo" di calendario (senza suffisso
   // categoria, es. "..._TERZA_TAPPA_2026-09-11") invece del gara_id nativo
@@ -22889,8 +22909,8 @@ async function renderGara(gara_id) {
           ${adminEditBtn('gara', primaryGaraId)}
           ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
           ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">➕ Aggiungi risultati</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">📷 Da foto ordine d'arrivo</button>` : ''}
         </div>
       </div>
       <div class="card" style="padding:20px 24px;margin-top:16px">
@@ -23698,8 +23718,8 @@ async function renderGara(gara_id) {
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
         ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}')">➕ Aggiungi risultati</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">➕ Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">📷 Da foto ordine d'arrivo</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${_stageTabsHtml}
