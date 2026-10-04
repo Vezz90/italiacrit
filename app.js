@@ -27030,10 +27030,20 @@ function toCalId(garaId) {
 // per id (garaToCalId) non li aggancia, e l'evento compariva sia coi risultati
 // sia come "gara senza risultati". Qui: stessa DATA + nome con parole
 // distintive in comune + categoria/genere coerenti.
-const _CAL_MATCH_STOP = new Set('DI DEL DELLA DEI DELLE DEGLI DELL DA IN CON PER GRAN PREMIO GP TROFEO TR COPPA MEMORIAL MEM EDIZIONE PROVA VALIDA VALEVOLE COME CAMPIONATO REGIONALE ITALIANO GARA UNICA ESORDIENTI ESORDIENTE ALLIEVI ALLIEVE ALLIEVO JUNIORES JUNIOR ELITE UNDER DONNE DONNA ANNO PRIMO SECONDO TAPPA PRIMA SECONDA TERZA QUARTA QUINTA SESTA SETTIMA OTTAVA CLASSIFICA GENERALE CRONOMETRO INDIVIDUALE LINEA'.split(' '));
+const _CAL_MATCH_STOP = new Set('DI DEL DELLA DEI DELLE DEGLI DELL DA IN CON PER GRAN PREMIO GP TROFEO TR COPPA MEMORIAL MEM EDIZIONE PROVA VALIDA VALEVOLE COME CAMPIONATO REGIONALE ITALIANO GARA UNICA ESORDIENTI ESORDIENTE ALLIEVI ALLIEVE ALLIEVO JUNIORES JUNIOR ELITE UNDER DONNE DONNA ANNO PRIMO SECONDO TAPPA PRIMA SECONDA TERZA QUARTA QUINTA SESTA SETTIMA OTTAVA CLASSIFICA GENERALE CRONOMETRO INDIVIDUALE LINEA CITTA COMUNE GIORNATA'.split(' '));
 function _calNameTokens(s) {
   return new Set(String(s || '').toUpperCase().replace(/['’`]/g, '').replace(/[^A-Z0-9 ]+/g, ' ').split(/\s+/)
     .filter(w => w.length > 2 && !_CAL_MATCH_STOP.has(w) && !/^\d+[A-Z]?$/.test(w)));
+}
+// Numeri d'edizione citati nel nome ("75^", "4A", "17°"): stessa edizione =
+// ulteriore conferma quando le parole distintive in comune sono poche.
+function _calEditionNums(s) {
+  const out = new Set();
+  String(s || '').toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').split(/\s+/).forEach(w => {
+    const m = w.match(/^(\d{1,3})A?$/);
+    if (m) out.add(String(parseInt(m[1], 10)));
+  });
+  return out;
 }
 function _calBandsOf(cat) {
   const c = String(cat || '').toUpperCase(), b = new Set();
@@ -27052,7 +27062,7 @@ function _calResultsIndexByDate() {
     const m = r.gara_id.match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
     if (!m) continue;
     const day = (idx[r.data] = idx[r.data] || {});
-    if (!day[r.gara_id]) day[r.gara_id] = { code: m[1], t: _calNameTokens(r.nome_gara) };
+    if (!day[r.gara_id]) day[r.gara_id] = { code: m[1], t: _calNameTokens(r.nome_gara), n: _calEditionNums(r.nome_gara) };
   }
   globalData._resIdxByDate = idx; globalData._resIdxLen = rr.length;
   return idx;
@@ -27060,6 +27070,7 @@ function _calResultsIndexByDate() {
 function calendarHasResultsByNameDate(g) {
   const ct = _calNameTokens(g.nome);
   if (!ct.size) return false;
+  const cn = _calEditionNums(g.nome);
   const cb = _calBandsOf(g.categoria);
   const mixed = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i.test(g.categoria || '');
   const calF = /DONNE|DONNA/i.test(g.categoria || '');
@@ -27072,7 +27083,8 @@ function calendarHasResultsByNameDate(g) {
     ct.forEach(w => { if (e.t.has(w)) common++; });
     const small = Math.min(ct.size, e.t.size);
     if (!small) continue;
-    if (common >= 2 || (small === 1 && common === 1 && [...ct][0].length >= 6) || (common >= 1 && common / small >= 0.6 && common >= Math.min(2, small))) return true;
+    const sameEdition = common >= 1 && cn.size && [...cn].some(n => e.n.has(n));
+    if (common >= 2 || sameEdition || (small === 1 && common === 1 && [...ct][0].length >= 6) || (common >= 1 && common / small >= 0.6 && common >= Math.min(2, small))) return true;
   }
   return false;
 }
