@@ -456,6 +456,18 @@
     "pos": 38
   },
   {
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
+    "punti": 92,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 39
+  },
+  {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
     "team_nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
     "punti": 91,
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "GRAGNANO_SPORTING_CLUB",
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 6,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "TEAM_POLTI_VISITMALTA",
@@ -489,7 +501,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
@@ -501,7 +513,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "DL_CHEMICALS_EXPERZA",
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
@@ -537,7 +549,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "LIDL_TREK_FUTURE_RACING",
@@ -549,7 +561,7 @@
     "p3": 2,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -573,18 +585,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 48
-  },
-  {
-    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
-    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
-    "punti": 62,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 49
   },
   {

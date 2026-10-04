@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
+    "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
+    "punti": 179,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 19,
+    "n_atleti": 8,
+    "pos": 31
+  },
+  {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
     "punti": 178,
@@ -369,7 +381,7 @@
     "p3": 2,
     "pout": 22,
     "n_atleti": 6,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "AUSTRIA",
@@ -381,7 +393,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "BELGIO",
@@ -393,7 +405,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "DUEPPI_CYCLING_PROJECT",
@@ -405,7 +417,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -417,18 +429,6 @@
     "p3": 2,
     "pout": 17,
     "n_atleti": 6,
-    "pos": 35
-  },
-  {
-    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
-    "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
-    "punti": 125,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 19,
-    "n_atleti": 8,
     "pos": 36
   },
   {

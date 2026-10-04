@@ -896,6 +896,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "GIOIA_FRANCESCO",
+    "cognome": "GIOIA",
+    "nome": "FRANCESCO",
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
+    "punti": 92,
+    "vittorie": 1,
+    "gare": 6,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 1,
+    "pos": 57,
+    "trend": 32
+  },
+  {
     "atleta_id": "JACKOWIAK_JAN_MICHAL",
     "cognome": "JACKOWIAK",
     "nome": "JAN MICHAL",
@@ -908,8 +924,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 57,
-    "trend": 0
+    "pos": 58,
+    "trend": -1
   },
   {
     "atleta_id": "DATI_TOMMASO",
@@ -924,8 +940,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 58,
-    "trend": 0
+    "pos": 59,
+    "trend": -1
   },
   {
     "atleta_id": "DRIESEN_NIELS",
@@ -940,8 +956,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 59,
-    "trend": 0
+    "pos": 60,
+    "trend": -1
   },
   {
     "atleta_id": "RACCANI_SIMONE",
@@ -956,8 +972,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 1,
-    "pos": 60,
-    "trend": 0
+    "pos": 61,
+    "trend": -1
   },
   {
     "atleta_id": "ZOZULIA_ANDRII",
@@ -972,8 +988,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 3,
-    "pos": 61,
-    "trend": 0
+    "pos": 62,
+    "trend": -1
   },
   {
     "atleta_id": "PALTRINIERI_MATTEO",
@@ -988,8 +1004,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 62,
-    "trend": 0
+    "pos": 63,
+    "trend": -1
   },
   {
     "atleta_id": "ZANINI_SIMONE",
@@ -1004,8 +1020,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 2,
-    "pos": 63,
-    "trend": 0
+    "pos": 64,
+    "trend": -1
   },
   {
     "atleta_id": "BIANCALANI_ANDREA",
@@ -1020,8 +1036,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 2,
-    "pos": 64,
-    "trend": 0
+    "pos": 65,
+    "trend": -1
   },
   {
     "atleta_id": "ROWE_ELLIOT",
@@ -1036,8 +1052,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 65,
-    "trend": 0
+    "pos": 66,
+    "trend": -1
   },
   {
     "atleta_id": "STEFANELLI_ANDREA",
@@ -1052,8 +1068,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 66,
-    "trend": 0
+    "pos": 67,
+    "trend": -1
   },
   {
     "atleta_id": "NEMBRINI_DIEGO",
@@ -1068,8 +1084,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 67,
-    "trend": 0
+    "pos": 68,
+    "trend": -1
   },
   {
     "atleta_id": "FRIGO_NICOLAS",
@@ -1084,8 +1100,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 7,
-    "pos": 68,
-    "trend": 0
+    "pos": 69,
+    "trend": -1
   },
   {
     "atleta_id": "GIANNELLI_ALESSIO",
@@ -1100,8 +1116,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 69,
-    "trend": 0
+    "pos": 70,
+    "trend": -1
   },
   {
     "atleta_id": "VAN_KERCKHOVE_MATISSE",
@@ -1116,8 +1132,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 70,
-    "trend": 0
+    "pos": 71,
+    "trend": -1
   },
   {
     "atleta_id": "SIMS_OLIVER_EDWARD_ANTHONY",
@@ -1132,8 +1148,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 71,
-    "trend": 0
+    "pos": 72,
+    "trend": -1
   },
   {
     "atleta_id": "SANFILIPPO_CRISTIAN",
@@ -1148,8 +1164,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 2,
-    "pos": 72,
-    "trend": 0
+    "pos": 73,
+    "trend": -1
   },
   {
     "atleta_id": "TESSIORE_TOMMASO",
@@ -1164,8 +1180,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 73,
-    "trend": 0
+    "pos": 74,
+    "trend": -1
   },
   {
     "atleta_id": "BUTI_ANDREA",
@@ -1180,8 +1196,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 74,
-    "trend": 0
+    "pos": 75,
+    "trend": -1
   },
   {
     "atleta_id": "SAVEKIN_ILIA",
@@ -1196,8 +1212,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 75,
-    "trend": 0
+    "pos": 76,
+    "trend": -1
   },
   {
     "atleta_id": "BORTOLUZZI_GIOVANNI",
@@ -1212,8 +1228,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 76,
-    "trend": 0
+    "pos": 77,
+    "trend": -1
   },
   {
     "atleta_id": "CAPRA_THOMAS",
@@ -1228,8 +1244,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 77,
-    "trend": 0
+    "pos": 78,
+    "trend": -1
   },
   {
     "atleta_id": "MECCIA_LEONARDO",
@@ -1244,8 +1260,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 78,
-    "trend": 0
+    "pos": 79,
+    "trend": -1
   },
   {
     "atleta_id": "ROCCELLA_MARCO",
@@ -1260,8 +1276,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 79,
-    "trend": 0
+    "pos": 80,
+    "trend": -1
   },
   {
     "atleta_id": "ANASTASIA_TOMMASO",
@@ -1276,8 +1292,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 3,
-    "pos": 80,
-    "trend": 0
+    "pos": 81,
+    "trend": -1
   },
   {
     "atleta_id": "QUINTERO_JUAN_DIEGO",
@@ -1292,8 +1308,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 81,
-    "trend": 0
+    "pos": 82,
+    "trend": -1
   },
   {
     "atleta_id": "ROSSETTI_THOMAS",
@@ -1308,8 +1324,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 82,
-    "trend": 0
+    "pos": 83,
+    "trend": -1
   },
   {
     "atleta_id": "BALMER_ALEXANDRE",
@@ -1324,8 +1340,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 83,
-    "trend": 0
+    "pos": 84,
+    "trend": -1
   },
   {
     "atleta_id": "FRATICELLI_LUCA",
@@ -1340,8 +1356,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 1,
-    "pos": 84,
-    "trend": 0
+    "pos": 85,
+    "trend": -1
   },
   {
     "atleta_id": "VILLA_GIACOMO",
@@ -1356,8 +1372,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 85,
-    "trend": 0
+    "pos": 86,
+    "trend": -1
   },
   {
     "atleta_id": "ROGERS_CAMERON",
@@ -1372,8 +1388,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 86,
-    "trend": 0
+    "pos": 87,
+    "trend": -1
   },
   {
     "atleta_id": "DIGNANI_FILIPPO",
@@ -1388,8 +1404,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 87,
-    "trend": 0
+    "pos": 88,
+    "trend": -1
   },
   {
     "atleta_id": "VANHUFFEL_MATTEO",
@@ -1404,24 +1420,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 88,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GIOIA_FRANCESCO",
-    "cognome": "GIOIA",
-    "nome": "FRANCESCO",
-    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
-    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
-    "punti": 62,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 1,
     "pos": 89,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "HAUGLAND_KASPER",
