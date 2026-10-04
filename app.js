@@ -27052,6 +27052,13 @@ function calendarHasResultsByNameDate(g) {
 // di un giro, o la classifica generale, hanno spesso un'etichetta diversa, si
 // riconoscono per nome + finestra di 10 giorni dalla prima voce.
 const _PRO_CAL_RE = /\bclasse\s*1\s*pro\b|\b1\.pro\b|proseries|world\s*tour/i;
+// Voci di calendario che non sono una gara da svolgere in quella data:
+// rinviate / annullate / sospese (le FCI le lascia in calendario con la
+// dicitura nel nome) e segnaposto "DA DEFINIRE". Non avranno mai risultati
+// alla data indicata, quindi non vanno elencate come "gare senza risultati".
+function isNonRaceCalendarEntry(g) {
+  return /\bRINVIAT[AO]\b|ANNULLAT[AO]|SOSPES[AO]|^\s*DA\s+DEFINIRE/i.test(g.nome || '');
+}
 function isProCalendarEntry(g) {
   if (_PRO_CAL_RE.test(g.categoria || '')) return true;
   if (!globalData._proCores || globalData._proCoresLen !== (globalData.calendar || []).length) {
@@ -27756,7 +27763,7 @@ async function renderRisultati() {
     // mostrarla (segnalato dal vivo dall'utente).
     .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
       && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id)
-      && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g))
+      && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g) && !isNonRaceCalendarEntry(g))
     .map(g => ({
       id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
       regione: g.regione, mult: g.moltiplicatore || 1,
@@ -27773,7 +27780,7 @@ async function renderRisultati() {
     ? (calendar || [])
         .filter(g => g.data && g.data <= _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
           && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id) && !_risPcsFoundGaraIds.has(g.id)
-          && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g))
+          && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g) && !isNonRaceCalendarEntry(g))
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
         .map(g => ({
           id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
