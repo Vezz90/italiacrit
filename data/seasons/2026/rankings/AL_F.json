@@ -624,6 +624,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "DE_GREGORIO_ELISA",
+    "cognome": "DE",
+    "nome": "GREGORIO ELISA",
+    "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
+    "team_nome": "FREE BIKE LT - LOGISTICA AMBIENTALE",
+    "punti": 43,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 3,
+    "p3": 0,
+    "pout": 2,
+    "pos": 40,
+    "trend": 1
+  },
+  {
     "atleta_id": "BANI_GIULIA",
     "cognome": "BANI",
     "nome": "GIULIA",
@@ -636,24 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 40,
-    "trend": 0
-  },
-  {
-    "atleta_id": "DE_GREGORIO_ELISA",
-    "cognome": "DE",
-    "nome": "GREGORIO ELISA",
-    "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
-    "team_nome": "FREE BIKE LT - LOGISTICA AMBIENTALE",
-    "punti": 42,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 3,
-    "p3": 0,
-    "pout": 2,
     "pos": 41,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "LISORINI_NINA",

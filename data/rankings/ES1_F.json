@@ -288,6 +288,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BUTTARAZZI_GIULIA",
+    "cognome": "BUTTARAZZI",
+    "nome": "GIULIA",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 111,
+    "vittorie": 5,
+    "gare": 7,
+    "p1": 5,
+    "p2": 2,
+    "p3": 0,
+    "pout": 0,
+    "pos": 19,
+    "trend": 1
+  },
+  {
     "atleta_id": "VOLLERO_SUSANNA",
     "cognome": "VOLLERO",
     "nome": "SUSANNA",
@@ -300,24 +316,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 5,
-    "pos": 19,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BUTTARAZZI_GIULIA",
-    "cognome": "BUTTARAZZI",
-    "nome": "GIULIA",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 99,
-    "vittorie": 5,
-    "gare": 7,
-    "p1": 5,
-    "p2": 2,
-    "p3": 0,
-    "pout": 0,
     "pos": 20,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "ABRIONI_ALESSIA",
@@ -352,6 +352,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BUTTARAZZI_SOFIA",
+    "cognome": "BUTTARAZZI",
+    "nome": "SOFIA",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 92,
+    "vittorie": 0,
+    "gare": 8,
+    "p1": 0,
+    "p2": 5,
+    "p3": 2,
+    "pout": 1,
+    "pos": 23,
+    "trend": 2
+  },
+  {
     "atleta_id": "ARCADU_GRETA",
     "cognome": "ARCADU",
     "nome": "GRETA",
@@ -364,8 +380,8 @@
     "p2": 3,
     "p3": 4,
     "pout": 0,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -1
   },
   {
     "atleta_id": "POIDOMANI_ELENA",
@@ -380,24 +396,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 0,
-    "pos": 24,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BUTTARAZZI_SOFIA",
-    "cognome": "BUTTARAZZI",
-    "nome": "SOFIA",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 82,
-    "vittorie": 0,
-    "gare": 8,
-    "p1": 0,
-    "p2": 5,
-    "p3": 2,
-    "pout": 1,
     "pos": 25,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -448,6 +448,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "CARLINO_MARIA_VITTORIA",
+    "cognome": "CARLINO",
+    "nome": "MARIA VITTORIA",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 68,
+    "vittorie": 2,
+    "gare": 5,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 1,
+    "pos": 29,
+    "trend": 2
+  },
+  {
     "atleta_id": "TESTA_CAROLINA",
     "cognome": "TESTA",
     "nome": "CAROLINA",
@@ -460,8 +476,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 29,
-    "trend": 0
+    "pos": 30,
+    "trend": -1
   },
   {
     "atleta_id": "BOTTARO_SOFIA",
@@ -476,24 +492,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 12,
-    "pos": 30,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CARLINO_MARIA_VITTORIA",
-    "cognome": "CARLINO",
-    "nome": "MARIA VITTORIA",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 60,
-    "vittorie": 2,
-    "gare": 5,
-    "p1": 2,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
     "pos": 31,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "LOMBARDI_ELEONORA",
@@ -560,6 +560,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ALFANO_VITTORIA",
+    "cognome": "ALFANO",
+    "nome": "VITTORIA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 47,
+    "vittorie": 1,
+    "gare": 4,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "pos": 36,
+    "trend": 10
+  },
+  {
     "atleta_id": "LUNARDON_EMMA",
     "cognome": "LUNARDON",
     "nome": "EMMA",
@@ -572,8 +588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "MORO_ELENA",
@@ -588,8 +604,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 9,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "GENTILI_PAOLA",
@@ -604,8 +620,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "D_EMILIO_VITTORIA",
@@ -620,8 +636,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "BACCI_SOFIA",
@@ -636,8 +652,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 40,
-    "trend": 0
+    "pos": 41,
+    "trend": -1
   },
   {
     "atleta_id": "PUTZU_EMMA",
@@ -652,8 +668,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 0,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "BILLIATO_ARIANNA",
@@ -668,8 +684,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 7,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "BANDIZIOL_DILETTA",
@@ -684,8 +700,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 43,
-    "trend": 0
+    "pos": 44,
+    "trend": -1
   },
   {
     "atleta_id": "CAVADA_ANNA",
@@ -700,8 +716,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 11,
-    "pos": 44,
-    "trend": 0
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "TERIACA_ANNA",
@@ -716,24 +732,24 @@
     "p2": 0,
     "p3": 1,
     "pout": 8,
-    "pos": 45,
-    "trend": 0
+    "pos": 46,
+    "trend": -1
   },
   {
-    "atleta_id": "ALFANO_VITTORIA",
-    "cognome": "ALFANO",
-    "nome": "VITTORIA",
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 32,
-    "vittorie": 1,
-    "gare": 4,
-    "p1": 1,
+    "atleta_id": "MASSA_MARTINA",
+    "cognome": "MASSA",
+    "nome": "MARTINA",
+    "team_id": "A_S_D_AMICISUPERSKI",
+    "team_nome": "A.S.D. AMICISUPERSKI",
+    "punti": 24,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
     "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "pos": 46,
-    "trend": 0
+    "p3": 0,
+    "pout": 3,
+    "pos": 47,
+    "trend": 6
   },
   {
     "atleta_id": "FARIAS_NICOLE",
@@ -748,8 +764,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 47,
-    "trend": 0
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "GALLI_MARTINA",
@@ -764,8 +780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 48,
-    "trend": 0
+    "pos": 49,
+    "trend": -1
   },
   {
     "atleta_id": "PIERANGELINI_ALICE",
@@ -780,8 +796,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "BAUCE_MARIA_VITTORIA",
@@ -796,8 +812,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "MOTTA_LUCREZIA",
@@ -812,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 51,
-    "trend": 0
+    "pos": 52,
+    "trend": -1
   },
   {
     "atleta_id": "GAZZOLI_GIULIA",
@@ -828,24 +844,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 52,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MASSA_MARTINA",
-    "cognome": "MASSA",
-    "nome": "MARTINA",
-    "team_id": "A_S_D_AMICISUPERSKI",
-    "team_nome": "A.S.D. AMICISUPERSKI",
-    "punti": 18,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 53,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PEDRONI_MARIA",
