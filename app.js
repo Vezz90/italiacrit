@@ -11216,51 +11216,96 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
 
 // ── PAGINA ALBO D'ORO (menu Classifiche) ──────────────────────────
 let alboGender = 'M', alboCat = 'ES1_M', alboView = 'atleti';
-let alboProva = '', alboReg = ''; // filtri della scheda Campioni
+let alboProva = '', alboYear = ''; // filtri della scheda Campioni
 window.setAlboGender = (g) => { alboGender = g; alboCat = g === 'M' ? 'ES1_M' : 'ES1_F'; renderAlboDoro(); };
 window.setAlboCat    = (c) => { alboCat = c; renderAlboDoro(); };
 window.setAlboView   = (v) => { alboView = v; renderAlboDoro(); };
 window.setAlboProva  = (p) => { alboProva = p; renderAlboDoro(); };
-window.setAlboReg    = (r) => { alboReg = r; renderAlboDoro(); };
+window.setAlboYear   = (y) => { alboYear = y; renderAlboDoro(); };
 
-// Scheda "Campioni" dell'Albo d'Oro: campioni italiani (dai risultati della
-// stagione caricata) e regionali (assegnati a mano dall'admin), anno per anno.
-// Il filtro regione vale solo per i regionali (gli italiani non hanno regione).
+// Scheda "Campioni" dell'Albo d'Oro, divisa per specialità (strada, cronometro,
+// cronometro a squadre, cronoscalata). Per ogni specialità: il campione
+// italiano e, regione per regione, il campione regionale oppure lo stato
+// "da assegnare" (gara di campionato presente nei risultati ma senza titolare,
+// col link alla gara) / "nessuna gara trovata" — così si vede cosa manca.
+// Sulla strada compaiono tutte le regioni; sulle altre specialità solo quelle
+// con una gara o un titolo.
+const ALBO_REGIONI = ['ABRUZZO','BASILICATA','BOLZANO','CALABRIA','CAMPANIA','EMILIA ROMAGNA','FRIULI VENEZIA GIULIA',
+  'LAZIO','LIGURIA','LOMBARDIA','MARCHE','MOLISE','PIEMONTE','PUGLIA','SARDEGNA','SICILIA','TOSCANA','TRENTO','UMBRIA','VALLE D AOSTA','VENETO'];
+const ALBO_PROVE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
+const _titleCase = (t) => String(t || '').toLowerCase().replace(/(^|\s)(\S)/g, (_, a, b) => a + b.toUpperCase());
 function _alboCampioniHtml(code) {
   const all = collectChampions({ catCode: code });
-  const PROVE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
-  const regioni = [...new Set(all.filter(c => c.kind === 'reg' && c.regione).map(c => c.regione))].sort();
-  let list = all;
-  if (alboProva) list = list.filter(c => c.disciplina === alboProva);
-  if (alboReg) list = list.filter(c => c.kind === 'reg' && c.regione === alboReg);
+  const years = [...new Set(all.map(c => c.anno))].sort((a, b) => b - a);
+  const thisYear = String(new Date().getFullYear());
+  if (!years.includes(thisYear)) years.unshift(thisYear);
+  const year = years.includes(alboYear) ? alboYear : years[0];
+
+  // Gare di campionato regionale presenti nei risultati, per regione e specialità.
+  const racesBy = {}; // `${disc}|${regione}` → {gara_id: nome}
+  for (const r of (globalData?.resultsRaw || [])) {
+    if (!r.campionato_regionale || !String(r.data || '').startsWith(year) || getRankingFileCode(r) !== code) continue;
+    const k = `${championDisciplina(r.nome_gara)}|${normalizeRegion(r.regione)}`;
+    (racesBy[k] = racesBy[k] || {})[r.gara_id] = r.nome_gara;
+  }
+
   const filters = `<div class="ranking-filter-bar" style="margin:8px 0 14px;gap:10px">
-      <select class="auth-input" style="max-width:240px" onchange="setAlboProva(this.value)">
-        <option value="">Tutte le prove</option>${PROVE.map(p => `<option value="${p}" ${alboProva === p ? 'selected' : ''}>${p.charAt(0) + p.slice(1).toLowerCase()}</option>`).join('')}
+      <select class="auth-input" style="max-width:200px" onchange="setAlboProva(this.value)">
+        <option value="">Tutte le specialità</option>${ALBO_PROVE.map(p => `<option value="${p}" ${alboProva === p ? 'selected' : ''}>${_titleCase(p)}</option>`).join('')}
       </select>
-      <select class="auth-input" style="max-width:240px" onchange="setAlboReg(this.value)">
-        <option value="">Tutte le regioni</option>${regioni.map(r => `<option value="${esc(r)}" ${alboReg === r ? 'selected' : ''}>${esc(r)}</option>`).join('')}
+      <select class="auth-input" style="max-width:120px" onchange="setAlboYear(this.value)">
+        ${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>${y}</option>`).join('')}
       </select>
     </div>`;
   const head = `<div class="albo-doro-head">
-      <h2>Campioni · ${esc(catLabel(code))}</h2>
-      <p>Campioni italiani (dai risultati) e regionali (assegnati dal pannello admin). Gli anni precedenti si completano man mano.</p>
+      <h2>Campioni · ${esc(catLabel(code))} · ${year}</h2>
+      <p>Campioni italiani (dai risultati) e regionali (assegnati dal pannello admin). Le regioni senza titolare indicano cosa manca.</p>
     </div>`;
-  if (!list.length) return `<section class="albo-doro-card">${head}${filters}<div style="padding:16px;color:var(--text-muted)">Nessun campione per i filtri scelti.</div></section>`;
-  const byYear = {};
-  list.forEach(c => (byYear[c.anno] = byYear[c.anno] || []).push(c));
-  const seasons = Object.keys(byYear).sort((a, b) => b - a).map(y => {
-    const rows = byYear[y].sort((a, b) => (a.kind === b.kind ? (a.regione || '').localeCompare(b.regione || '') : (a.kind === 'it' ? -1 : 1))).map(c => {
-      const href = c.atleta_id ? '#/atleta/' + encodeURIComponent(c.atleta_id) : (c.team_id ? '#/team/' + encodeURIComponent(c.team_id) : '#');
-      const titolo = c.kind === 'it' ? 'Campione Italiano' : `Campione Regionale${c.regione ? ' ' + c.regione : ''}`;
-      const sub = [titolo, FASCIA_LABEL[c.fascia] || '', c.disciplina.charAt(0) + c.disciplina.slice(1).toLowerCase(), c.atleta_id ? c.team : ''].filter(Boolean).join(' · ');
-      return `<a class="albo-pod albo-pod-1" href="${href}">
-        <span class="albo-medal">${c.kind === 'it' ? '🇮🇹' : '🥇'}</span>
-        <span class="albo-pod-main"><span class="albo-name">${esc(c.nome)}</span><span class="albo-sub">${esc(sub)}</span></span>
-      </a>`;
+
+  const chipLink = (c) => {
+    const href = c.atleta_id ? '#/atleta/' + encodeURIComponent(c.atleta_id) : (c.team_id ? '#/team/' + encodeURIComponent(c.team_id) : '#');
+    return `<a class="albo-pod albo-pod-1" href="${href}">
+      <span class="albo-medal">${c.kind === 'it' ? '🇮🇹' : '🥇'}</span>
+      <span class="albo-pod-main"><span class="albo-name">${esc(c.nome)}</span><span class="albo-sub">${esc([FASCIA_LABEL[c.fascia] || '', c.atleta_id ? c.team : ''].filter(Boolean).join(' · '))}</span></span>
+    </a>`;
+  };
+
+  const sections = ALBO_PROVE.filter(p => !alboProva || p === alboProva).map(p => {
+    const ita = all.filter(c => c.kind === 'it' && c.disciplina === p && c.anno === year);
+    const reg = all.filter(c => c.kind === 'reg' && c.disciplina === p && c.anno === year);
+    const byRegion = {};
+    reg.forEach(c => (byRegion[normalizeRegion(c.regione) || '—'] = byRegion[normalizeRegion(c.regione) || '—'] || []).push(c));
+    const raceRegions = Object.keys(racesBy).filter(k => k.startsWith(p + '|')).map(k => k.slice(p.length + 1));
+    const regions = p === 'STRADA'
+      ? [...new Set([...ALBO_REGIONI, ...Object.keys(byRegion), ...raceRegions])]
+      : [...new Set([...Object.keys(byRegion), ...raceRegions])].sort();
+    if (!ita.length && !regions.length) return '';
+    const isElite = /^ELI_/.test(code);
+    let assegnate = 0;
+    const regionRows = regions.map(rg => {
+      const titles = (byRegion[rg] || []).sort((a, b) => (a.fascia || '').localeCompare(b.fascia || ''));
+      const races = racesBy[`${p}|${rg}`] || {};
+      const raceLinks = Object.entries(races).map(([gid, nome]) => `<a href="#/gara/${esc(gid)}">${esc(nome.length > 44 ? nome.slice(0, 44) + '…' : nome)}</a>`).join(' · ');
+      let inner;
+      if (titles.length) {
+        assegnate++;
+        const mancaFascia = isElite && titles.length === 1 ? `<span class="albo-missing" style="margin-left:10px">manca ${titles[0].fascia === 'ELITE' ? 'Under 23' : 'Elite'}${raceLinks ? ' · ' + raceLinks : ''}</span>` : '';
+        inner = titles.map(chipLink).join('') + mancaFascia;
+      } else if (raceLinks) {
+        inner = `<span class="albo-missing">da assegnare · ${raceLinks}</span>`;
+      } else {
+        inner = `<span class="albo-missing">nessuna gara di campionato trovata</span>`;
+      }
+      return `<div class="albo-season"><div class="albo-season-year" style="min-width:150px">${esc(_titleCase(rg))}</div><div class="albo-podium">${inner}</div></div>`;
     }).join('');
-    return `<div class="albo-season"><div class="albo-season-year">${y}</div><div class="albo-podium">${rows}</div></div>`;
+    const itaRow = ita.length
+      ? `<div class="albo-season"><div class="albo-season-year" style="min-width:150px">Campione italiano</div><div class="albo-podium">${ita.map(chipLink).join('')}</div></div>` : '';
+    return `<div class="albo-prova-title" style="margin:18px 0 6px;font-family:var(--font-heading);font-weight:800;letter-spacing:.05em">${esc(p)}
+        <span class="albo-missing" style="font-weight:400;letter-spacing:0;margin-left:8px">${assegnate} di ${regions.length} regioni con titolare</span></div>
+      <div class="albo-doro-list">${itaRow}${regionRows}</div>`;
   }).join('');
-  return `<section class="albo-doro-card">${head}${filters}<div class="albo-doro-list">${seasons}</div></section>`;
+
+  return `<section class="albo-doro-card">${head}${filters}${sections || '<div style="padding:16px;color:var(--text-muted)">Nessun dato per i filtri scelti.</div>'}</section>`;
 }
 
 async function renderAlboDoro() {
