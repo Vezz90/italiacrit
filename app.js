@@ -26992,6 +26992,83 @@ function toCalId(garaId) {
   return (garaId || '').replace(/_[A-Z0-9]+_[MF]$/, '');
 }
 
+// ── Voci di calendario che hanno GIÀ risultati ma sotto un nome diverso ──
+// Il calendario FCI e la pagina risultati scrivono lo stesso evento in modo
+// diverso (numeri d'edizione, "G.P." / "Gran Premio", parole in più come
+// "valevole come campionato...", qualifiche di categoria): il collegamento
+// per id (garaToCalId) non li aggancia, e l'evento compariva sia coi risultati
+// sia come "gara senza risultati". Qui: stessa DATA + nome con parole
+// distintive in comune + categoria/genere coerenti.
+const _CAL_MATCH_STOP = new Set('DI DEL DELLA DEI DELLE DEGLI DELL DA IN CON PER GRAN PREMIO GP TROFEO TR COPPA MEMORIAL MEM EDIZIONE PROVA VALIDA VALEVOLE COME CAMPIONATO REGIONALE ITALIANO GARA UNICA ESORDIENTI ESORDIENTE ALLIEVI ALLIEVE ALLIEVO JUNIORES JUNIOR ELITE UNDER DONNE DONNA ANNO PRIMO SECONDO TAPPA PRIMA SECONDA TERZA QUARTA QUINTA SESTA SETTIMA OTTAVA CLASSIFICA GENERALE CRONOMETRO INDIVIDUALE LINEA'.split(' '));
+function _calNameTokens(s) {
+  return new Set(String(s || '').toUpperCase().replace(/['’`]/g, '').replace(/[^A-Z0-9 ]+/g, ' ').split(/\s+/)
+    .filter(w => w.length > 2 && !_CAL_MATCH_STOP.has(w) && !/^\d+[A-Z]?$/.test(w)));
+}
+function _calBandsOf(cat) {
+  const c = String(cat || '').toUpperCase(), b = new Set();
+  if (/ESORD/.test(c)) b.add('ES');
+  if (/ALLIEV/.test(c)) b.add('AL');
+  if (/JUNIOR/.test(c)) b.add('JUN');
+  if (/ELITE|UNDER/.test(c)) b.add('ELI');
+  return b;
+}
+function _calResultsIndexByDate() {
+  const rr = globalData?.resultsRaw || [];
+  if (globalData._resIdxByDate && globalData._resIdxLen === rr.length) return globalData._resIdxByDate;
+  const idx = {};
+  for (const r of rr) {
+    if (!r.gara_id || !r.data) continue;
+    const m = r.gara_id.match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
+    if (!m) continue;
+    const day = (idx[r.data] = idx[r.data] || {});
+    if (!day[r.gara_id]) day[r.gara_id] = { code: m[1], t: _calNameTokens(r.nome_gara) };
+  }
+  globalData._resIdxByDate = idx; globalData._resIdxLen = rr.length;
+  return idx;
+}
+function calendarHasResultsByNameDate(g) {
+  const ct = _calNameTokens(g.nome);
+  if (!ct.size) return false;
+  const cb = _calBandsOf(g.categoria);
+  const mixed = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i.test(g.categoria || '');
+  const calF = /DONNE|DONNA/i.test(g.categoria || '');
+  for (const e of Object.values(_calResultsIndexByDate()[g.data] || {})) {
+    if (!mixed) {
+      if (cb.size && !cb.has(e.code.replace(/_[MF]$/, '').replace(/^ES[12]$/, 'ES'))) continue;
+      if (calF !== e.code.endsWith('_F')) continue;
+    }
+    let common = 0;
+    ct.forEach(w => { if (e.t.has(w)) common++; });
+    const small = Math.min(ct.size, e.t.size);
+    if (!small) continue;
+    if (common >= 2 || (small === 1 && common === 1 && [...ct][0].length >= 6) || (common >= 1 && common / small >= 0.6 && common >= Math.min(2, small))) return true;
+  }
+  return false;
+}
+// Voci di calendario di validità Pro o superiore (UCI 1.Pro/ProSeries/WorldTour,
+// anche femminili): lo scraper non ne importa i risultati (vedi
+// PRO_VALIDITY_RE nello scraper), quindi non vanno mostrate come "senza
+// risultati". L'etichetta vale per la riga di calendario; le tappe successive
+// di un giro, o la classifica generale, hanno spesso un'etichetta diversa, si
+// riconoscono per nome + finestra di 10 giorni dalla prima voce.
+const _PRO_CAL_RE = /\bclasse\s*1\s*pro\b|\b1\.pro\b|proseries|world\s*tour/i;
+function isProCalendarEntry(g) {
+  if (_PRO_CAL_RE.test(g.categoria || '')) return true;
+  if (!globalData._proCores || globalData._proCoresLen !== (globalData.calendar || []).length) {
+    globalData._proCores = (globalData.calendar || []).filter(c => _PRO_CAL_RE.test(c.categoria || '')).map(c => ({
+      core: ' ' + [..._calNameTokens(c.nome)].join(' ') + ' ', data: c.data, tappe: /tapp/i.test(c.categoria || ''),
+    })).filter(c => c.core.trim().length >= 8);
+    globalData._proCoresLen = (globalData.calendar || []).length;
+  }
+  const nm = ' ' + [..._calNameTokens(g.nome)].join(' ') + ' ';
+  const gd = new Date(g.data + 'T00:00:00');
+  return globalData._proCores.some(c => {
+    if (!nm.includes(c.core)) return false;
+    const delta = Math.round((gd - new Date(c.data + 'T00:00:00')) / 86400000);
+    return c.tappe ? (delta >= 0 && delta <= 10) : delta === 0;
+  });
+}
+
 // ── Modal player unificato (YouTube + podcast), con coda per l'avanzamento
 // automatico dal più vecchio al più recente ────────────────────────────────
 // window._mvCurrentQueueSource: impostato da _loadMediaCreatorArea/
@@ -27678,7 +27755,8 @@ async function renderRisultati() {
     // una card "di oggi" senza titolo è più confusa che utile, meglio non
     // mostrarla (segnalato dal vivo dall'utente).
     .filter(g => g.data === _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
-      && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id))
+      && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id)
+      && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g))
     .map(g => ({
       id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
       regione: g.regione, mult: g.moltiplicatore || 1,
@@ -27694,7 +27772,8 @@ async function renderRisultati() {
   const missingRaces = risShowMissing
     ? (calendar || [])
         .filter(g => g.data && g.data <= _risTodayIso && !_hasResultsToday.has(g.id) && g.nome && g.nome.trim() !== '-'
-          && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id) && !_risPcsFoundGaraIds.has(g.id))
+          && !_bareCatWords.has(g.nome.trim().toUpperCase()) && !_calBareOrphanIds.has(g.id) && !_risPcsFoundGaraIds.has(g.id)
+          && !calendarHasResultsByNameDate(g) && !isProCalendarEntry(g))
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
         .map(g => ({
           id: g.id, nome: g.nome, data: g.data, genere: '', tipo: g.tipo || 'regionale',
