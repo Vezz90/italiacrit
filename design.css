@@ -11628,6 +11628,7 @@ main.page:has(.itc-dash) {
   color: #fff; background: #2F7FD8; vertical-align: middle; white-space: nowrap;
 }
 .team-champions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+.champ-jersey { display: inline-flex; margin-left: 5px; vertical-align: middle; cursor: help; flex-shrink: 0; }
 .albo-missing { color: var(--text-muted); font-style: italic; font-size: .8rem; }
 .albo-missing a { color: var(--accent); }
 .ci-jersey-text { display: flex; flex-direction: column; line-height: 1.15; }

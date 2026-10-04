@@ -3450,6 +3450,21 @@ function collectChampions({ year, catCode, teamId } = {}) {
   return out;
 }
 const FASCIA_LABEL = { UNDER23: 'Under 23', ELITE: 'Elite' };
+// Maglie "campione" nelle classifiche: una piccola maglia per ogni titolo
+// (tricolore = italiano, azzurra = regionale), col tooltip che dice a cosa si
+// riferisce. Più titoli = più maglie, gli italiani prima.
+function championJerseysHtml(champs) {
+  if (!champs || !champs.length) return '';
+  const sorted = champs.slice().sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'it' ? -1 : 1));
+  return sorted.map(c => {
+    const bands = c.kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
+    const tip = [c.kind === 'it' ? 'Campione Italiano' : `Campione Regionale${c.regione ? ' ' + _titleCase(c.regione) : ''}`,
+      _titleCase(c.disciplina), FASCIA_LABEL[c.fascia] || '', catLabel(c.categoria) || '', c.anno].filter(Boolean).join(' · ');
+    return `<span class="champ-jersey" title="${esc(tip)}"><svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.5)" stroke-width="0.9" stroke-linejoin="round"/>
+      <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${bands[0]}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${bands[1]}"/></svg></span>`;
+  }).join('');
+}
 function championChipHtml({ kind, disciplina, anno, extra, title, deleteId, href, fascia }) {
   const bands = kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
   const jersey = `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
@@ -11389,6 +11404,16 @@ async function updateRankTable() {
   let countLabel = '';
   let _rankPhotosQueue = null;
 
+  // Titoli di campione della stagione corrente, indicizzati per atleta e per
+  // team (per il team solo quelli della categoria mostrata) — le maglie
+  // accanto al nome nelle classifiche.
+  const _champsNow = collectChampions({ year: String(new Date().getFullYear()) });
+  const _champByAth = {}, _champByTeam = {};
+  for (const c of _champsNow) {
+    if (c.atleta_id) (_champByAth[c.atleta_id] = _champByAth[c.atleta_id] || []).push(c);
+    if (c.team_id && c.categoria === rankCat) (_champByTeam[c.team_id] = _champByTeam[c.team_id] || []).push(c);
+  }
+
   // Se i filtri regione/mese sono attivi, ricalcoliamo dinamicamente dai risultati raw
   const isFiltered = rankRegion || rankMonth;
   
@@ -11732,7 +11757,7 @@ async function updateRankTable() {
           <div class="rk-athlete-cell">
             <div class="rk-athlete-name-row">
               <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
-              <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+              <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>${championJerseysHtml(_champByAth[r.atleta_id])}
             </div>
             <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
             ${momBar}
@@ -11918,7 +11943,7 @@ async function updateRankTable() {
           <div class="rk-athlete-cell">
             <div class="rk-athlete-name-row">
               <span class="rk-tl-wrap" data-tid="${esc(t.team_id||'')}"></span>
-              <span class="rank-name"><a href="#/team/${esc(t.team_id)}">${nationFlagPrefix(t.team_nome)}${esc(t.team_nome)}</a></span>
+              <span class="rank-name"><a href="#/team/${esc(t.team_id)}">${nationFlagPrefix(t.team_nome)}${esc(t.team_nome)}</a></span>${championJerseysHtml(_champByTeam[t.team_id])}
             </div>
           </div>
         </td>
