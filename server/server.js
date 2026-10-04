@@ -2431,14 +2431,19 @@ app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
     // Nelle gare dilettanti Under 23 ed Elite corrono insieme e il titolo è
     // doppio: l'unicità è per gara + fascia (UNDER23 / ELITE / nessuna).
     const fas = ['UNDER23', 'ELITE'].includes(String(fascia || '').toUpperCase()) ? String(fascia).toUpperCase() : null;
+    // Una gara può valere come campionato di PIÙ regioni (es. disputata in
+    // Veneto e valida come campionato altoatesino): l'unicità è per gara +
+    // fascia + regione, così un titolo non sostituisce quello di un'altra regione.
+    const reg = (regione || '').trim() || null;
     if (gara_id) {
       let del = supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id);
       del = fas ? del.eq('fascia', fas) : del.is('fascia', null);
+      del = reg ? del.eq('regione', reg) : del.is('regione', null);
       const { error: delErr } = await del;
       if (delErr) throw delErr;
     }
     const { error } = await supabase.from('regional_champion_titles')
-      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: regione || null, note: note || null, gara_id: gara_id || null, atleta_nome: atleta_nome || null, fascia: fas, created_by: req.user.id });
+      .insert({ atleta_id, anno: parseInt(anno, 10), categoria, disciplina: disc, regione: reg, note: note || null, gara_id: gara_id || null, atleta_nome: atleta_nome || null, fascia: fas, created_by: req.user.id });
     if (error) throw error;
     _regionalChampionsCache = null;
     res.json({ ok: true });

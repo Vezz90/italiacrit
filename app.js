@@ -3486,6 +3486,15 @@ async function _refreshRegionalChampions() {
 // garaRow = una riga di risultato della gara (dà nome gara, data, categoria,
 // regione); atletaId/nome = chi proclamare, anche se NON è nella classifica
 // della gara (il campione regionale non è detto sia tra i primi 10).
+// Regione del titolo scritta a mano → chiave usata dal sito. L'Alto Adige /
+// Südtirol è BOLZANO e il Trentino è TRENTO (le due righe separate di FCI).
+function _normTitleRegion(txt) {
+  const t = String(txt || '').toUpperCase().trim();
+  if (!t) return '';
+  if (/BOLZANO|SUD\s*TIROL|S.DTIROL|ALTO\s*ADIGE/.test(t) && !/TRENTINO/.test(t)) return 'BOLZANO';
+  if (/TRENT/.test(t)) return 'TRENTO';
+  return normalizeRegion(t) || t;
+}
 async function _postRegionalChampion(garaRow, atletaId, nome) {
   const disciplina = championDisciplina(garaRow.nome_gara);
   // Una gara senza la dicitura "campionato regionale" (nome/calendario) lo
@@ -3504,12 +3513,23 @@ async function _postRegionalChampion(garaRow, atletaId, nome) {
   const avviso = diventaCR
     ? `\n\nATTENZIONE: questa gara oggi NON è un Campionato Regionale. Proclamando il campione lo diventa e il coefficiente passa a x2: i punteggi vengono ricalcolati al prossimo aggiornamento dati (entro ~30 minuti).`
     : '';
-  if (!confirm(`Proclamare ${nome} Campione Regionale${fasciaTxt} (${disciplina.toLowerCase()}) in questa gara?\nSostituisce l'eventuale campione${fasciaTxt} già indicato per la gara.${avviso}`)) return;
+  // La regione del titolo può essere diversa da quella della gara: una gara
+  // disputata in Veneto può valere come campionato regionale altoatesino. Si
+  // propone la regione della gara e si può correggere (es. BOLZANO), così il
+  // titolo non finisce come "doppione" nella regione ospitante.
+  const regioneGara = normalizeRegion(garaRow.regione) || String(garaRow.regione || '').toUpperCase();
+  const regRisposta = window.prompt(
+    `Proclamare ${nome} Campione Regionale${fasciaTxt} (${disciplina.toLowerCase()}) in questa gara?\n` +
+    `Sostituisce l'eventuale campione${fasciaTxt} della stessa regione per questa gara.${avviso}\n\n` +
+    `Regione del titolo (la gara è in ${_titleCase(regioneGara)}; se vale per un'altra regione scrivila, es. BOLZANO per l'Alto Adige):`,
+    regioneGara);
+  if (regRisposta === null) return;
+  const regione = _normTitleRegion(regRisposta.trim() || regioneGara);
   try {
     await apiCall('/admin/regional-champions', { method: 'POST', body: {
       atleta_id: atletaId, atleta_nome: nome, gara_id: garaRow.gara_id,
       anno: String(garaRow.data || '').slice(0, 4), categoria: getRankingFileCode(garaRow) || '',
-      disciplina, regione: garaRow.regione || '', fascia,
+      disciplina, regione, fascia,
     } });
     await _refreshRegionalChampions();
     document.getElementById('rc-picker-overlay')?.remove();
@@ -3578,7 +3598,7 @@ window.adminAddRegionalTitle = async function(atletaId, defaultCat) {
     if (!f) return;
     fascia = f.trim() === '2' ? 'ELITE' : 'UNDER23';
   }
-  const regione = window.prompt('Regione (opzionale):', '') || '';
+  const regione = _normTitleRegion(window.prompt('Regione (opzionale; es. BOLZANO per l\'Alto Adige):', '') || '');
   try {
     await apiCall('/admin/regional-champions', { method: 'POST', body: { atleta_id: atletaId, anno, categoria: categoria.toUpperCase(), disciplina, regione, fascia } });
     await _refreshRegionalChampions();
@@ -11245,8 +11265,15 @@ function _alboCampioniHtml(code) {
   const racesBy = {}; // `${disc}|${regione}` → {gara_id: nome}
   for (const r of (globalData?.resultsRaw || [])) {
     if (!r.campionato_regionale || !String(r.data || '').startsWith(year) || getRankingFileCode(r) !== code) continue;
-    const k = `${championDisciplina(r.nome_gara)}|${normalizeRegion(r.regione)}`;
-    (racesBy[k] = racesBy[k] || {})[r.gara_id] = r.nome_gara;
+    // Se per la gara è già stato assegnato un titolo, vale per la REGIONE DEL
+    // TITOLO (può non essere quella ospitante: una gara in Veneto valida come
+    // campionato altoatesino) — così non risulta "da assegnare" nella regione
+    // ospitante.
+    const titolate = (_regionalChampionByGara[r.gara_id] || []).map(t => normalizeRegion(t.regione)).filter(Boolean);
+    for (const rg of (titolate.length ? titolate : [normalizeRegion(r.regione)])) {
+      const k = `${championDisciplina(r.nome_gara)}|${rg}`;
+      (racesBy[k] = racesBy[k] || {})[r.gara_id] = r.nome_gara;
+    }
   }
 
   const filters = `<div class="ranking-filter-bar" style="margin:8px 0 14px;gap:10px">
