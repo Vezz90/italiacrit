@@ -16720,6 +16720,21 @@ function _athStageParse(name) {
   if (!key) return null;
   return { base: m[1], label: m[2], gc: /classifica generale/i.test(m[2]), key };
 }
+// Etichetta breve ben leggibile per una tappa: chip ("Tappa 4", "Class.
+// generale", "Prologo") + eventuale dettaglio (frazione, "cronometro"…).
+function _athStageChip(label, isGc) {
+  const L = String(label || '').trim();
+  if (isGc) return { chip: 'Class. generale', rest: '' };
+  const cap = t => { t = t.toLowerCase(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : ''; };
+  let m = L.match(/^(?:Stage|Tappa)\s+(\d+[a-z]?)\b\s*(.*)$/i);
+  if (m) return { chip: 'Tappa ' + m[1], rest: m[2].replace(/^[-–—]\s*/, '') };
+  m = L.match(new RegExp('^(' + _ATH_ORD + ')\\s+TAPPA\\b\\s*(.*)$', 'i'));
+  if (m) return { chip: 'Tappa ' + (_ATH_ORD.split('|').indexOf(m[1].toUpperCase()) + 1), rest: cap(m[2]) };
+  m = L.match(/^(\d+)\s*[ªA°]?\s+TAPPA\b\s*(.*)$/i);
+  if (m) return { chip: 'Tappa ' + m[1], rest: cap(m[2]) };
+  if (/^prologo/i.test(L)) return { chip: 'Prologo', rest: L.replace(/^prologo\s*[-–—]?\s*/i, '') };
+  return { chip: L, rest: '' };
+}
 function _atletaGroupStageRows() {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;
@@ -16727,7 +16742,7 @@ function _atletaGroupStageRows() {
   const rows = [...tbody.querySelectorAll('tr[data-date]')];
   const nameLink = tr => tr.querySelector('.td-race a');
   rows.forEach(tr => {
-    tr.classList.remove('ath-sub', 'ath-sub-hidden');
+    tr.classList.remove('ath-sub', 'ath-sub-hidden', 'ath-sub-last');
     const a = nameLink(tr);
     if (a) { if (tr.dataset.fullname == null) tr.dataset.fullname = a.textContent; a.textContent = tr.dataset.fullname; }
   });
@@ -16791,15 +16806,15 @@ function _atletaGroupStageRows() {
       <td class="td-pts">${pts}${prov ? '<span style="color:var(--text-muted);font-weight:400">*</span>' : ''}</td>`;
     anchor.tr.before(hdr);
     let prevEl = hdr;
+    subs[subs.length - 1].tr.classList.add('ath-sub-last');
     for (const s of subs) {
       s.tr.classList.add('ath-sub');
       if (!isOpen) s.tr.classList.add('ath-sub-hidden');
       s.tr.dataset.gkey = gkey;
       const a = nameLink(s.tr);
       if (a) {
-        let lab = s.p.label;
-        if (lab === lab.toUpperCase()) lab = lab.charAt(0) + lab.slice(1).toLowerCase();   // "QUARTA TAPPA" → "Quarta tappa"
-        a.textContent = lab.replace(/^Stage\b/, 'Tappa');                                 // i nomi propri PCS restano com'erano
+        const { chip, rest } = _athStageChip(s.p.label, s.p.gc);
+        a.innerHTML = `<span class="ath-stg-chip${s.p.gc ? ' ath-stg-gc' : ''}">${esc(chip)}</span>${rest ? ' <span class="ath-stg-rest">' + esc(rest) + '</span>' : ''}`;
         a.title = s.tr.dataset.fullname;
       }
       prevEl.after(s.tr);
@@ -16935,7 +16950,7 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
   if (typeof currentPos === 'number' && currentPos > 0) {
     pts.push({ d: todayIso > lastDate ? todayIso : lastDate, rk: currentPos, pos: null, pt: 0, nome: 'Classifica attuale', today: true });
   }
-  const W = 900, H = 250, L = 40, R = 18, T = 14, B = 28;
+  const W = 900, H = 130, L = 34, R = 12, T = 8, B = 20;
   const t = iso => new Date(iso + 'T00:00:00').getTime();
   const t0 = t(pts[0].d), t1 = Math.max(t(pts[pts.length - 1].d), t0 + 86400000);
   const pad = (t1 - t0) * 0.03;
@@ -16947,12 +16962,12 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
   let g = '';
   tickSet.forEach(v => {
     g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--border-subtle)" stroke-width="1"/>`;
-    g += `<text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--text-muted)">${v}°</text>`;
+    g += `<text x="${L - 6}" y="${Y(v) + 3}" text-anchor="end" font-size="9" fill="var(--text-muted)">${v}°</text>`;
   });
   const d0 = new Date(pts[0].d + 'T00:00:00'), d1 = new Date(pts[pts.length - 1].d + 'T00:00:00');
   for (let m = new Date(d0.getFullYear(), d0.getMonth() + 1, 1); m <= d1; m.setMonth(m.getMonth() + 1)) {
     const iso = `${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, '0')}-01`;
-    g += `<text x="${X(iso)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">${MESI[m.getMonth()]}</text>`;
+    g += `<text x="${X(iso)}" y="${H - 5}" text-anchor="middle" font-size="9" fill="var(--text-muted)">${MESI[m.getMonth()]}</text>`;
   }
   const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)} ${Y(p.rk).toFixed(1)}`).join(' ');
   const area = `${line} L${X(pts[pts.length - 1].d).toFixed(1)} ${Y(maxRk)} L${X(pts[0].d).toFixed(1)} ${Y(maxRk)} Z`;
@@ -16961,7 +16976,7 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
   pts.forEach(p => {
     const col = p.today ? 'var(--accent)' : p.pos === 1 ? 'var(--gold)' : (p.pos === 2 || p.pos === 3) ? 'var(--silver)' : 'var(--text-muted)';
     const tip = p.today ? `Oggi|${p.nome}|${p.rk}° in classifica` : `${fmtDateShort(p.d)}|${p.nome}|${p.pos}° posto · ${p.pt > 0 ? '+' + p.pt + ' pt' : '0 pt'}  ·  classifica dopo la gara: ${p.rk}°`;
-    g += `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.rk).toFixed(1)}" r="${p.today ? 6 : 5}" fill="${p.today ? 'var(--bg-card)' : col}" stroke="${p.today ? col : 'var(--bg-card)'}" stroke-width="${p.today ? 2.5 : 1.5}" data-tip="${esc(tip)}" tabindex="0" style="cursor:pointer" onpointerenter="window._athRkShow(this)" onpointerleave="window._athRkHide(this)" onfocus="window._athRkShow(this)" onblur="window._athRkHide(this)"/>`;
+    g += `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.rk).toFixed(1)}" r="${p.today ? 4.5 : 3.5}" fill="${p.today ? 'var(--bg-card)' : col}" stroke="${p.today ? col : 'var(--bg-card)'}" stroke-width="${p.today ? 2.5 : 1.5}" data-tip="${esc(tip)}" tabindex="0" style="cursor:pointer" onpointerenter="window._athRkShow(this)" onpointerleave="window._athRkHide(this)" onfocus="window._athRkShow(this)" onblur="window._athRkHide(this)"/>`;
   });
   const best = Math.min(...pts.map(p => p.rk)), worst = Math.max(...pts.map(p => p.rk));
   return `<section class="ath-block"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i></div>
