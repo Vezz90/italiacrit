@@ -12800,3 +12800,14 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
   .ath-stg-chip { min-width: 0; }
   .ath-stg-rest { font-size: .78rem; }
 }
+
+@media (max-width: 860px) {
+  .ath-hero .profile-photo-row { flex-direction: row !important; align-items: center !important; }
+  .ath-hero .profile-photo-row .photo-area { width: 64px !important; height: 64px !important; }
+  .ath-hero .athlete-header-name > div:first-child { gap: 2px 8px !important; }
+  .ath-hero-standing .athlete-stats-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .ath-hero-standing .athlete-stats-bar { gap: 10px; flex-wrap: nowrap; }
+  .ath-hero-standing .athlete-stat-val { font-size: 1.1rem !important; }
+}
+/* un solo "Segui": se c'è quello dell'account, nascondo quello locale */
+.ath-hero-actions:has(#atleta-follow-btn button) .watch-btn { display: none; }
