@@ -12862,3 +12862,30 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 
 /* Gara promiscua: iniziali della categoria dell'atleta "estraneo" */
 .cat-intruder { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 2px 6px; border-radius: 4px; font: 800 .6rem/1 'Inter Tight', 'Inter', sans-serif; letter-spacing: .06em; background: rgba(245,158,11,.16); color: #f7b94a; border: 1px solid rgba(245,158,11,.4); }
+
+/* ── Pagina team: stessa intestazione a due colonne della pagina atleta ── */
+.team-header.tm-hero { padding-top: 32px; padding-bottom: 28px; }
+.tm-hero .team-header-identity { margin-bottom: 4px; }
+.tm-hero .ath-hero-actions { margin-top: 12px; }
+.tm-hero .team-name-display { font-size: clamp(1.5rem, 3.4vw, 3rem) !important; }
+.tm-hero .ath-hero-standing .team-stats-row { margin: 0 !important; padding: 12px 0 0 !important; background: transparent !important; border: 0 !important; border-top: 1px solid rgba(255,255,255,.1) !important; display: flex; gap: 18px; flex-wrap: wrap; overflow: visible; }
+.tm-hero .ath-hero-standing .team-stat { padding: 0 !important; border: 0 !important; min-width: 0; }
+.tm-hero .ath-hero-standing .team-stat-val { font: 800 1.5rem/1 'Inter Tight', 'Inter', sans-serif !important; font-variant-numeric: tabular-nums; }
+.tm-hero .ath-hero-standing .team-stat-label { font-size: .62rem; }
+.tm-hero .ath-hero-standing .ath-standing-extra { margin-top: 2px; }
+#team-stats-estero .team-stats-row { margin: 0 !important; padding: 8px 0 0 !important; background: transparent !important; border: 0 !important; display: flex; gap: 14px; flex-wrap: wrap; }
+.team-results td.td-pts { font: 800 .95rem/1 'Inter Tight', 'Inter', sans-serif; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.team-results td.td-pts.ath-pts-pos { color: var(--blue, #3b82f6); }
+.team-results td.td-pts.ath-pts-pos::before { content: '+'; }
+@media (max-width: 860px) {
+  .team-header.tm-hero { padding: 16px 14px 14px !important; margin-left: -16px; margin-right: -16px; }
+  .tm-hero .team-header-identity { gap: 12px; align-items: center; }
+  .tm-hero .team-header-identity .photo-area { width: 64px !important; height: 64px !important; }
+  .tm-hero .team-name-display { font-size: clamp(1.3rem, 6.5vw, 2rem) !important; }
+  .tm-hero .ath-hero-actions { gap: 6px; }
+  .tm-hero .ath-hero-actions .btn-share, .tm-hero .ath-hero-actions .watch-btn, .tm-hero .ath-hero-actions .admin-edit-btn { padding: 8px 11px; font-size: .72rem; }
+  .tm-hero .ath-hero-standing { padding-top: 12px; gap: 8px; border-left: 0; padding-left: 0; border-top: 1px solid rgba(255,255,255,.12); }
+  .tm-hero .ath-hero-standing .ath-rank-block .athlete-pts-value { font-size: 3rem; }
+  .tm-hero .ath-hero-standing .ath-pts-block .athlete-pts-value { font-size: 1.6rem; }
+  .tm-hero .ath-hero-standing .team-stat-val { font-size: 1.15rem !important; }
+}

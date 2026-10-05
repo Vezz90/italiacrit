@@ -16799,8 +16799,8 @@ function _athStageChip(label, isGc) {
 // argento / bronzo per i primi tre), punti con il "+" se > 0. Idempotente:
 // non tocca nulla se la riga è già a posto, così può girare dopo qualunque
 // modifica della tabella (anche quella asincrona dei risultati PCS).
-function _athDecorateRows() {
-  const tbody = document.getElementById('atleta-results-tbody');
+function _athDecorateRows(tbodyId) {
+  const tbody = document.getElementById(typeof tbodyId === 'string' ? tbodyId : 'atleta-results-tbody');
   if (!tbody) return;
   tbody.querySelectorAll('td.td-pos').forEach(td => {
     if (td.querySelector('.ath-pos-pill')) return;
@@ -16814,13 +16814,13 @@ function _athDecorateRows() {
     td.classList.toggle('ath-pts-pos', n > 0);
   });
 }
-function _athWatchRows() {
-  const tbody = document.getElementById('atleta-results-tbody');
+function _athWatchRows(tbodyId) {
+  const tbody = document.getElementById(typeof tbodyId === 'string' ? tbodyId : 'atleta-results-tbody');
   if (!tbody || tbody._athDecoObs) return;
   let queued = false;
   const obs = new MutationObserver(() => {
     if (queued) return; queued = true;
-    requestAnimationFrame(() => { queued = false; _athSafe(_athDecorateRows); });
+    requestAnimationFrame(() => { queued = false; _athSafe(() => _athDecorateRows(tbody.id)); });
   });
   obs.observe(tbody, { childList: true, subtree: true });
   tbody._athDecoObs = obs;
@@ -20777,7 +20777,6 @@ async function renderTeam(team_id, opts = {}) {
 
   const risultatiRows = [...catRisultati]
     .sort((a,b) => a.posizione - b.posizione || (b.data||'').localeCompare(a.data||''))
-    .slice(0, 100)
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)
       const rankVal = r.team_rank_dopo_gara;
@@ -20942,39 +20941,38 @@ async function renderTeam(team_id, opts = {}) {
 
   // Header stats
   const currentRank = tCatRanks.find(rk => rk.cat === teamViewCat);
-  const rankHtml = currentRank ? `
-      <div class="team-stat" style="border-right:1px solid var(--border-subtle); padding-right:16px; margin-right:6px">
-        <span class="team-stat-val" style="color:var(--accent)">${currentRank.pos}°</span>
-        <span class="team-stat-label">Cl. Gen. ${catLabel(teamViewCat)}</span>
-      </div>` : '';
-
+  const _tmRankList = teamRankings[RANKING_CODES.indexOf(teamViewCat)] || [];
+  const _tmNm = e => `<a href="#/team/${encodeURIComponent(e.team_id)}">${esc(e.team_nome || '')}</a>`;
+  const _tmGap = (() => {
+    if (!currentRank) return '';
+    const lead = _tmRankList[0], below = _tmRankList[currentRank.pos];
+    const parts = [];
+    if (currentRank.pos > 1 && lead && lead.team_id !== team_id) parts.push(`<b>−${lead.punti - currentRank.pts}</b> dal 1° ${_tmNm(lead)} (${lead.punti})`);
+    if (below && below.team_id !== team_id) parts.push(`<b>+${currentRank.pts - below.punti}</b> sul ${currentRank.pos + 1}° ${_tmNm(below)} (${below.punti})`);
+    return parts.length ? `<div class="ath-gap-line">${parts.join(' · ')}</div>` : '';
+  })();
+  const _tmPct = (currentRank && _tmRankList[0] && _tmRankList[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(currentRank.pts / _tmRankList[0].punti * 100))) : null;
   const headerStats = `
+    <div class="athlete-pts-display">
+      <div class="ath-pts-block">
+        <div class="athlete-pts-value">${catPuntiTotali}</div>
+        <div class="athlete-pts-label">PUNTI STAGIONE</div>
+      </div>
+      ${currentRank ? `<div class="ath-rank-block">
+        <div class="athlete-pts-value" style="color:var(--accent)">${currentRank.pos}°</div>
+        <div class="athlete-pts-label">POSIZIONE</div>
+      </div>` : ''}
+    </div>
+    <div class="ath-standing-extra">
+      ${_tmPct != null ? `<div class="ath-stand-bar" role="img" aria-label="${currentRank.pts} punti su ${_tmRankList[0].punti} del leader"><i style="width:${_tmPct}%"></i></div>` : ''}
+      ${_tmGap}
+    </div>
     <div class="team-stats-row">
-      ${rankHtml}
-      <div class="team-stat">
-        <span class="team-stat-val">${catPuntiTotali}</span>
-        <span class="team-stat-label">Punti Stagionali</span>
-      </div>
-      <div class="team-stat">
-        <span class="team-stat-val" style="color:var(--gold)">${p1}</span>
-        <span class="team-stat-label">1°</span>
-      </div>
-      <div class="team-stat">
-        <span class="team-stat-val" style="color:var(--silver)">${p2}</span>
-        <span class="team-stat-label">2°</span>
-      </div>
-      <div class="team-stat">
-        <span class="team-stat-val" style="color:var(--bronze)">${p3}</span>
-        <span class="team-stat-label">3°</span>
-      </div>
-      <div class="team-stat">
-        <span class="team-stat-val" style="color:var(--text-muted)">${pout}</span>
-        <span class="team-stat-label">4-10</span>
-      </div>
-      <div class="team-stat">
-        <span class="team-stat-val">${atletiListCat.length}</span>
-        <span class="team-stat-label">Atleti</span>
-      </div>
+      <div class="team-stat"><span class="team-stat-val" style="color:var(--gold)">${p1}</span><span class="team-stat-label">1°</span></div>
+      <div class="team-stat"><span class="team-stat-val" style="color:var(--silver)">${p2}</span><span class="team-stat-label">2°</span></div>
+      <div class="team-stat"><span class="team-stat-val" style="color:var(--bronze)">${p3}</span><span class="team-stat-label">3°</span></div>
+      <div class="team-stat"><span class="team-stat-val" style="color:var(--text-muted)">${pout}</span><span class="team-stat-label">4-10</span></div>
+      <div class="team-stat"><span class="team-stat-val">${atletiListCat.length}</span><span class="team-stat-label">Atleti</span></div>
     </div>`;
 
   const teamInitials = t.nome.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
@@ -20995,33 +20993,42 @@ async function renderTeam(team_id, opts = {}) {
   setPageMeta(t.nome, `${atletiList.length} atleti${catPuntiTotali ? ' · ' + catPuntiTotali + ' pt' : ''} — Italia Cycling Stats`);
   setSchemaOrg({ '@context':'https://schema.org','@type':'SportsTeam', name:t.nome, identifier:team_id, url:window.location.href });
   setPage(`
-    <div class="team-header">
-      <div class="team-header-identity">
-        ${teamPhotoHtml}
-        <div class="team-header-name-block">
-          <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
-          <span id="team-msg-btn"></span>
-          <span id="team-follow-btn"></span>
+    <div class="team-header tm-hero">
+      <div class="ath-hero-grid">
+        <div class="ath-hero-left">
+          <div class="team-header-identity">
+            ${teamPhotoHtml}
+            <div class="team-header-name-block">
+              <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
+              <span id="team-msg-btn"></span>
+              <span id="team-follow-btn"></span>
+            </div>
+          </div>
+    <div class="ath-hero-actions">
+            <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+            <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
+            ${adminEditBtn('team', team_id)}
+            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
+          </div>
           ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
         </div>
+        <aside class="ath-hero-standing">
+          <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(teamViewCat))}</div>
+          <div id="team-native-header-stats">${headerStats}</div>
+          <div id="team-stats-estero" style="display:none;margin-top:6px"></div>
+        </aside>
       </div>
-      <div id="team-native-header-stats">${headerStats}</div>
-      <div id="team-stats-estero" style="display:none;margin-top:6px"></div>
     </div>
     <div id="team-lineage-bar"></div>
     ${teamChampionsHtml}
     ${profileYearRow('team', team_id, selYear)}
-    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
-      <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
-      <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
-      ${adminEditBtn('team', team_id)}
-      ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
-    </div>
 
     <div id="team-native-content">
     <span style="display:none"></span>
     ${catTabsHtml}
+    ${_athSafe(() => athleteMomentHtml(catRisultatiStrada, null, _isLoadedYear))}
+    ${_athSafe(() => athleteLastBestHtml(catRisultatiStrada))}
 
     <div class="section-header" style="margin-top:28px;align-items:center">
       <div class="tab-group" role="tablist" style="display:flex;gap:8px">
@@ -21081,6 +21088,8 @@ async function renderTeam(team_id, opts = {}) {
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
+  _athSafe(() => _athDecorateRows('team-results-tbody'));
+  _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
