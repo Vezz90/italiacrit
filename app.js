@@ -16735,6 +16735,36 @@ function _athStageChip(label, isGc) {
   if (/^prologo/i.test(L)) return { chip: 'Prologo', rest: L.replace(/^prologo\s*[-–—]?\s*/i, '') };
   return { chip: L, rest: '' };
 }
+// Numeri dei risultati nello stile del mockup: posizione in "pill" (oro /
+// argento / bronzo per i primi tre), punti con il "+" se > 0. Idempotente:
+// non tocca nulla se la riga è già a posto, così può girare dopo qualunque
+// modifica della tabella (anche quella asincrona dei risultati PCS).
+function _athDecorateRows() {
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (!tbody) return;
+  tbody.querySelectorAll('td.td-pos').forEach(td => {
+    if (td.querySelector('.ath-pos-pill')) return;
+    const txt = td.textContent.trim();
+    const n = parseInt(txt, 10);
+    if (!n) return;
+    td.innerHTML = `<span class="ath-pos-pill ${n === 1 ? 'p1' : n === 2 ? 'p2' : n === 3 ? 'p3' : ''}">${esc(txt)}</span>`;
+  });
+  tbody.querySelectorAll('td.td-pts').forEach(td => {
+    const n = parseInt(td.textContent, 10);
+    td.classList.toggle('ath-pts-pos', n > 0);
+  });
+}
+function _athWatchRows() {
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (!tbody || tbody._athDecoObs) return;
+  let queued = false;
+  const obs = new MutationObserver(() => {
+    if (queued) return; queued = true;
+    requestAnimationFrame(() => { queued = false; _athSafe(_athDecorateRows); });
+  });
+  obs.observe(tbody, { childList: true, subtree: true });
+  tbody._athDecoObs = obs;
+}
 function _atletaGroupStageRows() {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;
@@ -17465,6 +17495,8 @@ async function renderAtleta(atleta_id, opts = {}) {
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   window._athSortMode = 'data';
   _athSafe(_atletaGroupStageRows);
+  _athSafe(_athDecorateRows);
+  _athSafe(_athWatchRows);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
   _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria, displayTeamId);
   // nativeCount = solo risultati ICS dell'anno caricato — _loadCiclismoStorico
