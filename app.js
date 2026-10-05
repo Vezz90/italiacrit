@@ -16699,9 +16699,129 @@ function _buildAtletaResultRows(rows) {
 // nel DOM) e renderAtleta può essere invocata più volte per la stessa pagina
 // (refresh dati in background) — un'istantanea presa una volta sola poteva
 // restare indietro rispetto a quello che l'utente vede davvero.
+// ── Corse a tappe raggruppate (stile PCS) ─────────────────────────
+// Le righe tappa/classifica generale della stessa corsa si raccolgono sotto
+// una riga di testata CHIUSA di default (si apre con un clic). È solo una
+// vista sopra le righe piatte `tr[data-date]`: queste restano la fonte di
+// verità (le usano l'ordinamento e l'inserimento asincrono dei risultati PCS),
+// quindi la funzione riparte ogni volta da zero e si può richiamare dopo
+// qualunque modifica della tabella. In ordinamento "per posizione" non
+// raggruppa.
+const _ATH_ORD = 'PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|TREDICESIMA|QUATTORDICESIMA|QUINDICESIMA|SEDICESIMA|DICIASSETTESIMA|DICIOTTESIMA|DICIANNOVESIMA|VENTESIMA|VENTUNESIMA';
+const _ATH_STAGE_NATIVE_RE = new RegExp('^(.*?)\\s+((?:(?:' + _ATH_ORD + ')|\\d+\\s*[ªA°]?)\\s+TAPPA(?:\\s+.*)?|CLASSIFICA GENERALE|PROLOGO)$', 'i');
+const _ATH_KEY_STOP = new Set('DI DEL DELLA DELLO DELL DEI DELLE DEGLI IL LA LE LO REGIONE'.split(' '));
+function _athStageParse(name) {
+  const n = String(name || '').replace(/\s+/g, ' ').trim();
+  let m = n.match(/^(.*?)\s+[—–]\s+((?:Stage|Tappa)\b.*|Classifica Generale)$/i);
+  if (!m) m = n.match(_ATH_STAGE_NATIVE_RE);
+  if (!m || !m[1]) return null;
+  const key = m[1].toUpperCase().replace(/['’`°ª^º]/g, ' ').split(/\s+/)
+    .filter(w => w && !/^\d+$/.test(w) && !_ATH_KEY_STOP.has(w)).join(' ');
+  if (!key) return null;
+  return { base: m[1], label: m[2], gc: /classifica generale/i.test(m[2]), key };
+}
+function _atletaGroupStageRows() {
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (!tbody) return;
+  tbody.querySelectorAll('tr.ath-grp').forEach(t => t.remove());
+  const rows = [...tbody.querySelectorAll('tr[data-date]')];
+  const nameLink = tr => tr.querySelector('.td-race a');
+  rows.forEach(tr => {
+    tr.classList.remove('ath-sub', 'ath-sub-hidden');
+    const a = nameLink(tr);
+    if (a) { if (tr.dataset.fullname == null) tr.dataset.fullname = a.textContent; a.textContent = tr.dataset.fullname; }
+  });
+  if (window._athSortMode === 'pos' || !rows.length) return;
+
+  const buckets = {};
+  rows.forEach((tr, idx) => {
+    const a = nameLink(tr);
+    const full = a ? tr.dataset.fullname : (tr.querySelector('.td-race')?.textContent || '').trim();
+    const p = _athStageParse(full);
+    if (!p) return;
+    (buckets[p.key] ||= []).push({ tr, idx, p, date: tr.dataset.date || '' });
+  });
+  const groups = [];
+  for (const items of Object.values(buckets)) {
+    items.sort((x, y) => x.date.localeCompare(y.date) || x.idx - y.idx);
+    let cur = [];
+    for (const it of items) {
+      const prev = cur[cur.length - 1];
+      if (prev && (new Date(it.date) - new Date(prev.date)) / 86400000 > 10) { groups.push(cur); cur = []; }
+      cur.push(it);
+    }
+    groups.push(cur);
+  }
+  const open = (window._athOpenGroups ||= new Set());
+  for (const items of groups.filter(g => g.length >= 2)) {
+    const gkey = items[0].p.key + '|' + items[0].date;
+    const subs = items.slice().sort((x, y) => y.date.localeCompare(x.date) || (y.p.gc - x.p.gc) || (x.idx - y.idx));
+    const anchor = items.reduce((m, it) => it.idx < m.idx ? it : m, items[0]);
+    const gcRow = subs.find(s => s.p.gc);
+    const stageRows = subs.filter(s => !s.p.gc);
+    const posOf = s => parseInt(s.tr.querySelector('.td-pos')?.textContent, 10) || 9999;
+    const bestStage = stageRows.length ? stageRows.reduce((m, s) => posOf(s) < posOf(m) ? s : m, stageRows[0]) : null;
+    const pts = subs.reduce((s, it) => s + (parseInt(it.tr.querySelector('.td-pts')?.textContent, 10) || 0), 0);
+    const prov = subs.some(it => /\*/.test(it.tr.querySelector('.td-pts')?.textContent || ''));
+    const first = items[0], last = items[items.length - 1];
+    const dates = first.date === last.date ? fmtDateShort(first.date) : `${fmtDateShort(first.date)} – ${fmtDateShort(last.date)}`;
+    const nativeRow = items[0];
+    const flag = anchor.tr.querySelector('.td-race img')?.outerHTML || '';
+    const baseName = (gcRow || subs[0]).p.base;
+    const gcPos = gcRow ? posOf(gcRow) : null;
+    const hdr = document.createElement('tr');
+    hdr.className = 'ath-grp';
+    hdr.dataset.gkey = gkey;
+    hdr.tabIndex = 0;
+    hdr.setAttribute('role', 'button');
+    const isOpen = open.has(gkey);
+    hdr.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    hdr.innerHTML = `
+      <td class="td-date">${dates}</td>
+      <td class="td-pos ${gcPos ? posClass(gcPos) : ''}">${gcPos ? gcPos + '°' : '—'}</td>
+      <td class="td-race"><span class="ath-grp-name"><span class="ath-grp-chev" aria-hidden="true">›</span>${flag}<b>${esc(baseName)}</b></span>
+        <div class="ath-grp-sub">${subs.length} risultati${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · clicca per ${isOpen ? 'chiudere' : 'aprire'}</div></td>
+      <td>${nativeRow.tr.children[3] ? nativeRow.tr.children[3].innerHTML : '—'}</td>
+      <td style="text-align:right">—</td>
+      <td style="text-align:right">—</td>
+      <td class="td-pts">${pts}${prov ? '<span style="color:var(--text-muted);font-weight:400">*</span>' : ''}</td>`;
+    anchor.tr.before(hdr);
+    let prevEl = hdr;
+    for (const s of subs) {
+      s.tr.classList.add('ath-sub');
+      if (!isOpen) s.tr.classList.add('ath-sub-hidden');
+      s.tr.dataset.gkey = gkey;
+      const a = nameLink(s.tr);
+      if (a) {
+        let lab = s.p.label;
+        if (lab === lab.toUpperCase()) lab = lab.charAt(0) + lab.slice(1).toLowerCase();   // "QUARTA TAPPA" → "Quarta tappa"
+        a.textContent = lab.replace(/^Stage\b/, 'Tappa');                                 // i nomi propri PCS restano com'erano
+        a.title = s.tr.dataset.fullname;
+      }
+      prevEl.after(s.tr);
+      prevEl = s.tr;
+    }
+  }
+  if (!tbody._athGrpBound) {
+    tbody._athGrpBound = true;
+    const toggle = hdr => {
+      const k = hdr.dataset.gkey;
+      const nowOpen = hdr.getAttribute('aria-expanded') !== 'true';
+      hdr.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+      (nowOpen ? window._athOpenGroups.add(k) : window._athOpenGroups.delete(k));
+      tbody.querySelectorAll('tr.ath-sub').forEach(tr => { if (tr.dataset.gkey === k) tr.classList.toggle('ath-sub-hidden', !nowOpen); });
+      const hint = hdr.querySelector('.ath-grp-sub');
+      if (hint) hint.textContent = hint.textContent.replace(/clicca per (aprire|chiudere)$/, 'clicca per ' + (nowOpen ? 'chiudere' : 'aprire'));
+    };
+    tbody.addEventListener('click', e => { const h = e.target.closest('tr.ath-grp'); if (h) toggle(h); });
+    tbody.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.ath-grp')) { e.preventDefault(); toggle(e.target); } });
+  }
+}
+
 window.setAtletaResultsSort = function(mode) {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;
+  window._athSortMode = mode;
   const rows = [...tbody.querySelectorAll('tr[data-date]')].map(tr => ({
     data: tr.dataset.date || '',
     posizione: parseInt(tr.querySelector('.td-pos')?.textContent, 10) || 9999,
@@ -16712,6 +16832,7 @@ window.setAtletaResultsSort = function(mode) {
     : rows.sort((a, b) => (b.data||'').localeCompare(a.data||''));
   tbody.innerHTML = sorted.map(r => r.html).join('') || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>';
   document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === mode));
+  _athSafe(_atletaGroupStageRows);
 };
 
 // ── Pagina atleta: blocchi "Il momento", "Ultimi / Migliori", "Rivalità" ──
@@ -17291,6 +17412,8 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
+  window._athSortMode = 'data';
+  _athSafe(_atletaGroupStageRows);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
   _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria, displayTeamId);
   // nativeCount = solo risultati ICS dell'anno caricato — _loadCiclismoStorico
@@ -19839,6 +19962,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     const combined = [...(icsRisultati || []), ...garaExtra, ...esteroExtra.map(r => ({ data: r.data, posizione: r.posizione, nome_gara: r.gara_name }))];
     chartWrap.innerHTML = buildCumulChart(combined);
   }
+  _athSafe(_atletaGroupStageRows);
 }
 
 // ── Commenti gare ─────────────────────────────────────────────────────────────
