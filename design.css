@@ -12889,3 +12889,12 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
   .tm-hero .ath-hero-standing .ath-pts-block .athlete-pts-value { font-size: 1.6rem; }
   .tm-hero .ath-hero-standing .team-stat-val { font-size: 1.15rem !important; }
 }
+
+/* Team: record in una riga sola */
+.tm-hero .ath-hero-standing .team-stats-row,
+.tm-hero #team-stats-estero .team-stats-row { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 8px; }
+.tm-hero #team-stats-estero .team-stats-row { padding-top: 10px !important; }
+.tm-hero #team-stats-estero .team-stat:first-child { grid-column: 1 / -1; }
+.tm-hero .ath-hero-standing .team-stat { display: flex; flex-direction: column; gap: 3px; }
+.tm-hero .ath-hero-standing .team-stat-val { font-size: 1.35rem !important; }
+.tm-hero .ath-hero-actions .admin-edit-btn { font-size: .72rem; }
