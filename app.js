@@ -2133,6 +2133,16 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // accumuliamo i punti_effettivi e dopo ogni gara assegniamo il rank.
   // Così ogni risultato porta il rank dell'atleta DOPO quella specifica gara.
   if (resultsRaw) _buildAthleteHomeCats(resultsRaw);
+  // Allinea la categoria dei profili a quella di appartenenza (finché lo
+  // scraper non rigenera athletes.json con la stessa regola): tab categoria
+  // dei team, filtri, ecc. leggono ath.categoria. Le correzioni manuali
+  // dell'admin vengono applicate dopo e hanno la precedenza.
+  if (resultsRaw && athletes) {
+    for (const [aid, home] of Object.entries(_athleteHomeCat)) {
+      const ath = athletes[aid];
+      if (ath && /^[A-Z0-9]+_[MF]$/.test(ath.categoria || '') && _catBand(ath.categoria) !== _catBand(home) && ath.categoria.slice(-1) === home.slice(-1)) ath.categoria = home;
+    }
+  }
   if (resultsRaw) {
     // Raggruppa per catCode
     const _byCode = {};
