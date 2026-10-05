@@ -16769,6 +16769,10 @@ function _atletaGroupStageRows() {
     const flag = anchor.tr.querySelector('.td-race img')?.outerHTML || '';
     const baseName = (gcRow || subs[0]).p.base;
     const gcPos = gcRow ? posOf(gcRow) : null;
+    // km totali solo se TUTTE le tappe hanno il dato (una somma parziale
+    // direbbe un numero falso)
+    const kmOf = s => parseFloat((s.tr.children[4]?.textContent || '').replace(',', '.'));
+    const kmAll = stageRows.length && stageRows.every(s => kmOf(s) > 0) ? stageRows.reduce((t, s) => t + kmOf(s), 0) : 0;
     const hdr = document.createElement('tr');
     hdr.className = 'ath-grp';
     hdr.dataset.gkey = gkey;
@@ -16782,7 +16786,7 @@ function _atletaGroupStageRows() {
       <td class="td-race"><span class="ath-grp-name"><span class="ath-grp-chev" aria-hidden="true">›</span>${flag}<b>${esc(baseName)}</b></span>
         <div class="ath-grp-sub">${subs.length} risultati${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · clicca per ${isOpen ? 'chiudere' : 'aprire'}</div></td>
       <td>${nativeRow.tr.children[3] ? nativeRow.tr.children[3].innerHTML : '—'}</td>
-      <td style="text-align:right">—</td>
+      <td style="text-align:right">${kmAll ? Math.round(kmAll) + ' km' : '—'}</td>
       <td style="text-align:right">—</td>
       <td class="td-pts">${pts}${prov ? '<span style="color:var(--text-muted);font-weight:400">*</span>' : ''}</td>`;
     anchor.tr.before(hdr);
