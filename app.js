@@ -16830,7 +16830,7 @@ function _atletaGroupStageRows() {
       <td class="td-date">${dates}</td>
       <td class="td-pos ${gcPos ? posClass(gcPos) : ''}">${gcPos ? gcPos + '°' : '—'}</td>
       <td class="td-race"><span class="ath-grp-name"><span class="ath-grp-chev" aria-hidden="true">›</span>${flag}<b>${esc(baseName)}</b></span>
-        <div class="ath-grp-sub"><span class="ath-grp-dates">${dates} · </span>${subs.length} risultati${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · clicca per ${isOpen ? 'chiudere' : 'aprire'}</div></td>
+        <div class="ath-grp-sub"><span class="ath-grp-dates">${dates} · </span>${subs.length} risultati<span class="ath-grp-more">${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · <span class="ath-grp-hint">clicca per ${isOpen ? 'chiudere' : 'aprire'}</span></span></div></td>
       <td>${nativeRow.tr.children[3] ? nativeRow.tr.children[3].innerHTML : '—'}</td>
       <td style="text-align:right">${kmAll ? Math.round(kmAll) + ' km' : '—'}</td>
       <td style="text-align:right">—</td>
@@ -16862,8 +16862,8 @@ function _atletaGroupStageRows() {
       hdr.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
       (nowOpen ? window._athOpenGroups.add(k) : window._athOpenGroups.delete(k));
       tbody.querySelectorAll('tr.ath-sub').forEach(tr => { if (tr.dataset.gkey === k) tr.classList.toggle('ath-sub-hidden', !nowOpen); });
-      const hint = hdr.querySelector('.ath-grp-sub');
-      if (hint) hint.textContent = hint.textContent.replace(/clicca per (aprire|chiudere)$/, 'clicca per ' + (nowOpen ? 'chiudere' : 'aprire'));
+      const hint = hdr.querySelector('.ath-grp-hint');
+      if (hint) hint.textContent = 'clicca per ' + (nowOpen ? 'chiudere' : 'aprire');
     };
     tbody.addEventListener('click', e => { const h = e.target.closest('tr.ath-grp'); if (h) toggle(h); });
     tbody.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.ath-grp')) { e.preventDefault(); toggle(e.target); } });

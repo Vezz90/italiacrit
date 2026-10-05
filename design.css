@@ -12836,3 +12836,4 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
   .atleta-results tr.ath-sub td.td-race { white-space: normal; }
   .ath-grp-name b { overflow-wrap: anywhere; }
 }
+@media (max-width: 760px) { .ath-grp-more { display: none; } .ath-grp-sub { margin-left: 18px; } }
