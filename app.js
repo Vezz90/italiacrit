@@ -16796,6 +16796,73 @@ function athleteH2H(atleta_id, resultsRaw, rCode) {
     .sort((a, b) => b.n - a.n || Math.abs(a.ahead - a.behind) - Math.abs(b.ahead - b.behind))
     .slice(0, 3);
 }
+// Andamento della POSIZIONE IN CLASSIFICA dopo ogni gara (rank_dopo_gara,
+// calcolato in loadAll sulla categoria), con asse temporale reale e tooltip.
+// Solo stagione caricata: per gli anni storici non c'è il dato.
+function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
+  const rows = resultsRaw
+    .filter(r => r.atleta_id === atleta_id && r.rank_dopo_gara && r.data && r.posizione && (!rCode || getRankingFileCode(r) === rCode))
+    .sort((a, b) => a.data.localeCompare(b.data) || (a.gara_id || '').localeCompare(b.gara_id || ''));
+  if (rows.length < 3) return '';
+  const pts = rows.map(r => ({ d: r.data, rk: r.rank_dopo_gara, pos: r.posizione, pt: r.punti_effettivi || 0, nome: r.nome_gara || '' }));
+  const lastDate = pts[pts.length - 1].d;
+  const todayIso = new Date().toISOString().slice(0, 10);
+  if (typeof currentPos === 'number' && currentPos > 0) {
+    pts.push({ d: todayIso > lastDate ? todayIso : lastDate, rk: currentPos, pos: null, pt: 0, nome: 'Classifica attuale', today: true });
+  }
+  const W = 900, H = 250, L = 40, R = 18, T = 14, B = 28;
+  const t = iso => new Date(iso + 'T00:00:00').getTime();
+  const t0 = t(pts[0].d), t1 = Math.max(t(pts[pts.length - 1].d), t0 + 86400000);
+  const pad = (t1 - t0) * 0.03;
+  const maxRk = Math.max(...pts.map(p => p.rk), 2);
+  const X = iso => L + (t(iso) - t0 + pad) / (t1 - t0 + 2 * pad) * (W - L - R);
+  const Y = rk => T + (rk - 1) / (maxRk - 1) * (H - T - B);
+  const tickSet = [...new Set([1, Math.min(5, maxRk), Math.min(10, maxRk), maxRk])].filter(v => v >= 1 && v <= maxRk);
+  const MESI = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  let g = '';
+  tickSet.forEach(v => {
+    g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--border-subtle)" stroke-width="1"/>`;
+    g += `<text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--text-muted)">${v}°</text>`;
+  });
+  const d0 = new Date(pts[0].d + 'T00:00:00'), d1 = new Date(pts[pts.length - 1].d + 'T00:00:00');
+  for (let m = new Date(d0.getFullYear(), d0.getMonth() + 1, 1); m <= d1; m.setMonth(m.getMonth() + 1)) {
+    const iso = `${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, '0')}-01`;
+    g += `<text x="${X(iso)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">${MESI[m.getMonth()]}</text>`;
+  }
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)} ${Y(p.rk).toFixed(1)}`).join(' ');
+  const area = `${line} L${X(pts[pts.length - 1].d).toFixed(1)} ${Y(maxRk)} L${X(pts[0].d).toFixed(1)} ${Y(maxRk)} Z`;
+  g += `<path d="${area}" fill="var(--blue, #3b82f6)" fill-opacity=".1"/>`;
+  g += `<path d="${line}" fill="none" stroke="var(--blue, #3b82f6)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach(p => {
+    const col = p.today ? 'var(--accent)' : p.pos === 1 ? 'var(--gold)' : (p.pos === 2 || p.pos === 3) ? 'var(--silver)' : 'var(--text-muted)';
+    const tip = p.today ? `Oggi|${p.nome}|${p.rk}° in classifica` : `${fmtDateShort(p.d)}|${p.nome}|${p.pos}° posto · ${p.pt > 0 ? '+' + p.pt + ' pt' : '0 pt'}  ·  classifica dopo la gara: ${p.rk}°`;
+    g += `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.rk).toFixed(1)}" r="${p.today ? 6 : 5}" fill="${p.today ? 'var(--bg-card)' : col}" stroke="${p.today ? col : 'var(--bg-card)'}" stroke-width="${p.today ? 2.5 : 1.5}" data-tip="${esc(tip)}" tabindex="0" style="cursor:pointer" onpointerenter="window._athRkShow(this)" onpointerleave="window._athRkHide(this)" onfocus="window._athRkShow(this)" onblur="window._athRkHide(this)"/>`;
+  });
+  const best = Math.min(...pts.map(p => p.rk)), worst = Math.max(...pts.map(p => p.rk));
+  return `<section class="ath-block"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i></div>
+    <div class="ath-rank-card" style="position:relative">
+      <div class="ath-rank-sum"><div><b>${pts[pts.length - 1].rk}°</b><small>Posizione oggi</small></div><div><b>${best}°</b><small>Migliore</small></div><div><b>${worst}°</b><small>Peggiore</small></div></div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Posizione nella classifica dopo ciascuna gara" style="width:100%;height:auto;display:block;overflow:visible">${g}</svg>
+      <div class="ath-rank-tip" role="status"></div>
+      <p class="ath-moment-note">Posizione in classifica di categoria dopo ogni gara a cui ha preso parte nei primi 10. Passa sopra un punto per i dettagli. Oro = vittoria, argento = podio.</p>
+    </div></section>`;
+}
+window._athRkShow = function(el) {
+  const card = el.closest('.ath-rank-card'); const tip = card && card.querySelector('.ath-rank-tip');
+  if (!tip) return;
+  const [d, n, x] = (el.getAttribute('data-tip') || '').split('|');
+  tip.innerHTML = `<div class="ath-rank-tip-d">${esc(d)}</div><div class="ath-rank-tip-n">${esc(n)}</div><div class="ath-rank-tip-x">${esc(x)}</div>`;
+  tip.classList.add('on');
+  const cr = card.getBoundingClientRect(), er = el.getBoundingClientRect();
+  let left = er.left - cr.left + er.width / 2 - tip.offsetWidth / 2;
+  left = Math.max(6, Math.min(left, cr.width - tip.offsetWidth - 6));
+  tip.style.left = left + 'px';
+  tip.style.top = Math.max(6, er.top - cr.top - tip.offsetHeight - 10) + 'px';
+};
+window._athRkHide = function(el) {
+  const tip = el.closest('.ath-rank-card')?.querySelector('.ath-rank-tip');
+  if (tip) tip.classList.remove('on');
+};
 function athleteRivalsHtml(list) {
   if (!list.length) return '';
   const rows = list.map(v => {
@@ -17173,6 +17240,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
     ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
+    ${_isLoadedYear ? _athSafe(() => athleteRankChartHtml(atleta_id, globalData.resultsRaw, rCode, typeof globalPos === 'number' ? globalPos : null)) : ''}
     <div id="atleta-cumul-chart-wrap">${cumulHtml}</div>
     ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">

@@ -12650,3 +12650,16 @@ main.page:has(.itc-dash) {
 .ath-h2h-bar i.w { background: #10b981; color: #04130d; }
 .ath-h2h-bar i.l { background: #ef4444; color: #fff; }
 @media (max-width: 760px) { .ath-h2h-row { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+
+/* Pagina atleta: andamento in classifica */
+.ath-rank-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; }
+.ath-rank-sum { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-bottom: 8px; }
+.ath-rank-sum div { display: flex; flex-direction: column; gap: 4px; }
+.ath-rank-sum b { font-family: var(--font-display); font-size: 1.4rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ath-rank-sum small { font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+.ath-rank-tip { position: absolute; z-index: 5; pointer-events: none; min-width: 190px; max-width: 280px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 9px 11px; font-size: .78rem; box-shadow: 0 8px 24px rgba(0,0,0,.4); opacity: 0; transition: opacity .12s; }
+.ath-rank-tip.on { opacity: 1; }
+.ath-rank-tip-d { font-size: .65rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.ath-rank-tip-n { font-weight: 700; margin: 2px 0; }
+.ath-rank-tip-x { color: var(--text-secondary); }
+@media (prefers-reduced-motion: reduce) { .ath-rank-tip { transition: none; } }
