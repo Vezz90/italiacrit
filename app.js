@@ -17122,14 +17122,25 @@ async function renderAtleta(atleta_id, opts = {}) {
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
   const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
 
+  // Pulsanti azione: stesso contenuto di prima, ora dentro l'intestazione
+  const _actionsHtml = `
+          <div class="ath-hero-actions">
+            <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
+            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
+            <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            ${adminEditBtn('atleta', atleta_id)}
+          </div>`;
+  const _standPct = (aRankObj && currentRanking[0] && currentRanking[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(aRankObj.punti / currentRanking[0].punti * 100))) : null;
   const headerHtml = `
-    <div class="athlete-header">
+    <div class="athlete-header ath-hero">
       <div class="athlete-header-top" id="atleta-header-top">
         ${badgeCat(displayCategoria)}
         ${atletaOv.anno_nascita ? `<span class="badge-cat">Classe ${esc(atletaOv.anno_nascita)}</span>` : ''}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         <span id="atleta-team-pill-wrap">${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}</span>
       </div>
+      <div class="ath-hero-grid">
+        <div class="ath-hero-left">
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px;justify-content:space-between">
         ${photoHtml}
         <div class="athlete-header-name" style="flex:1;min-width:0">
@@ -17142,22 +17153,6 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span id="atleta-follow-btn"></span>
           </div>
           <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
-          <div class="athlete-pts-display" id="atleta-pts-display">
-            <div class="athlete-pts-dot"></div>
-            <div>
-              <div class="athlete-pts-value" id="atleta-pts-value" data-base="${a.punti_totali}">${a.punti_totali}</div>
-              <div class="athlete-pts-label">PUNTI STAGIONE</div>
-            </div>
-            ${globalPos !== '-' ? `
-            <div class="athlete-pts-dot" style="background:var(--accent); margin-left:24px;"></div>
-            <div>
-              <div class="athlete-pts-value" style="color:var(--accent)">${globalPos}°</div>
-              <div class="athlete-pts-label">CLASSIFICA GENERALE</div>
-            </div>
-            ` : ''}
-          </div>
-          ${_gapHtml}
-          ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
         <span id="atleta-team-photo-wrap">${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
           ${teamOvAtleta?.photo_url
@@ -17167,7 +17162,30 @@ async function renderAtleta(atleta_id, opts = {}) {
           <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(displayTeam)}</span>
         </a>` : ''}</span>
       </div>
-      <div class="athlete-stats-groups" style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
+          ${_actionsHtml}
+          ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
+        </div>
+        <aside class="ath-hero-standing">
+          <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(displayCategoria))}</div>
+          <div class="athlete-pts-display" id="atleta-pts-display">
+            <div class="athlete-pts-dot"></div>
+            <div class="ath-pts-block">
+              <div class="athlete-pts-value" id="atleta-pts-value" data-base="${a.punti_totali}">${a.punti_totali}</div>
+              <div class="athlete-pts-label">PUNTI STAGIONE</div>
+            </div>
+            ${globalPos !== '-' ? `
+            <div class="athlete-pts-dot" style="background:var(--accent); margin-left:24px;"></div>
+            <div class="ath-rank-block">
+              <div class="athlete-pts-value" style="color:var(--accent)">${globalPos}°</div>
+              <div class="athlete-pts-label">POSIZIONE</div>
+            </div>
+            ` : ''}
+          </div>
+          <div class="ath-standing-extra">
+            ${_standPct != null ? `<div class="ath-stand-bar" role="img" aria-label="${aRankObj.punti} punti su ${currentRanking[0].punti} del leader"><i style="width:${_standPct}%"></i></div>` : ''}
+            ${_gapHtml}
+          </div>
+      <div class="athlete-stats-groups">
         <div class="athlete-stats-group" id="atleta-stats-italia-group">
           <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px" id="atleta-stats-italia-label">ITALIA</div>
           <div class="athlete-stats-bar" id="atleta-stats-italia-bar">
@@ -17203,6 +17221,9 @@ async function renderAtleta(atleta_id, opts = {}) {
             <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${ppout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
           </div>
         </div>` : ''}
+      </div>
+
+        </aside>
       </div>
     </div>`;
 
@@ -17368,12 +17389,6 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${_isLoadedYear ? _athSafe(() => athleteRankChartHtml(atleta_id, globalData.resultsRaw, rCode, typeof globalPos === 'number' ? globalPos : null)) : ''}
     <div id="atleta-cumul-chart-wrap">${cumulHtml}</div>
     ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
-    <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
-      <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
-      <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
-      ${adminEditBtn('atleta', atleta_id)}
-    </div>
     <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
     ${(() => {
       // globalData.videos al primo caricamento può venire dal fallback statico
@@ -19139,6 +19154,8 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // riga dell'atleta di quell'anno) lo mostriamo così com'è — solo per gli
   // anni ri-scrapati dopo l'introduzione di questo campo resta "—".
   const ptsDisplay = document.getElementById('atleta-pts-display');
+  // barra/distacchi valgono solo per la stagione in corso
+  document.querySelectorAll('.ath-standing-extra').forEach(e => { e.style.display = 'none'; });
   const puntiStagione = rows.find(r => r.punti_stagione != null)?.punti_stagione;
   if (ptsDisplay) {
     if (puntiStagione != null) {
@@ -19287,6 +19304,8 @@ window.setAtletaPcsYear = (atletaId, anno) => {
   }
 
   const ptsDisplay = document.getElementById('atleta-pts-display');
+  // barra/distacchi valgono solo per la stagione in corso
+  document.querySelectorAll('.ath-standing-extra').forEach(e => { e.style.display = 'none'; });
   if (ptsDisplay) ptsDisplay.style.display = 'none';
 
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);

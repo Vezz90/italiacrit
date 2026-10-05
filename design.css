@@ -12676,3 +12676,32 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .atleta-results tr.ath-sub td.td-race { padding-left: 30px; }
 .atleta-results tr.ath-sub-hidden { display: none; }
 @media (prefers-reduced-motion: reduce) { .ath-grp-chev { transition: none; } }
+
+/* ── Pagina atleta: intestazione a due colonne (identità | classifica) ── */
+.athlete-header.ath-hero { padding-top: 32px; padding-bottom: 28px; }
+.ath-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
+.ath-hero-left { min-width: 0; }
+.ath-hero-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 4px; }
+.ath-hero-left .profile-social-links { margin-top: 10px; }
+.ath-hero-standing { border-left: 1px solid rgba(255,255,255,.12); padding-left: 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ath-stand-lbl { font-size: .68rem; font-weight: 700; letter-spacing: .09em; color: rgba(255,255,255,.55); text-transform: uppercase; }
+.ath-hero-standing .athlete-pts-display { display: flex !important; flex-direction: row-reverse; justify-content: flex-end; align-items: baseline; gap: 16px; margin: 0 !important; flex-wrap: wrap; }
+.ath-hero-standing .athlete-pts-dot { display: none !important; }
+.ath-hero-standing .ath-rank-block .athlete-pts-value { font-size: 4.4rem; line-height: .85; }
+.ath-hero-standing .ath-pts-block .athlete-pts-value { font-size: 1.9rem; color: #fff; }
+.ath-hero-standing .athlete-pts-label { color: rgba(255,255,255,.5); }
+.ath-stand-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; margin-bottom: 8px; }
+.ath-stand-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent, #ff6b00), #ff9a4d); }
+.ath-hero-standing .ath-gap-line { color: rgba(255,255,255,.6); margin: 0; }
+.ath-hero-standing .ath-gap-line b { color: #fff; }
+.ath-hero-standing .ath-gap-line a { color: rgba(255,255,255,.8); }
+.ath-hero-standing .athlete-stats-groups { display: flex; flex-direction: column; gap: 12px; margin: 6px 0 0 !important; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.1); }
+.ath-hero-standing .athlete-stats-bar { margin: 0 !important; padding: 0 !important; background: transparent !important; border: 0 !important; border-top: 0 !important; display: flex; gap: 18px; flex-wrap: wrap; overflow: visible; }
+.ath-hero-standing .athlete-stat { padding: 0 !important; border: 0 !important; min-width: 0; }
+.ath-hero-standing .athlete-stat-val { font-size: 1.5rem !important; }
+.ath-hero-standing .athlete-stats-group > div:first-child { margin-bottom: 6px !important; }
+@media (max-width: 860px) {
+  .ath-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .ath-hero-standing { border-left: 0; padding-left: 0; border-top: 1px solid rgba(255,255,255,.12); padding-top: 16px; }
+  .ath-hero-standing .ath-rank-block .athlete-pts-value { font-size: 3.4rem; }
+}
