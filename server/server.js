@@ -463,10 +463,34 @@ const OG_IMG_VERSION = 13;
 // continuava a usare l'immagine che aveva già in cache per quell'indirizzo —
 // "Ricontrolla" nel debugger non basta se l'URL dell'immagine non cambia.
 // Con l'impronta nell'URL, ogni variazione dei risultati è un'immagine nuova.
-function _ogResultsTag(results) {
-  if (!results || !results.length) return '0';
-  const s = results.map(r => `${r.posizione}|${r.cognome}|${r.nome}|${r.team || ''}|${r.tempo || ''}`).join('~');
+function _ogResultsTag(results, photoSig) {
+  const s = (results || []).map(r => `${r.posizione}|${r.cognome}|${r.nome}|${r.team || ''}|${r.tempo || ''}`).join('~') + '#' + (photoSig || '');
+  if (s === '#') return '0';
   return require('crypto').createHash('md5').update(s).digest('hex').slice(0, 8);
+}
+// Firma delle foto della gara (caricate a mano approvate + album esterni con
+// questo id esatto): se cambia la foto, cambia anche l'URL dell'immagine di
+// anteprima — lo stesso problema dei risultati, ma per la foto "hero".
+async function _ogPhotoSig(garaId) {
+  try {
+    const [mine, xpix, ic] = await Promise.all([
+      queries.getApprovedRacePhotos(garaId).catch(() => []),
+      readXpixPhotos().catch(() => ({})),
+      readICPhotos().catch(() => ({})),
+    ]);
+    return [(mine || []).map(p => p.id).join(','), xpix?.[garaId]?.url || '', ic?.[garaId]?.url || ''].join('|');
+  } catch { return ''; }
+}
+// Svuota dalla cache in memoria le immagini di anteprima di questa gara (e
+// delle altre categorie dello stesso evento, che condividono foto/id base):
+// la cache tiene 30 minuti, quindi una foto caricata subito dopo la prima
+// generazione restava fuori dall'anteprima fino alla scadenza.
+function _ogInvalidateGara(garaId) {
+  if (!garaId) return;
+  const base = String(garaId).replace(/_[A-Z0-9]+_[MF]$/, '');
+  for (const k of [..._ogCache.keys()]) {
+    if (k.startsWith('gara_') && k.slice(5).startsWith(base)) _ogCache.delete(k);
+  }
 }
 
 function readDataJson(file) {
@@ -1001,7 +1025,7 @@ app.get('/og/gara/:id', async (req, res) => {
   const adjustQS = ['s', 'ox', 'oy']
     .filter(k => req.query[k] != null)
     .map(k => `&${k}=${encodeURIComponent(req.query[k])}`).join('');
-  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results)}${adjustQS}`;
+  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results, await _ogPhotoSig(id))}${adjustQS}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   // Canonical sulla pagina pulita reale (indicizzabile da quando esiste il
   // router URL puliti, vedi commento in ogHtml) invece che su questa stessa
@@ -2772,6 +2796,7 @@ app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (
       filename, caption: caption || '', photographer: photographer || '', status,
       atleta_ids: [...new Set(tags)].join(','),
     });
+    _ogInvalidateGara(gara_id);
     res.json({ ok: true, status });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -2794,12 +2819,22 @@ app.get('/api/admin/race-photos/pending', requireAdmin, async (req, res) => {
 });
 
 app.post('/api/admin/race-photos/:id/approve', requireAdmin, async (req, res) => {
-  try { await queries.approveRacePhoto(req.params.id); res.json({ ok: true }); }
+  try {
+    const ph = await queries.getRacePhotoById(req.params.id).catch(() => null);
+    await queries.approveRacePhoto(req.params.id);
+    _ogInvalidateGara(ph?.gara_id);
+    res.json({ ok: true });
+  }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/admin/race-photos/:id/reject', requireAdmin, async (req, res) => {
-  try { await queries.rejectRacePhoto(req.params.id); res.json({ ok: true }); }
+  try {
+    const ph = await queries.getRacePhotoById(req.params.id).catch(() => null);
+    await queries.rejectRacePhoto(req.params.id);
+    _ogInvalidateGara(ph?.gara_id);
+    res.json({ ok: true });
+  }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2821,7 +2856,11 @@ app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
       });
     }
     // Cambio annata/gara: aggiorna il gara_id della foto
-    if (gara_id) await queries.updateRacePhotoGara(req.params.id, gara_id);
+    if (gara_id) {
+      const prev = await queries.getRacePhotoById(req.params.id).catch(() => null);
+      await queries.updateRacePhotoGara(req.params.id, gara_id);
+      _ogInvalidateGara(prev?.gara_id); _ogInvalidateGara(gara_id);
+    }
     // Tag corridori (l'admin può impostare la lista completa)
     if (atleta_ids !== undefined) {
       const photo = await queries.getRacePhotoById(req.params.id);
@@ -2933,6 +2972,7 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
     if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
     await queries.deleteRacePhoto(req.params.id);
     await deletePhoto(photo.filename);
+    _ogInvalidateGara(photo.gara_id);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -11330,7 +11370,7 @@ async function _getHeadMetaFor(type, id) {
     return {
       title: `${title} | ICS`, desc,
       canonical: `${SITE_URL}/gara/${encodeURIComponent(id)}`,
-      ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results)}`,
+      ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results, await _ogPhotoSig(id))}`,
     };
   }
   if (type === 'atleta') {
