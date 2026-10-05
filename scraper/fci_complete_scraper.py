@@ -891,16 +891,52 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
                 r["team"] = p_name
                 r["team_id"] = p_tid
 
+    def _row_cc(r):
+        cat_val = r["categoria"]
+        if cat_val in ALL_CODES: return cat_val
+        return CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
+
+    def _band(cc):
+        # fascia d'età senza genere; ES1/ES2 sono la stessa fascia (si passa da
+        # 1° a 2° anno in corso di stagione, è normale)
+        b = cc.rsplit("_", 1)[0]
+        return "ES" if b in ("ES1", "ES2") else b
+
+    # ── Categoria di appartenenza di ogni atleta ─────────────────────────
+    # Nelle gare PROMISCUE (più categorie in un'unica classifica) la FCI
+    # pubblica la gara sotto UNA categoria, quindi un Juniores che corre con
+    # gli Elite compare in una gara "ELI_M". Prima la categoria dell'atleta era
+    # quella della PRIMA riga incontrata: se capitava quella promiscua, TUTTI i
+    # suoi punti finivano nella classifica sbagliata (es. un Juniores con 16
+    # gare Juniores e una Elite finiva in Elite). Ora vince la fascia in cui ha
+    # più risultati (a parità, la più recente): i punti delle gare promiscue
+    # restano nella categoria a cui appartiene, e anche la squadra li conta lì.
+    _band_count = {}; _band_last = {}
+    for r in results:
+        a_ = r["atleta_id"]
+        if not a_ or not str(r["data"]).startswith(str(CURRENT_YEAR)): continue
+        c_ = _row_cc(r)
+        k_ = (a_, _band(c_), c_.rsplit("_", 1)[1])
+        _band_count[k_] = _band_count.get(k_, 0) + 1
+        if k_ not in _band_last or r["data"] >= _band_last[k_][0]:
+            _band_last[k_] = (r["data"], c_)
+    home_cat = {}
+    for (a_, b_, g_), n_ in _band_count.items():
+        cur = home_cat.get(a_)
+        cand = (n_, _band_last[(a_, b_, g_)][0], _band_last[(a_, b_, g_)][1])
+        if cur is None or cand[:2] > cur[:2]: home_cat[a_] = cand
+    home_cat = {a_: v[2] for a_, v in home_cat.items()}
+
     for r in results:
         if not str(r["data"]).startswith(str(CURRENT_YEAR)): continue
         aid, tid, pts, pos = r["atleta_id"], r["team_id"], r["punti_effettivi"], r["posizione"]
         
         # Gestione categoria: se è già un codice (es. ELI_M) lo usiamo, altrimenti mappiamo
-        cat_val = r["categoria"]
-        if cat_val in ALL_CODES:
-            cc = cat_val
-        else:
-            cc = CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
+        cc = _row_cc(r)
+        # Gara in una fascia diversa da quella dell'atleta (gara promiscua):
+        # il risultato vale per la SUA categoria, non per quella della gara.
+        if aid and aid in home_cat and _band(cc) != _band(home_cat[aid]):
+            cc = home_cat[aid]
 
         # ── Atleta — SOLO se la riga ha un vero atleta_id. Le righe "a
         # squadre" (gara a cronometro a squadre ecc., vedi is_squadre più

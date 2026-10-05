@@ -2132,6 +2132,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // per ogni categoria, processiamo i risultati in ordine cronologico,
   // accumuliamo i punti_effettivi e dopo ogni gara assegniamo il rank.
   // Così ogni risultato porta il rank dell'atleta DOPO quella specifica gara.
+  if (resultsRaw) _buildAthleteHomeCats(resultsRaw);
   if (resultsRaw) {
     // Raggruppa per catCode
     const _byCode = {};
@@ -3222,6 +3223,51 @@ function catLabel(code) {
   return map[code] || code;
 }
 
+// ── Categoria di appartenenza degli atleti (gare promiscue) ─────────────
+// Una gara promiscua è pubblicata dalla FCI sotto UNA categoria: un Juniores
+// che corre con gli Elite compare in una gara "ELI_M". Il suo risultato deve
+// restare nella SUA categoria (classifica, squadra, grafici), non in quella
+// della gara. Come nello scraper (aggregate): vince la fascia d'età (ES/AL/
+// JUN/ELI, a parità di genere) in cui ha più risultati, a parità la più
+// recente. ES1/ES2 sono la stessa fascia (si cambia in stagione).
+let _athleteHomeCat = {};
+function _catBand(code) {
+  const b = String(code || '').replace(/_[MF]$/, '');
+  return (b === 'ES1' || b === 'ES2') ? 'ES' : b;
+}
+function _buildAthleteHomeCats(rows) {
+  const cnt = {}, last = {};
+  for (const r of (rows || [])) {
+    if (!r.atleta_id || !r.gara_id || !r.data) continue;
+    const m = r.gara_id.match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
+    if (!m) continue;
+    const g = r.genere === 'F' ? 'F' : r.genere === 'M' ? 'M' : m[1].slice(-1);
+    const code = m[1].slice(0, -1) + g;
+    const k = r.atleta_id + '|' + _catBand(code) + '|' + g;
+    cnt[k] = (cnt[k] || 0) + 1;
+    if (!last[k] || r.data >= last[k].d) last[k] = { d: r.data, code };
+  }
+  const best = {};
+  for (const k of Object.keys(cnt)) {
+    const aid = k.split('|')[0];
+    const cand = { n: cnt[k], d: last[k].d, code: last[k].code };
+    const cur = best[aid];
+    if (!cur || cand.n > cur.n || (cand.n === cur.n && cand.d > cur.d)) best[aid] = cand;
+  }
+  _athleteHomeCat = {};
+  for (const [aid, v] of Object.entries(best)) _athleteHomeCat[aid] = v.code;
+}
+const _CAT_INITIALS = { ELI: 'ELI', JUN: 'JUN', AL: 'ALL', ES: 'ES' };
+// Badge "estraneo" per le righe di una gara in cui l'atleta appartiene a
+// un'altra fascia d'età (gara promiscua). Stringa vuota se è della categoria.
+function _catIntruderBadge(atleta_id, gara_id) {
+  const home = _athleteHomeCat[atleta_id];
+  const m = String(gara_id || '').match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
+  if (!home || !m || _catBand(home) === _catBand(m[1])) return '';
+  const ini = _CAT_INITIALS[_catBand(home)] || _catBand(home);
+  return ` <span class="cat-intruder" title="${esc(catLabel(home))} — il risultato conta nella sua categoria (gara promiscua)">${ini}</span>`;
+}
+function athleteHomeCat(atleta_id) { return _athleteHomeCat[atleta_id] || null; }
 function getRankingFileCode(obj) {
   if (!obj) return null;
   if (typeof obj === 'string') {
@@ -3244,6 +3290,10 @@ function getRankingFileCode(obj) {
       // (sotto) romperebbe quelle già corrette. Bug reale osservato:
       // RENZULLI_GIULIA forzata a ES1_F anche sulla riga "TROFEO ROSA...
       // SECONDO ANNO", dove il suo gara_id (ES2_F) era già giusto.
+      // Gara promiscua: il risultato vale per la categoria dell'atleta, non per
+      // quella in cui la FCI ha pubblicato la gara (vedi _buildAthleteHomeCats).
+      const _home = obj.atleta_id && _athleteHomeCat[obj.atleta_id];
+      if (_home && _home.endsWith('_' + gender) && _catBand(_home) !== _catBand(`${base}_${gender}`)) return _home;
       if (gender === 'F') return `${base}_${gender}`;
       // gender è 'M': possibile gara mista non ancora ri-scrapata dopo il
       // fix — ATHLETE_GENDER_FIXES sotto fa da rete di sicurezza SOLO in
@@ -17139,7 +17189,8 @@ async function renderAtleta(atleta_id, opts = {}) {
   // dalla categoria della gara in cui compare, che può differire dalla vera
   // categoria dell'atleta in casi di gare promiscue o iscrizioni fuori
   // categoria). Prima solo gli atleti PCS-only potevano essere corretti.
-  const displayCategoria = atletaOv.categoria || a.categoria;
+  // (gare promiscue: vince la categoria in cui ha più risultati, vedi _buildAthleteHomeCats)
+  const displayCategoria = atletaOv.categoria || (_isLoadedYear && athleteHomeCat(atleta_id)) || a.categoria;
   const rCode = getRankingFileCode(displayCategoria);
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
@@ -23756,13 +23807,16 @@ async function renderGara(gara_id) {
       const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${FASCIA_LABEL[_rcTitle.fascia] ? ' ' + FASCIA_LABEL[_rcTitle.fascia].toUpperCase() : ''}${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
       const _rcBtn = (_rowIsAdmin && r.atleta_id && !_isRegChamp)
         ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${esc(r.gara_id)}','${esc(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
+      // Gara promiscua: se l'atleta appartiene a un'altra fascia d'età lo si
+      // segnala con le iniziali della sua categoria (il risultato conta lì).
+      const _intr = _catIntruderBadge(r.atleta_id, r.gara_id);
       return `<tr${_isRegChamp ? ' class="rc-row"' : ''}>
         <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
         <td style="font-family:var(--font-heading);font-weight:700">
           <div style="display:flex;align-items:center">
             <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
             <div>
-              <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>${_rcBadge}${_rcBtn}
+              <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>${_intr}${_rcBadge}${_rcBtn}
               <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
             </div>
           </div>
