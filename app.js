@@ -16950,7 +16950,7 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
   if (typeof currentPos === 'number' && currentPos > 0) {
     pts.push({ d: todayIso > lastDate ? todayIso : lastDate, rk: currentPos, pos: null, pt: 0, nome: 'Classifica attuale', today: true });
   }
-  const W = 900, H = 130, L = 34, R = 12, T = 8, B = 20;
+  const W = 900, H = 105, L = 34, R = 12, T = 8, B = 18;
   const t = iso => new Date(iso + 'T00:00:00').getTime();
   const t0 = t(pts[0].d), t1 = Math.max(t(pts[pts.length - 1].d), t0 + 86400000);
   const pad = (t1 - t0) * 0.03;
@@ -16979,12 +16979,10 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
     g += `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.rk).toFixed(1)}" r="${p.today ? 4.5 : 3.5}" fill="${p.today ? 'var(--bg-card)' : col}" stroke="${p.today ? col : 'var(--bg-card)'}" stroke-width="${p.today ? 2.5 : 1.5}" data-tip="${esc(tip)}" tabindex="0" style="cursor:pointer" onpointerenter="window._athRkShow(this)" onpointerleave="window._athRkHide(this)" onfocus="window._athRkShow(this)" onblur="window._athRkHide(this)"/>`;
   });
   const best = Math.min(...pts.map(p => p.rk)), worst = Math.max(...pts.map(p => p.rk));
-  return `<section class="ath-block"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i></div>
-    <div class="ath-rank-card" style="position:relative">
-      <div class="ath-rank-sum"><div><b>${pts[pts.length - 1].rk}°</b><small>Posizione oggi</small></div><div><b>${best}°</b><small>Migliore</small></div><div><b>${worst}°</b><small>Peggiore</small></div></div>
+  return `<section class="ath-block"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i><em class="ath-rank-inline">oggi <b>${pts[pts.length - 1].rk}°</b> · migliore <b>${best}°</b> · peggiore <b>${worst}°</b></em></div>
+    <div class="ath-rank-card" style="position:relative" title="Posizione in classifica di categoria dopo ogni gara a cui ha preso parte nei primi 10. Oro = vittoria, argento = podio.">
       <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Posizione nella classifica dopo ciascuna gara" style="width:100%;height:auto;display:block;overflow:visible">${g}</svg>
       <div class="ath-rank-tip" role="status"></div>
-      <p class="ath-moment-note">Posizione in classifica di categoria dopo ogni gara a cui ha preso parte nei primi 10. Passa sopra un punto per i dettagli. Oro = vittoria, argento = podio.</p>
     </div></section>`;
 }
 window._athRkShow = function(el) {

@@ -12735,3 +12735,7 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .ath-stg-chip { display: inline-block; min-width: 62px; text-align: center; font-size: .66rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,.1); color: var(--text-primary); white-space: nowrap; }
 .ath-stg-chip.ath-stg-gc { background: var(--accent, #ff6b00); color: #111; }
 .ath-stg-rest { color: var(--text-secondary); font-size: .82rem; }
+.ath-rank-inline { font-style: normal; font-size: .72rem; color: var(--text-muted); white-space: nowrap; }
+.ath-rank-inline b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.ath-rank-card { padding: 8px 12px 4px; }
+@media (max-width: 520px) { .ath-rank-inline { display: none; } }
