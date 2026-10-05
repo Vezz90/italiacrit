@@ -18598,35 +18598,92 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
       const amYears  = amRows.map(r => Number(r.anno));
       const proYears = proRows.map(r => Number(r.anno));
       const block = (label, e, years) => `
-        <div class="pcs-career-block">
-          <div class="pcs-career-label">${esc(label)} <span class="pcs-career-years">(${Math.min(...years)}-${Math.max(...years)})</span></div>
-          <div class="pcs-career-stats">
-            <span><strong>${e.wins}</strong> vittorie</span>
-            <span><strong>${e.podi}</strong> podi</span>
-            <span><strong>${e.gare}</strong> gare</span>
+        <div class="ath-career-card">
+          <div class="ath-career-label">${esc(label)} <span>· ${Math.min(...years)}–${Math.max(...years)}</span></div>
+          <div class="ath-career-nums">
+            <div><b>${e.wins}</b><span>vittorie</span></div>
+            <div><b>${e.podi}</b><span>podi</span></div>
+            <div><b>${e.gare}</b><span>gare</span></div>
           </div>
         </div>`;
       careerHtml = `
-        <div class="pcs-career-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
-          ${block('CARRIERA DILETTANTI/GIOVANILE', am, amYears)}
-          ${block('CARRIERA PROFESSIONISTICA', pro, proYears)}
+        <div class="ath-career-grid">
+          ${block('Dilettanti e giovanile', am, amYears)}
+          ${block('Professionistica', pro, proYears)}
         </div>`;
     }
   }
+  if (!careerHtml && dedupedMerged.length) {
+    const yrs = dedupedMerged.map(r => Number(r.anno)).filter(y => !isNaN(y));
+    if (yrs.length) {
+      const wins = dedupedMerged.filter(r => r.posizione === 1).length;
+      const podi = dedupedMerged.filter(r => r.posizione <= 3).length;
+      careerHtml = `<div class="ath-career-grid ath-career-grid--one"><div class="ath-career-card">
+        <div class="ath-career-label">Carriera <span>· ${Math.min(...yrs)}–${Math.max(...yrs)}</span></div>
+        <div class="ath-career-nums"><div><b>${wins}</b><span>vittorie</span></div><div><b>${podi}</b><span>podi</span></div><div><b>${dedupedMerged.length}</b><span>gare</span></div></div>
+      </div></div>`;
+    }
+  }
 
-  if (!topResultsHtml && !teamsHtml) return;
+  // ── Titoli: campionati italiani vinti + titoli regionali (assegnati a mano
+  // o vittorie in gare "Campionato Regionale"), uno per prova/anno.
+  const _titles = [], _titleSeen = new Set();
+  const _pushTitle = (kind, disc, anno, extra) => {
+    const k = `${kind}|${disc}|${anno}`;
+    if (_titleSeen.has(k)) return;
+    _titleSeen.add(k);
+    _titles.push({ kind, disc, anno: String(anno), extra: extra || '' });
+  };
+  for (const r of dedupedMerged.filter(r => r.posizione === 1)) {
+    if (isCampIt(r.nome_gara)) _pushTitle('it', championDisciplina(r.nome_gara), r.anno);
+    else if (isCampReg(r.nome_gara)) _pushTitle('reg', championDisciplina(r.nome_gara), r.anno);
+  }
+  for (const t of (_regionalChampionTitles[atletaId] || [])) _pushTitle('reg', t.disciplina || 'STRADA', t.anno, t.regione);
+  _titles.sort((x, y) => y.anno.localeCompare(x.anno) || (x.kind === 'it' ? -1 : 1));
+  const _cap = t => { t = String(t || '').toLowerCase(); return t.charAt(0).toUpperCase() + t.slice(1); };
+  const titlesHtml = _titles.map(t => `
+    <div class="ath-tl-row"><span class="ath-tl-y">${esc(t.anno)}</span>
+      <span class="ath-tl-main"><i class="ath-tl-dot ath-tl-dot--${t.kind}"></i>Campione ${t.kind === 'it' ? 'italiano' : 'regionale'} · ${esc(t.disc.toLowerCase())}${t.extra ? ' <small>(' + esc(_cap(t.extra)) + ')</small>' : ''}</span>
+      <span class="ath-tl-m">${t.kind === 'it' ? 'Italiano' : 'Regionale'}</span></div>`).join('');
+
+  // ── Squadre: una riga per anno
+  const teamsTl = teamYears.map(y => {
+    const { team, categoria, pcs } = teamsByYear.get(y);
+    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
+    const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
+    const catShort = (categoria || '').replace(/_/g, ' ');
+    return `<div class="ath-tl-row"><span class="ath-tl-y">${esc(y)}</span><span class="ath-tl-main">${teamHtml}</span><span class="ath-tl-m">${esc(catShort)}</span></div>`;
+  }).join('');
+
+  // ── Vittorie principali: per anno, le più rilevanti (stesso ordine di
+  // rilievo dei vecchi "Top results") e il numero totale di vittorie
+  const _winName = r => {
+    const k = _raceGroupKey(r.nome_gara).replace(/\s*[—-]\s*(Classifica Generale|Tappe)\s*$/i, '').trim();
+    return k + (isGC(r.nome_gara) ? ' (GC)' : isStageOrTappa(r.nome_gara) ? ' (tappa)' : '');
+  };
+  const _winsByYear = new Map();
+  for (const r of dedupedMerged.filter(r => r.posizione === 1)) {
+    const y = String(r.anno);
+    if (!_winsByYear.has(y)) _winsByYear.set(y, []);
+    _winsByYear.get(y).push(r);
+  }
+  const winsHtml = [..._winsByYear.keys()].sort((x, y) => y.localeCompare(x)).map(y => {
+    const rows = _winsByYear.get(y).slice().sort((p, q) => tier(q) - tier(p) || (q.data || '').localeCompare(p.data || ''));
+    const names = [], seenN = new Set();
+    for (const r of rows) { const n = _winName(r); if (!seenN.has(n)) { seenN.add(n); names.push(r.url && !r.external ? `<a href="${esc(r.url)}">${esc(n)}</a>` : esc(n)); } }
+    const shown = names.slice(0, 3), more = names.length - shown.length;
+    return `<div class="ath-tl-row"><span class="ath-tl-y">${esc(y)}</span><span class="ath-tl-main">${shown.join(' · ')}${more > 0 ? ` <small>+${more} altre</small>` : ''}</span><span class="ath-tl-m">${rows.length}</span></div>`;
+  }).join('');
+
+  if (!careerHtml && !titlesHtml && !teamsTl && !winsHtml) return;
+  const _sec = (title, body) => `<section class="ath-block"><div class="ath-block-h"><span>${title}</span><i></i></div>${body}</section>`;
   el.innerHTML = `
-    ${careerHtml}
-    <div class="pcs-widget-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0 8px">
-      <div>
-        <div class="pcs-widget-title">Top results</div>
-        ${topResultsHtml || '<div class="empty-state">Nessun risultato</div>'}
-      </div>
-      <div>
-        <div class="pcs-widget-title">Teams</div>
-        ${teamsHtml || '<div class="empty-state">Nessuna squadra</div>'}
-      </div>
-    </div>`;
+    ${careerHtml ? _sec('CARRIERA', careerHtml) : ''}
+    <div class="ath-two-col">
+      ${titlesHtml ? _sec('TITOLI', `<div class="ath-tl">${titlesHtml}</div>`) : ''}
+      ${teamsTl ? _sec('SQUADRE', `<div class="ath-tl">${teamsTl}</div>`) : ''}
+    </div>
+    ${winsHtml ? _sec('VITTORIE PRINCIPALI', `<div class="ath-tl">${winsHtml}</div>`) : ''}`;
 }
 
 // Risolve il team_id italiacrit ATTUALE a partire da un nome squadra

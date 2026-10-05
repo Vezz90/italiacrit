@@ -12837,3 +12837,25 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
   .ath-grp-name b { overflow-wrap: anywhere; }
 }
 @media (max-width: 760px) { .ath-grp-more { display: none; } .ath-grp-sub { margin-left: 18px; } }
+
+/* Pagina atleta: scheda Carriera (come mockup) */
+.ath-career-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.ath-career-grid--one { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+.ath-career-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px 18px; }
+.ath-career-label { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.ath-career-label span { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.ath-career-nums { display: flex; gap: 8px 28px; flex-wrap: wrap; margin-top: 10px; }
+.ath-career-nums b { display: block; font: 800 1.9rem/1 'Inter Tight', 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+.ath-career-nums span { font-size: .75rem; color: var(--text-secondary); }
+.ath-tl { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 2px 16px; }
+.ath-tl-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 8px 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
+.ath-tl-row:first-child { border-top: 0; }
+.ath-tl-y { font: 800 .85rem/1 'Inter Tight', 'Inter', sans-serif; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.ath-tl-main { min-width: 0; overflow-wrap: anywhere; font-size: .88rem; }
+.ath-tl-main a { color: var(--text-primary); text-decoration: none; border-bottom: 1px dotted var(--border-subtle); }
+.ath-tl-main small { color: var(--text-muted); font-size: .72rem; }
+.ath-tl-m { font-size: .72rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+.ath-tl-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+.ath-tl-dot--it { background: linear-gradient(90deg, #008c45 50%, #cd212a 50%); }
+.ath-tl-dot--reg { background: #2f7fd8; }
+@media (max-width: 760px) { .ath-career-grid { grid-template-columns: minmax(0, 1fr); } .ath-career-nums b { font-size: 1.6rem; } }
