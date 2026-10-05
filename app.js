@@ -17210,16 +17210,33 @@ async function renderAtleta(atleta_id, opts = {}) {
     loadRisPhotos(),
     displayTeamId ? getEntityOverrides('team', displayTeamId).catch(() => ({})) : Promise.resolve({}),
   ]);
-  const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
+  // Ripiego: se la classifica pubblicata non contiene ancora l'atleta nella sua
+  // categoria (es. cambio di categoria per gara promiscua, il file si aggiorna
+  // al prossimo giro dello scraper) la ricostruisco dai risultati.
+  let _rankList = currentRanking;
+  if (_isLoadedYear && rCode && !currentRanking.some(x => x.atleta_id === a.id) && globalData.resultsRaw) {
+    const acc = {};
+    for (const r of globalData.resultsRaw) {
+      if (!r.atleta_id || getRankingFileCode(r) !== rCode || r.tipo === 'pista') continue;
+      const e = (acc[r.atleta_id] ||= { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, punti: 0, vittorie: 0 });
+      e.punti += r.punti_effettivi || 0;
+      if (r.posizione === 1) e.vittorie++;
+    }
+    if (acc[a.id]) {
+      _rankList = Object.values(acc).sort((x, y) => y.punti - x.punti || y.vittorie - x.vittorie);
+      _rankList.forEach((e, i) => { e.pos = i + 1; });
+    }
+  }
+  const aRankObj = _rankList.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
   // Distacco dal leader e vantaggio sul successivo, nella stessa classifica
   const _gapHtml = (() => {
-    if (!aRankObj || !currentRanking.length) return '';
+    if (!aRankObj || !_rankList.length) return '';
     const nm = e => `<a href="#/atleta/${encodeURIComponent(e.atleta_id)}">${esc(e.cognome || '')} ${esc(e.nome || '')}</a>`;
     const parts = [];
-    const lead = currentRanking[0];
+    const lead = _rankList[0];
     if (aRankObj.pos > 1 && lead && lead.atleta_id !== atleta_id) parts.push(`<b>−${lead.punti - aRankObj.punti}</b> dal 1° ${nm(lead)} (${lead.punti})`);
-    const below = currentRanking[aRankObj.pos];
+    const below = _rankList[aRankObj.pos];
     if (below && below.atleta_id !== atleta_id) parts.push(`<b>+${aRankObj.punti - below.punti}</b> sul ${aRankObj.pos + 1}° ${nm(below)} (${below.punti})`);
     return parts.length ? `<div class="ath-gap-line">${parts.join(' · ')}</div>` : '';
   })();
@@ -17237,7 +17254,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span id="atleta-follow-btn"></span>
             ${adminEditBtn('atleta', atleta_id)}
           </div>`;
-  const _standPct = (aRankObj && currentRanking[0] && currentRanking[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(aRankObj.punti / currentRanking[0].punti * 100))) : null;
+  const _standPct = (aRankObj && _rankList[0] && _rankList[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(aRankObj.punti / _rankList[0].punti * 100))) : null;
   const headerHtml = `
     <div class="athlete-header ath-hero">
       <div class="athlete-header-top" id="atleta-header-top">
@@ -17287,7 +17304,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             ` : ''}
           </div>
           <div class="ath-standing-extra">
-            ${_standPct != null ? `<div class="ath-stand-bar" role="img" aria-label="${aRankObj.punti} punti su ${currentRanking[0].punti} del leader"><i style="width:${_standPct}%"></i></div>` : ''}
+            ${_standPct != null ? `<div class="ath-stand-bar" role="img" aria-label="${aRankObj.punti} punti su ${_rankList[0].punti} del leader"><i style="width:${_standPct}%"></i></div>` : ''}
             ${_gapHtml}
           </div>
       <div class="athlete-stats-groups">
