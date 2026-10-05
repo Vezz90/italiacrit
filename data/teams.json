@@ -4266,8 +4266,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 12,
-      "JUN_M": 857
+      "JUN_M": 869
     }
   },
   "POLISPORTIVA_TRIPETETOLO_SEANESE": {
@@ -7337,8 +7336,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 11,
-      "JUN_M": 1765
+      "JUN_M": 1776
     }
   },
   "SOLME_OLMO_ARVEDI": {
@@ -31195,10 +31193,10 @@
     ],
     "punti_per_cat": {
       "JUN_M": 71,
-      "JUN_F": 706,
+      "JUN_F": 636,
       "AL_F": 312,
       "ELI_M": 830,
-      "ELI_F": 143
+      "ELI_F": 213
     }
   },
   "TEAM_SERIO": {
@@ -45519,8 +45517,8 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 102,
-      "JUN_F": 40
+      "ELI_F": 119,
+      "JUN_F": 23
     }
   },
   "BORN_TO_WIN_BTC_CITY_LJUBLJANA": {
@@ -47683,8 +47681,8 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 381,
-      "ELI_F": 84
+      "JUN_F": 380,
+      "ELI_F": 85
     }
   },
   "BREGANZE_MILLENIUM": {
@@ -57874,10 +57872,9 @@
       }
     ],
     "punti_per_cat": {
-      "AL_F": 118,
+      "AL_F": 133,
       "ES1_F": 119,
-      "AL_M": 1,
-      "ES2_F": 15
+      "AL_M": 1
     }
   },
   "FOLIGNO_CYCLING_TEAM_ASD": {
@@ -67984,10 +67981,10 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 106,
+      "ES2_F": 91,
       "AL_M": 429,
       "ES1_F": 471,
-      "AL_F": 307,
+      "AL_F": 322,
       "ES1_M": 10
     }
   },
@@ -98707,10 +98704,9 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 416,
+      "AL_M": 421,
       "ES2_M": 457,
-      "ES1_M": 24,
-      "JUN_M": 5
+      "ES1_M": 24
     }
   },
   "CICLISTICA_DRO": {
@@ -130566,8 +130562,8 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 431,
-      "JUN_F": 4
+      "ELI_F": 430,
+      "JUN_F": 5
     }
   },
   "BRESCIA_F_MAGNI_FLANDRES_LOVE": {
@@ -132903,9 +132899,9 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 56,
+      "ELI_F": 72,
       "JUN_M": 426,
-      "JUN_F": 199,
+      "JUN_F": 183,
       "AL_F": 170,
       "AL_M": 432
     }
@@ -140311,9 +140307,10 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 570,
+      "ES1_F": 568,
       "ES2_F": 211,
-      "AL_F": 388
+      "AL_F": 388,
+      "ELI_F": 2
     }
   },
   "G_S_MOSOLE": {
@@ -143442,8 +143439,7 @@
     ],
     "punti_per_cat": {
       "AL_F": 121,
-      "JUN_F": 261,
-      "ELI_F": 17
+      "JUN_F": 278
     }
   },
   "TEAM_CICLISTICO_PALETTI": {
@@ -173472,9 +173468,8 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 118,
-      "ES2_M": 99,
-      "AL_M": 8
+      "JUN_M": 126,
+      "ES2_M": 99
     }
   },
   "FABIO_ARU_ACADEMY_S_R_L_A_R_L": {
@@ -175165,9 +175160,8 @@
     "punti_per_cat": {
       "AL_M": 94,
       "ES2_M": 128,
-      "ES2_F": 90,
-      "JUN_M": 12,
-      "AL_F": 24
+      "ES2_F": 114,
+      "JUN_M": 12
     }
   },
   "CRAZY_WHEELS_CYCLING_ACADEMY": {
@@ -187514,7 +187508,8 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 25
+      "JUN_M": 19,
+      "ES1_M": 6
     }
   },
   "MATSUYAMA_GAKUIN_HIGH_SCHOOL_CYCLING": {
@@ -208081,8 +208076,8 @@
       }
     ],
     "punti_per_cat": {
-      "AL_F": 53,
-      "ES2_F": 39
+      "AL_F": 43,
+      "ES2_F": 49
     }
   },
   "ASD_TEAM_FEMMINILE_TRENTINO": {
@@ -214028,8 +214023,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_F": 41,
-      "ES2_M": 2
+      "AL_F": 43
     }
   },
   "ASD_TIRRENO_BIKE_CICLI_FATATO": {
@@ -216656,9 +216650,8 @@
     "punti_per_cat": {
       "ES1_F": 72,
       "ES1_M": 18,
-      "ES2_M": 27,
-      "AL_M": 9,
-      "AL_F": 30
+      "ES2_M": 57,
+      "AL_M": 9
     }
   },
   "G_S_PEDALE_SINISCOLESE": {

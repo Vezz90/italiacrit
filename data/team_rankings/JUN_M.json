@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1945,
+    "punti": 1956,
     "vittorie": 29,
     "p1": 29,
     "p2": 18,
-    "p3": 17,
-    "pout": 77,
+    "p3": 18,
+    "pout": 78,
     "n_atleti": 14,
     "pos": 1
   },
@@ -26,10 +26,10 @@
   {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 857,
+    "punti": 869,
     "vittorie": 7,
     "p1": 7,
-    "p2": 13,
+    "p2": 14,
     "p3": 6,
     "pout": 52,
     "n_atleti": 9,
@@ -434,12 +434,12 @@
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti": 123,
+    "punti": 131,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 2,
     "pos": 37
   },
@@ -996,6 +996,18 @@
     "pos": 83
   },
   {
+    "team_id": "SCONOSCIUTO",
+    "team_nome": "",
+    "punti": 28,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 84
+  },
+  {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
     "punti": 27,
@@ -1005,7 +1017,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -1017,18 +1029,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 85
-  },
-  {
-    "team_id": "G_S_BAREGGESE_A_S_D",
-    "team_nome": "G.S. BAREGGESE A.S.D",
-    "punti": 25,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 5,
     "pos": 86
   },
   {
@@ -1080,6 +1080,18 @@
     "pos": 90
   },
   {
+    "team_id": "G_S_BAREGGESE_A_S_D",
+    "team_nome": "G.S. BAREGGESE A.S.D",
+    "punti": 19,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 91
+  },
+  {
     "team_id": "CLUB_DEPORTIVO_TRI_SPORT",
     "team_nome": "CLUB DEPORTIVO TRI SPORT",
     "punti": 19,
@@ -1089,7 +1101,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "EMILIA_ROMAGNA",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "RKC_ROMAN_KREUZIGER",
@@ -1113,23 +1125,11 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "ARA_I_SKIP_CAPITAL",
     "team_nome": "ARA I SKIP CAPITAL",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 94
-  },
-  {
-    "team_id": "SCONOSCIUTO",
-    "team_nome": "",
     "punti": 18,
     "vittorie": 0,
     "p1": 0,
@@ -1428,18 +1428,6 @@
     "pos": 119
   },
   {
-    "team_id": "C_C_FORTI_E_VELOCI",
-    "team_nome": "C.C. FORTI E VELOCI",
-    "punti": 5,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 120
-  },
-  {
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
     "team_nome": "CANNIBAL BAHRAIN VICTORIUS",
     "punti": 5,
@@ -1449,7 +1437,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 121
+    "pos": 120
   },
   {
     "team_id": "GI_ESSE_PRO_CYCLING",
@@ -1461,7 +1449,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 122
+    "pos": 121
   },
   {
     "team_id": "DAL_RISO_AL_ROSA",
@@ -1473,7 +1461,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 123
+    "pos": 122
   },
   {
     "team_id": "CASANO",
@@ -1485,7 +1473,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 124
+    "pos": 123
   },
   {
     "team_id": "CICLI_LUCCHINI",
@@ -1497,7 +1485,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 125
+    "pos": 124
   },
   {
     "team_id": "ASD_TEAM_PIERI",
@@ -1509,7 +1497,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 126
+    "pos": 125
   },
   {
     "team_id": "PUGLIA",
@@ -1521,7 +1509,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 127
+    "pos": 126
   },
   {
     "team_id": "VILLADOSE_ANGELO_GOMME",
@@ -1533,7 +1521,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 128
+    "pos": 127
   },
   {
     "team_id": "TSCHERNING_CYCLING_ACADEMY",
@@ -1545,7 +1533,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 129
+    "pos": 128
   },
   {
     "team_id": "AUDAX_FIORMONTI",
@@ -1557,7 +1545,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 130
+    "pos": 129
   },
   {
     "team_id": "UCRAINA",
@@ -1569,7 +1557,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 131
+    "pos": 130
   },
   {
     "team_id": "A_S_D_FORTEBRACCIO_DA_MONTONE",
@@ -1581,7 +1569,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 132
+    "pos": 131
   },
   {
     "team_id": "TEAM_TRAVEL_SERVICE",
@@ -1593,7 +1581,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 133
+    "pos": 132
   },
   {
     "team_id": "E_VALTELLINA_PEDALE_MORBEGNESE",
@@ -1605,7 +1593,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 134
+    "pos": 133
   },
   {
     "team_id": "SC_ROMANESE_CYCLING_TEAM",
@@ -1617,6 +1605,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 135
+    "pos": 134
   }
 ]

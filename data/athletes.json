@@ -805,7 +805,7 @@
     "cognome": "BELLATO",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 121,
     "risultati": [
@@ -1473,7 +1473,7 @@
     "cognome": "TARALLO",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 262,
     "risultati": [
@@ -80705,7 +80705,7 @@
     "cognome": "GOTTOLI",
     "team_attuale": "TEAM WILIER BREGANZE",
     "team_id": "TEAM_WILIER_BREGANZE",
-    "categoria": "ELI_F",
+    "categoria": "JUN_F",
     "genere": "F",
     "punti_totali": 44,
     "risultati": [
@@ -113375,7 +113375,7 @@
     "cognome": "BANI",
     "team_attuale": "PETRUCCI GAUSS CYCLING TEAM",
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "categoria": "ELI_F",
+    "categoria": "JUN_F",
     "genere": "F",
     "punti_totali": 30,
     "risultati": [

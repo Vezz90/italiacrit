@@ -1908,6 +1908,18 @@
     "pos": 159
   },
   {
+    "team_id": "G_S_BAREGGESE_A_S_D",
+    "team_nome": "G.S. BAREGGESE A.S.D",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 160
+  },
+  {
     "team_id": "VELO_CLUB_CATTOLICA",
     "team_nome": "VELO CLUB CATTOLICA",
     "punti": 6,
@@ -1917,7 +1929,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 160
+    "pos": 161
   },
   {
     "team_id": "ASD_FK_BIKE_SCORRANO",
@@ -1929,7 +1941,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 161
+    "pos": 162
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE",
@@ -1941,7 +1953,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 162
+    "pos": 163
   },
   {
     "team_id": "U_C_SANGIULIANESE",
@@ -1953,7 +1965,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 163
+    "pos": 164
   },
   {
     "team_id": "USD_MONTECARLO_CICLISMO",
@@ -1965,7 +1977,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 164
+    "pos": 165
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -1977,7 +1989,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 165
+    "pos": 166
   },
   {
     "team_id": "SPRINT_VIDOR_VALLATA_ASD",
@@ -1989,7 +2001,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 166
+    "pos": 167
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -2001,7 +2013,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 167
+    "pos": 168
   },
   {
     "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
@@ -2013,7 +2025,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 168
+    "pos": 169
   },
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
@@ -2025,7 +2037,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 169
+    "pos": 170
   },
   {
     "team_id": "POL_GHISALBESE_A_S_D",
@@ -2037,7 +2049,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 170
+    "pos": 171
   },
   {
     "team_id": "ASD_SICILY_BIKE_ACADEMY",
@@ -2049,7 +2061,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 171
+    "pos": 172
   },
   {
     "team_id": "U_C_FOLIGNO_ASD",
@@ -2061,7 +2073,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 172
+    "pos": 173
   },
   {
     "team_id": "SCUOLA_DI_CICLISMO_FRANCO_BALLERINI",
@@ -2073,7 +2085,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 173
+    "pos": 174
   },
   {
     "team_id": "MOTOSTAFFETTE_POTENZA",
@@ -2085,7 +2097,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 174
+    "pos": 175
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -2097,7 +2109,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 175
+    "pos": 176
   },
   {
     "team_id": "UC_COSTAMASNAGA_ASD",
@@ -2109,7 +2121,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 176
+    "pos": 177
   },
   {
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
@@ -2121,7 +2133,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 177
+    "pos": 178
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
@@ -2133,7 +2145,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 178
+    "pos": 179
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
@@ -2145,7 +2157,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 179
+    "pos": 180
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -2157,7 +2169,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 180
+    "pos": 181
   },
   {
     "team_id": "ESPERIA_PIASCO",
@@ -2169,7 +2181,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 181
+    "pos": 182
   },
   {
     "team_id": "POL_ASD_RE_CYCLING",
@@ -2181,7 +2193,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 182
+    "pos": 183
   },
   {
     "team_id": "A_S_D_LUDOBIKE_SCUOLA_DI_CICLISMO",
@@ -2193,7 +2205,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 183
+    "pos": 184
   },
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
@@ -2205,7 +2217,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 184
+    "pos": 185
   },
   {
     "team_id": "FRIULI_VENEZIA_GIULIA",
@@ -2217,7 +2229,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 185
+    "pos": 186
   },
   {
     "team_id": "TOSCANA",
@@ -2229,7 +2241,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 186
+    "pos": 187
   },
   {
     "team_id": "UMBRIA",
@@ -2241,7 +2253,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 187
+    "pos": 188
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -2253,6 +2265,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 188
+    "pos": 189
   }
 ]
