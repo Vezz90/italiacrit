@@ -6219,19 +6219,88 @@ function updateNavContextChip() {
 
 // ── SPORT INTELLIGENCE ENGINE ──────────────────────────────
 
-function siStreak(athleteId, resultsRaw) {
-  // Count consecutive podiums from most recent result backward
-  const sorted = resultsRaw
-    .filter(r => r.atleta_id === athleteId && r.data && r.posizione)
-    .sort((a, b) => b.data.localeCompare(a.data));
-  let podioStreak = 0, winStreak = 0;
-  for (const r of sorted) {
-    if (r.posizione <= 3) { podioStreak++; if (r.posizione === 1) winStreak++; else if (winStreak > 0) break; }
-    else break;
+// ── Serie "di fila" ──────────────────────────────────────────────
+// Di ogni gara salviamo solo i primi 10: se un atleta arriva 11° (o non
+// corre) non c'è nessuna riga, quindi contare solo le righe presenti
+// collegherebbe risultati separati da gare senza piazzamento. Una serie è
+// consecutiva solo se tra due risultati (e tra l'ultimo e l'ultima data
+// con risultati importati) NON c'è nessuna gara della sua categoria in
+// calendario: se c'era e l'atleta non è nei primi 10, la serie si
+// interrompe. Se il calendario non copre l'anno non si può verificare e la
+// serie non supera la singola gara.
+function _calByDateIndex() {
+  const cal = globalData?.calendar || [];
+  if (globalData._calByDateIdx && globalData._calByDateLen === cal.length) return globalData._calByDateIdx;
+  const byDate = {}, years = new Set();
+  for (const g of cal) {
+    if (!g.data) continue;
+    years.add(g.data.slice(0, 4));
+    if (isNonRaceCalendarEntry(g) || isProCalendarEntry(g)) continue;
+    const bands = _calBandsOf(g.categoria);
+    const mixed = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i.test(g.categoria || '');
+    if (!bands.size && !mixed) continue;
+    (byDate[g.data] = byDate[g.data] || []).push({ bands, mixed, f: /DONNE|DONNA/i.test(g.categoria || '') });
   }
-  let wStreak = 0;
-  for (const r of sorted) { if (r.posizione === 1) wStreak++; else break; }
-  return { podioStreak, winStreak: wStreak };
+  globalData._calByDateIdx = { byDate, years, dates: Object.keys(byDate).sort() };
+  globalData._calByDateLen = cal.length;
+  return globalData._calByDateIdx;
+}
+function _lastResultDate() {
+  const rr = globalData?.resultsRaw || [];
+  if (globalData._lastResDate && globalData._lastResDateLen === rr.length) return globalData._lastResDate;
+  let mx = '';
+  for (const r of rr) if (r.data && r.data > mx) mx = r.data;
+  globalData._lastResDate = mx; globalData._lastResDateLen = rr.length;
+  return mx;
+}
+// C'è almeno una gara di calendario per questa categoria tra le due date
+// (estremi esclusi)?
+function _calRaceBetween(garaId, from, to) {
+  const m = String(garaId || '').match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
+  if (!m) return false;
+  const band = m[1].replace(/_[MF]$/, '').replace(/^ES[12]$/, 'ES'), isF = m[1].endsWith('_F');
+  const idx = _calByDateIndex();
+  if (!idx.years.has(from.slice(0, 4))) return true;   // non verificabile → non conta come consecutiva
+  for (const d of idx.dates) {
+    if (d <= from) continue;
+    if (d >= to) break;
+    for (const e of idx.byDate[d]) {
+      if (e.mixed || (e.bands.has(band) && e.f === isF)) return true;
+    }
+  }
+  return false;
+}
+// Quante gare consecutive, dalla più recente all'indietro, soddisfano
+// `ok(r)` senza gare di categoria "saltate" in mezzo. `rows` = risultati
+// dell'atleta.
+function consecutiveRun(rows, ok, until) {
+  const seen = new Set();
+  const sorted = rows
+    .filter(r => r.data && r.posizione && !seen.has(r.gara_id) && seen.add(r.gara_id))
+    .sort((a, b) => b.data.localeCompare(a.data));
+  if (!sorted.length) return 0;
+  const end = (until || _lastResultDate() || sorted[0].data);
+  let n = 0, prev = null;
+  for (const r of sorted) {
+    if (!ok(r)) break;
+    if (prev) {
+      // gara di categoria in calendario tra questo risultato e il successivo
+      if (r.data < prev.data && _calRaceBetween(r.gara_id, r.data, prev.data)) break;
+    } else if (r.data.slice(0, 4) === end.slice(0, 4) && r.data < end && _calRaceBetween(r.gara_id, r.data, end)) {
+      // …oppure dopo l'ultimo risultato, fino all'ultima data importata
+      break;
+    }
+    n++; prev = r;
+  }
+  return n;
+}
+
+function siStreak(athleteId, resultsRaw) {
+  const mine = resultsRaw.filter(r => r.atleta_id === athleteId);
+  return {
+    podioStreak: consecutiveRun(mine, r => r.posizione <= 3),
+    winStreak: consecutiveRun(mine, r => r.posizione === 1),
+  };
 }
 
 // ── computeHotScore — forma 0-100 ────────────────────────────────
@@ -6248,8 +6317,7 @@ function computeHotScore(atleta_id, resultsRaw, catCode) {
   const winsScore = Math.min(20,wins*10);
   const avgPos = recent.slice(0,5).reduce((s,r)=>s+(r.posizione||99),0)/Math.min(recent.length,5);
   const trendScore = Math.max(0,30-(avgPos-1)*2);
-  let streak=0;
-  for(const r of recent){ if((r.punti_effettivi||0)>0) streak++; else break; }
+  const streak=consecutiveRun(recent,r=>(r.punti_effettivi||0)>0);
   const streakScore = Math.min(10,streak*2);
   return Math.round(ptsScore+winsScore+trendScore+streakScore);
 }
@@ -6267,7 +6335,7 @@ function getAthleteBadges(atleta_id, resultsRaw, catCode, rankingEntry) {
   if (wins14>=2) badges.push({icon:'🔥',label:'ON FIRE',cls:'badge-fire'});
   else if (wins7>=1) badges.push({icon:'⚡',label:'IN FORMA',cls:'badge-hot'});
   const sorted=resultsRaw.filter(r=>r.atleta_id===atleta_id&&getRankingFileCode(r)===catCode&&r.data).sort((a,b)=>b.data.localeCompare(a.data));
-  let str=0; for(const r of sorted){if((r.punti_effettivi||0)>0)str++;else break;}
+  const str=consecutiveRun(sorted,r=>(r.punti_effettivi||0)>0);
   if(str>=5) badges.push({icon:'💪',label:'STREAK '+str,cls:'badge-streak'});
   else if(str>=3) badges.push({icon:'📈',label:'SERIE '+str,cls:'badge-streak'});
   if(rankingEntry && rankingEntry.pos===1) badges.push({icon:'👑',label:'LEADER',cls:'badge-leader'});
@@ -9694,8 +9762,7 @@ async function renderHubBars() {
     const rEntry=hubRanking.find(r=>r.atleta_id===mvp.atleta_id);
     const pos=rEntry?.pos;
     const streak=(()=>{
-      const rs=hubRes.filter(r=>r.atleta_id===mvp.atleta_id&&r.posizione).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
-      let s=0; for(const r of rs){if(r.posizione===1)s++;else break;} return s;
+      return consecutiveRun(hubRes.filter(r=>r.atleta_id===mvp.atleta_id),r=>r.posizione===1);
     })();
     return `<div class="itc-card itc-mvp-card" onclick="location.hash='#/atleta/${encodeURIComponent(mvp.atleta_id)}'">
       <div class="itc-card-hdr"><span class="itc-card-title">🏆 ATLETA DELLA SETTIMANA</span></div>
@@ -25632,11 +25699,9 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   // Striscia di vittorie più lunga. Deduplica per gara_id: uno stesso
   // risultato può comparire più volte (import FCI + import PCS per la
   // stessa gara), il che gonfiava artificialmente le strisce di vittorie.
-  // Inoltre due vittorie separate da troppo tempo (>25 giorni, più del
-  // normale ritmo settimanale di gare) NON contano come "di fila": quasi
-  // certamente in mezzo ci sono state altre gare senza podio, semplicemente
-  // non tracciate nei dati con lo stesso dettaglio delle gare vinte.
-  const _STREAK_GAP_DAYS = 25;
+  // Due vittorie non sono "di fila" se in mezzo c'è almeno una gara della
+  // stessa categoria in calendario (l'atleta non è nei primi 10, quindi non
+  // ha una riga): vedi _calRaceBetween.
   let recordStreak = null;
   {
     const byAth = {};
@@ -25651,7 +25716,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       let cur = 0, max = 0, prevDate = null;
       for (const r of hist) {
         if (r.posizione === 1) {
-          if (prevDate && r.data && Math.round((new Date(r.data) - new Date(prevDate)) / 86400000) > _STREAK_GAP_DAYS) cur = 0;
+          if (prevDate && r.data && prevDate < r.data && _calRaceBetween(r.gara_id, prevDate, r.data)) cur = 0;
           cur++; max = Math.max(max,cur);
         } else cur = 0;
         prevDate = r.data || prevDate;
