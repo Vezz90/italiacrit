@@ -12739,3 +12739,64 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .ath-rank-inline b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .ath-rank-card { padding: 8px 12px 4px; }
 @media (max-width: 520px) { .ath-rank-inline { display: none; } }
+
+/* ── Pagina atleta: schede, header e tabella compatti (stile PCS) ── */
+.ath-tabs { display: flex; gap: 6px; margin: 4px 0 14px; }
+.ath-tab { flex: 1 1 0; max-width: 200px; font: 800 .78rem/1 var(--font-heading, inherit); letter-spacing: .08em; text-transform: uppercase; padding: 12px 16px; border-radius: 6px; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); cursor: pointer; }
+.ath-tab[aria-selected="true"] { background: var(--accent, #ff6b00); border-color: var(--accent, #ff6b00); color: #111; }
+.ath-tab:focus-visible { outline: 2px solid var(--accent, #ff6b00); outline-offset: 2px; }
+.ath-grp-dates { display: none; }
+.atleta-results tr.ath-sub td.ath-zero { color: var(--text-muted); }
+/* tappe aperte: più discrete (barra a sinistra + fondo appena accennato) */
+.atleta-results tr.ath-grp[aria-expanded="true"] td { background: rgba(255,255,255,.05); border-bottom-color: var(--border-subtle); }
+.atleta-results tr.ath-sub td { background: rgba(255,255,255,.015); }
+.atleta-results tr.ath-sub td:first-child { box-shadow: inset 2px 0 0 rgba(255,107,0,.6); }
+.atleta-results tr.ath-sub-last td { border-bottom: 1px solid var(--border-subtle); }
+.ath-stg-chip { background: rgba(255,255,255,.08); font-weight: 700; }
+
+@media (max-width: 860px) {
+  /* intestazione compatta */
+  .athlete-header.ath-hero { padding: 16px 14px 14px !important; }
+  .ath-hero .athlete-header-top { margin-bottom: 10px; }
+  .ath-hero .profile-photo-row { flex-wrap: nowrap !important; gap: 12px !important; justify-content: flex-start !important; align-items: center !important; }
+  .ath-hero #atleta-team-photo-wrap { display: none; }
+  .ath-hero .athlete-cognome { font-size: clamp(1.7rem, 8.5vw, 2.5rem) !important; }
+  .ath-hero .athlete-nome { font-size: .95rem !important; margin-bottom: 0 !important; }
+  .ath-hero-actions { gap: 6px; margin-top: 10px; }
+  .ath-hero-actions .btn-share, .ath-hero-actions .watch-btn { padding: 8px 11px; font-size: .72rem; }
+  .ath-hero-actions .ath-btn-lbl { display: none; }
+  .ath-hero-left .media-profile-links { margin-top: 8px; }
+  .ath-hero-left .media-profile-link { width: 34px; height: 34px; }
+  .ath-hero-standing { padding-top: 12px; gap: 8px; }
+  .ath-hero-standing .ath-rank-block .athlete-pts-value { font-size: 3rem; }
+  .ath-hero-standing .ath-pts-block .athlete-pts-value { font-size: 1.6rem; }
+  .ath-hero-standing .athlete-stats-groups { flex-direction: row; flex-wrap: wrap; gap: 14px 22px; padding-top: 10px; }
+  .ath-hero-standing .athlete-stat-val { font-size: 1.25rem !important; }
+  .ath-hero-standing .athlete-stat-label { font-size: .58rem; }
+  .ath-hero-standing .athlete-stats-bar { gap: 12px; }
+  .ath-tab { max-width: none; }
+}
+@media (max-width: 760px) {
+  /* tabella risultati: una riga per tappa, come PCS */
+  .atleta-results tr.ath-grp { grid-template-columns: minmax(0, 1fr) auto auto; padding: 10px 12px; row-gap: 0; }
+  .atleta-results tr.ath-grp td:nth-child(3) { grid-column: 1; grid-row: 1; }
+  .atleta-results tr.ath-grp td:nth-child(2) { grid-column: 2; grid-row: 1; font-weight: 800; }
+  .atleta-results tr.ath-grp td:nth-child(7) { grid-column: 3; grid-row: 1; }
+  .atleta-results tr.ath-grp td:nth-child(1),
+  .atleta-results tr.ath-grp td:nth-child(4),
+  .atleta-results tr.ath-grp td:nth-child(5),
+  .atleta-results tr.ath-grp td:nth-child(6) { display: none; }
+  .ath-grp-dates { display: inline; }
+  .atleta-results tr.ath-sub { grid-template-columns: minmax(0, 1fr) auto auto; padding: 7px 12px 7px 14px; row-gap: 0; }
+  .atleta-results tr.ath-sub td:nth-child(3) { grid-column: 1; grid-row: 1; padding-left: 0; }
+  .atleta-results tr.ath-sub td:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .atleta-results tr.ath-sub td:nth-child(7) { grid-column: 3; grid-row: 1; }
+  .atleta-results tr.ath-sub td:nth-child(1),
+  .atleta-results tr.ath-sub td:nth-child(4),
+  .atleta-results tr.ath-sub td:nth-child(5),
+  .atleta-results tr.ath-sub td:nth-child(6),
+  .atleta-results tr.ath-sub td.ath-zero { display: none; }
+  .atleta-results tr.ath-sub td.td-race { padding-left: 0; }
+  .ath-stg-chip { min-width: 0; }
+  .ath-stg-rest { font-size: .78rem; }
+}

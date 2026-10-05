@@ -16743,6 +16743,7 @@ function _atletaGroupStageRows() {
   const nameLink = tr => tr.querySelector('.td-race a');
   rows.forEach(tr => {
     tr.classList.remove('ath-sub', 'ath-sub-hidden', 'ath-sub-last');
+    tr.querySelector('.td-pts')?.classList.remove('ath-zero');
     const a = nameLink(tr);
     if (a) { if (tr.dataset.fullname == null) tr.dataset.fullname = a.textContent; a.textContent = tr.dataset.fullname; }
   });
@@ -16799,7 +16800,7 @@ function _atletaGroupStageRows() {
       <td class="td-date">${dates}</td>
       <td class="td-pos ${gcPos ? posClass(gcPos) : ''}">${gcPos ? gcPos + '°' : '—'}</td>
       <td class="td-race"><span class="ath-grp-name"><span class="ath-grp-chev" aria-hidden="true">›</span>${flag}<b>${esc(baseName)}</b></span>
-        <div class="ath-grp-sub">${subs.length} risultati${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · clicca per ${isOpen ? 'chiudere' : 'aprire'}</div></td>
+        <div class="ath-grp-sub"><span class="ath-grp-dates">${dates} · </span>${subs.length} risultati${bestStage ? ` · migliore tappa ${posOf(bestStage)}°` : ''}${gcRow ? ` · classifica generale ${gcPos}°` : ''} · clicca per ${isOpen ? 'chiudere' : 'aprire'}</div></td>
       <td>${nativeRow.tr.children[3] ? nativeRow.tr.children[3].innerHTML : '—'}</td>
       <td style="text-align:right">${kmAll ? Math.round(kmAll) + ' km' : '—'}</td>
       <td style="text-align:right">—</td>
@@ -16811,6 +16812,8 @@ function _atletaGroupStageRows() {
       s.tr.classList.add('ath-sub');
       if (!isOpen) s.tr.classList.add('ath-sub-hidden');
       s.tr.dataset.gkey = gkey;
+      const ptsTd = s.tr.querySelector('.td-pts');
+      if (ptsTd) ptsTd.classList.toggle('ath-zero', !(parseInt(ptsTd.textContent, 10) > 0));
       const a = nameLink(s.tr);
       if (a) {
         const { chip, rest } = _athStageChip(s.p.label, s.p.gc);
@@ -16854,6 +16857,14 @@ window.setAtletaResultsSort = function(mode) {
   _athSafe(_atletaGroupStageRows);
 };
 
+window._athTab = function(k) {
+  const on = k === 'c' ? 'c' : 's';
+  ['s', 'c'].forEach(x => {
+    const t = document.getElementById('ath-tab-' + x), p = document.getElementById('ath-panel-' + x);
+    if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
+    if (p) p.hidden = x !== on;
+  });
+};
 // ── Pagina atleta: blocchi "Il momento", "Ultimi / Migliori", "Rivalità" ──
 // Solo fatti calcolabili dai dati: niente etichette soggettive ("in
 // crescita"). Le serie "di fila" usano siStreak (verificate sul calendario).
@@ -17138,9 +17149,11 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Pulsanti azione: stesso contenuto di prima, ora dentro l'intestazione
   const _actionsHtml = `
           <div class="ath-hero-actions">
-            <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
-            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
+            <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl"> Condividi Profilo</span></button>
+            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')" aria-label="Compara">⚖<span class="ath-btn-lbl"> Compara</span></button>
             <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            <span id="atleta-msg-btn"></span>
+            <span id="atleta-follow-btn"></span>
             ${adminEditBtn('atleta', atleta_id)}
           </div>`;
   const _standPct = (aRankObj && currentRanking[0] && currentRanking[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(aRankObj.punti / currentRanking[0].punti * 100))) : null;
@@ -17162,8 +17175,6 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span class="athlete-nome">${esc(displayNome)}</span>
             <span id="atleta-ci-badge-host" style="display:contents"></span>
             ${regionalChampionChipsHtml(atleta_id)}
-            <span id="atleta-msg-btn"></span>
-            <span id="atleta-follow-btn"></span>
           </div>
           <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
         </div>
@@ -17390,17 +17401,22 @@ async function renderAtleta(atleta_id, opts = {}) {
     description: `${catLabel(displayCategoria)} — ciclismo italiano`,
   });
 
+  const _rankChartHtml = _isLoadedYear ? _athSafe(() => athleteRankChartHtml(atleta_id, globalData.resultsRaw, rCode, typeof globalPos === 'number' ? globalPos : null)) : '';
   setPage(`
     <div class="hd-wrap pg-inset">
     ${headerHtml}
-    <div id="atleta-pcs-widget"></div>
+    <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina atleta">
+      <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
+      <button class="ath-tab" role="tab" id="ath-tab-c" aria-selected="false" aria-controls="ath-panel-c" onclick="window._athTab('c')">Carriera</button>
+    </div>
+    <div id="ath-panel-s" role="tabpanel" aria-labelledby="ath-tab-s">
     ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
     ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
-    ${_isLoadedYear ? _athSafe(() => athleteRankChartHtml(atleta_id, globalData.resultsRaw, rCode, typeof globalPos === 'number' ? globalPos : null)) : ''}
-    <div id="atleta-cumul-chart-wrap">${cumulHtml}</div>
+    ${_rankChartHtml}
+    <div id="atleta-cumul-chart-wrap"${_rankChartHtml ? ' style="display:none"' : ''}>${cumulHtml}</div>
     ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
     <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
     ${(() => {
@@ -17437,6 +17453,9 @@ async function renderAtleta(atleta_id, opts = {}) {
         </tr></thead>
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
+    </div>
+    <div id="ath-panel-c" role="tabpanel" aria-labelledby="ath-tab-c" hidden>
+      <div id="atleta-pcs-widget"></div>
     </div>
     </div>
   `);
