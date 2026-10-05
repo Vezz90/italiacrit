@@ -12609,3 +12609,44 @@ main.page:has(.itc-dash) {
 .team-lineage-chip--current { font-weight: 700; color: var(--text-primary); background: var(--bg-card); border-color: var(--accent); }
 .team-lineage-year { color: var(--text-muted); font-size: .74rem; }
 .team-lineage-arrow { color: var(--text-muted); font-size: .74rem; }
+
+/* ── Pagina atleta: Il momento / Ultimi e Migliori / Rivalità ── */
+.ath-gap-line { font-size: .8rem; color: var(--text-muted); margin: 2px 0 8px; line-height: 1.5; }
+.ath-gap-line b { color: var(--text-primary); font-weight: 700; font-variant-numeric: tabular-nums; }
+.ath-gap-line a { color: var(--text-secondary); text-decoration: none; border-bottom: 1px dotted var(--border-subtle); }
+.ath-block { margin: 18px 0; }
+.ath-block-h { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ath-block-h span { font-family: var(--font-heading); font-size: .78rem; font-weight: 800; letter-spacing: .09em; color: var(--text-primary); }
+.ath-block-h i { flex: 1; height: 1px; background: var(--border-subtle); }
+.ath-moment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 0; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 4px; }
+.ath-moment-grid > div { padding: 2px 16px; border-left: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ath-moment-grid > div:first-child { border-left: 0; }
+.ath-moment-grid b { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.ath-moment-grid span { font-size: .75rem; color: var(--text-muted); line-height: 1.35; }
+.ath-moment-grid a { color: var(--text-secondary); }
+.ath-moment-note { font-size: .78rem; color: var(--text-muted); margin: 8px 0 0; max-width: 70ch; }
+.ath-two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 760px) { .ath-two-col { grid-template-columns: minmax(0, 1fr); } .ath-moment-grid > div:nth-child(odd) { border-left: 0; } }
+.ath-res-list { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 2px 14px; }
+.ath-res-row { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid var(--border-subtle); text-decoration: none; color: inherit; }
+.ath-res-row:first-child { border-top: 0; }
+.ath-res-row:hover .ath-res-name { color: var(--accent); }
+.ath-res-pos { width: 34px; height: 26px; border-radius: 4px; display: grid; place-items: center; font-family: var(--font-display); font-size: .8rem; background: var(--bg-elevated); color: var(--text-secondary); }
+.ath-res-pos.p1 { background: var(--gold); color: #1a1300; }
+.ath-res-pos.p2 { background: var(--silver); color: #10151c; }
+.ath-res-pos.p3 { background: var(--bronze); color: #1a0e02; }
+.ath-res-body { display: flex; flex-direction: column; min-width: 0; }
+.ath-res-name { font-weight: 600; font-size: .85rem; overflow-wrap: anywhere; }
+.ath-res-date { font-size: .72rem; color: var(--text-muted); }
+.ath-res-pts { font-family: var(--font-display); font-size: .95rem; text-align: right; font-variant-numeric: tabular-nums; }
+.ath-res-pts small { display: block; font-size: .55rem; letter-spacing: .08em; color: var(--text-muted); font-family: var(--font-body, inherit); }
+.ath-h2h-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--border-subtle); }
+.ath-h2h-row:first-of-type { border-top: 0; }
+.ath-h2h-name { font-weight: 700; text-decoration: none; color: var(--text-primary); }
+.ath-h2h-bar-wrap { display: flex; flex-direction: column; gap: 6px; }
+.ath-h2h-bar-wrap small { font-size: .72rem; color: var(--text-muted); }
+.ath-h2h-bar { display: flex; height: 20px; border-radius: 4px; overflow: hidden; background: var(--bg-elevated); }
+.ath-h2h-bar i { display: grid; place-items: center; font: 800 .72rem/1 var(--font-display); font-style: normal; }
+.ath-h2h-bar i.w { background: #10b981; color: #04130d; }
+.ath-h2h-bar i.l { background: #ef4444; color: #fff; }
+@media (max-width: 760px) { .ath-h2h-row { grid-template-columns: minmax(0, 1fr); gap: 6px; } }

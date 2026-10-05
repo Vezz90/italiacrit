@@ -16714,6 +16714,104 @@ window.setAtletaResultsSort = function(mode) {
   document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === mode));
 };
 
+// ── Pagina atleta: blocchi "Il momento", "Ultimi / Migliori", "Rivalità" ──
+// Solo fatti calcolabili dai dati: niente etichette soggettive ("in
+// crescita"). Le serie "di fila" usano siStreak (verificate sul calendario).
+function _athSafe(fn) { try { return fn() || ''; } catch (e) { console.warn('[atleta] blocco non disponibile', e); return ''; } }
+function _athDaysAgo(iso) {
+  const d = Math.round((new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00') - new Date(iso + 'T00:00:00')) / 86400000);
+  return Math.max(0, d);
+}
+function _athResRow(r) {
+  const p = r.posizione, cls = p === 1 ? 'p1' : p === 2 ? 'p2' : p === 3 ? 'p3' : '';
+  return `<a class="ath-res-row" href="#/gara/${esc(r.gara_id)}">
+    <span class="ath-res-pos ${cls}">${p}°</span>
+    <span class="ath-res-body"><span class="ath-res-name">${esc(r.nome_gara)}</span><span class="ath-res-date">${fmtDateShort(r.data)}</span></span>
+    <span class="ath-res-pts">${(r.punti_effettivi || 0) > 0 ? '+' + r.punti_effettivi : '0'}<small>PT</small></span>
+  </a>`;
+}
+function athleteMomentHtml(rows, streak, isCurrent) {
+  if (!rows.length) return '';
+  const byDate = rows.slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  const scoring = rows.filter(r => (r.punti_effettivi || 0) > 0).length;
+  const last = byDate[0];
+  const lastWin = byDate.find(r => r.posizione === 1);
+  const cells = [];
+  if (isCurrent && last) {
+    const days = _athDaysAgo(last.data);
+    const cut = new Date(); cut.setDate(cut.getDate() - 28);
+    const cutIso = cut.toISOString().slice(0, 10);
+    const recent = rows.filter(r => r.data >= cutIso);
+    const pts4 = recent.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    cells.push(`<div><b>${days === 0 ? 'Oggi' : days + ' giorn' + (days === 1 ? 'o' : 'i')}</b><span>dall'ultima gara in Italia (${fmtDateShort(last.data)})</span></div>`);
+    cells.push(`<div><b>${pts4} pt</b><span>nelle ultime 4 settimane, in ${recent.length} gar${recent.length === 1 ? 'a' : 'e'}</span></div>`);
+  } else if (last) {
+    cells.push(`<div><b>${fmtDateShort(last.data)}</b><span>ultima gara della stagione</span></div>`);
+  }
+  cells.push(`<div><b>${scoring}</b><span>gar${scoring === 1 ? 'a' : 'e'} a punti su ${rows.length}</span></div>`);
+  cells.push(lastWin
+    ? `<div><b>${fmtDateShort(lastWin.data)}</b><span>ultima vittoria · <a href="#/gara/${esc(lastWin.gara_id)}">${esc(lastWin.nome_gara)}</a></span></div>`
+    : `<div><b>—</b><span>nessuna vittoria in stagione</span></div>`);
+  // Serie: solo se verificate sul calendario (vedi consecutiveRun) e ≥ 2
+  let streakTxt = '';
+  if (streak && streak.winStreak >= 2) streakTxt = `${streak.winStreak} vittorie consecutive senza gare di categoria saltate in mezzo`;
+  else if (streak && streak.podioStreak >= 2) streakTxt = `${streak.podioStreak} podi consecutivi senza gare di categoria saltate in mezzo`;
+  return `<section class="ath-block" id="ath-moment">
+    <div class="ath-block-h"><span>IL MOMENTO</span><i></i></div>
+    <div class="ath-moment-grid">${cells.join('')}</div>
+    ${streakTxt ? `<p class="ath-moment-note">${streakTxt}.</p>` : ''}
+  </section>`;
+}
+function athleteLastBestHtml(rows) {
+  if (!rows.length) return '';
+  const byDate = rows.slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  const last5 = byDate.slice(0, 5);
+  const best5 = rows.slice().sort((a, b) => (b.punti_effettivi || 0) - (a.punti_effettivi || 0) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || '')).slice(0, 5);
+  return `<div class="ath-two-col">
+    <section class="ath-block"><div class="ath-block-h"><span>ULTIMI RISULTATI</span><i></i></div><div class="ath-res-list">${last5.map(_athResRow).join('')}</div></section>
+    <section class="ath-block"><div class="ath-block-h"><span>MIGLIORI DELLA STAGIONE</span><i></i></div><div class="ath-res-list">${best5.map(_athResRow).join('')}</div></section>
+  </div>`;
+}
+// Confronto diretto: solo gare in cui entrambi sono nei primi 10 (di ogni
+// gara salviamo solo la top 10).
+function athleteH2H(atleta_id, resultsRaw, rCode) {
+  const mine = {};
+  for (const r of resultsRaw) if (r.atleta_id === atleta_id && r.gara_id && r.posizione) mine[r.gara_id] = r;
+  const ids = new Set(Object.keys(mine));
+  if (!ids.size) return [];
+  const rivals = {};
+  const seen = new Set();
+  for (const r of resultsRaw) {
+    if (!r.gara_id || !ids.has(r.gara_id) || r.atleta_id === atleta_id || !r.posizione) continue;
+    const k = r.gara_id + '|' + r.atleta_id;
+    if (seen.has(k)) continue; seen.add(k);
+    if (rCode && getRankingFileCode(r) !== rCode) continue;
+    const me = mine[r.gara_id];
+    const v = (rivals[r.atleta_id] ||= { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, ahead: 0, behind: 0, n: 0, last: null });
+    v.n++;
+    if (me.posizione < r.posizione) v.ahead++; else if (me.posizione > r.posizione) v.behind++;
+    if (!v.last || (me.data || '') > v.last.data) v.last = { data: me.data, nome: me.nome_gara, gara_id: r.gara_id, mine: me.posizione, theirs: r.posizione };
+  }
+  return Object.values(rivals).filter(v => v.n >= 2)
+    .sort((a, b) => b.n - a.n || Math.abs(a.ahead - a.behind) - Math.abs(b.ahead - b.behind))
+    .slice(0, 3);
+}
+function athleteRivalsHtml(list) {
+  if (!list.length) return '';
+  const rows = list.map(v => {
+    const tot = v.ahead + v.behind;
+    return `<div class="ath-h2h-row">
+      <div><a class="ath-h2h-name" href="#/atleta/${encodeURIComponent(v.atleta_id)}">${esc(v.cognome)} ${esc(v.nome)}</a><div class="ath-res-date">${esc(v.team || '')}</div></div>
+      <div class="ath-h2h-bar-wrap">
+        ${tot ? `<div class="ath-h2h-bar" role="img" aria-label="Davanti ${v.ahead} volte, dietro ${v.behind}"><i class="w" style="flex:${v.ahead}">${v.ahead || ''}</i><i class="l" style="flex:${v.behind}">${v.behind || ''}</i></div>` : ''}
+        <small>${v.n} gare insieme nei primi 10${v.last ? ` · ultima: ${fmtDateShort(v.last.data)} (${v.last.mine}° contro ${v.last.theirs}°)` : ''}</small>
+      </div>
+    </div>`;
+  }).join('');
+  return `<section class="ath-block"><div class="ath-block-h"><span>RIVALITÀ</span><i></i></div>${rows}
+    <p class="ath-moment-note">Verde = gare in cui è arrivato davanti, rosso = dietro. Contano solo le gare in cui entrambi sono nei primi 10.</p></section>`;
+}
+
 async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
@@ -16817,6 +16915,17 @@ async function renderAtleta(atleta_id, opts = {}) {
   ]);
   const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
+  // Distacco dal leader e vantaggio sul successivo, nella stessa classifica
+  const _gapHtml = (() => {
+    if (!aRankObj || !currentRanking.length) return '';
+    const nm = e => `<a href="#/atleta/${encodeURIComponent(e.atleta_id)}">${esc(e.cognome || '')} ${esc(e.nome || '')}</a>`;
+    const parts = [];
+    const lead = currentRanking[0];
+    if (aRankObj.pos > 1 && lead && lead.atleta_id !== atleta_id) parts.push(`<b>−${lead.punti - aRankObj.punti}</b> dal 1° ${nm(lead)} (${lead.punti})`);
+    const below = currentRanking[aRankObj.pos];
+    if (below && below.atleta_id !== atleta_id) parts.push(`<b>+${aRankObj.punti - below.punti}</b> sul ${aRankObj.pos + 1}° ${nm(below)} (${below.punti})`);
+    return parts.length ? `<div class="ath-gap-line">${parts.join(' · ')}</div>` : '';
+  })();
 
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
   const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
@@ -16855,6 +16964,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             </div>
             ` : ''}
           </div>
+          ${_gapHtml}
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
         <span id="atleta-team-photo-wrap">${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
@@ -17061,7 +17171,10 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
+    ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
+    ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
     <div id="atleta-cumul-chart-wrap">${cumulHtml}</div>
+    ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
