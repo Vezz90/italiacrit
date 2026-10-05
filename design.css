@@ -12825,3 +12825,14 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .ath-hero-standing .athlete-pts-value, .ath-hero-standing .athlete-stat-val, .ath-h2h-bar i { font-family: 'Inter Tight', 'Inter', sans-serif; font-weight: 800; font-variant-numeric: tabular-nums; }
 .ath-res-pts { color: var(--blue, #3b82f6); }
 .ath-res-pos { font-size: .8rem; }
+
+@media (max-width: 760px) {
+  /* celle senza padding/sfondo: lo stile sta sulla riga, come una lista PCS */
+  .atleta-results tr.ath-grp td,
+  .atleta-results tr.ath-sub td { padding: 0 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; }
+  .atleta-results tr.ath-grp { background: rgba(255,255,255,.04); column-gap: 10px; align-items: center; }
+  .atleta-results tr.ath-grp[aria-expanded="true"] { background: rgba(255,255,255,.07); }
+  .atleta-results tr.ath-sub { background: rgba(255,255,255,.015); box-shadow: inset 2px 0 0 rgba(255,107,0,.6); align-items: center; column-gap: 10px; }
+  .atleta-results tr.ath-sub td.td-race { white-space: normal; }
+  .ath-grp-name b { overflow-wrap: anywhere; }
+}
