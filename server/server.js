@@ -456,6 +456,18 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
 const OG_IMG_VERSION = 13;
+// Impronta dei risultati mostrati nell'immagine di anteprima di una gara:
+// l'URL dell'immagine dipendeva solo da OG_IMG_VERSION, quindi per Facebook
+// restava lo STESSO anche quando i risultati cambiavano (gara senza
+// risultati → risultati arrivati, correzioni, righe aggiunte a mano) e
+// continuava a usare l'immagine che aveva già in cache per quell'indirizzo —
+// "Ricontrolla" nel debugger non basta se l'URL dell'immagine non cambia.
+// Con l'impronta nell'URL, ogni variazione dei risultati è un'immagine nuova.
+function _ogResultsTag(results) {
+  if (!results || !results.length) return '0';
+  const s = results.map(r => `${r.posizione}|${r.cognome}|${r.nome}|${r.team || ''}|${r.tempo || ''}`).join('~');
+  return require('crypto').createHash('md5').update(s).digest('hex').slice(0, 8);
+}
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -989,7 +1001,7 @@ app.get('/og/gara/:id', async (req, res) => {
   const adjustQS = ['s', 'ox', 'oy']
     .filter(k => req.query[k] != null)
     .map(k => `&${k}=${encodeURIComponent(req.query[k])}`).join('');
-  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}${adjustQS}`;
+  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results)}${adjustQS}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   // Canonical sulla pagina pulita reale (indicizzabile da quando esiste il
   // router URL puliti, vedi commento in ogHtml) invece che su questa stessa
@@ -11318,7 +11330,7 @@ async function _getHeadMetaFor(type, id) {
     return {
       title: `${title} | ICS`, desc,
       canonical: `${SITE_URL}/gara/${encodeURIComponent(id)}`,
-      ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+      ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results)}`,
     };
   }
   if (type === 'atleta') {
