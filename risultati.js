@@ -211,7 +211,7 @@
         <img src="https://img.youtube.com/vi/${esc(c.video_id)}/hqdefault.jpg" alt="">
         <span class="bdg"><i></i>IN DIRETTA</span><button class="pl" type="button" aria-label="Guarda la diretta" onclick="window.RisV2.play()">▶</button>
         <div class="cap"><b>${esc(c.title || '')}</b><small>${esc(c.channel || 'YouTube')} · <a href="/gara/${esc(calId)}">Vai alla gara →</a></small></div></div>
-      ${many ? `<div class="lst">${liveItems.map((l, i) => `<button class="it" type="button" onclick="window.RisV2.pick(${i})" aria-current="${i === liveCur}"><b>${esc(l.title || '')}</b><small>${esc(l.channel || '')}</small><span class="pg"></span></button>`).join('')}</div>` : ''}</div>`;
+      ${many ? `<div class="lst">${liveItems.map((l, i) => `<button class="it" type="button" onclick="window.RisV2.pick(${i})" aria-current="${i === liveCur}"><b>${esc(l.title || '')}</b><small>${esc(l.channel || '')}</small><span class="pg"></span></button>`).join('')}<button class="both" type="button" onclick="window.RisV2.both()">▦ Guarda entrambe insieme</button></div>` : ''}</div>`;
     liveTick();
   }
   async function liveRefresh(force) {
@@ -253,6 +253,12 @@
       const y = $('ris-sel-year'); if (y && o.year) y.value = String(o.year);
     },
     loadMoreHtml(n) { return n > 0 ? `<button class="rs-more" type="button" onclick="window.risLoadMore()">Carica altre gare (${n})</button>` : ''; },
+    both() {
+      const el = $('ris-live'); if (!el || liveItems.length < 2) return;
+      livePlaying = true; liveStop();
+      el.innerHTML = `<div class="rs-stage one paused"><div class="rs-both">${liveItems.slice(0, 2).map(c => `<div class="bx"><div class="fr"><iframe src="https://www.youtube.com/embed/${encodeURIComponent(c.video_id)}?autoplay=1&mute=1&rel=0" title="${esc(c.title || 'Diretta')}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div><div class="tt"><b>${esc(c.title || '')}</b><small>${esc(c.channel || '')} · <a href="/gara/${esc(c.gara_id)}">Vai alla gara →</a></small></div></div>`).join('')}</div><div class="bar2"><button type="button" onclick="window.RisV2.single()">← Torna al lettore singolo</button><span>Audio spento: tocca un video per attivarlo.</span></div></div>`;
+    },
+    single() { livePlaying = false; liveDraw(); },
     pick(i) { liveCur = i; livePlaying = false; liveStop(); liveDraw(); liveStop(); const s = $('rs-stg'); if (s) s.classList.add('paused'); },
   };
 

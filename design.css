@@ -13203,3 +13203,11 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 /* il banner globale delle dirette e' ridondante quando il lettore e' gia' in pagina */
 body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .hx-top3 .hx-med:not(.p1):not(.p2):not(.p3), .rs-w .hx-med:not(.p1):not(.p2):not(.p3) { background: var(--bg-elevated, rgba(127,127,127,.2)); color: var(--text-secondary); }
+.rs-stage .lst .both { margin-top: auto; border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; border-radius: 8px; padding: 10px 12px; font-weight: 700; font-size: 12.5px; cursor: pointer; }
+.rs-stage .lst .both:hover { background: rgba(255,255,255,.12); }
+.rs-both { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; background: #000; }
+.rs-both .fr { position: relative; aspect-ratio: 16 / 9; background: #000; }
+.rs-both iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.rs-both .tt { padding: 8px 12px; background: var(--hx-navy); } .rs-both .tt b { display: block; font-size: 12.5px; text-transform: uppercase; } .rs-both .tt small { color: rgba(255,255,255,.75); font-size: 12px; } .rs-both .tt a { color: #fff; font-weight: 700; }
+.rs-stage .bar2 { display: flex; align-items: center; gap: 12px; padding: 8px 12px; flex-wrap: wrap; } .rs-stage .bar2 button { background: transparent; border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 8px; padding: 7px 12px; font-weight: 600; font-size: 12.5px; cursor: pointer; } .rs-stage .bar2 span { color: rgba(255,255,255,.65); font-size: 12px; }
+@media (max-width: 700px) { .rs-both { grid-template-columns: minmax(0, 1fr); } }
