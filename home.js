@@ -113,6 +113,43 @@
     }
     return out;
   }
+  /* ---------- gare recenti con solo i dati PCS (importati a mano, non ancora nei risultati FCI) ---------- */
+  const pcsCache = {};
+  function pcsPerson(name) {
+    const w = String(name || '').trim().split(/\s+/);
+    const up = w.filter(x => x.length > 1 && x === x.toUpperCase() && /[A-ZÀ-Ý]/.test(x));
+    let cognome = up.join(' '), nome = w.filter(x => !up.includes(x)).join(' ');
+    if (!cognome || !nome) { nome = w.length > 1 ? w[w.length - 1] : ''; cognome = w.slice(0, -1).join(' ') || w[0] || ''; }
+    return { cognome, nome };
+  }
+  async function provisional(taken) {
+    const today = iso(new Date()), from = iso(new Date(Date.now() - 3 * 864e5));
+    const g2c = globalData.garaToCalId || {}, orphans = globalData.calBareOrphanIds || new Set();
+    const have = new Set();
+    for (const r of globalData.resultsRaw) if (r.gara_id) { have.add(toCalId(r.gara_id)); if (g2c[r.gara_id]) have.add(g2c[r.gara_id]); }
+    const cands = [];
+    for (const g of globalData.calendar) {
+      if (!g.data || g.data < from || g.data > today || have.has(g.id) || orphans.has(g.id)) continue;
+      if (!g.nome || g.nome.trim() === '-' || isNonRaceCalendarEntry(g) || isProCalendarEntry(g) || calendarHasResultsByNameDate(g)) continue;
+      const bands = _calBandsOf(g.categoria);
+      if (bands.size !== 1) continue;
+      const band = [...bands][0];
+      if (band === 'ES') continue;
+      cands.push({ g, code: band + (/DONNE|DONNA/i.test(g.categoria || '') ? '_F' : '_M') });
+    }
+    const out = await Promise.all(cands.map(async ({ g, code }) => {
+      let rows = pcsCache[g.id];
+      if (!rows || Date.now() - rows.ts > 180000) {
+        try { rows = { ts: Date.now(), v: await apiCall(`/pcs-results/gara/${encodeURIComponent(g.id)}`) }; } catch { rows = { ts: Date.now(), v: [] }; }
+        pcsCache[g.id] = rows;
+      }
+      const v = (Array.isArray(rows.v) ? rows.v : []).slice().sort((a, b) => a.posizione - b.posizione);
+      if (!v.length || v[0].posizione !== 1) return null;
+      return { id: g.id, nome: g.nome, data: g.data, code, km: g.km || '', media: '', tipo: g.tipo || 'regionale', molt: g.moltiplicatore || 1, luogo: g.luogo || g.regione || '', regione: g.regione || '', n: v.length, prov: true,
+        top: v.slice(0, 3).map(r => ({ posizione: r.posizione, atleta_id: r.atleta_id, tempo: '', ...pcsPerson(r.rider_name) })) };
+    }));
+    return out.filter(Boolean);
+  }
   function sortRaces(a, b) {
     return b.data.localeCompare(a.data) || b.molt - a.molt || (b.code === 'ELI_M') - (a.code === 'ELI_M') || b.n - a.n || a.id.localeCompare(b.id);
   }
@@ -143,7 +180,7 @@
       ? `<div class="hx-rk-m">${cover(g.code, '')}${photos[0] ? `<img src="${esc(photos[0])}" alt="" loading="lazy" onerror="this.remove()">` : ''}${vids && !photos.length ? '<span class="hx-play">▶</span>' : ''}<div class="hx-chips">${photos.length ? `<span>📷 ${photos.length}</span>` : ''}${vids ? `<span>▶ ${vids}</span>` : ''}</div></div>`
       : `<div class="hx-spine" style="--sp:${col}"></div>`;
     const top = podium(g).map(t => `<li><i class="hx-med p${t.pos}">${t.pos}</i><span class="nm">${esc(t.nome)}</span><span class="g">${esc(t.gap)}</span></li>`).join('');
-    return `<a class="hx-rk ${has ? '' : 'nomedia'}" href="#/gara/${encodeURIComponent(g.id)}">${media$}<div class="hx-rk-b"><div class="hx-rk-h"><span class="hx-bd ${b[1] ? 'hot' : ''}">${b[0]}</span><span>${esc(catLabel(g.code))}</span>${km ? `<span>·</span><span class="num">${km} km</span>` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><div class="hx-loc">${esc(g.luogo || g.regione || '')}</div><ol class="hx-top3">${top}</ol></div></a>`;
+    return `<a class="hx-rk ${has ? '' : 'nomedia'}" href="#/gara/${encodeURIComponent(g.id)}">${media$}<div class="hx-rk-b"><div class="hx-rk-h"><span class="hx-bd ${b[1] ? 'hot' : ''}">${b[0]}</span><span>${esc(catLabel(g.code))}</span>${g.prov ? '<span class="hx-bd" style="background:#64748B" title="Ordine d’arrivo da PCS, in attesa dei risultati FCI">PROVV.</span>' : ''}${km ? `<span>·</span><span class="num">${km} km</span>` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><div class="hx-loc">${esc(g.luogo || g.regione || '')}</div><ol class="hx-top3">${top}</ol></div></a>`;
   }
 
   function stats(races, today) {
@@ -232,7 +269,7 @@
   }
 
   async function paint(media, myId) {
-    const all = buildRaces().sort(sortRaces);
+    const all = [...buildRaces(), ...await provisional().catch(() => [])].sort(sortRaces);
     const today = iso(new Date());
     const regs = [...new Set(all.map(g => g.regione).filter(Boolean))].sort();
     const tipi = [...new Set(all.map(g => g.tipo).filter(Boolean))].sort();
