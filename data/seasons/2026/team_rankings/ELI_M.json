@@ -2,24 +2,24 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1618,
+    "punti": 1642,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
     "p3": 7,
-    "pout": 57,
+    "pout": 58,
     "n_atleti": 13,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 1293,
+    "punti": 1299,
     "vittorie": 7,
     "p1": 7,
     "p2": 14,
     "p3": 12,
-    "pout": 45,
+    "pout": 46,
     "n_atleti": 13,
     "pos": 2
   },
@@ -50,12 +50,12 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 830,
+    "punti": 839,
     "vittorie": 3,
     "p1": 3,
     "p2": 6,
     "p3": 4,
-    "pout": 45,
+    "pout": 46,
     "n_atleti": 14,
     "pos": 5
   },
@@ -86,21 +86,21 @@
   {
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti": 688,
+    "punti": 718,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 1,
-    "pout": 27,
+    "pout": 29,
     "n_atleti": 8,
     "pos": 8
   },
   {
     "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
     "team_nome": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "punti": 589,
-    "vittorie": 6,
-    "p1": 6,
+    "punti": 634,
+    "vittorie": 7,
+    "p1": 7,
     "p2": 1,
     "p3": 4,
     "pout": 12,
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "punti": 357,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 6,
+    "p3": 5,
+    "pout": 12,
+    "n_atleti": 12,
+    "pos": 16
+  },
+  {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
     "team_nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
     "punti": 337,
@@ -189,18 +201,6 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 16
-  },
-  {
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti": 337,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 6,
-    "p3": 4,
-    "pout": 12,
-    "n_atleti": 11,
     "pos": 17
   },
   {
@@ -230,13 +230,13 @@
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
     "team_nome": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
-    "punti": 278,
+    "punti": 293,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 1,
-    "pout": 7,
-    "n_atleti": 8,
+    "pout": 8,
+    "n_atleti": 9,
     "pos": 20
   },
   {
@@ -314,12 +314,12 @@
   {
     "team_id": "NETCOMPANY_INEOS_RACING_ACADEMY",
     "team_nome": "NETCOMPANY INEOS RACING ACADEMY",
-    "punti": 219,
+    "punti": 222,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 4,
     "pos": 27
   },
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "TIROL_KTM_CYCLING_TEAM",
+    "team_nome": "TIROL KTM CYCLING TEAM",
+    "punti": 75,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 46
+  },
+  {
     "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
     "team_nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
     "punti": 71,
@@ -549,7 +561,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "LIDL_TREK_FUTURE_RACING",
@@ -561,7 +573,7 @@
     "p3": 2,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "TEAM_COLOQUICK",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "MENTECORPO_TEAM",
@@ -609,7 +621,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "U_C_MONACO",
@@ -633,7 +645,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "BOURG_EN_BRESSE_AIN_CYCLISME",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -669,7 +681,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -681,18 +693,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 57
-  },
-  {
-    "team_id": "TIROL_KTM_CYCLING_TEAM",
-    "team_nome": "TIROL KTM CYCLING TEAM",
-    "punti": 39,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 3,
     "pos": 58
   },
   {
@@ -768,6 +768,18 @@
     "pos": 64
   },
   {
+    "team_id": "TEAM_VORARLBERG",
+    "team_nome": "TEAM VORARLBERG",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 65
+  },
+  {
     "team_id": "PRO_GI_T_CYCLING_TEAM",
     "team_nome": "PRO.GI.T. CYCLING TEAM",
     "punti": 30,
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "GARLASCHESE_A_S_D",
@@ -789,7 +801,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "TRENTINO_CYCLING_TEAM_U23",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "NAZIONALE_PARALIMPICA",
@@ -813,7 +825,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "VENDEE_OU_PRIMEO_ENERGIE",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "GROUPAMA_FDJ_CONTINENTAL_TEAM",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "DEKA_RIDERS_TEAM_ASD",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "SCONOSCIUTO",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "ROLLING_BIKE_RACING_TEAM",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "MG_K_VIS_PROMOTECH_FMB",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "NAZIONALE_ROMANIA",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "NORVEGIA",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "TEAM_GAIAPLAST_BIBANESE",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "TEAM_DRALI_REPSOL",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "S_C_VALLE_SERIANA_CENE_A_S_D",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "ASD_TEAM_MOOVEO",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "PC_BAIX_EBRE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "TUDOR_PRO_CYCLING_U23",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "A_S_D_CATTOLI_ANDREA",
@@ -1017,7 +1029,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "TEAM_WSA_KTM_GRAZ",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "PETROLIKE",
@@ -1041,7 +1053,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -1053,7 +1065,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "ELITE_FONDATIONS_CYCLING_TEAM",
@@ -1065,7 +1077,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "ITALIA",
@@ -1077,7 +1089,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -1089,7 +1101,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "BIKE_ACADEMY_MARCHINI_COSTRUZIONI",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "VELOCE_CLUB_ISOLANO",
@@ -1113,7 +1125,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "NMD_CYCLING_TEAM_S_S_D_A_R_L",
@@ -1125,7 +1137,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 94
+    "pos": 95
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -1137,7 +1149,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 95
+    "pos": 96
   },
   {
     "team_id": "CAJA_RURAL_ALEA",
@@ -1149,7 +1161,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 96
+    "pos": 97
   },
   {
     "team_id": "TEAM_MAZZOLA_P_G_C_U23",
@@ -1161,7 +1173,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 98
   },
   {
     "team_id": "G_S_PODENZANO_A_S_D",
@@ -1173,7 +1185,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 99
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1185,7 +1197,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 99
+    "pos": 100
   },
   {
     "team_id": "DU_ACADEMY",
@@ -1197,7 +1209,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 100
+    "pos": 101
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -1209,6 +1221,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 101
+    "pos": 102
   }
 ]
