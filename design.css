@@ -13350,3 +13350,9 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 body:not(.light-mode) .hx-seg button[aria-pressed="true"], body:not(.light-mode) .al-sp > button[aria-pressed="true"] { background: #2459E6; color: #fff; border-color: #2459E6; }
 body:not(.light-mode) .rs-years, body:not(.light-mode) .cls-tabs { scrollbar-color: rgba(255,255,255,.22) transparent; }
 body:not(.light-mode) .al-wrap .al-y, body:not(.light-mode) .al-rc.ita { background: linear-gradient(160deg, #10284A, #17386B); }
+
+/* Home: la gara in evidenza e' tutta cliccabile (niente bottone, niente podio) */
+a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
+/* Risultati: due card per riga, piu' respiro */
+#ris-cards .hx-rlist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 760px) { #ris-cards .hx-rlist { grid-template-columns: minmax(0, 1fr); } }

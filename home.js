@@ -305,11 +305,9 @@
     const sel = (id, val, opts, label) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" aria-label="${label}"><option value="">${label}</option>${opts.map(o => `<option value="${esc(o[0])}" ${o[0] === val ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
     const heroHtml = hero ? (() => {
       const ph = racePhotos(media, hero.id)[0];
-      return `<article class="hx-card hx-hero"><div class="hx-bg">${cover(hero.code, '')}${ph ? `<img src="${esc(ph)}" alt="" onerror="this.remove()">` : ''}</div>
+      return `<a class="hx-card hx-hero" href="#/gara/${encodeURIComponent(hero.id)}"><div class="hx-bg">${cover(hero.code, '')}${ph ? `<img src="${esc(ph)}" alt="" onerror="this.remove()">` : ''}</div>
         <span class="hx-tag">IN EVIDENZA</span><div class="hx-meta">${fmtLong(hero.data).toUpperCase()} · ${esc(catLabel(hero.code)).toUpperCase()}</div>
-        <h1>${esc(raceTitle(hero.nome))}</h1><p>I risultati della giornata</p>
-        <div class="hx-pod">${podium(hero).map(t => `<span><i class="hx-med p${t.pos}">${t.pos}</i>${esc(t.nome)}</span>`).join('')}</div>
-        <a class="hx-cta" href="#/gara/${encodeURIComponent(hero.id)}">VAI AI RISULTATI →</a></article>`;
+        <h1>${esc(raceTitle(hero.nome))}</h1><p>I risultati della giornata</p></a>`;
     })() : '<div class="hx-card hx-empty">Nessuna gara trovata con questi filtri.</div>';
     const sideHtml = side.map(g => { const ph = racePhotos(media, g.id)[0]; return `<a class="hx-card hx-side" href="#/gara/${encodeURIComponent(g.id)}"><div class="hx-bg">${cover(g.code, '')}${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(catLabel(g.code))}${g.luogo ? ' · ' + esc(g.luogo) : ''}</small><span class="hx-chev">›</span></a>`; }).join('');
     const siHtml = `<section class="hx-si"><h2>${ic('<path d="M12 3c1 3.5 4.5 5 4.5 9a4.5 4.5 0 0 1-9 0c0-1.7.7-2.9 1.6-3.9C9.6 10 11 9 12 3z"/>')}Sport Intelligence</h2><div class="hx-si-g">
