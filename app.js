@@ -17201,6 +17201,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // categoria). Prima solo gli atleti PCS-only potevano essere corretti.
   // (gare promiscue: vince la categoria in cui ha più risultati, vedi _buildAthleteHomeCats)
   const displayCategoria = atletaOv.categoria || (_isLoadedYear && athleteHomeCat(atleta_id)) || a.categoria;
+  (window._athBirthYearOv = window._athBirthYearOv || {})[atleta_id] = atletaOv.anno_nascita ? Number(atletaOv.anno_nascita) : null;
   const rCode = getRankingFileCode(displayCategoria);
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
@@ -18274,26 +18275,38 @@ function athleteCategoryPath(rows, nowYear, nowCode, birthYear) {
   const years = Object.keys(per).sort();
   const NAME = { ES: 'Esordienti', AL: 'Allievi', JUN: 'Juniores' };
   const OFFSET = { ES: 12, AL: 14, JUN: 16 };          // età - OFFSET = anno nella categoria (13→1°, 15→1°, 17→1°)
-  const out = {};
+  // 1) fascia e anno-nella-fascia di ogni stagione, dai soli risultati
+  const seq = [];
   let prevG = null, idx = 0;
   for (const y of years) {
     const counts = per[y];
     const gc = {};
     for (const [b, n] of Object.entries(counts)) gc[grp(b)] = (gc[grp(b)] || 0) + n;
     const g = Object.entries(gc).sort((a, b) => b[1] - a[1])[0][0];
+    let explicit = null;
+    if (g === 'ES') { const e1 = counts.ES1 || 0, e2 = counts.ES2 || 0; if (e1 !== e2) explicit = e1 > e2 ? 1 : 2; }
     if (g === prevG) idx += 1; else {
       idx = 1;
       if (birthYear && OFFSET[g]) { const exp = Number(y) - birthYear - OFFSET[g]; if (exp === 1 || exp === 2) idx = exp; }
     }
     prevG = g;
-    if (g === 'ES') {
-      const e1 = counts.ES1 || 0, e2 = counts.ES2 || 0;
-      const n = e1 > e2 ? 1 : e2 > e1 ? 2 : idx;
-      out[y] = `Esordienti ${n}° anno`;
-    } else if (g === 'ELI') {
-      if (birthYear) { const age = Number(y) - birthYear; out[y] = age <= 22 ? 'Under 23' : 'Elite'; }
-      else out[y] = 'Elite / Under 23';
-    } else out[y] = `${NAME[g]} ${idx}° anno`;
+    seq.push({ y, g, idx: explicit || idx, explicit: !!explicit });
+  }
+  // 2) anno di nascita: se non noto lo ricavo dalla PRIMA fascia osservata
+  // (Esordienti/Allievi/Juniores, assumendo che i dati inizino dal 1° anno,
+  // salvo ES1/ES2 espliciti) — serve a separare Under 23 da Elite.
+  let by = birthYear || null;
+  if (!by) {
+    const first = seq.find(x => OFFSET[x.g]);
+    if (first && first === seq[0]) by = Number(first.y) - OFFSET[first.g] - first.idx;
+  }
+  const out = {};
+  for (const x of seq) {
+    if (x.g === 'ES') out[x.y] = `Esordienti ${x.idx}° anno`;
+    else if (x.g === 'ELI') {
+      if (by) { const age = Number(x.y) - by; out[x.y] = age <= 22 ? 'Under 23' : 'Elite'; }
+      else out[x.y] = 'Elite / Under 23';
+    } else out[x.y] = `${NAME[x.g]} ${x.idx}° anno`;
   }
   return out;
 }
@@ -18313,7 +18326,7 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   if (bdEl && payload?.data_nascita) bdEl.textContent = payload.data_nascita;
   if (!risultati.length) return;
   try {
-    const _by = _athBirthYear(payload?.data_nascita) || _athBirthYear(document.querySelector('#atleta-header-top .badge-cat + .badge-cat')?.textContent);
+    const _by = (window._athBirthYearOv || {})[atletaId] || _athBirthYear(payload?.data_nascita);
     window._athCatPath[atletaId] = athleteCategoryPath(risultati, _loadedSeasonYear(), athleteHomeCat(atletaId), _by);
   } catch (_) {}
 
@@ -18692,7 +18705,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
 
   let _catPathW = {};
   try {
-    const _by = _athBirthYear(ciclismoPayload?.data_nascita);
+    const _by = (window._athBirthYearOv || {})[atletaId] || _athBirthYear(ciclismoPayload?.data_nascita);
     _catPathW = athleteCategoryPath(ciclismoRows, nowYear, currentCategoria, _by);
     window._athCatPath[atletaId] = Object.assign({}, window._athCatPath[atletaId] || {}, _catPathW);
   } catch (_) {}
