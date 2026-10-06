@@ -18238,6 +18238,68 @@ window._ciclismoMediaCache = window._ciclismoMediaCache || {};
 window._pcsStoricoCache = window._pcsStoricoCache || {};
 window._pcsTeamHistCache = window._pcsTeamHistCache || {};
 
+// ── Percorso di categoria anno per anno ───────────────────────────────
+// Ricostruisce, dai RISULTATI di ogni stagione, in che categoria correva
+// l'atleta: Esordienti 1°/2° anno, Allievi 1°/2° anno, Juniores 1°/2° anno,
+// poi Under 23 / Elite. Le fonti distinguono 1°/2° anno solo per gli
+// Esordienti (ESORDIENTI1/2); per Allievi e Juniores si conta la sequenza
+// delle stagioni nella stessa fascia (1ª stagione = 1° anno, 2ª = 2° anno,
+// 3ª = "3° anno", cioè un anno in più nella stessa categoria: non ci si
+// ferma ai due canonici). Se si conosce l'anno di nascita lo si usa solo per
+// ancorare la PRIMA stagione osservata di una fascia (se i dati iniziano da
+// metà percorso) e per separare Under 23 da Elite. Ritorna { anno: etichetta }.
+function athleteCategoryPath(rows, nowYear, nowCode, birthYear) {
+  const norm = c => {
+    const u = String(c || '').toUpperCase().replace(/[_\s]+/g, ' ').trim();
+    if (!u) return null;
+    if (/ESORD.*1|^ES1/.test(u)) return 'ES1';
+    if (/ESORD.*2|^ES2/.test(u)) return 'ES2';
+    if (/ESORD|^ES\b/.test(u)) return 'ES';
+    if (/ALLIEV|^AL\b/.test(u)) return 'AL';
+    if (/JUNIOR|^JUN\b/.test(u)) return 'JUN';
+    if (/ELITE|UNDER|^ELI\b/.test(u)) return 'ELI';
+    return null;
+  };
+  const grp = b => (b === 'ES1' || b === 'ES2') ? 'ES' : b;
+  const per = {};
+  for (const r of (rows || [])) {
+    const y = String(r.stagione || (r.data || '').slice(0, 4)); const b = norm(r.categoria);
+    if (!y || !b) continue;
+    const o = (per[y] = per[y] || {}); o[b] = (o[b] || 0) + 1;
+  }
+  if (nowCode && nowYear) {
+    const b = norm(String(nowCode).replace(/_[MF]$/, ''));
+    if (b) { const o = (per[String(nowYear)] = per[String(nowYear)] || {}); o[b] = (o[b] || 0) + 1000; }
+  }
+  const years = Object.keys(per).sort();
+  const NAME = { ES: 'Esordienti', AL: 'Allievi', JUN: 'Juniores' };
+  const OFFSET = { ES: 12, AL: 14, JUN: 16 };          // età - OFFSET = anno nella categoria (13→1°, 15→1°, 17→1°)
+  const out = {};
+  let prevG = null, idx = 0;
+  for (const y of years) {
+    const counts = per[y];
+    const gc = {};
+    for (const [b, n] of Object.entries(counts)) gc[grp(b)] = (gc[grp(b)] || 0) + n;
+    const g = Object.entries(gc).sort((a, b) => b[1] - a[1])[0][0];
+    if (g === prevG) idx += 1; else {
+      idx = 1;
+      if (birthYear && OFFSET[g]) { const exp = Number(y) - birthYear - OFFSET[g]; if (exp === 1 || exp === 2) idx = exp; }
+    }
+    prevG = g;
+    if (g === 'ES') {
+      const e1 = counts.ES1 || 0, e2 = counts.ES2 || 0;
+      const n = e1 > e2 ? 1 : e2 > e1 ? 2 : idx;
+      out[y] = `Esordienti ${n}° anno`;
+    } else if (g === 'ELI') {
+      if (birthYear) { const age = Number(y) - birthYear; out[y] = age <= 22 ? 'Under 23' : 'Elite'; }
+      else out[y] = 'Elite / Under 23';
+    } else out[y] = `${NAME[g]} ${idx}° anno`;
+  }
+  return out;
+}
+function _athBirthYear(text) { const m = String(text || '').match(/(19|20)\d{2}(?!.*(19|20)\d{2})/); return m ? Number(m[0]) : null; }
+window._athCatPath = window._athCatPath || {};
+
 async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow) return;
@@ -18250,6 +18312,10 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const bdEl = document.getElementById('atleta-birthdate-full');
   if (bdEl && payload?.data_nascita) bdEl.textContent = payload.data_nascita;
   if (!risultati.length) return;
+  try {
+    const _by = _athBirthYear(payload?.data_nascita) || _athBirthYear(document.querySelector('#atleta-header-top .badge-cat + .badge-cat')?.textContent);
+    window._athCatPath[atletaId] = athleteCategoryPath(risultati, _loadedSeasonYear(), athleteHomeCat(atletaId), _by);
+  } catch (_) {}
 
   const perAnno = {};
   for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
@@ -18624,6 +18690,12 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     }
   }
 
+  let _catPathW = {};
+  try {
+    const _by = _athBirthYear(ciclismoPayload?.data_nascita);
+    _catPathW = athleteCategoryPath(ciclismoRows, nowYear, currentCategoria, _by);
+    window._athCatPath[atletaId] = Object.assign({}, window._athCatPath[atletaId] || {}, _catPathW);
+  } catch (_) {}
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
@@ -18719,7 +18791,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     const { team, categoria, pcs } = teamsByYear.get(y);
     const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
     const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
-    const catShort = (categoria || '').replace(/_/g, ' ');
+    const catShort = _catPathW[String(y)] || (categoria || '').replace(/_/g, ' ');
     return `<div class="ath-tl-row"><span class="ath-tl-y">${esc(y)}</span><span class="ath-tl-main">${teamHtml}</span><span class="ath-tl-m">${esc(catShort)}</span></div>`;
   }).join('');
 
@@ -19322,10 +19394,12 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
         : `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>`;
     }
     const catBadge = headerTop.querySelector('.badge-cat');
-    if (catBadge) catBadge.textContent = categoria.replace(/_/g, ' ');
-    // etichetta sopra il punteggio: categoria dell'anno che sto guardando
+    const _pathLbl = window._athCatPath?.[atletaId]?.[String(anno)];
+    const _catTxt = _pathLbl || categoria.replace(/_/g, ' ');
+    if (catBadge) catBadge.textContent = _catTxt;
+    // etichetta sopra il punteggio: categoria (con 1°/2° anno) dell'anno che sto guardando
     const _sl = document.querySelector('.ath-stand-lbl');
-    if (_sl) _sl.textContent = (categoria ? categoria.replace(/_/g, ' ') + ' · ' : 'STAGIONE ') + anno;
+    if (_sl) _sl.textContent = (_catTxt ? _catTxt.toUpperCase() + ' · ' : 'STAGIONE ') + anno;
   }
   const photoWrap = document.getElementById('atleta-team-photo-wrap');
   if (photoWrap) {
