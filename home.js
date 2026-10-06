@@ -18,7 +18,7 @@
   const CATS_F = ['ELI_F', 'JUN_F', 'AL_F', 'ES2_F', 'ES1_F'];
   const BAND_COLOR = { ELI: ['#2459E6', '#0B1B3A'], JUN: ['#0E8F7E', '#042B26'], AL: ['#C2670C', '#3B1D04'], ES: ['#7C3AED', '#1F0B47'] };
   const F_COLOR = ['#D6336C', '#3B0A1E'];
-  const hx = { sex: 'M', cat: '', reg: '', tipo: '', n: 12 };
+  const hx = { sex: 'M', cat: '', reg: '', tipo: '', n: 12, cls: 'atleti' };
   let mediaPromise = null, seq = 0;
 
   const $ = id => document.getElementById(id);
@@ -64,7 +64,7 @@
       for (const p of (d1.photos || [])) {
         if (!p.filename || !p.gara_id) continue;
         if (!up.has(p.gara_id)) up.set(p.gara_id, []);
-        up.get(p.gara_id).push({ url: `${PHOTOS_BASE}/photos/${p.filename}`, tags: String(p.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean) });
+        up.get(p.gara_id).push({ url: `${PHOTOS_BASE}/photos/${p.filename}`, cap: String(p.caption || ''), tags: String(p.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean) });
       }
       for (const p of [...(d2.photos || []), ...(d3.photos || [])]) {
         if (!p.gara_id) continue;
@@ -200,7 +200,7 @@
     return { hot: hotL, movers: movers.slice(0, 5).map(m => ({ ...m, nome: nameOf[m.id] || m.id })), nameOf };
   }
 
-  async function rivalries(code) {
+  async function rivalries(code, k) {
     const rk = (await loadRanking(code) || []).slice(0, 10), ids = new Set(rk.map(x => x.atleta_id));
     const by = {};
     for (const r of globalData.resultsRaw) if (ids.has(r.atleta_id) && codeOf(r.gara_id) === code) (by[r.gara_id] = by[r.gara_id] || {})[r.atleta_id] = r.posizione;
@@ -213,37 +213,38 @@
       }
     }
     const nm = {}; rk.forEach(x => { nm[x.atleta_id] = tc(`${x.cognome} ${x.nome}`); });
-    return Object.entries(pair).sort((a, b) => b[1][0] - a[1][0]).slice(0, 3).map(([k, v]) => { const [a, b] = k.split('|'); return { a: nm[a], b: nm[b], n: v[0], wa: v[1], wb: v[2] }; });
+    return Object.entries(pair).sort((a, b) => b[1][0] - a[1][0]).slice(0, k || 3).map(([kk, v]) => { const [a, b] = kk.split('|'); return { a: nm[a], b: nm[b], n: v[0], wa: v[1], wb: v[2], cat: code }; });
   }
 
   /* ---------- foto del leader: la migliore tra quelle delle sue vittorie ---------- */
   function measure(url) {
     return new Promise(res => { const im = new Image(); im.onload = () => res({ url, w: im.naturalWidth, h: im.naturalHeight }); im.onerror = () => res(null); im.src = url; });
   }
-  async function leaderShot(aid, media) {
-    const key = 'hxLead:' + aid;
-    try { const c = JSON.parse(sessionStorage.getItem(key) || 'null'); if (c) return c; } catch (_) { /* ok */ }
+  const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  // La foto deve ritrarre DAVVERO il leader: o è taggato, o il suo nome compare nella didascalia
+  // (le foto caricate hanno "COGNOME NOME - TEAM | gara"). Le foto "della gara vinta" senza nome
+  // possono essere di un compagno di squadra, quindi non si usano. In mancanza: foto profilo, poi iniziali.
+  async function leaderShot(aid, media, cognome, nome) {
+    const key = 'hxLead2:' + aid;
+    try { const c = JSON.parse(sessionStorage.getItem(key) || 'null'); if (c !== null && c !== undefined) return c; } catch (_) { /* ok */ }
     const wins = new Set(globalData.resultsRaw.filter(r => r.atleta_id === aid && r.posizione === 1).map(r => r.gara_id));
-    const winNs = new Set([...wins].map(noSuffix));
+    const surname = norm(cognome), first = norm(nome).split(' ')[0] || '';
+    const hasName = cap => { const c = ' ' + norm(cap) + ' '; return surname && c.includes(' ' + surname + ' ') && (!first || c.includes(' ' + first + ' ')); };
     const cand = [];
-    for (const [gid, list] of media.up) for (const p of list) { const tagged = p.tags.includes(aid); if (tagged || wins.has(gid)) cand.push({ url: p.url, gara: gid, tag: tagged }); }
-    for (const e of media.ext) {
-      const isWin = wins.has(e.gara_id) || winNs.has(noSuffix(e.gara_id));
-      for (const u of e.urls.slice(0, isWin ? 4 : 0)) cand.push({ url: u, gara: e.gara_id, tag: false });
-      for (const [u, csv] of Object.entries(e.tags || {})) if (/^https?:/.test(u) && String(csv).split(',').map(s => s.trim()).includes(aid)) cand.push({ url: icProxy(u), gara: e.gara_id, tag: true });
-    }
+    for (const [gid, list] of media.up) for (const p of list) { if (p.tags.includes(aid) || hasName(p.cap)) cand.push({ url: p.url, gara: gid, tag: true, win: wins.has(gid) }); }
+    for (const e of media.ext) for (const [u, csv] of Object.entries(e.tags || {})) if (/^https?:/.test(u) && String(csv).split(',').map(s => s.trim()).includes(aid)) cand.push({ url: icProxy(u), gara: e.gara_id, tag: true, win: wins.has(e.gara_id) });
     const seen = new Set(), list = [];
     for (const c of cand) if (!seen.has(c.url)) { seen.add(c.url); list.push(c); }
     const probed = (await Promise.all(list.slice(0, 8).map(async c => { const m = await measure(c.url); return m ? { ...c, w: m.w, h: m.h } : null; }))).filter(Boolean);
     let best = null, bs = -99;
     for (const c of probed) {
-      const s = -Math.abs(c.w / c.h - 4 / 3) * 3 + (c.tag ? 0.4 : 0) + Math.min(c.w, 2000) / 5000;
+      const s = -Math.abs(c.w / c.h - 4 / 3) * 3 + (c.win ? 0.4 : 0) + Math.min(c.w, 2000) / 5000;
       if (s > bs) { bs = s; best = c; }
     }
     let out = null;
     if (best) {
       const nm = (globalData.resultsRaw.find(r => r.gara_id === best.gara) || {}).nome_gara || '';
-      out = { url: best.url, cap: raceTitle(nm).replace(/\s*Classifica Generale.*$/i, '') };
+      out = { url: best.url, cap: best.win ? raceTitle(nm).replace(/\s*Classifica Generale.*$/i, '') : '' };
     } else {
       try { const ov = await getEntityOverrides('atleta', aid); if (ov.photo_url) out = { url: mediaUrl(ov.photo_url), cap: '' }; } catch (_) { /* ok */ }
     }
@@ -283,8 +284,8 @@
     const tCode = hx.cat || (hx.sex === 'F' ? 'ELI_F' : 'ELI_M');
     let teamRk = [];
     try { teamRk = ((await loadTeamRanking(tCode)) || []).slice(0, 5); } catch (_) { /* ok */ }
-    const rivCode = hx.cat || (hx.sex === 'F' ? 'ELI_F' : 'ELI_M');
-    const riv = await rivalries(rivCode);
+    // rivalità: con una categoria scelta le 3 più accese di quella; altrimenti la più accesa di OGNI categoria
+    const riv = hx.cat ? await rivalries(hx.cat, 3) : (await Promise.all(cats.map(c => rivalries(c, 1)))).flat();
     if (myId !== window._hxRender) return;
     const band = hx.cat ? hx.cat.replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES') : '';
     const calOk = g => {
@@ -295,7 +296,13 @@
       return mixed || _calBandsOf(g.categoria).has(band);
     };
     const upcoming = globalData.calendar.filter(g => g.data >= today && !isNonRaceCalendarEntry(g) && !isProCalendarEntry(g) && calOk(g)).sort((a, b) => a.data.localeCompare(b.data)).slice(0, 5);
-    const tiles = hx.cat ? [0, 1, 2, 3, 4].map(i => ({ code: hx.cat, idx: i })) : cats.map(c => ({ code: c, idx: 0 }));
+    const tiles = hx.cls !== 'atleti' ? [] : hx.cat ? [0, 1, 2, 3, 4].map(i => ({ code: hx.cat, idx: i })) : [...CATS_M, ...CATS_F].map(c => ({ code: c, idx: 0 }));
+    const tileHtml = t => `<a class="hx-ct" href="#/classifica/${t.code}" data-code="${t.code}" data-idx="${t.idx}"><div class="hx-img">${cover(t.code, '')}<span class="hx-crown ${t.idx > 0 ? 'p' + (t.idx + 1) : ''}">${t.idx + 1}°</span></div><div class="hx-ctb"><b>${esc(hx.cat ? '' + (t.idx + 1) + '° posto' : catLabel(t.code))}</b><span>${hx.cat ? esc(catLabel(t.code)) : 'Classifica generale'}</span><div class="hx-lead">…</div></div></a>`;
+    const teamCard = c => `<div class="hx-tcard" data-tcode="${c}"><div class="hx-tcard-h"><b>${esc(catLabel(c))}</b><a href="#/classifica/${c}/team">Completa →</a></div><div class="hx-tcard-b"><div class="hx-none">…</div></div></div>`;
+    const grp = (t, inner) => `<div class="hx-grp">${t}</div>${inner}`;
+    const clsBody = hx.cls === 'team'
+      ? (hx.cat ? `<div class="hx-tteam">${teamCard(hx.cat)}</div>` : grp('Uomini', `<div class="hx-tteam">${CATS_M.map(teamCard).join('')}</div>`) + grp('Donne', `<div class="hx-tteam">${CATS_F.map(teamCard).join('')}</div>`))
+      : (hx.cat ? `<div class="hx-cls">${tiles.map(tileHtml).join('')}</div>` : grp('Uomini', `<div class="hx-cls">${tiles.filter(t => t.code.endsWith('_M')).map(tileHtml).join('')}</div>`) + grp('Donne', `<div class="hx-cls">${tiles.filter(t => t.code.endsWith('_F')).map(tileHtml).join('')}</div>`));
     const ic = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
     const sel = (id, val, opts, label) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" aria-label="${label}"><option value="">${label}</option>${opts.map(o => `<option value="${esc(o[0])}" ${o[0] === val ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
     const heroHtml = hero ? (() => {
@@ -310,7 +317,7 @@
     const siHtml = `<section class="hx-si"><h2>${ic('<path d="M12 3c1 3.5 4.5 5 4.5 9a4.5 4.5 0 0 1-9 0c0-1.7.7-2.9 1.6-3.9C9.6 10 11 9 12 3z"/>')}Sport Intelligence</h2><div class="hx-si-g">
       <div class="hx-si-c"><h3>Hot riders · 14 giorni</h3>${si.hot.map((h, i) => `<a class="hx-si-r" href="#/atleta/${encodeURIComponent(h.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(h.nome)}</span><span class="up">${h.pts} pt</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div>
       <div class="hx-si-c"><h3>Movers · posizioni guadagnate</h3>${si.movers.map((m, i) => `<a class="hx-si-r" href="#/atleta/${encodeURIComponent(m.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(m.nome)}</span><span class="up">↑${m.gain}</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div>
-      <div class="hx-si-c"><h3>Rivalità · ${esc(catLabel(rivCode))}</h3>${riv.map(r => `<div class="hx-rv"><b>${esc(r.a)} vs ${esc(r.b)}</b><span>${r.n} gare insieme · ${r.wa}–${r.wb}</span></div>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div></div>
+      <div class="hx-si-c"><h3>Rivalità${hx.cat ? ' · ' + esc(catLabel(hx.cat)) : ''}</h3>${riv.map(r => `<div class="hx-rv"><b>${esc(r.a)} vs ${esc(r.b)}</b><span>${hx.cat ? '' : esc(catLabel(r.cat)) + ' · '}${r.n} gare insieme · ${r.wa}–${r.wb}</span></div>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div></div>
       <div class="hx-si-f"><a href="#/statistiche">Statistiche per categoria →</a> · <a href="#/record">Record e primati →</a></div></section>`;
     const followHtml = si.hot.slice(0, 3).map((h, i) => `<a class="hx-ath" href="#/atleta/${encodeURIComponent(h.id)}"><div class="hx-av" data-aid="${esc(h.id)}" style="background:${['#2459E6', '#0E8F7E', '#C2670C'][i]}">${esc(initials(h.nome))}</div><div><b>${esc(h.nome)}</b><span>${esc(h.team)} · ${esc(catLabel(h.cat))}</span><br><span class="hx-tg ${h.w ? '' : 'b'}">${h.w ? 'Hot rider' : 'In forma'}</span></div><div class="hx-upv">+${h.pts}</div></a>`).join('');
     const calRow = g => { const x = dparts(g.data); return `<a class="hx-calr" href="#/calendario"><div class="d num">${String(x.d).padStart(2, '0')}<small>${MESI[x.m]}</small></div><div class="t">${esc(raceTitle(g.nome))}<small>${esc(tc(g.luogo || g.regione || ''))}</small></div><span class="hx-pill">${esc(tc(g.categoria || '').replace(/ E /g, ' · '))}</span></a>`; };
@@ -327,7 +334,7 @@
         <section><div class="hx-ph"><h2>Ultime gare</h2><a href="#/risultati">Tutti i risultati →</a></div><div class="hx-rlist">${rest.map(g => raceCard(g, media, today)).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div>${restAll.length > rest.length ? `<button type="button" class="hx-more" id="hx-more">Carica altre gare (${restAll.length - rest.length})</button>` : ''}</section>
         <section class="hx-panel"><div class="hx-ph"><h2>Oggi su ICS</h2></div><div class="hx-stats">${st.map(s => `<div class="hx-st">${ic(s[0])}<b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div></section>
         ${siHtml}
-        <section class="hx-panel"><div class="hx-ph"><h2>${hx.cat ? 'Classifica ' + esc(catLabel(hx.cat)) : 'Le classifiche'}</h2><a href="#/classifica${hx.cat ? '/' + hx.cat : ''}">Classifica completa →</a></div><div class="hx-cls" id="hx-cls">${tiles.map(t => `<a class="hx-ct" href="#/classifica/${t.code}" data-code="${t.code}" data-idx="${t.idx}"><div class="hx-img">${cover(t.code, '')}<span class="hx-crown ${t.idx > 0 ? 'p' + (t.idx + 1) : ''}">${t.idx + 1}°</span></div><div class="hx-ctb"><b>${esc(hx.cat ? '' + (t.idx + 1) + '° posto' : catLabel(t.code))}</b><span>${hx.cat ? esc(catLabel(t.code)) : 'Classifica generale'}</span><div class="hx-lead">…</div></div></a>`).join('')}</div></section>
+        <section class="hx-panel"><div class="hx-ph"><h2>${hx.cat ? 'Classifica ' + esc(catLabel(hx.cat)) : 'Le classifiche'}</h2><div class="hx-tabs" role="tablist" aria-label="Atleti o team"><button type="button" role="tab" data-cls="atleti" aria-selected="${hx.cls === 'atleti'}">Atleti</button><button type="button" role="tab" data-cls="team" aria-selected="${hx.cls === 'team'}">Team</button></div><a href="#/classifica${hx.cat ? '/' + hx.cat : ''}${hx.cls === 'team' && hx.cat ? '/team' : ''}">Classifica completa →</a></div>${clsBody}</section>
       </div>
       <aside class="hx-col" aria-label="Laterale">
         <section class="hx-panel"><div class="hx-ph"><h2>Atleti da seguire</h2><a href="#/atleti">Vedi tutti →</a></div>${followHtml || '<div class="hx-none">Nessun dato</div>'}</section>
@@ -337,6 +344,7 @@
       <section class="hx-banner"><div><h2>Tutto il ciclismo italiano,<br>in un unico portale.</h2><p>Risultati, classifiche, atleti, team, gare e molto altro.</p></div><a class="hx-cta" href="#/regolamento">SCOPRI IL PROGETTO →</a></section>
     </div>`);
     document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; hx.n = 12; render(); }; });
+    document.querySelectorAll('.hx-tabs button').forEach(b => { b.onclick = () => { hx.cls = b.dataset.cls; const y = window.scrollY; render().then(() => window.scrollTo(0, y)); }; });
     const more = $('hx-more'); if (more) more.onclick = () => { const y = window.scrollY; hx.n += 12; render().then(() => window.scrollTo(0, y)); };
     [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 12; render(); }; });
     // classifiche (leader + foto di una vittoria) e foto profilo degli atleti da seguire, in secondo tempo
@@ -349,7 +357,7 @@
           const name = tc(`${l.cognome} ${l.nome}`);
           if (hx.cat) tile.href = '#/atleta/' + encodeURIComponent(l.atleta_id);   // nella classifica di categoria ogni tessera porta all'atleta
           tile.querySelector('.hx-lead').innerHTML = `${esc(name)}<div class="pts num">${l.punti} pt · ${esc(tc(l.team_nome || ''))}</div>`;
-          const shot = await leaderShot(l.atleta_id, media);
+          const shot = await leaderShot(l.atleta_id, media, l.cognome, l.nome);
           if (myId !== window._hxRender) return;
           const box = tile.querySelector('.hx-img');
           if (shot && shot.url) box.insertAdjacentHTML('beforeend', `<img src="${esc(shot.url)}" alt="${esc(name)}${shot.cap ? ', vittoria: ' + esc(shot.cap) : ''}" loading="lazy" onerror="this.remove()">${shot.cap ? `<div class="hx-cap"><span>🏆 ${esc(shot.cap)}</span></div>` : ''}`);
@@ -357,6 +365,14 @@
         });
       }).catch(() => {});
     }
+    document.querySelectorAll('.hx-tcard[data-tcode]').forEach(card => {
+      const code = card.dataset.tcode;
+      loadTeamRanking(code).then(rk => {
+        if (myId !== window._hxRender) return;
+        const rows = (rk || []).slice(0, hx.cat ? 5 : 3);
+        card.querySelector('.hx-tcard-b').innerHTML = rows.map((t, i) => `<a class="hx-tm" href="#/team/${encodeURIComponent(t.team_id)}"><span class="n">${i + 1}</span><span class="nm">${esc(tc(t.team_nome || ''))}</span><span class="pts num">${t.punti} pt</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>';
+      }).catch(() => {});
+    });
     document.querySelectorAll('.hx-av[data-aid]').forEach(async el => {
       try { const ov = await getEntityOverrides('atleta', el.dataset.aid); if (ov.photo_url && myId === window._hxRender) el.innerHTML = `<img src="${esc(mediaUrl(ov.photo_url))}" alt="" loading="lazy" onerror="this.remove()">`; } catch (_) { /* ok */ }
     });
