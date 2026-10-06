@@ -17294,6 +17294,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(displayTeam)}</span>
         </a>` : ''}</span>
       </div>
+          <div class="ath-hero-pills" id="ath-hero-pills"></div>
           ${_actionsHtml}
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
@@ -17319,7 +17320,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           </div>
       <div class="athlete-stats-groups">
         <div class="athlete-stats-group" id="atleta-stats-italia-group">
-          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px" id="atleta-stats-italia-label">ITALIA</div>
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px" id="atleta-stats-italia-label">RISULTATI ${esc(selYear)}</div>
           <div class="athlete-stats-bar" id="atleta-stats-italia-bar">
             <div class="athlete-stat">
               <span class="athlete-stat-val" style="color:var(--gold)">${p1}</span>
@@ -17354,7 +17355,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           </div>
         </div>` : ''}
       </div>
-
+          <div id="atleta-stats-note" class="ath-stats-note"></div>
         </aside>
       </div>
     </div>`;
@@ -17465,7 +17466,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // globalData.resultsRaw non la rappresenta più (è sempre la corrente).
   // Sostituisce il generico "👑 LEADER" (stesso cls badge-leader) già
   // calcolato da getAthleteBadges, altrimenti i due finiscono doppi in fila.
-  let _leaderBadgeHtml = '';
+  let _leaderBadgeHtml = '', _leaderPillHtml = '';
   if (_isLoadedYear && rCode) {
     const _catResultsForBadge = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rCode);
     const _allReignsForBadge = buildLeaderReigns(_catResultsForBadge, 'atleta_id', 'punti');
@@ -17475,6 +17476,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       const _isCurrentLeader = _allReignsForBadge.length && _allReignsForBadge[_allReignsForBadge.length - 1].key === atleta_id;
       const _leaderHref = `#/classifica/${encodeURIComponent(rCode)}/atleti/punti/storia`;
       _leaderBadgeHtml = `<a href="${_leaderHref}" class="ath-badge ath-badge--badge-leader" style="text-decoration:none">👑 ${_isCurrentLeader ? 'LEADER DA' : 'LEADER PER'} ${_myWeeks} SETT.</a>`;
+      _leaderPillHtml = `<a href="${_leaderHref}" class="ath-pill ath-pill--gold" title="Settimane in testa alla classifica">👑 ${_isCurrentLeader ? 'Leader da' : 'Leader per'} ${_myWeeks} sett.</a>`;
       _badges = _badges.filter(b => b.label !== 'LEADER');
     }
   }
@@ -17489,7 +17491,6 @@ async function renderAtleta(atleta_id, opts = {}) {
   const _badgeStripHtml = `
     <div class="ath-badge-strip">
       ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
-      ${_leaderBadgeHtml}
       ${_rcAdminHtml}
     </div>`;
 
@@ -17568,6 +17569,13 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
   `);
 
+  {
+    const _pillHost = document.getElementById('ath-hero-pills');
+    if (_pillHost) {
+      const _scoring = risultatiStrada.filter(r => (r.punti_effettivi || 0) > 0).length;
+      _pillHost.innerHTML = (_scoring ? `<span class="ath-pill ath-pill--green">${_scoring} gar${_scoring === 1 ? 'a' : 'e'} a punti nel ${esc(selYear)}</span>` : '') + _leaderPillHtml;
+    }
+  }
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
@@ -17991,38 +17999,26 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     return { cognome: id, nome: '' };
   };
 
-  // Riepilogo podi "ESTERO" del team, accanto a quello "ITALIA" già presente
-  // nell'header — quadro completo a colpo d'occhio anche per il team.
-  const teamEsteroEl = document.getElementById('team-stats-estero');
-  if (teamEsteroEl && seasonExtra.length) {
-    const ep1   = seasonExtra.filter(r => r.posizione === 1).length;
-    const ep2   = seasonExtra.filter(r => r.posizione === 2).length;
-    const ep3   = seasonExtra.filter(r => r.posizione === 3).length;
-    const epout = seasonExtra.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
-    teamEsteroEl.innerHTML = `
-      <div class="team-stats-row">
-        <div class="team-stat">
-          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">ALTRI RISULTATI</span>
-          <span class="team-stat-label"></span>
-        </div>
-        <div class="team-stat">
-          <span class="team-stat-val" style="color:var(--gold)">${ep1}</span>
-          <span class="team-stat-label">1°</span>
-        </div>
-        <div class="team-stat">
-          <span class="team-stat-val" style="color:var(--silver)">${ep2}</span>
-          <span class="team-stat-label">2°</span>
-        </div>
-        <div class="team-stat">
-          <span class="team-stat-val" style="color:var(--bronze)">${ep3}</span>
-          <span class="team-stat-label">3°</span>
-        </div>
-        <div class="team-stat">
-          <span class="team-stat-val" style="color:var(--text-muted)">${epout}</span>
-          <span class="team-stat-label">4-10</span>
-        </div>
-      </div>`;
-    teamEsteroEl.style.display = '';
+  // Record unico (come sulla pagina atleta): i piazzamenti da PCS/estero si
+  // sommano ai numeri in alto invece di avere un secondo blocco. I punti
+  // restano solo quelli del circuito. Valori assoluti da data-base.
+  {
+    const tv = document.querySelectorAll('#team-native-header-stats .team-stats-row .team-stat-val');
+    if (tv.length >= 4 && seasonExtra.length) {
+      tv.forEach((el, i) => { if (i < 4 && el.dataset.base == null) el.dataset.base = String(parseInt(el.textContent, 10) || 0); });
+      const add = [0, 0, 0, 0]; let n = 0;
+      for (const r of seasonExtra) {
+        const k = r.posizione === 1 ? 0 : r.posizione === 2 ? 1 : r.posizione === 3 ? 2 : (r.posizione >= 4 && r.posizione <= 10) ? 3 : -1;
+        if (k >= 0) { add[k]++; n++; }
+      }
+      for (let i = 0; i < 4; i++) tv[i].textContent = (parseInt(tv[i].dataset.base, 10) || 0) + add[i];
+      const teamEsteroEl = document.getElementById('team-stats-estero');
+      if (teamEsteroEl) {
+        teamEsteroEl.className = 'ath-stats-note';
+        teamEsteroEl.textContent = n ? `Il record include ${n} piazzament${n === 1 ? 'o' : 'i'} in gare estere/PCS. I punti in classifica vengono solo dalle gare del circuito italiano.` : '';
+        teamEsteroEl.style.display = n ? '' : 'none';
+      }
+    }
   }
 
   if (!garaExtra.length && !seasonExtra.length) return;
@@ -20030,22 +20026,25 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   // pur comparendo poi in tabella: segnalato dal vivo ("non è stata messa
   // la vittoria"). Si somma qui ai numeri già mostrati invece di
   // ricalcolarli da zero (evita di duplicare la logica di conteggio ICS).
-  if (garaExtra.length) {
+  // Il record in alto è UNO solo: gare del circuito + piazzamenti da PCS/estero
+  // (prima c'era un secondo blocco "ALTRI RISULTATI"). I PUNTI restano solo
+  // quelli del circuito italiano: lo dice la nota sotto il record. Valori
+  // assoluti da data-base, così il calcolo è idempotente.
+  {
     const italiaBar = document.getElementById('atleta-stats-italia-bar');
     const vals = italiaBar?.querySelectorAll('.athlete-stat-val');
     if (vals && vals.length === 4) {
+      vals.forEach(el => { if (el.dataset.base == null) el.dataset.base = String(parseInt(el.textContent, 10) || 0); });
       const add = [0, 0, 0, 0];
-      // _isProTier escluso anche qui: un piazzamento in una gara World
-      // Tour/ProSeries non è un podio "dilettantistico" da contare insieme
-      // agli altri (stesso criterio dei punti, vedi sopra).
-      for (const r of garaExtra) {
-        if (r._isProTier) continue;
-        if (r.posizione === 1) add[0]++;
-        else if (r.posizione === 2) add[1]++;
-        else if (r.posizione === 3) add[2]++;
-        else if (r.posizione >= 4 && r.posizione <= 10) add[3]++;
-      }
-      vals.forEach((el, i) => { if (add[i]) el.textContent = (parseInt(el.textContent, 10) || 0) + add[i]; });
+      const bucket = r => r.posizione === 1 ? 0 : r.posizione === 2 ? 1 : r.posizione === 3 ? 2 : (r.posizione >= 4 && r.posizione <= 10) ? 3 : -1;
+      // _isProTier escluso: un piazzamento in una gara World Tour/ProSeries non
+      // è un podio "dilettantistico" (stesso criterio dei punti)
+      for (const r of garaExtra) { if (r._isProTier) continue; const k = bucket(r); if (k >= 0) add[k]++; }
+      let nEstero = 0;
+      for (const r of esteroExtra) { const k = bucket(r); if (k >= 0) { add[k]++; nEstero++; } }
+      vals.forEach((el, i) => { el.textContent = (parseInt(el.dataset.base, 10) || 0) + add[i]; });
+      const note = document.getElementById('atleta-stats-note');
+      if (note) note.textContent = nEstero ? `Il record include ${nEstero} piazzament${nEstero === 1 ? 'o' : 'i'} in gare estere/PCS. I punti in classifica vengono solo dalle gare del circuito italiano.` : '';
     }
   }
 
@@ -20065,34 +20064,6 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     }
   }
 
-  // Riepilogo podi "ESTERO" nell'header, accanto a quello "ITALIA" già
-  // presente — dà un quadro completo del corridore a colpo d'occhio.
-  const esteroStatsEl = document.getElementById('atleta-stats-estero');
-  if (esteroStatsEl && esteroExtra.length) {
-    const ep1   = esteroExtra.filter(r => r.posizione === 1).length;
-    const ep2   = esteroExtra.filter(r => r.posizione === 2).length;
-    const ep3   = esteroExtra.filter(r => r.posizione === 3).length;
-    const epout = esteroExtra.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
-    const bar = esteroStatsEl.querySelector('.athlete-stats-bar');
-    if (bar) bar.innerHTML = `
-      <div class="athlete-stat">
-        <span class="athlete-stat-val" style="color:var(--gold)">${ep1}</span>
-        <span class="athlete-stat-label">1° Posto</span>
-      </div>
-      <div class="athlete-stat">
-        <span class="athlete-stat-val" style="color:var(--silver)">${ep2}</span>
-        <span class="athlete-stat-label">2° Posto</span>
-      </div>
-      <div class="athlete-stat">
-        <span class="athlete-stat-val" style="color:var(--bronze)">${ep3}</span>
-        <span class="athlete-stat-label">3° Posto</span>
-      </div>
-      <div class="athlete-stat">
-        <span class="athlete-stat-val" style="color:var(--text-muted)">${epout}</span>
-        <span class="athlete-stat-label">4°-10° Posti</span>
-      </div>`;
-    esteroStatsEl.style.display = '';
-  }
 
   // Un video/foto può già esistere per una gara che l'atleta ha corso ma che
   // la sezione MEDIA (buildProfileMedia, calcolata al render iniziale) non
@@ -20994,14 +20965,14 @@ async function renderTeam(team_id, opts = {}) {
             ${teamPhotoHtml}
             <div class="team-header-name-block">
               <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
-              <span id="team-msg-btn"></span>
-              <span id="team-follow-btn"></span>
             </div>
           </div>
     <div class="ath-hero-actions">
             <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
-            <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
             <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')"><span class="ath-btn-lbl">Compara</span></button>
+            <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            <span id="team-msg-btn"></span>
+            <span id="team-follow-btn"></span>
             ${adminEditBtn('team', team_id)}
             ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
           </div>

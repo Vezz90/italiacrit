@@ -12921,3 +12921,12 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 /* l'intestazione è sempre scura: colori espliciti (con tema chiaro var(--text-primary) è scuro) */
 .ath-hero-actions .btn-share, .ath-hero-actions .admin-edit-btn:not([style*="0891b2"]) { color: #f1f5f9 !important; }
 .ath-hero-actions .watch-btn.watch-btn--active, .ath-hero-actions .follow-pill.is-on { color: #ff8a3d !important; }
+
+/* Pillole nell'intestazione atleta (gare a punti, settimane da leader) + nota del record */
+.ath-hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ath-hero-pills:empty { display: none; }
+.ath-pill { font: 700 11px/1 'Inter', system-ui, sans-serif; letter-spacing: .04em; padding: 6px 10px; border-radius: 20px; border: 1px solid; text-decoration: none; white-space: nowrap; }
+.ath-pill--green { color: #34d399; background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.3); }
+.ath-pill--gold { color: #f5b301; background: rgba(245,179,1,.1); border-color: rgba(245,179,1,.3); }
+.ath-stats-note { font-size: .7rem; line-height: 1.4; color: rgba(255,255,255,.5); margin-top: 8px; }
+.ath-stats-note:empty { display: none; }
