@@ -24839,6 +24839,8 @@ let calQCat     = '';
 let calQMonth   = '';
 let calQRegione = '';
 let calView     = 'lista';   // 'lista' | 'mappa'
+let calOnlyFuture = false;   // nasconde le gare concluse
+let calPastN    = 40;        // quante gare concluse mostrare (carica altre)
 let _calMap     = null;      // istanza Leaflet
 let _calCluster = null;      // istanza MarkerCluster
 let _raceDetailsCache = null; // cache race_details.json
@@ -24968,10 +24970,14 @@ async function renderCalendario(highlightId) {
     const future = filtered.filter(g => (g.data || '') > today || ((g.data||'') === today && !hasRes(g))).sort((a,b) => (a.data||'').localeCompare(b.data||''));
     const past   = filtered.filter(g => (g.data || '') < today || ((g.data||'') === today && hasRes(g))).sort((a,b) => (b.data||'').localeCompare(a.data||''));
 
+    const _MESIL = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    const _GG = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+    const _dayLong = iso => { const d = new Date(iso + 'T00:00:00'); return `${_GG[d.getDay()]} ${d.getDate()} ${_MESIL[d.getMonth()]} ${d.getFullYear()}`; };
+    const _sp = c => { c = String(c || '').toLowerCase(); return /donne|donna/.test(c) ? '#D6336C' : /esord/.test(c) ? '#7C3AED' : /alliev/.test(c) ? '#C2670C' : /junior/.test(c) ? '#0E8F7E' : '#2459E6'; };
+    const _tcCal = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
+
     const renderItem = (g) => {
       const mult = g.moltiplicatore || multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
-      const day = g.data ? g.data.split('-')[2] : '—';
-      const mon = g.data ? (['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'][parseInt(g.data.split('-')[1])-1]||'') : '';
       const isPast = (g.data || '') < today;
       const calMatch   = calendarResultsMap[g.id] || null;
       const byCategory = calMatch ? calMatch.byCategory : null;
@@ -24985,92 +24991,71 @@ async function renderCalendario(highlightId) {
         podioHtml = catEntries.map(([catName, catData]) => {
           const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
           const cLabel = catLabel(catName) || catName;
-          const firstRes = top3[0];
-          const kmVal = firstRes?.km || '';
-          const mediaVal = firstRes?.media || '';
-          const techBit = (kmVal || mediaVal)
-            ? `<span style="font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono)">${kmVal ? '📍 '+esc(kmVal)+' km' : ''}${kmVal&&mediaVal?' | ':''}${mediaVal ? '⚡ '+esc(mediaVal)+' km/h' : ''}</span>`
-            : '';
-          const rows = top3.map((r,i) => {
-            const pClass = ['p1','p2','p3'][i] || '';
-            return `<div style="display:grid;grid-template-columns:28px 1fr;align-items:center;gap:6px;padding:3px 0;">
-              <div class="hero-pos ${pClass}" style="font-size:0.82rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${r.posizione}°</div>
-              <div>
-                <a href="#/atleta/${esc(r.atleta_id)}" style="font-weight:700;font-size:0.88rem;color:var(--text-primary)">${esc(r.cognome)} ${esc(r.nome)}</a>
-                <span style="font-size:0.75rem;color:var(--text-muted);margin-left:6px">${esc(r.team)}</span>
-              </div>
-            </div>`;
-          }).join('');
-          return `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle);">
-            ${catEntries.length > 1 ? `<div style="font-size:0.65rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${cLabel}</div>` : ''}
-            ${techBit}
-            ${rows}
-          </div>`;
+          const rows = top3.map(r => `<li><i class="hx-med p${r.posizione}">${r.posizione}</i><a class="nm" href="#/atleta/${esc(r.atleta_id)}">${esc(_tcCal(`${r.cognome} ${r.nome}`))}</a><span class="g">${esc(_tcCal(r.team))}</span></li>`).join('');
+          return `${catEntries.length > 1 ? `<div class="rs-catl">${esc(cLabel)}</div>` : ''}<ol class="hx-top3">${rows}</ol>`;
         }).join('');
-        const calVideos = (globalData.videos || {})[(globalData.garaToCalId||{})[garaLink] || toCalId(garaLink)] ||
-                          (globalData.videos || {})[garaLink] || [];
-        const calVideoBtn = calVideos.length
-          ? `<a href="${esc(calVideos[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.72rem;padding:7px 12px;display:flex;align-items:center;gap:5px;white-space:nowrap;">▶ Video</a>`
-          : '';
-        podioHtml += `<div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
-          <a href="#/gara/${esc(garaLink)}" class="btn-action full" style="font-size:0.72rem;text-align:center;padding:7px 12px;flex:1;">VAI AI RISULTATI COMPLETI &rarr;</a>
-          ${calVideoBtn}
-        </div>`;
       }
+      const calVideos = hasResults ? ((globalData.videos || {})[(globalData.garaToCalId||{})[garaLink] || toCalId(garaLink)] || (globalData.videos || {})[garaLink] || []) : [];
+      const _rde = (globalData.raceDetails || {})[g.id];
+      const _nCat = (g.nome||'').toLowerCase().trim() === (g.categoria||'').toLowerCase().trim().split(' ')[0];
+      const _displayNome = _rde?.nome_gara ? _rde.nome_gara : (_nCat ? (g.luogo ? `Gara a ${g.luogo}` : (g.categoria || g.nome || g.id)) : (g.nome || g.id));
+      const _det = _parseRitrovo((globalData.raceDetails || {})[g.id]);
+      const _navParts = [_det.indirizzo_ritrovo, _det.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean);
+      const _murl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(_navParts.join(', '))}`;
+      const _hasNav = !!(_det.indirizzo_ritrovo || _det.luogo_ritrovo || g.luogo);
+      const multTag = g.campionato_italiano ? '<span class="rs-bd ci">CAMP. ITALIANO</span>' : g.campionato_regionale ? '<span class="rs-bd cr">CAMP. REGIONALE</span>'
+        : mult >= 3 ? '<span class="rs-bd m3">Internazionale ×3</span>' : mult === 2 ? '<span class="rs-bd m2">Nazionale ×2</span>' : '<span class="rs-bd">Regionale ×1</span>';
+      const star = (!isPast && typeof authUser==='function' && authUser())
+        ? `<button id="myrace-btn-${esc(g.id)}" class="cal-follow-btn ${isMyRace(g.id)?'active':''}" title="Aggiungi al mio calendario" onclick="event.stopPropagation();window.toggleMyRace('${esc(g.id)}','${esc((g.nome||'').replace(/'/g,''))}','${esc(g.data||'')}')">★</button>` : '';
 
-      return `<div id="cal-${esc(g.id)}" class="cal-item ${isPast?'cal-item-past':''} ${hasResults?'cal-item-has-results':''}">
-        <div class="cal-item-header">
-          <div class="cal-date-block" style="${isPast?'opacity:0.6':''}">
-            <div class="cal-day">${day}</div>
-            <div class="cal-month">${mon}</div>
-          </div>
-          <div style="flex:1;min-width:0">
-            ${(() => {
-              const _rde = (globalData.raceDetails || {})[g.id];
-              const _nCat = (g.nome||'').toLowerCase().trim() === (g.categoria||'').toLowerCase().trim().split(' ')[0];
-              const _displayNome = _rde?.nome_gara
-                ? _rde.nome_gara
-                : (_nCat
-                  ? (g.luogo ? `Gara a ${g.luogo}` : (g.categoria || g.nome || g.id))
-                  : (g.nome || g.id));
-              return `<div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(_displayNome)}</a></div>`;
-            })()}
-            <div class="cal-cat">
-              ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
-              ${(g.luogo || g.regione) ? (() => {
-                const _det = _parseRitrovo((globalData.raceDetails || {})[g.id]);
-                const _navParts = [_det.indirizzo_ritrovo, _det.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean);
-                const _addr = encodeURIComponent(_navParts.join(', '));
-                const _murl = `https://www.google.com/maps/dir/?api=1&destination=${_addr}`;
-                const _hasNav = !!(_det.indirizzo_ritrovo || _det.luogo_ritrovo || g.luogo);
-                return `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                  <span>📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</span>
-                  ${_hasNav ? `<a href="${_murl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:0.7rem;color:#6366f1;white-space:nowrap;font-weight:600;text-decoration:none;border:1px solid #6366f1;border-radius:4px;padding:1px 7px;line-height:1.6">🧭 Indicazioni</a>` : ''}
-                </div>`;
-              })() : ''}
-            </div>
-          </div>
-          <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
-            ${badgeMult(mult, g.tipo, g.campionato_regionale, g.campionato_italiano)}
-            ${g.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
-            ${g.campionato_italiano?'<span class="badge-cat badge-mult-x3">CI</span>':''}
-            ${g.campionato_regionale?'<span class="badge-cat badge-mult-x2">CR</span>':''}
-            ${(!isPast && typeof authUser==='function' && authUser()) ? `<button id="myrace-btn-${esc(g.id)}" class="cal-follow-btn ${isMyRace(g.id)?'active':''}" title="Aggiungi al mio calendario" onclick="event.stopPropagation();window.toggleMyRace('${esc(g.id)}','${esc((g.nome||'').replace(/'/g,''))}','${esc(g.data||'')}')">★</button>` : ''}
-          </div>
+      return `<div id="cal-${esc(g.id)}" class="cr ${isPast ? 'cal-item-past' : ''} ${hasResults ? 'cal-item-has-results' : ''}" style="--sp:${_sp(g.categoria)}">
+        <span class="sp"></span>
+        <div class="b">
+          <h3><a href="#/gara/${esc(garaLink)}">${esc(_displayNome)}</a></h3>
+          <div class="m">${(g.luogo || g.regione) ? `📍 ${esc(_tcCal(g.luogo || ''))}${g.regione ? ' · ' + esc(_tcCal(g.regione)) : ''}` : ''}</div>
+          <div class="tags"><span class="rs-bd">${esc(catLabel(g.categoria) || '')}</span>${multTag}${g.genere==='F' ? '<span class="rs-bd">♀</span>' : ''}${hasResults ? '<span class="rs-bd" style="background:rgba(16,185,129,.15);color:#10B981">Risultati</span>' : ''}</div>
+          ${podioHtml}
         </div>
-        ${podioHtml}
+        <div class="go">
+          ${_hasNav ? `<a href="${_murl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🧭 Indicazioni</a>` : ''}
+          <a href="#/gara/${esc(garaLink)}">${hasResults ? 'Risultati completi →' : 'Dettagli →'}</a>
+          ${calVideos.length ? `<a href="${esc(calVideos[0].url)}" target="_blank" rel="noopener">▶ Video</a>` : ''}
+          ${star}
+        </div>
       </div>`;
     };
 
+    // Raggruppa per giorno (stesso stile della pagina Risultati)
+    const _byDay = (list) => {
+      let out = '', day = null, buf = [];
+      const flush = () => { if (day === null) return;
+        out += `<section><div class="rs-dayh"><h2>${esc(_dayLong(day))}</h2>${day === today ? '<span class="cal-today-tag">OGGI</span>' : ''}<small>${buf.length} gar${buf.length === 1 ? 'a' : 'e'}</small><span class="line"></span></div><div class="hx-rlist cal-grid">${buf.map(renderItem).join('')}</div></section>`;
+        buf = []; };
+      for (const g of list) { if (g.data !== day) { flush(); day = g.data; } buf.push(g); }
+      flush();
+      return out;
+    };
+
     let html = '';
-    if (future.length > 0) {
-      html += `<div class="category-divider" style="margin-top:0">Prossime Gare</div>`;
-      html += future.map(renderItem).join('');
+    if (future.length > 0) html += _byDay(future);
+    if (past.length > 0 && !calOnlyFuture) {
+      const shown = past.slice(0, calPastN);
+      html += `<div class="rs-dayh" style="margin-top:18px"><h2 style="color:var(--text-secondary)">Gare concluse</h2><small>${past.length}</small><span class="line"></span></div>` + _byDay(shown);
+      if (past.length > shown.length) html += `<button class="rs-more" type="button" onclick="window.calMorePast()">Carica altre gare concluse (${past.length - shown.length})</button>`;
     }
-    if (past.length > 0) {
-      html += `<div class="category-divider" style="color:var(--text-muted); border-color:var(--text-muted); opacity:0.6">Gare Concluse</div>`;
-      html += past.map(renderItem).join('');
-    }
+
+    // Colonna destra: prossimi giorni e regioni più attive
+    const _in12 = future.filter(g => g.data <= new Date(Date.now() + 12 * 864e5).toISOString().slice(0, 10));
+    const _busy = {}; future.forEach(g => { _busy[g.data] = (_busy[g.data] || 0) + 1; });
+    const _busiest = Object.entries(_busy).sort((a, b) => b[1] - a[1])[0];
+    const _regs = {}; _in12.forEach(g => { const r = g.regione || '—'; _regs[r] = (_regs[r] || 0) + 1; });
+    const _side = document.getElementById('cal-side');
+    if (_side) _side.innerHTML = `<section class="hx-panel"><div class="hx-ph"><h2>Prossimi 12 giorni</h2></div><div class="rs-kv"><span>Gare in programma</span><b>${_in12.length}</b><span>Ancora da correre (filtri attivi)</span><b>${future.length}</b>${_busiest ? `<span>Giorno più ricco</span><b>${esc(_dayLong(_busiest[0]).split(' ').slice(0, 3).join(' '))} · ${_busiest[1]}</b>` : ''}</div></section>
+      <section class="hx-panel"><div class="hx-ph"><h2>Dove si corre</h2></div>${Object.entries(_regs).sort((a, b) => b[1] - a[1]).slice(0, 5).map(r => `<div class="cal-reg"><b>${esc(_tcCal(r[0]))}</b><span>${r[1]} gare</span></div>`).join('') || '<div class="hx-none">Nessuna gara nei prossimi 12 giorni</div>'}</section>`;
+    // stato attivo dei controlli
+    document.querySelectorAll('#cal-seg-genere button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.g || '') === calQGenere)));
+    document.querySelectorAll('#cal-cats button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.c === calQCat)));
+    const _fb = document.getElementById('cal-future-btn'); if (_fb) _fb.setAttribute('aria-pressed', String(calOnlyFuture));
 
     document.getElementById('cal-list').innerHTML = html || '<div class="empty-state">Nessuna gara trovata</div>';
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
@@ -25099,67 +25084,33 @@ async function renderCalendario(highlightId) {
       ? `Calendario delle gare di ciclismo agonistico italiano nella categoria ${_calCatLabel}: date, luoghi e regioni.`
       : 'Calendario delle gare di ciclismo agonistico italiano: date, luoghi e categorie di ogni evento su tutto il territorio nazionale.'
   );
+  const _calMonths = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  const _calSel = (id, fn, label, inner) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" onchange="${fn}(this.value)" aria-label="${label}"><option value="">${label}</option>${inner}</select></label>`;
   setPage(`
-    <div class="pg-header">
-      <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
-      <h1 class="pg-title">CALENDARIO</h1>
+    <div class="hx-wrap cal-wrap">
+      <div class="rs-head"><h1>Calendario</h1><span class="rs-cnt" id="cal-count">${calendar.length} gare</span>
+        <div class="rs-right"><span class="hx-pill">Stagione 2025-2026</span>
+          <div class="hx-seg" role="group" aria-label="Vista"><button type="button" id="cal-view-lista" class="cal-view-btn ${calView==='lista'?'active':''}" onclick="window.calSetView('lista')" aria-pressed="${calView==='lista'}">Lista</button><button type="button" id="cal-view-mappa" class="cal-view-btn ${calView==='mappa'?'active':''}" onclick="window.calSetView('mappa')" aria-pressed="${calView==='mappa'}">Mappa</button></div></div></div>
+      <div class="rs-bar" role="search">
+        <div class="hx-seg" id="cal-seg-genere" role="group" aria-label="Genere"><button type="button" data-g="" onclick="calSetGenere('')" aria-pressed="${calQGenere===''}">Tutti</button><button type="button" data-g="M" onclick="calSetGenere('M')" aria-pressed="${calQGenere==='M'}">Uomini</button><button type="button" data-g="F" onclick="calSetGenere('F')" aria-pressed="${calQGenere==='F'}">Donne</button></div>
+        <div class="cls-cats" id="cal-cats" role="group" aria-label="Categoria">${CAL_CAT_GROUPS.map(g => `<button type="button" data-c="${g.value}" onclick="calSetCat(calQCat==='${g.value}'?'':'${g.value}')" aria-pressed="${calQCat===g.value}">${g.label}</button>`).join('')}</div>
+        <input type="search" class="rs-search" id="cal-search" placeholder="Cerca gara…" oninput="calSetSearch(this.value)" aria-label="Cerca gara" autocomplete="off" value="${calQSearch.replace(/"/g, '&quot;')}"/>
+        ${_calSel('cal-month', 'window.calSetMonth', 'Tutti i mesi', _calMonths.map((n, i) => { const v = String(i + 1).padStart(2, '0'); return `<option value="${v}" ${calQMonth===v?'selected':''}>${n}</option>`; }).join(''))}
+        ${_calSel('cal-regione', 'calSetRegione', 'Tutte le regioni', allRegions.map(r => `<option value="${r}" ${r === calQRegione ? 'selected' : ''}>${esc(r)}</option>`).join(''))}
+        ${_calSel('cal-tipo', 'calSetTipo', 'Tutti i tipi', ['regionale|Regionali ×1','nazionale|Nazionali ×2','internazionale|Internazionali ×3','campionato_regionale|Campionati Regionali','campionato_italiano|Campionati Italiani'].map(s => { const [v, l] = s.split('|'); return `<option value="${v}" ${calQTipo===v?'selected':''}>${l}</option>`; }).join(''))}
+        <button class="rs-miss" type="button" id="cal-future-btn" onclick="window.calToggleFuture()" aria-pressed="${calOnlyFuture}">Solo da correre</button>
+      </div>
+      <div class="hx-layout">
+        <div class="hx-col"><div id="cal-list" style="${calView==='mappa'?'display:none':''}"></div><div id="cal-map" style="${calView==='lista'?'display:none':'display:block'}"></div></div>
+        <aside class="hx-col" id="cal-side"></aside>
+      </div>
     </div>
-    <div class="calendar-controls">
-      <select class="cal-filter-select" id="cal-month" onchange="window.calSetMonth(this.value)" aria-label="Filtra per mese">
-        <option value="">Tutti i mesi</option>
-        <option value="01" ${calQMonth==='01'?'selected':''}>Gennaio</option>
-        <option value="02" ${calQMonth==='02'?'selected':''}>Febbraio</option>
-        <option value="03" ${calQMonth==='03'?'selected':''}>Marzo</option>
-        <option value="04" ${calQMonth==='04'?'selected':''}>Aprile</option>
-        <option value="05" ${calQMonth==='05'?'selected':''}>Maggio</option>
-        <option value="06" ${calQMonth==='06'?'selected':''}>Giugno</option>
-        <option value="07" ${calQMonth==='07'?'selected':''}>Luglio</option>
-        <option value="08" ${calQMonth==='08'?'selected':''}>Agosto</option>
-        <option value="09" ${calQMonth==='09'?'selected':''}>Settembre</option>
-        <option value="10" ${calQMonth==='10'?'selected':''}>Ottobre</option>
-        <option value="11" ${calQMonth==='11'?'selected':''}>Novembre</option>
-        <option value="12" ${calQMonth==='12'?'selected':''}>Dicembre</option>
-      </select>
-      <select class="cal-filter-select" id="cal-genere" onchange="calSetGenere(this.value)" aria-label="Filtra per genere">
-        <option value="" ${calQGenere===''?'selected':''}>Tutti</option>
-        <option value="M" ${calQGenere==='M'?'selected':''}>Uomini</option>
-        <option value="F" ${calQGenere==='F'?'selected':''}>Donne</option>
-      </select>
-      <select class="cal-filter-select" id="cal-cat" onchange="calSetCat(this.value)" aria-label="Filtra per categoria">
-        <option value="" ${calQCat===''?'selected':''}>Tutte Categorie</option>
-        ${CAL_CAT_GROUPS.map(g => `<option value="${g.value}" ${g.value === calQCat ? 'selected' : ''}>${g.label}</option>`).join('')}
-      </select>
-      <select class="cal-filter-select" id="cal-tipo" onchange="calSetTipo(this.value)" aria-label="Filtra per tipo gara">
-        <option value="" ${calQTipo===''?'selected':''}>Tutti i tipi</option>
-        <option value="regionale" ${calQTipo==='regionale'?'selected':''}>Regionali ×1</option>
-        <option value="nazionale" ${calQTipo==='nazionale'?'selected':''}>Nazionali ×2</option>
-        <option value="internazionale" ${calQTipo==='internazionale'?'selected':''}>Internazionali ×3</option>
-        <option value="campionato_regionale" ${calQTipo==='campionato_regionale'?'selected':''}>Campionati Regionali</option>
-        <option value="campionato_italiano" ${calQTipo==='campionato_italiano'?'selected':''}>Campionati Italiani</option>
-      </select>
-      <select class="cal-filter-select" id="cal-regione" onchange="calSetRegione(this.value)" aria-label="Filtra per regione">
-        <option value="" ${calQRegione===''?'selected':''}>Tutte le Regioni</option>
-        ${allRegions.map(r => `<option value="${r}" ${r === calQRegione ? 'selected' : ''}>${esc(r)}</option>`).join('')}
-      </select>
-      <input type="search" class="cal-filter-select" id="cal-search" placeholder="Cerca gara…" oninput="calSetSearch(this.value)" aria-label="Cerca gara" style="width:200px" value="${calQSearch.replace(/"/g, '&quot;')}"/>
-      <span class="ranking-count" id="cal-count">${calendar.length} gare</span>
-    </div>
-    <div class="cal-view-toggle">
-      <button id="cal-view-lista" class="cal-view-btn ${calView==='lista'?'active':''}" onclick="window.calSetView('lista')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="3" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
-        Lista
-      </button>
-      <button id="cal-view-mappa" class="cal-view-btn ${calView==='mappa'?'active':''}" onclick="window.calSetView('mappa')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-        Mappa
-      </button>
-    </div>
-    <div class="calendar-list" id="cal-list" style="${calView==='mappa'?'display:none':''}"></div>
-    <div id="cal-map" style="${calView==='lista'?'display:none':'display:block'}"></div>
   `);
 
-  window.calSetMonth  = (v) => { calQMonth = v; render(); };
-  window.calSetGenere = (v) => { calQGenere = v; render(); };
+  window.calSetMonth  = (v) => { calQMonth = v; calPastN = 40; render(); };
+  window.calSetGenere = (v) => { calQGenere = v; calPastN = 40; render(); };
+  window.calMorePast = () => { calPastN += 60; render(); };
+  window.calToggleFuture = () => { calOnlyFuture = !calOnlyFuture; render(); };
   window.calSetCat    = (v) => {
     calQCat = v;
     // Sincronizza la barra indirizzi con la categoria filtrata (URL
@@ -25170,16 +25121,17 @@ async function renderCalendario(highlightId) {
     if (location.pathname !== path) history.replaceState(null, '', path);
     renderCalendario();
   };
-  window.calSetTipo   = (v) => { calQTipo = v; render(); };
-  window.calSetSearch = (v) => { calQSearch = v; render(); };
-  window.calSetRegione = (v) => { calQRegione = v; render(); };
+  window.calSetTipo   = (v) => { calQTipo = v; calPastN = 40; render(); };
+  window.calSetSearch = (v) => { calQSearch = v; calPastN = 40; render(); };
+  window.calSetRegione = (v) => { calQRegione = v; calPastN = 40; render(); };
 
   window.calSetView = (v) => {
     calView = v;
     const list = document.getElementById('cal-list');
     const map  = document.getElementById('cal-map');
-    document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cal-view-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
     document.getElementById('cal-view-' + v)?.classList.add('active');
+    document.getElementById('cal-view-' + v)?.setAttribute('aria-pressed', 'true');
     if (v === 'mappa') {
       if (list) list.style.display = 'none';
       if (map)  map.style.display  = 'block';
