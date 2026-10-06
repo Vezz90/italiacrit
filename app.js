@@ -10851,6 +10851,46 @@ window.classSetYear = (y) => {
   renderClassificaStorica(y);
 };
 
+
+// ── Classifica v2: linguette, podio e "situazione" nella colonna destra ──
+window.clsTab = (tab) => {
+  if (tab === 'atleti' || tab === 'team') {
+    rankPanel = 'classifica';
+    if (rankView !== tab) { rankView = tab; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); }
+  } else rankPanel = tab;
+  renderClassifica();
+};
+window._clsAfter = function () {
+  const cont = document.getElementById('rank-table-container');
+  if (!cont) return;
+  const sit = document.getElementById('cls-sit');
+  const nar = cont.querySelector('.rk-narrative');
+  if (sit) {
+    if (nar) { sit.innerHTML = ''; sit.appendChild(nar); } else sit.innerHTML = '<div class="hx-none">Nessuna situazione da mostrare con i filtri attivi.</div>';
+  }
+  const pod = document.getElementById('cls-pod');
+  if (!pod) return;
+  const rows = [...cont.querySelectorAll('tr.ranking-row')].slice(0, 3);
+  if (!rankFilter && rows.length >= 3) {
+    const wins = rankSort === 'vittorie', C = [['#C99400', '#5A3F00'], ['#6E7A90', '#2A3342'], ['#B26A2C', '#4A2A0E']];
+    const ini = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '?')[0] + ((w[1] || '')[0] || '')).toUpperCase(); };
+    pod.innerHTML = `<div class="hx-ph"><h2>Il podio</h2></div><div class="el-pod">${rows.map((r, i) => {
+      const a = r.querySelector('.rank-name a'), name = a ? a.textContent.trim() : '', href = a ? a.getAttribute('href') : '#';
+      const aid = r.querySelector('.rk-av-wrap'), tid = r.querySelector('.rk-tl-wrap');
+      const teamA = r.querySelector('.rk-team-cell a');
+      const sub = teamA ? teamA.textContent.trim() : (r.querySelector('td.r.hide-mobile') ? r.querySelector('td.r.hide-mobile').textContent.trim() + ' atleti' : '');
+      const pts = (r.querySelector('.rank-pts') || {}).textContent || '';
+      const attr = aid ? `data-aid="${esc(aid.getAttribute('data-aid'))}"` : (tid ? `data-tid="${esc(tid.getAttribute('data-tid'))}"` : '');
+      return `<a class="el-pc" href="${esc(href)}" style="--c1:${C[i][0]};--c2:${C[i][1]}"><span class="rk">${i + 1}</span><div class="av" ${attr}>${esc(ini(name))}</div><b>${esc(name)}</b><small>${esc(sub)}</small><div class="pt">${esc(pts)} <span>${wins ? 'vittorie' : 'punti'}</span></div></a>`;
+    }).join('')}</div>`;
+    pod.querySelectorAll('[data-aid],[data-tid]').forEach(async el => {
+      const isA = el.hasAttribute('data-aid'), id = el.getAttribute(isA ? 'data-aid' : 'data-tid');
+      const ov = await getEntityOverrides(isA ? 'atleta' : 'team', id).catch(() => ({}));
+      if (!ov.photo_url || !document.contains(el)) return;
+      const img = document.createElement('img'); img.src = mediaUrl(ov.photo_url); img.alt = ''; img.onerror = () => img.remove(); el.appendChild(img);
+    });
+  } else pod.innerHTML = '';
+};
 async function renderClassifica() {
   const _rkIsPista = rankDisciplina === 'pista';
   if ((rankGender === 'M' && rankCat.endsWith('_F')) ||
@@ -10998,52 +11038,43 @@ async function renderClassifica() {
       background:${y === _classCurYear ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === _classCurYear ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
   </div>`;
 
+  const _clsCats = currentCats.map(c => `<button type="button" onclick="setRankCat('${c}')" aria-pressed="${rankCat === c}">${esc(catLabel(c))}</button>`).join('');
+  const _clsSel = (fn, label, inner) => `<label class="hx-sel"><span class="sr">${label}</span><select aria-label="${label}" onchange="${fn}(this.value)"><option value="">${label}</option>${inner}</select></label>`;
+  const _clsYears = (() => { const o = []; for (let y = _classCurYear; y >= 2007; y--) o.push(`<option value="${y}"${y === _classCurYear ? ' selected' : ''}>Stagione ${y}</option>`); return o.join(''); })();
+  const _clsTab = (id, label, on) => `<button type="button" onclick="window.clsTab('${id}')" aria-pressed="${on}">${label}</button>`;
+  const _clsOnClass = rankPanel === 'classifica';
+  const _clsTabs = _rkIsPista ? '' : `<div class="cls-tabs" role="group" aria-label="Vista">
+      ${_clsTab('atleti', 'Atleti', _clsOnClass && rankView === 'atleti')}${_clsTab('team', 'Team', _clsOnClass && rankView === 'team')}${_clsTab('storia', 'Storia', rankPanel === 'storia')}${_clsTab('albo', 'Albo d’oro', rankPanel === 'albo')}</div>`;
+  const _clsPista = _rkIsPista ? `<div class="cls-tabs" role="group" aria-label="Vista">${_clsTab('atleti', 'Atleti', rankView === 'atleti')}${_clsTab('team', 'Team', rankView === 'team')}</div>` : '';
+  const _clsSort = _clsOnClass ? `<div class="hx-seg" role="group" aria-label="Ordina per"><button type="button" data-s="punti" onclick="setRankSort('punti')" aria-pressed="${rankSort === 'punti'}">Punti</button><button type="button" data-s="vittorie" onclick="setRankSort('vittorie')" aria-pressed="${rankSort === 'vittorie'}">Vittorie</button></div>` : '';
+  const _clsShare = `<button class="rs-miss" type="button" id="btn-share-class" onclick="window.shareClassifica()">⤴ Condividi</button>`;
   setPageMeta(`Classifica ${_rkIsPista ? 'Pista ' : ''}${catLabel(rankCat)}`, `Classifica ${_rkIsPista ? 'pista (velodromo)' : 'ufficiale'} ${catLabel(rankCat)} del ciclismo agonistico italiano, aggiornata gara dopo gara.`);
   setPage(`
-    <div class="pg-header">
-      <div class="pg-eyebrow">${_rkIsPista ? 'CLASSIFICA INDIPENDENTE — NON CONTA PER LA STRADA' : 'CLASSIFICA UFFICIALE'}</div>
-      <h1 class="pg-title">${_rkIsPista ? 'PISTA' : 'CLASSIFICHE'}</h1>
-    </div>
-    ${classYearPillsHtml}
-    ${_rkIntelHtml}
-
-    <div class="ranking-controls">
-      <div class="tab-group" role="tablist" aria-label="Seleziona genere">${genderTabs}</div>
-      <div class="tab-group" role="tablist" aria-label="Seleziona categoria">${catTabs}</div>
-      
-      <div class="calendar-controls" style="margin-top:16px; margin-bottom:16px;">
-        <select class="cal-filter-select" onchange="window.setRankRegion(this.value)" aria-label="Filtra per regione">
-          <option value="">Tutte le Regioni</option>
-          ${regionOptions}
-        </select>
-        <select class="cal-filter-select" onchange="window.setRankMonth(this.value)" aria-label="Filtra per mese">
-          <option value="">Tutti i Mesi</option>
-          ${monthOptions}
-        </select>
-        <div class="ranking-filter-bar" style="margin:0; flex-grow:1">
-          <input type="search" id="ranking-search"
-            placeholder="${rankView==='atleti'?'Cerca atleta o team…':'Filtra team…'}"
-            value="${esc(rankFilter)}"
-            oninput="setRankFilter(this.value)"
-            aria-label="Filtra classifica" />
+    <div class="hx-wrap cls-wrap">
+      <div class="rs-head"><h1>${_rkIsPista ? 'Pista' : 'Classifica'}</h1><span class="rs-cnt" id="rank-count-label">Caricamento...</span>
+        <div class="rs-right">${_rkIsPista ? '' : `<label class="hx-sel"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="window.classSetYear(Number(this.value))">${_clsYears}</select></label>`}${_clsOnClass ? _clsShare : ''}</div></div>
+      ${_rkIsPista ? '<p class="rk-intel-line">Classifica indipendente — non conta per la strada.</p>' : ''}
+      <div class="rs-bar" role="search">
+        <div class="hx-seg" role="group" aria-label="Seleziona genere"><button type="button" id="tab-gender-M" onclick="setRankGender('M')" aria-pressed="${rankGender === 'M'}">Uomini</button><button type="button" id="tab-gender-F" onclick="setRankGender('F')" aria-pressed="${rankGender === 'F'}">Donne</button></div>
+        <div class="cls-cats" role="group" aria-label="Seleziona categoria">${_clsCats}</div>
+        ${_clsSel('window.setRankRegion', 'Tutte le regioni', regionOptions)}
+        ${_clsSel('window.setRankMonth', 'Tutti i mesi', monthOptions)}
+        <input type="search" id="ranking-search" class="rs-search" placeholder="${rankView === 'atleti' ? 'Cerca atleta o team…' : 'Filtra team…'}" value="${esc(rankFilter)}" oninput="setRankFilter(this.value)" aria-label="Filtra classifica" autocomplete="off">
+      </div>
+      <div class="cls-bar2">${_clsTabs}${_clsPista}${_clsSort}</div>
+      <div class="${_clsOnClass ? 'hx-layout' : ''}">
+        <div class="hx-col">
+          ${_clsOnClass ? '<section id="cls-pod"></section>' : ''}
+          <div class="ranking-table-wrap cls-table" id="rank-table-container" style="display:${_clsOnClass ? '' : 'none'}"></div>
+          ${rankPanel === 'albo' ? `<div id="rank-albo-panel"></div>` : ''}
+          ${rankPanel === 'storia' ? leaderHistorySectionHtml : ''}
         </div>
-      </div>
-
-      <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">
-        <span class="ranking-count" id="rank-count-label">Caricamento...</span>
-        ${sortTabs}
-        ${viewTabs}
-        ${panelTabs}
+        ${_clsOnClass ? `<aside class="hx-col">
+          <section class="hx-panel"><div class="hx-ph"><h2>Situazione in classifica</h2></div><div id="cls-sit"><div class="hx-none">…</div></div></section>
+          ${_rkIntelHtml ? `<section class="hx-panel"><div class="hx-ph"><h2>Ultime 4 settimane</h2></div>${_rkIntelHtml}</section>` : ''}
+        </aside>` : ''}
       </div>
     </div>
-    <div style="padding: 0 0 16px; display:${rankPanel==='classifica'?'block':'none'}">
-      <button class="btn-share" onclick="window.shareClassifica()" id="btn-share-class">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Classifica
-      </button>
-    </div>
-    <div class="ranking-table-wrap" id="rank-table-container" style="display:${rankPanel==='classifica'?'':'none'}"></div>
-    ${rankPanel==='albo' ? `<div id="rank-albo-panel"></div>` : ''}
-    ${rankPanel==='storia' ? leaderHistorySectionHtml : ''}
   `);
 
   // Classifiche parallele: dati pensati per la classifica strada (stagioni
@@ -11115,13 +11146,10 @@ async function renderClassificaStorica(anno) {
   if (!bodyEl) {
     setPageMeta(`Classifica ${anno}`, `Classifica storica ${anno} del ciclismo agonistico italiano.`);
     setPage(`
-      <div class="pg-header">
-        <div class="pg-eyebrow">CLASSIFICA UFFICIALE · ${anno}</div>
-        <h1 class="pg-title">CLASSIFICHE</h1>
-      </div>
-      ${_classYearRowHtml(anno)}
+      <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span>
+        <div class="rs-right"><label class="hx-sel"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="window.classSetYear(Number(this.value))">${(() => { const o = []; for (let y = Number(_loadedSeasonYear()); y >= 2007; y--) o.push(`<option value="${y}"${y === anno ? ' selected' : ''}>Stagione ${y}</option>`); return o.join(''); })()}</select></label></div></div>
       <div class="ranking-controls" id="class-storico-controls"></div>
-      <div class="ranking-table-wrap" id="class-storico-body"></div>
+      <div class="ranking-table-wrap" id="class-storico-body"></div></div>
     `);
     bodyEl = document.getElementById('class-storico-body');
   } else {
@@ -12144,6 +12172,7 @@ async function updateRankTable() {
   container.innerHTML = tableHtml;
   countSpan.textContent = countLabel;
   if (_rankPhotosQueue) _injectRankPhotos(_rankPhotosQueue);
+  if (typeof window._clsAfter === 'function') window._clsAfter();
 }
 
 async function _injectRankPhotos(items) {
@@ -15883,6 +15912,7 @@ window.setRankSort   = (s) => {
   // ordinamento sono fuori da quel container, quindi lo stato "attivo" va
   // sincronizzato qui a mano invece di richiedere un renderClassifica()
   // completo (che ricaricherebbe tutta la pagina per un semplice toggle).
+  document.querySelectorAll('[aria-label="Ordina per"] button[data-s]').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.s === s)));
   document.querySelectorAll('[aria-label="Ordina per"] .tab-btn').forEach(btn => {
     btn.classList.toggle('active-cat', btn.textContent.trim().includes(s === 'vittorie' ? 'VITTORIE' : 'PUNTI'));
   });
