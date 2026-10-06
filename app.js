@@ -25528,6 +25528,7 @@ async function renderAtletiList() {
 
 // ── GARE: elenco di TUTTE le gare registrate (stagione caricata) ──────
 let gareSearch = '';
+let gareN = 60;
 const _GARE_CAT_ORDER = ['ELI_M','ELI_F','JUN_M','JUN_F','AL_M','AL_F','ES1_M','ES1_F','ES2_M','ES2_F'];
 function _gareListHtml() {
   const events = window._gareEvents || [];
@@ -25537,22 +25538,32 @@ function _gareListHtml() {
     const hay = (e.base + ' ' + e.regione).toLowerCase();
     return toks.every(t => hay.includes(t));
   });
-  if (!filtered.length) return '<div class="empty-state" style="padding:24px 0">Nessuna gara trovata</div>';
-  return filtered.map(e => {
+  if (!filtered.length) return '<div class="hx-empty">Nessuna gara trovata</div>';
+  const _gtc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
+  const _gDays = {}; filtered.forEach(e => { _gDays[e.data] = (_gDays[e.data] || 0) + 1; });
+  let day = null, html = '';
+  filtered.slice(0, gareN).forEach(e => {
     const cats = Object.entries(e.cats).sort((a, b) => _GARE_CAT_ORDER.indexOf(a[0]) - _GARE_CAT_ORDER.indexOf(b[0]));
     const mainGid = cats[0] ? cats[0][1] : '';
-    const catBtns = cats.map(([code, gid]) =>
-      `<button class="tab-btn" onclick="event.stopPropagation();location.hash='#/gara/${esc(gid)}'" style="font-size:.7rem;padding:3px 10px">${esc(catLabel(code))}</button>`).join('');
-    return `<div onclick="location.hash='#/gara/${esc(mainGid)}'" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--bg-card);cursor:pointer;margin-bottom:8px">
-      <div style="min-width:0;flex:1">
-        <div style="font-weight:700;font-size:.95rem">${esc(e.base)}</div>
-        <div style="font-size:.75rem;color:var(--text-muted)">${fmtDateShort(e.data)}${e.regione && isRealRegion(e.regione) ? ' · ' + esc(e.regione) : ''}${cats.length > 1 ? ` · ${cats.length} categorie` : ''}</div>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end">${catBtns}</div>
+    if (e.data !== day) {
+      if (day !== null) html += '</div></section>';
+      day = e.data;
+      const d = new Date(e.data + 'T00:00:00');
+      const lab = isNaN(d) ? esc(e.data || '') : `${['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'][d.getDay()]} ${d.getDate()} ${['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'][d.getMonth()]} ${d.getFullYear()}`;
+      html += `<section><div class="rs-dayh"><h2>${lab}</h2><small>${_gDays[e.data]} gar${_gDays[e.data] === 1 ? 'a' : 'e'}</small><span class="line"></span></div><div class="gr-list">`;
+    }
+    const catBtns = cats.map(([code, gid]) => `<a class="gr-cat" href="#/gara/${esc(gid)}" onclick="event.stopPropagation()">${esc(catLabel(code))}</a>`).join('');
+    html += `<div class="gr-row" onclick="location.hash='#/gara/${esc(mainGid)}'">
+      <div class="gr-main"><b>${esc(e.base)}</b><small>${e.regione && isRealRegion(e.regione) ? esc(_gtc(e.regione)) : ''}${cats.length > 1 ? `${e.regione && isRealRegion(e.regione) ? ' · ' : ''}${cats.length} categorie` : ''}</small></div>
+      <div class="gr-cats">${catBtns}</div>
     </div>`;
-  }).join('');
+  });
+  if (day !== null) html += '</div></section>';
+  if (filtered.length > gareN) html += `<button class="rs-more" type="button" onclick="window.gareMore()">Carica altre gare (${filtered.length - gareN})</button>`;
+  return html;
 }
-window.setGareSearch = (v) => { gareSearch = v; const el = document.getElementById('gare-list'); if (el) el.innerHTML = _gareListHtml(); };
+window.gareMore = () => { gareN += 60; const el = document.getElementById('gare-list'); if (el) el.innerHTML = _gareListHtml(); };
+window.setGareSearch = (v) => { gareSearch = v; gareN = 60; const el = document.getElementById('gare-list'); if (el) el.innerHTML = _gareListHtml(); };
 async function renderGare() {
   if (!globalData) return;
   // Raggruppa per NOME base + data (un evento, anche con più categorie)
@@ -25578,16 +25589,15 @@ async function renderGare() {
     if (code && !groups[key].cats[code]) groups[key].cats[code] = r.gara_id;
   }
   window._gareEvents = Object.values(groups).sort((a, b) => (b.data || '').localeCompare(a.data || '') || (b._seq - a._seq));
-  const _inpStyle = 'width:100%;max-width:420px;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem';
   setPageMeta('Gare', `${window._gareEvents.length} gare di ciclismo agonistico italiano — cerca per nome, categoria, regione.`);
+  gareN = 60;
   setPage(`
-    <div class="pg-header">
-      <h1 class="pg-title">GARE</h1>
-      <div style="color:var(--text-muted);font-size:.85rem;margin-bottom:10px">${window._gareEvents.length} gare registrate</div>
-      <input id="gare-search" type="search" placeholder="Cerca una gara…  (anche solo una parte del nome)" autocomplete="off"
-        oninput="window.setGareSearch(this.value)" value="${esc(gareSearch)}" style="${_inpStyle}"/>
+    <div class="hx-wrap gare-wrap">
+      <div class="rs-head"><h1>Gare</h1><span class="rs-cnt"><b>${window._gareEvents.length}</b> gare registrate</span></div>
+      <div class="rs-bar" role="search"><input id="gare-search" type="search" class="rs-search" placeholder="Cerca una gara… (anche solo una parte del nome)" autocomplete="off"
+        oninput="window.setGareSearch(this.value)" value="${esc(gareSearch)}" aria-label="Cerca una gara"/></div>
+      <div id="gare-list">${_gareListHtml()}</div>
     </div>
-    <div id="gare-list">${_gareListHtml()}</div>
   `);
 }
 

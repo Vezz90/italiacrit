@@ -13329,3 +13329,12 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 
 .comp-wrap .comp-content { max-width: 1200px; width: 100%; margin: 0 auto; }
 .comp-wrap .rs-bar, .comp-wrap .rs-head { max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; }
+
+/* ===== Gare (v2) ===== */
+.gare-wrap .gr-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.gr-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-card); cursor: pointer; }
+.gr-row:hover { background: var(--bg-elevated, rgba(0,0,0,.03)); }
+.gr-main { min-width: 0; flex: 1; } .gr-main b { display: block; font-size: 13.5px; font-weight: 800; text-transform: uppercase; color: var(--text-primary); } .gr-main small { color: var(--text-secondary); font-size: 12px; }
+.gr-cats { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.gr-cat { font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: 14px; border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; background: var(--bg-primary, var(--bg-card)); }
+.gr-cat:hover { background: var(--hx-blue, #3D7BFF); border-color: var(--hx-blue, #3D7BFF); color: #fff; }
