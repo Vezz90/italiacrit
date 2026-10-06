@@ -380,7 +380,7 @@
         let logo = '';
         try { const ov = await getEntityOverrides('team', t.team_id); if (ov.photo_url) logo = mediaUrl(ov.photo_url); } catch (_) { /* ok */ }
         if (myId !== window._hxRender) return;
-        box.insertAdjacentHTML('beforeend', logo ? `<span class="hx-logobg"><img src="${esc(logo)}" alt="${esc(name)}" loading="lazy" onerror="this.parentNode.remove()"></span>` : `<span class="hx-ini">${esc(initials(name))}</span>`);
+        box.insertAdjacentHTML('beforeend', logo ? `<span class="hx-logobg"><img src="${esc(logo)}" alt="${esc(name)}" loading="lazy" onload="if(this.naturalWidth/this.naturalHeight>1.25)this.parentNode.classList.add('cover')" onerror="this.parentNode.remove()"></span>` : `<span class="hx-ini">${esc(initials(name))}</span>`);
       }).catch(() => {});
     });
     // classifica completa della categoria scelta: atleti e team affiancati, 25 alla volta
