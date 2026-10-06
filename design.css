@@ -13073,3 +13073,5 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
   .hx-st:nth-child(odd) { border-left: 0; padding-left: 0; } .hx-st:nth-child(even) { border-left: 1px solid var(--border-subtle); padding-left: 12px; }
   .hx-banner .hx-cta { margin-left: 0; }
 }
+.hx-more { margin-top: 12px; width: 100%; height: 42px; border-radius: 8px; border: 1px dashed var(--border-subtle); background: var(--bg-card); color: var(--hx-blue); font: 600 13px/1 inherit; cursor: pointer; }
+.hx-more:hover { border-style: solid; }

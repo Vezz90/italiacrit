@@ -1,11 +1,11 @@
 /* ============================================================
-   ICS — nuova HOME (v2)
+   ICS — nuova pagina RISULTATI (v2)
    Layout: gara in evidenza + 2 in vetrina, "Ultime gare" a card
    compatte (foto/video a sinistra se ci sono, sempre i primi 3),
    Oggi su ICS, Sport Intelligence, classifiche con la foto di una
    vittoria del leader, colonna laterale (atleti da seguire,
-   prossime gare). La vecchia dashboard resta raggiungibile da
-   #/home-old e fa da ripiego se questa pagina dà errore.
+   prossime gare). La vecchia pagina resta raggiungibile da
+   #/risultati-old e fa da ripiego se questa dà errore.
    Usa le funzioni/variabili globali di app.js (globalData, setPage,
    esc, catLabel, loadRanking, getEntityOverrides, mediaUrl…).
    ============================================================ */
@@ -18,7 +18,7 @@
   const CATS_F = ['ELI_F', 'JUN_F', 'AL_F', 'ES2_F', 'ES1_F'];
   const BAND_COLOR = { ELI: ['#2459E6', '#0B1B3A'], JUN: ['#0E8F7E', '#042B26'], AL: ['#C2670C', '#3B1D04'], ES: ['#7C3AED', '#1F0B47'] };
   const F_COLOR = ['#D6336C', '#3B0A1E'];
-  const hx = { sex: 'M', cat: '', reg: '', tipo: '' };
+  const hx = { sex: 'M', cat: '', reg: '', tipo: '', n: 8 };
   let mediaPromise = null, seq = 0;
 
   const $ = id => document.getElementById(id);
@@ -250,6 +250,10 @@
   /* ---------- pagina ---------- */
   async function render() {
     if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
+    if (window._hxPreset) {
+      const c = window._hxPreset.cat; window._hxPreset = null;
+      hx.cat = /^(ELI|JUN|AL|ES1|ES2)_[MF]$/.test(c) ? c : ''; hx.sex = hx.cat ? hx.cat.slice(-1) : (hx.sex || 'M'); hx.reg = ''; hx.tipo = ''; hx.n = 8;
+    }
     const myId = (window._hxRender = (window._hxRender || 0) + 1);
     setPage('<div class="hx-wrap"><div class="hd-skel-hero"></div></div>');
     try {
@@ -258,7 +262,7 @@
       await paint(media, myId);
     } catch (e) {
       console.error('[home v2]', e);
-      if (myId === window._hxRender) return window.renderHomeDashboard();
+      if (myId === window._hxRender) return window.renderRisultati();
     }
   }
 
@@ -273,7 +277,7 @@
     const hasPh = g => racePhotos(media, g.id).length > 0, head = list.slice(0, 12);
     const hero = head.find(hasPh) || head[0];
     const side = [...head.filter(g => g !== hero && hasPh(g)), ...head.filter(g => g !== hero && !hasPh(g))].slice(0, 2);
-    const rest = list.filter(g => g !== hero && !side.includes(g)).slice(0, 8);
+    const restAll = list.filter(g => g !== hero && !side.includes(g)), rest = restAll.slice(0, hx.n);
     const st = stats(all, today), si = intelligence(all, today);
     const riv = await rivalries(hx.sex === 'F' ? 'ELI_F' : 'ELI_M');
     if (myId !== window._hxRender) return;
@@ -306,7 +310,7 @@
       </div>
       <div class="hx-layout"><div class="hx-col">
         <section class="hx-herogrid">${heroHtml}<div class="hx-sidecol">${sideHtml}</div></section>
-        <section><div class="hx-ph"><h2>Ultime gare</h2><a href="#/risultati">Vedi tutte →</a></div><div class="hx-rlist">${rest.map(g => raceCard(g, media, today)).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div></section>
+        <section><div class="hx-ph"><h2>Ultime gare</h2><a href="#/risultati-old">Archivio, anni passati e gare senza risultati →</a></div><div class="hx-rlist">${rest.map(g => raceCard(g, media, today)).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div>${restAll.length > rest.length ? `<button type="button" class="hx-more" id="hx-more">Carica altre gare (${restAll.length - rest.length})</button>` : ''}</section>
         <section class="hx-panel"><div class="hx-ph"><h2>Oggi su ICS</h2></div><div class="hx-stats">${st.map(s => `<div class="hx-st">${ic(s[0])}<b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div></section>
         ${siHtml}
         <section class="hx-panel"><div class="hx-ph"><h2>Le classifiche</h2><a href="#/classifica">Vedi tutte →</a></div><div class="hx-cls" id="hx-cls">${cats.map(c => `<a class="hx-ct" href="#/classifica/${c}" data-code="${c}"><div class="hx-img">${cover(c, '')}<span class="hx-crown">1°</span></div><div class="hx-ctb"><b>${esc(catLabel(c))}</b><span>Classifica generale</span><div class="hx-lead">…</div></div></a>`).join('')}</div></section>
@@ -317,8 +321,9 @@
       </aside></div>
       <section class="hx-banner"><div><h2>Tutto il ciclismo italiano,<br>in un unico portale.</h2><p>Risultati, classifiche, atleti, team, gare e molto altro.</p></div><a class="hx-cta" href="#/regolamento">SCOPRI IL PROGETTO →</a></section>
     </div>`);
-    document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; render(); }; });
-    [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; render(); }; });
+    document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; hx.n = 8; render(); }; });
+    const more = $('hx-more'); if (more) more.onclick = () => { const y = window.scrollY; hx.n += 8; render().then(() => window.scrollTo(0, y)); };
+    [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 8; render(); }; });
     // classifiche (leader + foto di una vittoria) e foto profilo degli atleti da seguire, in secondo tempo
     for (const c of cats) {
       loadRanking(c).then(async rk => {
@@ -338,5 +343,5 @@
     });
   }
 
-  window.renderHomeV2 = render;
+  window.renderRisultatiV2 = render;
 })();
