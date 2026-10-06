@@ -18287,8 +18287,13 @@ function athleteCategoryPath(rows, nowYear, nowCode, birthYear) {
     if (g === 'ES') { const e1 = counts.ES1 || 0, e2 = counts.ES2 || 0; if (e1 !== e2) explicit = e1 > e2 ? 1 : 2; }
     if (g === prevG) idx += 1; else {
       idx = 1;
-      if (birthYear && OFFSET[g]) { const exp = Number(y) - birthYear - OFFSET[g]; if (exp === 1 || exp === 2) idx = exp; }
+      // Se i dati di una fascia iniziano a metà percorso, l'età dice se la
+      // prima stagione osservata è già il 2° anno (la norma sono due anni per
+      // categoria: 13-14 Esordienti, 15-16 Allievi, 17-18 Juniores).
+      // (solo per la PRIMA fascia osservata: se ne è già stata vista una prima, la sequenza dei risultati vale più dell'età)
+      if (prevG === null && birthYear && OFFSET[g]) { const exp = Number(y) - birthYear - OFFSET[g]; if (exp === 1 || exp === 2) idx = exp; }
     }
+    // Dal 3° anno nella stessa fascia (con risultati) è un'eccezione: un anno in più.
     prevG = g;
     seq.push({ y, g, idx: explicit || idx, explicit: !!explicit });
   }
@@ -18302,11 +18307,12 @@ function athleteCategoryPath(rows, nowYear, nowCode, birthYear) {
   }
   const out = {};
   for (const x of seq) {
-    if (x.g === 'ES') out[x.y] = `Esordienti ${x.idx}° anno`;
+    const _extra = x.idx > 2 ? ' (anno in più)' : '';
+    if (x.g === 'ES') out[x.y] = `Esordienti ${x.idx}° anno${_extra}`;
     else if (x.g === 'ELI') {
       if (by) { const age = Number(x.y) - by; out[x.y] = age <= 22 ? 'Under 23' : 'Elite'; }
       else out[x.y] = 'Elite / Under 23';
-    } else out[x.y] = `${NAME[x.g]} ${x.idx}° anno`;
+    } else out[x.y] = `${NAME[x.g]} ${x.idx}° anno${_extra}`;
   }
   return out;
 }
