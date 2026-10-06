@@ -13211,3 +13211,48 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .rs-both .tt { padding: 8px 12px; background: var(--hx-navy); } .rs-both .tt b { display: block; font-size: 12.5px; text-transform: uppercase; } .rs-both .tt small { color: rgba(255,255,255,.75); font-size: 12px; } .rs-both .tt a { color: #fff; font-weight: 700; }
 .rs-stage .bar2 { display: flex; align-items: center; gap: 12px; padding: 8px 12px; flex-wrap: wrap; } .rs-stage .bar2 button { background: transparent; border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 8px; padding: 7px 12px; font-weight: 600; font-size: 12.5px; cursor: pointer; } .rs-stage .bar2 span { color: rgba(255,255,255,.65); font-size: 12px; }
 @media (max-width: 700px) { .rs-both { grid-template-columns: minmax(0, 1fr); } }
+
+/* ===== Elenchi Atleti / Team (v2) ===== */
+.el-wrap { --hx-navy: #0A1B33; --hx-red: #E3182D; --hx-blue: #3D7BFF; --hx-up: #10B981; }
+.el-pod { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.el-pc { position: relative; overflow: hidden; border-radius: 10px; color: #fff; padding: 16px; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(150deg, var(--c1), var(--c2)); text-decoration: none; }
+.el-pc .rk { position: absolute; right: 12px; top: 8px; font-style: italic; font-weight: 800; font-size: 56px; line-height: 1; opacity: .28; }
+.el-pc .av { position: relative; overflow: hidden; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.18); border: 2px solid rgba(255,255,255,.7); display: grid; place-items: center; font-weight: 800; font-size: 17px; margin-bottom: 10px; }
+.el-pc .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.el-pc b { font-size: 16px; font-weight: 800; line-height: 1.15; text-transform: uppercase; }
+.el-pc small { opacity: .85; font-size: 12px; margin-top: 2px; }
+.el-pc .pt { margin-top: 8px; font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; } .el-pc .pt span { font-size: 12px; font-weight: 600; opacity: .8; }
+.el-tbl { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
+.el-thead, .el-tr { display: grid; grid-template-columns: 46px minmax(0, 2.4fr) minmax(0, 1.6fr) repeat(4, 62px) 100px; gap: 10px; align-items: center; padding: 0 14px; }
+.el-thead.t, .el-tr.t { grid-template-columns: 46px minmax(0, 2.6fr) minmax(0, 1.6fr) repeat(3, 62px) 100px; }
+.el-thead { height: 38px; background: var(--bg-elevated, rgba(0,0,0,.04)); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.el-thead .n { text-align: right; }
+.el-tr { min-height: 58px; border-top: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-primary); cursor: pointer; }
+.el-tr:hover { background: var(--bg-elevated, rgba(0,0,0,.03)); }
+.el-letter { padding: 8px 14px; background: var(--bg-elevated, rgba(0,0,0,.04)); font-size: 13px; font-weight: 800; letter-spacing: .1em; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); scroll-margin-top: 90px; }
+.el-rkb { font-size: 11px; font-weight: 700; color: var(--text-secondary); background: var(--bg-elevated, rgba(0,0,0,.05)); border-radius: 5px; padding: 4px 6px; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.el-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.el-who b { display: block; font-size: 13.5px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.el-who small { color: var(--text-secondary); font-size: 11.5px; }
+.el-av, .el-logo { position: relative; overflow: hidden; width: 36px; height: 36px; flex: none; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 800; }
+.el-av { border-radius: 50%; } .el-logo { border-radius: 8px; }
+.el-av img, .el-logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--bg-card); }
+.el-tm { color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.el-tm a { color: inherit; text-decoration: none; } .el-tm a:hover { text-decoration: underline; }
+.el-pts { font-weight: 800; color: var(--hx-blue); font-size: 15px; text-align: right; font-variant-numeric: tabular-nums; }
+.el-n { text-align: right; font-variant-numeric: tabular-nums; } .el-n.win { color: var(--hx-up); font-weight: 700; }
+.el-fol { text-align: right; } .el-fol .follow-pill { font-size: 12px; padding: 5px 10px; }
+.el-st { display: none; }
+.el-li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border-subtle); align-items: center; font-size: 13px; color: inherit; text-decoration: none; }
+.el-li:first-of-type { border-top: 0; padding-top: 0; }
+.el-li .p { font-weight: 800; color: var(--text-secondary); } .el-li b { font-weight: 600; color: var(--text-primary); } .el-li small { display: block; color: var(--text-secondary); font-size: 11.5px; } .el-li .up { color: var(--hx-up); font-weight: 700; }
+.el-az { display: flex; flex-wrap: wrap; gap: 4px; } .el-az a { min-width: 26px; height: 26px; display: grid; place-items: center; border-radius: 5px; background: var(--bg-elevated, rgba(0,0,0,.05)); font-size: 12px; font-weight: 600; color: var(--text-secondary); text-decoration: none; } .el-az a:hover { background: var(--hx-blue); color: #fff; }
+@media (max-width: 760px) {
+  .el-pod { grid-template-columns: minmax(0, 1fr); }
+  .el-thead { display: none; }
+  .el-tr, .el-tr.t { grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-areas: "r w pt" ". tm tm" ". st st"; padding: 10px 12px; row-gap: 4px; }
+  .el-tr > .el-rkb { grid-area: r; } .el-tr > .el-who { grid-area: w; } .el-tr > .el-pts { grid-area: pt; } .el-tr > .el-tm { grid-area: tm; }
+  .el-tr > .el-st { grid-area: st; display: flex; gap: 14px; color: var(--text-secondary); font-size: 12px; }
+  .el-tr > .el-n, .el-tr > .el-fol { display: none; }
+}
+@media (max-width: 760px) { .el-pc { min-height: 0; padding: 12px 14px; } .el-pc .av { width: 40px; height: 40px; margin-bottom: 6px; } .el-pc .rk { font-size: 40px; } }

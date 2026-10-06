@@ -25482,6 +25482,7 @@ window.setTeamSearch = (v) => { teamSearch = v; window.filterTeamList(v); };
 
 async function renderAtletiList() {
   if (!globalData) return;
+  if (window.ElV2) return window.ElV2.renderAtleti();
   const { athletes } = globalData;
   
   if ((atlGender === 'M' && atlCat.endsWith('_F')) || (atlGender === 'F' && !atlCat.endsWith('_F'))) {
@@ -25627,6 +25628,7 @@ async function renderGare() {
 
 async function renderTeamList() {
   if (!globalData) return;
+  if (window.ElV2) return window.ElV2.renderTeam();
   const { teams } = globalData;
 
   if ((teamGender === 'M' && teamCat.endsWith('_F')) || (teamGender === 'F' && !teamCat.endsWith('_F'))) {
