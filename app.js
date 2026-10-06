@@ -16965,20 +16965,24 @@ function _athDaysAgo(iso) {
 }
 function _athResRow(r) {
   const p = r.posizione, cls = p === 1 ? 'p1' : p === 2 ? 'p2' : p === 3 ? 'p3' : '';
-  return `<a class="ath-res-row" href="#/gara/${esc(r.gara_id)}">
+  const href = r._href || ('#/gara/' + esc(r.gara_id));
+  const ext = r._href && /^https?:/.test(r._href) ? ' target="_blank" rel="noopener"' : '';
+  const hasPts = r.punti_effettivi != null;
+  return `<a class="ath-res-row" href="${href}"${ext}>
     <span class="ath-res-pos ${cls}">${p}°</span>
     <span class="ath-res-body"><span class="ath-res-name">${esc(r.nome_gara)}</span><span class="ath-res-date">${fmtDateShort(r.data)}</span></span>
-    <span class="ath-res-pts">${(r.punti_effettivi || 0) > 0 ? '+' + r.punti_effettivi : '0'}<small>PT</small></span>
+    ${hasPts ? `<span class="ath-res-pts">${(r.punti_effettivi || 0) > 0 ? '+' + r.punti_effettivi : '0'}<small>PT</small></span>` : '<span></span>'}
   </a>`;
 }
 function athleteMomentHtml(rows, streak, isCurrent) {
   if (!rows.length) return '';
   const byDate = rows.slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  const hasPts = rows.some(r => r.punti_effettivi != null);
   const scoring = rows.filter(r => (r.punti_effettivi || 0) > 0).length;
   const last = byDate[0];
   const lastWin = byDate.find(r => r.posizione === 1);
   const cells = [];
-  if (isCurrent && last) {
+  if (isCurrent && hasPts && last) {
     const days = _athDaysAgo(last.data);
     const cut = new Date(); cut.setDate(cut.getDate() - 28);
     const cutIso = cut.toISOString().slice(0, 10);
@@ -16989,7 +16993,9 @@ function athleteMomentHtml(rows, streak, isCurrent) {
   } else if (last) {
     cells.push(`<div><b>${fmtDateShort(last.data)}</b><span>ultima gara della stagione</span></div>`);
   }
-  cells.push(`<div><b>${scoring}</b><span>gar${scoring === 1 ? 'a' : 'e'} a punti su ${rows.length}</span></div>`);
+  cells.push(hasPts
+    ? `<div><b>${scoring}</b><span>gar${scoring === 1 ? 'a' : 'e'} a punti su ${rows.length}</span></div>`
+    : `<div><b>${rows.length}</b><span>risultat${rows.length === 1 ? 'o' : 'i'} in classifica (primi 10)</span></div>`);
   cells.push(lastWin
     ? `<div><b>${fmtDateShort(lastWin.data)}</b><span>ultima vittoria · <a href="#/gara/${esc(lastWin.gara_id)}">${esc(lastWin.nome_gara)}</a></span></div>`
     : `<div><b>—</b><span>nessuna vittoria in stagione</span></div>`);
@@ -17007,8 +17013,9 @@ function athleteLastBestHtml(rows) {
   if (!rows.length) return '';
   const byDate = rows.slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
   const last5 = byDate.slice(0, 5);
-  const best5 = rows.slice().sort((a, b) => (b.punti_effettivi || 0) - (a.punti_effettivi || 0) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || '')).slice(0, 5);
-  return `<div class="ath-two-col">
+  const _hasPts = rows.some(r => r.punti_effettivi != null);
+  const best5 = rows.slice().sort((a, b) => (_hasPts ? (b.punti_effettivi || 0) - (a.punti_effettivi || 0) : 0) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || '')).slice(0, 5);
+  return `<div class="ath-two-col" id="ath-lastbest">
     <section class="ath-block"><div class="ath-block-h"><span>ULTIMI RISULTATI</span><i></i></div><div class="ath-res-list">${last5.map(_athResRow).join('')}</div></section>
     <section class="ath-block"><div class="ath-block-h"><span>MIGLIORI DELLA STAGIONE</span><i></i></div><div class="ath-res-list">${best5.map(_athResRow).join('')}</div></section>
   </div>`;
@@ -17080,7 +17087,7 @@ function athleteRankChartHtml(atleta_id, resultsRaw, rCode, currentPos) {
     g += `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.rk).toFixed(1)}" r="${p.today ? 4.5 : 3.5}" fill="${p.today ? 'var(--bg-card)' : col}" stroke="${p.today ? col : 'var(--bg-card)'}" stroke-width="${p.today ? 2.5 : 1.5}" data-tip="${esc(tip)}" tabindex="0" style="cursor:pointer" onpointerenter="window._athRkShow(this)" onpointerleave="window._athRkHide(this)" onfocus="window._athRkShow(this)" onblur="window._athRkHide(this)"/>`;
   });
   const best = Math.min(...pts.map(p => p.rk)), worst = Math.max(...pts.map(p => p.rk));
-  return `<section class="ath-block"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i><em class="ath-rank-inline">oggi <b>${pts[pts.length - 1].rk}°</b> · migliore <b>${best}°</b> · peggiore <b>${worst}°</b></em></div>
+  return `<section class="ath-block" id="ath-rankchart"><div class="ath-block-h"><span>ANDAMENTO IN CLASSIFICA</span><i></i><em class="ath-rank-inline">oggi <b>${pts[pts.length - 1].rk}°</b> · migliore <b>${best}°</b> · peggiore <b>${worst}°</b></em></div>
     <div class="ath-rank-card" style="position:relative" title="Posizione in classifica di categoria dopo ogni gara a cui ha preso parte nei primi 10. Oro = vittoria, argento = podio.">
       <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Posizione nella classifica dopo ciascuna gara" style="width:100%;height:auto;display:block;overflow:visible">${g}</svg>
       <div class="ath-rank-tip" role="status"></div>
@@ -17102,6 +17109,30 @@ window._athRkHide = function(el) {
   const tip = el.closest('.ath-rank-card')?.querySelector('.ath-rank-tip');
   if (tip) tip.classList.remove('on');
 };
+// Anno storico selezionato (ciclismo.info / PCS): "Il momento", "Ultimi" e
+// "Migliori" devono parlare di QUELL'anno, non della stagione in corso.
+// Andamento in classifica e rivalità valgono solo per la stagione corrente
+// (servono i dati di tutta la categoria), quindi si nascondono.
+function _athShowHistoricBlocks(rows) {
+  const list = (rows || []).filter(r => r.posizione && r.data).map(r => ({
+    posizione: r.posizione, data: r.data, nome_gara: r.nome_gara || r.gara_name || '',
+    punti_effettivi: null,
+    _href: r._href || (r.gara_ciclismo_url ? _ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione)
+      : r.pcs_url ? 'https://www.procyclingstats.com/' + String(r.pcs_url).replace(/^\/+/, '') : '#'),
+  }));
+  ['ath-rankchart', 'ath-rivals'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
+  const put = (id, html) => {
+    const old = document.getElementById(id);
+    if (!html) { if (old) old.style.display = 'none'; return; }
+    const tmp = document.createElement('div'); tmp.innerHTML = html.trim();
+    const node = tmp.firstElementChild;
+    if (old) { old.replaceWith(node); return; }
+    const anchor = document.getElementById('atleta-media-nativo') || document.getElementById('atleta-ciclismo-media');
+    if (anchor) anchor.before(node);
+  };
+  put('ath-moment', athleteMomentHtml(list, null, false));
+  put('ath-lastbest', athleteLastBestHtml(list));
+}
 function athleteRivalsHtml(list) {
   if (!list.length) return '';
   const rows = list.map(v => {
@@ -17114,7 +17145,7 @@ function athleteRivalsHtml(list) {
       </div>
     </div>`;
   }).join('');
-  return `<section class="ath-block"><div class="ath-block-h"><span>RIVALITÀ</span><i></i></div>${rows}
+  return `<section class="ath-block" id="ath-rivals"><div class="ath-block-h"><span>RIVALITÀ</span><i></i></div>${rows}
     <p class="ath-moment-note">Verde = gare in cui è arrivato davanti, rosso = dietro. Contano solo le gare in cui entrambi sono nei primi 10.</p></section>`;
 }
 
@@ -19391,6 +19422,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     b.style.color = on ? '#fff' : 'var(--text-secondary)';
   });
 
+  _athShowHistoricBlocks(rows);
   const team = rows[0]?.team || '';
   const categoria = rows[0]?.categoria || '';
   // Il nome squadra su ciclismo.info varia da un anno all'altro (sponsor
@@ -19566,6 +19598,7 @@ window.setAtletaPcsYear = (atletaId, anno) => {
     b.style.color = on ? '#fff' : 'var(--text-secondary)';
   });
 
+  _athShowHistoricBlocks(rows);
   const team = (window._pcsTeamHistCache[atletaId] || {})[anno] || '';
   const resolvedTeamId = null; // squadre estere/pro, mai un team_id italiacrit noto
   const headerTop = document.getElementById('atleta-header-top');
