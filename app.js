@@ -16704,11 +16704,13 @@ async function renderGaraStoria(baseName) {
     </div>`).join('');
 
   setPage(`
+    <div class="hx-wrap gara-wrap">
     <div class="race-header">
       <div class="race-name-display">${esc(baseName)}</div>
       <div class="race-meta-row"><span>${editions.length} edizioni trovate</span></div>
     </div>
-    <div style="margin-top:20px">${rowsHtml}</div>
+    <div>${rowsHtml}</div>
+    </div>
   `);
 }
 
@@ -19273,6 +19275,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       <button class="admin-edit-btn" style="background:#ea580c" onclick="window.ciclismoRimatchGara('${esc(ciclismoGaraId)}')">↺ Rimatch atleti mancanti</button>` : '';
 
   setPage(`
+    <div class="hx-wrap gara-wrap">
     <div class="race-header">
       <div class="race-name-display">${esc(first.nome_gara)}</div>
       <div class="race-meta-row">
@@ -19312,6 +19315,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>
     <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
+    </div>
   `);
   _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara });
 
