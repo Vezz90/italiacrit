@@ -13273,3 +13273,6 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .cls-wrap .rk-intel-line { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
 @media (max-width: 760px) { .cls-bar2 .hx-seg { margin-left: 0; } }
 .cls-tabs { scrollbar-width: none; }
+.rs-years { display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: thin; }
+.rs-years button { flex: 0 0 auto; padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); font-weight: 700; font-size: .82rem; cursor: pointer; }
+.rs-years button[aria-pressed="true"] { background: var(--hx-red, #E3182D); border-color: var(--hx-red, #E3182D); color: #fff; }

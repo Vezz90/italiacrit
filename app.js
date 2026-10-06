@@ -10837,11 +10837,7 @@ window.setRankPanel = (p) => { rankPanel = p; renderClassifica(); };
 // /ciclismo-results/classifica), non una stima nostra.
 let _classHistoricalYear = null;
 window.classSetYear = (y) => {
-  document.querySelectorAll('#class-year-row .year-pill').forEach(b => {
-    const on = Number(b.dataset.year) === Number(y);
-    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
-    b.style.color = on ? '#fff' : 'var(--text-secondary)';
-  });
+  document.querySelectorAll('#class-year-row button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.year) === Number(y))));
   if (Number(y) === Number(_loadedSeasonYear())) {
     _classHistoricalYear = null;
     renderClassifica();
@@ -11052,7 +11048,8 @@ async function renderClassifica() {
   setPage(`
     <div class="hx-wrap cls-wrap">
       <div class="rs-head"><h1>${_rkIsPista ? 'Pista' : 'Classifica'}</h1><span class="rs-cnt" id="rank-count-label">Caricamento...</span>
-        <div class="rs-right">${_rkIsPista ? '' : `<label class="hx-sel"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="window.classSetYear(Number(this.value))">${_clsYears}</select></label>`}${_clsOnClass ? _clsShare : ''}</div></div>
+        <div class="rs-right">${_clsOnClass ? _clsShare : ''}</div></div>
+      ${_rkIsPista ? '' : _classYearRowHtml(_classCurYear)}
       ${_rkIsPista ? '<p class="rk-intel-line">Classifica indipendente — non conta per la strada.</p>' : ''}
       <div class="rs-bar" role="search">
         <div class="hx-seg" role="group" aria-label="Seleziona genere"><button type="button" id="tab-gender-M" onclick="setRankGender('M')" aria-pressed="${rankGender === 'M'}">Uomini</button><button type="button" id="tab-gender-F" onclick="setRankGender('F')" aria-pressed="${rankGender === 'F'}">Donne</button></div>
@@ -11117,14 +11114,10 @@ window._classStoricoLastFilterCat = {};
 let _classStoricoGender = 'M';
 let _classStoricoSearch = '';
 function _classYearRowHtml(anno) {
-  const _classCurYear = Number(_loadedSeasonYear());
+  const cur = Number(_loadedSeasonYear());
   const pills = [];
-  for (let y = _classCurYear; y >= 2007; y--) pills.push(y);
-  return `<div id="class-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
-    ${pills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.classSetYear(${y})"
-      style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
-      background:${y === anno ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === anno ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
-  </div>`;
+  for (let y = cur; y >= 2007; y--) pills.push(y);
+  return `<div id="class-year-row" class="rs-years" role="group" aria-label="Stagione">${pills.map(y => `<button type="button" data-year="${y}" onclick="window.classSetYear(${y})" aria-pressed="${y === anno}">${y}</button>`).join('')}</div>`;
 }
 // Ordine ed etichetta dei codici categoria GREZZI di ciclismo.info (solo 8
 // in tutto l'archivio 2007-2025) — stesso ordine ES1→ES2→Allievi→Juniores→
@@ -11146,8 +11139,8 @@ async function renderClassificaStorica(anno) {
   if (!bodyEl) {
     setPageMeta(`Classifica ${anno}`, `Classifica storica ${anno} del ciclismo agonistico italiano.`);
     setPage(`
-      <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span>
-        <div class="rs-right"><label class="hx-sel"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="window.classSetYear(Number(this.value))">${(() => { const o = []; for (let y = Number(_loadedSeasonYear()); y >= 2007; y--) o.push(`<option value="${y}"${y === anno ? ' selected' : ''}>Stagione ${y}</option>`); return o.join(''); })()}</select></label></div></div>
+      <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span></div>
+      ${_classYearRowHtml(anno)}
       <div class="ranking-controls" id="class-storico-controls"></div>
       <div class="ranking-table-wrap" id="class-storico-body"></div></div>
     `);
@@ -28230,12 +28223,7 @@ window.risToggleMissing = () => {
 // coprono quegli anni). I filtri restano visibili e funzionanti su
 // entrambi (richiesta esplicita), applicati lato client per gli anni storici.
 window.risSetYear = (y) => {
-  const _ys = document.getElementById('ris-sel-year'); if (_ys) _ys.value = String(y);
-  document.querySelectorAll('#ris-year-row .year-pill, #ris-year-row button').forEach(b => {
-    const on = Number(b.dataset.year) === Number(y);
-    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
-    b.style.color = on ? '#fff' : 'var(--text-secondary)';
-  });
+  document.querySelectorAll('#ris-year-row button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.year) === Number(y))));
   if (Number(y) === Number(_loadedSeasonYear())) {
     _risHistoricalYear = null;
     renderRisultati();

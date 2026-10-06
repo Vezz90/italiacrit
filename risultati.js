@@ -170,8 +170,8 @@
     const seg = (v, l) => `<button type="button" data-g="${v}" onclick="window.risSetGenere('${v}')" aria-pressed="${o.genere === v}">${l}</button>`;
     return `<div class="hx-wrap rs-wrap">
       <div class="rs-head"><h1>Risultati</h1><span class="rs-cnt" id="ris-count"></span>
-        <div class="rs-right"><label class="hx-sel"><span class="sr">Stagione</span><select id="ris-sel-year" onchange="window.risSetYear(Number(this.value))" aria-label="Stagione">${years.map(y => `<option value="${y}"${y === o.curYear ? ' selected' : ''}>Stagione ${y}</option>`).join('')}</select></label>
-        <div class="hx-seg" role="group" aria-label="Vista"><button type="button" id="ris-v-card" onclick="window.RisV2.setView('card')" aria-pressed="${getView() === 'card'}">Card</button><button type="button" id="ris-v-list" onclick="window.RisV2.setView('list')" aria-pressed="${getView() === 'list'}">Lista</button></div></div></div>
+        <div class="rs-right"><div class="hx-seg" role="group" aria-label="Vista"><button type="button" id="ris-v-card" onclick="window.RisV2.setView('card')" aria-pressed="${getView() === 'card'}">Card</button><button type="button" id="ris-v-list" onclick="window.RisV2.setView('list')" aria-pressed="${getView() === 'list'}">Lista</button></div></div></div>
+      <div id="ris-year-row" class="rs-years" role="group" aria-label="Stagione">${years.map(y => `<button type="button" data-year="${y}" onclick="window.risSetYear(${y})" aria-pressed="${y === o.curYear}">${y}</button>`).join('')}</div>
       <div id="ris-live"></div>
       <div class="rs-bar" role="search">
         <div class="hx-seg" id="ris-seg-genere" role="group" aria-label="Genere">${seg('', 'Tutti')}${seg('M', 'Uomini')}${seg('F', 'Donne')}</div>
@@ -250,7 +250,7 @@
     syncShell(o) {
       document.querySelectorAll('#ris-seg-genere button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.g || '') === (o.genere || ''))));
       const m = $('ris-missing-toggle'); if (m) m.setAttribute('aria-pressed', String(!!o.missing));
-      const y = $('ris-sel-year'); if (y && o.year) y.value = String(o.year);
+      document.querySelectorAll('#ris-year-row button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.year) === Number(o.year))));
     },
     loadMoreHtml(n) { return n > 0 ? `<button class="rs-more" type="button" onclick="window.risLoadMore()">Carica altre gare (${n})</button>` : ''; },
     both() {
