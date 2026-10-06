@@ -12918,3 +12918,6 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .ath-hero-actions #atleta-msg-btn, .ath-hero-actions #atleta-follow-btn, .ath-hero-actions #team-msg-btn, .ath-hero-actions #team-follow-btn { display: inline-flex; }
 .ath-hero-actions:has(#atleta-follow-btn button) .watch-btn,
 .ath-hero-actions:has(#team-follow-btn button) .watch-btn { display: none !important; }
+/* l'intestazione è sempre scura: colori espliciti (con tema chiaro var(--text-primary) è scuro) */
+.ath-hero-actions .btn-share, .ath-hero-actions .admin-edit-btn:not([style*="0891b2"]) { color: #f1f5f9 !important; }
+.ath-hero-actions .watch-btn.watch-btn--active, .ath-hero-actions .follow-pill.is-on { color: #ff8a3d !important; }
