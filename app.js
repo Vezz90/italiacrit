@@ -9021,6 +9021,23 @@ function _hdCatBadgeStyle(catLabel) {
   return `color:${c};background:${c}1F`;
 }
 
+// Numeri, record e primati della categoria scelta (prima erano la pagina Statistiche):
+// KPI, confronto categorie, regioni, formati, storie, record, classifiche. Per gli
+// Esordienti (due annate) la seconda è in un riquadro apribile.
+function _hdStatsSection(d) {
+  try {
+    const one = code => {
+      const res = globalData.resultsRaw.filter(r => getRankingFileCode(r) === code);
+      return _renderStatisticheCat(code, res, globalData.athletes, globalData.calendar, '', globalData.resultsRaw, { asHtml: true });
+    };
+    const main = one(d.catCode);
+    const dual = d.dualCode ? one(d.dualCode) : '';
+    if (!main && !dual) return '';
+    const head = c => `<div class="section-header" style="margin-top:34px"><span class="section-title">STATISTICHE · ${esc(catLabel(c)).toUpperCase()}</span><span class="section-line"></span></div>`;
+    return `<section class="hd-stats-sec" id="hd-stats-sec">${head(d.catCode)}${main}${dual ? `<details class="hd-stats-dual" style="margin-top:28px"><summary style="cursor:pointer;font-weight:700;padding:10px 0">Statistiche ${esc(catLabel(d.dualCode))}</summary>${dual}</details>` : ''}<p style="margin-top:20px"><a href="#/record" class="hd-card-cta">Record e primati di tutte le categorie →</a></p></section>`;
+  } catch (e) { console.warn('[statistiche in dashboard]', e); return ''; }
+}
+
 function _hdBuildHtml(d) {
   const catLabelShort = c => (({ ELI_M:'Elite/U23', JUN_M:'Juniores', AL_M:'Allievi', ES2_M:'Esordienti 2° anno', ES1_M:'Esordienti 1° anno',
                                   ELI_F:'Elite/U23', JUN_F:'Juniores', AL_F:'Allieve', ES2_F:'Esordienti 2° anno', ES1_F:'Esordienti 1° anno' })[c] || c);
@@ -9354,6 +9371,7 @@ function _hdBuildHtml(d) {
       <div class="hd-grid-3">${teamClassificaHtml}${fireTeamHtml}${teamMoversHtml}</div>
       <div class="hd-grid-2">${rivalryHtml}${ultimiHtml}</div>
       <div class="hd-grid-2">${prossimeHtml}${archiveHtml}</div>
+      ${_hdStatsSection(d)}
       ${quickHtml}
     </div>
   </div>`;
@@ -26107,7 +26125,8 @@ async function renderStatistiche(selectedCatKey) {
 }
 
 // ── STATISTICHE CATEGORIA SINGOLA ────────────────────────────
-function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml, allResults) {
+// opts.asHtml: invece di disegnare la pagina restituisce l'HTML (usato dalla dashboard Statistiche)
+function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml, allResults, opts) {
   // catKey è un codice classifica (es. ES1_M)
   const label = catLabel(catKey);
 
@@ -26168,6 +26187,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     </div>`).join('');
 
   if (!resultsRaw.length) {
+    if (opts && opts.asHtml) return '';
     setPage(`<div class="pg-header"><h1 class="pg-title">STATISTICHE — ${esc(label)}</h1></div>${catTabsHtml}<p style="color:var(--text-muted)">Nessun dato per questa categoria.</p>`);
     return;
   }
@@ -26390,7 +26410,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   }
   const _fmtSec = s => { const m=Math.floor(s/60), ss=s%60; return m>0?`${m}'${String(ss).padStart(2,'0')}"`:`${ss}"`; };
 
-  setPage(`
+  const _statHtml = `
     <div class="pg-header">
       <div class="pg-eyebrow">📊 ANALISI & DATI</div>
       <h1 class="pg-title">STATISTICHE</h1>
@@ -26495,7 +26515,9 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏆 Vittorie per Team</div>
       <div style="padding:16px">${teamBarsHtml}</div>
     </div>` : ''}
-  `);
+  `;
+  if (opts && opts.asHtml) return _statHtml.replace(/<div class="pg-header">[\s\S]*?<\/h1>\s*<\/div>/, '');
+  setPage(_statHtml);
 }
 
 // ── COMPARATORE ───────────────────────────────────────────────

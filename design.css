@@ -13078,3 +13078,10 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 }
 .hx-more { margin-top: 12px; width: 100%; height: 42px; border-radius: 8px; border: 1px dashed var(--border-subtle); background: var(--bg-card); color: var(--hx-blue); font: 600 13px/1 inherit; cursor: pointer; }
 .hx-more:hover { border-style: solid; }
+.hx-tm { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--border-subtle); color: inherit; text-decoration: none; font-size: 13px; }
+.hx-tm:first-of-type { border-top: 0; padding-top: 0; }
+.hx-tm .n { color: var(--text-muted); font-weight: 800; font-variant-numeric: tabular-nums; }
+.hx-tm .nm { font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hx-tm .pts { color: var(--text-secondary); font-size: 12px; }
+.hx-tmsub { margin-top: 6px; color: var(--text-muted); font-size: 11.5px; }
+.hd-stats-sec .section-header { margin-top: 30px; }
