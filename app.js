@@ -28198,6 +28198,7 @@ window.risToggleMissing = () => {
 // coprono quegli anni). I filtri restano visibili e funzionanti su
 // entrambi (richiesta esplicita), applicati lato client per gli anni storici.
 window.risSetYear = (y) => {
+  const _ys = document.getElementById('ris-sel-year'); if (_ys) _ys.value = String(y);
   document.querySelectorAll('#ris-year-row .year-pill, #ris-year-row button').forEach(b => {
     const on = Number(b.dataset.year) === Number(y);
     b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
@@ -28283,7 +28284,16 @@ async function renderRisultatiStorico(anno) {
   const visibleRaces = races.slice(0, risVisibleCount);
 
   if (countEl) countEl.textContent = totalRaces > visibleRaces.length ? `${visibleRaces.length} di ${totalRaces} gare` : `${totalRaces} gare`;
-  if (!totalRaces) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata</div>'; return; }
+  if (!totalRaces) { cardsEl.innerHTML = window.RisV2 ? '<div class="hx-empty">Nessuna gara trovata</div>' : '<div class="empty-state">Nessuna gara trovata</div>'; return; }
+
+  if (window.RisV2) {
+    window.RisV2.syncShell({ genere: risQueryGenere, missing: false, year: anno });
+    cardsEl.innerHTML = window.RisV2.listHtml(visibleRaces, races, {}, window.RisV2.histCard, window.RisV2.histRows)
+      + window.RisV2.loadMoreHtml(totalRaces - visibleRaces.length);
+    const pe = document.getElementById('ris-pend'); if (pe) pe.innerHTML = '';
+    const se = document.getElementById('ris-side'); if (se) se.innerHTML = '';
+    return;
+  }
 
   const posColorHero = ['p1', 'p2', 'p3'];
   cardsEl.innerHTML = visibleRaces.map(ev => {
@@ -28694,7 +28704,10 @@ async function renderRisultati() {
   const appEl = document.getElementById('app');
   if (!appEl) return;
   const isFirstRender = !document.getElementById('ris-cards');
-  if (isFirstRender) {
+  if (isFirstRender && window.RisV2) {
+    setPage(window.RisV2.shellHtml({ curYear: Number(_loadedSeasonYear()), genere: risQueryGenere, missing: risShowMissing, regions: allRegions }));
+    window.RisV2.liveStart();
+  } else if (isFirstRender) {
     const selectsHtml = `
       <select class="cal-filter-select" id="ris-sel-month" onchange="window.risSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
@@ -28762,7 +28775,8 @@ async function renderRisultati() {
   const countEl   = document.getElementById('ris-count');
   const cardsEl   = document.getElementById('ris-cards');
   const missingToggleEl = document.getElementById('ris-missing-toggle');
-  if (missingToggleEl) {
+  if (window.RisV2) window.RisV2.syncShell({ genere: risQueryGenere, missing: risShowMissing, year: Number(_loadedSeasonYear()) });
+  if (missingToggleEl && !window.RisV2) {
     missingToggleEl.style.cssText = `margin:8px 0 0;padding:8px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;cursor:pointer;border:1px solid ${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'};background:${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${risShowMissing ? '#fff' : 'var(--text-secondary)'}`;
   }
 
@@ -28783,7 +28797,31 @@ async function renderRisultati() {
     : `${totalRaces} gare trovate`;
 
   // Always: rebuild only the cards area
-  if (cardsEl) {
+  if (cardsEl && window.RisV2) {
+    const calById = {};
+    (calendar || []).forEach(c => { calById[c.id] = c; });
+    const ctx = { photosMap, today: _risTodayIso, calById };
+    cardsEl.innerHTML = visibleRaces.length
+      ? window.RisV2.listHtml(visibleRaces, races, ctx, r => window.RisV2.cardHtml(r, ctx), r => window.RisV2.rowsHtml(r, ctx))
+      : '<div class="hx-empty">Nessuna gara trovata</div>';
+    cardsEl.insertAdjacentHTML('beforeend', window.RisV2.loadMoreHtml(totalRaces - visibleRaces.length));
+    const pendEl = document.getElementById('ris-pend');
+    if (pendEl) pendEl.innerHTML = (!risShowMissing && pendingToday.length)
+      ? `<div class="rs-pendbar"><span class="dot"></span><div><b>${pendingToday.length} gar${pendingToday.length === 1 ? 'a' : 'e'} di oggi senza ancora il risultato</b><br><span>Sei in gara o hai una foto dell’ordine d’arrivo? Puoi aggiungerlo dalla pagina della gara.</span></div><a href="#" onclick="event.preventDefault();var e=document.querySelector('#ris-cards [data-pend]');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})">Vai alle gare →</a></div>`
+      : '';
+    const sideEl = document.getElementById('ris-side');
+    if (sideEl) {
+      const evs = Object.values(eventMap);
+      const lastD = evs.reduce((m, e) => (e.data > m ? e.data : m), '');
+      const fromD = lastD ? new Date(new Date(lastD + 'T00:00:00').getTime() - 864e5).toISOString().slice(0, 10) : '';
+      const wantF = risQueryGenere === 'F', wantM = risQueryGenere === 'M';
+      const upcoming = (calendar || []).filter(g => g.data > _risTodayIso && !isNonRaceCalendarEntry(g) && !isProCalendarEntry(g)
+        && (!(wantF || wantM) || /DONNE|DONNA/i.test(g.categoria || '') === wantF))
+        .sort((a, b) => a.data.localeCompare(b.data)).slice(0, 5);
+      sideEl.innerHTML = window.RisV2.sideHtml({ weekend: lastD ? evs.filter(e => e.data >= fromD).length : 0, pending: pendingToday.length, upcoming });
+    }
+    window.RisV2.liveStart();
+  } else if (cardsEl) {
     cardsEl.innerHTML = visibleRaces.map(race => {
       // Card "in attesa" per una gara di oggi senza ancora risultati — vedi
       // pendingToday sopra. Nessun podio da mostrare, solo un invito a
