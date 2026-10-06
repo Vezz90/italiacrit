@@ -17578,7 +17578,7 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   const _rankChartHtml = _isLoadedYear ? _athSafe(() => athleteRankChartHtml(atleta_id, globalData.resultsRaw, rCode, typeof globalPos === 'number' ? globalPos : null)) : '';
   setPage(`
-    <div class="hd-wrap pg-inset">
+    <div class="ath-page">
     ${headerHtml}
     <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina atleta">
       <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
@@ -23681,7 +23681,7 @@ async function renderGara(gara_id) {
         </div>`;
     }
     setPage(`
-      <div class="hd-wrap pg-inset">
+      <div class="hx-wrap gara-wrap">
       <div class="race-header">
         <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--red-hot);margin-bottom:8px;text-transform:uppercase">🏁 Gara in programma · ${esc(dLabel.toUpperCase())}</div>
         <div class="race-name-display">${esc(_displayName)}</div>
@@ -24488,7 +24488,7 @@ async function renderGara(gara_id) {
     ...(results.length ? { performer: results.slice(0, 10).map(r => ({ '@type':'Person', name:`${r.cognome} ${r.nome}`, identifier: r.atleta_id })) } : {}),
   });
   setPage(`
-    <div class="hd-wrap pg-inset">
+    <div class="hx-wrap gara-wrap">
     <div class="race-header">
       <div class="race-name-display">${esc(name)}${tipoPistaTag(tipo)}</div>
       <div class="race-meta-row">

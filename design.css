@@ -13356,3 +13356,16 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 /* Risultati: due card per riga, piu' respiro */
 #ris-cards .hx-rlist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 760px) { #ris-cards .hx-rlist { grid-template-columns: minmax(0, 1fr); } }
+
+/* ===== Pagina gara (v2): tema del sito, intestazione pulita ===== */
+.gara-wrap .race-header { background: transparent; padding: 0; margin: 0; border: 0; color: var(--text-secondary); }
+.gara-wrap .race-name-display { color: var(--text-primary) !important; font-style: italic; font-weight: 800 !important; font-size: clamp(28px, 4vw, 48px) !important; letter-spacing: 0 !important; line-height: .98 !important; }
+.gara-wrap .race-meta-row { color: var(--text-secondary) !important; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px !important; font-size: 13px; }
+.gara-wrap .race-meta-sep { color: var(--border-subtle) !important; }
+.gara-wrap .race-meta-row .badge { color: var(--text-primary) !important; background: var(--bg-elevated, rgba(0,0,0,.05)) !important; border: 1px solid var(--border-subtle) !important; }
+.gara-wrap .race-meta-chip { background: var(--bg-elevated, rgba(0,0,0,.05)); border: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.gara-wrap .results-table-wrap { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow-x: auto; }
+.gara-wrap .tab-group[aria-label="Risultati o albo d'oro"] { gap: 22px !important; margin: 4px 0 0 !important; border-bottom: 1px solid var(--border-subtle); }
+.gara-wrap .tab-group[aria-label="Risultati o albo d'oro"] .tab-btn { background: none !important; border: 0 !important; border-bottom: 3px solid transparent !important; border-radius: 0 !important; padding: 10px 0 12px !important; font-weight: 700; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted) !important; opacity: 1 !important; margin-bottom: -1px; }
+.gara-wrap .tab-group[aria-label="Risultati o albo d'oro"] .tab-btn.active-cat { color: var(--text-primary) !important; border-bottom-color: var(--hx-red, #E3182D) !important; }
+.gara-wrap { padding-top: 26px; }
