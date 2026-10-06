@@ -55,6 +55,8 @@
 
   function tierBadges(race) {
     const out = [];
+    // gara a tappe / a prove: etichetta con la tappa (es. "2ª Tappa") per ritrovare la serie
+    try { if (typeof _stageBaseName === 'function' && _stageBaseName(race.nome)) out.push(`<span class="rs-bd" style="background:rgba(61,123,255,.14);color:#3D7BFF">${esc(_stageSuffixLabel(race.nome))}</span>`); } catch {}
     if (race.campionato_italiano) out.push('<span class="rs-bd ci">CAMP. ITALIANO</span>');
     else if (race.campionato_regionale) out.push('<span class="rs-bd cr">CAMP. REGIONALE</span>');
     else if ((race.mult || 1) >= 2) out.push(`<span class="rs-bd m${race.mult >= 3 ? 3 : 2}">×${race.mult}</span>`);

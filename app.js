@@ -16309,9 +16309,9 @@ function _raceBaseName(nome) {
 // l'opzionale la tappa a cronometro non veniva riconosciuta affatto) o
 // "CLASSIFICA GENERALE"; se non trova nessuna di queste code non è (di per
 // sé) riconoscibile come gara a tappe.
-const _STAGE_SUFFIX_RE = /\s+(?:(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|\d+[°^ª]?)\s+TAPPA(?:\s+A?\s*CRONOMETRO)?|TAPPA\s+\d+|PROLOGO|CLASSIFICA\s+GENERALE)\s*$/i;
+const _STAGE_SUFFIX_RE = /\s+(?:(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|SETTIMA|OTTAVA|NONA|DECIMA|UNDICESIMA|DODICESIMA|\d+[°^ª]?)\s+TAPPA(?:\s+(?:PRIMA|SECONDA|TERZA|QUARTA|\d+[°^ª]?)\s+SEMITAPPA)?(?:\s+A?\s*CRONO(?:METRO|SCALATA)?)?|TAPPA\s+\d+|PROLOGO|CLASSIFICA\s+GENERALE|(?:PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|\d+[°^ª]?)\s+PROVA(?:\s+CHALLENGE)?|PROVA\s+\d+(?:\s+CHALLENGE)?)\s*$/i;
 function _stageBaseName(nome) {
-  let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ').replace(/\s+/g, ' ').trim();
+  let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,°^ª]/g, ' ').replace(/\s+/g, ' ').trim();
   if (!_STAGE_SUFFIX_RE.test(s)) return '';
   return s.replace(_STAGE_SUFFIX_RE, '').trim();
 }
@@ -16323,7 +16323,7 @@ function _stageBaseName(nome) {
 // Qui, se non c'è coda riconoscibile, il nome intero conta come possibile
 // "prima tappa senza numero" e si confronta così com'è.
 function _stageEffectiveBase(nome) {
-  return _stageBaseName(nome) || String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ').replace(/\s+/g, ' ').trim();
+  return _stageBaseName(nome) || String(nome || '').toUpperCase().replace(/[’'`.\-–,°^ª]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 function _stageSuffixLabel(nome) {
   const m = String(nome || '').toUpperCase().match(_STAGE_SUFFIX_RE);
@@ -16331,6 +16331,11 @@ function _stageSuffixLabel(nome) {
   const s = m[0].trim();
   if (/CLASSIFICA/i.test(s)) return 'Classifica Generale';
   if (/PROLOGO/i.test(s)) return 'Prologo';
+  const _ord = w => ({ PRIMA: 1, SECONDA: 2, TERZA: 3, QUARTA: 4, QUINTA: 5, SESTA: 6, SETTIMA: 7, OTTAVA: 8, NONA: 9, DECIMA: 10 }[String(w).toUpperCase()] || parseInt(w, 10) || w);
+  const pm = s.match(/(?:(PRIMA|SECONDA|TERZA|QUARTA|QUINTA|SESTA|\d+)[°^ª]?\s+PROVA|PROVA\s+(\d+))/i);
+  if (pm) return `${_ord(pm[1] || pm[2])}ª Prova`;
+  const sm = s.match(/^(\w+)[°^ª]?\s+TAPPA\s+(\w+)[°^ª]?\s+SEMITAPPA(.*)$/i);
+  if (sm) return `${_ord(sm[1])}ª Tappa · ${_ord(sm[2])}ª semitappa${/CRONOSCALATA/i.test(sm[3]) ? ' (Cronoscalata)' : /CRONO/i.test(sm[3]) ? ' (Crono)' : ''}`;
   const isTT = /CRONOMETRO/i.test(s);
   const label = s.replace(/\s+/g, ' ')
     // \s+ (non \s*) OBBLIGATORIO prima dell'eventuale "A": senza, il motore
