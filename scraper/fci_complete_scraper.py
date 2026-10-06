@@ -135,6 +135,9 @@ ATHLETE_NAME_ALIASES = {
     # "LUCIA" (primo termine del nome) e' un nome femminile, isolava
     # l'atleta (maschio, cognome reale "DI LUCIA") in 11 gare Esordienti.
     robust_norm("DI LUCIA NICCOLO'"): ("DI LUCIA", "NICCOLO'"),
+    # Stesso corridore (confermato dall'admin 2026-10-06): dal 2026 la FCI (e PCS)
+    # lo riportano come "Will", ma lo storico 2024-2025 e' sotto HARDING_WILLIAM.
+    robust_norm("HARDING WILL"): ("HARDING", "WILLIAM"),
 }
 
 def canonical_athlete_name(cognome, nome):
