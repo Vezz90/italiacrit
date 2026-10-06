@@ -11405,25 +11405,18 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
       <p>${valid.length ? 'Il podio della classifica stagionale, anno per anno.' : 'Ancora nessun podio registrato per questa categoria.'}</p>
     </div>`;
   if (!valid.length) return opts.showEmpty ? `<section class="albo-doro-card">${head}</section>` : '';
-  const medals = ['🥇', '🥈', '🥉'];
+  const _alTc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase()).replace(/(?<![A-Za-z])(?:[A-Za-z]\.)+(?![A-Za-z]{2})[A-Za-z]?/g, m => m.toUpperCase());
+  const mcls = ['g', 's', 'b'];
   const seasonsHtml = valid.map(r => {
-    const podHtml = r.podium.map((c, i) => {
-      const name = isTeam ? esc(c.team_nome || '') : esc(((c.cognome || '') + ' ' + (c.nome || '')).trim());
+    const podHtml = r.podium.slice(0, 3).map((c, i) => {
+      const name = isTeam ? esc(_alTc(c.team_nome || '')) : esc(_alTc(((c.cognome || '') + ' ' + (c.nome || '')).trim()));
       const href = isTeam ? ('#/team/' + encodeURIComponent(c.team_id)) : ('#/atleta/' + encodeURIComponent(c.atleta_id));
-      const sub = isTeam
-        ? `${c.punti || 0} pti · ${c.vittorie || 0} vitt.`
-        : `${esc(c.team_nome || '')} · ${c.punti || 0} pti`;
-      return `<a class="albo-pod albo-pod-${i + 1}" href="${href}">
-        <span class="albo-medal">${medals[i] || ''}</span>
-        <span class="albo-pod-main"><span class="albo-name">${name}</span><span class="albo-sub">${sub}</span></span>
-      </a>`;
+      const sub = isTeam ? `${c.vittorie || 0} vittorie` : esc(_alTc(c.team_nome || ''));
+      return `<a class="al-pp" href="${href}"><span class="md ${mcls[i]}">${i + 1}</span><b>${name}</b><small>${sub}</small><span class="pt">${c.punti || 0} pt</span></a>`;
     }).join('');
-    return `<div class="albo-season">
-      <div class="albo-season-year">${r.year}${r.isCur ? ' <em>in&nbsp;corso</em>' : ''}</div>
-      <div class="albo-podium">${podHtml}</div>
-    </div>`;
+    return `<div class="al-year"><div class="al-y"><b>${r.year}</b>${r.isCur ? '<small>IN CORSO</small>' : ''}</div><div class="al-pod3">${podHtml}</div></div>`;
   }).join('');
-  return `<section class="albo-doro-card">${head}<div class="albo-doro-list">${seasonsHtml}</div></section>`;
+  return `<section class="al-card">${opts.compactHead ? head : ''}<div class="al-list">${seasonsHtml}</div></section>`;
 }
 
 // ── PAGINA ALBO D'ORO (menu Classifiche) ──────────────────────────
@@ -11468,25 +11461,16 @@ function _alboCampioniHtml(code) {
     }
   }
 
-  const filters = `<div class="ranking-filter-bar" style="margin:8px 0 14px;gap:10px">
-      <select class="auth-input" style="max-width:200px" onchange="setAlboProva(this.value)">
-        <option value="">Tutte le specialità</option>${ALBO_PROVE.map(p => `<option value="${p}" ${alboProva === p ? 'selected' : ''}>${_titleCase(p)}</option>`).join('')}
-      </select>
-      <select class="auth-input" style="max-width:120px" onchange="setAlboYear(this.value)">
-        ${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>${y}</option>`).join('')}
-      </select>
-    </div>`;
-  const head = `<div class="albo-doro-head">
-      <h2>Campioni · ${esc(catLabel(code))} · ${year}</h2>
-      <p>Campioni italiani (dai risultati) e regionali (assegnati dal pannello admin). Le regioni senza titolare indicano cosa manca.</p>
+  const _alTc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
+  const filters = `<div class="al-sp" role="group" aria-label="Specialità e anno">
+      ${['', ...ALBO_PROVE].map(pv => `<button type="button" onclick="setAlboProva('${pv}')" aria-pressed="${alboProva === pv}">${pv ? _titleCase(pv) : 'Tutte'}</button>`).join('')}
+      <label class="hx-sel" style="margin-left:auto"><span class="sr">Anno</span><select aria-label="Anno" onchange="setAlboYear(this.value)">${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>${y}</option>`).join('')}</select></label>
     </div>`;
 
-  const chipLink = (c) => {
+  const chipCard = (c, label) => {
     const href = c.atleta_id ? '#/atleta/' + encodeURIComponent(c.atleta_id) : (c.team_id ? '#/team/' + encodeURIComponent(c.team_id) : '#');
-    return `<a class="albo-pod albo-pod-1" href="${href}">
-      <span class="albo-medal">${c.kind === 'it' ? '🇮🇹' : '🥇'}</span>
-      <span class="albo-pod-main"><span class="albo-name">${esc(c.nome)}</span><span class="albo-sub">${esc([FASCIA_LABEL[c.fascia] || '', c.atleta_id ? c.team : ''].filter(Boolean).join(' · '))}</span></span>
-    </a>`;
+    const sub = [FASCIA_LABEL[c.fascia] || '', c.atleta_id ? _alTc(c.team) : ''].filter(Boolean).join(' · ');
+    return `<a class="al-rc ${c.kind === 'it' ? 'ita' : ''}" href="${href}"><span class="rn">${esc(label)}</span><b>${c.kind === 'it' ? '🇮🇹' : '🥇'} ${esc(_alTc(c.nome))}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</a>`;
   };
 
   const sections = ALBO_PROVE.filter(p => !alboProva || p === alboProva).map(p => {
@@ -11501,30 +11485,24 @@ function _alboCampioniHtml(code) {
     if (!ita.length && !regions.length) return '';
     const isElite = /^ELI_/.test(code);
     let assegnate = 0;
-    const regionRows = regions.map(rg => {
+    const regionCards = regions.map(rg => {
       const titles = (byRegion[rg] || []).sort((a, b) => (a.fascia || '').localeCompare(b.fascia || ''));
       const races = racesBy[`${p}|${rg}`] || {};
       const raceLinks = Object.entries(races).map(([gid, nome]) => `<a href="#/gara/${esc(gid)}">${esc(nome.length > 44 ? nome.slice(0, 44) + '…' : nome)}</a>`).join(' · ');
-      let inner;
       if (titles.length) {
         assegnate++;
-        const mancaFascia = isElite && titles.length === 1 ? `<span class="albo-missing" style="margin-left:10px">manca ${titles[0].fascia === 'ELITE' ? 'Under 23' : 'Elite'}${raceLinks ? ' · ' + raceLinks : ''}</span>` : '';
-        inner = titles.map(chipLink).join('') + mancaFascia;
-      } else if (raceLinks) {
-        inner = `<span class="albo-missing">da assegnare · ${raceLinks}</span>`;
-      } else {
-        inner = `<span class="albo-missing">nessuna gara di campionato trovata</span>`;
+        const manca = isElite && titles.length === 1 ? `<div class="al-rc empty"><span class="rn">${esc(_titleCase(rg))}</span><b>manca ${titles[0].fascia === 'ELITE' ? 'Under 23' : 'Elite'}</b>${raceLinks ? `<small>${raceLinks}</small>` : ''}</div>` : '';
+        return titles.map(c => chipCard(c, _titleCase(rg))).join('') + manca;
       }
-      return `<div class="albo-season"><div class="albo-season-year" style="min-width:150px">${esc(_titleCase(rg))}</div><div class="albo-podium">${inner}</div></div>`;
+      if (raceLinks) return `<div class="al-rc empty"><span class="rn">${esc(_titleCase(rg))}</span><b>da assegnare</b><small>${raceLinks}</small></div>`;
+      return `<div class="al-rc empty"><span class="rn">${esc(_titleCase(rg))}</span><b>nessuna gara di campionato trovata</b></div>`;
     }).join('');
-    const itaRow = ita.length
-      ? `<div class="albo-season"><div class="albo-season-year" style="min-width:150px">Campione italiano</div><div class="albo-podium">${ita.map(chipLink).join('')}</div></div>` : '';
-    return `<div class="albo-prova-title" style="margin:18px 0 6px;font-family:var(--font-heading);font-weight:800;letter-spacing:.05em">${esc(p)}
-        ${regions.length ? `<span class="albo-missing" style="font-weight:400;letter-spacing:0;margin-left:8px">${assegnate} di ${regions.length} regioni con titolare</span>` : ''}</div>
-      <div class="albo-doro-list">${itaRow}${regionRows}</div>`;
+    const itaCard = ita.map(c => chipCard(c, 'Campione italiano')).join('');
+    return `<div class="hx-ph" style="margin-top:6px"><h2>${esc(_titleCase(p))} · ${year}</h2>${regions.length ? `<span class="rs-cnt" style="margin-left:8px;padding:0">${assegnate} di ${regions.length} regioni con titolare</span>` : ''}</div>
+      <div class="al-rg">${itaCard}${regionCards}</div>`;
   }).join('');
 
-  return `<section class="albo-doro-card">${head}${filters}${sections || '<div style="padding:16px;color:var(--text-muted)">Nessun dato per i filtri scelti.</div>'}</section>`;
+  return `<section class="al-card">${filters}${sections || '<div class="hx-empty">Nessun dato per i filtri scelti.</div>'}</section>`;
 }
 
 async function renderAlboDoro() {
@@ -11536,40 +11514,44 @@ async function renderAlboDoro() {
   const catsFemale = ['ES1_F','ES2_F','AL_F','JUN_F','ELI_F'];
   const cats = alboGender === 'M' ? catsMale : catsFemale;
 
-  const genderTabs = ['M','F'].map(g =>
-    `<button class="tab-btn ${alboGender===g?'active-gender':''}" onclick="setAlboGender('${g}')">${g==='M'?'UOMINI':'DONNE'}</button>`
-  ).join('');
-  const catTabs = cats.map(c =>
-    `<button class="tab-btn ${alboCat===c?'active-cat':''}" onclick="setAlboCat('${c}')">${catLabel(c)}</button>`
-  ).join('');
-  const viewTabs = `<div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
-      <button class="tab-btn ${alboView==='atleti'?'active-cat':''}" onclick="setAlboView('atleti')">ATLETI</button>
-      <button class="tab-btn ${alboView==='team'?'active-cat':''}" onclick="setAlboView('team')">TEAM</button>
-      <button class="tab-btn ${alboView==='campioni'?'active-cat':''}" onclick="setAlboView('campioni')">🏅 CAMPIONI</button>
-    </div>`;
+  const _alCats = cats.map(c => `<button type="button" onclick="setAlboCat('${c}')" aria-pressed="${alboCat === c}">${esc(catLabel(c))}</button>`).join('');
+  const _alPodi = alboView !== 'campioni';
 
   setPageMeta("Albo d'Oro", "Albo d'oro delle gare di ciclismo agonistico italiano: vincitori per categoria, anno e genere.");
   setPage(`
-    <div class="pg-header">
-      <div class="pg-eyebrow">STORICITÀ</div>
-      <h1 class="pg-title">ALBO D'ORO</h1>
+    <div class="hx-wrap al-wrap">
+      <div class="rs-head"><h1>Albo d'oro</h1><span class="rs-cnt">I campioni di ogni stagione, categoria per categoria. Si arricchisce da solo al termine di ogni annata (31/12).</span></div>
+      <div class="rs-bar">
+        <div class="hx-seg" role="group" aria-label="Seleziona genere"><button type="button" onclick="setAlboGender('M')" aria-pressed="${alboGender === 'M'}">Uomini</button><button type="button" onclick="setAlboGender('F')" aria-pressed="${alboGender === 'F'}">Donne</button></div>
+        <div class="cls-cats" role="group" aria-label="Seleziona categoria">${_alCats}</div>
+        ${_alPodi ? `<div class="hx-seg" role="group" aria-label="Atleti o team" style="margin-left:auto"><button type="button" onclick="setAlboView('atleti')" aria-pressed="${alboView === 'atleti'}">Atleti</button><button type="button" onclick="setAlboView('team')" aria-pressed="${alboView === 'team'}">Team</button></div>` : ''}
+      </div>
+      <div class="cls-bar2"><div class="cls-tabs" role="group" aria-label="Sezione"><button type="button" onclick="setAlboView(alboView==='team'?'team':'atleti')" aria-pressed="${_alPodi}">Podi stagionali</button><button type="button" onclick="setAlboView('campioni')" aria-pressed="${!_alPodi}">Campioni italiani e regionali</button></div></div>
+      <div class="hx-layout"><div class="hx-col" id="albo-page-host"><div class="hx-none">Caricamento…</div></div><aside class="hx-col" id="albo-side"></aside></div>
     </div>
-    <p style="color:var(--text-muted);margin:-4px 0 16px;max-width:680px">I campioni di ogni stagione, categoria per categoria. Si arricchisce automaticamente al termine di ogni annata (31/12).</p>
-    <div class="ranking-controls">
-      <div class="tab-group" role="tablist" aria-label="Seleziona genere">${genderTabs}</div>
-      <div class="tab-group" role="tablist" aria-label="Seleziona categoria">${catTabs}</div>
-      <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">${viewTabs}</div>
-    </div>
-    <div id="albo-page-host"><p style="color:var(--text-muted)">Caricamento…</p></div>
   `);
 
   const hostEl = document.getElementById('albo-page-host');
+  const sideEl = document.getElementById('albo-side');
   if (alboView === 'campioni') {
     if (hostEl) hostEl.innerHTML = _alboCampioniHtml(alboCat);
+    if (sideEl) sideEl.innerHTML = `<section class="hx-panel"><div class="hx-ph"><h2>Come si legge</h2></div><p class="rk-intel-line">I campioni italiani arrivano dai risultati; i regionali li assegna l’admin dal pannello. Le regioni senza titolare indicano cosa manca.</p></section>`;
     return;
   }
   const valid = await _alboDoroRows(alboCat, alboView === 'team');
-  if (hostEl) hostEl.innerHTML = _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true });
+  if (hostEl) hostEl.innerHTML = valid.length
+    ? _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true })
+    : '<div class="hx-empty">Ancora nessun podio registrato per questa categoria.</div>';
+  if (sideEl && valid.length) {
+    const isTeam = alboView === 'team';
+    const nm = c => isTeam ? (c.team_nome || '') : `${c.cognome || ''} ${c.nome || ''}`.trim();
+    const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
+    const cur = valid.find(r => r.isCur);
+    const closed = valid.filter(r => !r.isCur && r.podium[0]);
+    const rec = closed.slice().sort((a, b) => (b.podium[0].punti || 0) - (a.podium[0].punti || 0))[0];
+    sideEl.innerHTML = (cur ? `<section class="hx-panel"><div class="hx-ph"><h2>Stagione in corso</h2></div>${cur.podium.slice(0, 3).map(c => `<div class="al-li"><b>${esc(tcs(nm(c)))}</b><span>${c.punti || 0} pt</span></div>`).join('')}</section>` : '')
+      + (rec ? `<section class="hx-panel"><div class="hx-ph"><h2>Record di categoria</h2></div><div class="al-li"><div><b>${esc(tcs(nm(rec.podium[0])))}</b><br><small>Record tra le stagioni chiuse · ${rec.year}</small></div><span>${rec.podium[0].punti || 0} pt</span></div></section>` : '');
+  }
 }
 
 async function updateRankTable() {

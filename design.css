@@ -13294,3 +13294,32 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .cal-today-tag { background: var(--hx-red); color: #fff; font-size: 10px; font-weight: 800; line-height: 1; padding: 4px 7px; border-radius: 3px; letter-spacing: .06em; align-self: center; }
 .cal-reg { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border-subtle); font-size: 13px; } .cal-reg:first-of-type { border-top: 0; padding-top: 0; } .cal-reg b { font-weight: 600; color: var(--text-primary); } .cal-reg span { color: var(--hx-blue); font-weight: 700; }
 @media (max-width: 720px) { .cr { grid-template-columns: 6px minmax(0, 1fr); } .cr .go { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; border-left: 0; border-top: 1px solid var(--border-subtle); padding: 8px 12px; gap: 14px; } }
+
+/* ===== Albo d'oro (v2) ===== */
+.al-wrap { --hx-navy: #0A1B33; --hx-navy2: #10284A; --hx-red: #E3182D; --hx-blue: #3D7BFF; }
+.al-list { display: flex; flex-direction: column; gap: 10px; }
+.al-year { display: grid; grid-template-columns: 92px minmax(0, 1fr); background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
+.al-y { background: linear-gradient(160deg, #0A1B33, #10284A); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 10px; }
+.al-y b { font-style: italic; font-weight: 800; font-size: 28px; line-height: 1; }
+.al-y small { font-size: 9.5px; font-weight: 800; letter-spacing: .08em; background: var(--hx-red); padding: 3px 6px; border-radius: 3px; }
+.al-pod3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.al-pp { padding: 12px 14px; border-left: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 3px; min-width: 0; color: inherit; text-decoration: none; }
+.al-pp:first-child { border-left: 0; background: linear-gradient(180deg, rgba(229,161,0,.10), transparent); }
+.al-pp:hover { background: var(--bg-elevated, rgba(0,0,0,.04)); }
+.al-pp .md { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #fff; }
+.al-pp .md.g { background: #E5A100; color: #3a2700; } .al-pp .md.s { background: #8E9AAE; } .al-pp .md.b { background: #C77B3B; }
+.al-pp b { font-size: 13.5px; text-transform: uppercase; line-height: 1.2; color: var(--text-primary); }
+.al-pp small { color: var(--text-secondary); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.al-pp .pt { font-size: 15px; font-weight: 800; color: var(--hx-blue); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.al-li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 9px 0; border-top: 1px solid var(--border-subtle); font-size: 13px; }
+.al-li:first-of-type { border-top: 0; padding-top: 0; } .al-li b { font-weight: 600; color: var(--text-primary); } .al-li small { color: var(--text-secondary); } .al-li span { color: var(--hx-blue); font-weight: 700; font-variant-numeric: tabular-nums; }
+.al-sp { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.al-sp > button { height: 34px; padding: 0 14px; border-radius: 17px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); font-weight: 600; font-size: 12.5px; cursor: pointer; }
+.al-sp > button[aria-pressed="true"] { background: var(--hx-navy); color: #fff; border-color: var(--hx-navy); }
+.al-rg { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 10px; margin-bottom: 18px; }
+.al-rc { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; color: inherit; text-decoration: none; }
+.al-rc .rn { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.al-rc b { font-size: 13.5px; text-transform: uppercase; color: var(--text-primary); } .al-rc small { color: var(--text-secondary); font-size: 12px; } .al-rc small a { color: var(--hx-blue); }
+.al-rc.empty { background: transparent; border-style: dashed; } .al-rc.empty b { color: var(--text-muted); text-transform: none; font-weight: 500; font-size: 12.5px; }
+.al-rc.ita { grid-column: 1 / -1; background: linear-gradient(120deg, #0A1B33, #10284A); border: 0; } .al-rc.ita .rn { color: #9FB2D0; } .al-rc.ita b { color: #fff; } .al-rc.ita small { color: #BFD0EA; }
+@media (max-width: 720px) { .al-year { grid-template-columns: minmax(0, 1fr); } .al-y { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 8px 14px; } .al-pod3 { grid-template-columns: minmax(0, 1fr); } .al-pp { border-left: 0; border-top: 1px solid var(--border-subtle); flex-direction: row; align-items: center; flex-wrap: wrap; gap: 4px 10px; } .al-pp:first-child { border-top: 0; } .al-pp small { white-space: normal; } }
