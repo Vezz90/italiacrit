@@ -17821,6 +17821,79 @@ function _teamLineageChain(team_id, links, currentNome) {
   return chain.slice(-14);
 }
 
+
+// ── Storia del club: stagione per stagione lungo tutta la catena dei nomi ──
+// Per ogni anno della catena (o gli ultimi anni se il club non ha mai cambiato
+// nome) legge la classifica storica pubblicata (ciclismo.info) e somma gli atleti
+// che in quell'anno correvano per quel nome. Nessun dato inventato: sono solo gli
+// atleti presenti in classifica, quindi i punti sono quelli degli atleti a punti.
+function _teamIdFromName(s) {
+  return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+function _teamLineageNodes(team_id, links) {
+  const key = (id, s) => id + '|' + s;
+  const nodes = new Map(), adj = new Map();
+  const add = (id, nome, s) => { const k = key(id, s); if (!nodes.has(k)) nodes.set(k, { team_id: id, nome, season: String(s || '') }); if (!adj.has(k)) adj.set(k, new Set()); return k; };
+  for (const l of links) { if (l.team_id_from === l.team_id_to) continue; const a = add(l.team_id_from, l.team_from, l.season_from), b = add(l.team_id_to, l.team_to, l.season_to); adj.get(a).add(b); adj.get(b).add(a); }
+  const starts = [...nodes.keys()].filter(k => nodes.get(k).team_id === team_id);
+  if (!starts.length) return [];
+  const seen = new Set(starts), q = [...starts];
+  while (q.length) { const k = q.shift(); for (const n of adj.get(k) || []) if (!seen.has(n)) { seen.add(n); q.push(n); } }
+  return [...seen].map(k => nodes.get(k));
+}
+async function _injectTeamClubHistory(team_id) {
+  const el = document.getElementById('team-club-history');
+  if (!el) return;
+  const curYear = Number(_loadedSeasonYear());
+  const links = await _loadTeamLineage();
+  const nodes = _teamLineageNodes(team_id, links);
+  const idsByYear = {};
+  for (const n of nodes) { const y = Number(n.season); if (y && y < curYear) (idsByYear[y] = idsByYear[y] || new Set()).add(n.team_id); }
+  const hasChain = nodes.length > 0;
+  if (!hasChain) for (let y = curYear - 1; y >= curYear - 6; y--) idsByYear[y] = new Set([team_id]);
+  const years = Object.keys(idsByYear).map(Number).sort((a, b) => b - a);
+  if (!years.length) return;
+  el.innerHTML = '<div class="hx-none" style="padding:6px 0">Carico la storia del club…</div>';
+  const rows = [];
+  await Promise.all(years.map(async y => {
+    let payload = _classStoricoCache[y];
+    if (!payload) {
+      payload = await loadJson(`data/ciclismo-storico/${y}/classifica.json`);
+      if (payload) _classStoricoCache[y] = payload;
+    }
+    const cl = payload?.classifica || {};
+    const ids = idsByYear[y], ath = {}, cats = new Set(); let nome = '';
+    for (const [cat, list] of Object.entries(cl)) {
+      for (const r of list) {
+        if (!ids.has(_teamIdFromName(r.team))) continue;
+        nome = nome || r.team; cats.add(cat);
+        const k = (r.atleta_id || r.nome_completo) + '|' + cat;
+        ath[k] = { id: r.atleta_id, nome: r.nome_completo, cat, pos: r.pos, punti: r.punti || 0 };
+      }
+    }
+    const list = Object.values(ath);
+    if (!list.length) return;
+    const best = list.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0];
+    rows.push({ y, nome, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: list.reduce((s, a) => s + a.punti, 0), best });
+  }));
+  rows.sort((a, b) => b.y - a.y);
+  const host = document.getElementById('team-club-history');
+  if (!host) return;
+  if (!rows.length) { host.innerHTML = ''; return; }
+  const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
+  const totPts = rows.reduce((s, r) => s + r.pts, 0);
+  host.innerHTML = `<section class="ath-block club-hist">
+    <div class="ath-block-h"><span>STORIA DEL CLUB</span><i></i></div>
+    <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi degli atleti a punti.</p>
+    <div class="club-hist-list">${rows.map(r => `<div class="club-hist-row">
+      <div class="y">${r.y}</div>
+      <div class="m"><b>${esc(tcs(r.nome))}</b><small>${r.cats.map(c => esc(_ciclismoCatLabel(c))).join(' · ')}</small></div>
+      <div class="n"><b>${r.pts}</b><small>punti · ${r.n} atlet${r.n === 1 ? 'a' : 'i'}</small></div>
+      <div class="b">${r.best.id ? `<a href="#/atleta/${esc(r.best.id)}">${esc(tcs(r.best.nome))}</a>` : esc(tcs(r.best.nome))}<small>miglior atleta · ${r.best.pos}° in ${esc(_ciclismoCatLabel(r.best.cat))} · ${r.best.punti} pt</small></div>
+    </div>`).join('')}</div>
+  </section>`;
+}
+
 async function _injectTeamLineageBar(team_id) {
   const el = document.getElementById('team-lineage-bar');
   if (!el) return;
@@ -21220,6 +21293,7 @@ async function renderTeam(team_id, opts = {}) {
       </div>
     </div>
     <div id="team-lineage-bar"></div>
+    <div id="team-club-history"></div>
     ${teamChampionsHtml}
     ${profileYearRow('team', team_id, selYear)}
 
@@ -21290,6 +21364,7 @@ async function renderTeam(team_id, opts = {}) {
   _athSafe(() => _athDecorateRows('team-results-tbody'));
   _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
+  _injectTeamClubHistory(team_id);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 
