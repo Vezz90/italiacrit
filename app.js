@@ -11141,7 +11141,8 @@ async function renderClassificaStorica(anno) {
     setPage(`
       <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span></div>
       ${_classYearRowHtml(anno)}
-      <div class="ranking-controls" id="class-storico-controls"></div>
+      <div class="rs-bar" id="class-storico-controls" role="search"></div>
+      <section id="class-storico-pod"></section>
       <div class="ranking-table-wrap" id="class-storico-body"></div></div>
     `);
     bodyEl = document.getElementById('class-storico-body');
@@ -11200,20 +11201,16 @@ async function renderClassificaStorica(anno) {
   // ricerca atleta/team, che è puro filtro client-side sui dati che abbiamo.
   if (controlsEl) {
     controlsEl.innerHTML = `
-      ${catsMale.length && catsFemale.length ? `<div class="tab-group" role="tablist" aria-label="Seleziona genere">
-        <button class="tab-btn ${_classStoricoGender==='M'?'active-gender':''}" onclick="window.classSetGender('M')">UOMINI</button>
-        <button class="tab-btn ${_classStoricoGender==='F'?'active-gender':''}" onclick="window.classSetGender('F')">DONNE</button>
+      ${catsMale.length && catsFemale.length ? `<div class="hx-seg" role="group" aria-label="Seleziona genere">
+        <button type="button" onclick="window.classSetGender('M')" aria-pressed="${_classStoricoGender==='M'}">Uomini</button>
+        <button type="button" onclick="window.classSetGender('F')" aria-pressed="${_classStoricoGender==='F'}">Donne</button>
       </div>` : ''}
-      <div class="tab-group" role="tablist" aria-label="Seleziona categoria">
-        ${cats.map(c => `<button class="tab-btn ${curCat === c ? 'active-cat' : ''}" onclick="window.classSetCat('${esc(c)}')">${esc(_ciclismoCatLabel(c))}</button>`).join('')}
+      <div class="cls-cats" role="group" aria-label="Seleziona categoria">
+        ${cats.map(c => `<button type="button" onclick="window.classSetCat('${esc(c)}')" aria-pressed="${curCat === c}">${esc(_ciclismoCatLabel(c))}</button>`).join('')}
       </div>
-      <div class="ranking-filter-bar" style="margin-top:16px">
-        <input type="search" id="class-storico-search" placeholder="Cerca atleta o team…" value="${esc(_classStoricoSearch)}"
-          oninput="window.classSetSearch(this.value)" aria-label="Filtra classifica" />
-      </div>
-      <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">
-        <span class="ranking-count" id="class-storico-count"></span>
-      </div>`;
+      <input type="search" id="class-storico-search" class="rs-search" placeholder="Cerca atleta o team…" value="${esc(_classStoricoSearch)}"
+        oninput="window.classSetSearch(this.value)" aria-label="Filtra classifica" autocomplete="off" />
+      <span class="rs-cnt" id="class-storico-count"></span>`;
   }
 
   await _renderClassStoricoTable(classifica[curCat] || []);
@@ -11233,6 +11230,17 @@ async function _renderClassStoricoTable(baseRows) {
   if (countEl) countEl.textContent = `${rows.length} atleti`;
 
   const leaderPts = rows[0]?.punti || 0;
+  const podEl = document.getElementById('class-storico-pod');
+  if (podEl) {
+    const C = [['#C99400', '#5A3F00'], ['#6E7A90', '#2A3342'], ['#B26A2C', '#4A2A0E']];
+    const ini = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '?')[0] + ((w[1] || '')[0] || '')).toUpperCase(); };
+    podEl.innerHTML = (!_classStoricoSearch && rows.length >= 3) ? `<div class="hx-ph"><h2>Il podio</h2></div><div class="el-pod">${rows.slice(0, 3).map((r, i) => `<${r.atleta_id ? `a href="#/atleta/${esc(r.atleta_id)}"` : 'div'} class="el-pc" style="--c1:${C[i][0]};--c2:${C[i][1]}"><span class="rk">${i + 1}</span><div class="av"${r.atleta_id ? ` data-aid="${esc(r.atleta_id)}"` : ''}>${esc(ini(r.nome_completo))}</div><b>${esc(r.nome_completo || '')}</b><small>${esc(r.team || '')}</small><div class="pt">${r.punti} <span>punti</span></div></${r.atleta_id ? 'a' : 'div'}>`).join('')}</div>` : '';
+    podEl.querySelectorAll('[data-aid]').forEach(async el => {
+      const ov = await getEntityOverrides('atleta', el.getAttribute('data-aid')).catch(() => ({}));
+      if (!ov.photo_url || !document.contains(el)) return;
+      const img = document.createElement('img'); img.src = mediaUrl(ov.photo_url); img.alt = ''; img.onerror = () => img.remove(); el.appendChild(img);
+    });
+  }
   const rowsHtml = rows.map((r, i) => {
     const tier = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
     const gap = r.pos === 1
