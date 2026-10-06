@@ -29822,46 +29822,22 @@ async function renderMedia(openOpts) {
   };
   const [_mediaMetaTitle, _mediaMetaDesc] = MEDIA_TAB_META[mediaTab] || ['Media', 'Video, dirette, presentazioni e programmi TV delle gare di ciclismo agonistico italiano.'];
   setPageMeta(_mediaMetaTitle, _mediaMetaDesc);
+  const _mTab = (key, label, count) => `<button type="button" onclick="window.mediaSetTab('${key}')" aria-pressed="${mediaTab === key}">${label}${count != null ? `<i>${count}</i>` : ''}</button>`;
+  const _mMonths = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   setPage(`
-    <div class="content-wrapper">
-      <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Media</h1>
-        <span class="section-line"></span>
+    <div class="hx-wrap media-wrap">
+      <div class="rs-head"><h1>Media</h1><span class="rs-cnt"><b>${videoItems.length}</b> video · <b>${direteItems.length}</b> dirette · creator e gallerie</span>
+        <div class="rs-right">${_isAdminMedia && mediaTab !== 'creator' ? `<button class="rs-miss" type="button" style="background:var(--hx-red,#E3182D);border-color:var(--hx-red,#E3182D);color:#fff" onclick="window.openMediaAddForm()">＋ Aggiungi</button><button class="rs-miss" type="button" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}</div></div>
+      <div class="cls-tabs" role="group" aria-label="Sezione">
+        ${_mTab('creator', 'Creator', null)}${_mTab('dirette', 'Dirette', direteItems.length)}${_mTab('video', 'Video', videoItems.length)}${_mTab('presentazioni', 'Presentazioni', presentazioniFiltered.length)}${_mTab('programmi_tv', 'Programmi TV', programmiTvFiltered.length)}${_mTab('altro', 'Altro', altroFiltered.length)}
       </div>
-    </div>
-    <div class="yt-page">
-      <div class="yt-chips">
-        <button class="yt-chip ${mediaTab === 'video' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('video')">🎬 Video <span class="yt-chip-count">${videoItems.length}</span></button>
-        <button class="yt-chip ${mediaTab === 'dirette' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette <span class="yt-chip-count">${direteItems.length}</span></button>
-        <button class="yt-chip ${mediaTab === 'presentazioni' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('presentazioni')">🎤 Presentazioni <span class="yt-chip-count">${presentazioniFiltered.length}</span></button>
-        <button class="yt-chip ${mediaTab === 'programmi_tv' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('programmi_tv')">📺 Programmi TV <span class="yt-chip-count">${programmiTvFiltered.length}</span></button>
-        <button class="yt-chip ${mediaTab === 'altro' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('altro')">🎬 Altro <span class="yt-chip-count">${altroFiltered.length}</span></button>
-        <button class="yt-chip ${mediaTab === 'creator' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('creator')">🧑‍🎨 Creator</button>
-        <span class="yt-chip-sep"></span>
-        ${_showRaceFilters ? `
-        <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">
-          <option value="">Tutti i generi</option>
-          <option value="M" ${mediaQueryGenere === 'M' ? 'selected' : ''}>Uomini</option>
-          <option value="F" ${mediaQueryGenere === 'F' ? 'selected' : ''}>Donne</option>
-        </select>
-        <select class="yt-chip yt-chip-select" onchange="window.mediaSetCat(this.value)">
-          <option value="">Tutte le categorie</option>
-          ${allCats.map(c => `<option value="${esc(c)}" ${c === mediaQueryCat ? 'selected' : ''}>${esc(catLabel(c) || c)}</option>`).join('')}
-        </select>
-        <select class="yt-chip yt-chip-select" onchange="window.mediaSetMonth(this.value)">
-          <option value="">Tutti i mesi</option>
-          ${['01','02','03','04','05','06','07','08','09','10','11','12'].map((m, i) =>
-            `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
-          ).join('')}
-        </select>` : ''}
-        ${mediaTab !== 'creator' ? `
-        <div class="yt-search-wrap">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" placeholder="Cerca…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
-        </div>
-        ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
-        ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}` : ''}
-      </div>
+      ${mediaTab !== 'creator' ? `<div class="rs-bar" role="search">
+        ${_showRaceFilters ? `<div class="hx-seg" role="group" aria-label="Genere"><button type="button" onclick="window.mediaSetGenere('')" aria-pressed="${mediaQueryGenere === ''}">Tutti</button><button type="button" onclick="window.mediaSetGenere('M')" aria-pressed="${mediaQueryGenere === 'M'}">Uomini</button><button type="button" onclick="window.mediaSetGenere('F')" aria-pressed="${mediaQueryGenere === 'F'}">Donne</button></div>` : ''}
+        <input type="search" class="rs-search" placeholder="Cerca un video, una gara o un canale…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}" aria-label="Cerca" autocomplete="off">
+        ${_showRaceFilters ? `<label class="hx-sel"><span class="sr">Categoria</span><select aria-label="Categoria" onchange="window.mediaSetCat(this.value)"><option value="">Tutte le categorie</option>${allCats.map(c => `<option value="${esc(c)}" ${c === mediaQueryCat ? 'selected' : ''}>${esc(catLabel(c) || c)}</option>`).join('')}</select></label>
+        <label class="hx-sel"><span class="sr">Mese</span><select aria-label="Mese" onchange="window.mediaSetMonth(this.value)"><option value="">Tutti i mesi</option>${_mMonths.map((n, i) => { const m = String(i + 1).padStart(2, '0'); return `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${n}</option>`; }).join('')}</select></label>` : ''}
+      </div>` : ''}
+    <div class="yt-page media-yt">
       ${mediaChannelsHtml}
       ${_isAdminMedia && _showRaceFilters && (window._mediaSel || new Set()).size ? `
       <div class="yt-bulk-bar">
@@ -29891,6 +29867,7 @@ async function renderMedia(openOpts) {
           ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
         </div>
       `}
+    </div>
     </div>
   `);
   if (mediaTab === 'creator') window._loadMediaCreatorArea();

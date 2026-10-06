@@ -13323,3 +13323,6 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .al-rc.empty { background: transparent; border-style: dashed; } .al-rc.empty b { color: var(--text-muted); text-transform: none; font-weight: 500; font-size: 12.5px; }
 .al-rc.ita { grid-column: 1 / -1; background: linear-gradient(120deg, #0A1B33, #10284A); border: 0; } .al-rc.ita .rn { color: #9FB2D0; } .al-rc.ita b { color: #fff; } .al-rc.ita small { color: #BFD0EA; }
 @media (max-width: 720px) { .al-year { grid-template-columns: minmax(0, 1fr); } .al-y { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 8px 14px; } .al-pod3 { grid-template-columns: minmax(0, 1fr); } .al-pp { border-left: 0; border-top: 1px solid var(--border-subtle); flex-direction: row; align-items: center; flex-wrap: wrap; gap: 4px 10px; } .al-pp:first-child { border-top: 0; } .al-pp small { white-space: normal; } }
+.media-wrap .yt-page { max-width: none; margin: 0; padding: 0; }
+.media-wrap .cls-tabs { border-bottom: 1px solid var(--border-subtle); }
+.cls-tabs button i { font-style: normal; font-weight: 600; margin-left: 6px; color: var(--text-muted); }
