@@ -66,7 +66,7 @@
       }
       for (const p of [...(d2.photos || []), ...(d3.photos || [])]) {
         if (!p.gara_id) continue;
-        const urls = (p.photos && p.photos.length ? p.photos : (p.url ? [p.url] : [])).filter(u => /^https:/.test(u));
+        const urls = (p.photos && p.photos.length ? p.photos : (p.url ? [p.url] : [])).filter(u => /^https?:/.test(u)).map(icProxy);
         if (urls.length) ext.push({ gara_id: p.gara_id, urls, tags: p.tags || {} });
       }
       return { up, ext };
@@ -226,7 +226,7 @@
     for (const e of media.ext) {
       const isWin = wins.has(e.gara_id) || winNs.has(noSuffix(e.gara_id));
       for (const u of e.urls.slice(0, isWin ? 4 : 0)) cand.push({ url: u, gara: e.gara_id, tag: false });
-      for (const [u, csv] of Object.entries(e.tags || {})) if (/^https:/.test(u) && String(csv).split(',').map(s => s.trim()).includes(aid)) cand.push({ url: u, gara: e.gara_id, tag: true });
+      for (const [u, csv] of Object.entries(e.tags || {})) if (/^https?:/.test(u) && String(csv).split(',').map(s => s.trim()).includes(aid)) cand.push({ url: icProxy(u), gara: e.gara_id, tag: true });
     }
     const seen = new Set(), list = [];
     for (const c of cand) if (!seen.has(c.url)) { seen.add(c.url); list.push(c); }
