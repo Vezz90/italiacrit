@@ -17299,7 +17299,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
         <aside class="ath-hero-standing">
-          <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(displayCategoria))}</div>
+          <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(displayCategoria))}${_isLoadedYear ? '' : ' · ' + esc(selYear)}</div>
           <div class="athlete-pts-display" id="atleta-pts-display">
             <div class="athlete-pts-dot"></div>
             <div class="ath-pts-block">
@@ -19323,6 +19323,9 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     }
     const catBadge = headerTop.querySelector('.badge-cat');
     if (catBadge) catBadge.textContent = categoria.replace(/_/g, ' ');
+    // etichetta sopra il punteggio: categoria dell'anno che sto guardando
+    const _sl = document.querySelector('.ath-stand-lbl');
+    if (_sl) _sl.textContent = (categoria ? categoria.replace(/_/g, ' ') + ' · ' : 'STAGIONE ') + anno;
   }
   const photoWrap = document.getElementById('atleta-team-photo-wrap');
   if (photoWrap) {
@@ -19478,6 +19481,8 @@ window.setAtletaPcsYear = (atletaId, anno) => {
     if (pillWrap) pillWrap.innerHTML = team ? `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>` : '';
     const catBadge = headerTop.querySelector('.badge-cat');
     if (catBadge) catBadge.textContent = 'Professionista';
+    const _sl = document.querySelector('.ath-stand-lbl');
+    if (_sl) _sl.textContent = 'PROFESSIONISTA · ' + anno;
   }
   // Stesso placeholder neutro (mai un buco vuoto) usato per i due rami
   // "team non risolvibile" poco sopra — qui il team è sempre estero/pro,
