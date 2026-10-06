@@ -4843,7 +4843,8 @@ function route() {
   // Uomo/Donna→Categoria (richiesta esplicita di rimuoverlo, ormai tutto è
   // raggiungibile/filtrabile dalla home). renderHome()/showCinematicEntry()
   // restano nel file ma non sono più collegate da nessuna route.
-  if (match('/')) return renderHomeDashboard();
+  if (match('/home-old')) return renderHomeDashboard();
+  if (match('/')) return (typeof window.renderHomeV2 === 'function' ? window.renderHomeV2() : renderHomeDashboard());
   // Classifica con categoria+vista+ordinamento encoded nell'URL, es.
   // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
   // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
