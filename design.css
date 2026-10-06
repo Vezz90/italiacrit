@@ -13326,3 +13326,6 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .media-wrap .yt-page { max-width: none; margin: 0; padding: 0; }
 .media-wrap .cls-tabs { border-bottom: 1px solid var(--border-subtle); }
 .cls-tabs button i { font-style: normal; font-weight: 600; margin-left: 6px; color: var(--text-muted); }
+
+.comp-wrap .comp-content { max-width: 1200px; width: 100%; margin: 0 auto; }
+.comp-wrap .rs-bar, .comp-wrap .rs-head { max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; }

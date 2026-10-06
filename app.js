@@ -27272,30 +27272,15 @@ async function renderComparatore() {
   // ── PAGE RENDER ───────────────────────────────────────────────
   setPageMeta('Comparatore Atleti', 'Confronta due atleti del ciclismo agonistico italiano: punti, piazzamenti, vittorie, statistiche a confronto.');
   setPage(`
-    <div class="pg-header">
-      <div class="pg-eyebrow">⚔️ SFIDA</div>
-      <h1 class="pg-title">COMPARATORE</h1>
+    <div class="hx-wrap comp-wrap">
+      <div class="rs-head"><h1>Comparatore</h1><span class="rs-cnt">Metti a confronto due ${compMode === 'team' ? 'team' : 'atleti'}: punti, piazzamenti, forma e sfide dirette.</span></div>
+      <div class="rs-bar" role="group" aria-label="Filtri comparatore">
+        <div class="hx-seg" role="group" aria-label="Cosa confrontare"><button type="button" onclick="window.setCompMode('atleta')" aria-pressed="${compMode==='atleta'}">Atleti</button><button type="button" onclick="window.setCompMode('team')" aria-pressed="${compMode==='team'}">Team</button></div>
+        <div class="hx-seg" role="group" aria-label="Genere"><button type="button" onclick="window.setCompGender('M')" aria-pressed="${compGender==='M'}">Uomini</button><button type="button" onclick="window.setCompGender('F')" aria-pressed="${compGender==='F'}">Donne</button></div>
+        <label class="hx-sel"><span class="sr">Categoria</span><select aria-label="Categoria" onchange="window.setCompCat(this.value)"><option value="">Tutte le categorie</option>${catOpts}</select></label>
+      </div>
+      <div id="comp-content" class="comp-content">${compMode==='atleta'?buildAthleteResult():buildTeamResult()}</div>
     </div>
-    <div class="comp-filter-bar">
-      <div class="comp-mode-tabs">
-        <button class="comp-tab ${compMode==='atleta'?'comp-tab-active-a':''}" onclick="window.setCompMode('atleta')">Atleti</button>
-        <button class="comp-tab ${compMode==='team'?'comp-tab-active-b':''}"   onclick="window.setCompMode('team')">Team</button>
-      </div>
-      <div style="flex:1;min-width:120px">
-        <label class="comp-label">Genere</label>
-        <select class="cal-filter-select" style="width:100%" onchange="window.setCompGender(this.value)">
-          <option value="M" ${compGender==='M'?'selected':''}>♂ Uomini</option>
-          <option value="F" ${compGender==='F'?'selected':''}>♀ Donne</option>
-        </select>
-      </div>
-      <div style="flex:2;min-width:160px">
-        <label class="comp-label">Categoria</label>
-        <select class="cal-filter-select" style="width:100%" onchange="window.setCompCat(this.value)">
-          <option value="">— Tutte —</option>${catOpts}
-        </select>
-      </div>
-    </div>
-    <div id="comp-content">${compMode==='atleta'?buildAthleteResult():buildTeamResult()}</div>
   `);
 
   window.setCompMode   = v => { compMode=v; compA=''; compB=''; renderComparatore(); };
