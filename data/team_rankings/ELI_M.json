@@ -2,12 +2,12 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1600,
+    "punti": 1618,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
     "p3": 7,
-    "pout": 55,
+    "pout": 57,
     "n_atleti": 13,
     "pos": 1
   },
@@ -60,27 +60,27 @@
     "pos": 5
   },
   {
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "team_nome": "BELTRAMI TSA TRE COLLI",
+    "punti": 772,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 12,
+    "p3": 7,
+    "pout": 35,
+    "n_atleti": 11,
+    "pos": 6
+  },
+  {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 756,
+    "punti": 762,
     "vittorie": 8,
     "p1": 8,
     "p2": 4,
     "p3": 8,
-    "pout": 32,
+    "pout": 33,
     "n_atleti": 12,
-    "pos": 6
-  },
-  {
-    "team_id": "BELTRAMI_TSA_TRE_COLLI",
-    "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 734,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 12,
-    "p3": 7,
-    "pout": 34,
-    "n_atleti": 11,
     "pos": 7
   },
   {
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "punti": 337,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 6,
+    "p3": 4,
+    "pout": 12,
+    "n_atleti": 11,
+    "pos": 17
+  },
+  {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
     "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
     "punti": 331,
@@ -201,18 +213,6 @@
     "p3": 5,
     "pout": 18,
     "n_atleti": 7,
-    "pos": 17
-  },
-  {
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti": 317,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 6,
-    "p3": 3,
-    "pout": 12,
-    "n_atleti": 10,
     "pos": 18
   },
   {
@@ -336,6 +336,18 @@
     "pos": 28
   },
   {
+    "team_id": "ASD_G_C_SISSIO_TEAM",
+    "team_nome": "ASD G.C. SISSIO TEAM",
+    "punti": 180,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 1,
+    "pout": 21,
+    "n_atleti": 9,
+    "pos": 29
+  },
+  {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
     "punti": 171,
@@ -345,7 +357,7 @@
     "p3": 4,
     "pout": 17,
     "n_atleti": 6,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "ZAPPI_RACING_TEAM",
@@ -357,29 +369,17 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 30
-  },
-  {
-    "team_id": "ASD_G_C_SISSIO_TEAM",
-    "team_nome": "ASD G.C. SISSIO TEAM",
-    "punti": 152,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 20,
-    "n_atleti": 9,
     "pos": 31
   },
   {
     "team_id": "RIME_DRALI",
     "team_nome": "RIME DRALI",
-    "punti": 141,
+    "punti": 151,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 7,
     "pos": 32
   },
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "team_nome": "GRAGNANO SPORTING CLUB",
+    "punti": 102,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 11,
+    "n_atleti": 6,
+    "pos": 38
+  },
+  {
     "team_id": "LOTTO_GROUPE_WANTY",
     "team_nome": "LOTTO GROUPE WANTY",
     "punti": 100,
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
@@ -465,7 +477,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
@@ -477,18 +489,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 40
-  },
-  {
-    "team_id": "GRAGNANO_SPORTING_CLUB",
-    "team_nome": "GRAGNANO SPORTING CLUB",
-    "punti": 90,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 6,
     "pos": 41
   },
   {
