@@ -17710,31 +17710,40 @@ async function _loadTeamLineage() {
 // il team corrente). I collegamenti sono coppie stagione-per-stagione, non
 // serve altro che seguirli finché ce n'è uno.
 function _teamLineageChain(team_id, links, currentNome) {
-  const chain = [{ team_id, nome: currentNome, season: null, current: true }];
-  // Un link con team_id_from === team_id_to (stessa squadra, solo il nome
-  // visualizzato cambiato — es. una spaziatura diversa, o un "#" aggiunto
-  // davanti allo sponsor — mai una vera transizione) non fa avanzare il
-  // cursore: senza questa guardia, .find() lo ritrovava identico ad ogni
-  // giro e il ciclo si fermava solo al limite di sicurezza (30), producendo
-  // 30 chip ripetuti in entrambe le direzioni — visto dal vivo su un caso
-  // reale ("Team Technipes inEmiliaRomagna"). Alla radice queste righe non
-  // andrebbero proprio generate (corretto anche lì), ma un guard qui protegge
-  // comunque da qualunque futuro dato sporco dello stesso tipo.
-  let cursor = team_id, guard = 0;
-  while (guard++ < 30) {
-    const prev = links.find(l => l.team_id_to === cursor && l.team_id_from !== cursor);
-    if (!prev) break;
-    chain.unshift({ team_id: prev.team_id_from, nome: prev.team_from, season: prev.season_from });
-    cursor = prev.team_id_from;
+  // Nodi = (team_id, stagione): un club che torna a un nome già usato
+  // (A → B → A) non deve far girare la catena in tondo, perché lo stesso
+  // team_id compare in anni non consecutivi. Si prende l'intera componente
+  // collegata che contiene il team corrente, ordinata per stagione; un link
+  // con from === to (stessa squadra, nome solo scritto in modo diverso) non
+  // è una transizione.
+  const key = (id, s) => id + '|' + s;
+  const nodes = new Map(), adj = new Map();
+  const add = (id, nome, s) => {
+    const k = key(id, s);
+    if (!nodes.has(k)) nodes.set(k, { team_id: id, nome, season: String(s || '') });
+    if (!adj.has(k)) adj.set(k, new Set());
+    return k;
+  };
+  for (const l of links) {
+    if (l.team_id_from === l.team_id_to) continue;
+    const a = add(l.team_id_from, l.team_from, l.season_from), b = add(l.team_id_to, l.team_to, l.season_to);
+    adj.get(a).add(b); adj.get(b).add(a);
   }
-  cursor = team_id; guard = 0;
-  while (guard++ < 30) {
-    const next = links.find(l => l.team_id_from === cursor && l.team_id_to !== cursor);
-    if (!next) break;
-    chain.push({ team_id: next.team_id_to, nome: next.team_to, season: next.season_to });
-    cursor = next.team_id_to;
+  const starts = [...nodes.keys()].filter(k => nodes.get(k).team_id === team_id);
+  if (!starts.length) return [{ team_id, nome: currentNome, season: null, current: true }];
+  const seen = new Set(starts), queue = [...starts];
+  while (queue.length) {
+    const k = queue.shift();
+    for (const n of adj.get(k) || []) if (!seen.has(n)) { seen.add(n); queue.push(n); }
   }
-  return chain;
+  const list = [...seen].map(k => nodes.get(k)).sort((x, y) => x.season.localeCompare(y.season) || x.nome.localeCompare(y.nome));
+  const chain = [];
+  for (const n of list) {
+    const last = chain[chain.length - 1];
+    if (last && last.team_id === n.team_id) continue;      // stesso nome in stagioni consecutive: un solo chip
+    chain.push({ team_id: n.team_id, nome: n.team_id === team_id ? currentNome : n.nome, season: n.season, current: n.team_id === team_id });
+  }
+  return chain.slice(-14);
 }
 
 async function _injectTeamLineageBar(team_id) {
@@ -17751,7 +17760,7 @@ async function _injectTeamLineageBar(team_id) {
       <span class="team-lineage-lbl">STORICO SQUADRA</span>
       <div class="team-lineage-chips">
         ${chain.map(c => c.current
-          ? `<span class="team-lineage-chip team-lineage-chip--current">${esc(c.nome)}</span>`
+          ? `<span class="team-lineage-chip team-lineage-chip--current">${esc(c.nome)}${c.season ? ` <span class="team-lineage-year">(${esc(c.season)})</span>` : ''}</span>`
           : `<a href="#/team/${encodeURIComponent(c.team_id)}" class="team-lineage-chip">${esc(c.nome)}${c.season ? ` <span class="team-lineage-year">(${esc(c.season)})</span>` : ''}</a>`
         ).join('<span class="team-lineage-arrow">→</span>')}
       </div>
