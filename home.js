@@ -269,7 +269,11 @@
     const tipi = [...new Set(all.map(g => g.tipo).filter(Boolean))].sort();
     const cats = hx.sex === 'F' ? CATS_F : CATS_M;
     let list = all.filter(g => (hx.sex === 'F' ? g.code.endsWith('_F') : g.code.endsWith('_M')) && (!hx.cat || g.code === hx.cat) && (!hx.reg || g.regione === hx.reg) && (!hx.tipo || g.tipo === hx.tipo));
-    const hero = list[0], side = list.slice(1, 3), rest = list.slice(3, 11);
+    // in evidenza e in vetrina: tra le gare più recenti preferisco quelle con una foto
+    const hasPh = g => racePhotos(media, g.id).length > 0, head = list.slice(0, 12);
+    const hero = head.find(hasPh) || head[0];
+    const side = [...head.filter(g => g !== hero && hasPh(g)), ...head.filter(g => g !== hero && !hasPh(g))].slice(0, 2);
+    const rest = list.filter(g => g !== hero && !side.includes(g)).slice(0, 8);
     const st = stats(all, today), si = intelligence(all, today);
     const riv = await rivalries(hx.sex === 'F' ? 'ELI_F' : 'ELI_M');
     if (myId !== window._hxRender) return;
@@ -325,7 +329,7 @@
         const shot = await leaderShot(l.atleta_id, media);
         if (myId !== window._hxRender) return;
         const box = tile.querySelector('.hx-img');
-        if (shot && shot.url) box.insertAdjacentHTML('afterbegin', `<img src="${esc(shot.url)}" alt="${esc(name)}${shot.cap ? ', vittoria: ' + esc(shot.cap) : ''}" loading="lazy" onerror="this.remove()">${shot.cap ? `<div class="hx-cap"><span>🏆 ${esc(shot.cap)}</span></div>` : ''}`);
+        if (shot && shot.url) box.insertAdjacentHTML('beforeend', `<img src="${esc(shot.url)}" alt="${esc(name)}${shot.cap ? ', vittoria: ' + esc(shot.cap) : ''}" loading="lazy" onerror="this.remove()">${shot.cap ? `<div class="hx-cap"><span>🏆 ${esc(shot.cap)}</span></div>` : ''}`);
         else box.insertAdjacentHTML('beforeend', `<span class="hx-ini">${esc(initials(name))}</span>`);
       }).catch(() => {});
     }
