@@ -13345,3 +13345,8 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .pg-eyebrow { color: var(--hx-red, #E3182D); margin-bottom: 6px; }
 .pg-title { color: var(--text-primary); font-style: italic; font-weight: 800; font-size: clamp(30px, 4vw, 52px); letter-spacing: 0; line-height: .95; }
 @media (max-width: 768px) { .pg-header { margin: 0 0 16px; padding: 0; } .pg-title { font-size: clamp(28px, 9vw, 40px); } }
+
+/* Tema scuro: pulsanti attivi più leggibili e barre di scorrimento sobrie */
+body:not(.light-mode) .hx-seg button[aria-pressed="true"], body:not(.light-mode) .al-sp > button[aria-pressed="true"] { background: #2459E6; color: #fff; border-color: #2459E6; }
+body:not(.light-mode) .rs-years, body:not(.light-mode) .cls-tabs { scrollbar-color: rgba(255,255,255,.22) transparent; }
+body:not(.light-mode) .al-wrap .al-y, body:not(.light-mode) .al-rc.ita { background: linear-gradient(160deg, #10284A, #17386B); }
