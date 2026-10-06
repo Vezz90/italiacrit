@@ -71,11 +71,17 @@
     const src = photo ? (photo.url ? icProxy(photo.url) : (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '')) : '';
     const v0 = vids[0] || null, kind = v0 ? videoKind(v0.url) : null;
     const ytThumb = kind === 'yt' ? `https://img.youtube.com/vi/${ytId(v0.url)}/hqdefault.jpg` : '';
-    return { src: src || ytThumb, hasPhoto: !!src, vids: vids.length, live: !!(v0 && v0.is_live), has: !!(src || vids.length) };
+    return { src: src || ytThumb, photo: src, vthumb: ytThumb, hasPhoto: !!src, vids: vids.length, live: !!(v0 && v0.is_live), has: !!(src || vids.length) };
   }
 
   function mediaBlock(code, m) {
-    return `<div class="hx-rk-m">${cover(code)}${m.src ? `<img src="${esc(m.src)}" alt="" loading="lazy" onerror="this.remove()">` : ''}${!m.hasPhoto && m.vids ? '<span class="hx-play">▶</span>' : ''}<div class="hx-chips">${m.hasPhoto ? '<span>📷</span>' : ''}${m.vids ? `<span>▶ ${m.vids}</span>` : ''}${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div></div>`;
+    // foto e video affiancati (in verticale) quando ci sono entrambi, cosi' c'e' spazio per vederli
+    const tile = (img, play, chips) => `<div class="t">${cover(code)}${img ? `<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">` : ''}${play ? '<span class="hx-play">▶</span>' : ''}${chips || ''}</div>`;
+    const vChip = `<div class="hx-chips">${m.vids ? `<span>▶ ${m.vids}</span>` : ''}${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div>`;
+    const tiles = [];
+    if (m.photo) tiles.push(tile(m.photo, false, m.vids ? '' : `<div class="hx-chips"><span>📷</span>${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div>`));
+    if (m.vids) tiles.push(tile(m.vthumb, true, vChip));
+    return `<div class="hx-rk-m rs-mm n${tiles.length}">${tiles.join('')}</div>`;
   }
 
   /* ---------- card gara ---------- */
