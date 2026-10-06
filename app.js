@@ -4843,7 +4843,7 @@ function route() {
   // Uomo/Donna→Categoria (richiesta esplicita di rimuoverlo, ormai tutto è
   // raggiungibile/filtrabile dalla home). renderHome()/showCinematicEntry()
   // restano nel file ma non sono più collegate da nessuna route.
-  if (match('/')) return renderHomeDashboard();
+  if (match('/')) return (typeof window.renderHomeV2 === 'function' ? window.renderHomeV2() : renderHomeDashboard());
   // Classifica con categoria+vista+ordinamento encoded nell'URL, es.
   // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
   // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
@@ -4919,23 +4919,6 @@ function route() {
   if (match('/gare')) return renderGare();
   // Risultati filtrati per categoria con URL dedicato (SEO: "risultati esordienti"
   // ecc. sono ricerche comuni) — es. #/risultati/ES1_M.
-  // Pagina Risultati NUOVA (home.js). La vecchia, con anni passati, ricerca per
-  // mese/regione/tipo e "gare senza risultati", resta su #/risultati-old.
-  if (match('/risultati-old')) {
-    risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
-    if (activeHub) applyHubFilters(activeHub);
-    _risHistoricalYear = null;
-    return renderRisultati();
-  }
-  const _mRisCatNew = match('/risultati/:cat');
-  if (_mRisCatNew && typeof window.renderRisultatiV2 === 'function') {
-    window._hxPreset = { cat: decodeURIComponent(_mRisCatNew[1]) };
-    return window.renderRisultatiV2();
-  }
-  if (match('/risultati') && typeof window.renderRisultatiV2 === 'function') {
-    window._hxPreset = { cat: '' };
-    return window.renderRisultatiV2();
-  }
   const _mRisCat = match('/risultati/:cat');
   if (_mRisCat) {
     risSearchQuery = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
@@ -4982,7 +4965,10 @@ function route() {
   }
   const m_stats = match('/statistiche/:cat');
   if (m_stats) return renderStatistiche(decodeURIComponent(m_stats[1]));
-  if (match('/statistiche')) return renderStatistiche(null);
+  // La vecchia home (dashboard per categoria) è ora la pagina Statistiche; i record e
+  // primati di una volta restano su #/record e #/statistiche/:cat.
+  if (match('/record')) return renderStatistiche(null);
+  if (match('/statistiche')) return renderHomeDashboard();
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
   if (match('/login')) return renderLogin();
