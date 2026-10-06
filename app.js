@@ -16464,6 +16464,75 @@ window._switchGaraTab = (tab) => {
 // storico", ma l'endpoint aveva i dati). La guardia fa vincere sempre
 // l'ULTIMA chiamata avviata, non l'ultima che finisce.
 let _alboDoroReqSeq = 0;
+
+// ── Serie di gare (albo d'oro v2) ─────────────────────────────────────────
+// scripts/build_race_series.py raggruppa le edizioni storiche (ciclismo.info
+// 2007-2025) in "serie" — la stessa gara attraverso nomi e sedi diverse, con
+// uomini e donne separati — e le salva in data/albo/ (indice + 64 file).
+// Qui si legge solo quello: nessun indovinare i nomi al volo. Se una gara non
+// è nell'indice si ricade sul vecchio metodo (ricerca per nome sul server).
+const _ALBO_NOISE = new Set(['JUNIORES','ALLIEVI','ALLIEVE','ESORDIENTI','UNDER','ELITE','DONNE','DONNA','U23','UNDER23','JUNIOR','OPEN','MASCHILE','FEMMINILE','ROSA','EDIZIONE','EDIZ']);
+function _alboBase(nome) {
+  let s = String(nome || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  s = s.replace(/[’'`.\-–,;:()"\/#]/g, ' ').replace(/\s+/g, ' ').trim();
+  s = s.replace(/^\d+\s*[°^ª]?\s*/, '');
+  const toks = s.split(' ').filter(Boolean);
+  while (toks.length > 1 && _ALBO_NOISE.has(toks[toks.length - 1])) toks.pop();
+  return toks.filter(t => t !== 'EDIZIONE').join(' ');
+}
+let _alboIdxP = null; const _alboShards = {};
+function _alboIndex() {
+  if (!_alboIdxP) _alboIdxP = fetch('data/albo/index.json').then(r => r.ok ? r.json() : null).catch(() => null);
+  return _alboIdxP;
+}
+const _ALBO_STOP = new Set(['DI','DEL','DELLA','DELLE','DEI','DEGLI','DELL','DALL','DA','DE','E','IN','AL','ALLA','ALLO','IL','LA','LO','I','LE','GLI','A','ED','PER','CON','NEL','NELLA','SUL','SULLA','GRAN','PREMIO','TROFEO','MEMORIAL','COPPA','CITTA','COMUNE','CIRCUITO','GARA','LINEA','ASD','GS','SC','UC','PROVA','VALIDA','XXI','XX','XIX','XVIII','XVII','XVI','XV','XIV','XIII','XII','XI','X']);
+// nome troppo generico ("Gran Premio Allievi"): da solo non identifica la gara
+function _alboIsGeneric(base) {
+  const toks = (' ' + base + ' ').replace(' G P ', ' GRAN PREMIO ').split(/\s+/).filter(Boolean).map(t => ({ GP: 'GRAN PREMIO', MEM: 'MEMORIAL', TR: 'TROFEO', C: 'COPPA', CIT: 'CITTA' }[t] || t)).join(' ').split(' ');
+  return toks.filter(t => !/^\d+$/.test(t) && !/^[IVXL]+$/.test(t) && !_ALBO_STOP.has(t) && t.length > 1).length < 2;
+}
+function _alboLuogoKey(l) {
+  const s = String(l || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’'`.\-–,;:()"\/#]/g, ' ').replace(/\s+/g, ' ').trim();
+  return s.replace(/(^|\s)[A-Z]{2}$/, '').trim();
+}
+async function _alboSeries(nome, g, luogo) {
+  const idx = await _alboIndex();
+  if (!idx) return null;
+  const cands = [_alboBase(nome), _alboBase(_raceBaseName(nome))];
+  const lk = _alboLuogoKey(luogo);
+  for (const b of cands) {
+    // nome troppo generico ("Gran Premio"): la serie e' identificata anche dal luogo
+    const sid = idx.index[`${b}|${g}`] || (lk ? idx.index[`${b}|${g}|${lk}`] : null);
+    if (!sid) continue;
+    const n = parseInt(sid, 16) % idx.n_shard;
+    if (!_alboShards[n]) _alboShards[n] = fetch(`data/albo/shard_${String(n).padStart(2, '0')}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    const sh = await _alboShards[n];
+    if (sh[sid]) return sh[sid];
+  }
+  return null;
+}
+// edizioni della serie nel formato usato dall'albo (una riga per edizione, con i podi di ogni categoria)
+function _alboEditionsFromSeries(s, skipYears) {
+  const catName = c => (typeof _ciclismoCatLabel === 'function' ? _ciclismoCatLabel(c) : c);
+  const out = [];
+  for (const e of (s.ed || [])) {
+    if (skipYears && skipYears.has(String(e.y))) continue;
+    const byCat = {};
+    for (const [cat, pos, aid, nome, team] of (e.p || [])) (byCat[cat] = byCat[cat] || []).push({ cat, posizione: pos, atleta_id: aid || null, nome_completo: nome || '', team: team || '' });
+    const cats = Object.keys(byCat);
+    const podio = [];
+    for (const c of cats) for (const r of byCat[c].sort((a, b) => (a.posizione || 99) - (b.posizione || 99))) {
+      const parts = (r.nome_completo || '').trim().split(/\s+/);
+      podio.push({ posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team, atleta_id: r.atleta_id, catLabel: cats.length > 1 ? catName(c) : '' });
+    }
+    const w = podio[0] || {};
+    out.push({ year: String(e.y), gara_id: 'CIC_' + e.id, data: e.d || '', nome: e.n || '', historic: true, partial: podio.length > 0 && cats.some(c => byCat[c].length < 3),
+      href: `#/gara/CIC_${e.id}${_slugify(`${e.n || ''} ${e.y}`) ? '-' + _slugify(`${e.n || ''} ${e.y}`) : ''}`,
+      winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' }, podio });
+  }
+  return out;
+}
+
 async function _injectRaceAlboDoro(garaId, opts = {}) {
   const el = document.getElementById('race-albo-doro');
   if (!el) return;
@@ -16503,7 +16572,11 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
   // precedenti o Gare correlate" che ciclismo.info stampa in fondo a ogni
   // pagina gara — un elenco curato DA LORO, non indovinato da noi.
   const baseName = _raceBaseName(opts.nomeGara || '');
-  if (baseName && baseName.length >= 3) {
+  const _alGender = opts.gender || (/_F$/.test(String(garaId)) || /^(DONNE)/i.test(String(opts.cat || '')) ? 'F' : 'M');
+  const _alSeries = await _alboSeries(opts.nomeGara || '', _alGender, opts.luogo || (globalData?.calendar || []).find(c => c.id === ((globalData?.garaToCalId || {})[garaId] || toCalId(garaId)))?.luogo || '');
+  if (_alSeries) {
+    editions.push(..._alboEditionsFromSeries(_alSeries, new Set(editions.map(e => String(e.year)))));
+  } else if (baseName && baseName.length >= 3 && !_alboIsGeneric(_alboBase(opts.nomeGara || ''))) {
     try {
       // Interroga anche le varianti storiche note (vedi _RACE_BASE_ALIASES) —
       // il fallback per sottostringa lato server cerca solo il termine
@@ -16611,8 +16684,9 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
               <div style="display:flex;align-items:center;gap:8px;font-size:.86rem">
                 <span style="min-width:20px">${medal(p.posizione)}</span>
                 <span style="font-weight:700">${esc(p.cognome)} ${esc(p.nome)}</span>
-                <span style="color:var(--text-muted);font-size:.82rem">${esc(p.team)}</span>
+                <span style="color:var(--text-muted);font-size:.82rem">${esc(p.team)}${p.catLabel ? ' · ' + esc(p.catLabel) : ''}</span>
               </div>`).join('')}
+            ${e.partial ? '<div style="font-size:.7rem;color:var(--text-muted);margin-top:2px">Podio incompleto nella fonte storica</div>' : ''}
           </div>
         </div>`;
       }).join('')}
@@ -16649,12 +16723,10 @@ async function renderGaraStoria(baseName) {
     }
   }
 
-  // Storico ciclismo.info — collegamento autoritativo via /albo-doro (blocco
-  // "Edizioni precedenti o Gare correlate" curato da ciclismo.info stesso),
-  // non più per uguaglianza di nome-base: i nomi cambiano negli anni per la
-  // stessa gara e un confronto testuale perdeva edizioni vere (es. Modolo,
-  // vincitore 2009 del Giro del Belvedere, mancava — segnalato dall'utente).
-  try {
+  let _stSeries = null;
+  for (const g of ['M', 'F']) { _stSeries = await _alboSeries(baseName, g, ''); if (_stSeries) break; }
+  if (_stSeries) editions.push(..._alboEditionsFromSeries(_stSeries, new Set(editions.map(e => String(e.year)))));
+  if (!_stSeries) try {
     // Varianti storiche note — vedi nota gemella in _injectRaceAlboDoro.
     const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
     const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
@@ -19429,7 +19501,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
     </div>
   `);
-  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara });
+  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M' });
 
   // (I risultati PCS sono già stati uniti a "rows" più sopra, per riempire
   // eventuali buchi nel podio — niente chiamata separata a _loadGaraPcsExt,
