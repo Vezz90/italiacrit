@@ -19495,9 +19495,10 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // usato per la stagione nativa 2026 — prima veniva mostrato un totale
   // unico che mischiava le due fonti, diverso dalla presentazione nativa
   // (richiesta esplicita dell'utente dopo aver confrontato le due viste).
-  const { p1, p2, p3, pout } = _ciclismoYearStats(italiaRows);
+  // Record UNICO (come per la stagione in corso): ciclismo.info + gare extra da PCS.
+  const { p1, p2, p3, pout } = _ciclismoYearStats([...italiaRows, ...addedRows]);
   const label = document.getElementById('atleta-stats-italia-label');
-  if (label) label.textContent = 'ITALIA';
+  if (label) label.textContent = 'RISULTATI ' + anno;
   const bar = document.getElementById('atleta-stats-italia-bar');
   if (bar) bar.innerHTML = `
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${p1}</span><span class="athlete-stat-label">1° Posto</span></div>
@@ -19506,20 +19507,11 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
   `;
   const esteroStatsForYear = document.getElementById('atleta-stats-estero');
-  if (esteroStatsForYear) {
-    if (addedRows.length) {
-      const { p1: ep1, p2: ep2, p3: ep3, pout: epout } = _ciclismoYearStats(addedRows);
-      const ebar = esteroStatsForYear.querySelector('.athlete-stats-bar');
-      if (ebar) ebar.innerHTML = `
-        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${ep1}</span><span class="athlete-stat-label">1° Posto</span></div>
-        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--silver)">${ep2}</span><span class="athlete-stat-label">2° Posto</span></div>
-        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${ep3}</span><span class="athlete-stat-label">3° Posto</span></div>
-        <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${epout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
-      `;
-      esteroStatsForYear.style.display = '';
-    } else {
-      esteroStatsForYear.style.display = 'none';
-    }
+  if (esteroStatsForYear) esteroStatsForYear.style.display = 'none';
+  {
+    const _nExtra = addedRows.filter(r => r.posizione >= 1 && r.posizione <= 10).length;
+    const note = document.getElementById('atleta-stats-note');
+    if (note) note.textContent = _nExtra ? `Il record include ${_nExtra} risultat${_nExtra === 1 ? 'o' : 'i'} effettuat${_nExtra === 1 ? 'o' : 'i'} in gare extra al circuito italiano ICS, che non assegnano punti.` : '';
   }
 
   // Titolo sezione + nota + tabella — STESSE colonne/classi della tabella
@@ -19630,7 +19622,7 @@ window.setAtletaPcsYear = (atletaId, anno) => {
 
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
   const label = document.getElementById('atleta-stats-italia-label');
-  if (label) label.textContent = 'STAGIONE';
+  if (label) label.textContent = 'RISULTATI ' + anno;
   const bar = document.getElementById('atleta-stats-italia-bar');
   if (bar) bar.innerHTML = `
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${p1}</span><span class="athlete-stat-label">1° Posto</span></div>
@@ -19639,6 +19631,7 @@ window.setAtletaPcsYear = (atletaId, anno) => {
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
   `;
 
+  const _n2 = document.getElementById('atleta-stats-note'); if (_n2) _n2.textContent = '';
   const title = document.getElementById('atleta-results-title');
   if (title) title.textContent = `RISULTATI ${anno} · Professionista (PCS)`;
   const note = document.getElementById('atleta-ciclismo-note');
@@ -19949,6 +19942,12 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
   const p2 = rows.filter(r => r.posizione === 2).length;
   const p3 = rows.filter(r => r.posizione === 3).length;
   const pout = rows.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+  {
+    const _sl = document.querySelector('.tm-hero .ath-stand-lbl');
+    if (_sl) _sl.textContent = (curCat ? String(curCat).replace(/_/g, ' ') + ' · ' : 'STAGIONE ') + anno;
+    const _pl = document.querySelector('.tm-hero .ath-hero-pills'); if (_pl) _pl.style.display = 'none';
+    const _ne = document.getElementById('team-stats-estero'); if (_ne) _ne.style.display = 'none';
+  }
   const nativeHeaderStats = document.getElementById('team-native-header-stats');
   if (nativeHeaderStats) {
     nativeHeaderStats.innerHTML = `
