@@ -17045,6 +17045,43 @@ function athleteMomentHtml(rows, streak, isCurrent) {
     ${streakTxt ? `<p class="ath-moment-note">${streakTxt}.</p>` : ''}
   </section>`;
 }
+// Profilo di corsa: come si distribuiscono i piazzamenti (di ogni gara salviamo solo
+// la top 10: le percentuali sono sui piazzamenti, non su tutte le gare disputate).
+function athleteRaceProfileHtml(rows) {
+  const n = rows.length;
+  if (n < 5) return '';
+  const cnt = f => rows.filter(f).length;
+  const w = cnt(r => r.posizione === 1), p3 = cnt(r => r.posizione <= 3), t5 = cnt(r => r.posizione <= 5);
+  const pct = x => Math.round(x / n * 100) + '%';
+  const avgPos = (rows.reduce((s, r) => s + (r.posizione || 0), 0) / n).toFixed(1).replace('.', ',');
+  const hasPts = rows.some(r => r.punti_effettivi != null);
+  const ptsAvg = hasPts ? (rows.reduce((s, r) => s + (r.punti_effettivi || 0), 0) / n).toFixed(1).replace('.', ',') : null;
+  // rendimento per lunghezza del percorso (solo se i km sono noti)
+  const bk = [['corte (fino a 70 km)', r => r <= 70], ['medie (70-110 km)', r => r > 70 && r <= 110], ['lunghe (oltre 110 km)', r => r > 110]];
+  let best = null;
+  for (const [label, f] of bk) {
+    const sub = rows.filter(r => { const km = parseFloat(r.km); return km > 0 && f(km); });
+    if (sub.length < 3) continue;
+    const avg = sub.reduce((s, r) => s + (r.posizione || 0), 0) / sub.length;
+    const wins = sub.filter(r => r.posizione === 1).length;
+    if (!best || avg < best.avg) best = { label, avg, n: sub.length, wins };
+  }
+  const tipoTxt = [['regionale', 'regionali'], ['nazionale', 'nazionali'], ['internazionale', 'internazionali']].map(([k, l]) => {
+    const s = rows.filter(r => r.tipo === k); return s.length ? `${s.length} ${l}${s.filter(r => r.posizione === 1).length ? ` (${s.filter(r => r.posizione === 1).length} vitt.)` : ''}` : '';
+  }).filter(Boolean).join(' · ');
+  const note = [best ? `Rende meglio sulle gare ${best.label}: posizione media ${best.avg.toFixed(1).replace('.', ',')} in ${best.n} risultati${best.wins ? `, ${best.wins} vittori${best.wins === 1 ? 'a' : 'e'}` : ''}.` : '', tipoTxt ? `Per livello di gara: ${tipoTxt}.` : ''].filter(Boolean).join(' ');
+  return `<section class="ath-block" id="ath-profile">
+    <div class="ath-block-h"><span>PROFILO DI CORSA</span><i></i></div>
+    <div class="ath-moment-grid">
+      <div><b>${pct(w)}</b><span>vittorie · ${w} su ${n} piazzamenti</span></div>
+      <div><b>${pct(p3)}</b><span>podi · ${p3} su ${n} piazzamenti</span></div>
+      <div><b>${pct(t5)}</b><span>nei primi 5 · ${t5} su ${n}</span></div>
+      <div><b>${avgPos}°</b><span>posizione media nei piazzamenti${ptsAvg ? ` · ${ptsAvg} pt a gara` : ''}</span></div>
+    </div>
+    ${note ? `<p class="ath-moment-note">${note}</p>` : ''}
+    <p class="ath-moment-note" style="margin-top:4px">Calcolato sui risultati registrati (primi 10 di ogni gara).</p>
+  </section>`;
+}
 function athleteLastBestHtml(rows) {
   if (!rows.length) return '';
   const byDate = rows.slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
@@ -17330,6 +17367,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
+            ${/^(ELI|JUN)_/.test(rCode || displayCategoria || '') ? `<a class="btn-share" href="https://www.procyclingstats.com/search.php?term=${encodeURIComponent(displayNome + ' ' + displayCognome)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="ath-btn-lbl">PCS ↗</span></a>` : ''}
             ${adminEditBtn('atleta', atleta_id)}
           </div>`;
   const _standPct = (aRankObj && _rankList[0] && _rankList[0].punti > 0) ? Math.max(0, Math.min(100, Math.round(aRankObj.punti / _rankList[0].punti * 100))) : null;
@@ -17591,6 +17629,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
+    ${_athSafe(() => athleteRaceProfileHtml(risultatiStrada))}
     ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
     ${_rankChartHtml}
     <div id="atleta-cumul-chart-wrap"${_rankChartHtml ? ' style="display:none"' : ''}>${cumulHtml}</div>
