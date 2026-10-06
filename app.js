@@ -18015,7 +18015,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       const teamEsteroEl = document.getElementById('team-stats-estero');
       if (teamEsteroEl) {
         teamEsteroEl.className = 'ath-stats-note';
-        teamEsteroEl.textContent = n ? `Il record include ${n} piazzament${n === 1 ? 'o' : 'i'} in gare estere/PCS. I punti in classifica vengono solo dalle gare del circuito italiano.` : '';
+        teamEsteroEl.textContent = n ? `Il record include ${n} risultat${n === 1 ? 'o' : 'i'} effettuat${n === 1 ? 'o' : 'i'} in gare extra al circuito italiano ICS, che non assegnano punti.` : '';
         teamEsteroEl.style.display = n ? '' : 'none';
       }
     }
@@ -20044,7 +20044,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       for (const r of esteroExtra) { const k = bucket(r); if (k >= 0) { add[k]++; nEstero++; } }
       vals.forEach((el, i) => { el.textContent = (parseInt(el.dataset.base, 10) || 0) + add[i]; });
       const note = document.getElementById('atleta-stats-note');
-      if (note) note.textContent = nEstero ? `Il record include ${nEstero} piazzament${nEstero === 1 ? 'o' : 'i'} in gare estere/PCS. I punti in classifica vengono solo dalle gare del circuito italiano.` : '';
+      if (note) note.textContent = nEstero ? `Il record include ${nEstero} risultat${nEstero === 1 ? 'o' : 'i'} effettuat${nEstero === 1 ? 'o' : 'i'} in gare extra al circuito italiano ICS, che non assegnano punti.` : '';
     }
   }
 
@@ -20955,6 +20955,23 @@ async function renderTeam(team_id, opts = {}) {
     title: `${c.nome}${c.nome_gara ? ' — ' + c.nome_gara : ''}${c.regione ? ' — ' + c.regione : ''}`,
     href: c.atleta_id ? `#/atleta/${encodeURIComponent(c.atleta_id)}` : null,
   })).join('')}</div>` : '';
+  // Pillole in intestazione: gare a punti e giorni da leader (come per gli atleti)
+  const _tmScoreRaces = new Set(catRisultatiStrada.filter(r => (r.punti_effettivi || 0) > 0).map(r => r.gara_id)).size;
+  let _tmLeaderDays = 0, _tmIsLeader = false;
+  if (_isLoadedYear && teamViewCat) {
+    try {
+      const _reigns = buildLeaderReigns(seasonRaw.filter(r => r.team_id && (getRankingFileCode(r) || r.categoria) === teamViewCat), 'team_id', 'punti');
+      const _todayIso = new Date().toISOString().slice(0, 10);
+      _reigns.forEach((rg, i) => {
+        if (rg.key !== team_id) return;
+        const end = _reigns[i + 1] ? _reigns[i + 1].fromDate : _todayIso;
+        _tmLeaderDays += Math.max(1, Math.round((new Date(end) - new Date(rg.fromDate)) / 86400000));
+        if (!_reigns[i + 1]) _tmIsLeader = true;
+      });
+    } catch (_) {}
+  }
+  const _tmPillsHtml = (_tmScoreRaces ? `<span class="ath-pill ath-pill--green">${_tmScoreRaces} gar${_tmScoreRaces === 1 ? 'a' : 'e'} a punti nel ${esc(selYear)}</span>` : '')
+    + (_tmLeaderDays ? `<a href="#/classifica/${encodeURIComponent(teamViewCat)}/team/punti/storia" class="ath-pill ath-pill--gold" title="Giorni in testa alla classifica team">👑 ${_tmIsLeader ? 'Leader da' : 'Leader per'} ${_tmLeaderDays} giorn${_tmLeaderDays === 1 ? 'o' : 'i'}</a>` : '');
   setPageMeta(t.nome, `${atletiList.length} atleti${catPuntiTotali ? ' · ' + catPuntiTotali + ' pt' : ''} — Italia Cycling Stats`);
   setSchemaOrg({ '@context':'https://schema.org','@type':'SportsTeam', name:t.nome, identifier:team_id, url:window.location.href });
   setPage(`
@@ -20967,6 +20984,7 @@ async function renderTeam(team_id, opts = {}) {
               <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
             </div>
           </div>
+          <div class="ath-hero-pills">${_tmPillsHtml}</div>
     <div class="ath-hero-actions">
             <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
             <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')"><span class="ath-btn-lbl">Compara</span></button>
