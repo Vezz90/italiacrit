@@ -17257,8 +17257,8 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Pulsanti azione: stesso contenuto di prima, ora dentro l'intestazione
   const _actionsHtml = `
           <div class="ath-hero-actions">
-            <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl"> Condividi Profilo</span></button>
-            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')" aria-label="Compara">⚖<span class="ath-btn-lbl"> Compara</span></button>
+            <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
+            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')" aria-label="Compara"><span class="ath-btn-lbl">Compara</span></button>
             <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
@@ -17626,10 +17626,7 @@ async function _injectFollowBtn(spanId, type, id) {
   if (!user) return;
   const isFollowing = type === 'atleta' ? _userFollows.atleti.has(id) : _userFollows.teams.has(id);
   const render = (following) => {
-    span.innerHTML = `<button id="follow-btn-${spanId}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')"
-      style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid ${following?'var(--accent)':'var(--border-subtle)'};background:${following?'var(--accent)':'transparent'};color:${following?'#fff':'var(--text-primary)'};transition:all .15s">
-      ${following ? '★ Seguito' : '☆ Segui'}
-    </button>`;
+    span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
   };
   render(isFollowing);
 }
@@ -17645,10 +17642,7 @@ window.toggleFollow = async function(type, id, spanId) {
     else { following ? _userFollows.teams.add(id) : _userFollows.teams.delete(id); }
     const span = document.getElementById(spanId);
     if (span) {
-      span.innerHTML = `<button id="follow-btn-${spanId}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')"
-        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid ${following?'var(--accent)':'var(--border-subtle)'};background:${following?'var(--accent)':'transparent'};color:${following?'#fff':'var(--text-primary)'}">
-        ${following ? '★ Seguito' : '☆ Segui'}
-      </button>`;
+      span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
     }
     showToast(following ? '★ Ora segui questo ' + (type === 'atleta' ? 'atleta' : 'team') : 'Non segui più');
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
@@ -21005,9 +20999,9 @@ async function renderTeam(team_id, opts = {}) {
             </div>
           </div>
     <div class="ath-hero-actions">
-            <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+            <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
             <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
-            <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
+            <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')"><span class="ath-btn-lbl">Compara</span></button>
             ${adminEditBtn('team', team_id)}
             ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
           </div>

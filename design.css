@@ -12898,3 +12898,21 @@ tr.ath-grp[aria-expanded="true"] .ath-grp-chev { transform: rotate(90deg); }
 .tm-hero .ath-hero-standing .team-stat { display: flex; flex-direction: column; gap: 3px; }
 .tm-hero .ath-hero-standing .team-stat-val { font-size: 1.35rem !important; }
 .tm-hero .ath-hero-actions .admin-edit-btn { font-size: .72rem; }
+
+/* Pulsanti azione (Segui / Compara / Condividi): stile del mockup, uguale su atleta e team */
+.follow-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 14px; font-size: .78rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-primary); }
+.follow-pill.is-on { border-color: var(--accent); background: var(--accent); color: #fff; }
+.ath-hero-actions { gap: 8px; align-items: center; }
+.ath-hero-actions .btn-share, .ath-hero-actions .watch-btn, .ath-hero-actions .follow-pill, .ath-hero-actions .admin-edit-btn {
+  display: inline-flex !important; align-items: center; gap: 6px; padding: 9px 13px !important; border-radius: 6px !important;
+  font: 600 12px/1 'Inter', system-ui, sans-serif !important; letter-spacing: 0 !important; text-transform: none !important;
+  border: 1px solid rgba(255,255,255,.14) !important; background: transparent !important; color: var(--text-primary) !important; cursor: pointer; box-shadow: none !important; margin: 0 !important;
+}
+.ath-hero-actions .btn-share:hover, .ath-hero-actions .watch-btn:hover, .ath-hero-actions .follow-pill:hover, .ath-hero-actions .admin-edit-btn:hover { border-color: rgba(255,255,255,.3) !important; background: rgba(255,255,255,.05) !important; }
+.ath-hero-actions .btn-share svg { display: none; }
+.ath-hero-actions .ath-btn-lbl { display: inline !important; }
+/* "Segui" = pulsante principale (arancione); "Seguito" = contorno arancione */
+.ath-hero-actions .watch-btn:not(.watch-btn--active), .ath-hero-actions .follow-pill:not(.is-on) { background: var(--accent, #ff6b00) !important; border-color: var(--accent, #ff6b00) !important; color: #111 !important; }
+.ath-hero-actions .watch-btn.watch-btn--active, .ath-hero-actions .follow-pill.is-on { background: transparent !important; border-color: var(--accent, #ff6b00) !important; color: var(--accent, #ff6b00) !important; }
+.ath-hero-actions .admin-edit-btn[style*="0891b2"] { border-color: rgba(8,145,178,.6) !important; color: #5fd0e6 !important; }
+.ath-hero-actions #atleta-msg-btn, .ath-hero-actions #atleta-follow-btn, .ath-hero-actions #team-msg-btn, .ath-hero-actions #team-follow-btn { display: inline-flex; }
