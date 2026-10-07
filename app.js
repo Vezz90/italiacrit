@@ -11113,6 +11113,8 @@ let _classStoricoCache = {};
 window._classStoricoLastFilterCat = {};
 let _classStoricoGender = 'M';
 let _classStoricoSearch = '';
+let _classStoricoKind = 'a'; // 'a' atleti, 't' team (classifica a squadre ciclismo.info)
+const _classStoricoTeamCache = {};
 function _classYearRowHtml(anno) {
   const cur = Number(_loadedSeasonYear());
   const pills = [];
@@ -11168,6 +11170,12 @@ async function renderClassificaStorica(anno) {
   }
 
   const classifica = payload?.classifica || {};
+  if (_classStoricoTeamCache[anno] === undefined) {
+    const tp = await loadJson(`data/ciclismo-storico/${anno}/classifica_team.json`).catch(() => null);
+    _classStoricoTeamCache[anno] = (tp && tp.classifica) || null;
+  }
+  const teamCls = _classStoricoTeamCache[anno];
+  if (!teamCls) _classStoricoKind = 'a';
   // Stesso ordine ES1→ES2→Allievi→Juniores→Elite della classifica nativa
   // (era invece alfabetico: "ALLIEVI" prima di "ELITE_UNDER23" prima di
   // "ESORDIENTI1" — sbagliato) e stessa forma del testo (era il codice
@@ -11201,6 +11209,10 @@ async function renderClassificaStorica(anno) {
   // ricerca atleta/team, che è puro filtro client-side sui dati che abbiamo.
   if (controlsEl) {
     controlsEl.innerHTML = `
+      ${teamCls ? `<div class="hx-seg" role="group" aria-label="Atleti o team">
+        <button type="button" onclick="window.classSetKind('a')" aria-pressed="${_classStoricoKind==='a'}">Atleti</button>
+        <button type="button" onclick="window.classSetKind('t')" aria-pressed="${_classStoricoKind==='t'}">Team</button>
+      </div>` : ''}
       ${catsMale.length && catsFemale.length ? `<div class="hx-seg" role="group" aria-label="Seleziona genere">
         <button type="button" onclick="window.classSetGender('M')" aria-pressed="${_classStoricoGender==='M'}">Uomini</button>
         <button type="button" onclick="window.classSetGender('F')" aria-pressed="${_classStoricoGender==='F'}">Donne</button>
@@ -11213,7 +11225,38 @@ async function renderClassificaStorica(anno) {
       <span class="rs-cnt" id="class-storico-count"></span>`;
   }
 
-  await _renderClassStoricoTable(classifica[curCat] || []);
+  if (_classStoricoKind === 't' && teamCls) await _renderClassStoricoTeamTable(teamCls[curCat] || []);
+  else await _renderClassStoricoTable(classifica[curCat] || []);
+}
+
+// Classifica a squadre (ciclismo.info) per l'anno/categoria scelti
+async function _renderClassStoricoTeamTable(baseRows) {
+  const bodyEl = document.getElementById('class-storico-body');
+  if (!bodyEl) return;
+  let rows = baseRows;
+  if (_classStoricoSearch) {
+    const q = _classStoricoSearch.toLowerCase();
+    rows = rows.filter(r => (r.team || '').toLowerCase().includes(q));
+  }
+  const countEl = document.getElementById('class-storico-count');
+  if (countEl) countEl.textContent = `${rows.length} team`;
+  const leaderPts = rows[0]?.punti || 0;
+  const podEl = document.getElementById('class-storico-pod');
+  if (podEl) {
+    const C = [['#C99400', '#5A3F00'], ['#6E7A90', '#2A3342'], ['#B26A2C', '#4A2A0E']];
+    const ini = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '?')[0] + ((w[1] || '')[0] || '')).toUpperCase(); };
+    podEl.innerHTML = (!_classStoricoSearch && rows.length >= 3) ? `<div class="hx-ph"><h2>Il podio</h2></div><div class="el-pod">${rows.slice(0, 3).map((r, i) => `<div class="el-pc" style="--c1:${C[i][0]};--c2:${C[i][1]}"><span class="rk">${i + 1}</span><div class="av">${esc(ini(r.team))}</div><b>${esc(r.team || '')}</b><small>&nbsp;</small><div class="pt">${r.punti} <span>punti</span></div></div>`).join('')}</div>` : '';
+  }
+  const rowsHtml = rows.map((r, i) => {
+    const tier = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
+    const gap = r.pos === 1 ? `<span class="rk-leader-tag">LEADER</span>` : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
+    return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
+      <td><span class="rank-num ${posClass(r.pos)}">${r.pos}</span></td>
+      <td><span class="rank-name">${esc(r.team || '')}</span></td>
+      <td class="r"><div class="rk-pts-cell"><span class="rank-pts">${r.punti}</span>${gap}</div></td>
+    </tr>`;
+  }).join('');
+  bodyEl.innerHTML = `<table class="ranking-table rk-table-narrative"><thead><tr><th style="width:50px">POS</th><th>TEAM</th><th class="r">PUNTI</th></tr></thead><tbody>${rowsHtml || '<tr><td colspan="3" class="empty-state">Nessun dato</td></tr>'}</tbody></table>`;
 }
 
 // Solo la tabella (non i controlli) — così la ricerca non ricostruisce
@@ -11298,6 +11341,11 @@ async function _renderClassStoricoTable(baseRows) {
     }));
   }
 }
+window.classSetKind = (k) => {
+  if (!_classHistoricalYear) return;
+  _classStoricoKind = k === 't' ? 't' : 'a';
+  renderClassificaStorica(_classHistoricalYear);
+};
 window.classSetCat = (c) => {
   if (!_classHistoricalYear) return;
   window._classStoricoLastFilterCat[_classHistoricalYear] = c;
@@ -11317,7 +11365,9 @@ window.classSetSearch = (v) => {
     if (!_classHistoricalYear) return;
     const payload = _classStoricoCache[_classHistoricalYear];
     const curCat = window._classStoricoLastFilterCat[_classHistoricalYear];
-    if (payload && curCat) _renderClassStoricoTable(payload.classifica?.[curCat] || []);
+    const tcl = _classStoricoTeamCache[_classHistoricalYear];
+    if (_classStoricoKind === 't' && tcl && curCat) _renderClassStoricoTeamTable(tcl[curCat] || []);
+    else if (payload && curCat) _renderClassStoricoTable(payload.classifica?.[curCat] || []);
   }, 250);
 };
 

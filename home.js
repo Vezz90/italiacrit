@@ -284,11 +284,11 @@
   const _pastCache = {};
   async function loadPast(y) {
     if (_pastCache[y]) return _pastCache[y];
-    const [r, c] = await Promise.all([loadJson(`data/ciclismo-storico/${y}/races.json`), loadJson(`data/ciclismo-storico/${y}/classifica.json`)]);
-    return (_pastCache[y] = { races: (r && r.races) || [], cls: (c && c.classifica) || {} });
+    const [r, c, tm] = await Promise.all([loadJson(`data/ciclismo-storico/${y}/races.json`), loadJson(`data/ciclismo-storico/${y}/classifica.json`), loadJson(`data/ciclismo-storico/${y}/classifica_team.json`).catch(() => null)]);
+    return (_pastCache[y] = { races: (r && r.races) || [], cls: (c && c.classifica) || {}, tcls: (tm && tm.classifica) || {} });
   }
   async function paintPast(y, myId) {
-    const { races, cls } = await loadPast(y);
+    const { races, cls, tcls } = await loadPast(y);
     if (myId !== window._hxRender) return;
     const isF = k => /^DONNE/i.test(k), F = hx.sex === 'F';
     const ord = k => (typeof _CICLISMO_CAT_ORDER !== 'undefined' && _CICLISMO_CAT_ORDER[k] != null) ? _CICLISMO_CAT_ORDER[k] : 99;
@@ -316,6 +316,10 @@
       const rows = (cls[k] || []).slice(0, hx.pcat ? 5 : 1);
       return rows.map((r, i) => `<a class="hx-mr" href="/atleta/${encodeURIComponent(r.atleta_id || '')}">${hx.pcat ? `<span class="hx-pos p${i + 1}">${i + 1}</span>` : ''}<span class="hx-mav">${esc(initials(tc(r.nome_completo)))}</span><span class="nm"><b>${esc(tc(r.nome_completo))}</b><small>${esc(hx.pcat ? tc(r.team || '') : lab(k))}</small></span><span class="pt num">${r.punti}</span></a>`).join('');
     }).join('') || '<div class="hx-none">Nessun dato</div>';
+    const tmHtml = topCats.map(k => {
+      const rows = (tcls[k] || []).slice(0, hx.pcat ? 5 : 1);
+      return rows.map((r, i) => `<div class="hx-mr">${hx.pcat ? `<span class="hx-pos p${i + 1}">${i + 1}</span>` : ''}<span class="hx-mav">${esc(initials(tc(r.team)))}</span><span class="nm"><b>${esc(tc(r.team))}</b><small>${esc(lab(k))}</small></span><span class="pt num">${r.punti}</span></div>`).join('');
+    }).join('');
     const withRes = list.filter(ev => Object.values(ev.categorie || {}).some(t => t.length)).length;
     const winners = {}, wNames = {};
     list.forEach(ev => Object.entries(ev.categorie || {}).forEach(([k, t]) => { if (isF(k) === F && t[0] && t[0].atleta_id) { winners[t[0].atleta_id] = (winners[t[0].atleta_id] || 0) + 1; wNames[t[0].atleta_id] = t[0].nome_completo; } }));
@@ -335,6 +339,7 @@
         <section class="hx-panel"><div class="hx-ph"><h2>Stagione ${y}</h2></div><div class="rs-kv"><span>Gare</span><b>${list.length}</b><span>Con risultati</span><b>${withRes}</b></div></section>
         <section class="hx-panel"><div class="hx-ph"><h2>Più vittorie</h2></div>${topW.map(([id, n], i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(id)}"><span class="n">${i + 1}</span><span class="nm">${esc(tc(wNames[id]))}</span><span class="up">${n} vitt.</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</section>
         <section class="hx-panel"><div class="hx-ph"><h2>Classifica atleti ${y}</h2><a href="/classifica">Completa →</a></div>${clsHtml}</section>
+        ${tmHtml ? `<section class="hx-panel"><div class="hx-ph"><h2>Classifica team ${y}</h2><a href="/classifica">Completa →</a></div>${tmHtml}</section>` : ''}
       </aside></div>
     </div>`);
     document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.pcat = ''; hx.n = 12; render(); }; });
