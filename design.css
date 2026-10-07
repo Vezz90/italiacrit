@@ -13461,3 +13461,26 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 .al-year.al-cur { box-shadow: inset 4px 0 0 #E3182D; }
 .al-cat { padding: 6px 14px 0; font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
 .al-year > div:last-child .al-pod3 + .al-cat { border-top: 1px solid var(--border-subtle); margin-top: 6px; padding-top: 8px; }
+
+/* ===== Admin (v2): schede foto/video in attesa, pulsanti e righe uniformi ===== */
+.admin-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+.admin-photo-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: border-color .15s, box-shadow .15s; }
+.admin-photo-card:hover { border-color: #3D7BFF; box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+.admin-photo-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--bg-elevated, #0A1B33); }
+.admin-photo-card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.admin-photo-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; word-break: break-word; }
+.admin-photo-actions { display: flex; gap: 8px; margin-top: auto; }
+.admin-photo-actions .btn-approve, .admin-photo-actions .btn-reject { flex: 1; padding: 9px 10px; }
+.admin-main button[style*="border-radius:6px"], .admin-main button[style*="border-radius: 6px"] { border-radius: 8px !important; }
+.admin-main button { font-family: inherit; }
+.admin-main button:focus-visible, .admin-nav-item:focus-visible, .adm-todo:focus-visible { outline: 2px solid #3D7BFF; outline-offset: 2px; }
+.admin-main button:not(:disabled):active { transform: translateY(1px); }
+.admin-main button:disabled { opacity: .55; cursor: not-allowed; }
+.admin-edit-btn { border-radius: 8px; font-weight: 700; }
+.admin-main .admin-page-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.admin-main a { text-underline-offset: 2px; }
+.admin-main hr { border: 0; border-top: 1px solid var(--border-subtle); margin: 18px 0; }
+.admin-main details { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 14px; }
+.admin-main summary { cursor: pointer; font-weight: 700; font-size: .86rem; }
+.admin-photo-meta { font-size: .78rem; }
+.admin-photo-meta a { font-size: .8rem; }
