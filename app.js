@@ -24442,7 +24442,8 @@ async function renderGara(gara_id) {
       _videoByUrl.set(v.url, { ...v, _srcKey: k, _srcIdx: vi, _keys: [k] });
     });
   }
-  const garaVideos = [..._videoByUrl.values()];
+  // le dirette hanno sempre la precedenza; a parità resta l'ordine di inserimento (sort stabile)
+  const garaVideos = [..._videoByUrl.values()].sort((x, y) => (y.is_live ? 1 : 0) - (x.is_live ? 1 : 0));
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
   const extraVideos = garaVideos.slice(1);
@@ -24635,7 +24636,9 @@ async function renderGara(gara_id) {
     {
       await loadRisPhotos();
       const _pm = _risExtPhotosMap || {}; // SOLO album esterni (xpix/IC)
-      const _extKeyGroups = [{ key: primaryGaraId, alt: [gara_id], badge: null }];
+      // L'album esterno e' spesso salvato sotto l'id di calendario (senza suffisso categoria) o sotto
+      // varianti dell'id: provale tutte, come fa il server per la grafica di condivisione.
+      const _extKeyGroups = [{ key: primaryGaraId, alt: [...new Set([gara_id, _aliasGaraId, primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''), primaryGaraId.replace(/^\d+_/, '')].filter(Boolean))], badge: null }];
       // Raccoglie TUTTI gli album distinti (deduplicati per URL principale),
       // non solo il primo trovato, così nessuna annata perde le sue foto.
       const _seenExtUrls = new Set();
