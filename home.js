@@ -18,7 +18,7 @@
   const CATS_F = ['ELI_F', 'JUN_F', 'AL_F', 'ES2_F', 'ES1_F'];
   const BAND_COLOR = { ELI: ['#2459E6', '#0B1B3A'], JUN: ['#0E8F7E', '#042B26'], AL: ['#C2670C', '#3B1D04'], ES: ['#7C3AED', '#1F0B47'] };
   const F_COLOR = ['#D6336C', '#3B0A1E'];
-  const hx = { sex: 'M', cat: '', reg: '', tipo: '', n: 12, };
+  const hx = { sex: 'M', cat: '', reg: '', tipo: '', n: 12, year: 0, pcat: '' };
   let mediaPromise = null, seq = 0;
 
   const $ = id => document.getElementById(id);
@@ -268,7 +268,84 @@
     }
   }
 
+  /* ---------- selettore stagione ---------- */
+  const curYear = () => +_loadedSeasonYear() || new Date().getFullYear();
+  function yearSel() {
+    const cy = curYear(), sel = hx.year || cy, ys = [];
+    for (let y = cy; y >= 2007; y--) ys.push(y);
+    return `<label class="hx-sel hx-yr"><span class="sr">Stagione</span><select id="hx-year" aria-label="Stagione">${ys.map(y => `<option value="${y}"${y === sel ? ' selected' : ''}>Stagione ${y}${y === cy ? ' (in corso)' : ''}</option>`).join('')}</select></label>`;
+  }
+  function wireYear() {
+    const el = $('hx-year');
+    if (el) el.onchange = () => { const y = +el.value; hx.year = y === curYear() ? 0 : y; hx.cat = ''; hx.pcat = ''; hx.reg = ''; hx.n = 12; render(); };
+  }
+
+  /* ---------- stagioni passate (archivio ciclismo.info) ---------- */
+  const _pastCache = {};
+  async function loadPast(y) {
+    if (_pastCache[y]) return _pastCache[y];
+    const [r, c] = await Promise.all([loadJson(`data/ciclismo-storico/${y}/races.json`), loadJson(`data/ciclismo-storico/${y}/classifica.json`)]);
+    return (_pastCache[y] = { races: (r && r.races) || [], cls: (c && c.classifica) || {} });
+  }
+  async function paintPast(y, myId) {
+    const { races, cls } = await loadPast(y);
+    if (myId !== window._hxRender) return;
+    const isF = k => /^DONNE/i.test(k), F = hx.sex === 'F';
+    const ord = k => (typeof _CICLISMO_CAT_ORDER !== 'undefined' && _CICLISMO_CAT_ORDER[k] != null) ? _CICLISMO_CAT_ORDER[k] : 99;
+    const catKeys = new Set(); races.forEach(ev => Object.keys(ev.categorie || {}).forEach(k => { if (isF(k) === F) catKeys.add(k); }));
+    const cats = [...catKeys].sort((a, b) => ord(a) - ord(b));
+    if (hx.pcat && !catKeys.has(hx.pcat)) hx.pcat = '';
+    const regs = [...new Set(races.map(g => g.regione).filter(Boolean))].sort();
+    const list = races.filter(ev => Object.entries(ev.categorie || {}).some(([k, t]) => isF(k) === F && t.length && (!hx.pcat || k === hx.pcat)) && (!hx.reg || ev.regione === hx.reg))
+      .sort((a, b) => String(b.data).localeCompare(String(a.data)));
+    const head = list.slice(0, 12), hero = head.find(g => g.photo_url) || head[0];
+    const side = [...head.filter(g => g !== hero && g.photo_url), ...head.filter(g => g !== hero && !g.photo_url)].slice(0, 2);
+    const restAll = list.filter(g => g !== hero && !side.includes(g)), rest = restAll.slice(0, hx.n);
+    const lab = k => (typeof _ciclismoCatLabel === 'function' ? _ciclismoCatLabel(k) : String(k).replace(/_/g, ' '));
+    const codeOfRaw = k => (isF(k) ? 'ELI_F' : 'ELI_M');
+    const sel = (id, val, opts, label) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" aria-label="${label}"><option value="">${label}</option>${opts.map(o => `<option value="${esc(o[0])}" ${o[0] === val ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
+    const href = ev => `/gara/CIC_${esc(ev.id)}`;
+    const firstCat = ev => Object.keys(ev.categorie || {}).find(k => isF(k) === F) || Object.keys(ev.categorie || {})[0] || '';
+    const heroHtml = hero ? `<a class="hx-card hx-hero" href="${href(hero)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(hero)), '')}${hero.photo_url ? `<img src="${esc(mediaUrl(hero.photo_url))}" alt="" onerror="this.remove()">` : ''}</div>
+        <span class="hx-tag">STAGIONE ${y}</span><div class="hx-meta">${fmtLong(hero.data).toUpperCase()} · ${esc(lab(firstCat(hero))).toUpperCase()}</div>
+        <h1>${esc(raceTitle(hero.nome))}</h1><p>I risultati della giornata</p></a>` : '<div class="hx-card hx-empty">Nessuna gara trovata con questi filtri.</div>';
+    const sideHtml = side.map(g => `<a class="hx-card hx-side" href="${href(g)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(g)), '')}${g.photo_url ? `<img src="${esc(mediaUrl(g.photo_url))}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(lab(firstCat(g)))}${g.luogo ? ' · ' + esc(tc(g.luogo)) : ''}</small><span class="hx-chev">›</span></a>`).join('');
+    const card = ev => window.RisV2 ? window.RisV2.histCard(ev) : '';
+    const topCats = hx.pcat ? [hx.pcat] : cats;
+    const clsHtml = topCats.map(k => {
+      const rows = (cls[k] || []).slice(0, hx.pcat ? 5 : 1);
+      return rows.map((r, i) => `<a class="hx-mr" href="/atleta/${encodeURIComponent(r.atleta_id || '')}">${hx.pcat ? `<span class="hx-pos p${i + 1}">${i + 1}</span>` : ''}<span class="hx-mav">${esc(initials(tc(r.nome_completo)))}</span><span class="nm"><b>${esc(tc(r.nome_completo))}</b><small>${esc(hx.pcat ? tc(r.team || '') : lab(k))}</small></span><span class="pt num">${r.punti}</span></a>`).join('');
+    }).join('') || '<div class="hx-none">Nessun dato</div>';
+    const withRes = list.filter(ev => Object.values(ev.categorie || {}).some(t => t.length)).length;
+    const winners = {}, wNames = {};
+    list.forEach(ev => Object.entries(ev.categorie || {}).forEach(([k, t]) => { if (isF(k) === F && t[0] && t[0].atleta_id) { winners[t[0].atleta_id] = (winners[t[0].atleta_id] || 0) + 1; wNames[t[0].atleta_id] = t[0].nome_completo; } }));
+    const topW = Object.entries(winners).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    setPage(`<div class="hx-wrap">
+      <div class="hx-filters" aria-label="Filtri">
+        <div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${!F}">Uomini</button><button type="button" data-sex="F" aria-pressed="${F}">Donne</button></div>
+        ${sel('hx-pcat', hx.pcat, cats.map(k => [k, lab(k)]), 'Tutte le categorie')}
+        ${sel('hx-reg', hx.reg, regs.map(r => [r, tc(r)]), 'Tutte le regioni')}
+        ${yearSel()}
+      </div>
+      <div class="hx-layout"><div class="hx-col">
+        <section class="hx-herogrid">${heroHtml}<div class="hx-sidecol">${sideHtml}</div></section>
+        <section><div class="hx-ph"><h2>Gare ${y}</h2><a href="/risultati">Tutti i risultati →</a></div><div class="hx-rlist">${rest.map(card).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div>${restAll.length > rest.length ? `<button type="button" class="hx-more" id="hx-more">Carica altre gare (${restAll.length - rest.length})</button>` : ''}</section>
+      </div>
+      <aside class="hx-col" aria-label="Laterale">
+        <section class="hx-panel"><div class="hx-ph"><h2>Stagione ${y}</h2></div><div class="rs-kv"><span>Gare</span><b>${list.length}</b><span>Con risultati</span><b>${withRes}</b></div></section>
+        <section class="hx-panel"><div class="hx-ph"><h2>Più vittorie</h2></div>${topW.map(([id, n], i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(id)}"><span class="n">${i + 1}</span><span class="nm">${esc(tc(wNames[id]))}</span><span class="up">${n} vitt.</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</section>
+        <section class="hx-panel"><div class="hx-ph"><h2>Classifica atleti ${y}</h2><a href="/classifica">Completa →</a></div>${clsHtml}</section>
+      </aside></div>
+    </div>`);
+    document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.pcat = ''; hx.n = 12; render(); }; });
+    const more = $('hx-more'); if (more) more.onclick = () => { const yy = window.scrollY; hx.n += 12; render().then(() => window.scrollTo(0, yy)); };
+    [['hx-pcat', 'pcat'], ['hx-reg', 'reg']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 12; render(); }; });
+    wireYear();
+    document.querySelectorAll('.hx-wrap [data-href]').forEach(el => el.addEventListener('click', e => { if (e.target.closest('a')) return; if (typeof navTo === 'function') navTo(el.getAttribute('data-href')); }));
+  }
+
   async function paint(media, myId) {
+    if (hx.year && hx.year !== curYear()) return paintPast(hx.year, myId);
     const all = [...buildRaces(), ...await provisional().catch(() => [])].sort(sortRaces);
     const today = iso(new Date());
     const regs = [...new Set(all.map(g => g.regione).filter(Boolean))].sort();
@@ -323,7 +400,7 @@
         ${sel('hx-cat', hx.cat, cats.map(c => [c, catLabel(c)]), 'Tutte le categorie')}
         ${sel('hx-reg', hx.reg, regs.map(r => [r, tc(r)]), 'Tutte le regioni')}
         ${sel('hx-tipo', hx.tipo, tipi.map(t => [t, tc(t)]), 'Tutti i tipi')}
-        <span class="hx-date">Oggi · ${fmtLong(today)}</span>
+        ${yearSel()}
       </div>
       <div class="hx-layout"><div class="hx-col">
         <section class="hx-herogrid">${heroHtml}<div class="hx-sidecol">${sideHtml}</div></section>
@@ -340,6 +417,7 @@
       <section class="hx-banner"><div><h2>Tutto il ciclismo italiano,<br>in un unico portale.</h2><p>Risultati, classifiche, atleti, team, gare e molto altro.</p></div><a class="hx-cta" href="#/regolamento">SCOPRI IL PROGETTO →</a></section>
     </div>`);
     document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; hx.n = 12; render(); }; });
+    wireYear();
     const more = $('hx-more'); if (more) more.onclick = () => { const y = window.scrollY; hx.n += 12; render().then(() => window.scrollTo(0, y)); };
     [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 12; render(); }; });
     // classifiche a destra: atleti e team (foto profilo / logo piccoli)
