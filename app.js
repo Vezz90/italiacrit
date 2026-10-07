@@ -21372,9 +21372,11 @@ async function renderTeam(team_id, opts = {}) {
   // team/posizione prima — o senza — indicare i singoli corridori, vedi
   // _patchAthleteTeamForManualRow): altrimenti comparivano come una riga
   // "corridore" fantasma senza nome, con i punti della squadra.
+  // Per-corridore si usano i risultati individuali SENZA la deduplica per (gara, posizione) fatta
+  // per il punteggio del team: stessa base del roster, cosi' punti e ordine coincidono.
   const catPerfMap = {};
-  for (const r of catRisultati) {
-    if (!r.atleta_id) continue;
+  for (const r of catRisultatiRaw) {
+    if (!r.atleta_id || r.tipo === 'pista') continue;
     if (!catPerfMap[r.atleta_id]) {
       const ath = athletes[r.atleta_id] || {};
       catPerfMap[r.atleta_id] = {
@@ -21399,7 +21401,7 @@ async function renderTeam(team_id, opts = {}) {
   const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)'];
   const _tc = p => ({ id: p.id, cognome: p.cognome, nome: p.nome, pts: p.pts, wins: p.wins, podi: p.podi, gare: p.races ? p.races.size : 0, best: p.best });
   const topPerfHtml = topPerformers.length ? topPerformers.slice(0, 6).map((p, i) => _teamRiderCardHtml(_tc(p), i)).join('') : '<div class="empty-state">Nessun corridore con risultati in questa categoria</div>';
-  const atletiRows = atletiListCat.map((a, i) => _teamRiderCardHtml({ id: a.id, cognome: a.cognome, nome: a.nome, pts: a.puntiCat > 0 ? a.puntiCat : (a.puntiTot > 0 ? a.puntiTot : 0), wins: (catPerfMap[a.id] || {}).wins || 0, podi: (catPerfMap[a.id] || {}).podi || 0, gare: (catPerfMap[a.id] && catPerfMap[a.id].races) ? catPerfMap[a.id].races.size : 0, best: (catPerfMap[a.id] || {}).best || 0 }, i)).join('');
+  const atletiRows = atletiListCat.slice().sort((a, b) => (b.puntiCat - a.puntiCat) || (b.puntiTot - a.puntiTot) || String(a.cognome || '').localeCompare(String(b.cognome || ''))).map((a, i) => _teamRiderCardHtml({ id: a.id, cognome: a.cognome, nome: a.nome, pts: a.puntiCat > 0 ? a.puntiCat : (a.puntiTot > 0 ? a.puntiTot : 0), wins: (catPerfMap[a.id] || {}).wins || 0, podi: (catPerfMap[a.id] || {}).podi || 0, gare: (catPerfMap[a.id] && catPerfMap[a.id].races) ? catPerfMap[a.id].races.size : 0, best: (catPerfMap[a.id] || {}).best || 0 }, i)).join('');
 
   // Identity strip HTML
   const identityHtml = `
