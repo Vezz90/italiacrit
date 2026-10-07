@@ -1250,6 +1250,37 @@ function normalizeRegion(s) {
   return t;
 }
 
+// ── Profili doppi: atleta del roster (PCS/manuale, senza risultati) che e' lo stesso di uno gia' con risultati ──
+// Es. "MARTÍNEZ AITOR" (PCS) e "MARTINEZ GROSET AITOR" (FCI): stessi token del nome (uno contenuto
+// nell'altro, almeno 2 in comune), stesso genere e stessa categoria. Il profilo del roster non viene
+// creato; il suo id punta a quello vero (window._athAlias) cosi' i vecchi link continuano a funzionare.
+window._athAlias = window._athAlias || {};
+function _athNameTokens(a) {
+  return String(`${a.cognome || ''} ${a.nome || ''}`).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean);
+}
+function _buildAthNameIndex(athletes) {
+  const idx = [];
+  for (const [id, a] of Object.entries(athletes || {})) {
+    if (!a || !(a.risultati && a.risultati.length)) continue;
+    idx.push({ id, tok: new Set(_athNameTokens(a)), g: a.genere || 'M', cat: (typeof getRankingFileCode === 'function' && getRankingFileCode({ categoria: a.categoria, genere: a.genere })) || a.categoria || '' });
+  }
+  return idx;
+}
+function _findDupAthlete(idx, p) {
+  // id con anno finale (es. ROSSI_MARIO_2023): omonimo disambiguato a mano, non va mai fuso
+  if (/_(19|20)\d{2}$/.test(String(p.atleta_id || ''))) return null;
+  const tk = new Set(_athNameTokens(p));
+  if (tk.size < 2) return null;
+  const g = p.genere || 'M';
+  const cat = (typeof getRankingFileCode === 'function' && getRankingFileCode({ categoria: p.categoria, genere: p.genere })) || p.categoria || '';
+  for (const e of idx) {
+    if (/_(19|20)\d{2}$/.test(e.id) || e.g !== g || (cat && e.cat && cat !== e.cat)) continue;
+    let common = 0; for (const x of tk) if (e.tok.has(x)) common++;
+    if (common >= 2 && (common === tk.size || common === e.tok.size)) return e.id;
+  }
+  return null;
+}
+
 // ── DATA CACHE ────────────────────────────────────────────────
 const cache = {};
 async function loadJson(path) {
@@ -2853,6 +2884,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // Non sovrascrive MAI chi esiste già.
   const athletesMerged = athletes ? { ...athletes } : {};
   const teamsMerged    = teams    ? { ...teams }    : {};
+  const _dupIdx = _buildAthNameIndex(athletesMerged);
   for (const tid in (extraRoster || {})) {
     const entry = extraRoster[tid];
     if (!entry || !Array.isArray(entry.atleti)) continue;
@@ -2877,6 +2909,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
         : (slug((p.cognome||'') + '_' + (p.nome||'')) || '').toUpperCase();
       if (!aid) continue;
       if (!athletesMerged[aid]) {
+        const _dup = _findDupAthlete(_dupIdx, p);
+        if (_dup) { window._athAlias[aid] = _dup; continue; }
         athletesMerged[aid] = {
           atleta_id: aid,
           nome: (p.nome || '').toUpperCase(),
@@ -17012,6 +17046,7 @@ async function _ensurePcsAthletesLoaded() {
   try { pcs = await apiCall('/data/pcs-extra-roster'); } catch { return; } // ritenta al prossimo giro
   if (!pcs || typeof pcs !== 'object') return;
   _pcsRosterRetried = true;   // segna riuscito solo dopo un fetch valido
+  const _dupIdx = _buildAthNameIndex(globalData.athletes);
   for (const [tid, bucket] of Object.entries(pcs)) {
     const teamNome = globalData.teams[tid]?.nome || bucket.nome || tid;
     if (!globalData.teams[tid]) {
@@ -17021,6 +17056,8 @@ async function _ensurePcsAthletesLoaded() {
       const aid = String(p.atleta_id || '').toUpperCase();
       if (!aid) continue;
       if (!globalData.athletes[aid]) {
+        const _dup = _findDupAthlete(_dupIdx, p);
+        if (_dup) { window._athAlias[aid] = _dup; continue; }
         globalData.athletes[aid] = {
           atleta_id: aid, nome: (p.nome || '').toUpperCase(), cognome: (p.cognome || '').toUpperCase(),
           team_attuale: teamNome, team_id: tid, categoria: p.categoria || '', genere: p.genere || 'M',
@@ -17491,6 +17528,7 @@ function athleteRivalsHtml(list) {
 async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
+  if (!athletes[atleta_id] && window._athAlias && window._athAlias[atleta_id] && athletes[window._athAlias[atleta_id]]) atleta_id = window._athAlias[atleta_id];
 
   let aLive = athletes[atleta_id];
   if (!aLive) {
@@ -21127,10 +21165,13 @@ async function renderTeam(team_id, opts = {}) {
         if (!globalData.teams[team_id]) {
           globalData.teams[team_id] = { id: team_id, nome: m.team_nome || team_id, atleti: [], punti_totali: 0, risultati: [] };
         }
+        const _dupIdx2 = _buildAthNameIndex(globalData.athletes);
         for (const p of (m.atleti || [])) {
           const aid = String(p.atleta_id || '').toUpperCase();
           if (!aid) continue;
           if (!globalData.athletes[aid]) {
+            const _dup2 = _findDupAthlete(_dupIdx2, p);
+            if (_dup2) { window._athAlias[aid] = _dup2; continue; }
             globalData.athletes[aid] = {
               atleta_id: aid, nome: (p.nome || '').toUpperCase(), cognome: (p.cognome || '').toUpperCase(),
               team_attuale: globalData.teams[team_id].nome, team_id, categoria: p.categoria || '', genere: p.genere || 'M',
