@@ -9457,6 +9457,61 @@ app.post('/api/admin/social/publish-pending', requireAdmin, async (req, res) => 
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Pubblicazione da pagina gara (pulsante admin): stato/anteprima e invio del singolo post
+async function _garaSocialInfo(garaId) {
+  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  const rows = resultsRaw.filter(r => r.gara_id === garaId);
+  const w = rows.find(r => Number(r.posizione) === 1) || rows[0] || {};
+  return { gara_name: w.nome_gara || garaId, winner: `${w.cognome || ''} ${w.nome || ''}`.trim(), category: w.categoria || '', winner_team: w.team || '', date: String(w.data || '').slice(0, 10) };
+}
+app.get('/api/admin/social/gara/:id', requireAdmin, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const info = await _garaSocialInfo(id);
+    const queue = await readSocialQueue();
+    const mine = queue.filter(p => p.gara_id === id);
+    const done = mine.find(p => p.status === 'posted');
+    if (done) return res.json({ fb_configured: _fbConfigured(), posted: true, posted_at: done.posted_at || null });
+    let checkFailed = false;
+    if (_fbConfigured()) {
+      const fp = await fetchFbPagePosts({ fresh: true });
+      if (!fp) checkFailed = true;
+      const hit = fbPostFor({ gara_id: id, gara_name: info.gara_name, date: info.date }, fp);
+      if (hit) return res.json({ fb_configured: true, posted: true, posted_at: hit.created || null, existing: true });
+    }
+    const media = await _socialMediaFor(id);
+    const pending = mine.find(p => p.status === 'pending');
+    let caption = pending && pending.caption;
+    if (!caption) {
+      const stored = await queries.getGaraNarrative(id).catch(() => null);
+      caption = (stored && stored.text) || await _generateAndStoreGaraNarrative(id, {}).catch(() => null);
+    }
+    if (!caption) caption = await generateSocialCaption({ nome_gara: info.gara_name, winner_label: info.winner, category: info.category, winner_team: info.winner_team, date: info.date, link: `${SITE_URL}/gara/${encodeURIComponent(id)}` });
+    res.json({ fb_configured: _fbConfigured(), posted: false, check_failed: checkFailed, caption: _withCredit(caption, media.credit), link: `${SITE_URL}/gara/${encodeURIComponent(id)}` });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/social/gara/:id/publish', requireAdmin, async (req, res) => {
+  try {
+    if (!_fbConfigured()) return res.status(400).json({ error: 'Facebook non configurato' });
+    const id = req.params.id;
+    const caption = String((req.body && req.body.caption) || '').trim();
+    if (!caption) return res.status(400).json({ error: 'Testo vuoto' });
+    const info = await _garaSocialInfo(id);
+    const fp = await fetchFbPagePosts({ fresh: true });
+    if (!fp) return res.status(409).json({ error: 'Non riesco a leggere i post della pagina Facebook: per evitare doppioni non pubblico. Riprova tra poco.' });
+    if (fbPostFor({ gara_id: id, gara_name: info.gara_name, date: info.date }, fp)) return res.status(409).json({ error: 'Questa gara risulta già pubblicata sulla pagina Facebook.', already: true });
+    const fb = await postGaraLinkToFacebook({ gara_id: id }, caption);
+    _fbFeedCache = { ts: 0, posts: null };
+    const queue = await readSocialQueue();
+    const entry = { ...info, gara_id: id, caption, link: `${SITE_URL}/gara/${encodeURIComponent(id)}`, status: 'posted', manual: true, fb_post_id: fb.id || fb.post_id || null, posted_at: new Date().toISOString() };
+    const idx = queue.findIndex(p => p.gara_id === id && p.status === 'pending');
+    if (idx >= 0) queue[idx] = { ...queue[idx], ...entry };
+    else queue.push({ id: `${id}_${Date.now()}`, created_at: new Date().toISOString(), photo_url: null, ...entry });
+    await writeSocialQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Trigger manuale accodamento post social (utile per test)
 app.post('/api/admin/social/queue-now', requireAdmin, async (req, res) => {
   try {

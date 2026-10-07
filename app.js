@@ -24848,6 +24848,7 @@ async function renderGara(gara_id) {
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
         ${adminEditBtn('gara', primaryGaraId)}
+        ${_isAdmin && results.length ? `<button class="admin-edit-btn" style="background:#1877f2" onclick="window.adminFbPublish('${esc(primaryGaraId)}')">📘 Pubblica su Facebook</button>` : ''}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
         ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
@@ -31833,6 +31834,40 @@ window.copyFbShareText = async function() {
 };
 
 // ── Trigger functions ──────────────────────────────────────
+window.adminFbPublish = async function(garaId){
+  const close = () => { const m = document.getElementById('fbpub-modal'); if (m) m.remove(); };
+  close();
+  const m = document.createElement('div');
+  m.id = 'fbpub-modal';
+  m.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px';
+  m.innerHTML = '<div style="background:var(--bg-card,#fff);color:var(--text-primary,#111);border-radius:14px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.4)"><div id="fbpub-body">Carico l’anteprima…</div></div>';
+  m.addEventListener('click', e => { if (e.target === m) close(); });
+  document.body.appendChild(m);
+  const body = document.getElementById('fbpub-body');
+  const msg = (h) => { body.innerHTML = h + '<div style="margin-top:14px;text-align:right"><button class="admin-edit-btn" id="fbpub-close">Chiudi</button></div>'; document.getElementById('fbpub-close').onclick = close; };
+  try {
+    const r = await apiCall('/admin/social/gara/' + encodeURIComponent(garaId));
+    if (!r.fb_configured) return msg('<b>Facebook non è configurato.</b> Mancano FB_PAGE_ID e FB_PAGE_TOKEN su Render.');
+    if (r.posted) return msg('✅ <b>Già pubblicata su Facebook</b>' + (r.posted_at ? ' il ' + esc(String(r.posted_at).slice(0,10)) : '') + '.');
+    body.innerHTML = '<h3 style="margin:0 0 6px">📘 Pubblica su Facebook</h3>'
+      + '<div style="font-size:.85rem;color:var(--text-muted);margin-bottom:10px">Il post esce come link alla pagina della gara: Facebook mostra da solo foto e podio. Puoi modificare il testo.</div>'
+      + (r.check_failed ? '<div style="color:#ef4444;font-size:.82rem;margin-bottom:8px">Non riesco a controllare i post già presenti sulla pagina: al momento di pubblicare verrà ricontrollato.</div>' : '')
+      + '<textarea id="fbpub-text" style="width:100%;min-height:260px;padding:10px;border-radius:8px;border:1px solid var(--border-subtle,#ccc);background:var(--bg-elevated,#fff);color:inherit;font:inherit;font-size:.9rem"></textarea>'
+      + '<div style="font-size:.8rem;color:var(--text-muted);margin-top:6px">🔗 ' + esc(r.link) + '</div>'
+      + '<div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="admin-edit-btn" id="fbpub-cancel" style="background:#64748b">Annulla</button><button class="admin-edit-btn" id="fbpub-go" style="background:#1877f2">Pubblica ora</button></div>';
+    const ta = document.getElementById('fbpub-text');
+    ta.value = r.caption || '';
+    document.getElementById('fbpub-cancel').onclick = close;
+    document.getElementById('fbpub-go').onclick = async (ev) => {
+      if (!confirm('Pubblicare ora sulla pagina Facebook?')) return;
+      const b = ev.currentTarget; b.disabled = true; b.textContent = 'Pubblico…';
+      try {
+        await apiCall('/admin/social/gara/' + encodeURIComponent(garaId) + '/publish', { method: 'POST', body: { caption: ta.value } });
+        msg('✅ <b>Pubblicata su Facebook.</b>');
+      } catch (e) { b.disabled = false; b.textContent = 'Pubblica ora'; showToast(e.message || 'Errore', 'error'); }
+    };
+  } catch (e) { msg('Errore: ' + esc(e.message || String(e))); }
+};
 window.triggerShareGara=function(){ if(window._shareGaraData) window.showShareModal('gara',window._shareGaraData); };
 window.triggerShareGara2=function(){ if(window._shareGaraData2) window.showShareModal('gara',window._shareGaraData2); };
 window.triggerShareAtleta=function(){ if(window._shareAtletaData) window.showShareModal('atleta',window._shareAtletaData); };
