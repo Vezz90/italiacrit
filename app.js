@@ -11113,6 +11113,16 @@ let _classStoricoCache = {};
 window._classStoricoLastFilterCat = {};
 let _classStoricoGender = 'M';
 let _classStoricoSearch = '';
+// Squadra dell'archivio storico -> scheda team, solo se esiste ancora tra i team della stagione caricata
+window._histTeamHref = function(name) {
+  const teams = (typeof globalData !== 'undefined' && globalData && globalData.teams) || {};
+  const up = String(name || '').trim().toUpperCase();
+  if (!up) return '';
+  const id = up.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  if (teams[id]) return `#/team/${encodeURIComponent(id)}`;
+  const hit = Object.values(teams).find(x => String(x.nome || '').trim().toUpperCase() === up);
+  return hit ? `#/team/${encodeURIComponent(hit.id)}` : '';
+};
 let _classStoricoKind = 'a'; // 'a' atleti, 't' team (classifica a squadre ciclismo.info)
 const _classStoricoTeamCache = {};
 function _classYearRowHtml(anno) {
@@ -11252,7 +11262,7 @@ async function _renderClassStoricoTeamTable(baseRows) {
     const gap = r.pos === 1 ? `<span class="rk-leader-tag">LEADER</span>` : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
     return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
       <td><span class="rank-num ${posClass(r.pos)}">${r.pos}</span></td>
-      <td><span class="rank-name">${esc(r.team || '')}</span></td>
+      <td><span class="rank-name">${(() => { const h = window._histTeamHref(r.team); return h ? `<a href="${h}">${esc(r.team || '')}</a>` : esc(r.team || ''); })()}</span></td>
       <td class="r"><div class="rk-pts-cell"><span class="rank-pts">${r.punti}</span>${gap}</div></td>
     </tr>`;
   }).join('');

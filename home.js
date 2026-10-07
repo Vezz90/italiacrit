@@ -318,7 +318,7 @@
     }).join('') || '<div class="hx-none">Nessun dato</div>';
     const tmHtml = topCats.map(k => {
       const rows = (tcls[k] || []).slice(0, hx.pcat ? 5 : 1);
-      return rows.map((r, i) => `<div class="hx-mr">${hx.pcat ? `<span class="hx-pos p${i + 1}">${i + 1}</span>` : ''}<span class="hx-mav">${esc(initials(tc(r.team)))}</span><span class="nm"><b>${esc(tc(r.team))}</b><small>${esc(lab(k))}</small></span><span class="pt num">${r.punti}</span></div>`).join('');
+      return rows.map((r, i) => { const h = window._histTeamHref ? window._histTeamHref(r.team) : ''; return `<${h ? `a href="${h}"` : 'div'} class="hx-mr">${hx.pcat ? `<span class="hx-pos p${i + 1}">${i + 1}</span>` : ''}<span class="hx-mav">${esc(initials(tc(r.team)))}</span><span class="nm"><b>${esc(tc(r.team))}</b><small>${esc(lab(k))}</small></span><span class="pt num">${r.punti}</span></${h ? 'a' : 'div'}>`; }).join('');
     }).join('');
     const withRes = list.filter(ev => Object.values(ev.categorie || {}).some(t => t.length)).length;
     const winners = {}, wNames = {};
