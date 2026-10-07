@@ -26994,87 +26994,73 @@ window.openComparatoreVs = (aId, bId, mode, gender, cat) => {
 
 // ── COMPARATORE AUTOCOMPLETE HELPERS ──────────────────────────
 function buildCompAc(side, items, selectedId) {
+  // Gli elementi restano in memoria: nel DOM finiscono solo i primi risultati (max 30) mentre si digita.
+  // Prima si scrivevano nel DOM tutti i ~2000 atleti, due volte: la pagina era lenta e il clic sul
+  // suggerimento arrivava dopo la chiusura dell'elenco (blur) e non selezionava niente.
+  window._compItems = window._compItems || {};
+  window._compItems[side] = items;
   const sel = items.find(i => i.id === selectedId);
-  const selLabel = sel ? sel.label : '';
-  const htmlItems = items.map(item =>
-    `<div class="comp-ac-item" data-id="${esc(item.id)}" data-label="${String(item.label).replace(/"/g,'&quot;')}"
-       onclick="window.compAcPick('${side}',this)">
-      <span class="comp-ac-name">${esc(item.label)}</span>
-      ${item.sub ? `<span class="comp-ac-sub">${esc(item.sub)}</span>` : ''}
-    </div>`
-  ).join('');
+  const selLabel = sel ? sel.label : (window._compHistoricalNames?.[selectedId] ? `${window._compHistoricalNames[selectedId].cognome} ${window._compHistoricalNames[selectedId].nome}`.trim() : '');
   return `<div class="comp-ac" id="comp-ac-${side}">
     <input type="text" id="comp-ac-input-${side}" class="comp-ac-input cal-filter-select"
       placeholder="Cerca nome…" value="${String(selLabel).replace(/"/g,'&quot;')}" autocomplete="off"
       oninput="window.compAcFilter('${side}',this.value)"
       onfocus="window.compAcOpen('${side}')"
-      onblur="setTimeout(()=>{var l=document.getElementById('comp-ac-list-${side}');if(l)l.style.display='none';},180)"
+      onblur="setTimeout(()=>{var l=document.getElementById('comp-ac-list-${side}');if(l)l.style.display='none';},200)"
     />
-    <div class="comp-ac-dropdown" id="comp-ac-list-${side}">
-      ${htmlItems || '<div class="comp-ac-empty">Nessun risultato</div>'}
-    </div>
+    <div class="comp-ac-dropdown" id="comp-ac-list-${side}" onmousedown="event.preventDefault()"></div>
   </div>`;
 }
 
-window.compAcFilter = (side, query) => {
+const _compNorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function _compRender(side, q) {
   const list = document.getElementById(`comp-ac-list-${side}`);
   if (!list) return;
-  const q = query.toLowerCase().trim();
-  let vis = 0;
-  list.querySelectorAll('.comp-ac-item').forEach(el => {
-    const match = !q || (el.dataset.label||'').toLowerCase().includes(q);
-    el.style.display = match ? '' : 'none';
-    if (match) vis++;
-  });
-  list.style.display = vis > 0 ? 'block' : 'none';
+  const items = (window._compItems && window._compItems[side]) || [];
+  const hist = (window._compHist && window._compHist[side]) || [];
+  const nq = _compNorm(q).trim();
+  const words = nq.split(/\s+/).filter(Boolean);
+  const score = it => {
+    const l = it._n || (it._n = _compNorm(it.label));
+    if (!words.length) return 1;
+    if (!words.every(w => l.includes(w))) return 0;
+    return l.startsWith(nq) ? 3 : (l.split(/\s+/).some(w => w.startsWith(words[0])) ? 2 : 1);
+  };
+  const seen = new Set();
+  const all = [...items, ...hist].filter(i => !seen.has(i.id) && seen.add(i.id));
+  const res = all.map(i => [score(i), i]).filter(x => x[0] > 0).sort((a, b) => b[0] - a[0]).slice(0, 30).map(x => x[1]);
+  list.innerHTML = res.length
+    ? res.map(item => `<div class="comp-ac-item" data-id="${esc(item.id)}" data-label="${String(item.label).replace(/"/g, '&quot;')}" onclick="window.compAcPick('${side}',this)"><span class="comp-ac-name">${esc(item.label)}</span>${item.sub ? `<span class="comp-ac-sub">${esc(item.sub)}</span>` : ''}</div>`).join('')
+    : '<div class="comp-ac-empty">Nessun risultato</div>';
+  list.style.display = 'block';
+}
 
-  // Atleti "storici" (ciclismo.info, mai nel roster nativo athletes.json) —
-  // segnalato esplicitamente: "il comparatore non prende i nomi dei
-  // corridori storici". Stesso endpoint già usato dalla ricerca globale
-  // (/api/search-storico), aggiunto qui in coda in modo asincrono così
-  // diventano selezionabili anche nel comparatore. NB: il confronto userà
-  // comunque solo i risultati storici disponibili per quell'atleta (vedi
-  // renderComparatore) — dati completi al 100% come i nativi non sono
-  // ancora garantiti per ogni fonte storica (es. anni coperti solo da PCS).
+window.compAcFilter = (side, query) => {
+  _compRender(side, query);
+  // Atleti "storici" (archivio ciclismo.info, non nel roster della stagione): stessa ricerca globale del sito
+  const q = String(query || '').trim();
   if (compMode === 'atleta' && q.length >= 2) {
     const reqId = (window._compAcStoricoReq = (window._compAcStoricoReq || 0) + 1);
     fetch(`${API_BASE}/search-storico?q=${encodeURIComponent(q)}`).then(r => r.json()).then(d => {
-      if (reqId !== window._compAcStoricoReq) return; // l'utente ha già digitato altro
-      const list2 = document.getElementById(`comp-ac-list-${side}`);
-      if (!list2) return;
-      const existingIds = new Set([...list2.querySelectorAll('.comp-ac-item')].map(el => el.dataset.id));
-      let added = 0;
-      for (const a of (d.results || [])) {
-        if (existingIds.has(a.atleta_id)) continue;
-        existingIds.add(a.atleta_id);
+      if (reqId !== window._compAcStoricoReq) return;
+      window._compHist = window._compHist || {};
+      window._compHistoricalNames = window._compHistoricalNames || {};
+      window._compHist[side] = (d.results || []).map(a => {
         const [cognome, ...restoNome] = (a.nome_completo || '').trim().split(/\s+/);
         const nome = restoNome.join(' ');
-        const label = `${cognome||''} ${nome||''}`.trim();
-        const sub = [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean).join(' · ');
-        const el = document.createElement('div');
-        el.className = 'comp-ac-item';
-        el.dataset.id = a.atleta_id;
-        el.dataset.label = label;
-        el.setAttribute('onclick', `window.compAcPick('${side}',this)`);
-        el.innerHTML = `<span class="comp-ac-name">${esc(label)}</span>${sub ? `<span class="comp-ac-sub">${esc(sub)}</span>` : ''}`;
-        list2.appendChild(el);
-        added++;
-        // Nome/team non nel roster nativo (athletes.json) — servono per
-        // mostrare comunque un messaggio con il nome invece di un generico
-        // "dati non disponibili" quando questo atleta viene selezionato.
-        window._compHistoricalNames = window._compHistoricalNames || {};
         window._compHistoricalNames[a.atleta_id] = { cognome: cognome || '', nome: nome || '', team: a.team || '' };
-      }
-      if (added) list2.style.display = 'block';
+        return { id: a.atleta_id, label: `${cognome || ''} ${nome || ''}`.trim(), sub: [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean).join(' · ') };
+      });
+      const inp = document.getElementById(`comp-ac-input-${side}`);
+      if (inp && document.activeElement === inp) _compRender(side, inp.value);
     }).catch(() => {});
   }
 };
 
 window.compAcOpen = (side) => {
   const input = document.getElementById(`comp-ac-input-${side}`);
-  const list  = document.getElementById(`comp-ac-list-${side}`);
-  if (!list) return;
-  window.compAcFilter(side, input?.value || '');
+  if (input && input.value) input.select();
+  _compRender(side, '');
 };
 
 window.compAcPick = (side, el) => {
