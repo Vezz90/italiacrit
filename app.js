@@ -16765,45 +16765,32 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
     ? `<a href="#/gara-storia/${encodeURIComponent(baseName)}" style="font-size:.76rem;color:var(--accent,#e8001d);font-weight:700;text-decoration:none">Storico completo (podi) →</a>`
     : '';
 
+  // stessa grafica dell'albo d'oro della Classifica: una riga per anno, i tre gradini del podio affiancati
+  const _alT = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase()).replace(/(?<![A-Za-z])(?:[A-Za-z]\.)+(?![A-Za-z]{2})[A-Za-z]?/g, m => m.toUpperCase());
+  const _mc = ['g', 's', 'b'];
+  const _podRow = (list) => `<div class="al-pod3">${list.slice(0, 3).map((p, i) => {
+    const nm = esc(_alT(`${p.cognome || ''} ${p.nome || ''}`.trim()));
+    const sub = esc(_alT(p.team || ''));
+    const body = `<span class="md ${_mc[i]}">${p.posizione || i + 1}</span><b>${nm}</b><small>${sub}</small>`;
+    return p.atleta_id ? `<a class="al-pp" href="#/atleta/${esc(p.atleta_id)}" onclick="event.stopPropagation()">${body}</a>` : `<div class="al-pp">${body}</div>`;
+  }).join('')}</div>`;
   el.innerHTML = `
-    <div class="section-header" style="margin-top:8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
-      <span class="section-title">🏆 ALBO D'ORO — EDIZIONI</span><span class="section-line"></span>
-      ${storiaLink}
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
+    <div class="hx-ph" style="margin-top:14px"><h2>Albo d'oro — edizioni</h2>${storiaLink}</div>
+    <div class="al-list">
       ${editions.map(e => {
         const cur = e.gara_id === garaId && (e.historic || String(e.year) === _loadedSeasonYear());
-        // Link storico interno con slug leggibile (nome+anno) invece del solo
-        // "CIC_<id>" — segnalato dall'utente cliccando un'edizione dell'albo.
         const onclick = e.historic
           ? `window.goTo('${esc(e.href || ('#/gara/' + e.gara_id))}')`
           : `window.openRaceEdition('${esc(e.gara_id)}','${e.year}')`;
         const podio = (e.podio && e.podio.length ? e.podio : [{ posizione: 1, ...e.winner }]);
-        // Nome della gara accanto all'anno quando due edizioni con lo stesso
-        // anno arrivano da gare DIVERSE incollate nel nome calendario (es.
-        // Trofeo Comune di Vertova + Memorial Merelli, stesso giorno, albo
-        // d'oro proprio di ciascuna) — senza questa etichetta le due righe
-        // sembravano un doppione invece di due gare distinte, segnalato
-        // dall'utente ("vedo sempre albi d'oro doppi con nomi diversi").
+        // più categorie nella stessa edizione (es. Esordienti 1° e 2° anno): una riga di podio per categoria
+        const groups = [];
+        for (const p of podio) { const k = p.catLabel || ''; let g = groups.find(x => x.k === k); if (!g) groups.push(g = { k, list: [] }); g.list.push(p); }
         const editionBase = _raceBaseName(e.nome || '');
         const raceLabel = (editionBase && editionBase !== baseName) ? editionBase : '';
-        return `<div onclick="${onclick}"
-          style="padding:10px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-            <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
-            ${raceLabel ? `<span style="font-size:.74rem;color:var(--text-muted);font-weight:600">${esc(raceLabel)}</span>` : ''}
-            <span style="flex:1"></span>
-            ${cur ? '<span style="font-size:.7rem;color:var(--accent,#e8001d);font-weight:700">QUESTA</span>' : '<span style="color:var(--text-muted);font-size:.8rem">→</span>'}
-          </div>
-          <div style="display:flex;flex-direction:column;gap:3px">
-            ${podio.map(p => `
-              <div style="display:flex;align-items:center;gap:8px;font-size:.86rem">
-                <span style="min-width:20px">${medal(p.posizione)}</span>
-                <span style="font-weight:700">${esc(p.cognome)} ${esc(p.nome)}</span>
-                <span style="color:var(--text-muted);font-size:.82rem">${esc(p.team)}${p.catLabel ? ' · ' + esc(p.catLabel) : ''}</span>
-              </div>`).join('')}
-            ${e.partial ? '<div style="font-size:.7rem;color:var(--text-muted);margin-top:2px">Podio incompleto nella fonte storica</div>' : ''}
-          </div>
+        return `<div class="al-year${cur ? ' al-cur' : ''}" onclick="${onclick}" style="cursor:pointer" title="Apri l'edizione ${esc(String(e.year))}">
+          <div class="al-y"><b>${esc(String(e.year))}</b>${cur ? '<small>QUESTA</small>' : ''}</div>
+          <div style="min-width:0">${raceLabel ? `<div class="al-cat">${esc(raceLabel)}</div>` : ''}${groups.map(g => `${g.k ? `<div class="al-cat">${esc(g.k)}</div>` : ''}${_podRow(g.list)}`).join('')}${e.partial ? '<div class="al-cat" style="text-transform:none;letter-spacing:0">Podio incompleto nella fonte storica</div>' : ''}</div>
         </div>`;
       }).join('')}
     </div>`;

@@ -144,58 +144,101 @@ def main():
     uf = UF()
     for k in groups: uf.f(k)
     review = []
-    by_loc = collections.defaultdict(list)
-    for k, lst in groups.items():
-        if k[3]:
-            continue
-        by_loc[(luogo_key(lst[0]), k[1], k[2])].append(k)
+    auto_log = []
     auto = 0
-    for (loc, g, bnd), keys in by_loc.items():
-        if not loc or len(keys) < 2:
+    # ---- punteggio di somiglianza fra due gruppi (stessa gara in anni diversi?) ----
+    # segnali: nome, luogo di svolgimento, data nell'anno (stessa settimana circa),
+    # numero d'edizione che avanza (1° memorial -> 2° memorial l'anno dopo)
+    def doy(d):
+        try:
+            y, m, dd = [int(x) for x in str(d).split('-')]
+            import datetime
+            return datetime.date(y, m, dd).timetuple().tm_yday
+        except Exception:
+            return None
+
+    def edition_no(nome):
+        m = re.match(r'^\s*(\d+)\s*[°^ª]?\s', norm(nome) + ' ')
+        if m:
+            return int(m.group(1))
+        m = re.match(r'^\s*([IVXL]+)\s', norm(nome) + ' ')
+        if m:
+            vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50}
+            s = 0; prev = 0
+            for ch in reversed(m.group(1)):
+                v = vals[ch]; s += -v if v < prev else v; prev = max(prev, v)
+            return s
+        return None
+
+    info = {}
+    for k, lst in groups.items():
+        years = {r['_year'] for r in lst}
+        nums = {}
+        for r in lst:
+            n = edition_no(r.get('nome'))
+            if n is not None:
+                nums[r['_year']] = n
+        days = sorted(d for d in (doy(r.get('data')) for r in lst) if d)
+        info[k] = {'years': years, 'nums': nums, 'doy': days[len(days) // 2] if days else None,
+                   'loc': luogo_key(lst[0]), 'reg': norm(lst[0].get('regione') or ''), 'ta': key_tokens(k[0]), 'disc': disc(k[0])}
+
+    def score(a, b):
+        A, B = info[a], info[b]
+        if A['years'] & B['years'] or A['disc'] != B['disc']:
+            return -99
+        gap = min(abs(x - y) for x in A['years'] for y in B['years'])
+        if gap > 4:
+            return -99
+        s = 0.0
+        ta, tb = A['ta'], B['ta']
+        name_pts = 0
+        if ta and tb:
+            if ta == tb:
+                name_pts = 3 if len(ta) >= 2 else 2
+            elif (ta <= tb or tb <= ta):
+                name_pts = 2 if min(len(ta), len(tb)) >= 2 else 1
+            elif len(ta & tb) / len(ta | tb) >= 0.5:
+                name_pts = 1
+        s += name_pts
+        score.last_name = name_pts
+        if A['loc'] and A['loc'] == B['loc']:
+            s += 2
+        elif A['reg'] and A['reg'] == B['reg']:
+            s += 0.5
+        if A['doy'] and B['doy']:
+            d = abs(A['doy'] - B['doy']); d = min(d, 365 - d)
+            s += 1.5 if d <= 14 else (0.5 if d <= 30 else (-1.5 if d > 60 else 0))
+        # edizioni che si susseguono: il numero cresce di 1 per ogni anno (o poco meno se qualche anno e' saltato)
+        ya, yb = (A, B) if max(A['years']) < min(B['years']) else (B, A)
+        if ya['nums'] and yb['nums'] and max(ya['years']) < min(yb['years']):
+            y1 = max(y for y in ya['nums']); y2 = min(y for y in yb['nums'])
+            dn = yb['nums'][y2] - ya['nums'][y1]; dy = y2 - y1
+            if dy > 0:
+                s += 2.5 if 1 <= dn <= dy else -2
+        return s
+
+    buckets = collections.defaultdict(list)
+    for k in groups:
+        if k[3]:
+            continue                                   # nomi generici: gestiti per luogo, mai fusi
+        buckets[(k[1], k[2], info[k]['reg'])].append(k)
+    for (g, bnd, reg), keys in buckets.items():
+        if len(keys) < 2:
             continue
         for i in range(len(keys)):
             for j in range(i + 1, len(keys)):
                 a, b = keys[i], keys[j]
-                ya = {r['_year'] for r in groups[a]}; yb = {r['_year'] for r in groups[b]}
-                if ya & yb:
-                    continue                          # due edizioni nello stesso anno: gare diverse
-                if disc(a[0]) != disc(b[0]):
-                    continue
-                ta, tb = key_tokens(a[0]), key_tokens(b[0])
-                if not ta or not tb:
-                    continue
-                inter = len(ta & tb)
-                sim = inter / len(ta | tb)
-                near = min(abs(x - y) for x in ya for y in yb) <= 3
-                if ta == tb and near:
-                    uf.u(a, b); auto += 1
-                elif (ta <= tb or tb <= ta) and min(len(ta), len(tb)) >= 2 and near:
-                    uf.u(a, b); auto += 1
-                elif sim >= 0.5 and near:
-                    review.append({'a': a[0], 'b': b[0], 'luogo': loc, 'g': g, 'band': bnd, 'anni_a': sorted(ya), 'anni_b': sorted(yb), 'sim': round(sim, 2)})
-    # stessa gara che cambia sede: nomi identici (almeno 2 parole distintive), stessa regione, anni vicini e disgiunti
-    by_reg = collections.defaultdict(list)
-    for k, lst in groups.items():
-        if k[3]:
-            continue
-        by_reg[(norm(lst[0].get('regione') or ''), k[1], k[2])].append(k)
-    for (reg, g, bnd), keys in by_reg.items():
-        if not reg:
-            continue
-        idx_tok = collections.defaultdict(list)
-        for k in keys:
-            tk = key_tokens(k[0])
-            if len(tk) >= 2:
-                idx_tok[(tk, disc(k[0]))].append(k)
-        for lst_k in idx_tok.values():
-            for i in range(len(lst_k)):
-                for j in range(i + 1, len(lst_k)):
-                    a_, b_ = lst_k[i], lst_k[j]
-                    ya = {r['_year'] for r in groups[a_]}; yb = {r['_year'] for r in groups[b_]}
-                    if ya & yb:
-                        continue
-                    if min(abs(x - y) for x in ya for y in yb) <= 3 and uf.f(a_) != uf.f(b_):
-                        uf.u(a_, b_); auto += 1
+                sc = score(a, b)
+                # senza nessuna parola in comune serve una prova molto forte (luogo + data + numero d'edizione che avanza)
+                if sc >= 5 and (score.last_name > 0 or sc >= 7):
+                    if uf.f(a) != uf.f(b):
+                        uf.u(a, b); auto += 1
+                        auto_log.append({'a': a[0], 'b': b[0], 'g': g, 'band': bnd, 'score': round(sc, 1), 'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'luogo': info[a]['loc']})
+                elif sc >= 4:
+                    review.append({'a': a[0], 'b': b[0], 'luogo': info[a]['loc'] or info[b]['loc'], 'g': g, 'band': bnd,
+                                   'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'sim': round(sc / 10, 2), 'score': round(sc, 1)})
+    review.sort(key=lambda r: -r['score'])
+    review = review[:600]
     # fusioni/separazioni manuali
     for a, b in manual.get('merge', []):
         ka = [k for k in groups if k[0] == base_name(a) and not k[3]]; kb = [k for k in groups if k[0] == base_name(b) and not k[3]]
@@ -240,6 +283,7 @@ def main():
     (ROOT / 'audit').mkdir(exist_ok=True)
     json.dump(review[:4000], open(ROOT / 'audit' / 'albo_review.json', 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(review[:4000], open(OUT / 'review.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    json.dump(auto_log, open(ROOT / 'audit' / 'albo_auto_merges.json', 'w', encoding='utf-8'), ensure_ascii=False)
     gaps = 0; ser_gap = 0
     for s in out_series.values():
         ys = sorted({e['y'] for e in s['ed']})

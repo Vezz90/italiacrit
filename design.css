@@ -13458,3 +13458,6 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 .admin-action-card { max-width: 720px; border-radius: 10px; }
 .admin-main [style*="border:1px solid var(--border-subtle)"][style*="border-radius:10px"] { box-shadow: none; }
 @media (max-width: 860px) { .admin-main { padding: 18px 14px 40px; } .admin-main table { display: block; overflow-x: auto; } }
+.al-year.al-cur { box-shadow: inset 4px 0 0 #E3182D; }
+.al-cat { padding: 6px 14px 0; font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.al-year > div:last-child .al-pod3 + .al-cat { border-top: 1px solid var(--border-subtle); margin-top: 6px; padding-top: 8px; }
