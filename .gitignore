@@ -30,6 +30,8 @@ data/team_rankings/
 !data/youtube_queue.json
 !data/entity_socials.json
 !data/extra_roster.json
+!data/almanacco.json
+!data/carriere.json
 server/norton-root.pem
 ~$*.xlsx
 server/team-history-*.json

@@ -5016,12 +5016,13 @@ function route() {
     if (activeHub) applyHubFilters(activeHub);
     return renderCalendario();
   }
+  if (match('/statistiche/stagione')) return renderHomeDashboard();
   const m_stats = match('/statistiche/:cat');
   if (m_stats) return renderStatistiche(decodeURIComponent(m_stats[1]));
   // La vecchia home (dashboard per categoria) è ora la pagina Statistiche; i record e
   // primati di una volta restano su #/record e #/statistiche/:cat.
   if (match('/record')) return renderStatistiche(null);
-  if (match('/statistiche')) return renderHomeDashboard();
+  if (match('/statistiche')) return (typeof window.renderAlmanacco === 'function' ? window.renderAlmanacco() : renderHomeDashboard());
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
   if (match('/login')) return renderLogin();
