@@ -287,7 +287,9 @@ function canUploadPhoto(entityType) {
 }
 
 function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle') {
-  const size   = shape === 'circle' ? 96 : 88;
+  const portrait = shape === 'portrait';
+  const size   = shape === 'circle' ? 96 : (portrait ? 92 : 88);
+  const sizeH  = portrait ? 122 : size;
   const radius = shape === 'circle' ? '50%' : '10px';
   const canUp  = canUploadPhoto(entityType);
   const imgEl  = photoUrl
@@ -316,7 +318,7 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
     </button>
     <input type="file" id="photo-file-${esc(entityId)}" accept="image/jpeg,image/png,image/webp"
       style="display:none" onchange="handlePhotoUpload(event,'${esc(entityType)}','${esc(entityId)}')">` : '';
-  return `<div class="photo-area" style="width:${size}px;height:${size}px;flex-shrink:0;position:relative">
+  return `<div class="photo-area${portrait ? ' photo-area--portrait' : ''}" style="width:${size}px;height:${sizeH}px;flex-shrink:0;position:relative">
     ${imgEl}${camBtn}
   </div>`;
 }
@@ -446,8 +448,10 @@ window.handlePhotoUpload = function(evt, entityType, entityId) {
 // Editor di ritaglio: zoom (slider/rotella) + trascinamento, anteprima live su canvas.
 function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdForPicker) {
   const _pickerId = _entityIdForPicker || entityId;
-  const isCircle = entityType !== 'team';
-  const V = 300, OUT = 512; // viewport anteprima e dimensione esportata
+  const isPortrait = entityType === 'atleta';
+  const isCircle = entityType !== 'team' && !isPortrait;
+  const VW = isPortrait ? 240 : 300, VH = isPortrait ? 320 : 300;            // viewport anteprima
+  const OUT_W = isPortrait ? 480 : 512, OUT_H = isPortrait ? 640 : 512;     // dimensione esportata
   const img = new Image();
   img.onload = () => {
     const overlay = document.createElement('div');
@@ -456,8 +460,8 @@ function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdFor
     overlay.innerHTML = `
       <div class="crop-modal">
         <div class="crop-title">Ritaglia la foto</div>
-        <div class="crop-stage" style="width:${V}px;height:${V}px">
-          <canvas id="crop-canvas" width="${V}" height="${V}"></canvas>
+        <div class="crop-stage" style="width:${VW}px;height:${VH}px">
+          <canvas id="crop-canvas" width="${VW}" height="${VH}"></canvas>
           <div class="crop-frame ${isCircle ? 'crop-frame--circle' : ''}"></div>
         </div>
         <div class="crop-controls">
@@ -479,24 +483,24 @@ function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdFor
 
     const canvas = overlay.querySelector('#crop-canvas');
     const ctx = canvas.getContext('2d');
-    const baseScale = Math.max(V / img.width, V / img.height); // "cover"
-    let zoom = 1, scale = baseScale, ox = (V - img.width * scale) / 2, oy = (V - img.height * scale) / 2;
+    const baseScale = Math.max(VW / img.width, VH / img.height); // "cover"
+    let zoom = 1, scale = baseScale, ox = (VW - img.width * scale) / 2, oy = (isPortrait ? 0 : (VH - img.height * scale) / 2);
 
     function clamp() {
       const w = img.width * scale, h = img.height * scale;
-      ox = Math.min(0, Math.max(V - w, ox));
-      oy = Math.min(0, Math.max(V - h, oy));
+      ox = Math.min(0, Math.max(VW - w, ox));
+      oy = Math.min(0, Math.max(VH - h, oy));
     }
     function draw() {
       ctx.fillStyle = '#0c0c0c';
-      ctx.fillRect(0, 0, V, V);
+      ctx.fillRect(0, 0, VW, VH);
       ctx.drawImage(img, ox, oy, img.width * scale, img.height * scale);
     }
     function setZoom(z) {
       const prev = scale;
       zoom = z; scale = baseScale * zoom;
-      ox = V / 2 - (V / 2 - ox) * (scale / prev);
-      oy = V / 2 - (V / 2 - oy) * (scale / prev);
+      ox = VW / 2 - (VW / 2 - ox) * (scale / prev);
+      oy = VH / 2 - (VH / 2 - oy) * (scale / prev);
       clamp(); draw();
     }
     clamp(); draw();
@@ -542,11 +546,11 @@ function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdFor
     overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
     overlay.querySelector('#crop-save').addEventListener('click', () => {
       const out = document.createElement('canvas');
-      out.width = OUT; out.height = OUT;
+      out.width = OUT_W; out.height = OUT_H;
       const octx = out.getContext('2d');
       octx.fillStyle = '#ffffff';
-      octx.fillRect(0, 0, OUT, OUT);
-      const r = OUT / V;
+      octx.fillRect(0, 0, OUT_W, OUT_H);
+      const r = OUT_W / VW;
       octx.drawImage(img, ox * r, oy * r, img.width * scale * r, img.height * scale * r);
       out.toBlob(blob => {
         close();
@@ -585,7 +589,7 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
     else _ovCache[key] = { photo_url: bustedUrl };
     const target = document.querySelector(`[data-photo-id="${entityId}"]`);
     if (target) {
-      const radius = entityType === 'team' ? '10px' : '50%';
+      const radius = (entityType === 'team' || entityType === 'atleta') ? '10px' : '50%';
       const newImg = document.createElement('img');
       newImg.src = `${MEDIA_BASE}${bustedUrl}`;
       newImg.setAttribute('data-photo-id', entityId);
@@ -17661,7 +17665,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   })();
 
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
-  const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
+  const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'portrait');
 
   // Pulsanti azione: stesso contenuto di prima, ora dentro l'intestazione
   const _actionsHtml = `
@@ -18191,8 +18195,10 @@ async function _injectTeamClubHistory(team_id) {
     const list = Object.values(ath);
     if (!list.length && !Object.keys(tmCats).length) return;
     const best = list.length ? list.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0] : null;
+    const bestByCat = {};
+    for (const a of list) { const cur = bestByCat[a.cat]; if (!cur || a.punti > cur.punti || (a.punti === cur.punti && a.pos < cur.pos)) bestByCat[a.cat] = a; }
     const tmVals = Object.values(tmCats);
-    rows.push({ y, nome, tmCats, list, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
+    rows.push({ y, nome, tmCats, list, bestByCat, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
   }));
   rows.sort((a, b) => b.y - a.y);
   const host = document.getElementById('team-club-history');
@@ -18213,7 +18219,13 @@ async function _injectTeamClubHistory(team_id) {
       <div class="y">${r.y}</div>
       <div class="m"><b>${esc(tcs(r.nome))}</b><small>${catLine(r)}</small></div>
       <div class="n"><b>${r.pts}</b><small>punti club${r.n ? ` · ${r.n} atlet${r.n === 1 ? 'a' : 'i'} a punti` : ''}</small></div>
-      <div class="b">${r.best ? `${r.best.id ? `<a href="#/atleta/${esc(r.best.id)}">${esc(tcs(r.best.nome))}</a>` : esc(tcs(r.best.nome))}<small>miglior atleta · ${r.best.pos}° in ${esc(_ciclismoCatLabel(r.best.cat))} · ${r.best.punti} pt</small>` : '<small>nessun atleta in classifica</small>'}</div>
+      <div class="b">${(() => {
+        const cs = Object.keys(r.bestByCat).sort((x, y) => (_CICLISMO_CAT_ORDER[x] ?? 99) - (_CICLISMO_CAT_ORDER[y] ?? 99));
+        if (!cs.length) return '<small>nessun atleta in classifica</small>';
+        const nm = a => a.id ? `<a href="#/atleta/${esc(a.id)}">${esc(tcs(a.nome))}</a>` : esc(tcs(a.nome));
+        if (cs.length === 1) { const a = r.bestByCat[cs[0]]; return `${nm(a)}<small>miglior atleta · ${a.pos}° in ${esc(_ciclismoCatLabel(a.cat))} · ${a.punti} pt</small>`; }
+        return `<small class="bl">Migliori per categoria</small>` + cs.map(k => { const a = r.bestByCat[k]; return `<span class="bc"><small>${esc(_ciclismoCatLabel(k))}</small>${nm(a)} <i>${a.punti} pt · ${a.pos}°</i></span>`; }).join('');
+      })()}</div>
     </summary><div class="club-hist-det">${det || '<small>Nessun atleta in classifica.</small>'}<small class="src">Dati: classifica ${r.y} di ciclismo.info, atleti con la squadra indicata.</small></div></details>`;
     }).join('')}</div>
   </section>`;

@@ -13537,3 +13537,11 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .club-hist-det .cat span i { font-style: normal; color: var(--text-muted); font-size: .72rem; }
 .club-hist-det .src { color: var(--text-muted); font-size: .7rem; }
 @media (max-width: 760px) { .club-hist-det { padding-left: 14px; } .club-hist-det .cat > b { flex-basis: 100%; } }
+
+/* Profilo atleta: foto verticale */
+.photo-area--portrait { border-radius: 10px; }
+@media (max-width: 860px) { .profile-photo-row .photo-area.photo-area--portrait, .ath-hero .profile-photo-row .photo-area.photo-area--portrait { width: 64px !important; height: 86px !important; } }
+/* Storia del club: migliori atleti per categoria */
+.club-hist-row .b .bl { margin: 0 0 3px; text-transform: uppercase; letter-spacing: .04em; font-size: .62rem; }
+.club-hist-row .b .bc { display: block; font-size: .78rem; line-height: 1.35; } .club-hist-row .b .bc small { display: inline; margin: 0 6px 0 0; }
+.club-hist-row .b .bc i { font-style: normal; color: var(--text-muted); font-size: .7rem; }
