@@ -13545,3 +13545,19 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .club-hist-row .b .bl { margin: 0 0 3px; text-transform: uppercase; letter-spacing: .04em; font-size: .62rem; }
 .club-hist-row .b .bc { display: block; font-size: .78rem; line-height: 1.35; } .club-hist-row .b .bc small { display: inline; margin: 0 6px 0 0; }
 .club-hist-row .b .bc i { font-style: normal; color: var(--text-muted); font-size: .7rem; }
+
+/* Profilo atleta: foto grande a sinistra, tutto il resto a destra della foto */
+.athlete-header .ath-hero-left { display: flex; gap: 24px; align-items: stretch; }
+.athlete-header .ath-hero-left > .photo-area--portrait { width: 210px !important; height: auto !important; min-height: 250px; flex: 0 0 210px; border-radius: 12px; overflow: hidden; align-self: stretch; }
+.athlete-header .ath-hero-left > .photo-area--portrait > img,
+.athlete-header .ath-hero-left > .photo-area--portrait > [data-photo-id] { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 12px !important; object-fit: cover; object-position: top center; }
+.athlete-header .ath-hero-left > .photo-area--portrait .photo-cam-btn { z-index: 3; }
+.athlete-header .ath-hero-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+@media (max-width: 860px) {
+  .athlete-header .ath-hero-left { gap: 14px; }
+  .athlete-header .ath-hero-left > .photo-area--portrait { width: 110px !important; flex-basis: 110px; min-height: 150px; }
+}
+@media (max-width: 560px) {
+  .athlete-header .ath-hero-left { flex-direction: column; }
+  .athlete-header .ath-hero-left > .photo-area--portrait { width: 132px !important; height: 176px !important; min-height: 0; flex: none; align-self: flex-start; }
+}

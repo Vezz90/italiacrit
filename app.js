@@ -17689,8 +17689,9 @@ async function renderAtleta(atleta_id, opts = {}) {
       </div>
       <div class="ath-hero-grid">
         <div class="ath-hero-left">
-      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px;justify-content:space-between">
         ${photoHtml}
+        <div class="ath-hero-main">
+      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px;justify-content:space-between">
         <div class="athlete-header-name" style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
             <span class="athlete-cognome">${esc(displayCognome)}</span>
@@ -17711,6 +17712,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           <div class="ath-hero-pills" id="ath-hero-pills"></div>
           ${_actionsHtml}
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
+        </div>
         </div>
         <aside class="ath-hero-standing">
           <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(displayCategoria))}${_isLoadedYear ? '' : ' · ' + esc(selYear)}</div>
