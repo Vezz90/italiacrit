@@ -7996,7 +7996,7 @@ async function queueSocialPostsForToday() {
     const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
     const winners = {};
     for (const r of results) {
-      const d = (r.data_gara || r.date || '').slice(0, 10);
+      const d = (r.data_gara || r.data || r.date || '').slice(0, 10);
       if (d !== today && d !== yesterday) continue;
       if (Number(r.posizione) !== 1 || !r.gara_id) continue;
       if (!winners[r.gara_id]) winners[r.gara_id] = r;
@@ -8014,7 +8014,7 @@ async function queueSocialPostsForToday() {
       const winner_label = `${r.cognome || ''} ${r.nome || ''}`.trim();
       const category     = r.categoria || r.category || '';
       const winner_team  = r.team || '';
-      const date         = (r.data_gara || r.date || '').slice(0, 10);
+      const date         = (r.data_gara || r.data || r.date || '').slice(0, 10);
       const link         = `https://italiacyclingstats.com/#/gara/${encodeURIComponent(garaId)}`;
       const photoUrl     = xpix[garaId]?.url || ic[garaId]?.url || null;
       // testo completo generato dall'AI (titolo, racconto, podio, hashtag); se non riesce, la caption breve
