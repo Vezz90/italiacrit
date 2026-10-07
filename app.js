@@ -4807,6 +4807,21 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Link scansionabili da Google: i link interni sono scritti come href="#/atleta/XXX" (il frammento
+// dopo # non viene mai seguito dai motori di ricerca, quindi le pagine atleta/team/gara risultavano
+// "rilevate ma non scansionate"). Dopo ogni render gli href diventano percorsi veri (/atleta/XXX); il
+// click resta gestito qui sopra (navTo), quindi per le persone non cambia nulla.
+(function _crawlableLinks() {
+  let pending = false;
+  const fix = () => {
+    pending = false;
+    document.querySelectorAll('a[href^="#/"]').forEach(a => { a.setAttribute('href', a.getAttribute('href').slice(1)); });
+  };
+  const schedule = () => { if (!pending) { pending = true; setTimeout(fix, 60); } };
+  const start = () => { new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true }); schedule(); };
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+
 // Deterrente al download facile delle foto gara caricate da noi (tasto
 // destro "Salva immagine", trascinamento sul desktop) — un listener globale
 // delegato invece di toccare ogni singolo punto dove compaiono (gallerie,

@@ -352,11 +352,30 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/photos', express.static(UPLOADS_DIR));
 
+// ── /og/*: pagine di servizio SOLO per le anteprime social ─────────────────
+// Google le scopriva e le segnalava come "pagina alternativa con canonical" (1.400+ URL).
+// Ai bot di anteprima social si serve la pagina con i meta tag; a tutti gli altri
+// (motori di ricerca, persone) un 301 verso l'URL pulito vero. In ogni caso noindex.
+app.use('/og', (req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  if (SOCIAL_BOT_RE.test(req.headers['user-agent'] || '')) return next();
+  const seg = req.path.split('/').filter(Boolean);
+  const map = { gara: 'gara', atleta: 'atleta', team: 'team', classifica: 'classifica', class: 'classifica' };
+  let target = `${SITE_URL}/`;
+  if (map[seg[0]] && seg[1]) target = `${SITE_URL}/${map[seg[0]]}/${seg.slice(1).join('/')}`;
+  else if (/^media/.test(seg[0] || '')) target = `${SITE_URL}/media`;
+  res.redirect(301, target);
+});
+
 // ── Sitemap.xml ───────────────────────────────────────────────────────────────
 // DEVE stare prima di express.static (sotto): la cartella statica servita
 // contiene anche un vecchio sitemap.xml a 1 sola voce (root del repo) — se
 // questa route fosse dopo, express.static lo troverebbe e lo servirebbe
 // direttamente, senza mai raggiungere l'handler dinamico qui sotto.
+// Squadre che in realta' sono selezioni regionali/nazionali: non hanno una pagina team vera
+const _SITEMAP_NOT_TEAMS = new Set(['ABRUZZO', 'BASILICATA', 'CALABRIA', 'CAMPANIA', 'EMILIA_ROMAGNA', 'FRIULI_VENEZIA_GIULIA', 'LAZIO', 'LIGURIA', 'LOMBARDIA', 'MARCHE', 'MOLISE', 'PIEMONTE', 'PUGLIA', 'SARDEGNA', 'SICILIA', 'TOSCANA', 'UMBRIA', 'VALLE_D_AOSTA', 'VENETO', 'BOLZANO', 'TRENTO', 'ITALIA', 'SCONOSCIUTO',
+  'AUSTRALIA', 'AUSTRIA', 'BELGIO', 'FRANCIA', 'GERMANIA', 'IRLANDA', 'LETTONIA', 'MESSICO', 'NORVEGIA', 'OLANDA', 'SLOVACCHIA', 'SPAGNA', 'SVIZZERA', 'UCRAINA', 'POLONIA', 'DANIMARCA', 'SLOVENIA', 'CROAZIA', 'REPUBBLICA_CECA', 'REGNO_UNITO', 'STATI_UNITI', 'COLOMBIA', 'PORTOGALLO', 'LUSSEMBURGO', 'UNGHERIA']);
+const _isNotRealTeam = id => _SITEMAP_NOT_TEAMS.has(String(id).toUpperCase()) || /^(SELEZIONE|NAZIONALE|CT_ITALIA|UNDER_|REGIONALE)/.test(String(id).toUpperCase());
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const CANONICAL = 'https://italiacyclingstats.com';
@@ -365,29 +384,44 @@ app.get('/sitemap.xml', async (req, res) => {
       readDataJsonFromGH('results_raw.json'),
       readDataJsonFromGH('teams.json'),
     ]);
-    // URL puliti (niente #, invisibile a Google/mai indicizzabile come pagina
-    // distinta) e pagine vere del sito (non le /og/... bot-only, che hanno il
-    // proprio canonical puntato qui e non vanno duplicate nel sitemap).
+    // URL puliti (niente #) e solo pagine con contenuto vero: atleti e team con risultati,
+    // gare con risultati. Le /og/... bot-only non vanno mai nel sitemap.
+    const today = new Date().toISOString().slice(0, 10);
     const urls = [
-      { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
-      { loc: `${CANONICAL}/risultati`,     priority: '0.9', changefreq: 'daily' },
-      { loc: `${CANONICAL}/classifica`,    priority: '0.8', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/calendario`,    priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily', lastmod: today },
+      { loc: `${CANONICAL}/risultati`,     priority: '0.9', changefreq: 'daily', lastmod: today },
+      { loc: `${CANONICAL}/classifica`,    priority: '0.8', changefreq: 'weekly', lastmod: today },
+      { loc: `${CANONICAL}/calendario`,    priority: '0.7', changefreq: 'weekly', lastmod: today },
       { loc: `${CANONICAL}/atleti`,        priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/team`,          priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/gare`,          priority: '0.6', changefreq: 'weekly' },
       { loc: `${CANONICAL}/albo`,          priority: '0.6', changefreq: 'monthly' },
+      { loc: `${CANONICAL}/media`,         priority: '0.5', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/statistiche`,   priority: '0.5', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/comparatore`,   priority: '0.4', changefreq: 'monthly' },
+      { loc: `${CANONICAL}/regolamento`,   priority: '0.3', changefreq: 'monthly' },
+      { loc: `${CANONICAL}/record`,        priority: '0.4', changefreq: 'weekly' },
     ];
-    for (const id of Object.keys(athletes || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
+    const lastOf = list => (list || []).reduce((m, r) => (r && r.data && r.data > m ? r.data : m), '');
+    for (const [id, a] of Object.entries(athletes || {})) {
+      if (!id || !a || !(a.risultati && a.risultati.length)) continue;
+      urls.push({ loc: `${CANONICAL}/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly', lastmod: lastOf(a.risultati) });
     }
-    const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
-    for (const gid of garaIds) {
-      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
+    const garaDate = new Map();
+    for (const r of (resultsRaw || [])) {
+      if (!r.gara_id) continue;
+      const d = r.data || '';
+      if (!garaDate.has(r.gara_id) || d > garaDate.get(r.gara_id)) garaDate.set(r.gara_id, d);
     }
-    for (const id of Object.keys(teams || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
+    for (const [gid, d] of garaDate) {
+      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly', lastmod: d });
+    }
+    for (const [id, tm] of Object.entries(teams || {})) {
+      if (!id || _isNotRealTeam(id) || !(tm && tm.risultati && tm.risultati.length)) continue;
+      urls.push({ loc: `${CANONICAL}/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly', lastmod: lastOf(tm.risultati) });
     }
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
-      urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
+      urls.map(u => `  <url><loc>${u.loc}</loc>${/^\d{4}-\d{2}-\d{2}$/.test(u.lastmod || '') ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
     }\n</urlset>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=3600');
