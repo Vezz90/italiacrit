@@ -7955,6 +7955,57 @@ async function postToFacebook(caption, photoUrl) {
   return data;
 }
 
+// Post gia' presenti sulla pagina Facebook (anche pubblicati a mano): evita doppioni.
+// Una gara conta come gia' condivisa se un post della pagina, uscito entro 10 giorni dalla gara,
+// contiene il suo link oppure tutte le parole significative del suo nome.
+let _fbFeedCache = { ts: 0, posts: null };
+async function fetchFbPagePosts({ fresh = false } = {}) {
+  if (!_fbConfigured()) return null;
+  if (!fresh && _fbFeedCache.posts && Date.now() - _fbFeedCache.ts < 5 * 60 * 1000) return _fbFeedCache.posts;
+  try {
+    const posts = [];
+    let url = `https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}/posts?fields=message,link,created_time,attachments%7Btitle,description,url%7D&limit=100&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
+    for (let i = 0; i < 3 && url; i++) {
+      const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      const j = await r.json();
+      if (j.error) throw new Error(j.error.message);
+      for (const x of (j.data || [])) {
+        const att = (x.attachments && x.attachments.data && x.attachments.data[0]) || {};
+        posts.push({ created: x.created_time || '', text: [x.message, x.link, att.title, att.description, att.url].filter(Boolean).join(' ') });
+      }
+      url = j.paging && j.paging.next;
+    }
+    _fbFeedCache = { ts: Date.now(), posts };
+    return posts;
+  } catch (e) {
+    console.warn('[social] lettura post pagina Facebook fallita:', e.message);
+    return null;
+  }
+}
+const _fbNorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const _FB_STOP = new Set(['gran', 'premio', 'trofeo', 'della', 'delle', 'degli', 'dello', 'memorial', 'classifica', 'generale', 'prova', 'tappa', 'prima', 'seconda', 'terza', 'quarta', 'quinta', 'sesta', 'settima', 'ottava', 'giro', 'coppa', 'città', 'citta']);
+function fbPostFor(post, fbPosts) {
+  if (!fbPosts) return null;
+  const gid = String(post.gara_id || '');
+  const day = String(post.date || '').slice(0, 10);
+  const base = day ? Date.parse(day) : NaN;
+  const words = [...new Set(_fbNorm(post.gara_name).split(' ').filter(w => w.length >= 4 && !/^\d+$/.test(w)))];
+  const sig = words.filter(w => !_FB_STOP.has(w));
+  const need = sig.length ? sig : words;
+  for (const f of fbPosts) {
+    const raw = f.text || '';
+    if (gid && (raw.includes(gid) || raw.includes(encodeURIComponent(gid)))) return f;
+    if (!need.length) continue;
+    if (!isNaN(base)) {
+      const c = Date.parse(f.created);
+      if (!isNaN(c) && (c < base - 86400000 || c > base + 10 * 86400000)) continue;
+    }
+    const n = ' ' + _fbNorm(raw) + ' ';
+    if (need.every(w => n.includes(' ' + w))) return f;
+  }
+  return null;
+}
+
 // Se la pubblicazione automatica e' accesa (e Facebook configurato) pubblica i post in attesa piu' recenti.
 let _socialAutoRunning = false;
 async function publishPendingSocialAuto({ force = false } = {}) {
@@ -7966,6 +8017,15 @@ async function publishPendingSocialAuto({ force = false } = {}) {
   try {
     const queue = await readSocialQueue();
     const alreadyPosted = new Set(queue.filter(p => p.status === 'posted').map(p => p.gara_id));
+    const fbPosts = await fetchFbPagePosts({ fresh: true });
+    if (!fbPosts) return { skipped: 'non riesco a leggere i post della pagina Facebook: per evitare doppioni non pubblico' };
+    for (let i = 0; i < queue.length; i++) {
+      const q = queue[i];
+      if (q.status !== 'pending') continue;
+      const hit = fbPostFor(q, fbPosts);
+      if (hit) { queue[i] = { ...q, status: 'posted', fb_existing: true, posted_at: hit.created || new Date().toISOString() }; alreadyPosted.add(q.gara_id); }
+    }
+    await writeSocialQueue(queue);
     // solo post recenti (oggi/ieri): niente arretrato quando si accende l'interruttore
     const cutoff = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10);
     const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= cutoff).slice(0, SOCIAL_AUTO_MAX_PER_RUN);
@@ -8007,9 +8067,16 @@ async function queueSocialPostsForToday() {
     const existing = new Set(queue.map(p => p.gara_id));
     const xpix = await readXpixPhotos();
     const ic   = await readICPhotos();
+    const fbPosts = await fetchFbPagePosts();
     for (const garaId of garaIds) {
       if (existing.has(garaId)) continue;
       const r = winners[garaId];
+      const hit = fbPostFor({ gara_id: garaId, gara_name: r.nome_gara || garaId, date: (r.data_gara || r.data || r.date || '').slice(0, 10) }, fbPosts);
+      if (hit) {
+        // gia' sulla pagina: la segno come pubblicata, senza spendere una generazione AI
+        queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: r.nome_gara || garaId, winner: `${r.cognome || ''} ${r.nome || ''}`.trim(), category: r.categoria || '', winner_team: r.team || '', date: (r.data_gara || r.data || r.date || '').slice(0, 10), caption: '', photo_url: null, link: null, status: 'posted', fb_existing: true, fb_post_id: null, posted_at: hit.created || new Date().toISOString() });
+        continue;
+      }
       const nome_gara    = r.nome_gara || garaId;
       const winner_label = `${r.cognome || ''} ${r.nome || ''}`.trim();
       const category     = r.categoria || r.category || '';
