@@ -24607,7 +24607,9 @@ async function renderGara(gara_id) {
       const _seenExtUrls = new Set();
       const _extEntries = [];
       for (const g of _extKeyGroups) {
-        const entry = _pm[g.key] || g.alt.map(k => _pm[k]).find(Boolean);
+        // album salvato sotto l'id con suffisso categoria/tappa (es. "..._PRIMA_TAPPA_..._ELI_M") mentre la pagina ha l'id di calendario
+        const _revIds = Object.entries(globalData?.garaToCalId || {}).filter(([, cid]) => cid === g.key).map(([rid]) => rid);
+        const entry = _pm[g.key] || [...g.alt, ..._revIds].map(k => _pm[k]).find(Boolean);
         if (entry?.url && !_seenExtUrls.has(entry.url)) {
           _seenExtUrls.add(entry.url);
           _extEntries.push({ entry, badge: g.badge });
