@@ -18128,7 +18128,20 @@ async function _injectTeamClubHistory(team_id) {
       if (payload) _classStoricoCache[y] = payload;
     }
     const cl = payload?.classifica || {};
-    const ids = idsByYear[y], ath = {}, cats = new Set(); let nome = '';
+    // classifica a squadre ufficiale (ciclismo.info): posizione e punti reali del club per categoria
+    if (_classStoricoTeamCache[y] === undefined) {
+      const tp = await loadJson(`data/ciclismo-storico/${y}/classifica_team.json`).catch(() => null);
+      _classStoricoTeamCache[y] = (tp && tp.classifica) || null;
+    }
+    const tcl = _classStoricoTeamCache[y] || {};
+    const ids = idsByYear[y], ath = {}, cats = new Set(), tmCats = {}; let nome = '';
+    for (const [cat, list] of Object.entries(tcl)) {
+      for (const r of list) {
+        if (!ids.has(_teamIdFromName(r.team))) continue;
+        nome = nome || r.team; cats.add(cat);
+        tmCats[cat] = { pos: r.pos, punti: r.punti || 0 };
+      }
+    }
     for (const [cat, list] of Object.entries(cl)) {
       for (const r of list) {
         if (!ids.has(_teamIdFromName(r.team))) continue;
@@ -18138,9 +18151,10 @@ async function _injectTeamClubHistory(team_id) {
       }
     }
     const list = Object.values(ath);
-    if (!list.length) return;
-    const best = list.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0];
-    rows.push({ y, nome, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: list.reduce((s, a) => s + a.punti, 0), best });
+    if (!list.length && !Object.keys(tmCats).length) return;
+    const best = list.length ? list.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0] : null;
+    const tmVals = Object.values(tmCats);
+    rows.push({ y, nome, tmCats, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
   }));
   rows.sort((a, b) => b.y - a.y);
   const host = document.getElementById('team-club-history');
@@ -18148,14 +18162,15 @@ async function _injectTeamClubHistory(team_id) {
   if (!rows.length) { host.innerHTML = ''; return; }
   const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
   const totPts = rows.reduce((s, r) => s + r.pts, 0);
+  const catLine = r => r.cats.map(c => { const v = r.tmCats[c]; return `${esc(_ciclismoCatLabel(c))}${v ? ` ${v.pos}° (${v.punti} pt)` : ''}`; }).join(' · ');
   host.innerHTML = `<section class="ath-block club-hist">
     <div class="ath-block-h"><span>STORIA DEL CLUB</span><i></i></div>
-    <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi degli atleti a punti.</p>
+    <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi nelle classifiche a squadre. Per ogni categoria: posizione del club e punti.</p>
     <div class="club-hist-list">${rows.map(r => `<div class="club-hist-row">
       <div class="y">${r.y}</div>
-      <div class="m"><b>${esc(tcs(r.nome))}</b><small>${r.cats.map(c => esc(_ciclismoCatLabel(c))).join(' · ')}</small></div>
-      <div class="n"><b>${r.pts}</b><small>punti · ${r.n} atlet${r.n === 1 ? 'a' : 'i'}</small></div>
-      <div class="b">${r.best.id ? `<a href="#/atleta/${esc(r.best.id)}">${esc(tcs(r.best.nome))}</a>` : esc(tcs(r.best.nome))}<small>miglior atleta · ${r.best.pos}° in ${esc(_ciclismoCatLabel(r.best.cat))} · ${r.best.punti} pt</small></div>
+      <div class="m"><b>${esc(tcs(r.nome))}</b><small>${catLine(r)}</small></div>
+      <div class="n"><b>${r.pts}</b><small>punti club${r.n ? ` · ${r.n} atlet${r.n === 1 ? 'a' : 'i'} a punti` : ''}</small></div>
+      <div class="b">${r.best ? `${r.best.id ? `<a href="#/atleta/${esc(r.best.id)}">${esc(tcs(r.best.nome))}</a>` : esc(tcs(r.best.nome))}<small>miglior atleta · ${r.best.pos}° in ${esc(_ciclismoCatLabel(r.best.cat))} · ${r.best.punti} pt</small>` : '<small>nessun atleta in classifica</small>'}</div>
     </div>`).join('')}</div>
   </section>`;
 }
