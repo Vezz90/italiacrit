@@ -13561,3 +13561,20 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
   .athlete-header .ath-hero-left { flex-direction: column; }
   .athlete-header .ath-hero-left > .photo-area--portrait { width: 132px !important; height: 176px !important; min-height: 0; flex: none; align-self: flex-start; }
 }
+
+/* Pagina team: foto grande a sinistra, tutto il resto a destra (come l'atleta). Logo/foto interi, mai tagliati */
+.team-header .ath-hero-left { display: flex; gap: 24px; align-items: stretch; }
+.team-header .ath-hero-left > .photo-area--portrait { width: 210px !important; height: auto !important; min-height: 230px; flex: 0 0 210px; border-radius: 12px; overflow: hidden; align-self: stretch; background: #fff; }
+.team-header .ath-hero-left > .photo-area--portrait > img,
+.team-header .ath-hero-left > .photo-area--portrait > [data-photo-id] { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 12px !important; object-fit: contain !important; object-position: center; background: #fff; }
+.team-header .ath-hero-left > .photo-area--portrait > div[data-photo-id] { background: var(--bg-elevated); color: var(--text-muted); }
+.team-header .ath-hero-left > .photo-area--portrait .photo-cam-btn { z-index: 3; }
+.team-header .ath-hero-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+@media (max-width: 860px) {
+  .team-header .ath-hero-left { gap: 14px; }
+  .team-header .ath-hero-left > .photo-area--portrait { width: 110px !important; flex-basis: 110px; min-height: 140px; }
+}
+@media (max-width: 560px) {
+  .team-header .ath-hero-left { flex-direction: column; }
+  .team-header .ath-hero-left > .photo-area--portrait { width: 132px !important; height: 150px !important; min-height: 0; flex: none; align-self: flex-start; }
+}

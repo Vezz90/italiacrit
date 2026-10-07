@@ -448,7 +448,7 @@ window.handlePhotoUpload = function(evt, entityType, entityId) {
 // Editor di ritaglio: zoom (slider/rotella) + trascinamento, anteprima live su canvas.
 function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdForPicker) {
   const _pickerId = _entityIdForPicker || entityId;
-  const isPortrait = entityType === 'atleta';
+  const isPortrait = entityType === 'atleta' || entityType === 'team';
   const isCircle = entityType !== 'team' && !isPortrait;
   const VW = isPortrait ? 240 : 300, VH = isPortrait ? 320 : 300;            // viewport anteprima
   const OUT_W = isPortrait ? 480 : 512, OUT_H = isPortrait ? 640 : 512;     // dimensione esportata
@@ -21547,7 +21547,7 @@ async function renderTeam(team_id, opts = {}) {
     </div>`;
 
   const teamInitials = t.nome.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
-  const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'square');
+  const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'portrait');
 
   window._shareTeamData = {_id:team_id,nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,p2:p2,p3:p3,p4_10:pout,atleti:atletiList.slice(0,5)};
   const _teamWatched = isWatched(team_id);
@@ -21584,8 +21584,9 @@ async function renderTeam(team_id, opts = {}) {
     <div class="team-header tm-hero">
       <div class="ath-hero-grid">
         <div class="ath-hero-left">
+          ${teamPhotoHtml}
+          <div class="ath-hero-main">
           <div class="team-header-identity">
-            ${teamPhotoHtml}
             <div class="team-header-name-block">
               <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
             </div>
@@ -21601,6 +21602,7 @@ async function renderTeam(team_id, opts = {}) {
             ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
           </div>
           ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
+          </div>
         </div>
         <aside class="ath-hero-standing">
           <div class="ath-stand-lbl">CLASSIFICA ${esc(catLabel(teamViewCat))}</div>
