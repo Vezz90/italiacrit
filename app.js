@@ -24848,15 +24848,16 @@ async function renderGara(gara_id) {
         ${!results.length && calEntry?.regione ? `<span class="race-meta-sep">|</span><span>${esc(calEntry.regione)}</span>` : ''}
       </div>
     </div>
-      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div class="gr-actions">
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
+        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">Da foto ordine d'arrivo</button>` : ''}
+        ${_isAdmin ? `<span class="gr-adm-lbl">Admin</span>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
-        ${_isAdmin && results.length ? `<button class="admin-edit-btn" style="background:#1877f2" onclick="window.adminFbPublish('${esc(primaryGaraId)}')">📘 Pubblica su Facebook</button>` : ''}
-        ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
-        ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-        ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn" style="background:#2F7FD8" onclick="window.openRegionalChampionPicker()">🥇 Campione regionale…</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">➕ Aggiungi risultati</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+        ${_isAdmin && results.length ? `<button class="admin-edit-btn gr-ab gr-fb" onclick="window.adminFbPublish('${esc(primaryGaraId)}')">Pubblica su Facebook</button>` : ''}
+        ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">Importa PCS</button>` : ''}
+        ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">Rimatch atleti</button>` : ''}
+        ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn gr-ab" onclick="window.openRegionalChampionPicker()">Campione regionale…</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${_stageTabsHtml}
