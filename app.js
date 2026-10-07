@@ -12313,6 +12313,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🔗</span> Storico Team
           <span class="admin-nav-badge" id="badge-team-lineage"></span>
         </div>
+        <div class="admin-nav-item" data-section="albo-review" onclick="adminNav('albo-review')">
+          <span class="admin-nav-icon">🏆</span> Albo d'oro · fusioni
+          <span class="admin-nav-badge" id="badge-albo-review"></span>
+        </div>
         <div class="admin-nav-group">Social & Automazione</div>
         <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
           <span class="admin-nav-icon">📣</span> Coda Social
@@ -12337,7 +12341,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','albo-review',
     'social-queue','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab');
@@ -13078,6 +13082,72 @@ window.adminNav = async function(section) {
           }
         };
         await window._tlLoad('pending');
+      })();
+      break;
+    }
+
+    case 'albo-review': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🏆 Albo d'oro · gare dal nome simile</h1>
+          <p class="admin-page-sub">Il sito ha già unito da solo le gare con lo stesso nome e la stessa sede. Qui ci sono le coppie dubbie: stessa sede o regione, nome simile, anni che non si sovrappongono. Se sono la stessa gara, «Stessa gara» ne unisce gli albi d'oro; se sono due gare vere, «Gare diverse» le toglie dalla coda.</p>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="ar-tabs">
+          <button class="tab-btn active-cat" data-ar="pending" onclick="window._arLoad('pending')">IN ATTESA</button>
+          <button class="tab-btn" data-ar="merge" onclick="window._arLoad('merge')">UNITE</button>
+          <button class="tab-btn" data-ar="distinct" onclick="window._arLoad('distinct')">DIVERSE</button>
+          <select id="ar-g" class="cal-filter-select" style="margin-left:auto" onchange="window._arLoad(window._arStatus||'pending')"><option value="">Uomini e donne</option><option value="M">Uomini</option><option value="F">Donne</option></select>
+        </div>
+        <div id="admin-ar-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const [review, man] = await Promise.all([
+          fetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
+          fetch(`${API_BASE}/data/albo-manual`).then(r => r.json()).catch(() => ({ merges: [], distinct: [] })),
+        ]);
+        window._arState = { review, man };
+        const key = x => `${x.g}|${x.a}|${x.b}`;
+        const same = (x, y) => x.g === y.g && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
+        const status = x => (window._arState.man.merges || []).some(m => same(m, x)) ? 'merge' : (window._arState.man.distinct || []).some(m => same(m, x)) ? 'distinct' : 'pending';
+        const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
+        window._arLoad = (st) => {
+          window._arStatus = st;
+          document.querySelectorAll('#ar-tabs .tab-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.ar === st));
+          const body = document.getElementById('admin-ar-body'); if (!body) return;
+          const g = (document.getElementById('ar-g') || {}).value || '';
+          const items = window._arState.review.filter(x => status(x) === st && (!g || x.g === g));
+          const pend = window._arState.review.filter(x => status(x) === 'pending').length;
+          const badge = document.getElementById('badge-albo-review'); if (badge) badge.textContent = pend || '';
+          if (!items.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${st === 'pending' ? '✅ Nessuna coppia in attesa.' : 'Nessun elemento.'}</div>`; return; }
+          const yr = a => a.length > 1 ? `${a[0]}–${a[a.length - 1]} (${a.length} edizioni)` : String(a[0]);
+          body.innerHTML = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} copp${items.length === 1 ? 'ia' : 'ie'}</div>
+            <div style="display:flex;flex-direction:column;gap:10px">${items.slice(0, 80).map((x, i) => `
+              <div id="ar-card-${i}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <div style="flex:1;min-width:300px">
+                  <div style="font-weight:700;font-size:.88rem">${esc(tcs(x.a))} <span style="color:var(--text-muted);font-weight:400">· ${esc(yr(x.anni_a))}</span></div>
+                  <div style="font-weight:700;font-size:.88rem;margin-top:2px">${esc(tcs(x.b))} <span style="color:var(--text-muted);font-weight:400">· ${esc(yr(x.anni_b))}</span></div>
+                  <div style="font-size:.76rem;color:var(--text-muted);margin-top:4px">${esc(tcs(x.luogo))} · ${x.g === 'F' ? 'donne' : 'uomini'} · somiglianza nome ${Math.round(x.sim * 100)}%</div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  ${st !== 'merge' ? `<button class="btn-approve" onclick="window._arAct(${window._arState.review.indexOf(x)},'merge')" style="padding:7px 14px;font-size:.82rem">✓ Stessa gara</button>` : ''}
+                  ${st !== 'distinct' ? `<button class="btn-reject" onclick="window._arAct(${window._arState.review.indexOf(x)},'distinct')" style="padding:7px 14px;font-size:.82rem">✗ Gare diverse</button>` : ''}
+                  ${st !== 'pending' ? `<button class="tab-btn" onclick="window._arAct(${window._arState.review.indexOf(x)},'undo')" style="padding:7px 12px;font-size:.78rem">↺ Rimetti in attesa</button>` : ''}
+                </div>
+              </div>`).join('')}</div>
+            ${items.length > 80 ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:12px">Mostro le prime 80: decidine alcune e la lista scorre.</div>` : ''}`;
+        };
+        window._arAct = async (idx, decision) => {
+          const x = window._arState.review[idx]; if (!x) return;
+          try {
+            const res = await fetch(`${API_BASE}/admin/albo-manual`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` }, body: JSON.stringify({ a: x.a, b: x.b, g: x.g, decision }) });
+            if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+            const man = window._arState.man;
+            man.merges = (man.merges || []).filter(m => !same(m, x)); man.distinct = (man.distinct || []).filter(m => !same(m, x));
+            if (decision === 'merge') man.merges.push({ a: x.a, b: x.b, g: x.g });
+            if (decision === 'distinct') man.distinct.push({ a: x.a, b: x.b, g: x.g });
+            window._arLoad(window._arStatus || 'pending');
+          } catch (e) { alert('Errore: ' + e.message); }
+        };
+        window._arLoad('pending');
       })();
       break;
     }
@@ -16500,6 +16570,33 @@ function _alboLuogoKey(l) {
   const s = String(l || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’'`.\-–,;:()"\/#]/g, ' ').replace(/\s+/g, ' ').trim();
   return s.replace(/(^|\s)[A-Z]{2}$/, '').trim();
 }
+let _alboManualP = null;
+function _alboManual() {
+  if (!_alboManualP) _alboManualP = apiCall('/data/albo-manual').catch(() => ({ merges: [] }));
+  return _alboManualP;
+}
+function _alboShard(idx, sid) {
+  const n = parseInt(sid, 16) % idx.n_shard;
+  if (!_alboShards[n]) _alboShards[n] = fetch(`data/albo/shard_${String(n).padStart(2, '0')}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  return _alboShards[n].then(sh => sh[sid] || null);
+}
+// unisce alla serie quelle che l'admin ha dichiarato "stessa gara" (Admin → Albo d'oro · fusioni)
+async function _alboApplyMerges(idx, sid, s, g) {
+  const man = await _alboManual();
+  let out = s;
+  for (const m of (man.merges || [])) {
+    if (m.g !== g) continue;
+    const sa = idx.index[`${m.a}|${g}`], sb = idx.index[`${m.b}|${g}`];
+    if (sa !== sid && sb !== sid) continue;
+    const other = sa === sid ? sb : sa;
+    if (!other || other === sid) continue;
+    const o = await _alboShard(idx, other);
+    if (!o) continue;
+    const have = new Set(out.ed.map(e => String(e.id)));
+    out = { ...out, ed: [...out.ed, ...o.ed.filter(e => !have.has(String(e.id)))].sort((x, y) => y.y - x.y || String(x.d).localeCompare(String(y.d))) };
+  }
+  return out;
+}
 async function _alboSeries(nome, g, luogo) {
   const idx = await _alboIndex();
   if (!idx) return null;
@@ -16509,10 +16606,8 @@ async function _alboSeries(nome, g, luogo) {
     // nome troppo generico ("Gran Premio"): la serie e' identificata anche dal luogo
     const sid = idx.index[`${b}|${g}`] || (lk ? idx.index[`${b}|${g}|${lk}`] : null);
     if (!sid) continue;
-    const n = parseInt(sid, 16) % idx.n_shard;
-    if (!_alboShards[n]) _alboShards[n] = fetch(`data/albo/shard_${String(n).padStart(2, '0')}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
-    const sh = await _alboShards[n];
-    if (sh[sid]) return sh[sid];
+    const s = await _alboShard(idx, sid);
+    if (s) return await _alboApplyMerges(idx, sid, s, g);
   }
   return null;
 }
@@ -24047,8 +24142,22 @@ async function renderGara(gara_id) {
   if (_stageBase) {
     const seenStageIds = new Set();
     const _stageCandidates = [];
+    const _stEd = s => (String(s).match(/^(\d+)\b/) || [])[1] || '';
+    const _stToks = s => new Set(String(s).split(' ').filter(w => w.length > 2 && !/^\d+$/.test(w) && !_ALBO_STOP.has(w)));
+    const _stDays = (x, y) => Math.abs((new Date(x) - new Date(y)) / 864e5);
+    const _stSame = (cn, cd) => {
+      const cb = _stageEffectiveBase(cn);
+      if (cb === _stageBase) return true;
+      // stesso giro scritto in modo un po' diverso: stessa edizione, parole una dentro l'altra, date vicine
+      const e1 = _stEd(cb), e2 = _stEd(_stageBase);
+      if (!e1 || e1 !== e2 || !cd || !data || _stDays(cd, data) > 12) return false;
+      const A = _stToks(cb), B = _stToks(_stageBase);
+      if (A.size < 2 || B.size < 2) return false;
+      const [small, big] = A.size <= B.size ? [A, B] : [B, A];
+      return [...small].every(w => big.has(w));
+    };
     for (const c of (calendar || [])) {
-      if (_stageEffectiveBase(c.nome) !== _stageBase) continue;
+      if (!_stSame(c.nome, c.data)) continue;
       if (seenStageIds.has(c.id)) continue;
       seenStageIds.add(c.id);
       _stageCandidates.push({

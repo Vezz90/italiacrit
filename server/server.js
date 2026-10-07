@@ -2512,6 +2512,52 @@ app.post('/api/admin/team-lineage/:id/reject', requireAdmin, async (req, res) =>
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Albo d'oro: decisioni dell'admin sulle gare dal nome simile ─────────────
+// scripts/build_race_series.py unisce da solo i casi sicuri; le coppie dubbie
+// (data/albo/review.json) le decide un admin: "stessa gara" le unisce, "gare
+// diverse" le toglie dalla coda. Le decisioni stanno in kv_store ('albo_manual')
+// e il sito le applica al volo sopra le serie già costruite.
+const ALBO_MANUAL_PATH = path.join(__dirname, '../data/albo_manual_runtime.json');
+async function readAlboManual() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'albo_manual').maybeSingle();
+    if (error) console.error('[albo-manual] read error:', error.message);
+    return data?.value || { merges: [], distinct: [] };
+  }
+  try { return JSON.parse(fs.readFileSync(ALBO_MANUAL_PATH, 'utf8')); } catch { return { merges: [], distinct: [] }; }
+}
+async function writeAlboManual(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store').upsert({ key: 'albo_manual', value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(ALBO_MANUAL_PATH, JSON.stringify(obj, null, 2));
+}
+let _alboManualCache = null, _alboManualCacheTs = 0;
+app.get('/api/data/albo-manual', async (req, res) => {
+  try {
+    if (!_alboManualCache || (Date.now() - _alboManualCacheTs) > 300000) { _alboManualCache = await readAlboManual(); _alboManualCacheTs = Date.now(); }
+    res.set('Cache-Control', 'public, max-age=120');
+    res.json(_alboManualCache);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/albo-manual', requireAdmin, async (req, res) => {
+  try {
+    const { a, b, g, decision } = req.body || {};
+    if (!a || !b || !['M', 'F'].includes(g) || !['merge', 'distinct', 'undo'].includes(decision)) return res.status(400).json({ error: 'Dati non validi' });
+    const cur = await readAlboManual();
+    const same = x => x.g === g && ((x.a === a && x.b === b) || (x.a === b && x.b === a));
+    cur.merges = (cur.merges || []).filter(x => !same(x));
+    cur.distinct = (cur.distinct || []).filter(x => !same(x));
+    if (decision === 'merge') cur.merges.push({ a, b, g });
+    if (decision === 'distinct') cur.distinct.push({ a, b, g });
+    await writeAlboManual(cur);
+    _alboManualCache = cur; _alboManualCacheTs = Date.now();
+    res.json({ ok: true, merges: cur.merges.length, distinct: cur.distinct.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 const VALID_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media', 'admin'];
 
 // Cambio ruolo utente (admin)

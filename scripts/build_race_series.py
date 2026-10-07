@@ -209,6 +209,7 @@ def main():
     json.dump({'n_shard': N_SHARD, 'index': index}, open(OUT / 'index.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     (ROOT / 'audit').mkdir(exist_ok=True)
     json.dump(review[:4000], open(ROOT / 'audit' / 'albo_review.json', 'w', encoding='utf-8'), ensure_ascii=False)
+    json.dump(review[:4000], open(OUT / 'review.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     gaps = 0; ser_gap = 0
     for s in out_series.values():
         ys = sorted({e['y'] for e in s['ed']})
