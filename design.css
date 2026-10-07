@@ -13504,3 +13504,22 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 .gara-wrap .gr-adm-lbl { margin-left: 6px; padding-left: 14px; border-left: 1px solid var(--border-subtle); font: 700 10px/1 'Inter', system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
 #fbpub-modal .admin-edit-btn { background: var(--bg-elevated, #f1f5f9) !important; color: var(--text-primary, #111) !important; border: 1px solid var(--border-subtle, #cbd5e1) !important; border-radius: 8px; padding: 9px 14px; font-weight: 600; }
 #fbpub-modal #fbpub-go { background: #1877f2 !important; border-color: #1877f2 !important; color: #fff !important; }
+
+/* ===== Pagina team: schede corridore (foto verticale a sinistra) ===== */
+.tr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .tr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .tr-grid { grid-template-columns: minmax(0, 1fr); } }
+.tr-card { position: relative; display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: stretch; min-height: 122px; padding: 0 16px 0 0; border-radius: 12px; overflow: hidden; color: #fff; text-decoration: none; background: linear-gradient(135deg, var(--c1), var(--c2)); transition: transform .15s, box-shadow .15s; }
+a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.22); color: #fff; }
+.tr-card .rk-av-wrap { display: block; position: relative; width: auto; height: auto; margin: 0; background: linear-gradient(180deg, #E9EDF5, #B9C4D8); overflow: hidden; }
+.tr-card .rk-av-img { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; object-fit: cover; object-position: top center; }
+.tr-card .rk-av-placeholder { position: absolute; inset: 0; width: auto; height: auto; border: 0; border-radius: 0; background: transparent; color: #52617B; display: flex; align-items: center; justify-content: center; }
+.tr-card .rk-av-placeholder svg { width: 34px; height: 34px; }
+.tr-wm { position: absolute; right: 12px; top: 2px; font: italic 800 54px/1 'Inter', system-ui, sans-serif; color: rgba(255,255,255,.2); pointer-events: none; }
+.tr-tx { display: flex; flex-direction: column; justify-content: center; padding: 12px 0; min-width: 0; }
+.tr-nm { font: 800 15px/1.2 'Inter', system-ui, sans-serif; padding-right: 34px; }
+.tr-tx small { font-size: 10.5px; opacity: .8; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-pt { margin-top: 8px; display: flex; align-items: baseline; gap: 6px; }
+.tr-pt b { font: 800 24px/1 'Inter', system-ui, sans-serif; }
+.tr-pt span { font-size: 11.5px; font-weight: 600; opacity: .85; }
+.tr-tx em { font-style: normal; font-size: 11px; opacity: .78; margin-top: 3px; }

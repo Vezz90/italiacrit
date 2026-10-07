@@ -20182,6 +20182,24 @@ function _renderCiclismoMedia(containerId, mediaList, rows) {
     </div>` : ''}`;
 }
 
+// Scheda corridore nella pagina team: foto verticale a sinistra, punti e numeri essenziali.
+// pts null = stagioni archivio (nessun punteggio): al suo posto la miglior posizione.
+function _teamRiderCardHtml(p, i) {
+  const cols = [['#C99400', '#5A3F00'], ['#6E7A90', '#2A3342'], ['#B26A2C', '#4A2A0E']];
+  const [c1, c2] = cols[i] || ['#33415F', '#16213D'];
+  const bits = [];
+  if (p.wins) bits.push(`${p.wins} vitt.`);
+  if (p.podi) bits.push(`${p.podi} podi`);
+  if (p.gare) bits.push(`${p.gare} gare`);
+  const hasPts = p.pts != null;
+  const big = hasPts ? (p.pts > 0 ? String(p.pts) : '—') : (p.best && p.best <= 10 ? `${p.best}°` : '—');
+  const unit = hasPts ? (p.pts > 0 ? 'punti' : '') : (p.best && p.best <= 10 ? 'miglior pos.' : '');
+  const av = p.id ? `<span class="rk-av-wrap" data-aid="${esc(p.id)}"></span>` : `<span class="rk-av-wrap"></span>`;
+  const nm = `${esc(String(p.cognome || '').toUpperCase())}${p.nome ? `<br>${esc(String(p.nome).toUpperCase())}` : ''}`;
+  const tag = p.id ? `a href="#/atleta/${esc(p.id)}"` : 'div';
+  return `<${tag} class="tr-card" style="--c1:${c1};--c2:${c2}"><span class="tr-wm">${i + 1}</span>${av}<span class="tr-tx"><b class="tr-nm">${nm}</b>${p.sub ? `<small>${esc(p.sub)}</small>` : ''}<span class="tr-pt"><b>${big}</b><span>${unit}</span></span><em>${bits.join(' · ')}</em></${p.id ? 'a' : 'div'}>`;
+}
+
 // Storico ciclismo.info per un TEAM — stesso pattern dell'atleta: pillole
 // anno aggiuntive nel selettore STAGIONE già esistente, che al click
 // mostrano il roster (chi ha corso per questa squadra quell'anno) e le
@@ -20334,29 +20352,9 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
   const _avSpan = p => p.atleta_id
     ? `<span class="rk-av-wrap" data-aid="${esc(p.atleta_id)}"><span class=rk-av-placeholder>${_avPlaceholderSvg}</span></span>`
     : `<span class="rk-av-wrap"><span class=rk-av-placeholder>${_avPlaceholderSvg}</span></span>`;
-  const topPerfHtml = topPerformers.length ? topPerformers.map((p, i) => {
-    const nomeLink = p.atleta_id ? `<a href="#/atleta/${esc(p.atleta_id)}">${esc(p.nome)}</a>` : esc(p.nome || '');
-    return `<div class="team-performer-card">
-      <div class="team-perf-rank" style="color:${rankAccents[i] || 'var(--text-muted)'}">${i + 1}</div>
-      ${_avSpan(p)}
-      <div class="team-perf-info">
-        <div class="team-perf-name">${nomeLink}</div>
-        <div style="font-size:.72rem;color:var(--text-muted)">${p.wins ? `${p.wins} vitt.` : `${p.gare} gare`}</div>
-      </div>
-      <div class="team-perf-right"><div class="team-perf-pts">${bestBadge(p)}</div></div>
-    </div>`;
-  }).join('') : '<div class="empty-state">Nessun corridore con risultati</div>';
-  const rosterCardsHtml = topPerformers.map(p => {
-    const nomeLink = p.atleta_id ? `<a href="#/atleta/${esc(p.atleta_id)}">${esc(p.nome)}</a>` : esc(p.nome || '');
-    return `<div class="team-performer-card">
-      ${_avSpan(p)}
-      <div class="team-perf-info">
-        <div class="team-perf-name">${nomeLink}</div>
-        <div style="font-size:.72rem;color:var(--text-muted)">${p.gare} gare</div>
-      </div>
-      <div class="team-perf-right"><div class="team-perf-pts">${bestBadge(p)}</div></div>
-    </div>`;
-  }).join('') || '<div class="empty-state">Nessun atleta</div>';
+  const _hc = p => ({ id: p.atleta_id, cognome: p.nome, nome: '', pts: null, wins: p.wins, podi: 0, gare: p.gare, best: p.best });
+  const topPerfHtml = topPerformers.length ? topPerformers.slice(0, 6).map((p, i) => _teamRiderCardHtml(_hc(p), i)).join('') : '<div class="empty-state">Nessun corridore con risultati</div>';
+  const rosterCardsHtml = topPerformers.map((p, i) => _teamRiderCardHtml(_hc(p), i)).join('') || '<div class="empty-state">Nessun atleta</div>';
 
   // Stats: solo conteggi OSSERVATI (podi, gare, atleti) — niente punti
   // stimati. Aggiorna DIRETTAMENTE la barra stats nativa in alto (stesso
@@ -20412,8 +20410,8 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
       <span class="section-line"></span>
       <span class="section-subtitle" id="team-ciclismo-riders-sub">${esc(String(curCat).replace(/_/g, ' '))}</span>
     </div>
-    <div id="team-ciclismo-riders-chiave" class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
-    <div id="team-ciclismo-riders-roster" class="team-roster-list" style="margin-bottom:28px;display:none">${rosterCardsHtml}</div>
+    <div id="team-ciclismo-riders-chiave" class="team-performers-list tr-grid" style="margin-bottom:28px">${topPerfHtml}</div>
+    <div id="team-ciclismo-riders-roster" class="team-roster-list tr-grid" style="margin-bottom:28px;display:none">${rosterCardsHtml}</div>
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">RISULTATI TEAM ${esc(anno)}</span>
       <span class="section-line"></span>
@@ -21280,21 +21278,6 @@ async function renderTeam(team_id, opts = {}) {
 
   // Stesso layout di CORRIDORI CHIAVE (team-performer-card) per coerenza.
   // Mostra solo gli atleti della categoria/genere selezionata (teamViewCat).
-  const atletiRows = atletiListCat.map((a,i) => {
-    const valHtml = a.puntiCat > 0 ? `${a.puntiCat}<small>pts</small>` : (a.puntiTot > 0 ? `<span style="opacity:.5">${a.puntiTot}</span>` : '<span style="color:var(--text-muted)">—</span>');
-    return `<div class="team-performer-card">
-      <div class="team-perf-rank" style="color:var(--text-muted)">${i+1}</div>
-      <span class="rk-av-wrap" data-aid="${esc(a.id)}"></span>
-      <div class="team-perf-info">
-        <div class="team-perf-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} <span style="font-weight:400">${esc(a.nome)}</span></a></div>
-        <div style="font-size:.72rem;color:var(--text-muted)">${catLabel(a.categoria||'')}</div>
-      </div>
-      <div class="team-perf-right">
-        <div class="team-perf-pts">${valHtml}</div>
-      </div>
-    </div>`;
-  }).join('');
-
   const risultatiRows = [...catRisultati]
     .sort((a,b) => a.posizione - b.posizione || (b.data||'').localeCompare(a.data||''))
     .map(r => {
@@ -21383,11 +21366,13 @@ async function renderTeam(team_id, opts = {}) {
         id: r.atleta_id,
         cognome: ath.cognome || r.atleta_cognome || r.cognome || '',
         nome:    ath.nome    || r.atleta_nome    || r.nome    || '',
-        pts: 0, wins: 0, placements: 0, best: 999
+        pts: 0, wins: 0, podi: 0, races: new Set(), placements: 0, best: 999
       };
     }
     const c = catPerfMap[r.atleta_id];
     c.pts += r.punti_effettivi||0;
+    if (r.gara_id) c.races.add(r.gara_id);
+    if (r.posizione >= 1 && r.posizione <= 3) c.podi++;
     if (r.posizione === 1) c.wins++;
     if (r.posizione >= 1 && r.posizione <= 10) c.placements++;
     if (r.posizione && r.posizione < c.best) c.best = r.posizione;
@@ -21397,21 +21382,9 @@ async function renderTeam(team_id, opts = {}) {
     .filter(p => p.pts > 0 || p.wins > 0 || p.placements > 0)
     .sort((a,b) => b.pts - a.pts || b.wins - a.wins || a.best - b.best);
   const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)'];
-  const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
-    const valHtml = p.pts > 0
-      ? `${p.pts}<small>pts</small>`
-      : (p.best <= 10 ? `${p.best}°` : '—');
-    return `<div class="team-performer-card">
-      <div class="team-perf-rank" style="color:${_rankAccents[i] || 'var(--text-muted)'}">${i+1}</div>
-      <span class="rk-av-wrap" data-aid="${esc(p.id)}"></span>
-      <div class="team-perf-info">
-        <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
-      </div>
-      <div class="team-perf-right">
-        <div class="team-perf-pts">${valHtml}</div>
-      </div>
-    </div>`;
-  }).join('') : '<div class="empty-state">Nessun corridore con risultati in questa categoria</div>';
+  const _tc = p => ({ id: p.id, cognome: p.cognome, nome: p.nome, pts: p.pts, wins: p.wins, podi: p.podi, gare: p.races ? p.races.size : 0, best: p.best });
+  const topPerfHtml = topPerformers.length ? topPerformers.slice(0, 6).map((p, i) => _teamRiderCardHtml(_tc(p), i)).join('') : '<div class="empty-state">Nessun corridore con risultati in questa categoria</div>';
+  const atletiRows = atletiListCat.map((a, i) => _teamRiderCardHtml({ id: a.id, cognome: a.cognome, nome: a.nome, pts: a.puntiCat > 0 ? a.puntiCat : (a.puntiTot > 0 ? a.puntiTot : 0), wins: (catPerfMap[a.id] || {}).wins || 0, podi: (catPerfMap[a.id] || {}).podi || 0, gare: (catPerfMap[a.id] && catPerfMap[a.id].races) ? catPerfMap[a.id].races.size : 0, best: (catPerfMap[a.id] || {}).best || 0 }, i)).join('');
 
   // Identity strip HTML
   const identityHtml = `
@@ -21577,8 +21550,8 @@ async function renderTeam(team_id, opts = {}) {
       <span class="section-line"></span>
       <span class="section-subtitle" id="team-riders-sub">${catLabel(teamViewCat)}</span>
     </div>
-    <div id="team-riders-chiave" class="team-performers-list" data-sub="${esc(catLabel(teamViewCat))}" style="margin-bottom:28px">${topPerfHtml}</div>
-    <div id="team-riders-roster" class="team-roster-list" data-sub="${catLabel(teamViewCat)} · ${atletiListCat.length} atlet${atletiListCat.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta in questa categoria</div>'}</div>
+    <div id="team-riders-chiave" class="team-performers-list tr-grid" data-sub="${esc(catLabel(teamViewCat))}" style="margin-bottom:28px">${topPerfHtml}</div>
+    <div id="team-riders-roster" class="team-roster-list tr-grid" data-sub="${catLabel(teamViewCat)} · ${atletiListCat.length} atlet${atletiListCat.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta in questa categoria</div>'}</div>
 
     ${(() => {
       // Un risultato ai campionati italiani/internazionali è registrato dalla
