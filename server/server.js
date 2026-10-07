@@ -7939,16 +7939,23 @@ Link: ${link}`
   }
 }
 
-async function postToFacebook(caption, photoUrl) {
+// Pubblica il post come LINK alla pagina della gara: Facebook ne ricava da solo la card
+// (foto/podio) e chi clicca arriva sul sito. Il link nudo al sito nel testo viene tolto.
+async function postGaraLinkToFacebook(post, caption) {
+  const link = `${SITE_URL}/gara/${encodeURIComponent(post.gara_id)}`;
+  const text = String(caption || '').split('\n').filter(l => l.trim().replace(/\/$/, '') !== SITE_URL).join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  return postToFacebook(text, null, link);
+}
+async function postToFacebook(caption, photoUrl, linkUrl) {
   const pageId = process.env.FB_PAGE_ID;
   const token  = process.env.FB_PAGE_TOKEN;
   if (!pageId || !token) throw new Error('FB_PAGE_ID o FB_PAGE_TOKEN non configurati su Render');
-  const endpoint = photoUrl
+  const endpoint = photoUrl && !linkUrl
     ? `https://graph.facebook.com/v19.0/${pageId}/photos`
     : `https://graph.facebook.com/v19.0/${pageId}/feed`;
-  const body = photoUrl
+  const body = photoUrl && !linkUrl
     ? { url: photoUrl, caption, access_token: token }
-    : { message: caption, access_token: token };
+    : { message: caption, ...(linkUrl ? { link: linkUrl } : {}), access_token: token };
   const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const data = await r.json();
   if (data.error) throw new Error(`Facebook API: ${data.error.message} (code ${data.error.code})`);
@@ -8049,7 +8056,7 @@ async function publishPendingSocialAuto({ force = false } = {}) {
     for (const post of todo) {
       const idx = queue.findIndex(p => p.id === post.id);
       try {
-        const fb = await postToFacebook(String(post.caption || '').trim(), post.photo_url);
+        const fb = await postGaraLinkToFacebook(post, String(post.caption || '').trim());
         queue[idx] = { ...post, status: 'posted', auto: true, error: null, fb_post_id: fb.id || fb.post_id || null, posted_at: new Date().toISOString() };
         alreadyPosted.add(post.gara_id); posted++;
       } catch (e) {
@@ -9393,7 +9400,7 @@ app.post('/api/admin/social/:id/approve', requireAdmin, async (req, res) => {
     if (idx < 0) return res.status(404).json({ error: 'Post non trovato' });
     const post = queue[idx];
     const finalCaption = ((req.body.caption || post.caption) + '').trim();
-    const fbResult = await postToFacebook(finalCaption, post.photo_url);
+    const fbResult = await postGaraLinkToFacebook(post, finalCaption);
     queue[idx] = { ...post, caption: finalCaption, status: 'posted', fb_post_id: fbResult.id || fbResult.post_id || null, posted_at: new Date().toISOString() };
     await writeSocialQueue(queue);
     res.json({ ok: true, fb: fbResult });
