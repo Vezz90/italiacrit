@@ -27454,18 +27454,15 @@ async function renderComparatore() {
 
     const aD=athletes[compA], bD=athletes[compB];
     if (!aD||!bD) {
-      // Atleta "storico" (ciclismo.info) selezionabile dalla ricerca ma non
-      // ancora nel roster nativo usato per il resto del confronto — i dati
-      // storici hanno un formato diverso (niente punti per singola gara,
-      // niente genere) e collegarli qui rischierebbe numeri sbagliati:
-      // meglio dirlo chiaramente che inventare un confronto. Vedi anche
-      // window._compHistoricalNames per il nome da mostrare.
-      const missing = !aD ? compA : compB;
-      const hist = window._compHistoricalNames?.[missing];
-      const label = hist ? `${hist.cognome} ${hist.nome}`.trim() : missing;
-      return `<div class="comp-empty">
-        <strong>${esc(label)}</strong> è un atleta storico (ciclismo.info): la ricerca lo trova, ma il confronto statistico completo con questi dati non è ancora supportato — formato diverso da quello degli atleti della stagione in corso.
-      </div>`;
+      // Almeno uno dei due e' un atleta "storico" (archivio ciclismo.info, non nella stagione in corso):
+      // il confronto statistico della stagione non c'e', ma la carriera anno per anno si'.
+      return `
+      <div class="comp-selectors-compact">
+        ${buildCompAc('a', acItems, compA)}
+        <span class="comp-vs-sm">VS</span>
+        ${buildCompAc('b', acItems, compB)}
+      </div>
+      <p class="am-note" style="margin:10px 2px">Uno dei due atleti non ha risultati nella stagione in corso: qui sotto il confronto di carriera dall'archivio storico.</p>`;
     }
     const aRes=resultsRaw.filter(r=>r.atleta_id===compA&&catFilter(r));
     const bRes=resultsRaw.filter(r=>r.atleta_id===compB&&catFilter(r));
@@ -27758,6 +27755,12 @@ async function renderComparatore() {
       <div id="comp-content" class="comp-content">${compMode==='atleta'?buildAthleteResult():buildTeamResult()}</div>
     </div>
   `);
+
+  // Carriera a confronto (anno per anno, archivio 2007-oggi): sotto il confronto della stagione
+  if (compA && compB && compA !== compB && window.CmpCareer) {
+    const _cc = document.getElementById('comp-content');
+    if (_cc) { _cc.insertAdjacentHTML('beforeend', '<div id="comp-career"></div>'); window.CmpCareer.render(compMode, compA, compB, 'comp-career'); }
+  }
 
   window.setCompMode   = v => { compMode=v; compA=''; compB=''; renderComparatore(); };
   window.setCompGender = v => { compGender=v; compA=''; compB=''; renderComparatore(); };

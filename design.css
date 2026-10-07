@@ -13623,3 +13623,27 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .am-rise:hover { border-color: var(--text-muted); } .am-rise span { grid-column: 1; color: var(--text-muted); font-size: .74rem; } .am-rise em { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-style: normal; font: 800 .95rem 'Inter', system-ui, sans-serif; color: #10B981; }
 @media (max-width: 980px) { .am-hall { grid-template-columns: repeat(2, minmax(0, 1fr)); } .am-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 700px) { .am-hall, .am-recs, .am-rises { grid-template-columns: minmax(0, 1fr); } .am-mrow { grid-template-columns: minmax(0, 1fr); } .am-mrow small { text-align: left; } .am-drow { grid-template-columns: 26px minmax(0, 1fr); } .am-dc { grid-column: 2; text-align: left; } }
+
+/* ===== Comparatore: carriere a confronto ===== */
+.cc-sec { margin-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+.cc-sec .hx-ph { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cc-sec .hx-ph small { color: var(--text-muted); font-size: .78rem; }
+.cc-heads { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; }
+.cc-heads > span { font: 800 .8rem 'Inter', system-ui, sans-serif; color: var(--text-muted); letter-spacing: .08em; }
+.cc-head { padding: 14px 16px; border-radius: 12px; color: #fff; background: var(--c); display: flex; flex-direction: column; gap: 2px; }
+.cc-head b { font: 800 1.15rem/1.2 'Inter', system-ui, sans-serif; } .cc-head small { opacity: .85; font-size: .76rem; }
+.cc-tot { padding: 6px 14px; } .cc-tr { display: grid; grid-template-columns: 1fr 1.6fr 1fr; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border-subtle); text-align: center; font-size: .82rem; }
+.cc-tr:first-child { border-top: 0; } .cc-tr span { color: var(--text-muted); font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; }
+.cc-tr b { font: 800 1.15rem 'Inter', system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--text-secondary); } .cc-tr b.w { color: var(--c); }
+.cc-chart { padding: 12px 14px; } .cc-chart svg { width: 100%; height: auto; } .cc-grid { stroke: var(--border-subtle); stroke-width: 1; } .cc-tk { font: 600 10px 'Inter', system-ui, sans-serif; fill: var(--text-muted); }
+.cc-leg { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin-bottom: 6px; font-size: .78rem; font-weight: 700; }
+.cc-leg span::before { content: ''; display: inline-block; width: 18px; height: 3px; background: var(--c); border-radius: 2px; margin-right: 6px; vertical-align: middle; } .cc-leg small { color: var(--text-muted); font-weight: 500; margin-left: auto; }
+.cc-table table { min-width: 0; } .cc-table td { width: 42%; }
+.cc-c { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 2px 0; } .cc-c b { font: 800 1rem 'Inter', system-ui, sans-serif; } .cc-c.win b { color: #D9A100; }
+.cc-c span { font-size: .74rem; color: var(--text-secondary); font-weight: 600; } .cc-c small { flex-basis: 100%; }
+.cc-none { color: var(--text-muted); }
+.cc-h3 { margin: 0 0 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.cc-h2h { display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; text-align: center; margin-bottom: 8px; } .cc-h2h b { font: 800 1.8rem 'Inter', system-ui, sans-serif; } .cc-h2h span { color: var(--text-muted); font-size: .8rem; }
+.cc-rows { display: flex; flex-direction: column; } .cc-rows a { display: grid; grid-template-columns: 44px minmax(0, 1fr) 42px 42px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border-subtle); text-decoration: none; color: inherit; font-size: .82rem; align-items: center; }
+.cc-rows em { font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .cc-rows span { color: var(--text-muted); } .cc-rows i { font-style: normal; font-weight: 700; text-align: center; color: var(--text-secondary); } .cc-rows i.w { color: var(--c); }
+@media (max-width: 700px) { .cc-heads { grid-template-columns: 1fr; } .cc-heads > span { text-align: center; } .cc-leg small { margin-left: 0; flex-basis: 100%; } }
