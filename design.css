@@ -13523,3 +13523,17 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .tr-pt b { font: 800 24px/1 'Inter', system-ui, sans-serif; }
 .tr-pt span { font-size: 11.5px; font-weight: 600; opacity: .85; }
 .tr-tx em { font-style: normal; font-size: 11px; opacity: .78; margin-top: 3px; }
+
+/* Storia del club: riga apribile con l'elenco atleti */
+.club-hist-item { border-top: 1px solid var(--border-subtle); }
+.club-hist-item:first-child { border-top: 0; }
+.club-hist-item > summary { list-style: none; cursor: pointer; border-top: 0 !important; }
+.club-hist-item > summary::-webkit-details-marker { display: none; }
+.club-hist-item > summary:hover { background: var(--bg-elevated, rgba(0,0,0,.03)); }
+.club-hist-det { padding: 4px 14px 14px 92px; display: flex; flex-direction: column; gap: 8px; font-size: .8rem; }
+.club-hist-det .cat { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.club-hist-det .cat > b { flex: 0 0 140px; color: var(--text-muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; }
+.club-hist-det .cat span a { color: var(--text-primary); font-weight: 600; text-decoration: none; } .club-hist-det .cat span a:hover { text-decoration: underline; }
+.club-hist-det .cat span i { font-style: normal; color: var(--text-muted); font-size: .72rem; }
+.club-hist-det .src { color: var(--text-muted); font-size: .7rem; }
+@media (max-width: 760px) { .club-hist-det { padding-left: 14px; } .club-hist-det .cat > b { flex-basis: 100%; } }

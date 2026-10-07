@@ -18192,7 +18192,7 @@ async function _injectTeamClubHistory(team_id) {
     if (!list.length && !Object.keys(tmCats).length) return;
     const best = list.length ? list.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0] : null;
     const tmVals = Object.values(tmCats);
-    rows.push({ y, nome, tmCats, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
+    rows.push({ y, nome, tmCats, list, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
   }));
   rows.sort((a, b) => b.y - a.y);
   const host = document.getElementById('team-club-history');
@@ -18203,13 +18203,19 @@ async function _injectTeamClubHistory(team_id) {
   const catLine = r => r.cats.map(c => { const v = r.tmCats[c]; return `${esc(_ciclismoCatLabel(c))}${v ? ` ${v.pos}° (${v.punti} pt)` : ''}`; }).join(' · ');
   host.innerHTML = `<section class="ath-block club-hist">
     <div class="ath-block-h"><span>STORIA DEL CLUB</span><i></i></div>
-    <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi nelle classifiche a squadre. Per ogni categoria: posizione del club e punti.</p>
-    <div class="club-hist-list">${rows.map(r => `<div class="club-hist-row">
+    <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi nelle classifiche a squadre. Clicca un anno per vedere gli atleti.</p>
+    <div class="club-hist-list">${rows.map(r => {
+      const byCat = {};
+      for (const a of r.list) (byCat[a.cat] = byCat[a.cat] || []).push(a);
+      const cats = Object.keys(byCat).sort((x, y) => (_CICLISMO_CAT_ORDER[x] ?? 99) - (_CICLISMO_CAT_ORDER[y] ?? 99));
+      const det = cats.map(cat => `<div class="cat"><b>${esc(_ciclismoCatLabel(cat))}</b>${byCat[cat].sort((a, b) => b.punti - a.punti).map(a => `<span>${a.id ? `<a href="#/atleta/${esc(a.id)}">${esc(tcs(a.nome))}</a>` : esc(tcs(a.nome))} <i>${a.punti} pt · ${a.pos}°</i></span>`).join('')}</div>`).join('');
+      return `<details class="club-hist-item"><summary class="club-hist-row">
       <div class="y">${r.y}</div>
       <div class="m"><b>${esc(tcs(r.nome))}</b><small>${catLine(r)}</small></div>
       <div class="n"><b>${r.pts}</b><small>punti club${r.n ? ` · ${r.n} atlet${r.n === 1 ? 'a' : 'i'} a punti` : ''}</small></div>
       <div class="b">${r.best ? `${r.best.id ? `<a href="#/atleta/${esc(r.best.id)}">${esc(tcs(r.best.nome))}</a>` : esc(tcs(r.best.nome))}<small>miglior atleta · ${r.best.pos}° in ${esc(_ciclismoCatLabel(r.best.cat))} · ${r.best.punti} pt</small>` : '<small>nessun atleta in classifica</small>'}</div>
-    </div>`).join('')}</div>
+    </summary><div class="club-hist-det">${det || '<small>Nessun atleta in classifica.</small>'}<small class="src">Dati: classifica ${r.y} di ciclismo.info, atleti con la squadra indicata.</small></div></details>`;
+    }).join('')}</div>
   </section>`;
 }
 
