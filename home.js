@@ -285,11 +285,20 @@
   async function loadPast(y) {
     if (_pastCache[y]) return _pastCache[y];
     const [r, c, tm] = await Promise.all([loadJson(`data/ciclismo-storico/${y}/races.json`), loadJson(`data/ciclismo-storico/${y}/classifica.json`), loadJson(`data/ciclismo-storico/${y}/classifica_team.json`).catch(() => null)]);
-    return (_pastCache[y] = { races: (r && r.races) || [], cls: (c && c.classifica) || {}, tcls: (tm && tm.classifica) || {} });
+    const data = { races: (r && r.races) || [], cls: (c && c.classifica) || {}, tcls: (tm && tm.classifica) || {} };
+    // un caricamento fallito non va ricordato: al prossimo tentativo si riscarica
+    if (!r && !c) { data.failed = true; return data; }
+    return (_pastCache[y] = data);
   }
   async function paintPast(y, myId) {
-    const { races, cls, tcls } = await loadPast(y);
+    const { races, cls, tcls, failed } = await loadPast(y);
     if (myId !== window._hxRender) return;
+    if (failed) {
+      setPage(`<div class="hx-wrap"><div class="hx-filters">${yearSel()}</div><div class="hx-card hx-empty" style="flex-direction:column;gap:12px;padding:28px;min-height:0">I dati della stagione ${y} non si sono caricati.<button type="button" class="hx-more" id="hx-retry" style="margin:0">Riprova</button></div></div>`);
+      wireYear();
+      const rt = $('hx-retry'); if (rt) rt.onclick = () => render();
+      return;
+    }
     const isF = k => /^DONNE/i.test(k), F = hx.sex === 'F';
     const ord = k => (typeof _CICLISMO_CAT_ORDER !== 'undefined' && _CICLISMO_CAT_ORDER[k] != null) ? _CICLISMO_CAT_ORDER[k] : 99;
     const catKeys = new Set(); races.forEach(ev => Object.keys(ev.categorie || {}).forEach(k => { if (isF(k) === F) catKeys.add(k); }));
