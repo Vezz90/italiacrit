@@ -7877,6 +7877,29 @@ async function writeSocialQueue(arr) {
   fs.writeFileSync(SOCIAL_QUEUE_PATH, JSON.stringify(arr, null, 2));
 }
 
+// Pubblicazione automatica su Facebook: interruttore salvato in kv_store ('social_auto').
+// Default SPENTO. Anche se acceso non pubblica nulla finche' FB_PAGE_ID e FB_PAGE_TOKEN
+// non sono configurati su Render. Limite di sicurezza: al massimo SOCIAL_AUTO_MAX_PER_RUN
+// post per ogni giro, uno ogni pochi secondi, mai oltre un post per gara.
+const SOCIAL_AUTO_KEY = 'social_auto';
+const SOCIAL_AUTO_MAX_PER_RUN = 6;
+async function readSocialAuto() {
+  if (supabase) {
+    const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_AUTO_KEY).maybeSingle();
+    return data?.value || { enabled: false };
+  }
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, '../data/social-auto.json'), 'utf8')); } catch { return { enabled: false }; }
+}
+async function writeSocialAuto(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store').upsert({ key: SOCIAL_AUTO_KEY, value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(path.join(__dirname, '../data/social-auto.json'), JSON.stringify(obj, null, 2));
+}
+const _fbConfigured = () => !!(process.env.FB_PAGE_ID && process.env.FB_PAGE_TOKEN);
+
 async function generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link }) {
   const ai = getAnthropic();
   if (!ai) return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' — ' + category : ''}\n🔗 ${link}`;
@@ -7932,6 +7955,39 @@ async function postToFacebook(caption, photoUrl) {
   return data;
 }
 
+// Se la pubblicazione automatica e' accesa (e Facebook configurato) pubblica i post in attesa piu' recenti.
+let _socialAutoRunning = false;
+async function publishPendingSocialAuto({ force = false } = {}) {
+  if (_socialAutoRunning) return { skipped: 'in corso' };
+  const cfg = await readSocialAuto();
+  if (!cfg.enabled && !force) return { skipped: 'spento' };
+  if (!_fbConfigured()) return { skipped: 'facebook non configurato' };
+  _socialAutoRunning = true;
+  try {
+    const queue = await readSocialQueue();
+    const alreadyPosted = new Set(queue.filter(p => p.status === 'posted').map(p => p.gara_id));
+    // solo post recenti (oggi/ieri): niente arretrato quando si accende l'interruttore
+    const cutoff = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10);
+    const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= cutoff).slice(0, SOCIAL_AUTO_MAX_PER_RUN);
+    let posted = 0;
+    for (const post of todo) {
+      const idx = queue.findIndex(p => p.id === post.id);
+      try {
+        const fb = await postToFacebook(String(post.caption || '').trim(), post.photo_url);
+        queue[idx] = { ...post, status: 'posted', auto: true, error: null, fb_post_id: fb.id || fb.post_id || null, posted_at: new Date().toISOString() };
+        alreadyPosted.add(post.gara_id); posted++;
+      } catch (e) {
+        queue[idx] = { ...post, error: String(e.message || e).slice(0, 300), last_try_at: new Date().toISOString() };
+        console.warn('[social] pubblicazione automatica fallita:', post.gara_id, e.message);
+      }
+      await writeSocialQueue(queue);
+      await new Promise(r => setTimeout(r, 4000));
+    }
+    if (posted) console.log(`[social] pubblicati automaticamente ${posted} post su Facebook`);
+    return { posted };
+  } finally { _socialAutoRunning = false; }
+}
+
 // Genera e accoda un post per ogni gara con risultato di oggi/ieri ancora non in coda.
 async function queueSocialPostsForToday() {
   try {
@@ -7961,10 +8017,14 @@ async function queueSocialPostsForToday() {
       const date         = (r.data_gara || r.date || '').slice(0, 10);
       const link         = `https://italiacyclingstats.com/#/gara/${encodeURIComponent(garaId)}`;
       const photoUrl     = xpix[garaId]?.url || ic[garaId]?.url || null;
-      const caption = await generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link });
+      // testo completo generato dall'AI (titolo, racconto, podio, hashtag); se non riesce, la caption breve
+      let caption = null;
+      try { caption = await _generateAndStoreGaraNarrative(garaId, { fresh: true }); } catch (e) { console.warn('[social] racconto AI non disponibile:', e.message); }
+      if (!caption) caption = await generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link });
       queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: nome_gara, winner: winner_label, category, winner_team, date, caption, photo_url: photoUrl, link, status: 'pending', fb_post_id: null });
     }
     await writeSocialQueue(queue);
+    await publishPendingSocialAuto().catch(e => console.warn('[social] auto-publish error:', e.message));
     console.log(`[social] ${garaIds.length} gare controllate, ${garaIds.filter(g => !existing.has(g)).length} nuovi post in coda`);
   } catch (e) { console.warn('[social] queueSocialPostsForToday error:', e.message); }
 }
@@ -9277,6 +9337,27 @@ app.post('/api/admin/social/:id/regenerate', requireAdmin, async (req, res) => {
     queue[idx] = { ...post, caption, status: 'pending' };
     await writeSocialQueue(queue);
     res.json({ ok: true, caption });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Interruttore "pubblica automaticamente su Facebook"
+app.get('/api/admin/social/auto', requireAdmin, async (req, res) => {
+  try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/social/auto', requireAdmin, async (req, res) => {
+  try {
+    const enabled = !!(req.body && req.body.enabled);
+    if (enabled && !_fbConfigured()) return res.status(400).json({ error: 'Facebook non configurato: mancano FB_PAGE_ID e FB_PAGE_TOKEN su Render' });
+    await writeSocialAuto({ enabled, updated_at: new Date().toISOString(), by: req.user && req.user.id });
+    res.json({ ok: true, enabled });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+// Pubblica adesso i post in attesa (stessi limiti dell'automatico), anche con l'interruttore spento
+app.post('/api/admin/social/publish-pending', requireAdmin, async (req, res) => {
+  try {
+    if (!_fbConfigured()) return res.status(400).json({ error: 'Facebook non configurato' });
+    res.json({ ok: true, ...(await publishPendingSocialAuto({ force: true })) });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

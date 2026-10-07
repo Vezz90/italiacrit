@@ -13484,3 +13484,12 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 .admin-main summary { cursor: pointer; font-weight: 700; font-size: .86rem; }
 .admin-photo-meta { font-size: .78rem; }
 .admin-photo-meta a { font-size: .8rem; }
+
+/* Interruttore pubblicazione automatica (Coda Social) */
+.adm-auto { display: flex; align-items: center; gap: 18px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; }
+.adm-auto.on { border-color: rgba(16,185,129,.5); background: linear-gradient(90deg, rgba(16,185,129,.08), transparent 70%), var(--bg-card); }
+.adm-auto-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.adm-auto-t b { font-size: .95rem; color: var(--text-primary); } .adm-auto-t span { font-size: .84rem; color: var(--text-secondary); } .adm-auto-t small { font-size: .74rem; color: var(--text-muted); }
+.adm-switch { flex: none; width: 52px; height: 30px; border-radius: 15px; border: 0; background: var(--border-subtle); position: relative; cursor: pointer; padding: 0; transition: background .15s; }
+.adm-switch i { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); transition: transform .15s; }
+.adm-switch[aria-checked="true"] { background: #10B981; } .adm-switch[aria-checked="true"] i { transform: translateX(22px); }

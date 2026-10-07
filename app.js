@@ -13683,6 +13683,7 @@ window.adminNav = async function(section) {
       main.innerHTML = '<div class="admin-loading">Caricamento coda social…</div>';
       try {
         const { queue = [] } = await apiCall('/admin/social/queue');
+        const autoCfg = await apiCall('/admin/social/auto').catch(() => ({ enabled: false, fb_configured: false }));
         const pending  = queue.filter(p => p.status === 'pending');
         const done     = queue.filter(p => p.status !== 'pending').slice(-10).reverse();
         const fbSet    = true; // mostrato nel pannello scraper
@@ -13707,7 +13708,8 @@ window.adminNav = async function(section) {
                    </div>`
                 : `<div style="font-size:.82rem;color:var(--text-muted);white-space:pre-wrap;margin-bottom:6px">${esc(p.caption)}</div>
                    ${statusBadge(p.status)}
-                   ${p.posted_at ? `<span style="font-size:.72rem;color:var(--text-muted);margin-left:8px">${p.posted_at.slice(0,16).replace('T',' ')}</span>` : ''}`
+                   ${p.posted_at ? `<span style="font-size:.72rem;color:var(--text-muted);margin-left:8px">${p.posted_at.slice(0,16).replace('T',' ')}${p.auto ? ' · automatico' : ''}</span>` : ''}
+                   ${p.error ? `<div style="font-size:.74rem;color:#ef4444;margin-top:4px">Ultimo errore: ${esc(p.error)}</div>` : ''}`
               }
             </div>
           </div>`;
@@ -13716,8 +13718,15 @@ window.adminNav = async function(section) {
             <h1 class="admin-page-title">📣 Coda Social Media</h1>
             <p class="admin-page-sub">Post generati automaticamente dopo ogni scrape. Revisiona e pubblica su Facebook.</p>
           </div>
+          <div class="adm-auto ${autoCfg.enabled ? 'on' : ''}">
+            <div class="adm-auto-t"><b>Pubblicazione automatica su Facebook</b>
+              <span>${autoCfg.enabled ? 'ACCESA: ogni nuovo risultato viene pubblicato da solo, con il testo scritto dall’AI (titolo, racconto, podio e hashtag), con la foto della gara se c’è.' : 'Spenta: i post restano qui in attesa e li pubblichi tu.'}</span>
+              ${autoCfg.fb_configured ? `<small>Limite di sicurezza: al massimo ${autoCfg.max_per_run || 6} post per ogni aggiornamento, uno per gara, solo gare di oggi e ieri.</small>` : '<small style="color:#ef4444">Facebook non è configurato: servono FB_PAGE_ID e FB_PAGE_TOKEN su Render (vedi Scraper &amp; Config).</small>'}</div>
+            <button class="adm-switch" role="switch" aria-checked="${!!autoCfg.enabled}" ${autoCfg.fb_configured || autoCfg.enabled ? '' : 'disabled'} onclick="window._sqAuto(${!autoCfg.enabled})"><i></i></button>
+          </div>
           <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
             <button onclick="window._sqQueueNow()" style="background:var(--red-hot);color:#fff;border:none;padding:8px 18px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🔄 Genera post adesso</button>
+            ${autoCfg.fb_configured && pending.length ? `<button onclick="window._sqPublishAll()" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:8px 18px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;color:var(--text-primary)">📤 Pubblica ora i post in attesa</button>` : ''}
           </div>
           ${pending.length
             ? `<h3 style="margin:0 0 12px;font-size:1rem">⏳ In attesa di approvazione (${pending.length})</h3>
@@ -13748,6 +13757,16 @@ window.adminNav = async function(section) {
             if (ta) ta.value = caption;
             showToast('Caption rigenerata ✓');
           } catch(e) { if(errEl){ errEl.textContent = e.message; errEl.style.display = 'block'; } else showToast(e.message,'error'); }
+        };
+        window._sqAuto = async (on) => {
+          if (on && !confirm('Accendere la pubblicazione automatica?\nDa ora ogni nuovo risultato verrà pubblicato da solo sulla pagina Facebook, con il testo scritto dall’AI.')) return;
+          try { await apiCall('/admin/social/auto', { method: 'POST', body: { enabled: !!on } }); showToast(on ? '✅ Pubblicazione automatica accesa' : 'Pubblicazione automatica spenta'); adminNav('social-queue'); }
+          catch (e) { showToast(e.message, 'error'); }
+        };
+        window._sqPublishAll = async () => {
+          if (!confirm('Pubblicare adesso su Facebook i post in attesa (al massimo 6, solo gare di oggi e ieri)?')) return;
+          try { const r = await apiCall('/admin/social/publish-pending', { method: 'POST' }); showToast(`📤 Pubblicati ${r.posted || 0} post`); adminNav('social-queue'); }
+          catch (e) { showToast(e.message, 'error'); }
         };
         window._sqQueueNow = async () => {
           try {
