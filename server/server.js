@@ -7955,6 +7955,22 @@ async function postToFacebook(caption, photoUrl) {
   return data;
 }
 
+// Immagine e credit del post: la stessa grafica della condivisione dal sito (foto della gara
+// + podio, oppure card risultati se non c'e' foto) e la riga "Foto: fotografo" nel testo.
+async function _socialMediaFor(garaId) {
+  let credit = null;
+  try {
+    const { cal } = await _fetchCalAndResultsFor(garaId, {});
+    credit = await _photoCreditFor(garaId, cal);
+  } catch (e) { console.warn('[social] credit foto non disponibile:', e.message); }
+  return { photo_url: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(garaId)}`, credit };
+}
+const _withCredit = (text, credit) => {
+  const s = String(text || '').trim();
+  if (!credit || /📷\s*Foto/i.test(s)) return s;
+  return `${s}\n\n📷 Foto: ${credit}`;
+};
+
 // Post gia' presenti sulla pagina Facebook (anche pubblicati a mano): evita doppioni.
 // Una gara conta come gia' condivisa se un post della pagina, uscito entro 10 giorni dalla gara,
 // contiene il suo link oppure tutte le parole significative del suo nome.
@@ -8083,11 +8099,13 @@ async function queueSocialPostsForToday() {
       const winner_team  = r.team || '';
       const date         = (r.data_gara || r.data || r.date || '').slice(0, 10);
       const link         = `https://italiacyclingstats.com/#/gara/${encodeURIComponent(garaId)}`;
-      const photoUrl     = xpix[garaId]?.url || ic[garaId]?.url || null;
+      const media        = await _socialMediaFor(garaId);
+      const photoUrl     = media.photo_url;
       // testo completo generato dall'AI (titolo, racconto, podio, hashtag); se non riesce, la caption breve
       let caption = null;
       try { caption = await _generateAndStoreGaraNarrative(garaId, { fresh: true }); } catch (e) { console.warn('[social] racconto AI non disponibile:', e.message); }
       if (!caption) caption = await generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link });
+      caption = _withCredit(caption, media.credit);
       queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: nome_gara, winner: winner_label, category, winner_team, date, caption, photo_url: photoUrl, link, status: 'pending', fb_post_id: null });
     }
     await writeSocialQueue(queue);
@@ -9400,8 +9418,12 @@ app.post('/api/admin/social/:id/regenerate', requireAdmin, async (req, res) => {
     const idx = queue.findIndex(p => p.id === req.params.id);
     if (idx < 0) return res.status(404).json({ error: 'Post non trovato' });
     const post = queue[idx];
-    const caption = await generateSocialCaption({ nome_gara: post.gara_name, winner_label: post.winner, category: post.category, winner_team: post.winner_team, date: post.date, link: post.link });
-    queue[idx] = { ...post, caption, status: 'pending' };
+    const media = await _socialMediaFor(post.gara_id);
+    let caption = null;
+    try { caption = await _generateAndStoreGaraNarrative(post.gara_id, { fresh: true }); } catch (e) { console.warn('[social] racconto AI non disponibile:', e.message); }
+    if (!caption) caption = await generateSocialCaption({ nome_gara: post.gara_name, winner_label: post.winner, category: post.category, winner_team: post.winner_team, date: post.date, link: post.link });
+    caption = _withCredit(caption, media.credit);
+    queue[idx] = { ...post, caption, photo_url: media.photo_url, status: 'pending' };
     await writeSocialQueue(queue);
     res.json({ ok: true, caption });
   } catch (e) { res.status(500).json({ error: e.message }); }
