@@ -13401,3 +13401,43 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
 .club-hist-row .n b { color: var(--hx-blue, #3D7BFF); font-variant-numeric: tabular-nums; }
 .club-hist-row .b a { font-weight: 700; color: var(--text-primary); text-decoration: none; } .club-hist-row .b a:hover { text-decoration: underline; }
 @media (max-width: 760px) { .club-hist-row { grid-template-columns: 54px minmax(0, 1fr); } .club-hist-row .n, .club-hist-row .b { grid-column: 2; } }
+
+/* ===== Pannello admin (v2): stesso linguaggio delle pagine nuove ===== */
+.admin-shell { gap: 0; background: var(--bg-primary); margin: -16px -16px 0; }
+.admin-sidebar { width: 248px; background: var(--bg-card); padding: 0 0 24px; }
+.admin-sidebar-title { font-style: italic; font-size: .8rem; letter-spacing: .14em; padding: 18px 16px 10px; border-bottom: 0; margin: 0; }
+.admin-nav-search { display: block; width: calc(100% - 24px); margin: 0 12px 6px; height: 36px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-primary, var(--bg-card)); color: var(--text-primary); padding: 0 10px; font-size: .8rem; }
+.admin-nav-group { font-size: .62rem; letter-spacing: .12em; padding: 16px 16px 5px; }
+.admin-nav-item { margin: 1px 8px; padding: 8px 10px; border-left: 0; border-radius: 8px; font-size: .82rem; gap: 10px; }
+.admin-nav-item.active { background: rgba(227,24,45,.1); color: var(--text-primary); font-weight: 700; box-shadow: inset 3px 0 0 #E3182D; }
+.admin-nav-lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-nav-badge { background: #E3182D; }
+.admin-nav-badge:empty { display: none; }
+.admin-main { padding: 26px clamp(16px, 3vw, 40px) 48px; }
+.admin-page-title { font-style: italic; text-transform: uppercase; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; line-height: 1; letter-spacing: 0; }
+.admin-page-sub { margin-top: 8px; }
+.adm-h { display: flex; align-items: baseline; gap: 12px; margin: 22px 0 10px; }
+.adm-h h2 { margin: 0; font-size: .82rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-primary); }
+.adm-h h2::before { content: ""; display: inline-block; width: 4px; height: 16px; background: #E3182D; transform: skewX(-14deg); margin-right: 9px; vertical-align: -3px; }
+.adm-h span { color: var(--text-secondary); font-size: .8rem; }
+.adm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 12px; }
+.adm-grid-s { grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.adm-todo { display: flex; align-items: center; gap: 14px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.adm-todo:hover { border-color: #3D7BFF; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+.adm-todo-i { font-size: 1.5rem; width: 40px; height: 40px; border-radius: 10px; background: var(--bg-elevated, rgba(0,0,0,.05)); display: grid; place-items: center; flex: none; }
+.adm-todo-b { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.adm-todo-b b { font-size: 1.7rem; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.adm-todo-b span { font-size: .84rem; font-weight: 700; color: var(--text-primary); margin-top: 3px; }
+.adm-todo-b small { font-size: .72rem; color: var(--text-muted); margin-top: 1px; }
+.adm-todo-go { color: var(--text-muted); font-size: 1.4rem; }
+.adm-todo-on { border-color: rgba(227,24,45,.45); background: linear-gradient(90deg, rgba(227,24,45,.07), transparent 60%), var(--bg-card); }
+.adm-todo-on .adm-todo-b b { color: #E3182D; }
+.adm-short { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 46px; padding: 0 16px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-primary); font-weight: 600; font-size: .84rem; cursor: pointer; }
+.adm-short:hover { border-color: #3D7BFF; }
+.adm-short b { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .admin-shell { flex-direction: column; margin: -16px -12px 0; }
+  .admin-sidebar { position: static; width: 100%; height: auto; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding: 8px; gap: 4px; align-items: center; border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+  .admin-sidebar-title, .admin-nav-group, .admin-nav-search { display: none !important; }
+  .admin-nav-item { flex: 0 0 auto; margin: 0; white-space: nowrap; }
+}

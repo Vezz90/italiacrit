@@ -12241,89 +12241,85 @@ async function renderAdmin() {
       <!-- ── SIDEBAR ── -->
       <aside class="admin-sidebar">
         <div class="admin-sidebar-title">GESTIONALE</div>
+        <input type="search" class="admin-nav-search" placeholder="Cerca una sezione…" aria-label="Cerca una sezione" oninput="window._adminNavFilter(this.value)" autocomplete="off">
 
-        <div class="admin-nav-group">Generale</div>
+        <div class="admin-nav-group">Panoramica</div>
         <div class="admin-nav-item" data-section="overview" onclick="adminNav('overview')">
-          <span class="admin-nav-icon">📊</span> Dashboard
+          <span class="admin-nav-icon">📊</span> <span class="admin-nav-lbl">Dashboard</span>
         </div>
         <div class="admin-nav-item" data-section="sync" onclick="adminNav('sync')">
-          <span class="admin-nav-icon">🔄</span> Sincronizza dati
+          <span class="admin-nav-icon">🔄</span> <span class="admin-nav-lbl">Sincronizza dati</span>
         </div>
 
-        <div class="admin-nav-group">Foto</div>
+        <div class="admin-nav-group">Da moderare</div>
         <div class="admin-nav-item" data-section="foto-pending" onclick="adminNav('foto-pending')">
-          <span class="admin-nav-icon">📥</span> In attesa
+          <span class="admin-nav-icon">📷</span> <span class="admin-nav-lbl">Foto in attesa</span>
           <span class="admin-nav-badge" id="badge-foto-pending"></span>
         </div>
+        <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
+          <span class="admin-nav-icon">🎬</span> <span class="admin-nav-lbl">Video in attesa</span>
+          <span class="admin-nav-badge" id="badge-video-pending"></span>
+        </div>
+        <div class="admin-nav-item" data-section="utenti-pending" onclick="adminNav('utenti-pending')">
+          <span class="admin-nav-icon">📥</span> <span class="admin-nav-lbl">Profili in attesa</span>
+          <span class="admin-nav-badge" id="badge-profili-pending"></span>
+        </div>
+        <div class="admin-nav-item" data-section="team-lineage" onclick="adminNav('team-lineage')">
+          <span class="admin-nav-icon">🔗</span> <span class="admin-nav-lbl">Storico Team</span>
+          <span class="admin-nav-badge" id="badge-team-lineage"></span>
+        </div>
+        <div class="admin-nav-item" data-section="albo-review" onclick="adminNav('albo-review')">
+          <span class="admin-nav-icon">🏆</span> <span class="admin-nav-lbl">Albo d'oro · fusioni</span>
+          <span class="admin-nav-badge" id="badge-albo-review"></span>
+        </div>
+        <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
+          <span class="admin-nav-icon">📣</span> <span class="admin-nav-lbl">Coda Social</span>
+          <span class="admin-nav-badge" id="badge-social"></span>
+        </div>
+
+        <div class="admin-nav-group">Dati e gare</div>
+        <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
+          <span class="admin-nav-icon">🏁</span> <span class="admin-nav-lbl">Gare / Risultati</span>
+        </div>
+        <div class="admin-nav-item" data-section="atleti-gestione" onclick="adminNav('atleti-gestione')">
+          <span class="admin-nav-icon">🚴</span> <span class="admin-nav-lbl">Atleti</span>
+        </div>
+        <div class="admin-nav-item" data-section="pcs-fix" onclick="adminNav('pcs-fix')">
+          <span class="admin-nav-icon" style="color:#059669">🔧</span> <span class="admin-nav-lbl">Team &amp; Atleti PCS</span>
+        </div>
+        <div class="admin-nav-item" data-section="scraper" onclick="adminNav('scraper')">
+          <span class="admin-nav-icon">🤖</span> <span class="admin-nav-lbl">Scraper &amp; Config</span>
+        </div>
+
+        <div class="admin-nav-group">Foto e video</div>
         <div class="admin-nav-item" data-section="foto-xpix" onclick="adminNav('foto-xpix')">
-          <span class="admin-nav-icon" style="color:#0ea5e9">◈</span> xpix Auto-Sync
+          <span class="admin-nav-icon" style="color:#0ea5e9">◈</span> <span class="admin-nav-lbl">xpix Auto-Sync</span>
           <span class="admin-nav-badge" id="badge-xpix"></span>
         </div>
         <div class="admin-nav-item" data-section="foto-ic" onclick="adminNav('foto-ic')">
-          <span class="admin-nav-icon" style="color:#f59e0b">📷</span> ciclismo.info Auto-Sync
+          <span class="admin-nav-icon" style="color:#f59e0b">📷</span> <span class="admin-nav-lbl">ciclismo.info Auto-Sync</span>
           <span class="admin-nav-badge" id="badge-ic"></span>
         </div>
-        <div class="admin-nav-item" data-section="pcs-fix" onclick="adminNav('pcs-fix')">
-          <span class="admin-nav-icon" style="color:#059669">🔧</span> Team &amp; Atleti PCS
-        </div>
-
-        <div class="admin-nav-group">Video</div>
-        <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
-          <span class="admin-nav-icon">📥</span> In attesa
-          <span class="admin-nav-badge" id="badge-video-pending"></span>
-        </div>
         <div class="admin-nav-item" data-section="video-yt" onclick="adminNav('video-yt')">
-          <span class="admin-nav-icon" style="color:#ef4444">▶</span> YouTube Auto-Sync
+          <span class="admin-nav-icon" style="color:#ef4444">▶</span> <span class="admin-nav-lbl">YouTube Auto-Sync</span>
           <span class="admin-nav-badge" id="badge-yt"></span>
         </div>
-        <div class="admin-nav-item" data-section="video-tutti" onclick="adminNav('video-tutti')">
-          <span class="admin-nav-icon">🎥</span> Tutti i video
-        </div>
-
-        <div class="admin-nav-group">Archivio Foto</div>
         <div class="admin-nav-item" data-section="foto-tutti" onclick="adminNav('foto-tutti')">
-          <span class="admin-nav-icon">🖼️</span> Tutte le foto
+          <span class="admin-nav-icon">🖼️</span> <span class="admin-nav-lbl">Tutte le foto</span>
         </div>
-
-        <div class="admin-nav-group">Media / Fotografi</div>
+        <div class="admin-nav-item" data-section="video-tutti" onclick="adminNav('video-tutti')">
+          <span class="admin-nav-icon">🎥</span> <span class="admin-nav-lbl">Tutti i video</span>
+        </div>
         <div class="admin-nav-item" data-section="media-profiles" onclick="adminNav('media-profiles')">
-          <span class="admin-nav-icon">📷</span> Profili media
+          <span class="admin-nav-icon">🧑‍🎨</span> <span class="admin-nav-lbl">Profili media</span>
         </div>
         <div class="admin-nav-item" data-section="media-seed" onclick="adminNav('media-seed')">
-          <span class="admin-nav-icon">🌱</span> Seed xpix
+          <span class="admin-nav-icon">🌱</span> <span class="admin-nav-lbl">Seed xpix</span>
         </div>
 
         <div class="admin-nav-group">Utenti</div>
         <div class="admin-nav-item" data-section="utenti-lista" onclick="adminNav('utenti-lista')">
-          <span class="admin-nav-icon">👥</span> Lista utenti
-        </div>
-        <div class="admin-nav-item" data-section="utenti-pending" onclick="adminNav('utenti-pending')">
-          <span class="admin-nav-icon">📥</span> Profili in attesa
-          <span class="admin-nav-badge" id="badge-profili-pending"></span>
-        </div>
-
-        <div class="admin-nav-group">Gestione contenuti</div>
-        <div class="admin-nav-item" data-section="atleti-gestione" onclick="adminNav('atleti-gestione')">
-          <span class="admin-nav-icon">🚴</span> Atleti
-        </div>
-        <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
-          <span class="admin-nav-icon">🏁</span> Gare / Risultati
-        </div>
-        <div class="admin-nav-item" data-section="team-lineage" onclick="adminNav('team-lineage')">
-          <span class="admin-nav-icon">🔗</span> Storico Team
-          <span class="admin-nav-badge" id="badge-team-lineage"></span>
-        </div>
-        <div class="admin-nav-item" data-section="albo-review" onclick="adminNav('albo-review')">
-          <span class="admin-nav-icon">🏆</span> Albo d'oro · fusioni
-          <span class="admin-nav-badge" id="badge-albo-review"></span>
-        </div>
-        <div class="admin-nav-group">Social & Automazione</div>
-        <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
-          <span class="admin-nav-icon">📣</span> Coda Social
-          <span class="admin-nav-badge" id="badge-social"></span>
-        </div>
-        <div class="admin-nav-item" data-section="scraper" onclick="adminNav('scraper')">
-          <span class="admin-nav-icon">🤖</span> Scraper & Config
+          <span class="admin-nav-icon">👥</span> <span class="admin-nav-lbl">Lista utenti</span>
         </div>
       </aside>
 
@@ -12351,6 +12347,16 @@ async function renderAdmin() {
   adminNav(_adminSection);
 }
 
+window._adminNavFilter = (q) => {
+  q = String(q || '').toLowerCase().trim();
+  document.querySelectorAll('.admin-sidebar .admin-nav-item').forEach(el => { el.style.display = !q || el.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  document.querySelectorAll('.admin-sidebar .admin-nav-group').forEach(g => {
+    let n = g.nextElementSibling, any = false;
+    while (n && n.classList.contains('admin-nav-item')) { if (n.style.display !== 'none') any = true; n = n.nextElementSibling; }
+    g.style.display = any ? '' : 'none';
+  });
+};
+
 window.adminNav = async function(section) {
   _adminSection = section;
 
@@ -12367,51 +12373,39 @@ window.adminNav = async function(section) {
 
     // ── OVERVIEW ──────────────────────────────────────────────
     case 'overview': {
+      const card = (sec, ico, label, id, hint) => `<div class="adm-todo" id="card-${id}" onclick="adminNav('${sec}')" role="button" tabindex="0">
+          <div class="adm-todo-i">${ico}</div><div class="adm-todo-b"><b id="${id}">—</b><span>${label}</span><small>${hint}</small></div><span class="adm-todo-go">›</span></div>`;
       main.innerHTML = `
         <div class="admin-page-header">
-          <h1 class="admin-page-title">📊 Dashboard</h1>
-          <p class="admin-page-sub">Benvenuto nel pannello di gestione Italia Cycling Stats.</p>
+          <h1 class="admin-page-title">Pannello admin</h1>
+          <p class="admin-page-sub">Cosa richiede la tua attenzione adesso, e le scorciatoie per il resto.</p>
         </div>
-        <div class="admin-overview-grid">
-          <div class="admin-stat-card" onclick="adminNav('foto-pending')" style="cursor:pointer">
-            <div class="admin-stat-icon">📷</div>
-            <div class="admin-stat-label">Foto in attesa</div>
-            <div class="admin-stat-value" id="ov-foto-pending">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('foto-xpix')" style="cursor:pointer">
-            <div class="admin-stat-icon" style="color:#0ea5e9">◈</div>
-            <div class="admin-stat-label">xpix in coda</div>
-            <div class="admin-stat-value" id="ov-xpix">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('video-pending')" style="cursor:pointer">
-            <div class="admin-stat-icon">🎬</div>
-            <div class="admin-stat-label">Video in attesa</div>
-            <div class="admin-stat-value" id="ov-video-pending">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('video-yt')" style="cursor:pointer">
-            <div class="admin-stat-icon" style="color:#ef4444">▶</div>
-            <div class="admin-stat-label">YouTube in coda</div>
-            <div class="admin-stat-value" id="ov-yt">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('utenti-pending')" style="cursor:pointer">
-            <div class="admin-stat-icon">📥</div>
-            <div class="admin-stat-label">Profili in attesa</div>
-            <div class="admin-stat-value" id="ov-profili-pending">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('utenti-lista')" style="cursor:pointer">
-            <div class="admin-stat-icon">👥</div>
-            <div class="admin-stat-label">Utenti registrati</div>
-            <div class="admin-stat-value" id="ov-utenti">—</div>
-          </div>
-          <div class="admin-stat-card" onclick="adminNav('social-queue')" style="cursor:pointer">
-            <div class="admin-stat-icon">📣</div>
-            <div class="admin-stat-label">Social in coda</div>
-            <div class="admin-stat-value" id="ov-social">—</div>
-          </div>
+        <div class="adm-h"><h2>Da moderare</h2><span id="adm-total"></span></div>
+        <div class="adm-grid">
+          ${card('foto-pending', '📷', 'Foto in attesa', 'ov-foto-pending', 'Approva o rifiuta le foto caricate')}
+          ${card('video-pending', '🎬', 'Video in attesa', 'ov-video-pending', 'Video proposti dagli utenti')}
+          ${card('utenti-pending', '📥', 'Profili in attesa', 'ov-profili-pending', 'Atleti, team e media da verificare')}
+          ${card('team-lineage', '🔗', 'Collegamenti storico team', 'ov-tl', 'Squadre rinominate da confermare')}
+          ${card('albo-review', '🏆', "Fusioni albo d'oro", 'ov-albo', 'Gare dal nome simile da unire o separare')}
+          ${card('social-queue', '📣', 'Social in coda', 'ov-social', 'Post pronti da pubblicare')}
+        </div>
+        <div class="adm-h"><h2>Code automatiche</h2></div>
+        <div class="adm-grid">
+          ${card('foto-xpix', '◈', 'xpix in coda', 'ov-xpix', 'Album foto trovati da collegare')}
+          ${card('video-yt', '▶', 'YouTube in coda', 'ov-yt', 'Video trovati sui canali')}
+        </div>
+        <div class="adm-h"><h2>Scorciatoie</h2></div>
+        <div class="adm-grid adm-grid-s">
+          <button class="adm-short" onclick="adminNav('gare-gestione')">🏁 Gare / Risultati</button>
+          <button class="adm-short" onclick="adminNav('atleti-gestione')">🚴 Atleti</button>
+          <button class="adm-short" onclick="adminNav('sync')">🔄 Sincronizza dati</button>
+          <button class="adm-short" onclick="adminNav('scraper')">🤖 Scraper &amp; config</button>
+          <button class="adm-short" onclick="adminNav('utenti-lista')">👥 Utenti <b id="ov-utenti">—</b></button>
+          <button class="adm-short" onclick="location.hash='#/'">↗ Vai al sito</button>
         </div>`;
       // Carica i contatori
       try {
-        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ, tlPend] = await Promise.all([
+        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ, tlPend, alboRev, alboMan] = await Promise.all([
           apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
           apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
           apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
@@ -12420,8 +12414,10 @@ window.adminNav = async function(section) {
           fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
           apiCall('/admin/social/queue').catch(()=>({queue:[]})),
           fetch(`${API_BASE}/admin/team-lineage?status=pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({items:[]})),
+          fetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
+          fetch(`${API_BASE}/data/albo-manual`).then(r => r.json()).catch(() => ({ merges: [], distinct: [] })),
         ]);
-        const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
+        const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; const c = document.getElementById('card-' + id); if (c) c.classList.toggle('adm-todo-on', Number(n) > 0); };
         const fotoPend    = (photos.photos||[]).length;
         const xpixPend    = (xpixQ.queue||[]).filter(q=>q.status==='pending').length;
         const vidPend2    = (vidPend.videos||[]).length;
@@ -12430,13 +12426,19 @@ window.adminNav = async function(section) {
         const utentiCount = (usersD.users||[]).length;
         const socialPend  = (socialQ.queue||[]).filter(q=>q.status==='pending').length;
         const tlPendCount = (tlPend.items||[]).length;
+        const sameAr = (x, y) => x.g === y.g && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
+        const alboPend = (alboRev || []).filter(x => !(alboMan.merges || []).some(m => sameAr(m, x)) && !(alboMan.distinct || []).some(m => sameAr(m, x))).length;
         setPending('ov-foto-pending', fotoPend);
         setPending('ov-xpix', xpixPend);
         setPending('ov-video-pending', vidPend2);
         setPending('ov-yt', ytPend);
         setPending('ov-profili-pending', profPend);
-        setPending('ov-utenti', utentiCount);
         setPending('ov-social', socialPend);
+        setPending('ov-tl', tlPendCount);
+        setPending('ov-albo', alboPend);
+        const ut = document.getElementById('ov-utenti'); if (ut) ut.textContent = utentiCount;
+        const tot = fotoPend + vidPend2 + profPend + tlPendCount + alboPend + socialPend;
+        const tEl = document.getElementById('adm-total'); if (tEl) tEl.textContent = tot ? `${tot} element${tot === 1 ? 'o' : 'i'} da guardare` : '✅ Tutto in ordine';
         // Aggiorna badge sidebar
         const setBadge = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
         setBadge('badge-foto-pending', fotoPend);
@@ -12446,6 +12448,7 @@ window.adminNav = async function(section) {
         setBadge('badge-profili-pending', profPend);
         setBadge('badge-social', socialPend);
         setBadge('badge-team-lineage', tlPendCount);
+        setBadge('badge-albo-review', alboPend);
       } catch(e) { /* ignora */ }
       break;
     }
