@@ -293,7 +293,7 @@
       const mixed = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i.test(g.categoria || '');
       return mixed || _calBandsOf(g.categoria).has(band);
     };
-    const upcoming = globalData.calendar.filter(g => g.data >= today && !isNonRaceCalendarEntry(g) && !isProCalendarEntry(g) && calOk(g)).sort((a, b) => a.data.localeCompare(b.data)).slice(0, 5);
+    const upcoming = globalData.calendar.filter(g => g.data >= today && !isNonRaceCalendarEntry(g) && !isProCalendarEntry(g) && calOk(g)).sort((a, b) => a.data.localeCompare(b.data)).filter((g, i, arr) => arr.findIndex(x => x.data === g.data && String(x.nome).toUpperCase().replace(/[^A-Z0-9]/g, '') === String(g.nome).toUpperCase().replace(/[^A-Z0-9]/g, '')) === i).slice(0, 5);
     // classifiche a destra: senza categoria il primo di ogni categoria (uomini e donne); con una categoria i primi 5
     const grp = (t, inner) => `<div class="hx-grp">${t}</div>${inner}`;
     const mini = (kind) => hx.cat

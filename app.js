@@ -29083,13 +29083,22 @@ async function renderRisultati() {
       : '';
     const sideEl = document.getElementById('ris-side');
     if (sideEl) {
-      const evs = Object.values(eventMap);
+      // il calendario segue i filtri scelti: sesso e categoria (anche quella del menu in alto)
+      const evs = races.filter(r => !r._pending);
       const lastD = evs.reduce((m, e) => (e.data > m ? e.data : m), '');
       const fromD = lastD ? new Date(new Date(lastD + 'T00:00:00').getTime() - 864e5).toISOString().slice(0, 10) : '';
-      const wantF = risQueryGenere === 'F', wantM = risQueryGenere === 'M';
+      const _codes = risQueryCat ? [risQueryCat] : ((activeHub && activeHub.catCodes) || []);
+      const _bandOf = c => String(c).replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES');
+      const wantBands = new Set(_codes.map(_bandOf));
+      const sexSel = risQueryGenere || (risQueryCat ? risQueryCat.slice(-1) : ((activeHub && activeHub.gender) || ''));
+      const wantF = sexSel === 'F', hasSex = sexSel === 'F' || sexSel === 'M';
+      const mixedRe = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i;
       const upcoming = (calendar || []).filter(g => g.data > _risTodayIso && !isNonRaceCalendarEntry(g) && !isProCalendarEntry(g)
-        && (!(wantF || wantM) || /DONNE|DONNA/i.test(g.categoria || '') === wantF))
-        .sort((a, b) => a.data.localeCompare(b.data)).slice(0, 5);
+        && (!hasSex || /DONNE|DONNA/i.test(g.categoria || '') === wantF)
+        && (!wantBands.size || mixedRe.test(g.categoria || '') || [..._calBandsOf(g.categoria)].some(b => wantBands.has(b))))
+        .sort((a, b) => a.data.localeCompare(b.data))
+        .filter((g, i, arr) => arr.findIndex(x => x.data === g.data && String(x.nome).toUpperCase().replace(/[^A-Z0-9]/g, '') === String(g.nome).toUpperCase().replace(/[^A-Z0-9]/g, '')) === i)
+        .slice(0, 5);
       sideEl.innerHTML = window.RisV2.sideHtml({ weekend: lastD ? evs.filter(e => e.data >= fromD).length : 0, pending: pendingToday.length, upcoming });
     }
     window.RisV2.liveStart();
