@@ -13441,3 +13441,20 @@ a.hx-hero { color: #fff; text-decoration: none; cursor: pointer; }
   .admin-sidebar-title, .admin-nav-group, .admin-nav-search { display: none !important; }
   .admin-nav-item { flex: 0 0 auto; margin: 0; white-space: nowrap; }
 }
+
+/* ===== Admin: sezioni interne con lo stesso stile (tabelle, campi, pulsanti) ===== */
+.admin-main .admin-page-header { padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
+.admin-main table { width: 100%; border-collapse: collapse; }
+.admin-main thead th { text-align: left; font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); padding: 10px 12px; background: var(--bg-elevated, rgba(0,0,0,.04)); border-bottom: 1px solid var(--border-subtle); }
+.admin-main tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+.admin-main tbody tr:hover td { background: var(--bg-elevated, rgba(0,0,0,.03)); }
+.admin-main input[type="text"], .admin-main input[type="search"], .admin-main input[type="url"], .admin-main input[type="number"], .admin-main input[type="date"], .admin-main input[type="password"], .admin-main select, .admin-main textarea {
+  border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); padding: 9px 12px; font-size: .86rem; font-family: inherit; }
+.admin-main input:focus, .admin-main select:focus, .admin-main textarea:focus { outline: 2px solid rgba(61,123,255,.35); outline-offset: 0; border-color: #3D7BFF; }
+.admin-main .btn-approve, .admin-main .btn-reject { flex: none; padding: 7px 14px; border-radius: 8px; font-size: .8rem; font-weight: 700; }
+.admin-main .btn-action, .admin-main .tab-btn { border-radius: 8px; }
+.admin-main .tab-btn { height: 36px; padding: 0 14px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); font-weight: 600; font-size: .8rem; }
+.admin-main .tab-btn.active-cat { background: #E3182D; border-color: #E3182D; color: #fff; }
+.admin-action-card { max-width: 720px; border-radius: 10px; }
+.admin-main [style*="border:1px solid var(--border-subtle)"][style*="border-radius:10px"] { box-shadow: none; }
+@media (max-width: 860px) { .admin-main { padding: 18px 14px 40px; } .admin-main table { display: block; overflow-x: auto; } }
