@@ -2545,13 +2545,14 @@ app.get('/api/data/albo-manual', async (req, res) => {
 app.post('/api/admin/albo-manual', requireAdmin, async (req, res) => {
   try {
     const { a, b, g, decision } = req.body || {};
+    const band = ['ELI', 'JUN', 'AL', 'ES', ''].includes(req.body && req.body.band) ? (req.body.band || '') : '';
     if (!a || !b || !['M', 'F'].includes(g) || !['merge', 'distinct', 'undo'].includes(decision)) return res.status(400).json({ error: 'Dati non validi' });
     const cur = await readAlboManual();
-    const same = x => x.g === g && ((x.a === a && x.b === b) || (x.a === b && x.b === a));
+    const same = x => x.g === g && (x.band || '') === band && ((x.a === a && x.b === b) || (x.a === b && x.b === a));
     cur.merges = (cur.merges || []).filter(x => !same(x));
     cur.distinct = (cur.distinct || []).filter(x => !same(x));
-    if (decision === 'merge') cur.merges.push({ a, b, g });
-    if (decision === 'distinct') cur.distinct.push({ a, b, g });
+    if (decision === 'merge') cur.merges.push({ a, b, g, band });
+    if (decision === 'distinct') cur.distinct.push({ a, b, g, band });
     await writeAlboManual(cur);
     _alboManualCache = cur; _alboManualCacheTs = Date.now();
     res.json({ ok: true, merges: cur.merges.length, distinct: cur.distinct.length });

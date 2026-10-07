@@ -28,7 +28,7 @@ STOP = {'DI', 'DEL', 'DELLA', 'DELLE', 'DEI', 'DEGLI', 'DELL', 'DALL', 'DA', 'DE
 ABBR = {'GP': 'GRAN PREMIO', 'G P': 'GRAN PREMIO', 'MEM': 'MEMORIAL', 'TR': 'TROFEO', 'C': 'COPPA', 'CIT': 'CITTA', 'CITTÀ': 'CITTA'}
 # se una e' presente e l'altra no, sono gare diverse (stesso luogo, evento diverso)
 DISCRIMINATORS = {'CAMP', 'CAMPIONATO', 'CAMPIONATI', 'REGIONALE', 'REGIONALI', 'ITALIANO', 'ITALIANI', 'CRONOMETRO', 'CRONO', 'CRONOSCALATA',
-                  'SQUADRE', 'PISTA', 'TAPPA', 'TAPPE', 'GIRO', 'PROVINCIALE', 'NAZIONALE', 'INDIVIDUALE', 'STAFFETTA'}
+                  'SQUADRE', 'PISTA', 'TAPPA', 'TAPPE', 'PROVINCIALE', 'NAZIONALE', 'INDIVIDUALE', 'STAFFETTA'}
 
 
 def norm(s):
@@ -73,6 +73,20 @@ def gender_of(race):
     return 'F' if f == len(cats) else ('M' if f == 0 else 'X')
 
 
+BAND_OF = {'ELITE_UNDER23': 'ELI', 'JUNIORES': 'JUN', 'ALLIEVI': 'AL', 'ESORDIENTI1': 'ES', 'ESORDIENTI2': 'ES',
+           'DONNE_JUNIORES': 'JUN', 'DONNE_ALLIEVE': 'AL', 'DONNE_ESORDIENTI': 'ES', 'DONNE_ELITE': 'ELI', 'DONNE_ELITE_UNDER23': 'ELI'}
+BAND_PRIO = ['ELI', 'JUN', 'AL', 'ES']
+
+
+def band_of(race):
+    # la categoria "principale" della gara: stessa corsa con categorie diverse = gare diverse
+    bands = {BAND_OF.get(str(c).upper(), 'ELI') for c in (race.get('categorie') or {}).keys()}
+    for b in BAND_PRIO:
+        if b in bands:
+            return b
+    return 'ELI'
+
+
 def luogo_key(race):
     loc = norm(race.get('luogo') or '')
     return re.sub(r'\s*\b[A-Z]{2}\b$', '', loc).strip()
@@ -99,6 +113,10 @@ class UF:
     def u(self, a, b): self.p[self.f(a)] = self.f(b)
 
 
+def manual_band(a, b):
+    return ''
+
+
 def main():
     races = load_all()
     manual = {}
@@ -107,20 +125,20 @@ def main():
         manual = json.load(open(mp, encoding='utf-8'))
     groups = collections.defaultdict(list)          # (base, genere) -> edizioni
     for r in races:
-        r['_base'] = base_name(r.get('nome')); r['_g'] = gender_of(r)
+        r['_base'] = base_name(r.get('nome')); r['_g'] = gender_of(r); r['_b'] = band_of(r)
         generic = len(key_tokens(r['_base'])) < 2          # "GRAN PREMIO", "TROFEO"...: da soli non dicono quale gara sia
         r['_ex'] = luogo_key(r) if generic else ''
-        groups[(r['_base'], r['_g'], r['_ex'])].append(r)
+        groups[(r['_base'], r['_g'], r['_b'], r['_ex'])].append(r)
     uf = UF()
     for k in groups: uf.f(k)
     review = []
     by_loc = collections.defaultdict(list)
     for k, lst in groups.items():
-        if k[2]:
+        if k[3]:
             continue
-        by_loc[(luogo_key(lst[0]), k[1])].append(k)
+        by_loc[(luogo_key(lst[0]), k[1], k[2])].append(k)
     auto = 0
-    for (loc, g), keys in by_loc.items():
+    for (loc, g, bnd), keys in by_loc.items():
         if not loc or len(keys) < 2:
             continue
         for i in range(len(keys)):
@@ -142,14 +160,14 @@ def main():
                 elif (ta <= tb or tb <= ta) and min(len(ta), len(tb)) >= 2 and near:
                     uf.u(a, b); auto += 1
                 elif sim >= 0.5 and near:
-                    review.append({'a': a[0], 'b': b[0], 'luogo': loc, 'g': g, 'anni_a': sorted(ya), 'anni_b': sorted(yb), 'sim': round(sim, 2)})
+                    review.append({'a': a[0], 'b': b[0], 'luogo': loc, 'g': g, 'band': bnd, 'anni_a': sorted(ya), 'anni_b': sorted(yb), 'sim': round(sim, 2)})
     # stessa gara che cambia sede: nomi identici (almeno 2 parole distintive), stessa regione, anni vicini e disgiunti
     by_reg = collections.defaultdict(list)
     for k, lst in groups.items():
-        if k[2]:
+        if k[3]:
             continue
-        by_reg[(norm(lst[0].get('regione') or ''), k[1])].append(k)
-    for (reg, g), keys in by_reg.items():
+        by_reg[(norm(lst[0].get('regione') or ''), k[1], k[2])].append(k)
+    for (reg, g, bnd), keys in by_reg.items():
         if not reg:
             continue
         idx_tok = collections.defaultdict(list)
@@ -168,10 +186,10 @@ def main():
                         uf.u(a_, b_); auto += 1
     # fusioni/separazioni manuali
     for a, b in manual.get('merge', []):
-        ka = [k for k in groups if k[0] == base_name(a) and not k[2]]; kb = [k for k in groups if k[0] == base_name(b) and not k[2]]
+        ka = [k for k in groups if k[0] == base_name(a) and not k[3]]; kb = [k for k in groups if k[0] == base_name(b) and not k[3]]
         for x in ka:
             for y in kb:
-                if x[1] == y[1]: uf.u(x, y)
+                if x[1] == y[1] and x[2] == y[2] and (not manual_band(a, b) or x[2] == manual_band(a, b)): uf.u(x, y)
     # serie
     series = collections.defaultdict(list)
     for k, lst in groups.items():
@@ -180,13 +198,13 @@ def main():
     for root, parts in series.items():
         eds = []
         names = collections.Counter()
-        for (base, g, ex), lst in parts:
+        for (base, g, bnd, ex), lst in parts:
             for r in lst:
                 names[(base, ex)] += 1
         # nome della serie = quello dell'edizione piu' recente
         latest = max((r for _, lst in parts for r in lst), key=lambda r: (r['_year'], r.get('data') or ''))
-        sid = hashlib.md5(f"{latest['_base']}|{root[1]}|{latest['_ex']}".encode()).hexdigest()[:10]
-        for (base, g, ex), lst in parts:
+        sid = hashlib.md5(f"{latest['_base']}|{root[1]}|{root[2]}|{latest['_ex']}".encode()).hexdigest()[:10]
+        for (base, g, bnd, ex), lst in parts:
             for r in lst:
                 pods = []
                 for cat, pod in (r.get('categorie') or {}).items():
@@ -194,9 +212,9 @@ def main():
                         pods.append([cat, p.get('posizione'), p.get('atleta_id'), p.get('nome_completo'), p.get('team')])
                 eds.append({'y': r['_year'], 'id': r.get('id'), 'd': r.get('data'), 'n': r.get('nome'), 'p': pods})
         eds.sort(key=lambda e: (-e['y'], e['d'] or ''))
-        out_series[sid] = {'nome': latest.get('nome'), 'base': latest['_base'], 'g': root[1], 'luogo': latest.get('luogo'), 'regione': latest.get('regione'), 'ed': eds}
+        out_series[sid] = {'nome': latest.get('nome'), 'base': latest['_base'], 'g': root[1], 'band': root[2], 'luogo': latest.get('luogo'), 'regione': latest.get('regione'), 'ed': eds}
         for (b, ex) in names:
-            index[f'{b}|{root[1]}' + (f'|{ex}' if ex else '')] = sid
+            index[f'{b}|{root[1]}|{root[2]}' + (f'|{ex}' if ex else '')] = sid
     # shard
     OUT.mkdir(parents=True, exist_ok=True)
     for f in OUT.glob('shard_*.json'):

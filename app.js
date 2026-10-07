@@ -12426,7 +12426,7 @@ window.adminNav = async function(section) {
         const utentiCount = (usersD.users||[]).length;
         const socialPend  = (socialQ.queue||[]).filter(q=>q.status==='pending').length;
         const tlPendCount = (tlPend.items||[]).length;
-        const sameAr = (x, y) => x.g === y.g && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
+        const sameAr = (x, y) => x.g === y.g && (x.band || '') === (y.band || '') && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
         const alboPend = (alboRev || []).filter(x => !(alboMan.merges || []).some(m => sameAr(m, x)) && !(alboMan.distinct || []).some(m => sameAr(m, x))).length;
         setPending('ov-foto-pending', fotoPend);
         setPending('ov-xpix', xpixPend);
@@ -13108,8 +13108,8 @@ window.adminNav = async function(section) {
           fetch(`${API_BASE}/data/albo-manual`).then(r => r.json()).catch(() => ({ merges: [], distinct: [] })),
         ]);
         window._arState = { review, man };
-        const key = x => `${x.g}|${x.a}|${x.b}`;
-        const same = (x, y) => x.g === y.g && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
+        const key = x => `${x.g}|${x.band || ''}|${x.a}|${x.b}`;
+        const same = (x, y) => x.g === y.g && (x.band || '') === (y.band || '') && ((x.a === y.a && x.b === y.b) || (x.a === y.b && x.b === y.a));
         const status = x => (window._arState.man.merges || []).some(m => same(m, x)) ? 'merge' : (window._arState.man.distinct || []).some(m => same(m, x)) ? 'distinct' : 'pending';
         const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
         window._arLoad = (st) => {
@@ -13128,7 +13128,7 @@ window.adminNav = async function(section) {
                 <div style="flex:1;min-width:300px">
                   <div style="font-weight:700;font-size:.88rem">${esc(tcs(x.a))} <span style="color:var(--text-muted);font-weight:400">· ${esc(yr(x.anni_a))}</span></div>
                   <div style="font-weight:700;font-size:.88rem;margin-top:2px">${esc(tcs(x.b))} <span style="color:var(--text-muted);font-weight:400">· ${esc(yr(x.anni_b))}</span></div>
-                  <div style="font-size:.76rem;color:var(--text-muted);margin-top:4px">${esc(tcs(x.luogo))} · ${x.g === 'F' ? 'donne' : 'uomini'} · somiglianza nome ${Math.round(x.sim * 100)}%</div>
+                  <div style="font-size:.76rem;color:var(--text-muted);margin-top:4px">${esc(tcs(x.luogo))} · ${x.g === 'F' ? 'donne' : 'uomini'} · ${({ ELI: 'Elite/U23', JUN: 'Juniores', AL: 'Allievi', ES: 'Esordienti' })[x.band] || ''} · somiglianza nome ${Math.round(x.sim * 100)}%</div>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
                   ${st !== 'merge' ? `<button class="btn-approve" onclick="window._arAct(${window._arState.review.indexOf(x)},'merge')" style="padding:7px 14px;font-size:.82rem">✓ Stessa gara</button>` : ''}
@@ -13141,12 +13141,12 @@ window.adminNav = async function(section) {
         window._arAct = async (idx, decision) => {
           const x = window._arState.review[idx]; if (!x) return;
           try {
-            const res = await fetch(`${API_BASE}/admin/albo-manual`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` }, body: JSON.stringify({ a: x.a, b: x.b, g: x.g, decision }) });
+            const res = await fetch(`${API_BASE}/admin/albo-manual`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` }, body: JSON.stringify({ a: x.a, b: x.b, g: x.g, band: x.band || '', decision }) });
             if (!res.ok) throw new Error((await res.json()).error || 'Errore');
             const man = window._arState.man;
             man.merges = (man.merges || []).filter(m => !same(m, x)); man.distinct = (man.distinct || []).filter(m => !same(m, x));
-            if (decision === 'merge') man.merges.push({ a: x.a, b: x.b, g: x.g });
-            if (decision === 'distinct') man.distinct.push({ a: x.a, b: x.b, g: x.g });
+            if (decision === 'merge') man.merges.push({ a: x.a, b: x.b, g: x.g, band: x.band || '' });
+            if (decision === 'distinct') man.distinct.push({ a: x.a, b: x.b, g: x.g, band: x.band || '' });
             window._arLoad(window._arStatus || 'pending');
           } catch (e) { alert('Errore: ' + e.message); }
         };
@@ -16584,12 +16584,17 @@ function _alboShard(idx, sid) {
   return _alboShards[n].then(sh => sh[sid] || null);
 }
 // unisce alla serie quelle che l'admin ha dichiarato "stessa gara" (Admin → Albo d'oro · fusioni)
-async function _alboApplyMerges(idx, sid, s, g) {
+const _ALBO_BAND_OF = { ELITE_UNDER23: 'ELI', JUNIORES: 'JUN', ALLIEVI: 'AL', ESORDIENTI1: 'ES', ESORDIENTI2: 'ES', DONNE_JUNIORES: 'JUN', DONNE_ALLIEVE: 'AL', DONNE_ESORDIENTI: 'ES', DONNE_ELITE: 'ELI' };
+function _alboBandOfGara(garaId) {
+  const m = String(garaId || '').match(/_(ELI|JUN|AL|ES1|ES2)_[MF]$/);
+  return m ? m[1].replace(/^ES\d$/, 'ES') : '';
+}
+async function _alboApplyMerges(idx, sid, s, g, band) {
   const man = await _alboManual();
   let out = s;
   for (const m of (man.merges || [])) {
-    if (m.g !== g) continue;
-    const sa = idx.index[`${m.a}|${g}`], sb = idx.index[`${m.b}|${g}`];
+    if (m.g !== g || (m.band && m.band !== band)) continue;
+    const sa = idx.index[`${m.a}|${g}|${band}`], sb = idx.index[`${m.b}|${g}|${band}`];
     if (sa !== sid && sb !== sid) continue;
     const other = sa === sid ? sb : sa;
     if (!other || other === sid) continue;
@@ -16600,23 +16605,24 @@ async function _alboApplyMerges(idx, sid, s, g) {
   }
   return out;
 }
-async function _alboSeries(nome, g, luogo) {
+async function _alboSeries(nome, g, luogo, band) {
   const idx = await _alboIndex();
   if (!idx) return null;
   const cands = [_alboBase(nome), _alboBase(_raceBaseName(nome))];
   const lk = _alboLuogoKey(luogo);
   for (const b of cands) {
     // nome troppo generico ("Gran Premio"): la serie e' identificata anche dal luogo
-    const sid = idx.index[`${b}|${g}`] || (lk ? idx.index[`${b}|${g}|${lk}`] : null);
+    const sid = idx.index[`${b}|${g}|${band}`] || (lk ? idx.index[`${b}|${g}|${band}|${lk}`] : null);
     if (!sid) continue;
     const s = await _alboShard(idx, sid);
-    if (s) return await _alboApplyMerges(idx, sid, s, g);
+    if (s) return await _alboApplyMerges(idx, sid, s, g, band);
   }
   return null;
 }
 // edizioni della serie nel formato usato dall'albo (una riga per edizione, con i podi di ogni categoria)
 function _alboEditionsFromSeries(s, skipYears) {
   const catName = c => (typeof _ciclismoCatLabel === 'function' ? _ciclismoCatLabel(c) : c);
+  const catOrder = c => (typeof _CICLISMO_CAT_ORDER !== 'undefined' && _CICLISMO_CAT_ORDER[c] != null ? _CICLISMO_CAT_ORDER[c] : 99);
   const out = [];
   for (const e of (s.ed || [])) {
     if (skipYears && skipYears.has(String(e.y))) continue;
@@ -16626,14 +16632,29 @@ function _alboEditionsFromSeries(s, skipYears) {
     const podio = [];
     for (const c of cats) for (const r of byCat[c].sort((a, b) => (a.posizione || 99) - (b.posizione || 99))) {
       const parts = (r.nome_completo || '').trim().split(/\s+/);
-      podio.push({ posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team, atleta_id: r.atleta_id, catLabel: cats.length > 1 ? catName(c) : '' });
+      podio.push({ posizione: r.posizione, cognome: parts[0] || '', nome: parts.slice(1).join(' '), team: r.team, atleta_id: r.atleta_id, cat: c });
     }
     const w = podio[0] || {};
-    out.push({ year: String(e.y), gara_id: 'CIC_' + e.id, data: e.d || '', nome: e.n || '', historic: true, partial: podio.length > 0 && cats.some(c => byCat[c].length < 3),
+    out.push({ year: String(e.y), gara_id: 'CIC_' + e.id, data: e.d || '', nome: e.n || '', historic: true, partial: cats.some(c => byCat[c].length < 3), _cats: new Set(cats),
       href: `#/gara/CIC_${e.id}${_slugify(`${e.n || ''} ${e.y}`) ? '-' + _slugify(`${e.n || ''} ${e.y}`) : ''}`,
       winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' }, podio });
   }
-  return out;
+  // Più gare dello STESSO giorno (es. Allievi e Juniores, ognuna con la sua pagina) sono una sola edizione
+  // con più podi, non righe ripetute dello stesso anno. Se le categorie si sovrappongono restano separate.
+  const merged = [], byDay = new Map();
+  for (const it of out) {
+    const k = it.data ? `${it.year}|${it.data}` : '';
+    const prev = k ? byDay.get(k) : null;
+    if (prev && ![...it._cats].some(c => prev._cats.has(c))) {
+      prev.podio.push(...it.podio); it._cats.forEach(c => prev._cats.add(c)); prev.partial = prev.partial || it.partial;
+    } else { if (k) byDay.set(k, it); merged.push(it); }
+  }
+  for (const it of merged) {
+    it.podio.sort((a, b) => catOrder(a.cat) - catOrder(b.cat) || (a.posizione || 99) - (b.posizione || 99));
+    const multi = it._cats.size > 1;
+    it.podio.forEach(p => { p.catLabel = multi ? catName(p.cat) : ''; });
+  }
+  return merged;
 }
 
 async function _injectRaceAlboDoro(garaId, opts = {}) {
@@ -16676,7 +16697,8 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
   // pagina gara — un elenco curato DA LORO, non indovinato da noi.
   const baseName = _raceBaseName(opts.nomeGara || '');
   const _alGender = opts.gender || (/_F$/.test(String(garaId)) || /^(DONNE)/i.test(String(opts.cat || '')) ? 'F' : 'M');
-  const _alSeries = await _alboSeries(opts.nomeGara || '', _alGender, opts.luogo || (globalData?.calendar || []).find(c => c.id === ((globalData?.garaToCalId || {})[garaId] || toCalId(garaId)))?.luogo || '');
+  const _alBand = opts.band || _alboBandOfGara(garaId) || 'ELI';
+  const _alSeries = await _alboSeries(opts.nomeGara || '', _alGender, opts.luogo || (globalData?.calendar || []).find(c => c.id === ((globalData?.garaToCalId || {})[garaId] || toCalId(garaId)))?.luogo || '', _alBand);
   if (_alSeries) {
     editions.push(..._alboEditionsFromSeries(_alSeries, new Set(editions.map(e => String(e.year)))));
   } else if (baseName && baseName.length >= 3 && !_alboIsGeneric(_alboBase(opts.nomeGara || ''))) {
@@ -16827,8 +16849,20 @@ async function renderGaraStoria(baseName) {
   }
 
   let _stSeries = null;
-  for (const g of ['M', 'F']) { _stSeries = await _alboSeries(baseName, g, ''); if (_stSeries) break; }
-  if (_stSeries) editions.push(..._alboEditionsFromSeries(_stSeries, new Set(editions.map(e => String(e.year)))));
+  {
+    // la stessa corsa puo' esistere per piu' categorie (Elite, Juniores...): le mostro tutte, con la categoria accanto ai nomi
+    const _found = [];
+    for (const g of ['M', 'F']) for (const b of ['ELI', 'JUN', 'AL', 'ES']) { const s = await _alboSeries(baseName, g, '', b); if (s) _found.push(s); }
+    if (_found.length) {
+      _stSeries = _found[0];
+      const have = new Set(editions.map(e => String(e.year)));
+      for (const s of _found) {
+        const eds = _alboEditionsFromSeries(s, have);
+        if (_found.length > 1) eds.forEach(e => e.podio.forEach(p => { p.catLabel = _ciclismoCatLabel(p.cat); }));
+        editions.push(...eds);
+      }
+    }
+  }
   if (!_stSeries) try {
     // Varianti storiche note — vedi nota gemella in _injectRaceAlboDoro.
     const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
@@ -19604,7 +19638,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
     </div>
   `);
-  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M' });
+  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M', band: _ALBO_BAND_OF[String(cats[0] || '').toUpperCase()] || 'ELI' });
 
   // (I risultati PCS sono già stati uniti a "rows" più sopra, per riempire
   // eventuali buchi nel podio — niente chiamata separata a _loadGaraPcsExt,
