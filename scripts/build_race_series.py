@@ -123,9 +123,21 @@ def main():
     mp = ROOT / 'data' / 'albo_manual.json'
     if mp.exists():
         manual = json.load(open(mp, encoding='utf-8'))
+    # una gara con piu' categorie compare in ogni albo di categoria, con i soli podi di quella categoria
+    split = []
+    for r in races:
+        byband = collections.defaultdict(dict)
+        for c, pod in (r.get('categorie') or {}).items():
+            byband[BAND_OF.get(str(c).upper(), 'ELI')][c] = pod
+        if not byband:
+            byband['ELI'] = {}
+        for band, cats in byband.items():
+            r2 = dict(r); r2['categorie'] = cats; r2['_forced_band'] = band
+            split.append(r2)
+    races = split
     groups = collections.defaultdict(list)          # (base, genere) -> edizioni
     for r in races:
-        r['_base'] = base_name(r.get('nome')); r['_g'] = gender_of(r); r['_b'] = band_of(r)
+        r['_base'] = base_name(r.get('nome')); r['_g'] = gender_of(r); r['_b'] = r['_forced_band']
         generic = len(key_tokens(r['_base'])) < 2          # "GRAN PREMIO", "TROFEO"...: da soli non dicono quale gara sia
         r['_ex'] = luogo_key(r) if generic else ''
         groups[(r['_base'], r['_g'], r['_b'], r['_ex'])].append(r)

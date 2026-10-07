@@ -16639,22 +16639,13 @@ function _alboEditionsFromSeries(s, skipYears) {
       href: `#/gara/CIC_${e.id}${_slugify(`${e.n || ''} ${e.y}`) ? '-' + _slugify(`${e.n || ''} ${e.y}`) : ''}`,
       winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' }, podio });
   }
-  // Più gare dello STESSO giorno (es. Allievi e Juniores, ognuna con la sua pagina) sono una sola edizione
-  // con più podi, non righe ripetute dello stesso anno. Se le categorie si sovrappongono restano separate.
-  const merged = [], byDay = new Map();
+  // Un albo per categoria: ogni edizione ha solo i podi della sua categoria (Esordienti 1°/2° anno restano insieme, con l'etichetta)
   for (const it of out) {
-    const k = it.data ? `${it.year}|${it.data}` : '';
-    const prev = k ? byDay.get(k) : null;
-    if (prev && ![...it._cats].some(c => prev._cats.has(c))) {
-      prev.podio.push(...it.podio); it._cats.forEach(c => prev._cats.add(c)); prev.partial = prev.partial || it.partial;
-    } else { if (k) byDay.set(k, it); merged.push(it); }
-  }
-  for (const it of merged) {
     it.podio.sort((a, b) => catOrder(a.cat) - catOrder(b.cat) || (a.posizione || 99) - (b.posizione || 99));
     const multi = it._cats.size > 1;
-    it.podio.forEach(p => { p.catLabel = multi ? catName(p.cat) : ''; });
+    it.podio.forEach(p => { p.catLabel = (multi || /^ESORDIENTI[12]$/.test(p.cat)) ? catName(p.cat) : ''; });
   }
-  return merged;
+  return out;
 }
 
 async function _injectRaceAlboDoro(garaId, opts = {}) {
