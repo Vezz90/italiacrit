@@ -12415,6 +12415,9 @@ async function renderAdmin() {
           <span class="admin-nav-icon">📣</span> <span class="admin-nav-lbl">Coda Social</span>
           <span class="admin-nav-badge" id="badge-social"></span>
         </div>
+        <div class="admin-nav-item" data-section="instagram" onclick="adminNav('instagram')">
+          <span class="admin-nav-icon">📸</span> <span class="admin-nav-lbl">Instagram</span>
+        </div>
 
         <div class="admin-nav-group">Dati e gare</div>
         <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
@@ -12477,7 +12480,7 @@ async function renderAdmin() {
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
     'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','albo-review',
-    'social-queue','scraper'];
+    'social-queue','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab');
   if (tabParam && ADMIN_SECTIONS.includes(tabParam)) _adminSection = tabParam;
@@ -13817,6 +13820,67 @@ window.adminNav = async function(section) {
       break;
     }
 
+    // ── INSTAGRAM: collegamento e impostazioni ─────────────────────
+    case 'instagram': {
+      main.innerHTML = '<div class="admin-loading">Controllo il collegamento a Instagram…</div>';
+      try {
+        const force = window._igForce ? '?force=1' : ''; window._igForce = false;
+        const { status: st, settings: se, fb_configured } = await apiCall('/admin/social/instagram' + force);
+        const nf = n => Number(n || 0).toLocaleString('it-IT');
+        const step = (n, done, html) => `<li class="ig-step ${done ? 'done' : ''}"><span>${done ? '✓' : n}</span><div>${html}</div></li>`;
+        const linked = st.state === 'linked';
+        const canPub = linked && st.publish && st.publish.ok;
+        let conn;
+        if (!fb_configured) {
+          conn = `<div class="ig-box warn"><b>Prima serve Facebook</b><p>Instagram si pubblica tramite la Pagina Facebook: configura <code>FB_PAGE_ID</code> e <code>FB_PAGE_TOKEN</code> su Render (vedi Scraper &amp; Config).</p></div>`;
+        } else if (linked) {
+          conn = `<div class="ig-box ok"><div class="ig-prof">${st.ig.profile_picture_url ? `<img src="${esc(st.ig.profile_picture_url)}" alt="">` : '<span>📸</span>'}<div><b>@${esc(st.ig.username || '')}</b><small>${esc(st.ig.name || '')}</small><small>${nf(st.ig.followers_count)} follower · ${nf(st.ig.media_count)} post</small></div></div>
+            ${canPub ? `<p class="ig-ok">✅ Collegato e pronto a pubblicare. Pubblicazioni di oggi: ${st.publish.used} su ${st.publish.total}.</p>` : `<p class="ig-warn">⚠️ Account collegato, ma il token non può ancora pubblicare${st.publish && st.publish.message ? ` (${esc(st.publish.message)})` : ''}. Rigenera il token aggiungendo i permessi <code>instagram_basic</code> e <code>instagram_content_publish</code> e aggiornalo su Render.</p>`}</div>`;
+        } else if (st.state === 'not_linked') {
+          conn = `<div class="ig-box warn"><b>Nessun account Instagram collegato alla Pagina</b>
+            <ol class="ig-steps">
+              ${step(1, false, 'Crea l’account Instagram (es. <b>italiacyclingstats</b>) dall’app o da instagram.com.')}
+              ${step(2, false, 'Passa ad <b>account professionale</b> (Impostazioni → Account → Passa ad account professionale → Creator o Business).')}
+              ${step(3, false, 'Collegalo alla Pagina Facebook <b>ICS - Italia Cycling Stats</b> (Impostazioni della Pagina → Account collegati → Instagram).')}
+              ${step(4, false, 'Nel Graph API Explorer aggiungi i permessi <code>instagram_basic</code> e <code>instagram_content_publish</code>, genera di nuovo il token della Pagina e aggiornalo su Render (<code>FB_PAGE_TOKEN</code>).')}
+              ${step(5, false, 'Torna qui e premi <b>Ricontrolla</b>.')}
+            </ol></div>`;
+        } else {
+          conn = `<div class="ig-box warn"><b>Non riesco a leggere il collegamento</b><p>${esc(st.message || 'Errore sconosciuto')}</p><p>Di solito manca un permesso nel token: aggiungi <code>instagram_basic</code> e <code>pages_read_engagement</code>, rigenera il token e aggiornalo su Render.</p></div>`;
+        }
+        main.innerHTML = `
+          <div class="admin-page-header">
+            <h1 class="admin-page-title">📸 Instagram</h1>
+            <p class="admin-page-sub">Collegamento dell'account e impostazioni di pubblicazione di feed e storie.</p>
+          </div>
+          <div class="ig-grid">
+            <section class="ig-card"><h3>Collegamento</h3>${conn}
+              <button class="admin-edit-btn" onclick="window._igForce=true;adminNav('instagram')">↻ Ricontrolla</button></section>
+            <section class="ig-card"><h3>Impostazioni</h3>
+              <label class="ig-sw"><input type="checkbox" id="ig-feed" ${se.feed ? 'checked' : ''}><span><b>Feed</b><small>Pubblica il post con la grafica della gara (formato 4:5, 1080×1350).</small></span></label>
+              <label class="ig-sw"><input type="checkbox" id="ig-story" ${se.story ? 'checked' : ''}><span><b>Storie</b><small>Pubblica anche una storia (formato 9:16, 1080×1920).</small></span></label>
+              <label class="ig-f"><span>Hashtag fissi</span><textarea id="ig-tags" rows="2">${esc(se.hashtags || '')}</textarea></label>
+              <label class="ig-f"><span>Riga per il link (Instagram non permette link cliccabili nelle didascalie)</span><input id="ig-link" type="text" value="${esc(se.link_line || '')}"></label>
+              <label class="ig-sw"><input type="checkbox" id="ig-credit" ${se.credit ? 'checked' : ''}><span><b>Credit della foto</b><small>Aggiunge «Foto: fotografo» in fondo alla didascalia.</small></span></label>
+              <button class="admin-edit-btn gr-fb" id="ig-save" onclick="window._igSave()">Salva impostazioni</button>
+            </section>
+            <section class="ig-card ig-wide"><h3>Grafiche</h3>
+              <p>Le grafiche per Instagram si creano come quelle della condivisione gara: foto della corsa con il podio, e puoi regolare <b>posizione e zoom della foto</b> per centrarla meglio prima di pubblicare.</p>
+              <p class="ig-note">Stato: collegamento e impostazioni pronti. La creazione delle grafiche 4:5 e 9:16 e la pubblicazione dalla pagina gara e dalla Coda Social sono il passo successivo.</p>
+            </section>
+          </div>`;
+        window._igSave = async () => {
+          const b = document.getElementById('ig-save'); if (b) { b.disabled = true; b.textContent = 'Salvo…'; }
+          try {
+            await apiCall('/admin/social/instagram', { method: 'POST', body: { feed: document.getElementById('ig-feed').checked, story: document.getElementById('ig-story').checked, hashtags: document.getElementById('ig-tags').value, link_line: document.getElementById('ig-link').value, credit: document.getElementById('ig-credit').checked } });
+            showToast('✅ Impostazioni Instagram salvate');
+          } catch (e) { showToast(e.message || 'Errore', 'error'); }
+          if (b) { b.disabled = false; b.textContent = 'Salva impostazioni'; }
+        };
+      } catch (e) { main.innerHTML = `<div style="color:#ef4444;padding:20px">Errore: ${esc(e.message)}</div>`; }
+      break;
+    }
+
     // ── SOCIAL QUEUE ──────────────────────────────────────────────
     case 'social-queue': {
       main.innerHTML = '<div class="admin-loading">Caricamento coda social…</div>';
@@ -13975,6 +14039,7 @@ window.adminNav = async function(section) {
                 <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">GH_DISPATCH_TOKEN</span>${badge(s.token_set,'Configurato','Mancante')}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">ANTHROPIC_API_KEY</span>${badge(s.anthropic_set,'Configurato','Mancante — captions di fallback')}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">FB_PAGE_ID + FB_PAGE_TOKEN</span>${badge(s.fb_set,'Configurati','Mancanti — social disabilitato')}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">Instagram collegato</span><a href="#/admin?tab=instagram" onclick="adminNav('instagram');return false" style="text-decoration:none">${s.ig_state === 'linked' ? badge(true,'Collegato','') : `<span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:.78rem;font-weight:700;background:#64748b;color:#fff">${s.fb_set ? 'Da collegare →' : 'Prima Facebook'}</span>`}</a></div>
               </div>
             </div>
             <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">

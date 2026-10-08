@@ -3284,6 +3284,7 @@ app.get('/api/admin/scraper/status', requireAdmin, async (req, res) => {
     token_set:      !!token,
     anthropic_set:  !!process.env.ANTHROPIC_API_KEY,
     fb_set:         !!(process.env.FB_PAGE_ID && process.env.FB_PAGE_TOKEN),
+    ig_state:       (_igStatusCache.v && _igStatusCache.v.state) || null,
     last_trigger_ts: _lastScrapeTrigger || null,
     last_sync_ts:    _lastCronSync      || null,
     last_gh_run:     lastRun,
@@ -9470,7 +9471,77 @@ app.post('/api/admin/social/:id/regenerate', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Interruttore "pubblica automaticamente su Facebook"
+// ── Instagram: collegamento all'account professionale della Pagina + impostazioni ─────────
+// Instagram si pubblica dalla stessa app Meta di Facebook: serve un account Instagram PROFESSIONALE collegato
+// alla Pagina e i permessi instagram_basic + instagram_content_publish nel token (FB_PAGE_TOKEN).
+const SOCIAL_IG_KEY = 'social_instagram';
+const IG_DEFAULTS = { feed: false, story: false, hashtags: '#ciclismo #ciclismogiovanile #ItaliaCyclingStats #juniores #allievi #esordienti', link_line: 'Risultati completi sul sito: link nel profilo', credit: true };
+async function readSocialIg() {
+  let v = null;
+  if (supabase) {
+    const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_IG_KEY).maybeSingle();
+    v = data && data.value;
+  } else {
+    try { v = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/social-instagram.json'), 'utf8')); } catch { v = null; }
+  }
+  return { ...IG_DEFAULTS, ...(v || {}) };
+}
+async function writeSocialIg(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store').upsert({ key: SOCIAL_IG_KEY, value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(path.join(__dirname, '../data/social-instagram.json'), JSON.stringify(obj, null, 2));
+}
+let _igStatusCache = { ts: 0, v: null };
+async function instagramStatus(force) {
+  if (!_fbConfigured()) return { state: 'no_fb' };
+  if (!force && _igStatusCache.v && Date.now() - _igStatusCache.ts < 60000) return _igStatusCache.v;
+  const tk = encodeURIComponent(process.env.FB_PAGE_TOKEN);
+  let out;
+  try {
+    const r = await fetch(`https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}?fields=instagram_business_account%7Bid,username,name,profile_picture_url,followers_count,media_count%7D&access_token=${tk}`, { signal: AbortSignal.timeout(12000) });
+    const j = await r.json();
+    if (j.error) out = { state: 'error', message: j.error.message, code: j.error.code };
+    else if (!j.instagram_business_account) out = { state: 'not_linked' };
+    else {
+      const ig = j.instagram_business_account;
+      out = { state: 'linked', ig };
+      // il permesso di pubblicazione si verifica con la quota di pubblicazione dell'account
+      try {
+        const q = await fetch(`https://graph.facebook.com/v19.0/${ig.id}/content_publishing_limit?fields=quota_usage,config&access_token=${tk}`, { signal: AbortSignal.timeout(12000) });
+        const qj = await q.json();
+        if (qj.error) out.publish = { ok: false, message: qj.error.message, code: qj.error.code };
+        else { const d = (qj.data && qj.data[0]) || {}; out.publish = { ok: true, used: d.quota_usage || 0, total: (d.config && d.config.quota_total) || 100 }; }
+      } catch (e) { out.publish = { ok: false, message: e.message }; }
+    }
+  } catch (e) { out = { state: 'error', message: e.message }; }
+  _igStatusCache = { ts: Date.now(), v: out };
+  return out;
+}
+app.get('/api/admin/social/instagram', requireAdmin, async (req, res) => {
+  try { res.json({ status: await instagramStatus(req.query.force === '1'), settings: await readSocialIg(), fb_configured: _fbConfigured() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/social/instagram', requireAdmin, async (req, res) => {
+  try {
+    const b = req.body || {};
+    const cur = await readSocialIg();
+    const next = {
+      feed: b.feed != null ? !!b.feed : cur.feed,
+      story: b.story != null ? !!b.story : cur.story,
+      hashtags: b.hashtags != null ? String(b.hashtags).slice(0, 600) : cur.hashtags,
+      link_line: b.link_line != null ? String(b.link_line).slice(0, 200) : cur.link_line,
+      credit: b.credit != null ? !!b.credit : cur.credit,
+      updated_at: new Date().toISOString(),
+    };
+    await writeSocialIg(next);
+    res.json({ ok: true, settings: next });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Interruttore "pubblica automaticamente su Facebook\"
 app.get('/api/admin/social/auto', requireAdmin, async (req, res) => {
   try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN }); }
   catch (e) { res.status(500).json({ error: e.message }); }
