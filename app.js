@@ -31840,12 +31840,27 @@ window.publishShareToInstagram = async function(){
   const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
   const name=_sharePayload?.name||gid;
-  if(!confirm(`Pubblicare ora ${kind==='story'?'la storia':'il post nel feed'} su Instagram?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`)) return;
+  if(!confirm(kind==='story'
+    ? `Pubblicare ora la storia su Instagram?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`
+    : `Pubblicare ora il post su Instagram?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
   const old=btn.textContent; btn.disabled=true; btn.textContent='⏳ Pubblico su Instagram…';
   try{
-    const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
-    const image=canvas.toDataURL('image/jpeg',0.92);
-    await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,image}});
+    let images=[];
+    if(kind==='feed'){
+      // post nel feed = carosello: prima la grafica Vincitore, poi quella con i Risultati (come nel download)
+      const prev=_shareGaraStyle;
+      try{
+        for(const st of ['winner','results']){
+          _shareGaraStyle=st;
+          const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+          images.push(cv.toDataURL('image/jpeg',0.9));
+        }
+      } finally { _shareGaraStyle=prev; }
+    } else {
+      const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+      images=[cv.toDataURL('image/jpeg',0.92)];
+    }
+    await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,images}});
     delete _igPostedCache[gid];
     showToast('✅ Pubblicato su Instagram');
     await _updateIgShareBtn();

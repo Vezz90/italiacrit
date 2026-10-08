@@ -11751,23 +11751,39 @@ async function postToInstagram(kind, imageUrl, caption) {
     throw new Error('Account Instagram non raggiungibile — ' + why);
   }
   const token = process.env.FB_PAGE_TOKEN, base = `https://graph.facebook.com/v19.0`;
-  const body = { image_url: imageUrl, access_token: token };
-  if (kind === 'story') body.media_type = 'STORIES'; else body.caption = caption;
   const post = async (url, b) => {
     const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b), signal: AbortSignal.timeout(45000) });
     const j = await r.json();
     if (j.error) throw new Error(`Instagram API: ${j.error.message} (code ${j.error.code})`);
     return j;
   };
-  const c = await post(`${base}/${st.ig.id}/media`, body);
-  for (let i = 0; i < 15; i++) {
-    const r = await fetch(`${base}/${c.id}?fields=status_code&access_token=${encodeURIComponent(token)}`, { signal: AbortSignal.timeout(15000) });
-    const j = await r.json();
-    if (j.status_code === 'FINISHED') break;
-    if (j.status_code === 'ERROR' || j.status_code === 'EXPIRED') throw new Error('Instagram non riesce a elaborare immagine (' + j.status_code + ')');
-    await new Promise(res => setTimeout(res, 2000));
+  const waitReady = async (cid) => {
+    for (let i = 0; i < 15; i++) {
+      const r = await fetch(`${base}/${cid}?fields=status_code&access_token=${encodeURIComponent(token)}`, { signal: AbortSignal.timeout(15000) });
+      const j = await r.json();
+      if (j.status_code === 'FINISHED') return;
+      if (j.status_code === 'ERROR' || j.status_code === 'EXPIRED') throw new Error('Instagram non riesce a elaborare immagine (' + j.status_code + ')');
+      await new Promise(res => setTimeout(res, 2000));
+    }
+  };
+  const urls = Array.isArray(imageUrl) ? imageUrl : [imageUrl];
+  let creation;
+  if (kind === 'feed' && urls.length > 1) {
+    // carosello: una "figlia" per immagine, poi il contenitore che le raggruppa (con il testo)
+    const kids = [];
+    for (const u of urls) {
+      const k = await post(`${base}/${st.ig.id}/media`, { image_url: u, is_carousel_item: true, access_token: token });
+      await waitReady(k.id);
+      kids.push(k.id);
+    }
+    creation = await post(`${base}/${st.ig.id}/media`, { media_type: 'CAROUSEL', children: kids.join(','), caption, access_token: token });
+  } else {
+    const body = { image_url: urls[0], access_token: token };
+    if (kind === 'story') body.media_type = 'STORIES'; else body.caption = caption;
+    creation = await post(`${base}/${st.ig.id}/media`, body);
   }
-  return await post(`${base}/${st.ig.id}/media_publish`, { creation_id: c.id, access_token: token });
+  await waitReady(creation.id);
+  return await post(`${base}/${st.ig.id}/media_publish`, { creation_id: creation.id, access_token: token });
 }
 app.post('/api/admin/social/instagram/publish', requireAdmin, async (req, res) => {
   try {
@@ -11827,17 +11843,22 @@ app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => 
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, res) => {
-  let token = null;
+  let tokens = [];
   try {
     if (!_fbConfigured()) return res.status(400).json({ error: 'Facebook/Instagram non configurato' });
     const b = req.body || {};
     const id = String(b.gara_id || '');
     const kind = b.kind === 'story' ? 'story' : 'feed';
     if (!id) return res.status(400).json({ error: 'Gara mancante' });
-    const m = /^data:image\/jpeg;base64,(.+)$/.exec(String(b.image || ''));
-    if (!m) return res.status(400).json({ error: 'Immagine mancante o non valida' });
-    const buf = Buffer.from(m[1], 'base64');
-    if (buf.length < 5000 || buf.length > 8 * 1024 * 1024) return res.status(400).json({ error: 'Immagine non valida' });
+    const rawImgs = (Array.isArray(b.images) && b.images.length ? b.images : [b.image]).slice(0, kind === 'feed' ? 10 : 1);
+    const bufs = [];
+    for (const im of rawImgs) {
+      const m = /^data:image\/jpeg;base64,(.+)$/.exec(String(im || ''));
+      if (!m) return res.status(400).json({ error: 'Immagine mancante o non valida' });
+      const buf = Buffer.from(m[1], 'base64');
+      if (buf.length < 5000 || buf.length > 8 * 1024 * 1024) return res.status(400).json({ error: 'Immagine non valida' });
+      bufs.push(buf);
+    }
     const log = await readIgLog();
     if (log.some(l => l.gara_id === id && l.kind === kind)) return res.status(409).json({ error: kind === 'story' ? 'La storia di questa gara è già stata pubblicata.' : 'Questo post è già stato pubblicato su Instagram.', already: true });
     const settings = await readSocialIg();
@@ -11848,15 +11869,20 @@ app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, 
       caption = [body, settings.link_line, settings.hashtags].map(s => String(s || '').trim()).filter(Boolean).join('\n\n').slice(0, 2200);
     }
     for (const [k, v] of _igTmp) if (v.exp < Date.now()) _igTmp.delete(k);
-    token = require('crypto').randomBytes(16).toString('hex');
-    _igTmp.set(token, { buf, exp: Date.now() + 10 * 60 * 1000 });
-    const out = await postToInstagram(kind, `${process.env.RENDER_EXTERNAL_URL || 'https://italiacrit.onrender.com'}/api/ig-tmp/${token}.jpg`, caption);
-    log.push({ gara_id: id, kind, media_id: out.id || null, posted_at: new Date().toISOString() });
+    const origin = process.env.RENDER_EXTERNAL_URL || 'https://italiacrit.onrender.com';
+    const urls = bufs.map(buf => {
+      const tk = require('crypto').randomBytes(16).toString('hex');
+      _igTmp.set(tk, { buf, exp: Date.now() + 10 * 60 * 1000 });
+      tokens.push(tk);
+      return `${origin}/api/ig-tmp/${tk}.jpg`;
+    });
+    const out = await postToInstagram(kind, urls.length > 1 ? urls : urls[0], caption);
+    log.push({ gara_id: id, kind, slides: urls.length, media_id: out.id || null, posted_at: new Date().toISOString() });
     await writeIgLog(log);
     _igStatusCache = { ts: 0, v: null };
     res.json({ ok: true, media_id: out.id || null });
   } catch (e) { res.status(500).json({ error: e.message }); }
-  finally { if (token) setTimeout(() => _igTmp.delete(token), 60 * 1000); }
+  finally { if (tokens.length) setTimeout(() => tokens.forEach(tk => _igTmp.delete(tk)), 60 * 1000); }
 });
 // Anteprima (nessuna pubblicazione): grafiche feed/storia e testo per una gara, di default l'ultima con risultati.
 app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) => {
