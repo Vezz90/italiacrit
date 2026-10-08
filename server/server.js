@@ -6867,6 +6867,54 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Legge i risultati di una pagina PCS SENZA scrivere nulla nel database: restituisce le righe con l'atleta ICS
+// collegato (atleta_id) cosi' l'admin sceglie cosa inserire come risultato vero (con punti e moltiplicatore).
+// Accetta uno slug ("race/world-championship-me-u23/2026"), un link PCS completo oppure l'HTML incollato.
+app.post('/api/admin/pcs-fetch-results', requireAdmin, async (req, res) => {
+  try {
+    const b = req.body || {};
+    let html = b.html && String(b.html).length > 100 ? String(b.html) : null;
+    let slug = String(b.slug || '').trim().replace(/^https?:\/\/(www\.)?procyclingstats\.com\//i, '').replace(/[?#].*$/, '').replace(/\/result\/?$/, '').replace(/\/$/, '');
+    let usedUrl = null;
+    if (!html) {
+      if (!slug) return res.status(400).json({ error: 'Indica lo slug o il link della gara su ProCyclingStats' });
+      const PCS = 'https://www.procyclingstats.com';
+      const hasPfx = /^(race|national-race|stage-race|one-day-race)\//.test(slug);
+      const urls = hasPfx ? [`${PCS}/${slug}/result`, `${PCS}/${slug}`] : [`${PCS}/race/${slug}/result`, `${PCS}/race/${slug}`];
+      const hdr = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'it-IT,it;q=0.9,en;q=0.8' };
+      const hasResults = x => x.includes('<table') && (x.toLowerCase().includes('rider') || x.toLowerCase().includes('cyclist'));
+      for (const url of urls) {
+        try { const r = await fetch(url, { headers: hdr, redirect: 'follow', signal: AbortSignal.timeout(20000) }); if (!r.ok) continue; const tx = await r.text(); if (hasResults(tx)) { html = tx; usedUrl = url; break; } } catch (_) {}
+      }
+      if (!html) {
+        let browser;
+        try {
+          const { chromium } = require('playwright');
+          browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] });
+          const ctx = await browser.newContext({ userAgent: hdr['User-Agent'], locale: 'it-IT', viewport: { width: 1280, height: 800 } });
+          await ctx.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }); });
+          const page = await ctx.newPage();
+          for (const url of urls) {
+            try {
+              await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+              const fu = page.url();
+              if (fu === 'https://www.procyclingstats.com/' || fu.includes('pagenotfound')) continue;
+              await page.waitForTimeout(1500);
+              const tx = await page.content();
+              if (hasResults(tx)) { html = tx; usedUrl = url; break; }
+            } catch (_) {}
+          }
+        } catch (_) {}
+        finally { if (browser) await browser.close().catch(() => {}); }
+      }
+      if (!html) return res.status(502).json({ error: `PCS non ha restituito risultati per "${slug}" (anti-bot o slug errato). Apri la pagina risultati su PCS, copia il sorgente (tasto destro > Visualizza sorgente) e incollalo nel campo apposito.`, blocked: true });
+    }
+    const rows = _parsePcsResultsHtml(html, 'tmp', new Date().getFullYear(), slug || 'html');
+    if (!rows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS (struttura non riconosciuta).' });
+    res.json({ ok: true, url: usedUrl, total: rows.length, rows: rows.map(r => ({ posizione: r.posizione, rider_name: r.rider_name, team_name: r.team_name, distacco: r.distacco, atleta_id: r.atleta_id })) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Import risultati PCS da HTML incollato manualmente (bypassa anti-bot)
 app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, res) => {
   try {

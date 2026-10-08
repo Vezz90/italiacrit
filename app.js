@@ -13846,12 +13846,60 @@ window.adminNav = async function(section) {
             <label class="ig-f"><span>Moltiplicatore</span><select id="mg-mult"><option value="4">×4 Mondiale</option><option value="3" selected>×3 Europeo / Campionato Italiano</option><option value="2">×2 Nazionale</option><option value="1">×1 Standard</option></select></label>
             <label class="ig-f"><span>Luogo / regione (facoltativo)</span><input id="mg-reg" type="text"></label>
           </div>
+          <div class="ig-adj" style="align-items:flex-end;border-top:1px solid var(--border-subtle);padding-top:12px">
+            <label class="ig-f" style="flex:1;min-width:260px"><span>Oppure importa da ProCyclingStats: slug o link della gara (es. race/world-championship-me-u23/2026)</span><input id="mg-pcs" type="text" placeholder="https://www.procyclingstats.com/race/…/2026"></label>
+            <button class="admin-edit-btn" id="mg-pcs-btn" onclick="window._mgPcs()">⬇ Importa da PCS</button>
+          </div>
+          <label class="ig-f" id="mg-html-box" style="display:none"><span>PCS ha bloccato l'accesso automatico: apri la pagina risultati su PCS, copia il sorgente della pagina e incollalo qui, poi premi di nuovo «Importa da PCS»</span><textarea id="mg-html" rows="4"></textarea></label>
           <p class="ig-note">Inserisci solo gli <b>italiani</b> (gli stranieri non servono) con la <b>posizione vera</b> in classifica: i punti dipendono dalla posizione, quindi un italiano arrivato 2° dietro a uno straniero va inserito come 2°.</p>
           <div id="mg-err" class="ig-warn" style="display:none"></div>
           <div><button class="admin-edit-btn gr-fb" onclick="window._mgGo()">Crea e inserisci i risultati →</button></div>
         </section></div>`;
       window._mgPreset = (nome, mult) => { document.getElementById('mg-nome').value = nome; document.getElementById('mg-mult').value = String(mult); };
+      window._mgPcs = async () => {
+        const gid = window._mgBuild(); if (!gid) return;
+        const slug = document.getElementById('mg-pcs').value.trim();
+        const html = document.getElementById('mg-html').value.trim();
+        const err = document.getElementById('mg-err');
+        if (!slug && !html) { err.textContent = 'Incolla lo slug o il link della gara su PCS'; err.style.display = 'block'; return; }
+        const btn = document.getElementById('mg-pcs-btn'); btn.disabled = true; btn.textContent = '⏳ Leggo PCS…';
+        err.style.display = 'none';
+        try {
+          const r = await apiCall('/admin/pcs-fetch-results', { method: 'POST', body: { slug, html } });
+          // si tengono solo i corridori già presenti in ICS (italiani): la posizione resta quella vera della gara
+          const rows = r.rows.filter(x => x.atleta_id && globalData?.athletes?.[x.atleta_id]).map(x => {
+            const a = globalData.athletes[x.atleta_id];
+            return { pos: x.posizione, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || x.team_name || '', tempo: x.distacco || '', atletaId: x.atleta_id, _autoMatched: true, _dbTeam: a.team_attuale || '' };
+          });
+          if (!rows.length) { err.textContent = `Letti ${r.total} corridori da PCS ma nessuno corrisponde a un atleta ICS. Controlla lo slug o la categoria.`; err.style.display = 'block'; return; }
+          showToast(`PCS: ${r.total} corridori letti, ${rows.length} italiani trovati in ICS`);
+          window.openManualResultBulkForm(gid, rows.map(x => ({ pos: x.pos, cognome: x.cognome, nome: x.nome, team: x.team, tempo: x.tempo })), window._mgCatHint);
+        } catch (e) {
+          err.textContent = e.message || 'Errore'; err.style.display = 'block';
+          if (/anti-bot|bloccat|incolla/i.test(e.message || '')) document.getElementById('mg-html-box').style.display = 'flex';
+        } finally { btn.disabled = false; btn.textContent = '⬇ Importa da PCS'; }
+      };
+      window._mgBuild = () => {
+        const nome = document.getElementById('mg-nome').value.trim();
+        const data = document.getElementById('mg-data').value;
+        const cat = document.getElementById('mg-cat').value, gen = document.getElementById('mg-gen').value;
+        const mult = parseInt(document.getElementById('mg-mult').value, 10) || 1;
+        const reg = document.getElementById('mg-reg').value.trim();
+        const err = document.getElementById('mg-err');
+        if (!nome || !data) { err.textContent = 'Inserisci nome e data della gara'; err.style.display = 'block'; return null; }
+        const slug = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+        const gid = `${slug}_${data}_${cat}_${gen}`;
+        window._mrNewGara = window._mrNewGara || {};
+        window._mrNewGara[gid] = { id: gid, nome, nome_gara: nome, data, regione: reg, tipo: mult >= 3 ? 'internazionale' : (mult === 2 ? 'nazionale' : 'regionale'), moltiplicatore: mult, categoria: '', campionato_italiano: false, campionato_regionale: false };
+        window._mgCatHint = `${cat}_${gen}`;
+        return gid;
+      };
       window._mgGo = () => {
+        const gid = window._mgBuild(); if (!gid) return;
+        window.openManualResultBulkForm(gid, null, window._mgCatHint);
+        return;
+      };
+      window._mgGoOld = () => {
         const nome = document.getElementById('mg-nome').value.trim();
         const data = document.getElementById('mg-data').value;
         const cat = document.getElementById('mg-cat').value, gen = document.getElementById('mg-gen').value;
