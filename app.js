@@ -31827,7 +31827,15 @@ async function _updateIgShareBtn(){
   const gid=_sharePayload?._id; if(!gid) return;
   try {
     if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid));
-    if(_igPostedCache[gid][kind]){ btn.disabled=true; btn.textContent = kind==='story' ? '✓ Storia già pubblicata' : '✓ Già pubblicato su Instagram'; }
+    const old=document.getElementById('share-ig-unlock'); if(old) old.remove();
+    if(_igPostedCache[gid][kind]){
+      btn.disabled=true; btn.textContent = kind==='story' ? '✓ Storia già pubblicata' : '✓ Già pubblicato su Instagram';
+      const u=document.createElement('button'); u.id='share-ig-unlock'; u.className='share-action-btn'; u.style.cssText='flex:0 0 auto;font-size:.72rem';
+      u.textContent='Ripubblica…'; u.title='Da usare solo dopo aver eliminato il post da Instagram';
+      u.onclick=async()=>{ if(!confirm('Sblocca questa gara per pubblicarla di nuovo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
+        try{ await apiCall('/admin/social/instagram/unlock',{method:'POST',body:{gara_id:gid,kind}}); delete _igPostedCache[gid]; showToast('Sbloccato: ora puoi ripubblicare'); await _updateIgShareBtn(); }catch(e){ showToast(e.message||'Errore','error'); } };
+      row.appendChild(u);
+    }
   } catch {}
 }
 window.publishShareToInstagram = async function(){

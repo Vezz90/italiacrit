@@ -11835,6 +11835,16 @@ app.get('/api/admin/social/instagram/recent', requireAdmin, async (req, res) => 
     res.json({ races: list });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
+// Sblocca una gara gia' pubblicata (es. dopo aver eliminato il post da Instagram) per poterla ripubblicare.
+app.post('/api/admin/social/instagram/unlock', requireAdmin, async (req, res) => {
+  try {
+    const id = String((req.body && req.body.gara_id) || ''), kind = (req.body && req.body.kind) === 'story' ? 'story' : 'feed';
+    const log = await readIgLog();
+    const next = log.filter(l => !(l.gara_id === id && l.kind === kind));
+    await writeIgLog(next);
+    res.json({ ok: true, removed: log.length - next.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => {
   try {
     const id = String(req.query.gara || '');
