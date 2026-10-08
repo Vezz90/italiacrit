@@ -3399,6 +3399,7 @@ app.post('/api/internal/notify-results', async (req, res) => {
     });
     // Background: accoda post social + notifica follower
     queueSocialPostsForToday().catch(e => console.warn('[social] queue error:', e.message));
+    rescrapeRecentFbPosts().catch(() => {});
     notifyFollowers().catch(e => console.warn('[follow] notify error:', e.message));
     notifyRankChanges().catch(e => console.warn('[rank] notify error:', e.message));
     _warmRecentOgImages().catch(e => console.warn('[og-warm] notify error:', e.message));
@@ -7918,6 +7919,7 @@ async function writeSocialQueue(arr) {
 // post per ogni giro, uno ogni pochi secondi, mai oltre un post per gara.
 const SOCIAL_AUTO_KEY = 'social_auto';
 const SOCIAL_AUTO_MAX_PER_RUN = 6;
+const SOCIAL_AUTO_MAX_PER_DAY = 8; // tetto giornaliero della pubblicazione automatica: niente "inondazione" nei giorni pieni di gare
 async function readSocialAuto() {
   if (supabase) {
     const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_AUTO_KEY).maybeSingle();
@@ -8086,7 +8088,10 @@ async function publishPendingSocialAuto({ force = false } = {}) {
     await writeSocialQueue(queue);
     // solo post recenti (oggi/ieri): niente arretrato quando si accende l'interruttore
     const cutoff = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10);
-    const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= cutoff).slice(0, SOCIAL_AUTO_MAX_PER_RUN);
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const postedToday = queue.filter(p => p.auto && p.status === 'posted' && String(p.posted_at || '').slice(0, 10) === todayStr).length;
+    const room = force ? SOCIAL_AUTO_MAX_PER_RUN : Math.max(0, Math.min(SOCIAL_AUTO_MAX_PER_RUN, SOCIAL_AUTO_MAX_PER_DAY - postedToday));
+    const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= cutoff).slice(0, room);
     let posted = 0;
     for (const post of todo) {
       const idx = queue.findIndex(p => p.id === post.id);
@@ -8104,6 +8109,28 @@ async function publishPendingSocialAuto({ force = false } = {}) {
     if (posted) console.log(`[social] pubblicati automaticamente ${posted} post su Facebook`);
     return { posted };
   } finally { _socialAutoRunning = false; }
+}
+
+// Chiede a Facebook di rileggere l'anteprima (foto/podio) delle pagine gara dei post recenti: quando una foto
+// arriva dopo la pubblicazione, l'anteprima del post si aggiorna da sola senza ripubblicare.
+// Ogni gara viene riletta al massimo ogni 3 ore, per 4 giorni dopo la pubblicazione.
+let _fbRescrapeAt = {};
+async function rescrapeRecentFbPosts() {
+  if (!_fbConfigured()) return;
+  try {
+    const queue = await readSocialQueue();
+    const since = Date.now() - 4 * 86400000;
+    const recent = queue.filter(p => p.status === 'posted' && !p.fb_existing && Date.parse(p.posted_at || '') >= since).slice(-40);
+    for (const p of recent) {
+      if ((_fbRescrapeAt[p.gara_id] || 0) > Date.now() - 3 * 3600000) continue;
+      _fbRescrapeAt[p.gara_id] = Date.now();
+      const url = `${SITE_URL}/gara/${encodeURIComponent(p.gara_id)}`;
+      try {
+        await fetch(`https://graph.facebook.com/v19.0/?id=${encodeURIComponent(url)}&scrape=true&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`, { method: 'POST', signal: AbortSignal.timeout(20000) });
+      } catch (e) { console.warn('[social] rescrape fallito:', p.gara_id, e.message); }
+      await new Promise(r => setTimeout(r, 1500));
+    }
+  } catch (e) { console.warn('[social] rescrape error:', e.message); }
 }
 
 // Genera e accoda un post per ogni gara con risultato di oggi/ieri ancora non in coda.
@@ -9545,7 +9572,7 @@ app.post('/api/admin/social/instagram', requireAdmin, async (req, res) => {
 
 // Interruttore "pubblica automaticamente su Facebook\"
 app.get('/api/admin/social/auto', requireAdmin, async (req, res) => {
-  try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN }); }
+  try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN, max_per_day: SOCIAL_AUTO_MAX_PER_DAY }); }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/social/auto', requireAdmin, async (req, res) => {
@@ -12157,6 +12184,7 @@ init()
       autoMediaChannelsSync();
       autoPodcastFeedsSync();
       setInterval(autoXpixSync, SYNC_INTERVAL);
+      setInterval(rescrapeRecentFbPosts, SYNC_INTERVAL);
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
       setInterval(autoMediaChannelsSync, SYNC_INTERVAL);
