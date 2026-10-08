@@ -3538,7 +3538,7 @@ function collectChampions({ year, catCode, teamId } = {}) {
       const row = t.gara_id ? (globalData?.resultsRaw || []).find(r => r.gara_id === t.gara_id && r.atleta_id === t.atleta_id) : null;
       const tm = row ? teamOf(row) : { team_id: a?.team_id, team: a?.team_attuale };
       push({
-        kind: 'reg', atleta_id: t.atleta_id,
+        kind: 'reg', atleta_id: t.atleta_id, id: t.id,
         nome: t.atleta_nome || `${a?.cognome || ''} ${a?.nome || ''}`.trim() || t.atleta_id,
         team_id: tm.team_id, team: tm.team, disciplina: t.disciplina || 'STRADA',
         anno: String(t.anno), categoria: t.categoria, regione: t.regione || '', fascia: t.fascia || null,
@@ -17738,7 +17738,6 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
             <span id="atleta-ci-badge-host" style="display:contents"></span>
-            ${regionalChampionChipsHtml(atleta_id)}<span id="atleta-arch-chips" style="display:contents"></span>
           </div>
           <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
         </div>
@@ -19070,19 +19069,17 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const _ciBadgeHost = document.getElementById('atleta-ci-badge-host');
   if (_ciBadgeHost) {
     const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || ''));
-    // Un chip per ogni titolo, con la prova (strada / cronometro / a squadre /
-    // cronoscalata) — richiesto esplicitamente. Stessa prova+anno in più
-    // categorie (es. due titoli nello stesso anno) conta una volta sola.
+    // I titoli non si mostrano piu' accanto al nome (troppo ingombro): finiscono nella sezione compatta
+    // "Titoli e medaglie" (titoli.js). Qui si passano solo i campionati italiani trovati nelle fonti PCS/ciclismo.info.
     const _ciSeen = new Set();
-    _ciBadgeHost.innerHTML = _ciWins
-      .slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''))
-      .map(r => {
-        const disciplina = championDisciplina(r.nome_gara);
-        const k = `${disciplina}|${r.anno}`;
-        if (_ciSeen.has(k)) return '';
-        _ciSeen.add(k);
-        return championChipHtml({ kind: 'it', disciplina, anno: r.anno, title: `${r.nome_gara} (${r.anno})` });
-      }).join('');
+    window._athExtraTitles = window._athExtraTitles || {};
+    window._athExtraTitles[atletaId] = _ciWins.map(r => {
+      const prova = championDisciplina(r.nome_gara);
+      const y = String(r.data || r.anno || '').slice(0, 4);
+      const k = `${prova}|${y}`; if (_ciSeen.has(k)) return null; _ciSeen.add(k);
+      return { y: +y, kind: 'it', cat: null, catCode: '', reg: '', aid: atletaId, n: '', team: '', gid: '', gara: r.nome_gara || '', pos: 1, prova, extra: true };
+    }).filter(Boolean);
+    if (window.Titoli && window._athExtraTitles[atletaId].length) window.Titoli.mountAthlete(atletaId, 'atleta-titles');
   }
 
   // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una
@@ -21660,7 +21657,6 @@ async function renderTeam(team_id, opts = {}) {
     </div>
     <div id="team-lineage-bar"></div>
     <div id="team-club-history"></div>
-    ${teamChampionsHtml}
     <div id="team-titles"></div>
     ${profileYearRow('team', team_id, selYear)}
 

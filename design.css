@@ -13665,3 +13665,25 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .ci-medal--1 { border-color: #D9A100; background: linear-gradient(135deg, rgba(229,161,0,.16), transparent); }
 .ci-medal--2 { border-color: #8E9AAE; background: linear-gradient(135deg, rgba(142,154,174,.16), transparent); }
 .ci-medal--3 { border-color: #C77B3B; background: linear-gradient(135deg, rgba(199,123,59,.16), transparent); }
+
+/* ===== Titoli e medaglie: una parola + anni cliccabili ===== */
+.ttl-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.ttl-card { display: inline-flex; align-items: flex-start; gap: 9px; padding: 7px 14px 8px 10px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-card); max-width: 100%; }
+.ttl-ic { font-size: 1.35rem; line-height: 1; display: inline-flex; padding-top: 2px; flex: none; }
+.ttl-body { min-width: 0; }
+.ttl-body > b { display: block; font: 800 .72rem/1.2 'Inter', system-ui, sans-serif; letter-spacing: .05em; color: var(--text-primary); }
+.ttl-body > b em { font-style: normal; font-weight: 700; color: var(--text-muted); margin-left: 5px; letter-spacing: 0; }
+.ttl-yrs { display: flex; flex-wrap: wrap; gap: 2px 5px; margin-top: 3px; }
+.ttl-yr { font: 700 .8rem 'Inter', system-ui, sans-serif; color: var(--text-secondary); text-decoration: none; padding: 0 1px; border-radius: 4px; white-space: nowrap; }
+a.ttl-yr:hover { color: var(--accent, #F2750F); text-decoration: underline; }
+.ttl-yr sup { font-size: .55rem; font-weight: 700; margin-left: 1px; color: var(--text-muted); text-transform: uppercase; }
+.ttl-x { border: 0; background: none; cursor: pointer; color: var(--text-muted); font-size: .7rem; padding: 0 3px 0 0; }
+.ttl-card--g1 { border-color: #D9A100; background: linear-gradient(135deg, rgba(229,161,0,.16), transparent); }
+.ttl-card--g2 { border-color: #8E9AAE; background: linear-gradient(135deg, rgba(142,154,174,.18), transparent); }
+.ttl-card--g3 { border-color: #C77B3B; background: linear-gradient(135deg, rgba(199,123,59,.16), transparent); }
+.ttl-card--it { border-color: rgba(205,33,42,.55); background: linear-gradient(135deg, rgba(0,140,69,.10), rgba(205,33,42,.10)); }
+.ttl-card--reg { border-color: rgba(47,127,216,.55); background: linear-gradient(135deg, rgba(47,127,216,.12), transparent); }
+.ttl-det { margin-top: 10px; font-size: .8rem; } .ttl-det summary { cursor: pointer; color: var(--text-muted); font-weight: 600; }
+.ttl-dr { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 8px; padding: 6px 0; border-top: 1px solid var(--border-subtle); } .ttl-dr b { font-weight: 800; }
+.ttl-dr span { display: flex; flex-direction: column; gap: 2px; } .ttl-dr em { font-style: normal; color: var(--text-secondary); } .ttl-dr a { color: var(--text-primary); font-weight: 600; text-decoration: none; }
+@media (max-width: 600px) { .ttl-card { flex: 1 1 100%; } .ttl-card--g1, .ttl-card--g2, .ttl-card--g3 { flex: 1 1 calc(50% - 4px); padding-right: 8px; } .ttl-body > b { font-size: .66rem; } }

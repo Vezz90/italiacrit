@@ -1,7 +1,9 @@
 /* ============================================================
-   ICS — Titoli di campione (regionali e italiani) sui profili
-   Archivio 2007-2025: data/titoli_campione.json (da scripts/scrape_campioni_regionali.py +
-   scripts/build_titoli.py) + titoli della stagione in corso (admin / campionati italiani).
+   ICS — Titoli di campione e medaglie sui profili
+   Archivio 2007-2025: data/titoli_campione.json (campioni regionali/italiani), data/medaglie_internazionali.json
+   (Europei/Mondiali), data/titoli_stagioni.json (campioni italiani accumulati dallo scraper) + titoli della
+   stagione in corso (admin / campionati italiani / medaglie dai risultati inseriti).
+   Resa compatta: una "parola" per tipo di titolo con gli anni accanto, ogni anno apre la gara.
    ============================================================ */
 'use strict';
 
@@ -51,7 +53,7 @@
     return id;
   }
 
-  // titoli della stagione in corso (ICS): italiani dalle gare + regionali assegnati dall'admin
+  // titoli della stagione in corso (ICS): italiani dalle gare + regionali assegnati dall'admin + medaglie Europei/Mondiali
   const INTL = /campionat\w*[^]*?(europe\w*|del mondo|mondial\w*)|(europe\w*|mondial\w*)[^]*?campionat/i;
   function nativeMedals(filter) {
     const out = [];
@@ -66,58 +68,63 @@
     } catch (_) { /* ok */ }
     return out;
   }
+  const mapNative = (c, id) => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: id || c.atleta_id || '', n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', fascia: c.fascia, native: true, did: c.id });
   function nativeFor(id) {
-    try {
-      return nativeMedals(r => r.atleta_id === id).concat(collectChampions().filter(c => c.atleta_id === id).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: id, n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', fascia: c.fascia, native: true })));
-    } catch (_) { return []; }
+    try { return nativeMedals(r => r.atleta_id === id).concat(collectChampions().filter(c => c.atleta_id === id).map(c => mapNative(c, id))); } catch (_) { return []; }
   }
   function nativeForTeam(teamId) {
-    try { return nativeMedals(r => r.team_id === teamId).concat(collectChampions({ teamId }).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: c.atleta_id || '', n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', native: true }))); } catch (_) { return []; }
+    try { return nativeMedals(r => r.team_id === teamId).concat(collectChampions({ teamId }).map(c => mapNative(c))); } catch (_) { return []; }
   }
 
   function catLabelOf(t) { return t.cat != null ? SHORT[t.cat] : (typeof catLabel === 'function' ? catLabel(t.catCode) : ''); }
 
-  const MEDAL = { 1: ['🥇', 'ORO'], 2: ['🥈', 'ARGENTO'], 3: ['🥉', 'BRONZO'] };
-  function medalChip(t, withName) {
-    const [ic, lb] = MEDAL[t.pos] || ['🏅', ''];
-    const ev = t.kind === 'eu' ? 'EUROPEI' : 'MONDIALI';
-    const prova = t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : 'Strada');
-    const sub = [prova, catLabelOf(t), t.y, withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
-    const href = withName && t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : null));
-    const el = `<span class="ci-medal ci-medal--${t.pos}" title="${esc((t.gara ? tc(t.gara) + ' — ' : '') + t.y)}"><i>${ic}</i><span><b>${lb} · ${ev}</b><small>${esc(sub)}</small></span></span>`;
-    return href ? `<a href="${href}" style="text-decoration:none;color:inherit">${el}</a>` : el;
-  }
-  function chip(t, withName) {
-    if (t.medal) return medalChip(t, withName);
-    const extra = [catLabelOf(t), t.reg ? tc(t.reg) : '', withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
-    const href = withName && t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : null));
-    const prova = t.prova && t.prova !== 'STRADA' ? tc(t.prova).replace(' A ', ' a ') : '';
-    return championChipHtml({ kind: t.kind, disciplina: prova, anno: t.y, extra, title: `${t.gara ? tc(t.gara) + ' — ' : ''}${t.y}`, href });
-  }
-
-  function summary(list) {
-    const reg = list.filter(t => t.kind === 'reg').length, it = list.filter(t => t.kind === 'it').length;
-    const med = list.filter(t => t.medal), ori = med.filter(t => t.pos === 1).length;
-    const parts = [];
-    if (med.length) parts.push(`<b>${med.length}</b> ${med.length === 1 ? 'medaglia' : 'medaglie'} a Europei/Mondiali${ori ? ` (${ori} ${ori === 1 ? 'oro' : 'ori'})` : ''}`);
-    if (reg) parts.push(`<b>${reg}</b> ${reg === 1 ? 'titolo regionale' : 'titoli regionali'}`);
-    if (it) parts.push(`<b>${it}</b> ${it === 1 ? 'titolo italiano' : 'titoli italiani'}`);
-    return parts.join(' · ');
-  }
-
   function uniq(list) {
     const seen = new Set();
-    return list.filter(t => { const k = `${t.y}|${t.kind}|${t.aid}|${t.catCode || t.cat}|${t.prova}|${t.reg}|${t.medal ? t.pos : ''}`; if (seen.has(k)) return false; seen.add(k); return true; });
+    return list.filter(t => { const k = `${t.y}|${t.kind}|${t.aid}|${String(t.prova || '')}|${t.medal ? t.pos : ''}|${t.reg}|${t.gid || ''}`; if (seen.has(k)) return false; seen.add(k); return true; });
   }
 
   async function athleteTitles(id) {
     await load();
-    return uniq([...nativeFor(id), ...(byAth[athKey(id)] || [])]).sort((a, b) => b.y - a.y || (a.medal ? 1 : 0) - (b.medal ? 1 : 0) || (a.kind === 'it' ? -1 : 1));
+    const extra = (window._athExtraTitles && window._athExtraTitles[id]) || [];
+    return uniq([...nativeFor(id), ...extra, ...(byAth[athKey(id)] || [])]);
   }
   async function teamTitles(teamId) {
     await load();
     const nm = globalData && globalData.teams && globalData.teams[teamId] ? globalData.teams[teamId].nome : teamId;
-    return uniq([...nativeForTeam(teamId), ...(byTeam[norm(nm)] || [])]).sort((a, b) => b.y - a.y || (a.kind === 'it' ? -1 : 1));
+    return uniq([...nativeForTeam(teamId), ...(byTeam[norm(nm)] || [])]);
+  }
+
+  // ── resa compatta ────────────────────────────────────────────
+  const JERSEY = (a, b) => `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/><rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${a}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${b}"/></svg>`;
+  // ordine: medaglie (oro/argento/bronzo, Mondiali prima degli Europei), poi italiano, poi regionale
+  const GROUPS = [
+    { label: 'ORO · MONDIALI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'wc' && t.pos === 1 },
+    { label: 'ORO · EUROPEI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'eu' && t.pos === 1 },
+    { label: 'ARGENTO · MONDIALI', cls: 'g2', icon: '🥈', test: t => t.medal && t.kind === 'wc' && t.pos === 2 },
+    { label: 'ARGENTO · EUROPEI', cls: 'g2', icon: '🥈', test: t => t.medal && t.kind === 'eu' && t.pos === 2 },
+    { label: 'BRONZO · MONDIALI', cls: 'g3', icon: '🥉', test: t => t.medal && t.kind === 'wc' && t.pos === 3 },
+    { label: 'BRONZO · EUROPEI', cls: 'g3', icon: '🥉', test: t => t.medal && t.kind === 'eu' && t.pos === 3 },
+    { label: 'CAMPIONE ITALIANO', cls: 'it', icon: JERSEY('#008C45', '#CD212A'), test: t => !t.medal && t.kind === 'it' },
+    { label: 'CAMPIONE REGIONALE', cls: 'reg', icon: JERSEY('#2F7FD8', '#2F7FD8'), test: t => !t.medal && t.kind === 'reg' },
+  ];
+  const raceHref = t => (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : ''));
+  function yearLink(t, withName) {
+    const prova = t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : ''));
+    const tip = [t.gara ? tc(t.gara) : '', prova, catLabelOf(t), t.reg ? tc(t.reg) : '', withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
+    const sup = t.prova === 'CRONOMETRO' ? 'crono' : (t.prova === 'CRONOSCALATA' ? 'scal.' : '');
+    const href = raceHref(t);
+    const body = `${t.y}${sup ? `<sup>${sup}</sup>` : ''}`;
+    const x = t.did != null && authUser()?.role === 'admin' ? `<button class="ttl-x" title="Rimuovi il titolo" onclick="event.preventDefault();event.stopPropagation();window.adminDeleteRegionalTitle(${t.did})">✕</button>` : '';
+    return `${href ? `<a class="ttl-yr" href="${href}" title="${esc(tip)}">${body}</a>` : `<span class="ttl-yr" title="${esc(tip)}">${body}</span>`}${x}`;
+  }
+  function cardsHtml(list, withName) {
+    return GROUPS.map(g => {
+      const seenK = new Set();
+      const items = list.filter(g.test).sort((a, b) => (b.y - a.y) || ((b.gid ? 1 : 0) - (a.gid ? 1 : 0)) || ((b.cat != null || b.catCode ? 1 : 0) - (a.cat != null || a.catCode ? 1 : 0)))
+        .filter(t => { const k = `${t.y}|${t.prova}|${withName ? t.aid : ''}`; if (seenK.has(k)) return false; seenK.add(k); return true; });
+      if (!items.length) return '';
+      return `<div class="ttl-card ttl-card--${g.cls}"><span class="ttl-ic">${g.icon}</span><div class="ttl-body"><b>${g.label}${items.length > 1 ? `<em>×${items.length}</em>` : ''}</b><div class="ttl-yrs">${items.map(t => yearLink(t, withName)).join('')}</div></div></div>`;
+    }).join('');
   }
 
   async function mountAthlete(id, hostId) {
@@ -125,8 +132,7 @@
     const list = await athleteTitles(id);
     if (!document.getElementById(hostId)) return;
     if (!list.length) { host.innerHTML = ''; return; }
-    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI DI CAMPIONE</span><i></i></div>
-      <p class="ath-moment-note ttl-sum">${summary(list)}</p><div class="ttl-chips">${list.map(t => chip(t, false)).join('')}</div></section>`;
+    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE</span><i></i></div><div class="ttl-grid">${cardsHtml(list, false)}</div></section>`;
   }
 
   async function mountTeam(teamId, hostId) {
@@ -135,22 +141,17 @@
     if (!document.getElementById(hostId)) return;
     if (!list.length) { host.innerHTML = ''; return; }
     const years = [...new Set(list.map(t => t.y))].sort((a, b) => b - a);
-    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI DI CAMPIONE</span><i></i></div>
-      <p class="ath-moment-note ttl-sum">${summary(list)} vinti da corridori della squadra</p>
-      <div class="ttl-years">${years.map(y => `<div class="ttl-y"><b>${y}</b><div class="ttl-chips">${list.filter(t => t.y === y).map(t => chip(t, true)).join('')}</div></div>`).join('')}</div></section>`;
+    const det = years.map(y => `<div class="ttl-dr"><b>${y}</b><span>${list.filter(t => t.y === y).map(t => {
+      const g = GROUPS.find(x => x.test(t)); const href = t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : '';
+      return `<em>${g ? g.label.toLowerCase().replace(/^./, c => c.toUpperCase()) : ''}${catLabelOf(t) ? ' · ' + esc(catLabelOf(t)) : ''}: ${href ? `<a href="${href}">${esc(tc(t.n))}</a>` : esc(tc(t.n))}</em>`;
+    }).join('')}</span></div>`).join('');
+    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE DEI CORRIDORI</span><i></i></div><div class="ttl-grid">${cardsHtml(list, true)}</div>
+      <details class="ttl-det"><summary>Chi li ha vinti</summary>${det}</details></section>`;
   }
 
-  // badge dell'anno che si sta guardando (vista storica del profilo)
-  async function yearChipsAthlete(id, anno, hostId) {
-    const host = document.getElementById(hostId); if (!host) return;
-    const list = (await athleteTitles(id)).filter(t => String(t.y) === String(anno));
-    host.innerHTML = list.map(t => chip(t, false)).join('');
-  }
-  async function yearChipsTeam(teamId, anno, hostId) {
-    const host = document.getElementById(hostId); if (!host) return;
-    const list = (await teamTitles(teamId)).filter(t => String(t.y) === String(anno));
-    host.innerHTML = list.length ? `<div class="ttl-chips" style="margin:10px 0">${list.map(t => chip(t, true)).join('')}</div>` : '';
-  }
+  // compatibilita': i badge accanto al nome non ci sono piu', restano per non rompere i richiami
+  async function yearChipsAthlete() {}
+  async function yearChipsTeam() {}
 
   window.Titoli = { mountAthlete, mountTeam, yearChipsAthlete, yearChipsTeam, athleteTitles, teamTitles };
 })();
