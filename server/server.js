@@ -11791,6 +11791,24 @@ app.get('/api/ig-tmp/:token', (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.send(e.buf);
 });
+// Ultime gare con risultati (una riga per gara/categoria) con lo stato di pubblicazione su Instagram.
+app.get('/api/admin/social/instagram/recent', requireAdmin, async (req, res) => {
+  try {
+    const raw = (await readDataJsonFromGH('results_raw.json')) || [];
+    const today = new Date().toISOString().slice(0, 10);
+    const byId = new Map();
+    for (const r of raw) {
+      if (!r.gara_id || Number(r.posizione) !== 1) continue;
+      const d = String(r.data || '').slice(0, 10);
+      if (!d || d > today) continue;
+      if (!byId.has(r.gara_id)) byId.set(r.gara_id, { gara_id: r.gara_id, name: r.nome_gara || r.gara_id, date: d, category: r.categoria || '', winner: `${r.cognome || ''} ${r.nome || ''}`.trim() });
+    }
+    const log = await readIgLog();
+    const list = [...byId.values()].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30)
+      .map(g => ({ ...g, feed: log.some(l => l.gara_id === g.gara_id && l.kind === 'feed'), story: log.some(l => l.gara_id === g.gara_id && l.kind === 'story') }));
+    res.json({ races: list });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => {
   try {
     const id = String(req.query.gara || '');

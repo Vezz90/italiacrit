@@ -13734,3 +13734,10 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .ig-adj { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: .8rem; } .ig-adj label { display: flex; align-items: center; gap: 6px; color: var(--text-muted); } .ig-adj input[type=range] { width: 130px; }
 .ig-cap textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .86rem; line-height: 1.5; resize: vertical; }
 .ig-pub { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.ig-races { display: flex; flex-direction: column; max-height: 420px; overflow-y: auto; border: 1px solid var(--border-subtle); border-radius: 10px; }
+.ig-race { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 12px; text-decoration: none; color: inherit; border-top: 1px solid var(--border-subtle); }
+.ig-race:first-child { border-top: 0; } .ig-race:hover { background: var(--bg-elevated); }
+.ig-race-d { font-weight: 800; font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.ig-race-n { min-width: 0; } .ig-race-n b { display: block; font-size: .86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ig-race-n small { color: var(--text-muted); font-size: .74rem; }
+.ig-race-s { display: flex; gap: 6px; } .ig-race-s i { font-style: normal; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--bg-elevated); color: var(--text-muted); } .ig-race-s i.on { background: rgba(16,185,129,.15); color: #059669; }

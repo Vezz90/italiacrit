@@ -13868,9 +13868,20 @@ window.adminNav = async function(section) {
             <section class="ig-card ig-wide"><h3>Come si pubblica</h3>
               <p>Si pubblica dalla finestra <b>Condividi</b> di una gara, la stessa con cui crei le grafiche: scegli <b>Instagram Feed</b> o <b>Story / Reels</b>, <b>Vincitore</b> o <b>Risultati</b>, regola foto e zoom, controlla il testo (con il credit del fotografo e la regola xpix) e premi <b>📸 Pubblica su Instagram</b>.</p>
               <p class="ig-note">Il post nel feed esce con questo testo, la riga per il link e gli hashtag fissi. La storia esce solo con la grafica. Ogni gara si può pubblicare una volta sola per tipo.</p>
-              <div><button class="admin-edit-btn gr-fb" id="ig-latest-btn" onclick="window._igOpenLatest()">Prova con l'ultima gara</button></div>
+              <div id="ig-recent"><div class="admin-loading">Carico le ultime gare…</div></div>
             </section>
           </div>`;
+        (async () => {
+          const box = document.getElementById('ig-recent'); if (!box) return;
+          try {
+            const { races } = await apiCall('/admin/social/instagram/recent');
+            if (!races.length) { box.innerHTML = '<p class="ig-note">Nessuna gara con risultati.</p>'; return; }
+            box.innerHTML = '<div class="ig-races">' + races.map(r => `<a class="ig-race" href="/gara/${encodeURIComponent(r.gara_id)}">
+              <span class="ig-race-d">${esc(r.date.slice(8, 10) + '/' + r.date.slice(5, 7))}</span>
+              <span class="ig-race-n"><b>${esc(r.name)}</b><small>${esc(r.category)}${r.winner ? ' · ' + esc(r.winner) : ''}</small></span>
+              <span class="ig-race-s">${r.feed ? '<i class="on">Feed ✓</i>' : '<i>Feed</i>'}${r.story ? '<i class="on">Storia ✓</i>' : '<i>Storia</i>'}</span></a>`).join('') + '</div><p class="ig-note">Si apre la pagina della gara: premi Condividi, poi scegli Instagram Feed o Story.</p>';
+          } catch (e) { box.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
+        })();
         window._igOpenLatest = async () => {
           const b = document.getElementById('ig-latest-btn'); b.disabled = true; b.textContent = 'Cerco l’ultima gara…';
           try { const r = await apiCall('/admin/social/instagram/preview?only=latest'); window.location.href = '/gara/' + encodeURIComponent(r.gara_id); }
