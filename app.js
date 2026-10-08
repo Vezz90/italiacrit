@@ -13825,7 +13825,8 @@ window.adminNav = async function(section) {
       main.innerHTML = '<div class="admin-loading">Controllo il collegamento a Instagram…</div>';
       try {
         const force = window._igForce ? '?force=1' : ''; window._igForce = false;
-        const { status: st, settings: se, fb_configured } = await apiCall('/admin/social/instagram' + force);
+        const { status: st, settings: se, fb_configured, accounts: igAccs } = await apiCall('/admin/social/instagram' + force);
+        const tosc = (igAccs || []).find(a => a.key === 'toscana');
         const nf = n => Number(n || 0).toLocaleString('it-IT');
         const step = (n, done, html) => `<li class="ig-step ${done ? 'done' : ''}"><span>${done ? '✓' : n}</span><div>${html}</div></li>`;
         const linked = st.state === 'linked';
@@ -13857,6 +13858,18 @@ window.adminNav = async function(section) {
           <div class="ig-grid">
             <section class="ig-card"><h3>Collegamento</h3>${conn}
               <button class="admin-edit-btn" onclick="window._igForce=true;adminNav('instagram')">↻ Ricontrolla</button></section>
+            <section class="ig-card"><h3>Toscana Crit</h3>${(() => {
+              if (!tosc) return `<div class="ig-box warn"><b>Secondo profilo non ancora configurato</b>
+                <p>Per pubblicare anche su Toscana Crit con lo stesso strumento servono due valori su Render (Environment):</p>
+                <ol class="ig-steps">
+                  <li class="ig-step"><span>1</span><div><code>FB_PAGE_ID_TOSCANA</code>: l’ID della Pagina Facebook a cui è collegato l’Instagram di Toscana Crit.</div></li>
+                  <li class="ig-step"><span>2</span><div><code>FB_PAGE_TOKEN_TOSCANA</code>: il token di quella Pagina (stessa procedura di ICS, con token esteso e <code>me/accounts</code>).</div></li>
+                </ol><p>Poi premi Ricontrolla.</p></div>`;
+              const s2 = tosc.status;
+              if (s2.state === 'linked') return `<div class="ig-box ok"><div class="ig-prof">${s2.ig.profile_picture_url ? `<img src="${esc(s2.ig.profile_picture_url)}" alt="">` : '<span>📸</span>'}<div><b>@${esc(s2.ig.username || '')}</b><small>${esc(s2.ig.name || '')}</small><small>${nf(s2.ig.followers_count)} follower · ${nf(s2.ig.media_count)} post</small></div></div>${s2.publish && s2.publish.ok ? `<p class="ig-ok">✅ Pronto a pubblicare. Oggi: ${s2.publish.used} su ${s2.publish.total}.</p>` : `<p class="ig-warn">⚠️ Collegato, ma il token non può ancora pubblicare${s2.publish && s2.publish.message ? ` (${esc(s2.publish.message)})` : ''}.</p>`}</div>`;
+              return `<div class="ig-box warn"><b>${s2.state === 'not_linked' ? 'Nessun account Instagram collegato a quella Pagina' : 'Non riesco a leggere il collegamento'}</b><p>${esc(s2.message || '')}</p></div>`;
+            })()}
+              <p class="ig-note">Dalla finestra Condividi scegli se pubblicare su ICS, su Toscana Crit o su entrambi. Per le gare in Toscana Crit è già spuntato.</p></section>
             <section class="ig-card"><h3>Impostazioni</h3>
               <label class="ig-sw"><input type="checkbox" id="ig-feed" ${se.feed ? 'checked' : ''}><span><b>Feed</b><small>Pubblica il post con la grafica della gara (formato 4:5, 1080×1350).</small></span></label>
               <label class="ig-sw"><input type="checkbox" id="ig-story" ${se.story ? 'checked' : ''}><span><b>Storie</b><small>Pubblica anche una storia (formato 9:16, 1080×1920).</small></span></label>
@@ -31756,7 +31769,7 @@ window.showShareModal = async function(type, payload) {
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
       </div>
-      ${(type==='gara' && authUser()?.role==='admin') ? `<div class="share-actions" id="share-actions-ig" style="display:flex">
+      ${(type==='gara' && authUser()?.role==='admin') ? `<div class="share-actions" id="share-actions-ig" style="display:flex;flex-direction:column;align-items:stretch;gap:8px"><div id="share-ig-accs" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
         <button class="share-action-btn" id="share-ig-btn" style="flex:1;background:linear-gradient(45deg,#f09433,#dc2743 55%,#bc1888);color:#fff;border:0" onclick="window.publishShareToInstagram()">📸 Pubblica su Instagram</button>
       </div>` : ''}
       <div class="share-actions" id="share-actions-whatsapp" style="display:none">
@@ -31812,8 +31825,8 @@ window.setSharePlat=async function(k){
 
 // Stile grafica gara: "risultati" (podio+classifica) o "vincitore" (solo il
 // primo, stile annuncio) — libero per ogni formato (Post/Instagram/Story/…).
-// Riga "Pubblica su Instagram" (admin): visibile solo per Instagram Feed e Story, con lo stato
-// "gia' pubblicato" per quella gara.
+// Riga "Pubblica su Instagram" (admin): visibile solo per Instagram Feed e Story. Si sceglie su quale/i profilo/i
+// pubblicare (ICS, Toscana Crit se configurato); i profili dove la gara e' gia' uscita sono grigi.
 const _igPostedCache = {};
 async function _updateIgShareBtn(){
   const row=document.getElementById('share-actions-ig'), btn=document.getElementById('share-ig-btn');
@@ -31822,21 +31835,37 @@ async function _updateIgShareBtn(){
   row.style.display = (k==='instagram'||k==='story') ? 'flex' : 'none';
   if(k!=='instagram' && k!=='story') return;
   const kind = k==='story' ? 'story' : 'feed';
-  const lbl = kind==='story' ? '📸 Pubblica la storia su Instagram' : '📸 Pubblica nel feed di Instagram';
-  btn.disabled=false; btn.textContent=lbl;
   const gid=_sharePayload?._id; if(!gid) return;
+  btn.disabled=true; btn.textContent='…';
+  let info;
   try {
     if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid));
-    const old=document.getElementById('share-ig-unlock'); if(old) old.remove();
-    if(_igPostedCache[gid][kind]){
-      btn.disabled=true; btn.textContent = kind==='story' ? '✓ Storia già pubblicata' : '✓ Già pubblicato su Instagram';
-      const u=document.createElement('button'); u.id='share-ig-unlock'; u.className='share-action-btn'; u.style.cssText='flex:0 0 auto;font-size:.72rem';
-      u.textContent='Ripubblica…'; u.title='Da usare solo dopo aver eliminato il post da Instagram';
-      u.onclick=async()=>{ if(!confirm('Sblocca questa gara per pubblicarla di nuovo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
-        try{ await apiCall('/admin/social/instagram/unlock',{method:'POST',body:{gara_id:gid,kind}}); delete _igPostedCache[gid]; showToast('Sbloccato: ora puoi ripubblicare'); await _updateIgShareBtn(); }catch(e){ showToast(e.message||'Errore','error'); } };
-      row.appendChild(u);
-    }
-  } catch {}
+    info=_igPostedCache[gid];
+  } catch { btn.disabled=false; btn.textContent = kind==='story' ? '📸 Pubblica la storia su Instagram' : '📸 Pubblica nel feed di Instagram'; return; }
+  const accs = info.accounts && info.accounts.length ? info.accounts : [{key:'ics',label:'ICS',feed:info.feed,story:info.story,suggested:true}];
+  const box=document.getElementById('share-ig-accs');
+  const prevSel = {}; box.querySelectorAll('input').forEach(i=>{ prevSel[i.value]=i.checked; });
+  box.innerHTML = accs.map(a=>{
+    const done=a[kind];
+    const chk = done ? false : (a.key in prevSel ? prevSel[a.key] : a.suggested);
+    return `<label style="display:flex;align-items:center;gap:6px;font-size:.8rem;${done?'opacity:.55':''}"><input type="checkbox" value="${a.key}" ${chk?'checked':''} ${done?'disabled':''}> ${a.label}${done?' ✓ già pubblicato':''}</label>`
+      + (done ? `<button type="button" class="share-action-btn" style="flex:0 0 auto;font-size:.68rem;padding:2px 8px" data-unlock="${a.key}" title="Da usare solo dopo aver eliminato il post da Instagram">Ripubblica…</button>` : '');
+  }).join('');
+  box.querySelectorAll('input').forEach(i=>i.addEventListener('change',_refreshIgBtn));
+  box.querySelectorAll('[data-unlock]').forEach(u=>{ u.onclick=async()=>{
+    if(!confirm('Sblocca questa gara per pubblicarla di nuovo su questo profilo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
+    try{ await apiCall('/admin/social/instagram/unlock',{method:'POST',body:{gara_id:gid,kind,acc:u.dataset.unlock}}); delete _igPostedCache[gid]; showToast('Sbloccato: ora puoi ripubblicare'); await _updateIgShareBtn(); }catch(e){ showToast(e.message||'Errore','error'); }
+  }; });
+  _refreshIgBtn();
+}
+function _refreshIgBtn(){
+  const btn=document.getElementById('share-ig-btn'); if(!btn) return;
+  const kind = _sharePlatKey==='story' ? 'story' : 'feed';
+  const sel=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.parentElement.textContent.trim().replace(/ ✓.*$/,''));
+  const all=document.querySelectorAll('#share-ig-accs input').length;
+  btn.disabled = !sel.length;
+  btn.textContent = !sel.length ? (all ? '✓ Già pubblicato' : '📸 Pubblica su Instagram')
+    : `📸 Pubblica ${kind==='story'?'la storia':'nel feed'} su ${sel.join(' + ')}`;
 }
 window.publishShareToInstagram = async function(){
   const k=_sharePlatKey;
@@ -31845,12 +31874,15 @@ window.publishShareToInstagram = async function(){
   const gid=_sharePayload?._id;
   const btn=document.getElementById('share-ig-btn');
   const ta=document.getElementById('share-fb-text');
+  const accounts=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.value);
+  if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
   const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
   const name=_sharePayload?.name||gid;
+  const who=btn.textContent.replace(/^.* su /,'');
   if(!confirm(kind==='story'
-    ? `Pubblicare ora la storia su Instagram?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`
-    : `Pubblicare ora il post su Instagram?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
+    ? `Pubblicare ora la storia su ${who}?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`
+    : `Pubblicare ora il post su ${who}?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
   const old=btn.textContent; btn.disabled=true; btn.textContent='⏳ Pubblico su Instagram…';
   try{
     let images=[];
@@ -31868,11 +31900,12 @@ window.publishShareToInstagram = async function(){
       const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
       images=[cv.toDataURL('image/jpeg',0.92)];
     }
-    await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,images}});
+    const r=await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,images,accounts}});
     delete _igPostedCache[gid];
-    showToast('✅ Pubblicato su Instagram');
+    const bad=(r.results||[]).filter(x=>!x.ok);
+    showToast(bad.length ? `✅ Pubblicato, ma non su: ${bad.map(x=>x.label+' ('+x.error+')').join('; ')}` : '✅ Pubblicato su Instagram', bad.length?'error':undefined);
     await _updateIgShareBtn();
-  }catch(e){ btn.disabled=false; btn.textContent=old; showToast(e.message||'Errore', 'error'); }
+  }catch(e){ btn.disabled=false; btn.textContent=old; showToast(e.message||'Errore', 'error'); await _updateIgShareBtn(); }
 };
 
 window.setGaraStyle=async function(style){

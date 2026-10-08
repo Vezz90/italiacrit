@@ -3284,7 +3284,7 @@ app.get('/api/admin/scraper/status', requireAdmin, async (req, res) => {
     token_set:      !!token,
     anthropic_set:  !!process.env.ANTHROPIC_API_KEY,
     fb_set:         !!(process.env.FB_PAGE_ID && process.env.FB_PAGE_TOKEN),
-    ig_state:       (_igStatusCache.v && _igStatusCache.v.state) || null,
+    ig_state:       (_igStatusCache.ics && _igStatusCache.ics.v && _igStatusCache.ics.v.state) || null,
     last_trigger_ts: _lastScrapeTrigger || null,
     last_sync_ts:    _lastCronSync      || null,
     last_gh_run:     lastRun,
@@ -7918,8 +7918,8 @@ async function writeSocialQueue(arr) {
 // non sono configurati su Render. Limite di sicurezza: al massimo SOCIAL_AUTO_MAX_PER_RUN
 // post per ogni giro, uno ogni pochi secondi, mai oltre un post per gara.
 const SOCIAL_AUTO_KEY = 'social_auto';
-const SOCIAL_AUTO_MAX_PER_RUN = 6;
-const SOCIAL_AUTO_MAX_PER_DAY = 8; // tetto giornaliero della pubblicazione automatica: niente "inondazione" nei giorni pieni di gare
+const SOCIAL_AUTO_MAX_PER_RUN = 25;
+const SOCIAL_AUTO_MAX_PER_DAY = 500; // tetto di sicurezza (non limita i weekend pieni: ogni risultato viene pubblicato)
 async function readSocialAuto() {
   if (supabase) {
     const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_AUTO_KEY).maybeSingle();
@@ -9521,15 +9521,26 @@ async function writeSocialIg(obj) {
   }
   fs.writeFileSync(path.join(__dirname, '../data/social-instagram.json'), JSON.stringify(obj, null, 2));
 }
-let _igStatusCache = { ts: 0, v: null };
-let _igLastLinked = null;
-async function instagramStatus(force) {
-  if (!_fbConfigured()) return { state: 'no_fb' };
-  if (!force && _igStatusCache.v && Date.now() - _igStatusCache.ts < 60000) return _igStatusCache.v;
-  const tk = encodeURIComponent(process.env.FB_PAGE_TOKEN);
+// Account Instagram gestiti: ICS (FB_PAGE_ID/FB_PAGE_TOKEN) e, se configurato, Toscana Crit
+// (FB_PAGE_ID_TOSCANA/FB_PAGE_TOKEN_TOSCANA = Pagina Facebook a cui e' collegato il suo Instagram).
+function _igAccounts() {
+  const list = [];
+  if (_fbConfigured()) list.push({ key: 'ics', label: 'ICS', pageId: process.env.FB_PAGE_ID, token: process.env.FB_PAGE_TOKEN });
+  if (process.env.FB_PAGE_ID_TOSCANA && process.env.FB_PAGE_TOKEN_TOSCANA) list.push({ key: 'toscana', label: 'Toscana Crit', pageId: process.env.FB_PAGE_ID_TOSCANA, token: process.env.FB_PAGE_TOKEN_TOSCANA });
+  return list;
+}
+const _igAcc = key => _igAccounts().find(a => a.key === (key || 'ics')) || null;
+let _igStatusCache = {};
+let _igLastLinked = {};
+async function instagramStatus(force, accKey = 'ics') {
+  const acc = _igAcc(accKey);
+  if (!acc) return { state: 'no_fb' };
+  const hit = _igStatusCache[accKey];
+  if (!force && hit && hit.v && Date.now() - hit.ts < 60000) return hit.v;
+  const tk = encodeURIComponent(acc.token);
   let out;
   try {
-    const r = await fetch(`https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}?fields=instagram_business_account%7Bid,username,name,profile_picture_url,followers_count,media_count%7D&access_token=${tk}`, { signal: AbortSignal.timeout(12000) });
+    const r = await fetch(`https://graph.facebook.com/v19.0/${acc.pageId}?fields=instagram_business_account%7Bid,username,name,profile_picture_url,followers_count,media_count%7D&access_token=${tk}`, { signal: AbortSignal.timeout(12000) });
     const j = await r.json();
     if (j.error) out = { state: 'error', message: j.error.message, code: j.error.code };
     else if (!j.instagram_business_account) out = { state: 'not_linked' };
@@ -9545,12 +9556,17 @@ async function instagramStatus(force) {
       } catch (e) { out.publish = { ok: false, message: e.message }; }
     }
   } catch (e) { out = { state: 'error', message: e.message }; }
-  _igStatusCache = { ts: Date.now(), v: out };
-  if (out.state === 'linked') _igLastLinked = out;
+  _igStatusCache[accKey] = { ts: Date.now(), v: out };
+  if (out.state === 'linked') _igLastLinked[accKey] = out;
   return out;
 }
 app.get('/api/admin/social/instagram', requireAdmin, async (req, res) => {
-  try { res.json({ status: await instagramStatus(req.query.force === '1'), settings: await readSocialIg(), fb_configured: _fbConfigured() }); }
+  try {
+    const force = req.query.force === '1';
+    const accounts = [];
+    for (const a of _igAccounts()) accounts.push({ key: a.key, label: a.label, status: await instagramStatus(force, a.key) });
+    res.json({ status: accounts.find(a => a.key === 'ics')?.status || { state: 'no_fb' }, accounts, toscana_configured: accounts.some(a => a.key === 'toscana'), settings: await readSocialIg(), fb_configured: _fbConfigured() });
+  }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/social/instagram', requireAdmin, async (req, res) => {
@@ -11766,18 +11782,20 @@ async function writeIgLog(arr) {
   fs.writeFileSync(path.join(__dirname, '../data/social-instagram-log.json'), JSON.stringify(arr, null, 2));
 }
 // Pubblica un'immagine su Instagram (feed o storia): contenitore -> attesa elaborazione -> pubblicazione.
-async function postToInstagram(kind, imageUrl, caption) {
-  let st = await instagramStatus(true);
-  if (st.state !== 'linked') { await new Promise(r => setTimeout(r, 1500)); st = await instagramStatus(true); }
+async function postToInstagram(kind, imageUrl, caption, accKey = 'ics') {
+  const acc = _igAcc(accKey);
+  if (!acc) throw new Error('Account Instagram non configurato su Render');
+  let st = await instagramStatus(true, accKey);
+  if (st.state !== 'linked') { await new Promise(r => setTimeout(r, 1500)); st = await instagramStatus(true, accKey); }
   // errore momentaneo di Facebook: se poco fa l'account risultava collegato si usa quello
-  if (st.state !== 'linked' && _igLastLinked) st = _igLastLinked;
+  if (st.state !== 'linked' && _igLastLinked[accKey]) st = _igLastLinked[accKey];
   if (st.state !== 'linked') {
     const why = st.state === 'not_linked' ? 'alla Pagina Facebook non risulta collegato nessun account Instagram'
       : st.state === 'no_fb' ? 'FB_PAGE_ID o FB_PAGE_TOKEN mancanti su Render'
       : `Facebook risponde: ${st.message || 'errore sconosciuto'}${st.code ? ' (code ' + st.code + ')' : ''}`;
     throw new Error('Account Instagram non raggiungibile — ' + why);
   }
-  const token = process.env.FB_PAGE_TOKEN, base = `https://graph.facebook.com/v19.0`;
+  const token = acc.token, base = `https://graph.facebook.com/v19.0`;
   const post = async (url, b) => {
     const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b), signal: AbortSignal.timeout(45000) });
     const j = await r.json();
@@ -11829,7 +11847,7 @@ app.post('/api/admin/social/instagram/publish', requireAdmin, async (req, res) =
     const out = await postToInstagram(kind, imageUrl, caption);
     log.push({ gara_id: id, kind, media_id: out.id || null, posted_at: new Date().toISOString() });
     await writeIgLog(log);
-    _igStatusCache = { ts: 0, v: null };
+    _igStatusCache = {};
     res.json({ ok: true, media_id: out.id || null });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -11866,8 +11884,9 @@ app.get('/api/admin/social/instagram/recent', requireAdmin, async (req, res) => 
 app.post('/api/admin/social/instagram/unlock', requireAdmin, async (req, res) => {
   try {
     const id = String((req.body && req.body.gara_id) || ''), kind = (req.body && req.body.kind) === 'story' ? 'story' : 'feed';
+    const acc = String((req.body && req.body.acc) || 'ics');
     const log = await readIgLog();
-    const next = log.filter(l => !(l.gara_id === id && l.kind === kind));
+    const next = log.filter(l => !(l.gara_id === id && l.kind === kind && (l.acc || 'ics') === acc));
     await writeIgLog(next);
     res.json({ ok: true, removed: log.length - next.length });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -11876,7 +11895,17 @@ app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => 
   try {
     const id = String(req.query.gara || '');
     const log = await readIgLog();
-    res.json({ feed: log.some(l => l.gara_id === id && l.kind === 'feed'), story: log.some(l => l.gara_id === id && l.kind === 'story') });
+    const has = (acc, kind) => log.some(l => l.gara_id === id && l.kind === kind && (l.acc || 'ics') === acc);
+    // Toscana Crit consigliato se la gara e' in Toscana (regione dal calendario o dai risultati)
+    let tosc = false;
+    try {
+      const calendar = (await readDataJsonFromGH('calendar.json')) || [];
+      const cal = _findCalEntryForNativeGaraId(calendar, id);
+      const raw = (await readDataJsonFromGH('results_raw.json')) || [];
+      tosc = /toscana/i.test(String(cal && cal.regione || '')) || raw.some(r => r.gara_id === id && /toscana/i.test(String(r.regione || '')));
+    } catch {}
+    const accounts = _igAccounts().map(a => ({ key: a.key, label: a.label, feed: has(a.key, 'feed'), story: has(a.key, 'story'), suggested: a.key === 'ics' || (a.key === 'toscana' && tosc) }));
+    res.json({ accounts, feed: has('ics', 'feed'), story: has('ics', 'story') });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, res) => {
@@ -11897,7 +11926,10 @@ app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, 
       bufs.push(buf);
     }
     const log = await readIgLog();
-    if (log.some(l => l.gara_id === id && l.kind === kind)) return res.status(409).json({ error: kind === 'story' ? 'La storia di questa gara è già stata pubblicata.' : 'Questo post è già stato pubblicato su Instagram.', already: true });
+    const wanted = (Array.isArray(b.accounts) && b.accounts.length ? b.accounts : ['ics']).map(String).filter(k => _igAcc(k));
+    if (!wanted.length) return res.status(400).json({ error: 'Nessun account Instagram selezionato' });
+    const todo = wanted.filter(k => !log.some(l => l.gara_id === id && l.kind === kind && (l.acc || 'ics') === k));
+    if (!todo.length) return res.status(409).json({ error: kind === 'story' ? 'La storia di questa gara è già stata pubblicata su questo profilo.' : 'Questo post è già stato pubblicato su questo profilo.', already: true });
     const settings = await readSocialIg();
     let caption = '';
     if (kind === 'feed') {
@@ -11913,11 +11945,19 @@ app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, 
       tokens.push(tk);
       return `${origin}/api/ig-tmp/${tk}.jpg`;
     });
-    const out = await postToInstagram(kind, urls.length > 1 ? urls : urls[0], caption);
-    log.push({ gara_id: id, kind, slides: urls.length, media_id: out.id || null, posted_at: new Date().toISOString() });
-    await writeIgLog(log);
-    _igStatusCache = { ts: 0, v: null };
-    res.json({ ok: true, media_id: out.id || null });
+    const results = [];
+    for (const k of todo) {
+      try {
+        const out = await postToInstagram(kind, urls.length > 1 ? urls : urls[0], caption, k);
+        log.push({ gara_id: id, kind, acc: k, slides: urls.length, media_id: out.id || null, posted_at: new Date().toISOString() });
+        await writeIgLog(log);
+        results.push({ acc: k, label: _igAcc(k).label, ok: true });
+      } catch (e) { results.push({ acc: k, label: _igAcc(k).label, ok: false, error: e.message }); }
+    }
+    _igStatusCache = {};
+    const failed = results.filter(r => !r.ok);
+    if (failed.length === results.length) return res.status(500).json({ error: failed.map(f => `${f.label}: ${f.error}`).join(' | '), results });
+    res.json({ ok: true, results, partial: failed.length > 0 });
   } catch (e) { res.status(500).json({ error: e.message }); }
   finally { if (tokens.length) setTimeout(() => tokens.forEach(tk => _igTmp.delete(tk)), 60 * 1000); }
 });
