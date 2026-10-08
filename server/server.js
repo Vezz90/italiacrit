@@ -11780,6 +11780,56 @@ app.post('/api/admin/social/instagram/publish', requireAdmin, async (req, res) =
     res.json({ ok: true, media_id: out.id || null });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
+// Pubblicazione dell'immagine generata nel browser (la stessa grafica della finestra di condivisione:
+// foto + vincitore/risultati, credit foto, regola xpix). L'immagine viene tenuta in memoria pochi minuti
+// a un indirizzo pubblico casuale, perche' Instagram la scarica da un URL.
+const _igTmp = new Map();
+app.get('/api/ig-tmp/:token', (req, res) => {
+  const e = _igTmp.get(String(req.params.token).replace(/\.jpg$/, ''));
+  if (!e || e.exp < Date.now()) return res.status(404).end();
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(e.buf);
+});
+app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => {
+  try {
+    const id = String(req.query.gara || '');
+    const log = await readIgLog();
+    res.json({ feed: log.some(l => l.gara_id === id && l.kind === 'feed'), story: log.some(l => l.gara_id === id && l.kind === 'story') });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, res) => {
+  let token = null;
+  try {
+    if (!_fbConfigured()) return res.status(400).json({ error: 'Facebook/Instagram non configurato' });
+    const b = req.body || {};
+    const id = String(b.gara_id || '');
+    const kind = b.kind === 'story' ? 'story' : 'feed';
+    if (!id) return res.status(400).json({ error: 'Gara mancante' });
+    const m = /^data:image\/jpeg;base64,(.+)$/.exec(String(b.image || ''));
+    if (!m) return res.status(400).json({ error: 'Immagine mancante o non valida' });
+    const buf = Buffer.from(m[1], 'base64');
+    if (buf.length < 5000 || buf.length > 8 * 1024 * 1024) return res.status(400).json({ error: 'Immagine non valida' });
+    const log = await readIgLog();
+    if (log.some(l => l.gara_id === id && l.kind === kind)) return res.status(409).json({ error: kind === 'story' ? 'La storia di questa gara è già stata pubblicata.' : 'Questo post è già stato pubblicato su Instagram.', already: true });
+    const settings = await readSocialIg();
+    let caption = '';
+    if (kind === 'feed') {
+      const body = String(b.caption || '').split('\n').filter(l => !/https?:\/\/|italiacyclingstats\.com/i.test(l) && l.trim() !== '🔗').join('\n').replace(/\n{3,}/g, '\n\n').trim();
+      if (!body) return res.status(400).json({ error: 'Testo vuoto' });
+      caption = [body, settings.link_line, settings.hashtags].map(s => String(s || '').trim()).filter(Boolean).join('\n\n').slice(0, 2200);
+    }
+    for (const [k, v] of _igTmp) if (v.exp < Date.now()) _igTmp.delete(k);
+    token = require('crypto').randomBytes(16).toString('hex');
+    _igTmp.set(token, { buf, exp: Date.now() + 10 * 60 * 1000 });
+    const out = await postToInstagram(kind, `${API_BASE_URL}/api/ig-tmp/${token}.jpg`, caption);
+    log.push({ gara_id: id, kind, media_id: out.id || null, posted_at: new Date().toISOString() });
+    await writeIgLog(log);
+    _igStatusCache = { ts: 0, v: null };
+    res.json({ ok: true, media_id: out.id || null });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+  finally { if (token) setTimeout(() => _igTmp.delete(token), 60 * 1000); }
+});
 // Anteprima (nessuna pubblicazione): grafiche feed/storia e testo per una gara, di default l'ultima con risultati.
 app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) => {
   try {
@@ -11796,6 +11846,7 @@ app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) =>
       if (!best) return res.status(404).json({ error: 'Nessuna gara con risultati trovata' });
       id = best.id;
     }
+    if (req.query.only === 'latest') return res.json({ gara_id: id, ...(await _garaSocialInfo(id)) });
     const info = await _garaSocialInfo(id);
     const settings = await readSocialIg();
     const enc = encodeURIComponent(id), q = `&adj=${Date.now()}`;

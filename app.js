@@ -13865,55 +13865,16 @@ window.adminNav = async function(section) {
               <label class="ig-sw"><input type="checkbox" id="ig-credit" ${se.credit ? 'checked' : ''}><span><b>Credit della foto</b><small>Aggiunge «Foto: fotografo» in fondo alla didascalia.</small></span></label>
               <button class="admin-edit-btn gr-fb" id="ig-save" onclick="window._igSave()">Salva impostazioni</button>
             </section>
-            <section class="ig-card ig-wide"><h3>Anteprima grafiche e testo</h3>
-              <p>Le grafiche usano la foto della gara e il podio, come la condivisione dal sito; il testo è lo stesso che viene generato per Facebook. Prima di pubblicare puoi regolare zoom e posizione della foto e modificare il testo. <b>Non viene pubblicato nulla finché non premi «Pubblica» e confermi.</b></p>
-              <div><button class="admin-edit-btn" id="ig-prev-btn" onclick="window._igPreview()">Prova con l'ultima gara</button></div>
-              <div id="ig-prev"></div>
+            <section class="ig-card ig-wide"><h3>Come si pubblica</h3>
+              <p>Si pubblica dalla finestra <b>Condividi</b> di una gara, la stessa con cui crei le grafiche: scegli <b>Instagram Feed</b> o <b>Story / Reels</b>, <b>Vincitore</b> o <b>Risultati</b>, regola foto e zoom, controlla il testo (con il credit del fotografo e la regola xpix) e premi <b>📸 Pubblica su Instagram</b>.</p>
+              <p class="ig-note">Il post nel feed esce con questo testo, la riga per il link e gli hashtag fissi. La storia esce solo con la grafica. Ogni gara si può pubblicare una volta sola per tipo.</p>
+              <div><button class="admin-edit-btn gr-fb" id="ig-latest-btn" onclick="window._igOpenLatest()">Prova con l'ultima gara</button></div>
             </section>
           </div>`;
-        window._igPreview = async () => {
-          const b = document.getElementById('ig-prev-btn'), box = document.getElementById('ig-prev');
-          b.disabled = true; b.textContent = 'Preparo l’anteprima…';
-          box.innerHTML = '<div class="admin-loading">Creo le grafiche e il testo (qualche secondo)…</div>';
-          try {
-            const p = await apiCall('/admin/social/instagram/preview');
-            const adj = { s: 1, ox: 0, oy: 0 };
-            const imgUrl = f => `${p.img_base}?f=${f}&t=${Date.now()}` + (adj.s > 1 ? `&s=${adj.s}` : '') + (adj.ox ? `&ox=${adj.ox}` : '') + (adj.oy ? `&oy=${adj.oy}` : '');
-            const canPub = canPubNow;
-            const pubBtn = (k, lbl) => p.posted[k] ? `<button class="admin-edit-btn" disabled>✓ ${lbl} già pubblicato</button>` : `<button class="admin-edit-btn gr-fb" ${canPub ? '' : 'disabled title="Collega prima Instagram"'} onclick="window._igPublish('${k}')">Pubblica ${lbl}</button>`;
-            box.innerHTML = `<p class="ig-note"><b>${esc(p.gara_name)}</b> · ${esc(p.category || '')} · ${esc(p.date || '')}</p>
-              <div class="ig-adj"><b>Foto</b>
-                <label>Zoom <input type="range" id="ig-z" min="1" max="3" step="0.05" value="1"></label>
-                <label>Sposta ←→ <input type="range" id="ig-x" min="-300" max="300" step="5" value="0"></label>
-                <label>Sposta ↑↓ <input type="range" id="ig-y" min="-300" max="300" step="5" value="0"></label>
-                <button class="admin-edit-btn" id="ig-adj-reset">Azzera</button></div>
-              <div class="ig-prev-grid">
-                <figure><figcaption>Feed 4:5</figcaption><img id="ig-img-feed" src="${esc(imgUrl('feed'))}" alt="Anteprima feed"></figure>
-                <figure><figcaption>Storia 9:16</figcaption><img id="ig-img-story" src="${esc(imgUrl('story'))}" alt="Anteprima storia"></figure>
-                <div class="ig-cap"><div class="ig-cap-h">Testo del post (modificabile) <small id="ig-cap-n">${p.caption.length}/2200</small></div><textarea id="ig-cap-t" rows="14">${esc(p.caption)}</textarea></div>
-              </div>
-              <div class="ig-pub">${pubBtn('feed', 'nel feed')}${pubBtn('story', 'la storia')}<span id="ig-pub-msg" class="ig-note"></span></div>`;
-            let tm = null;
-            const apply = () => {
-              adj.s = +document.getElementById('ig-z').value; adj.ox = +document.getElementById('ig-x').value; adj.oy = +document.getElementById('ig-y').value;
-              clearTimeout(tm); tm = setTimeout(() => { ['feed', 'story'].forEach(f => { document.getElementById('ig-img-' + f).src = imgUrl(f); }); }, 450);
-            };
-            ['ig-z', 'ig-x', 'ig-y'].forEach(i => document.getElementById(i).addEventListener('input', apply));
-            document.getElementById('ig-adj-reset').onclick = () => { document.getElementById('ig-z').value = 1; document.getElementById('ig-x').value = 0; document.getElementById('ig-y').value = 0; apply(); };
-            const ta = document.getElementById('ig-cap-t');
-            ta.addEventListener('input', () => { document.getElementById('ig-cap-n').textContent = ta.value.length + '/2200'; });
-            window._igPublish = async (kind) => {
-              const lbl = kind === 'story' ? 'la storia' : 'il post nel feed';
-              if (!confirm(`Pubblicare ora ${lbl} su @${(st.ig && st.ig.username) || 'instagram'}?\n\n${p.gara_name}`)) return;
-              const msg = document.getElementById('ig-pub-msg'); msg.textContent = 'Pubblico su Instagram… (può richiedere qualche secondo)';
-              try {
-                await apiCall('/admin/social/instagram/publish', { method: 'POST', body: { gara_id: p.gara_id, kind, caption: ta.value, s: adj.s, ox: adj.ox, oy: adj.oy } });
-                msg.textContent = '✅ Pubblicato'; showToast('✅ Pubblicato su Instagram');
-                p.posted[kind] = true; window._igPreview();
-              } catch (e) { msg.textContent = ''; showToast(e.message || 'Errore', 'error'); }
-            };
-          } catch (e) { box.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
-          b.disabled = false; b.textContent = 'Rigenera con l’ultima gara';
+        window._igOpenLatest = async () => {
+          const b = document.getElementById('ig-latest-btn'); b.disabled = true; b.textContent = 'Cerco l’ultima gara…';
+          try { const r = await apiCall('/admin/social/instagram/preview?only=latest'); window.location.href = '/gara/' + encodeURIComponent(r.gara_id); }
+          catch (er) { showToast(er.message || 'Errore', 'error'); b.disabled = false; b.textContent = 'Prova con l\'ultima gara'; }
         };
         window._igSave = async () => {
           const b = document.getElementById('ig-save'); if (b) { b.disabled = true; b.textContent = 'Salvo…'; }
@@ -31782,6 +31743,9 @@ window.showShareModal = async function(type, payload) {
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
       </div>
+      ${(type==='gara' && authUser()?.role==='admin') ? `<div class="share-actions" id="share-actions-ig" style="display:flex">
+        <button class="share-action-btn" id="share-ig-btn" style="flex:1;background:linear-gradient(45deg,#f09433,#dc2743 55%,#bc1888);color:#fff;border:0" onclick="window.publishShareToInstagram()">📸 Pubblica su Instagram</button>
+      </div>` : ''}
       <div class="share-actions" id="share-actions-whatsapp" style="display:none">
         <button class="share-action-btn" onclick="window.shareWhatsappLink()">🔗 Condividi il link</button>
         <button class="share-action-btn share-action-native" id="share-native-btn-wa" onclick="window.nativeShare()">🖼 Condividi la foto</button>
@@ -31799,6 +31763,7 @@ window.showShareModal = async function(type, payload) {
   // altrove (WhatsApp, Instagram, Twitter, Post) pur essendo lo stesso
   // identico testo utile per qualsiasi condivisione manuale.
   _showFbShareText();
+  _updateIgShareBtn();
   await _refreshPreview();
 };
 
@@ -31828,11 +31793,52 @@ window.setSharePlat=async function(k){
   if(defRow) defRow.style.display = (k==='whatsapp' || isFbSharer) ? 'none' : '';
   if(waRow) waRow.style.display = k==='whatsapp' ? '' : 'none';
   if(fbRow) fbRow.style.display = isFbSharer ? '' : 'none';
+  _updateIgShareBtn();
   await _refreshPreview();
 };
 
 // Stile grafica gara: "risultati" (podio+classifica) o "vincitore" (solo il
 // primo, stile annuncio) — libero per ogni formato (Post/Instagram/Story/…).
+// Riga "Pubblica su Instagram" (admin): visibile solo per Instagram Feed e Story, con lo stato
+// "gia' pubblicato" per quella gara.
+const _igPostedCache = {};
+async function _updateIgShareBtn(){
+  const row=document.getElementById('share-actions-ig'), btn=document.getElementById('share-ig-btn');
+  if(!row||!btn) return;
+  const k=_sharePlatKey;
+  row.style.display = (k==='instagram'||k==='story') ? 'flex' : 'none';
+  if(k!=='instagram' && k!=='story') return;
+  const kind = k==='story' ? 'story' : 'feed';
+  const lbl = kind==='story' ? '📸 Pubblica la storia su Instagram' : '📸 Pubblica nel feed di Instagram';
+  btn.disabled=false; btn.textContent=lbl;
+  const gid=_sharePayload?._id; if(!gid) return;
+  try {
+    if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid));
+    if(_igPostedCache[gid][kind]){ btn.disabled=true; btn.textContent = kind==='story' ? '✓ Storia già pubblicata' : '✓ Già pubblicato su Instagram'; }
+  } catch {}
+}
+window.publishShareToInstagram = async function(){
+  const k=_sharePlatKey;
+  if(k!=='instagram' && k!=='story') return;
+  const kind = k==='story' ? 'story' : 'feed';
+  const gid=_sharePayload?._id;
+  const btn=document.getElementById('share-ig-btn');
+  const ta=document.getElementById('share-fb-text');
+  const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
+  if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
+  const name=_sharePayload?.name||gid;
+  if(!confirm(`Pubblicare ora ${kind==='story'?'la storia':'il post nel feed'} su Instagram?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`)) return;
+  const old=btn.textContent; btn.disabled=true; btn.textContent='⏳ Pubblico su Instagram…';
+  try{
+    const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+    const image=canvas.toDataURL('image/jpeg',0.92);
+    await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,image}});
+    delete _igPostedCache[gid];
+    showToast('✅ Pubblicato su Instagram');
+    await _updateIgShareBtn();
+  }catch(e){ btn.disabled=false; btn.textContent=old; showToast(e.message||'Errore', 'error'); }
+};
+
 window.setGaraStyle=async function(style){
   _shareGaraStyle=style;
   document.querySelectorAll('.share-style-toggle .share-plat-btn').forEach(b=>b.classList.remove('active'));
