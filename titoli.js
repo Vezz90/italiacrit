@@ -17,6 +17,13 @@
     const d = await loadJson('data/titoli_campione.json').catch(() => null);
     data = (d && d.t) || [];
     byAth = {}; byTeam = {};
+    // Medaglie (primi 3) ai Campionati Europei e Mondiali, archivio 2007-2025
+    const md = await loadJson('data/medaglie_internazionali.json').catch(() => null);
+    for (const r of ((md && md.t) || [])) {
+      const t3 = { y: r[0], kind: r[1] ? 'wc' : 'eu', cat: r[2], reg: '', aid: r[5], n: r[6], team: r[7], gid: r[8], gara: r[9], pos: r[4], prova: r[3], arch: true, medal: true };
+      (byAth[t3.aid] = byAth[t3.aid] || []).push(t3);
+      const k3 = norm(t3.team); if (k3) (byTeam[k3] = byTeam[k3] || []).push(t3);
+    }
     // Campioni Italiani delle stagioni successive all'archivio, accumulati dallo scraper (data/titoli_stagioni.json):
     // la stagione in corso e' gia' coperta da collectChampions, quindi si prendono solo gli anni diversi.
     const cur = typeof _loadedSeasonYear === 'function' ? +_loadedSeasonYear() : 0;
@@ -45,18 +52,43 @@
   }
 
   // titoli della stagione in corso (ICS): italiani dalle gare + regionali assegnati dall'admin
+  const INTL = /campionat\w*[^]*?(europe\w*|del mondo|mondial\w*)|(europe\w*|mondial\w*)[^]*?campionat/i;
+  function nativeMedals(filter) {
+    const out = [];
+    try {
+      for (const r of (globalData.resultsRaw || [])) {
+        if (!r.posizione || r.posizione > 3 || !INTL.test(r.nome_gara || '') || !r.atleta_id) continue;
+        if (/squadre|staffetta/i.test(r.nome_gara)) continue;
+        if (!filter(r)) continue;
+        const code = getRankingFileCode(r) || r.categoria;
+        out.push({ y: +String(r.data || '').slice(0, 4), kind: /europe/i.test(r.nome_gara) ? 'eu' : 'wc', cat: null, catCode: code, reg: '', aid: r.atleta_id, n: `${r.cognome || ''} ${r.nome || ''}`.trim(), team: r.team || '', gid: r.gara_id, gara: r.nome_gara, pos: r.posizione, prova: /cronometro/i.test(r.nome_gara) ? 'CRONOMETRO' : 'STRADA', native: true, medal: true });
+      }
+    } catch (_) { /* ok */ }
+    return out;
+  }
   function nativeFor(id) {
     try {
-      return collectChampions().filter(c => c.atleta_id === id).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: id, n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', fascia: c.fascia, native: true }));
+      return nativeMedals(r => r.atleta_id === id).concat(collectChampions().filter(c => c.atleta_id === id).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: id, n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', fascia: c.fascia, native: true })));
     } catch (_) { return []; }
   }
   function nativeForTeam(teamId) {
-    try { return collectChampions({ teamId }).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: c.atleta_id || '', n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', native: true })); } catch (_) { return []; }
+    try { return nativeMedals(r => r.team_id === teamId).concat(collectChampions({ teamId }).map(c => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: c.atleta_id || '', n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', native: true }))); } catch (_) { return []; }
   }
 
   function catLabelOf(t) { return t.cat != null ? SHORT[t.cat] : (typeof catLabel === 'function' ? catLabel(t.catCode) : ''); }
 
+  const MEDAL = { 1: ['🥇', 'ORO'], 2: ['🥈', 'ARGENTO'], 3: ['🥉', 'BRONZO'] };
+  function medalChip(t, withName) {
+    const [ic, lb] = MEDAL[t.pos] || ['🏅', ''];
+    const ev = t.kind === 'eu' ? 'EUROPEI' : 'MONDIALI';
+    const prova = t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : 'Strada');
+    const sub = [prova, catLabelOf(t), t.y, withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
+    const href = withName && t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : null));
+    const el = `<span class="ci-medal ci-medal--${t.pos}" title="${esc((t.gara ? tc(t.gara) + ' — ' : '') + t.y)}"><i>${ic}</i><span><b>${lb} · ${ev}</b><small>${esc(sub)}</small></span></span>`;
+    return href ? `<a href="${href}" style="text-decoration:none;color:inherit">${el}</a>` : el;
+  }
   function chip(t, withName) {
+    if (t.medal) return medalChip(t, withName);
     const extra = [catLabelOf(t), t.reg ? tc(t.reg) : '', withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
     const href = withName && t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : null));
     const prova = t.prova && t.prova !== 'STRADA' ? tc(t.prova).replace(' A ', ' a ') : '';
@@ -65,7 +97,9 @@
 
   function summary(list) {
     const reg = list.filter(t => t.kind === 'reg').length, it = list.filter(t => t.kind === 'it').length;
+    const med = list.filter(t => t.medal), ori = med.filter(t => t.pos === 1).length;
     const parts = [];
+    if (med.length) parts.push(`<b>${med.length}</b> ${med.length === 1 ? 'medaglia' : 'medaglie'} a Europei/Mondiali${ori ? ` (${ori} ${ori === 1 ? 'oro' : 'ori'})` : ''}`);
     if (reg) parts.push(`<b>${reg}</b> ${reg === 1 ? 'titolo regionale' : 'titoli regionali'}`);
     if (it) parts.push(`<b>${it}</b> ${it === 1 ? 'titolo italiano' : 'titoli italiani'}`);
     return parts.join(' · ');
@@ -73,12 +107,12 @@
 
   function uniq(list) {
     const seen = new Set();
-    return list.filter(t => { const k = `${t.y}|${t.kind}|${t.aid}|${t.catCode || t.cat}|${t.prova}|${t.reg}`; if (seen.has(k)) return false; seen.add(k); return true; });
+    return list.filter(t => { const k = `${t.y}|${t.kind}|${t.aid}|${t.catCode || t.cat}|${t.prova}|${t.reg}|${t.medal ? t.pos : ''}`; if (seen.has(k)) return false; seen.add(k); return true; });
   }
 
   async function athleteTitles(id) {
     await load();
-    return uniq([...nativeFor(id), ...(byAth[athKey(id)] || [])]).sort((a, b) => b.y - a.y || (a.kind === 'it' ? -1 : 1));
+    return uniq([...nativeFor(id), ...(byAth[athKey(id)] || [])]).sort((a, b) => b.y - a.y || (a.medal ? 1 : 0) - (b.medal ? 1 : 0) || (a.kind === 'it' ? -1 : 1));
   }
   async function teamTitles(teamId) {
     await load();

@@ -13656,3 +13656,12 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .ttl-y { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; align-items: start; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
 .ttl-y:first-child { border-top: 0; padding-top: 0; } .ttl-y > b { font: 800 1.05rem 'Inter', system-ui, sans-serif; padding-top: 4px; }
 @media (max-width: 600px) { .ttl-y { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Medaglie a Europei / Mondiali */
+.ci-medal { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-card); }
+.ci-medal > i { font-style: normal; font-size: 1.35rem; line-height: 1; }
+.ci-medal b { display: block; font: 800 .72rem/1.2 'Inter', system-ui, sans-serif; letter-spacing: .04em; color: var(--text-primary); }
+.ci-medal small { display: block; font-size: .68rem; color: var(--text-muted); line-height: 1.25; margin-top: 1px; }
+.ci-medal--1 { border-color: #D9A100; background: linear-gradient(135deg, rgba(229,161,0,.16), transparent); }
+.ci-medal--2 { border-color: #8E9AAE; background: linear-gradient(135deg, rgba(142,154,174,.16), transparent); }
+.ci-medal--3 { border-color: #C77B3B; background: linear-gradient(135deg, rgba(199,123,59,.16), transparent); }

@@ -3233,6 +3233,7 @@ function badgeMult(m, tipo, isCR = false, isCI = false) {
   const isNat = (m === 2 || tipo === 'nazionale');
   const isInt = (m === 3 || tipo === 'internazionale');
 
+  if (m === 4) return `<span class="res-badge blue-badge">Europei/Mondiali (x4)</span>`;
   if (isCI) return `<span class="res-badge blue-badge">Campionato Italiano (x3)</span>`;
   if (isCR) return `<span class="res-badge orange-badge">Campionato Regionale (x2)</span>`;
   // Formati "tipo pista" (criterium in circuito chiuso, stile pista ma su
@@ -3444,7 +3445,7 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'nome_gara',     label: 'Nome gara',     type: 'text' },
     { key: 'tipo',          label: 'Tipo gara',      type: 'select',
       options: ['regionale','nazionale','internazionale','campionato_regionale','campionato_italiano'] },
-    { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
+    { key: 'moltiplicatore', label: 'Moltiplicatore (x4 = Europei/Mondiali)', type: 'select', options: ['1','2','3','4'] },
     { key: 'pcs_race_slug', label: 'Slug PCS — percorso dopo procyclingstats.com/ (es. national-race/coppa-campioni/2026)', type: 'text' },
   ],
   atleta: [
