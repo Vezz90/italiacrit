@@ -11490,6 +11490,30 @@ async function _seasonPodiumCiclismo(year, code) {
   });
 }
 
+// Podio STORICO delle SQUADRE (classifica a squadre di ciclismo.info) per categoria/anno.
+// Per le categorie donne che nel sistema nativo sono unite (AL_F = Esordienti + Allieve) i punti dello
+// stesso team nelle due liste si sommano.
+const _classTeamStoricoCache = {};
+async function _seasonPodiumCiclismoTeam(year, code) {
+  const rawCats = NATIVE_TO_CICLISMO_CATS[code];
+  if (!rawCats) return null;
+  if (_classTeamStoricoCache[year] === undefined) {
+    const p = await loadJson(`data/ciclismo-storico/${year}/classifica_team.json`).catch(() => null);
+    _classTeamStoricoCache[year] = (p && p.classifica) || null;
+  }
+  const cl = _classTeamStoricoCache[year];
+  if (!cl) return null;
+  const by = {};
+  for (const k of rawCats) for (const r of (cl[k] || [])) {
+    const key = String(r.team || '').toUpperCase();
+    if (!by[key]) by[key] = { team_nome: r.team, punti: 0, team_id: r.team_id };
+    by[key].punti += r.punti || 0;
+  }
+  const list = Object.values(by).sort((a, b) => b.punti - a.punti);
+  if (!list.length) return null;
+  return list.slice(0, 3).map(r => ({ ...r, href: typeof window._histTeamHref === 'function' ? window._histTeamHref(r.team_nome) : '', hist: true }));
+}
+
 // Podio di ogni stagione disponibile per una categoria — anni nativi
 // (data/seasons/...) + anni storici ciclismo.info 2007-2025 (solo atleti).
 async function _alboDoroRows(code, isTeam) {
@@ -11499,12 +11523,12 @@ async function _alboDoroRows(code, isTeam) {
     year: y, isCur: String(y) === cur, podium: await _seasonPodium(y, code, isTeam),
   })));
   let historicRows = [];
-  if (!isTeam) {
+  {
     const earliestNative = Math.min(...nativeYears.map(Number).filter(Number.isFinite));
     const histYears = [];
     for (let y = (Number.isFinite(earliestNative) ? earliestNative - 1 : 2026); y >= 2007; y--) histYears.push(y);
     historicRows = await Promise.all(histYears.map(async y => ({
-      year: y, isCur: false, podium: await _seasonPodiumCiclismo(y, code),
+      year: y, isCur: false, podium: await (isTeam ? _seasonPodiumCiclismoTeam(y, code) : _seasonPodiumCiclismo(y, code)),
     })));
   }
   return [...nativeRows, ...historicRows].filter(r => r.podium && r.podium.length);
@@ -11524,9 +11548,9 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
   const seasonsHtml = valid.map(r => {
     const podHtml = r.podium.slice(0, 3).map((c, i) => {
       const name = isTeam ? esc(_alTc(c.team_nome || '')) : esc(_alTc(((c.cognome || '') + ' ' + (c.nome || '')).trim()));
-      const href = isTeam ? ('#/team/' + encodeURIComponent(c.team_id)) : ('#/atleta/' + encodeURIComponent(c.atleta_id));
-      const sub = isTeam ? `${c.vittorie || 0} vittorie` : esc(_alTc(c.team_nome || ''));
-      return `<a class="al-pp" href="${href}"><span class="md ${mcls[i]}">${i + 1}</span><b>${name}</b><small>${sub}</small><span class="pt">${c.punti || 0} pt</span></a>`;
+      const href = isTeam ? (c.hist ? (c.href || '') : ('#/team/' + encodeURIComponent(c.team_id))) : ('#/atleta/' + encodeURIComponent(c.atleta_id));
+      const sub = isTeam ? (c.hist ? 'classifica a squadre' : `${c.vittorie || 0} vittorie`) : esc(_alTc(c.team_nome || ''));
+      return `<${href ? `a class="al-pp" href="${href}"` : 'div class="al-pp"'}><span class="md ${mcls[i]}">${i + 1}</span><b>${name}</b><small>${sub}</small><span class="pt">${c.punti || 0} pt</span></${href ? 'a' : 'div'}>`;
     }).join('');
     return `<div class="al-year"><div class="al-y"><b>${r.year}</b>${r.isCur ? '<small>IN CORSO</small>' : ''}</div><div class="al-pod3">${podHtml}</div></div>`;
   }).join('');
