@@ -17,6 +17,16 @@
     const d = await loadJson('data/titoli_campione.json').catch(() => null);
     data = (d && d.t) || [];
     byAth = {}; byTeam = {};
+    // Campioni Italiani delle stagioni successive all'archivio, accumulati dallo scraper (data/titoli_stagioni.json):
+    // la stagione in corso e' gia' coperta da collectChampions, quindi si prendono solo gli anni diversi.
+    const cur = typeof _loadedSeasonYear === 'function' ? +_loadedSeasonYear() : 0;
+    const st = await loadJson('data/titoli_stagioni.json').catch(() => null);
+    for (const s of ((st && st.t) || [])) {
+      if (s.y === cur) continue;
+      const t2 = { y: s.y, kind: 'it', cat: null, catCode: s.catCode, reg: '', aid: s.aid, n: s.n, team: s.team, gid: s.gid, gara: s.gara, pos: 1, prova: s.prova, acc: true };
+      (byAth[t2.aid] = byAth[t2.aid] || []).push(t2);
+      const k = norm(t2.team); if (k) (byTeam[k] = byTeam[k] || []).push(t2);
+    }
     for (const r of data) {
       const t = { y: r[0], kind: r[1] ? 'it' : 'reg', cat: r[2], reg: r[3], aid: r[4], n: r[5], team: r[6], gid: r[7], gara: r[8], pos: r[9], prova: r[10], arch: true };
       (byAth[t.aid] = byAth[t.aid] || []).push(t);

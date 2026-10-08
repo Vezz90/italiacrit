@@ -54,6 +54,10 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET }}
 
+      - name: Conserva i Campioni Italiani della stagione (non si cancellano mai)
+        run: python scripts/accumula_titoli.py
+        continue-on-error: true
+
       - name: Run race details scraper (informazioni tecniche gare)
         run: python scraper/race_details_scraper.py
         continue-on-error: true
