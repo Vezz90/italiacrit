@@ -13864,11 +13864,27 @@ window.adminNav = async function(section) {
               <label class="ig-sw"><input type="checkbox" id="ig-credit" ${se.credit ? 'checked' : ''}><span><b>Credit della foto</b><small>Aggiunge «Foto: fotografo» in fondo alla didascalia.</small></span></label>
               <button class="admin-edit-btn gr-fb" id="ig-save" onclick="window._igSave()">Salva impostazioni</button>
             </section>
-            <section class="ig-card ig-wide"><h3>Grafiche</h3>
-              <p>Le grafiche per Instagram si creano come quelle della condivisione gara: foto della corsa con il podio, e puoi regolare <b>posizione e zoom della foto</b> per centrarla meglio prima di pubblicare.</p>
-              <p class="ig-note">Stato: collegamento e impostazioni pronti. La creazione delle grafiche 4:5 e 9:16 e la pubblicazione dalla pagina gara e dalla Coda Social sono il passo successivo.</p>
+            <section class="ig-card ig-wide"><h3>Anteprima grafiche e testo</h3>
+              <p>Le grafiche usano la foto della gara e il podio, come la condivisione dal sito; il testo è lo stesso che viene generato per Facebook. <b>Qui non viene pubblicato nulla.</b></p>
+              <div><button class="admin-edit-btn" id="ig-prev-btn" onclick="window._igPreview()">Prova con l'ultima gara</button></div>
+              <div id="ig-prev"></div>
             </section>
           </div>`;
+        window._igPreview = async () => {
+          const b = document.getElementById('ig-prev-btn'), box = document.getElementById('ig-prev');
+          b.disabled = true; b.textContent = 'Preparo l’anteprima…';
+          box.innerHTML = '<div class="admin-loading">Creo le grafiche e il testo (qualche secondo)…</div>';
+          try {
+            const p = await apiCall('/admin/social/instagram/preview');
+            box.innerHTML = `<p class="ig-note"><b>${esc(p.gara_name)}</b> · ${esc(p.category || '')} · ${esc(p.date || '')}</p>
+              <div class="ig-prev-grid">
+                <figure><figcaption>Feed 4:5</figcaption><img src="${esc(p.feed)}" alt="Anteprima feed"></figure>
+                <figure><figcaption>Storia 9:16</figcaption><img src="${esc(p.story)}" alt="Anteprima storia"></figure>
+                <div class="ig-cap"><div class="ig-cap-h">Testo del post <small>${p.caption.length}/2200</small></div><pre>${esc(p.caption)}</pre></div>
+              </div>`;
+          } catch (e) { box.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
+          b.disabled = false; b.textContent = 'Rigenera con l’ultima gara';
+        };
         window._igSave = async () => {
           const b = document.getElementById('ig-save'); if (b) { b.disabled = true; b.textContent = 'Salvo…'; }
           try {

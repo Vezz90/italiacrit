@@ -13723,3 +13723,10 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .ig-sw { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; cursor: pointer; } .ig-sw b { display: block; font-size: .88rem; } .ig-sw small { display: block; color: var(--text-muted); font-size: .76rem; }
 .ig-f { display: flex; flex-direction: column; gap: 4px; font-size: .78rem; color: var(--text-muted); } .ig-f textarea, .ig-f input { border: 1px solid var(--border-subtle); background: var(--bg-primary, var(--bg-card)); color: var(--text-primary); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .86rem; }
 @media (max-width: 800px) { .ig-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.ig-prev-grid { display: grid; grid-template-columns: 300px 220px minmax(0, 1fr); gap: 16px; align-items: start; }
+.ig-prev-grid figure { margin: 0; display: flex; flex-direction: column; gap: 6px; } .ig-prev-grid figcaption { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); }
+.ig-prev-grid img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-elevated); display: block; }
+.ig-cap { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 12px; min-width: 0; } .ig-cap-h { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 8px; }
+.ig-cap pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: inherit; font-size: .86rem; line-height: 1.5; }
+@media (max-width: 900px) { .ig-prev-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .ig-cap { grid-column: 1 / -1; } }

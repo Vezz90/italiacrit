@@ -11627,6 +11627,123 @@ function _parseImgAdjust(q) {
   return _hasImgAdjust(adjust) ? adjust : null;
 }
 
+// ── Instagram: grafiche verticali (feed 4:5 e storia 9:16) ──────────────────────────────
+// Stessa identita' della card di condivisione (foto della gara + podio), impaginata in verticale:
+// foto in alto (con zoom/posizione regolabili come nella modale di condivisione), pannello podio sotto.
+const IG_FORMATS = { feed: { W: 1080, H: 1350, photoH: 750 }, story: { W: 1080, H: 1920, photoH: 1100 } };
+async function _findGaraPhotoSource(garaId, cal) {
+  const uploadedIds = [garaId, ...(cal?.id && cal.id !== garaId ? [cal.id] : [])];
+  for (const uid of uploadedIds) {
+    const up = await queries.getApprovedRacePhotos(uid).catch(() => []);
+    if (up && up.length) return { source: up[0].filename || up[0].photo_url, credit: up[0].photographer || null };
+  }
+  const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, ''), ...(cal?.id ? [cal.id] : [])];
+  const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
+  for (const [src, srcCredit] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
+    for (const alias of aliases) {
+      const e = src[alias];
+      if (e && (e.url || e.filename)) return { source: e.url || e.filename, credit: srcCredit };
+    }
+  }
+  const allVideos = await readVideos().catch(() => ({}));
+  for (const alias of aliases) {
+    const vids = allVideos[alias];
+    const vid = vids && vids.length ? _extractYouTubeId(vids[0].url) : null;
+    if (vid) return { source: `https://img.youtube.com/vi/${vid}/hqdefault.jpg`, credit: null };
+  }
+  return null;
+}
+async function _generateGaraIgBuffer(garaId, fmt, adjust) {
+  const sharp = require('sharp');
+  const { W, H, photoH } = IG_FORMATS[fmt];
+  const calendar = (await readDataJsonFromGH('calendar.json')) || [];
+  const cal = _findCalEntryForNativeGaraId(calendar, garaId);
+  const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+  let resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
+  const results = await _resolveGaraResults(garaId, cal, resultsRaw, calendar);
+  const first = results[0];
+  const catCode = first ? _rankingCodeFromRow(first) : null;
+  const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
+  const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  const subtitle = [dateShort, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
+  const found = await _findGaraPhotoSource(garaId, cal);
+
+  const SC = 1.5, panelH = H - photoH;
+  const svg0 = buildGaraSplitPanelSvg({ catLabel, title, subtitle, results, credit: found && found.credit, panelW: W / SC, H: panelH / SC });
+  const panelSvg = svg0.replace(/^<svg width="[\d.]+" height="[\d.]+"/, m => { const mm = m.match(/width="([\d.]+)" height="([\d.]+)"/); return `<svg width="${W}" height="${panelH}" viewBox="0 0 ${mm[1]} ${mm[2]}"`; });
+  const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
+  const layers = [{ input: panelBuf, left: 0, top: photoH }];
+  const raw = found ? await _fetchRawImageBuffer(found.source) : null;
+  if (raw) {
+    const meta = await sharp(raw).metadata();
+    const pipe = _hasImgAdjust(adjust)
+      ? sharp(raw).extract(_photoCoverRectServer(meta, W, photoH, adjust)).resize(W, photoH, { fit: 'fill' })
+      : sharp(raw).resize(W, photoH, { fit: 'cover', position: _ogCropPosition(meta) });
+    layers.unshift({ input: await pipe.jpeg({ quality: 95, mozjpeg: true }).toBuffer(), left: 0, top: 0 });
+  }
+  return await sharp({ create: { width: W, height: H, channels: 3, background: '#181c24' } }).composite(layers).jpeg({ quality: 93, mozjpeg: true }).toBuffer();
+}
+app.get('/api/og-image/gara-ig/:id', async (req, res) => {
+  const garaId = decodeURIComponent(req.params.id);
+  const fmt = req.query.f === 'story' ? 'story' : 'feed';
+  const adjust = _parseImgAdjust(req.query);
+  const cacheKey = `garaig_${fmt}_${garaId}` + (adjust ? `_${adjust.scale.toFixed(2)}_${Math.round(adjust.offsetX)}_${Math.round(adjust.offsetY)}` : '');
+  try {
+    const buf = await _ogGenerateDeduped(cacheKey, () => _generateGaraIgBuffer(garaId, fmt, adjust));
+    if (!buf) return res.status(404).end();
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.send(buf);
+  } catch (e) { console.error('[ig-image]', e.message); res.status(500).end(); }
+});
+
+// Testo Instagram = lo stesso testo generato per Facebook (racconto della gara), senza link nudi
+// (su Instagram non sono cliccabili) + riga "link nel profilo", credit foto e hashtag fissi.
+async function _igCaptionFor(garaId, settings) {
+  const info = await _garaSocialInfo(garaId);
+  const media = await _socialMediaFor(garaId);
+  const queue = await readSocialQueue();
+  const pending = queue.find(p => p.gara_id === garaId && p.caption);
+  let caption = pending && pending.caption;
+  if (!caption) {
+    const stored = await queries.getGaraNarrative(garaId).catch(() => null);
+    caption = (stored && stored.text) || await _generateAndStoreGaraNarrative(garaId, {}).catch(() => null);
+  }
+  if (!caption) caption = await generateSocialCaption({ nome_gara: info.gara_name, winner_label: info.winner, category: info.category, winner_team: info.winner_team, date: info.date, link: '' });
+  let text = String(caption || '').split('\n').filter(l => !/https?:\/\/|italiacyclingstats\.com/i.test(l) && l.trim() !== '🔗').join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  if (settings.credit) text = _withCredit(text, media.credit);
+  const tail = [settings.link_line, settings.hashtags].map(s => String(s || '').trim()).filter(Boolean);
+  return [text, ...tail].join('\n\n').slice(0, 2200);
+}
+// Anteprima (nessuna pubblicazione): grafiche feed/storia e testo per una gara, di default l'ultima con risultati.
+app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) => {
+  try {
+    let id = req.query.gara ? String(req.query.gara) : '';
+    if (!id) {
+      const raw = (await readDataJsonFromGH('results_raw.json')) || [];
+      const today = new Date().toISOString().slice(0, 10);
+      let best = null;
+      for (const r of raw) {
+        if (!r.gara_id || Number(r.posizione) !== 1) continue;
+        const d = String(r.data || '').slice(0, 10);
+        if (d && d <= today && (!best || d > best.d)) best = { id: r.gara_id, d };
+      }
+      if (!best) return res.status(404).json({ error: 'Nessuna gara con risultati trovata' });
+      id = best.id;
+    }
+    const info = await _garaSocialInfo(id);
+    const settings = await readSocialIg();
+    const enc = encodeURIComponent(id), q = `&adj=${Date.now()}`;
+    res.json({
+      gara_id: id, ...info,
+      feed: `${API_BASE_URL}/api/og-image/gara-ig/${enc}?f=feed${q}`,
+      story: `${API_BASE_URL}/api/og-image/gara-ig/${enc}?f=story${q}`,
+      caption: await _igCaptionFor(id, settings),
+    });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/og-image/gara/:id', async (req, res) => {
   const garaId = decodeURIComponent(req.params.id);
   const adjust = _parseImgAdjust(req.query);
