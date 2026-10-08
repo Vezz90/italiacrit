@@ -6911,7 +6911,18 @@ app.post('/api/admin/pcs-fetch-results', requireAdmin, async (req, res) => {
     }
     const rows = _parsePcsResultsHtml(html, 'tmp', new Date().getFullYear(), slug || 'html');
     if (!rows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS (struttura non riconosciuta).' });
-    res.json({ ok: true, url: usedUrl, total: rows.length, rows: rows.map(r => ({ posizione: r.posizione, rider_name: r.rider_name, team_name: r.team_name, distacco: r.distacco, atleta_id: r.atleta_id })) });
+    // nazionalita' dalla bandierina PCS accanto al nome (es. class "flag it")
+    const nat = {};
+    try {
+      const $ = require('cheerio').load(html);
+      $('table tbody tr').each((_, tr) => {
+        const a = $(tr).find('a[href^="rider/"]').first(), fl = $(tr).find('.flag').first();
+        if (!a.length || !fl.length) return;
+        const cls = (fl.attr('class') || '').split(/\s+/).find(c => c !== 'flag' && /^[a-z]{2}$/.test(c));
+        if (cls) nat[a.text().replace(/\s+/g, ' ').trim()] = cls.toUpperCase();
+      });
+    } catch (_) {}
+    res.json({ ok: true, url: usedUrl, total: rows.length, rows: rows.map(r => ({ posizione: r.posizione, rider_name: r.rider_name, team_name: r.team_name, distacco: r.distacco, atleta_id: r.atleta_id, nation: nat[r.rider_name] || null })) });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

@@ -13848,6 +13848,7 @@ window.adminNav = async function(section) {
           </div>
           <div class="ig-adj" style="align-items:flex-end;border-top:1px solid var(--border-subtle);padding-top:12px">
             <label class="ig-f" style="flex:1;min-width:260px"><span>Oppure importa da ProCyclingStats: slug o link della gara (es. race/world-championship-me-u23/2026)</span><input id="mg-pcs" type="text" placeholder="https://www.procyclingstats.com/race/…/2026"></label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-muted)"><input type="checkbox" id="mg-foreign"> includi anche gli stranieri già presenti in ICS</label>
             <button class="admin-edit-btn" id="mg-pcs-btn" onclick="window._mgPcs()">⬇ Importa da PCS</button>
           </div>
           <label class="ig-f" id="mg-html-box" style="display:none"><span>PCS ha bloccato l'accesso automatico: apri la pagina risultati su PCS, copia il sorgente della pagina e incollalo qui, poi premi di nuovo «Importa da PCS»</span><textarea id="mg-html" rows="4"></textarea></label>
@@ -13867,13 +13868,15 @@ window.adminNav = async function(section) {
         try {
           const r = await apiCall('/admin/pcs-fetch-results', { method: 'POST', body: { slug, html } });
           // si tengono solo i corridori già presenti in ICS (italiani): la posizione resta quella vera della gara
-          const rows = r.rows.filter(x => x.atleta_id && globalData?.athletes?.[x.atleta_id]).map(x => {
+          const withForeign = !!document.getElementById('mg-foreign')?.checked;
+          const nIt = r.rows.filter(x => x.nation === 'IT').length;
+          const rows = r.rows.filter(x => x.atleta_id && globalData?.athletes?.[x.atleta_id] && (withForeign || !x.nation || x.nation === 'IT')).map(x => {
             const a = globalData.athletes[x.atleta_id];
             return { pos: x.posizione, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || x.team_name || '', tempo: x.distacco || '', atletaId: x.atleta_id, _autoMatched: true, _dbTeam: a.team_attuale || '' };
           });
           if (!rows.length) { err.textContent = `Letti ${r.total} corridori da PCS ma nessuno corrisponde a un atleta ICS. Controlla lo slug o la categoria.`; err.style.display = 'block'; return; }
-          showToast(`PCS: ${r.total} corridori letti, ${rows.length} italiani trovati in ICS`);
-          window.openManualResultBulkForm(gid, rows.map(x => ({ pos: x.pos, cognome: x.cognome, nome: x.nome, team: x.team, tempo: x.tempo })), window._mgCatHint);
+          showToast(`PCS: ${r.total} corridori letti, ${rows.length} ${withForeign ? 'trovati in ICS' : 'italiani trovati in ICS'}`);
+          window.openManualResultBulkForm(gid, rows.map(x => ({ pos: x.pos, cognome: x.cognome, nome: x.nome, team: x.team, tempo: x.tempo, atletaId: x.atletaId })), window._mgCatHint);
         } catch (e) {
           err.textContent = e.message || 'Errore'; err.style.display = 'block';
           if (/anti-bot|bloccat|incolla/i.test(e.message || '')) document.getElementById('mg-html-box').style.display = 'flex';
@@ -22784,6 +22787,11 @@ window.openManualResultBulkForm = (garaId, prefilledRows, catHint) => {
   window._mrBulkFromOcr = !!(prefilledRows && prefilledRows.length);
   if (prefilledRows && prefilledRows.length) {
     window._mrBulkRows = prefilledRows.map(r => {
+      // riga con atleta gia' identificato (es. importata da PCS): si usa quel profilo, senza ricercarlo per categoria
+      if (r.atletaId && globalData?.athletes?.[r.atletaId]) {
+        const a = globalData.athletes[r.atletaId];
+        return { pos: r.pos, cognome: a.cognome || r.cognome, nome: a.nome || r.nome, team: r.team || a.team_attuale || '', tempo: r.tempo || '', atletaId: r.atletaId, _autoMatched: true, _ocrRaw: `${a.cognome || ''} ${a.nome || ''}`.trim(), _dbTeam: a.team_attuale || '' };
+      }
       const match = _mrAutoMatchAthlete(r.cognome, r.nome, r.team, window._mrMeta);
       if (match) {
         // Se la foto riporta una nazionale/rappresentativa ma l'atleta ha già
