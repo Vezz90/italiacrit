@@ -9495,6 +9495,7 @@ async function writeSocialIg(obj) {
   fs.writeFileSync(path.join(__dirname, '../data/social-instagram.json'), JSON.stringify(obj, null, 2));
 }
 let _igStatusCache = { ts: 0, v: null };
+let _igLastLinked = null;
 async function instagramStatus(force) {
   if (!_fbConfigured()) return { state: 'no_fb' };
   if (!force && _igStatusCache.v && Date.now() - _igStatusCache.ts < 60000) return _igStatusCache.v;
@@ -9518,6 +9519,7 @@ async function instagramStatus(force) {
     }
   } catch (e) { out = { state: 'error', message: e.message }; }
   _igStatusCache = { ts: Date.now(), v: out };
+  if (out.state === 'linked') _igLastLinked = out;
   return out;
 }
 app.get('/api/admin/social/instagram', requireAdmin, async (req, res) => {
@@ -11738,8 +11740,16 @@ async function writeIgLog(arr) {
 }
 // Pubblica un'immagine su Instagram (feed o storia): contenitore -> attesa elaborazione -> pubblicazione.
 async function postToInstagram(kind, imageUrl, caption) {
-  const st = await instagramStatus(true);
-  if (st.state !== 'linked') throw new Error('Account Instagram non collegato');
+  let st = await instagramStatus(true);
+  if (st.state !== 'linked') { await new Promise(r => setTimeout(r, 1500)); st = await instagramStatus(true); }
+  // errore momentaneo di Facebook: se poco fa l'account risultava collegato si usa quello
+  if (st.state !== 'linked' && _igLastLinked) st = _igLastLinked;
+  if (st.state !== 'linked') {
+    const why = st.state === 'not_linked' ? 'alla Pagina Facebook non risulta collegato nessun account Instagram'
+      : st.state === 'no_fb' ? 'FB_PAGE_ID o FB_PAGE_TOKEN mancanti su Render'
+      : `Facebook risponde: ${st.message || 'errore sconosciuto'}${st.code ? ' (code ' + st.code + ')' : ''}`;
+    throw new Error('Account Instagram non raggiungibile — ' + why);
+  }
   const token = process.env.FB_PAGE_TOKEN, base = `https://graph.facebook.com/v19.0`;
   const body = { image_url: imageUrl, access_token: token };
   if (kind === 'story') body.media_type = 'STORIES'; else body.caption = caption;
