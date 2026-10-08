@@ -11716,6 +11716,70 @@ async function _igCaptionFor(garaId, settings) {
   const tail = [settings.link_line, settings.hashtags].map(s => String(s || '').trim()).filter(Boolean);
   return [text, ...tail].join('\n\n').slice(0, 2200);
 }
+// Registro delle pubblicazioni Instagram (anti-doppioni): [{gara_id, kind, media_id, posted_at}]
+const SOCIAL_IG_LOG_KEY = 'social_instagram_log';
+async function readIgLog() {
+  let v = null;
+  if (supabase) {
+    const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_IG_LOG_KEY).maybeSingle();
+    v = data && data.value;
+  } else {
+    try { v = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/social-instagram-log.json'), 'utf8')); } catch { v = null; }
+  }
+  return Array.isArray(v) ? v : [];
+}
+async function writeIgLog(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store').upsert({ key: SOCIAL_IG_LOG_KEY, value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(path.join(__dirname, '../data/social-instagram-log.json'), JSON.stringify(arr, null, 2));
+}
+// Pubblica un'immagine su Instagram (feed o storia): contenitore -> attesa elaborazione -> pubblicazione.
+async function postToInstagram(kind, imageUrl, caption) {
+  const st = await instagramStatus(true);
+  if (st.state !== 'linked') throw new Error('Account Instagram non collegato');
+  const token = process.env.FB_PAGE_TOKEN, base = `https://graph.facebook.com/v19.0`;
+  const body = { image_url: imageUrl, access_token: token };
+  if (kind === 'story') body.media_type = 'STORIES'; else body.caption = caption;
+  const post = async (url, b) => {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b), signal: AbortSignal.timeout(45000) });
+    const j = await r.json();
+    if (j.error) throw new Error(`Instagram API: ${j.error.message} (code ${j.error.code})`);
+    return j;
+  };
+  const c = await post(`${base}/${st.ig.id}/media`, body);
+  for (let i = 0; i < 15; i++) {
+    const r = await fetch(`${base}/${c.id}?fields=status_code&access_token=${encodeURIComponent(token)}`, { signal: AbortSignal.timeout(15000) });
+    const j = await r.json();
+    if (j.status_code === 'FINISHED') break;
+    if (j.status_code === 'ERROR' || j.status_code === 'EXPIRED') throw new Error('Instagram non riesce a elaborare immagine (' + j.status_code + ')');
+    await new Promise(res => setTimeout(res, 2000));
+  }
+  return await post(`${base}/${st.ig.id}/media_publish`, { creation_id: c.id, access_token: token });
+}
+app.post('/api/admin/social/instagram/publish', requireAdmin, async (req, res) => {
+  try {
+    if (!_fbConfigured()) return res.status(400).json({ error: 'Facebook/Instagram non configurato' });
+    const b = req.body || {};
+    const id = String(b.gara_id || '');
+    const kind = b.kind === 'story' ? 'story' : 'feed';
+    if (!id) return res.status(400).json({ error: 'Gara mancante' });
+    const log = await readIgLog();
+    if (log.some(l => l.gara_id === id && l.kind === kind) && !b.force) return res.status(409).json({ error: kind === 'story' ? 'La storia di questa gara è già stata pubblicata.' : 'Questo post è già stato pubblicato su Instagram.', already: true });
+    const caption = String(b.caption || '').trim().slice(0, 2200);
+    if (kind === 'feed' && !caption) return res.status(400).json({ error: 'Testo vuoto' });
+    const s = parseFloat(b.s), ox = parseFloat(b.ox), oy = parseFloat(b.oy);
+    const adj = (Number.isFinite(s) && s > 1 ? `&s=${s}` : '') + (Number.isFinite(ox) && ox ? `&ox=${Math.round(ox)}` : '') + (Number.isFinite(oy) && oy ? `&oy=${Math.round(oy)}` : '');
+    const imageUrl = `${API_BASE_URL}/api/og-image/gara-ig/${encodeURIComponent(id)}?f=${kind}${adj}`;
+    const out = await postToInstagram(kind, imageUrl, caption);
+    log.push({ gara_id: id, kind, media_id: out.id || null, posted_at: new Date().toISOString() });
+    await writeIgLog(log);
+    _igStatusCache = { ts: 0, v: null };
+    res.json({ ok: true, media_id: out.id || null });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 // Anteprima (nessuna pubblicazione): grafiche feed/storia e testo per una gara, di default l'ultima con risultati.
 app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) => {
   try {
@@ -11735,8 +11799,11 @@ app.get('/api/admin/social/instagram/preview', requireAdmin, async (req, res) =>
     const info = await _garaSocialInfo(id);
     const settings = await readSocialIg();
     const enc = encodeURIComponent(id), q = `&adj=${Date.now()}`;
+    const log = await readIgLog();
     res.json({
       gara_id: id, ...info,
+      posted: { feed: log.some(l => l.gara_id === id && l.kind === 'feed'), story: log.some(l => l.gara_id === id && l.kind === 'story') },
+      img_base: `${API_BASE_URL}/api/og-image/gara-ig/${enc}`,
       feed: `${API_BASE_URL}/api/og-image/gara-ig/${enc}?f=feed${q}`,
       story: `${API_BASE_URL}/api/og-image/gara-ig/${enc}?f=story${q}`,
       caption: await _igCaptionFor(id, settings),

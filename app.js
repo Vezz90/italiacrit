@@ -13830,6 +13830,7 @@ window.adminNav = async function(section) {
         const step = (n, done, html) => `<li class="ig-step ${done ? 'done' : ''}"><span>${done ? '✓' : n}</span><div>${html}</div></li>`;
         const linked = st.state === 'linked';
         const canPub = linked && st.publish && st.publish.ok;
+        const canPubNow = canPub;
         let conn;
         if (!fb_configured) {
           conn = `<div class="ig-box warn"><b>Prima serve Facebook</b><p>Instagram si pubblica tramite la Pagina Facebook: configura <code>FB_PAGE_ID</code> e <code>FB_PAGE_TOKEN</code> su Render (vedi Scraper &amp; Config).</p></div>`;
@@ -13865,7 +13866,7 @@ window.adminNav = async function(section) {
               <button class="admin-edit-btn gr-fb" id="ig-save" onclick="window._igSave()">Salva impostazioni</button>
             </section>
             <section class="ig-card ig-wide"><h3>Anteprima grafiche e testo</h3>
-              <p>Le grafiche usano la foto della gara e il podio, come la condivisione dal sito; il testo è lo stesso che viene generato per Facebook. <b>Qui non viene pubblicato nulla.</b></p>
+              <p>Le grafiche usano la foto della gara e il podio, come la condivisione dal sito; il testo è lo stesso che viene generato per Facebook. Prima di pubblicare puoi regolare zoom e posizione della foto e modificare il testo. <b>Non viene pubblicato nulla finché non premi «Pubblica» e confermi.</b></p>
               <div><button class="admin-edit-btn" id="ig-prev-btn" onclick="window._igPreview()">Prova con l'ultima gara</button></div>
               <div id="ig-prev"></div>
             </section>
@@ -13876,12 +13877,41 @@ window.adminNav = async function(section) {
           box.innerHTML = '<div class="admin-loading">Creo le grafiche e il testo (qualche secondo)…</div>';
           try {
             const p = await apiCall('/admin/social/instagram/preview');
+            const adj = { s: 1, ox: 0, oy: 0 };
+            const imgUrl = f => `${p.img_base}?f=${f}&t=${Date.now()}` + (adj.s > 1 ? `&s=${adj.s}` : '') + (adj.ox ? `&ox=${adj.ox}` : '') + (adj.oy ? `&oy=${adj.oy}` : '');
+            const canPub = canPubNow;
+            const pubBtn = (k, lbl) => p.posted[k] ? `<button class="admin-edit-btn" disabled>✓ ${lbl} già pubblicato</button>` : `<button class="admin-edit-btn gr-fb" ${canPub ? '' : 'disabled title="Collega prima Instagram"'} onclick="window._igPublish('${k}')">Pubblica ${lbl}</button>`;
             box.innerHTML = `<p class="ig-note"><b>${esc(p.gara_name)}</b> · ${esc(p.category || '')} · ${esc(p.date || '')}</p>
+              <div class="ig-adj"><b>Foto</b>
+                <label>Zoom <input type="range" id="ig-z" min="1" max="3" step="0.05" value="1"></label>
+                <label>Sposta ←→ <input type="range" id="ig-x" min="-300" max="300" step="5" value="0"></label>
+                <label>Sposta ↑↓ <input type="range" id="ig-y" min="-300" max="300" step="5" value="0"></label>
+                <button class="admin-edit-btn" id="ig-adj-reset">Azzera</button></div>
               <div class="ig-prev-grid">
-                <figure><figcaption>Feed 4:5</figcaption><img src="${esc(p.feed)}" alt="Anteprima feed"></figure>
-                <figure><figcaption>Storia 9:16</figcaption><img src="${esc(p.story)}" alt="Anteprima storia"></figure>
-                <div class="ig-cap"><div class="ig-cap-h">Testo del post <small>${p.caption.length}/2200</small></div><pre>${esc(p.caption)}</pre></div>
-              </div>`;
+                <figure><figcaption>Feed 4:5</figcaption><img id="ig-img-feed" src="${esc(imgUrl('feed'))}" alt="Anteprima feed"></figure>
+                <figure><figcaption>Storia 9:16</figcaption><img id="ig-img-story" src="${esc(imgUrl('story'))}" alt="Anteprima storia"></figure>
+                <div class="ig-cap"><div class="ig-cap-h">Testo del post (modificabile) <small id="ig-cap-n">${p.caption.length}/2200</small></div><textarea id="ig-cap-t" rows="14">${esc(p.caption)}</textarea></div>
+              </div>
+              <div class="ig-pub">${pubBtn('feed', 'nel feed')}${pubBtn('story', 'la storia')}<span id="ig-pub-msg" class="ig-note"></span></div>`;
+            let tm = null;
+            const apply = () => {
+              adj.s = +document.getElementById('ig-z').value; adj.ox = +document.getElementById('ig-x').value; adj.oy = +document.getElementById('ig-y').value;
+              clearTimeout(tm); tm = setTimeout(() => { ['feed', 'story'].forEach(f => { document.getElementById('ig-img-' + f).src = imgUrl(f); }); }, 450);
+            };
+            ['ig-z', 'ig-x', 'ig-y'].forEach(i => document.getElementById(i).addEventListener('input', apply));
+            document.getElementById('ig-adj-reset').onclick = () => { document.getElementById('ig-z').value = 1; document.getElementById('ig-x').value = 0; document.getElementById('ig-y').value = 0; apply(); };
+            const ta = document.getElementById('ig-cap-t');
+            ta.addEventListener('input', () => { document.getElementById('ig-cap-n').textContent = ta.value.length + '/2200'; });
+            window._igPublish = async (kind) => {
+              const lbl = kind === 'story' ? 'la storia' : 'il post nel feed';
+              if (!confirm(`Pubblicare ora ${lbl} su @${(st.ig && st.ig.username) || 'instagram'}?\n\n${p.gara_name}`)) return;
+              const msg = document.getElementById('ig-pub-msg'); msg.textContent = 'Pubblico su Instagram… (può richiedere qualche secondo)';
+              try {
+                await apiCall('/admin/social/instagram/publish', { method: 'POST', body: { gara_id: p.gara_id, kind, caption: ta.value, s: adj.s, ox: adj.ox, oy: adj.oy } });
+                msg.textContent = '✅ Pubblicato'; showToast('✅ Pubblicato su Instagram');
+                p.posted[kind] = true; window._igPreview();
+              } catch (e) { msg.textContent = ''; showToast(e.message || 'Errore', 'error'); }
+            };
           } catch (e) { box.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
           b.disabled = false; b.textContent = 'Rigenera con l’ultima gara';
         };
