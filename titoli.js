@@ -95,8 +95,9 @@
   }
 
   // ── resa compatta ────────────────────────────────────────────
-  const JERSEY = (a, b) => `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/><rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${a}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${b}"/></svg>`;
-  // ordine: medaglie (oro/argento/bronzo, Mondiali prima degli Europei), poi italiano, poi regionale
+  const JERSEY = (bands, size) => `<svg width="${size || 22}" height="${size || 22}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>${bands.map((c, i) => `<rect x="6.1" y="${10.2 + i * (7.4 / bands.length)}" width="11.8" height="${7.4 / bands.length - .5}" fill="${c}"/>`).join('')}</svg>`;
+  const J_IT = ['#008C45', '#CD212A'], J_REG = ['#2F7FD8', '#2F7FD8'], J_EU = ['#1B4DB1', '#F5C400'], J_WC = ['#0072CE', '#E4002B', '#111', '#F5C400', '#00A859'];
+  // ordine dentro lo stesso anno: medaglie (oro prima, Mondiali prima degli Europei), poi italiano, poi regionale
   const GROUPS = [
     { label: 'ORO · MONDIALI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'wc' && t.pos === 1 },
     { label: 'ORO · EUROPEI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'eu' && t.pos === 1 },
@@ -104,49 +105,70 @@
     { label: 'ARGENTO · EUROPEI', cls: 'g2', icon: '🥈', test: t => t.medal && t.kind === 'eu' && t.pos === 2 },
     { label: 'BRONZO · MONDIALI', cls: 'g3', icon: '🥉', test: t => t.medal && t.kind === 'wc' && t.pos === 3 },
     { label: 'BRONZO · EUROPEI', cls: 'g3', icon: '🥉', test: t => t.medal && t.kind === 'eu' && t.pos === 3 },
-    { label: 'CAMPIONE ITALIANO', cls: 'it', icon: JERSEY('#008C45', '#CD212A'), test: t => !t.medal && t.kind === 'it' },
-    { label: 'CAMPIONE REGIONALE', cls: 'reg', icon: JERSEY('#2F7FD8', '#2F7FD8'), test: t => !t.medal && t.kind === 'reg' },
+    { label: 'CAMPIONE ITALIANO', cls: 'it', icon: JERSEY(J_IT, 15), test: t => !t.medal && t.kind === 'it' },
+    { label: 'CAMPIONE REGIONALE', cls: 'reg', icon: JERSEY(J_REG, 15), test: t => !t.medal && t.kind === 'reg' },
   ];
   const raceHref = t => (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : ''));
-  function yearLink(t, withName) {
-    const prova = t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : ''));
-    const tip = [t.gara ? tc(t.gara) : '', prova, catLabelOf(t), t.reg ? tc(t.reg) : '', withName ? tc(t.n) : ''].filter(Boolean).join(' · ');
+  function provaOf(t) { return t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : '')); }
+  function tipText(t, withName) { return [t.gara ? tc(t.gara) : '', provaOf(t), catLabelOf(t), t.reg ? tc(t.reg) : '', t.y, withName ? tc(t.n) : ''].filter(Boolean).join(' · '); }
+  function chipHtml(t, g, withName) {
     const sup = t.prova === 'CRONOMETRO' ? 'crono' : (t.prova === 'CRONOSCALATA' ? 'scal.' : '');
-    const href = raceHref(t);
-    const body = `${t.y}${sup ? `<sup>${sup}</sup>` : ''}`;
+    const surname = withName && t.n ? ` <small>${esc(tc(String(t.n).split(/\s+/)[0]))}</small>` : '';
+    const body = `<i>${g.icon}</i>${g.label}${sup ? `<sup>${sup}</sup>` : ''}${surname}`;
+    const href = withName && t.aid ? '' : raceHref(t);
     const x = t.did != null && authUser()?.role === 'admin' ? `<button class="ttl-x" title="Rimuovi il titolo" onclick="event.preventDefault();event.stopPropagation();window.adminDeleteRegionalTitle(${t.did})">✕</button>` : '';
-    return `${href ? `<a class="ttl-yr" href="${href}" title="${esc(tip)}">${body}</a>` : `<span class="ttl-yr" title="${esc(tip)}">${body}</span>`}${x}`;
+    const link = raceHref(t);
+    return `${link ? `<a class="ttl-chip ttl-chip--${g.cls}" href="${link}" title="${esc(tipText(t, withName))}">${body}</a>` : `<span class="ttl-chip ttl-chip--${g.cls}" title="${esc(tipText(t, withName))}">${body}</span>`}${x}`;
   }
-  function cardsHtml(list, withName) {
-    return GROUPS.map(g => {
+  // un titolo per riga di anno, dal piu' recente al piu' vecchio
+  function yearRowsHtml(list, withName) {
+    const years = [...new Set(list.map(t => t.y))].sort((a, b) => b - a);
+    return years.map(y => {
       const seenK = new Set();
-      const items = list.filter(g.test).sort((a, b) => (b.y - a.y) || ((b.gid ? 1 : 0) - (a.gid ? 1 : 0)) || ((b.cat != null || b.catCode ? 1 : 0) - (a.cat != null || a.catCode ? 1 : 0)))
-        .filter(t => { const k = `${t.y}|${t.prova}|${withName ? t.aid : ''}`; if (seenK.has(k)) return false; seenK.add(k); return true; });
-      if (!items.length) return '';
-      return `<div class="ttl-card ttl-card--${g.cls}"><span class="ttl-ic">${g.icon}</span><div class="ttl-body"><b>${g.label}${items.length > 1 ? `<em>×${items.length}</em>` : ''}</b><div class="ttl-yrs">${items.map(t => yearLink(t, withName)).join('')}</div></div></div>`;
+      const items = [];
+      for (const g of GROUPS) {
+        list.filter(t => t.y === y && g.test(t))
+          .sort((a, b) => ((b.gid ? 1 : 0) - (a.gid ? 1 : 0)) || ((b.cat != null || b.catCode ? 1 : 0) - (a.cat != null || a.catCode ? 1 : 0)))
+          .forEach(t => { const k = `${g.label}|${t.prova}|${withName ? t.aid : ''}|${t.reg}`; if (seenK.has(k)) return; seenK.add(k); items.push(chipHtml(t, g, withName)); });
+      }
+      return items.length ? `<div class="ttl-row"><b>${y}</b><div class="ttl-chips2">${items.join('')}</div></div>` : '';
     }).join('');
+  }
+
+  // maglie accanto al nome: solo la stagione in corso, solo campioni (oro europeo/mondiale, italiano, regionale)
+  function seasonBadges(list) {
+    const cur = typeof _loadedSeasonYear === 'function' ? +_loadedSeasonYear() : new Date().getFullYear();
+    const out = [], seen = new Set();
+    for (const t of list.filter(x => x.y === cur && (x.pos === 1 || !x.medal))) {
+      const kindKey = t.medal ? t.kind : t.kind;
+      const label = t.medal ? (t.kind === 'wc' ? 'Campione del mondo' : 'Campione europeo') : (t.kind === 'it' ? 'Campione italiano' : 'Campione regionale');
+      const bands = t.kind === 'wc' ? J_WC : (t.kind === 'eu' ? J_EU : (t.kind === 'it' ? J_IT : J_REG));
+      const k = `${kindKey}|${t.prova}|${t.medal ? t.pos : ''}`;
+      if (seen.has(k)) continue; seen.add(k);
+      const tip = `${label} · ${[provaOf(t), catLabelOf(t), t.reg ? tc(t.reg) : '', t.y].filter(Boolean).join(' · ')}`;
+      const href = raceHref(t);
+      const ic = JERSEY(bands, 22);
+      out.push(href ? `<a href="${href}" title="${esc(tip)}">${ic}</a>` : `<span title="${esc(tip)}">${ic}</span>`);
+    }
+    return out.join('');
   }
 
   async function mountAthlete(id, hostId) {
     const host = document.getElementById(hostId); if (!host) return;
     const list = await athleteTitles(id);
+    const bh = document.getElementById('atleta-champ-badges'); if (bh) bh.innerHTML = seasonBadges(list);
     if (!document.getElementById(hostId)) return;
     if (!list.length) { host.innerHTML = ''; return; }
-    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE</span><i></i></div><div class="ttl-grid">${cardsHtml(list, false)}</div></section>`;
+    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE</span><i></i></div><div class="ttl-rows">${yearRowsHtml(list, false)}</div></section>`;
   }
 
   async function mountTeam(teamId, hostId) {
     const host = document.getElementById(hostId); if (!host) return;
     const list = await teamTitles(teamId);
+    const bh = document.getElementById('team-champ-badges'); if (bh) bh.innerHTML = seasonBadges(list);
     if (!document.getElementById(hostId)) return;
     if (!list.length) { host.innerHTML = ''; return; }
-    const years = [...new Set(list.map(t => t.y))].sort((a, b) => b - a);
-    const det = years.map(y => `<div class="ttl-dr"><b>${y}</b><span>${list.filter(t => t.y === y).map(t => {
-      const g = GROUPS.find(x => x.test(t)); const href = t.aid ? `/atleta/${encodeURIComponent(t.aid)}` : '';
-      return `<em>${g ? g.label.toLowerCase().replace(/^./, c => c.toUpperCase()) : ''}${catLabelOf(t) ? ' · ' + esc(catLabelOf(t)) : ''}: ${href ? `<a href="${href}">${esc(tc(t.n))}</a>` : esc(tc(t.n))}</em>`;
-    }).join('')}</span></div>`).join('');
-    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE DEI CORRIDORI</span><i></i></div><div class="ttl-grid">${cardsHtml(list, true)}</div>
-      <details class="ttl-det"><summary>Chi li ha vinti</summary>${det}</details></section>`;
+    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE DEI CORRIDORI</span><i></i></div><div class="ttl-rows">${yearRowsHtml(list, true)}</div></section>`;
   }
 
   // compatibilita': i badge accanto al nome non ci sono piu', restano per non rompere i richiami

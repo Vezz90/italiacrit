@@ -17737,7 +17737,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
-            <span id="atleta-ci-badge-host" style="display:contents"></span>
+            <span id="atleta-ci-badge-host" style="display:contents"></span><span id="atleta-champ-badges" class="champ-badges"></span>
           </div>
           <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
         </div>
@@ -21632,7 +21632,7 @@ async function renderTeam(team_id, opts = {}) {
           <div class="ath-hero-main">
           <div class="team-header-identity">
             <div class="team-header-name-block">
-              <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
+              <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}<span id="team-champ-badges" class="champ-badges"></span></div>
             </div>
           </div>
           <div class="ath-hero-pills">${_tmPillsHtml}</div>
