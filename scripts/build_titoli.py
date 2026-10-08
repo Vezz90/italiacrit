@@ -38,6 +38,8 @@ def main():
         reg = (t.get('reg') or t.get('regione') or '').upper().strip()
         if t['kind'] == 'provinciale' and 'TRENTINO' not in reg and 'BOLZANO' not in reg and 'TRENTO' not in reg:
             continue
+        if kind == 1:
+            reg = ''
         pv = prova(t['gara'])
         key = (t['y'], kind, t['cat'], norm_id(t['n']), pv, reg if kind == 0 else '')
         if key in seen:

@@ -32,6 +32,7 @@ data/team_rankings/
 !data/extra_roster.json
 !data/almanacco.json
 !data/carriere.json
+!data/titoli_campione.json
 server/norton-root.pem
 ~$*.xlsx
 server/team-history-*.json

@@ -83,41 +83,61 @@ def kind_of(text, race_name):
     return 'regionale'
 
 
+NAME_VERB = re.compile(r"((?:[A-ZÀ-Ý][\w'’.\-]+ ){1,4}[A-ZÀ-Ý][\w'’.\-]+)\s+(?:vince|conquista|ottiene|si laurea|diventa|si aggiudica|indossa|e' il nuovo|è il nuovo|e' la nuova|è la nuova)")
+BRAND = re.compile(r'TROFEO|MEMORIAL|GRAN PREMIO|COPPA|G\.?\s?P\.?\s|PROVA VALIDA|VALEVOLE|VALIDA|MEDAGLIA|GIRO|CIRCUITO|CHALLENGE|TAPPA|CRONOMETRO|CRONOSCALATA|SQUADRE', re.I)
+
+
+def match_row(name, rows):
+    """riga dell'ordine d'arrivo che corrisponde al nome citato (anche con parole in piu' davanti)"""
+    toks = norm(name).split()
+    for k in range(0, max(1, len(toks) - 1)):
+        sub = set(toks[k:])
+        if len(sub) < 2:
+            break
+        for pos, rname, rteam in rows:
+            rt = set(norm(rname).split())
+            if sub == rt or (sub <= rt and len(sub) >= 2) or (rt <= sub and len(rt) >= 2):
+                return pos, rname, rteam
+    return None
+
+
 def find_champions(cron, rows, race_name):
     out = []
-    if not cron or not rows:
+    if not rows:
         return out
-    cron = re.sub(r'\s*\n\s*', ' ', cron)
+    cron = re.sub(r'\s*\n\s*', ' ', cron or '')
     sents = re.split(r'(?<=[.!?])\s+', cron)
     for si, s in enumerate(sents):
         tm = re.search(r'(?i)campion(?:e|essa|i|ato)\b|titolo|maglia di', s)
         if not tm:
             continue
-        if re.search(r'(?i)europe|mondial|del mondo|campionato italiano.*(?:vince|vinto).*(?:ieri|scors)', s):
+        if re.search(r'(?i)europe|mondial|del mondo', s):
             continue
-        # persona "Nome Cognome (Team)" piu' vicina PRIMA dell'espressione del titolo, nella stessa frase;
-        # se la frase inizia col team/verbo (nome nella frase precedente) si usa l'ultima persona di quella
-        before = [m for m in PERSON.finditer(s) if m.start() < tm.start() + 3]
-        cand = before[-1] if before else None
-        if cand is None and si > 0:
-            prev = list(PERSON.finditer(sents[si - 1]))
-            if prev and re.match(r'^[\s(]', s):
-                cand = prev[-1]
-        if cand is None:
-            continue
-        toks = set(norm(cand.group(1)).split())
+        cands = [m.group(1) for m in PERSON.finditer(s) if m.start() < tm.start() + 3]
+        cands += [m.group(1) for m in NAME_VERB.finditer(s) if m.start() < tm.start() + 3]
+        if not cands and si > 0 and re.match(r'^[\s(]', s):
+            prev = [m.group(1) for m in PERSON.finditer(sents[si - 1])]
+            cands = prev[-1:]
         hit = None
-        for pos, rname, rteam in rows:
-            rt = set(norm(rname).split())
-            if toks and (toks == rt or (len(toks) >= 2 and toks <= rt) or (len(rt) >= 2 and rt <= toks)):
-                hit = (pos, rname, rteam); break
+        # il nome piu' vicino al titolo (ultimo) per primo
+        for nm in reversed(cands):
+            hit = match_row(nm, rows)
+            if hit:
+                break
         if not hit:
             continue
         reg = ''
         for k, v in REGIONI_AGG.items():
             if re.search(k, norm(s)):
                 reg = v; break
-        out.append({'pos': hit[0], 'n': hit[1], 'team': hit[2], 'text': s.strip()[:200], 'kind': kind_of(s, race_name), 'reg': reg})
+        out.append({'pos': hit[0], 'n': hit[1], 'team': hit[2], 'text': s.strip()[:200], 'kind': kind_of(s, race_name), 'reg': reg, 'src': 'testo'})
+    # campionato italiano / regionale "puro": il titolo e' del vincitore anche se la cronaca non lo scrive
+    if not out and rows:
+        up = race_name.upper()
+        if re.search(r'CAMPIONATO\s+ITALIANO', up) and not re.search(r'SQUADRE', up):
+            out.append({'pos': rows[0][0], 'n': rows[0][1], 'team': rows[0][2], 'text': race_name, 'kind': 'italiano', 'reg': '', 'src': 'nome'})
+        elif re.search(r'^\s*(\d+\s+)?CAMPIONATO\s+REGIONALE', up) and not BRAND.search(up):
+            out.append({'pos': rows[0][0], 'n': rows[0][1], 'team': rows[0][2], 'text': race_name, 'kind': 'regionale', 'reg': '', 'src': 'nome'})
     seen = set(); res = []
     for o in out:
         if o['pos'] not in seen:
@@ -153,7 +173,7 @@ def main():
                 found += 1
                 cat = next(iter(e['categorie'].keys()), '')
                 res.append({'y': y, 'id': e['id'], 'gara': n, 'data': e.get('data'), 'regione': e.get('regione') or '', 'cat': cat,
-                            'pos': c['pos'], 'n': c['n'], 'team': c['team'], 'kind': c['kind'], 'reg': c['reg'], 'txt': c['text']})
+                            'pos': c['pos'], 'n': c['n'], 'team': c['team'], 'kind': c['kind'], 'reg': c['reg'], 'src': c.get('src', ''), 'txt': c['text']})
         print(y, tot, found, flush=True)
     json.dump({'generated': time.strftime('%Y-%m-%d'), 'titles': res}, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print('gare esaminate', tot, 'titoli trovati', found)

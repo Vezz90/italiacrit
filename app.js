@@ -17737,7 +17737,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
             <span id="atleta-ci-badge-host" style="display:contents"></span>
-            ${regionalChampionChipsHtml(atleta_id)}
+            ${regionalChampionChipsHtml(atleta_id)}<span id="atleta-arch-chips" style="display:contents"></span>
           </div>
           <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
         </div>
@@ -17970,6 +17970,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   setPage(`
     <div class="ath-page">
     ${headerHtml}
+    <div id="atleta-titles"></div>
     <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina atleta">
       <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
       <button class="ath-tab" role="tab" id="ath-tab-c" aria-selected="false" aria-controls="ath-panel-c" onclick="window._athTab('c')">Carriera</button>
@@ -18047,6 +18048,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // (un atleta come Nencini ha 0 risultati ICS nel 2026 ma corre da
   // professionista, con risultati PCS veri: quella pillola non va tolta).
   _loadCiclismoStorico(atleta_id, selYear, risultati.length);
+  if (window.Titoli) window.Titoli.mountAthlete(atleta_id, 'atleta-titles');
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -19961,6 +19963,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   });
 
   _athShowHistoricBlocks(rows);
+  if (window.Titoli) window.Titoli.yearChipsAthlete(atletaId, anno, 'atleta-arch-chips');
   const team = rows[0]?.team || '';
   const categoria = rows[0]?.categoria || '';
   // Il nome squadra su ciclismo.info varia da un anno all'altro (sponsor
@@ -20513,6 +20516,7 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
   if (!el) return;
   el.innerHTML = `
     <span style="display:none"></span>
+    <div id="team-arch-chips"></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin:12px 0 8px">Dati storici — archivio in fase di validazione.</div>
     ${catTabsHtml}
     <div class="section-header" style="margin-top:20px">
@@ -20545,6 +20549,8 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
       <div class="profile-media-grid">${mediaCards}</div>
     </div>` : ''}
   `;
+
+  if (window.Titoli) window.Titoli.yearChipsTeam(teamId, anno, 'team-arch-chips');
 
   // Carica le vere foto profilo nei cerchi appena aggiunti (stesso pattern
   // batch async usato in renderGaraStorica) — il placeholder è già visibile
@@ -21654,6 +21660,7 @@ async function renderTeam(team_id, opts = {}) {
     <div id="team-lineage-bar"></div>
     <div id="team-club-history"></div>
     ${teamChampionsHtml}
+    <div id="team-titles"></div>
     ${profileYearRow('team', team_id, selYear)}
 
     <div id="team-native-content">
@@ -21724,6 +21731,7 @@ async function renderTeam(team_id, opts = {}) {
   _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
   _injectTeamClubHistory(team_id);
+  if (window.Titoli) window.Titoli.mountTeam(team_id, 'team-titles');
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 

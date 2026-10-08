@@ -13647,3 +13647,12 @@ a.tr-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0
 .cc-rows { display: flex; flex-direction: column; } .cc-rows a { display: grid; grid-template-columns: 44px minmax(0, 1fr) 42px 42px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border-subtle); text-decoration: none; color: inherit; font-size: .82rem; align-items: center; }
 .cc-rows em { font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .cc-rows span { color: var(--text-muted); } .cc-rows i { font-style: normal; font-weight: 700; text-align: center; color: var(--text-secondary); } .cc-rows i.w { color: var(--c); }
 @media (max-width: 700px) { .cc-heads { grid-template-columns: 1fr; } .cc-heads > span { text-align: center; } .cc-leg small { margin-left: 0; flex-basis: 100%; } }
+
+/* ===== Titoli di campione sui profili ===== */
+.ttl-sec { margin-top: 16px; }
+.ttl-sum b { font-weight: 800; color: var(--text-primary); }
+.ttl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ttl-years { display: flex; flex-direction: column; gap: 10px; }
+.ttl-y { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; align-items: start; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+.ttl-y:first-child { border-top: 0; padding-top: 0; } .ttl-y > b { font: 800 1.05rem 'Inter', system-ui, sans-serif; padding-top: 4px; }
+@media (max-width: 600px) { .ttl-y { grid-template-columns: 1fr; gap: 4px; } }
