@@ -13876,7 +13876,7 @@ window.adminNav = async function(section) {
           try {
             const { races } = await apiCall('/admin/social/instagram/recent');
             if (!races.length) { box.innerHTML = '<p class="ig-note">Nessuna gara con risultati.</p>'; return; }
-            box.innerHTML = '<div class="ig-races">' + races.map(r => `<a class="ig-race" href="/gara/${encodeURIComponent(r.gara_id)}">
+            box.innerHTML = '<div class="ig-races">' + races.map(r => `<a class="ig-race" href="/gara/${encodeURIComponent(r.gara_id)}?share=ig">
               <span class="ig-race-d">${esc(r.date.slice(8, 10) + '/' + r.date.slice(5, 7))}</span>
               <span class="ig-race-n"><b>${esc(r.name)}</b><small>${esc(r.category)}${r.winner ? ' · ' + esc(r.winner) : ''}</small></span>
               <span class="ig-race-s">${r.feed ? '<i class="on">Feed ✓</i>' : '<i>Feed</i>'}${r.story ? '<i class="on">Storia ✓</i>' : '<i>Storia</i>'}</span></a>`).join('') + '</div><p class="ig-note">Si apre la pagina della gara: premi Condividi, poi scegli Instagram Feed o Story.</p>';
@@ -13884,7 +13884,7 @@ window.adminNav = async function(section) {
         })();
         window._igOpenLatest = async () => {
           const b = document.getElementById('ig-latest-btn'); b.disabled = true; b.textContent = 'Cerco l’ultima gara…';
-          try { const r = await apiCall('/admin/social/instagram/preview?only=latest'); window.location.href = '/gara/' + encodeURIComponent(r.gara_id); }
+          try { const r = await apiCall('/admin/social/instagram/preview?only=latest'); window.location.href = '/gara/' + encodeURIComponent(r.gara_id) + '?share=ig'; }
           catch (er) { showToast(er.message || 'Errore', 'error'); b.disabled = false; b.textContent = 'Prova con l\'ultima gara'; }
         };
         window._igSave = async () => {
@@ -25133,6 +25133,8 @@ async function renderGara(gara_id) {
     </div>
   `);
   if (document.getElementById('race-route-box')) window._loadRaceRouteMap(_calId);
+  // Arrivo dall'elenco Instagram dell'admin (?share=ig): apre subito la finestra Condividi.
+  if (/[?&]share=ig/.test(location.search) && authUser()?.role === 'admin' && window._shareGaraData && !window._igAutoOpened) { window._igAutoOpened = true; setTimeout(() => window.triggerShareGara(), 400); }
 
   // Racconto della gara (stesso testo generato per i post social, ripulito
   // di link/hashtag) sopra la classifica, visibile a tutti — non solo nel
