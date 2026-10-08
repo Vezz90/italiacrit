@@ -31848,10 +31848,11 @@ async function _updateIgShareBtn(){
   box.innerHTML = accs.map(a=>{
     const done=a[kind];
     const chk = done ? false : (a.key in prevSel ? prevSel[a.key] : a.suggested);
-    return `<label style="display:flex;align-items:center;gap:6px;font-size:.8rem;${done?'opacity:.55':''}"><input type="checkbox" value="${a.key}" ${chk?'checked':''} ${done?'disabled':''}> ${a.label}${done?' ✓ già pubblicato':''}</label>`
-      + (done ? `<button type="button" class="share-action-btn" style="flex:0 0 auto;font-size:.68rem;padding:2px 8px" data-unlock="${a.key}" title="Da usare solo dopo aver eliminato il post da Instagram">Ripubblica…</button>` : '');
+    const ini = a.key==='toscana' ? 'TC' : 'ICS';
+    const logo = a.logo ? `<img src="${esc(a.logo)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'${ini}'}))">` : `<b>${ini}</b>`;
+    return `<span class="ig-acc-wrap"><label class="ig-acc ${chk?'on':''} ${done?'done':''}" title="${esc(a.label)}${a.username?' · @'+esc(a.username):''}${done?' — già pubblicato':''}"><input type="checkbox" value="${a.key}" data-label="${esc(a.label)}" ${chk?'checked':''} ${done?'disabled':''}>${logo}${done?'<i>✓</i>':''}</label>${done?`<button type="button" class="share-action-btn" style="font-size:.64rem;padding:1px 7px" data-unlock="${a.key}" title="Da usare solo dopo aver eliminato il post da Instagram">Ripubblica…</button>`:''}</span>`;
   }).join('');
-  box.querySelectorAll('input').forEach(i=>i.addEventListener('change',_refreshIgBtn));
+  box.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{ i.parentElement.classList.toggle('on',i.checked); _refreshIgBtn(); }));
   box.querySelectorAll('[data-unlock]').forEach(u=>{ u.onclick=async()=>{
     if(!confirm('Sblocca questa gara per pubblicarla di nuovo su questo profilo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
     try{ await apiCall('/admin/social/instagram/unlock',{method:'POST',body:{gara_id:gid,kind,acc:u.dataset.unlock}}); delete _igPostedCache[gid]; showToast('Sbloccato: ora puoi ripubblicare'); await _updateIgShareBtn(); }catch(e){ showToast(e.message||'Errore','error'); }
@@ -31861,7 +31862,7 @@ async function _updateIgShareBtn(){
 function _refreshIgBtn(){
   const btn=document.getElementById('share-ig-btn'); if(!btn) return;
   const kind = _sharePlatKey==='story' ? 'story' : 'feed';
-  const sel=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.parentElement.textContent.trim().replace(/ ✓.*$/,''));
+  const sel=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.dataset.label);
   const all=document.querySelectorAll('#share-ig-accs input').length;
   btn.disabled = !sel.length;
   btn.textContent = !sel.length ? (all ? '✓ Già pubblicato' : '📸 Pubblica su Instagram')

@@ -11904,7 +11904,11 @@ app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => 
       const raw = (await readDataJsonFromGH('results_raw.json')) || [];
       tosc = /toscana/i.test(String(cal && cal.regione || '')) || raw.some(r => r.gara_id === id && /toscana/i.test(String(r.regione || '')));
     } catch {}
-    const accounts = _igAccounts().map(a => ({ key: a.key, label: a.label, feed: has(a.key, 'feed'), story: has(a.key, 'story'), suggested: a.key === 'ics' || (a.key === 'toscana' && tosc) }));
+    const accounts = [];
+    for (const a of _igAccounts()) {
+      const st = await instagramStatus(false, a.key).catch(() => null);
+      accounts.push({ key: a.key, label: a.label, logo: (st && st.ig && st.ig.profile_picture_url) || null, username: (st && st.ig && st.ig.username) || null, feed: has(a.key, 'feed'), story: has(a.key, 'story'), suggested: a.key === 'ics', toscana_race: a.key === 'toscana' && tosc });
+    }
     res.json({ accounts, feed: has('ics', 'feed'), story: has('ics', 'story') });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
