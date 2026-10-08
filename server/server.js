@@ -11850,7 +11850,7 @@ app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, 
     for (const [k, v] of _igTmp) if (v.exp < Date.now()) _igTmp.delete(k);
     token = require('crypto').randomBytes(16).toString('hex');
     _igTmp.set(token, { buf, exp: Date.now() + 10 * 60 * 1000 });
-    const out = await postToInstagram(kind, `${API_BASE_URL}/api/ig-tmp/${token}.jpg`, caption);
+    const out = await postToInstagram(kind, `${process.env.RENDER_EXTERNAL_URL || 'https://italiacrit.onrender.com'}/api/ig-tmp/${token}.jpg`, caption);
     log.push({ gara_id: id, kind, media_id: out.id || null, posted_at: new Date().toISOString() });
     await writeIgLog(log);
     _igStatusCache = { ts: 0, v: null };
