@@ -21728,7 +21728,7 @@ async function renderTeam(team_id, opts = {}) {
   _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
   _injectTeamClubHistory(team_id);
-  if (window.Titoli) window.Titoli.mountTeam(team_id, 'team-titles');
+  if (window.Titoli) window.Titoli.mountTeam(team_id, 'team-titles', teamViewCat);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 

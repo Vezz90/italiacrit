@@ -166,13 +166,17 @@
     host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE</span><i></i></div><div class="ttl-rows">${yearRowsHtml(list, false)}</div></section>`;
   }
 
-  async function mountTeam(teamId, hostId) {
+  // categoria dell'archivio (indice) -> codici categoria del sito
+  const CAT_CODES = [['ES1_M'], ['ES2_M'], ['AL_M'], ['JUN_M'], ['ELI_M'], ['ES1_F', 'ES2_F', 'AL_F'], ['AL_F'], ['JUN_F', 'ELI_F']];
+  const inCat = (t, code) => !code || (t.cat != null ? (CAT_CODES[t.cat] || []).includes(code) : (t.catCode === code || !t.catCode));
+
+  async function mountTeam(teamId, hostId, catCode) {
     const host = document.getElementById(hostId); if (!host) return;
-    const list = await teamTitles(teamId);
+    const list = (await teamTitles(teamId)).filter(t => inCat(t, catCode));
     const bh = document.getElementById('team-champ-badges'); if (bh) bh.innerHTML = seasonBadges(list);
     if (!document.getElementById(hostId)) return;
     if (!list.length) { host.innerHTML = ''; return; }
-    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE DEI CORRIDORI</span><i></i></div><div class="ttl-rows">${yearRowsHtml(list, true)}</div></section>`;
+    host.innerHTML = `<section class="ath-block ttl-sec"><div class="ath-block-h"><span>TITOLI E MEDAGLIE DEI CORRIDORI${catCode && typeof catLabel === 'function' ? ' · ' + esc(catLabel(catCode)).toUpperCase() : ''}</span><i></i></div><div class="ttl-rows">${yearRowsHtml(list, true)}</div></section>`;
   }
 
   // compatibilita': i badge accanto al nome non ci sono piu', restano per non rompere i richiami
