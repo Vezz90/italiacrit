@@ -3445,7 +3445,7 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'nome_gara',     label: 'Nome gara',     type: 'text' },
     { key: 'tipo',          label: 'Tipo gara',      type: 'select',
       options: ['regionale','nazionale','internazionale','campionato_regionale','campionato_italiano'] },
-    { key: 'moltiplicatore', label: 'Moltiplicatore (x4 = Europei/Mondiali)', type: 'select', options: ['1','2','3','4'] },
+    { key: 'moltiplicatore', label: 'Moltiplicatore (x4 = Mondiali, x3 = Europei/Campionato Italiano)', type: 'select', options: ['1','2','3','4'] },
     { key: 'pcs_race_slug', label: 'Slug PCS — percorso dopo procyclingstats.com/ (es. national-race/coppa-campioni/2026)', type: 'text' },
   ],
   atleta: [
@@ -12415,6 +12415,9 @@ async function renderAdmin() {
           <span class="admin-nav-icon">📣</span> <span class="admin-nav-lbl">Coda Social</span>
           <span class="admin-nav-badge" id="badge-social"></span>
         </div>
+        <div class="admin-nav-item" data-section="manual-gara" onclick="adminNav('manual-gara')">
+          <span class="admin-nav-icon">🏁</span> <span class="admin-nav-lbl">Nuova gara manuale</span>
+        </div>
         <div class="admin-nav-item" data-section="instagram" onclick="adminNav('instagram')">
           <span class="admin-nav-icon">📸</span> <span class="admin-nav-lbl">Instagram</span>
         </div>
@@ -12480,7 +12483,7 @@ async function renderAdmin() {
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
     'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','albo-review',
-    'social-queue','instagram','scraper'];
+    'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab');
   if (tabParam && ADMIN_SECTIONS.includes(tabParam)) _adminSection = tabParam;
@@ -13817,6 +13820,51 @@ window.adminNav = async function(section) {
           </div>`;
       };
       window._adminRenderGare(gareList.slice(0,100));
+      break;
+    }
+
+    // ── NUOVA GARA MANUALE (Europei, Mondiali, gare fuori calendario) ─────
+    case 'manual-gara': {
+      const cats = [['ELI','Elite / Under 23'],['JUN','Juniores'],['AL','Allievi'],['ES2','Esordienti 2° anno'],['ES1','Esordienti 1° anno']];
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🏁 Nuova gara manuale</h1>
+          <p class="admin-page-sub">Per risultati di gare che non sono in calendario (Mondiali, Europei, ecc.): crei la gara, scegli il moltiplicatore e inserisci i corridori. I punti si assegnano con la tabella standard × moltiplicatore.</p>
+        </div>
+        <div class="ig-grid"><section class="ig-card ig-wide"><h3>Dati della gara</h3>
+          <div class="ig-adj" style="gap:8px">
+            <button class="admin-edit-btn" onclick="window._mgPreset('Campionato del Mondo su strada',4)">🌍 Mondiali · strada ×4</button>
+            <button class="admin-edit-btn" onclick="window._mgPreset('Campionato del Mondo a cronometro',4)">🌍 Mondiali · crono ×4</button>
+            <button class="admin-edit-btn" onclick="window._mgPreset('Campionato Europeo su strada',3)">🇪🇺 Europei · strada ×3</button>
+            <button class="admin-edit-btn" onclick="window._mgPreset('Campionato Europeo a cronometro',3)">🇪🇺 Europei · crono ×3</button>
+          </div>
+          <label class="ig-f"><span>Nome gara (per le medaglie sul profilo usa «Campionato del Mondo…» o «Campionato Europeo…»)</span><input id="mg-nome" type="text" placeholder="Campionato Europeo su strada"></label>
+          <div class="ig-adj" style="align-items:flex-end">
+            <label class="ig-f"><span>Data</span><input id="mg-data" type="date" value="${new Date().toISOString().slice(0,10)}"></label>
+            <label class="ig-f"><span>Categoria</span><select id="mg-cat">${cats.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>
+            <label class="ig-f"><span>Genere</span><select id="mg-gen"><option value="M">Maschile</option><option value="F">Femminile</option></select></label>
+            <label class="ig-f"><span>Moltiplicatore</span><select id="mg-mult"><option value="4">×4 Mondiale</option><option value="3" selected>×3 Europeo / Campionato Italiano</option><option value="2">×2 Nazionale</option><option value="1">×1 Standard</option></select></label>
+            <label class="ig-f"><span>Luogo / regione (facoltativo)</span><input id="mg-reg" type="text"></label>
+          </div>
+          <p class="ig-note">Inserisci solo gli <b>italiani</b> (gli stranieri non servono) con la <b>posizione vera</b> in classifica: i punti dipendono dalla posizione, quindi un italiano arrivato 2° dietro a uno straniero va inserito come 2°.</p>
+          <div id="mg-err" class="ig-warn" style="display:none"></div>
+          <div><button class="admin-edit-btn gr-fb" onclick="window._mgGo()">Crea e inserisci i risultati →</button></div>
+        </section></div>`;
+      window._mgPreset = (nome, mult) => { document.getElementById('mg-nome').value = nome; document.getElementById('mg-mult').value = String(mult); };
+      window._mgGo = () => {
+        const nome = document.getElementById('mg-nome').value.trim();
+        const data = document.getElementById('mg-data').value;
+        const cat = document.getElementById('mg-cat').value, gen = document.getElementById('mg-gen').value;
+        const mult = parseInt(document.getElementById('mg-mult').value, 10) || 1;
+        const reg = document.getElementById('mg-reg').value.trim();
+        const err = document.getElementById('mg-err');
+        if (!nome || !data) { err.textContent = 'Inserisci nome e data della gara'; err.style.display = 'block'; return; }
+        const slug = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+        const gid = `${slug}_${data}_${cat}_${gen}`;
+        window._mrNewGara = window._mrNewGara || {};
+        window._mrNewGara[gid] = { id: gid, nome, nome_gara: nome, data, regione: reg, tipo: mult >= 3 ? 'internazionale' : (mult === 2 ? 'nazionale' : 'regionale'), moltiplicatore: mult, categoria: '', campionato_italiano: false, campionato_regionale: false };
+        window.openManualResultBulkForm(gid, null, `${cat}_${gen}`);
+      };
       break;
     }
 
@@ -22195,7 +22243,7 @@ function _catLabelToCode(label, genere) {
 }
 
 function _mrDeriveMeta(garaId, sampleRow) {
-  const calEntry = (globalData?.calendar || []).find(g => g.id === garaId);
+  const calEntry = (globalData?.calendar || []).find(g => g.id === garaId) || (window._mrNewGara && window._mrNewGara[garaId]) || null;
   // Suffissi reali del gara_id (verificati sui dati): ELI, JUN, AL, ES1, ES2.
   const m = garaId.match(/_(ELI|JUN|AL|ES1|ES2)_(M|F)$/);
   // Se non c'è ancora nessun risultato campione (gara mai scrapata/inserita
@@ -23084,6 +23132,7 @@ window.submitManualResultBulk = async () => {
   // Vedi commento equivalente in submitManualResult: se la categoria scelta
   // ha prodotto un gara_id diverso da quello della pagina corrente (caso
   // "Open"), vai alla pagina specifica invece di ri-renderizzare la bare.
+  if (window._mrNewGara && window._mrNewGara[garaId]) { delete window._mrNewGara[garaId]; if (ok > 0) { location.hash = '#/gara/' + encodeURIComponent(garaId); return; } }
   if (window._currentGaraId && garaId !== window._currentGaraId) location.hash = '#/gara/' + encodeURIComponent(garaId);
   else if (window._currentGaraId) _rerenderCurrentGaraPage();
 };
