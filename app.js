@@ -13855,7 +13855,43 @@ window.adminNav = async function(section) {
           <p class="ig-note">Inserisci solo gli <b>italiani</b> (gli stranieri non servono) con la <b>posizione vera</b> in classifica: i punti dipendono dalla posizione, quindi un italiano arrivato 2° dietro a uno straniero va inserito come 2°.</p>
           <div id="mg-err" class="ig-warn" style="display:none"></div>
           <div><button class="admin-edit-btn gr-fb" onclick="window._mgGo()">Crea e inserisci i risultati →</button></div>
+        </section>
+        <section class="ig-card ig-wide"><h3>Importa un campionato completo da PCS</h3>
+          <p>Con un clic importa <b>tutte le categorie</b> del campionato (Under 23, Juniores, Donne Elite/Under 23/Juniores, anche a cronometro). Restano esclusi Uomini Elite, Uomini Elite a cronometro e le staffette miste. Vengono inseriti solo gli italiani già presenti in ICS, con la posizione vera e il moltiplicatore scelto.</p>
+          <div class="ig-adj" style="align-items:flex-end">
+            <label class="ig-f" style="flex:1;min-width:260px"><span>Pagina PCS del campionato</span><input id="ch-url" type="text" value="https://www.procyclingstats.com/race/world-championships-u23-2026-result"></label>
+            <label class="ig-f"><span>Evento / moltiplicatore</span><select id="ch-ev" onchange="document.getElementById('ch-url').value=this.value==='wc'?'https://www.procyclingstats.com/race/world-championships-u23-2026-result':'https://www.procyclingstats.com/race/uec-road-european-championships-me-2026-result';document.getElementById('ch-mult').value=this.value==='wc'?'4':'3'"><option value="wc">Mondiali</option><option value="eu">Europei</option></select></label>
+            <label class="ig-f"><span>Moltiplicatore</span><select id="ch-mult"><option value="4" selected>×4</option><option value="3">×3</option><option value="2">×2</option><option value="1">×1</option></select></label>
+            <button class="admin-edit-btn" onclick="window._chRun(true)">Anteprima</button>
+            <button class="admin-edit-btn gr-fb" onclick="window._chRun(false)">Importa tutto</button>
+          </div>
+          <div id="ch-out"></div>
         </section></div>`;
+      window._chRun = async (dry) => {
+        const out = document.getElementById('ch-out');
+        const url = document.getElementById('ch-url').value.trim();
+        const event = document.getElementById('ch-ev').value, mult = document.getElementById('ch-mult').value;
+        if (!dry && !confirm(`Importare TUTTE le categorie con moltiplicatore ×${mult}? I risultati diventano veri e assegnano punti.`)) return;
+        out.innerHTML = '<div class="admin-loading">Leggo le categorie da PCS…</div>';
+        try {
+          const { classes, skipped, year } = await apiCall('/admin/championships/classes', { method: 'POST', body: { url } });
+          if (!classes.length) { out.innerHTML = '<p class="ig-warn">Nessuna categoria trovata nella pagina.</p>'; return; }
+          let html = `<p class="ig-note">${classes.length} categorie ${year}${skipped.length ? ` · escluse: ${esc(skipped.join(', '))}` : ''}</p><div class="ig-races">`;
+          let totSalvati = 0, totIt = 0;
+          for (const c of classes) {
+            out.innerHTML = html + `</div><div class="admin-loading">${dry ? 'Controllo' : 'Importo'} ${esc(c.label)}…</div>`;
+            let r;
+            try { r = await apiCall('/admin/championships/class', { method: 'POST', body: { slug: c.slug, label: c.label, event, mult, dry } }); }
+            catch (e) { html += `<div class="ig-race"><span class="ig-race-d">${esc(c.label)}</span><span class="ig-race-n"><b>Errore</b><small>${esc(e.message || '')}</small></span><span></span></div>`; continue; }
+            totIt += r.italiani.length; totSalvati += r.salvati || 0;
+            const list = r.italiani.map(x => `${x.posizione}° ${esc(x.cognome)} ${esc(x.nome)} (${x.punti} pt)`).join(' · ') || 'nessun italiano';
+            const nf = r.non_trovati.length ? ` · <i>non in ICS:</i> ${r.non_trovati.map(x => `${x.posizione}° ${esc(x.nome)}`).join(', ')}` : '';
+            html += `<div class="ig-race" style="grid-template-columns:70px minmax(0,1fr) auto"><span class="ig-race-d">${esc(c.label)}</span><span class="ig-race-n"><b>${esc(r.nome_gara)} · ${esc(r.data)}</b><small style="white-space:normal">${list}${nf}</small></span><span class="ig-race-s"><i class="${dry ? '' : 'on'}">${dry ? 'anteprima' : (r.salvati || 0) + ' salvati'}</i></span></div>`;
+          }
+          out.innerHTML = html + `</div><p class="ig-note"><b>${totIt}</b> risultati italiani ${dry ? 'da importare' : 'trovati'}${dry ? '' : `, <b>${totSalvati}</b> salvati`}.${dry ? ' Se è tutto giusto premi «Importa tutto».' : ' Controlla le pagine gara e le classifiche.'}</p>`;
+          if (!dry) { globalData = await loadAll(); }
+        } catch (e) { out.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
+      };
       window._mgPreset = (nome, mult) => { document.getElementById('mg-nome').value = nome; document.getElementById('mg-mult').value = String(mult); };
       window._mgPcs = async () => {
         const gid = window._mgBuild(); if (!gid) return;

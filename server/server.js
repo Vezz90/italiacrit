@@ -6926,6 +6926,109 @@ app.post('/api/admin/pcs-fetch-results', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Import completo Campionati Mondiali / Europei da PCS ──────────────────────────────────────────────
+// Una pagina PCS di campionato ha un menu con tutte le categorie dell'anno (MU, MJ, WE, WJ, WU, anche a
+// cronometro). Si importano gli ITALIANI gia' presenti in ICS come risultati veri (punti = tabella x moltiplicatore).
+// Escluse: ME (uomini elite), ME (TT) e le staffette miste (nome con "+").
+const _CH_EXCLUDE = new Set(['ME', 'ME (TT)']);
+const _CH_CLASS = {
+  MU: { cat: 'ELI', gen: 'M', nome: 'Under 23' }, MJ: { cat: 'JUN', gen: 'M', nome: 'Juniores' },
+  WE: { cat: 'ELI', gen: 'F', nome: 'Donne Elite' }, WU: { cat: 'ELI', gen: 'F', nome: 'Donne Under 23' }, WJ: { cat: 'JUN', gen: 'F', nome: 'Donne Juniores' },
+};
+async function _pcsGetHtml(slugOrUrl) {
+  const PCS = 'https://www.procyclingstats.com';
+  const slug = String(slugOrUrl || '').trim().replace(/^https?:\/\/(www\.)?procyclingstats\.com\//i, '').replace(/[?#].*$/, '').replace(/\/$/, '');
+  if (!slug) throw new Error('slug PCS mancante');
+  const url = `${PCS}/${slug}`;
+  const hdr = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'it-IT,it;q=0.9,en;q=0.8' };
+  const ok = x => x.includes('<table') && x.toLowerCase().includes('rider');
+  try { const r = await fetch(url, { headers: hdr, redirect: 'follow', signal: AbortSignal.timeout(25000) }); if (r.ok) { const tx = await r.text(); if (ok(tx) || tx.includes('<select')) return tx; } } catch (_) {}
+  let browser;
+  try {
+    const { chromium } = require('playwright');
+    browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] });
+    const ctx = await browser.newContext({ userAgent: hdr['User-Agent'], locale: 'it-IT', viewport: { width: 1280, height: 800 } });
+    await ctx.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }); });
+    const page = await ctx.newPage();
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(1500);
+    const tx = await page.content();
+    if (tx.includes('<select')) return tx;
+  } catch (_) {}
+  finally { if (browser) await browser.close().catch(() => {}); }
+  throw new Error('PCS non raggiungibile (anti-bot) per ' + slug);
+}
+app.post('/api/admin/championships/classes', requireAdmin, async (req, res) => {
+  try {
+    const html = await _pcsGetHtml(req.body && req.body.url);
+    const cheerio = require('cheerio');
+    const $ = cheerio.load(html);
+    const slugStart = String((req.body && req.body.url) || '');
+    const year = (slugStart.match(/(20\d\d)/) || [])[1] || String(new Date().getFullYear());
+    const found = new Map();
+    $('option').each((_, o) => {
+      const label = $(o).text().replace(/\s+/g, ' ').trim();
+      const val = ($(o).attr('value') || '').trim();
+      if (!/^race\//.test(val) || !/^(M|W)[EUJ]( \(TT\))?$/.test(label)) return;
+      const years = val.match(/20\d\d/g) || [];
+      if (years.length && years.some(y => y !== year)) return;          // anno diverso: scartata
+      if (!found.has(label) || (years.length && !found.get(label).years.length)) found.set(label, { label, slug: val, years });
+    });
+    const classes = [...found.values()].map(c => ({ label: c.label, slug: c.slug, tt: /\(TT\)/.test(c.label), base: c.label.replace(/ \(TT\)/, '') }))
+      .filter(c => !_CH_EXCLUDE.has(c.label) && _CH_CLASS[c.base]);
+    const skipped = [...new Set([...$('option').map((_, o) => $(o).text().replace(/\s+/g, ' ').trim()).get().filter(l => /^(M|W)[EUJ]( \(TT\))?$|\+/.test(l) && !classes.some(c => c.label === l))])];
+    res.json({ year, classes, skipped });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/championships/class', requireAdmin, async (req, res) => {
+  try {
+    const b = req.body || {};
+    const label = String(b.label || ''), base = label.replace(/ \(TT\)/, ''), tt = /\(TT\)/.test(label);
+    const cl = _CH_CLASS[base];
+    if (!cl || _CH_EXCLUDE.has(label)) return res.status(400).json({ error: 'Categoria non importabile: ' + label });
+    const mult = Math.max(1, Math.min(4, parseInt(b.mult, 10) || 3));
+    const event = b.event === 'wc' ? 'Campionato del Mondo' : 'Campionato Europeo';
+    const html = await _pcsGetHtml(b.slug);
+    const cheerio = require('cheerio');
+    const $ = cheerio.load(html);
+    const dm = html.match(/\b(\d{1,2}) (January|February|March|April|May|June|July|August|September|October|November|December) (20\d\d)\b/);
+    if (!dm) return res.status(422).json({ error: 'Data della gara non trovata su PCS' });
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const data = `${dm[3]}-${String(MONTHS.indexOf(dm[2]) + 1).padStart(2, '0')}-${String(dm[1]).padStart(2, '0')}`;
+    const nomeGara = `${event} ${tt ? 'a cronometro' : 'su strada'} - ${cl.nome}`;
+    const slugName = nomeGara.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    const garaId = `${slugName}_${data}_${cl.cat}_${cl.gen}`;
+    const rows = _parsePcsResultsHtml(html, 'tmp', parseInt(dm[3], 10), b.slug);
+    const nat = {};
+    $('table tbody tr').each((_, tr) => {
+      const a = $(tr).find('a[href^="rider/"]').first(), fl = $(tr).find('.flag').first();
+      if (!a.length || !fl.length) return;
+      const k = (fl.attr('class') || '').split(/\s+/).find(x => x !== 'flag' && /^[a-z]{2}$/.test(x));
+      if (k) nat[a.text().replace(/\s+/g, ' ').trim()] = k.toUpperCase();
+    });
+    let athletes = {};
+    try { athletes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8')); } catch (_) {}
+    const plan = [], notFound = [];
+    for (const r of rows) {
+      if (nat[r.rider_name] !== 'IT') continue;
+      const a = r.atleta_id && athletes[r.atleta_id];
+      const pts = (_MANUAL_BASE_PTS[r.posizione] || 0) * mult;
+      if (!a) { notFound.push({ posizione: r.posizione, nome: r.rider_name }); continue; }
+      plan.push({ posizione: r.posizione, atleta_id: r.atleta_id, cognome: a.cognome, nome: a.nome, team: a.team_attuale || '', punti: pts });
+    }
+    const out = { garaId, nome_gara: nomeGara, data, categoria: `${cl.cat}_${cl.gen}`, mult, totale_pcs: rows.length, italiani: plan, non_trovati: notFound };
+    if (b.dry) return res.json({ ok: true, dry: true, ...out });
+    let saved = 0;
+    for (const p of plan) {
+      const fake = { params: { garaId }, user: req.user, body: { posizione: p.posizione, cognome: p.cognome, nome: p.nome, team: p.team, tempo: '', atleta_id: p.atleta_id, nome_gara: nomeGara, data, categoria: `${cl.cat}_${cl.gen}`, genere: cl.gen, tipo: 'internazionale', moltiplicatore: mult, regione: '' } };
+      const cap = { code: 200, body: null, status(c) { this.code = c; return this; }, json(o) { this.body = o; return this; } };
+      await _submitManualResult(fake, cap);
+      if (cap.code === 200 && cap.body && cap.body.ok) saved++;
+    }
+    res.json({ ok: true, ...out, salvati: saved });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Import risultati PCS da HTML incollato manualmente (bypassa anti-bot)
 app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, res) => {
   try {
