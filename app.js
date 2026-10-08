@@ -19252,7 +19252,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // l'header di conseguenza invece di lasciarlo con l'informazione vecchia.
   const nowTeamEntry = teamsByYear.get(nowYear);
   if (nowTeamEntry && nowTeamEntry.team && nowTeamEntry.team !== currentTeam) {
-    const nowTid = currentTeamId && !nowTeamEntry.pcs ? currentTeamId : _resolveHistoricalTeamId(nowTeamEntry.team);
+    const nowTid = currentTeamId && !nowTeamEntry.pcs ? currentTeamId : _resolveHistoricalTeamId(nowTeamEntry.team, currentTeamId);
     const pillWrap = document.getElementById('atleta-team-pill-wrap');
     if (pillWrap) {
       pillWrap.innerHTML = nowTid
@@ -19285,7 +19285,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
-    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
+    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team, currentTeamId)) : (pcs ? null : _resolveHistoricalTeamId(team, currentTeamId));
     const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
     const catShort = (categoria || '').replace(/_/g, ' ');
     return `<div class="pcs-team-row"><span class="pcs-team-year">${esc(y)}</span><span class="pcs-team-name">${teamHtml}</span>${catShort ? ` <span class="pcs-team-cat">(${esc(catShort)})</span>` : ''}</div>`;
@@ -19375,7 +19375,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // ── Squadre: una riga per anno
   const teamsTl = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
-    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
+    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team, currentTeamId)) : (pcs ? null : _resolveHistoricalTeamId(team, currentTeamId));
     const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
     const catShort = _catPathW[String(y)] || (categoria || '').replace(/_/g, ' ');
     return `<div class="ath-tl-row"><span class="ath-tl-y">${esc(y)}</span><span class="ath-tl-main">${teamHtml}</span><span class="ath-tl-m">${esc(catShort)}</span></div>`;
@@ -19863,38 +19863,38 @@ async function renderGaraStorica(ciclismoGaraId) {
   _initGaraMediaModals();
 }
 
-function _resolveHistoricalTeamId(teamName) {
+// Parole che compaiono in moltissimi nomi di squadra: da sole non identificano un club
+// (es. "UAE Team L'IMAD" non e' "Blu Team" solo perche' entrambi contengono "team").
+const _TEAM_STOP = new Set(['TEAM', 'CLUB', 'SQUADRA', 'CICLISMO', 'CYCLING', 'CICLISTICA', 'CICLISTA', 'ASD', 'SSD', 'SRL', 'GRUPPO', 'SPORTIVO', 'SPORTIVA', 'POLISPORTIVA', 'UNIONE', 'ASSOCIAZIONE', 'DILETTANTISTICA', 'BIKE', 'RACING', 'PROFESSIONAL', 'DEVELOPMENT', 'JUNIOR', 'JUNIORES', 'ALLIEVI', 'UNDER', 'ELITE', 'SCUOLA', 'PEDALE', 'VELO', 'LA', 'IL', 'DEL', 'DELLA', 'DEI', 'DEGLI', 'SAN', 'SANTA', 'POL', 'ACD', 'USD', 'UCS', 'GSD', 'ADS', 'ONLUS', 'SPORT', 'SPORTING', 'COMITATO', 'GRUP', 'GROUP', 'CASA', 'FRATELLI']);
+function _teamSigWords(s) {
+  return new Set(String(s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^A-Z0-9]+/).filter(w => w.length >= 3 && !/^\d+$/.test(w) && !_TEAM_STOP.has(w)));
+}
+// preferId = squadra attuale dell'atleta: se il nome storico condivide con lei una parola davvero distintiva
+// (es. UAE) e' la stessa squadra con un altro nome (cambio sponsor), non un team a caso.
+function _resolveHistoricalTeamId(teamName, preferId) {
   if (!teamName || !globalData?.teams) return null;
-  // Un team_id esiste nei dati anche solo come voce vuota (creata al volo
-  // da extra_roster/PCS senza mai un roster reale, o un club dilettanti
-  // ormai fermo/senza tesserati quest'anno) — collegarcisi apre una pagina
-  // vera ma con 0 atleti e 0 risultati: "apre ma non dà nulla" (segnalato
-  // dal vivo, verificato su più casi). Non abbiamo NESSUN archivio storico
-  // per team stagione-per-stagione (solo per gli atleti) — un link non può
-  // mai mostrare l'anno storico giusto, quindi ha senso solo se il team ha
-  // ALMENO un atleta tesserato quest'anno (buona probabilità di contenuto
-  // reale da vedere), altrimenti resta testo semplice.
+  // Un team_id esiste nei dati anche solo come voce vuota: collegarcisi apre una pagina vera ma con 0 atleti
+  // e 0 risultati. Si collega solo se il team ha ALMENO un atleta tesserato quest'anno.
   const hasRoster = tid => (globalData.teams[tid]?.atleti?.length || 0) > 0;
-  const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   const normId = norm(teamName);
-  if (globalData.teams[normId] && hasRoster(normId)) return normId; // stesso slug — match esatto, sempre affidabile
-  // Fallback fuzzy: richiede che la MAGGIORANZA delle parole significative
-  // coincidano (indice di Jaccard sul più piccolo dei due insiemi), non
-  // basta più condividerne UNA sola come prima — un nome storico che
-  // condivideva anche solo una parola comune (es. il nome della città) con
-  // un team ATTUALE completamente diverso apriva quella pagina sbagliata:
-  // "apre ma non dà nulla" perché quel team non c'entra nulla con l'atleta
-  // né con l'anno storico in questione (segnalato dal vivo).
-  const words = s => new Set(String(s || '').toUpperCase().split(/[^A-Z0-9]+/).filter(w => w.length >= 4));
-  const wTarget = words(teamName);
+  if (globalData.teams[normId] && hasRoster(normId)) return normId; // stesso slug: match esatto, sempre affidabile
+  const wTarget = _teamSigWords(teamName);
   if (!wTarget.size) return null;
+  if (preferId && globalData.teams[preferId] && hasRoster(preferId)) {
+    const wp = _teamSigWords(globalData.teams[preferId].nome || preferId);
+    for (const w of wTarget) if (wp.has(w)) return preferId;
+  }
+  // Fallback fuzzy: serve la MAGGIORANZA delle parole distintive in comune e almeno una parola
+  // non generica; basta una parola sola solo se entrambi i nomi ne hanno una sola.
   let best = null, bestScore = 0;
   for (const [tid, t] of Object.entries(globalData.teams)) {
     if (!hasRoster(tid)) continue;
-    const wCand = words(t.nome || tid);
+    const wCand = _teamSigWords(t.nome || tid);
     if (!wCand.size) continue;
     let common = 0;
     for (const w of wTarget) if (wCand.has(w)) common++;
+    if (!common) continue;
     const ratio = common / Math.min(wTarget.size, wCand.size);
     if (ratio > bestScore) { bestScore = ratio; best = tid; }
   }
@@ -19967,7 +19967,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // Il nome squadra su ciclismo.info varia da un anno all'altro (sponsor
   // aggiunti/rimossi) — risolve il team_id ATTUALE italiacrit per quell'anno
   // storico così il pill torna un link cliccabile invece di testo morto.
-  const resolvedTeamId = _resolveHistoricalTeamId(team);
+  const resolvedTeamId = _resolveHistoricalTeamId(team, globalData.athletes[atletaId]?.team_id);
 
   // Header: entrambi i punti dove compare il team (pill accanto al nome +
   // badge con logo) vanno aggiornati OGNI volta — usano contenitori con id
