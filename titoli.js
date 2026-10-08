@@ -98,7 +98,7 @@
   const JERSEY = (bands, size) => `<svg width="${size || 22}" height="${size || 22}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="0.7" stroke-linejoin="round"/>${bands.map((c, i) => `<rect x="6.1" y="${10.2 + i * (7.4 / bands.length)}" width="11.8" height="${7.4 / bands.length - .5}" fill="${c}"/>`).join('')}</svg>`;
   const J_IT = ['#008C45', '#CD212A'], J_REG = ['#2F7FD8', '#2F7FD8'], J_EU = ['#1B4DB1', '#F5C400'], J_WC = ['#0072CE', '#E4002B', '#111', '#F5C400', '#00A859'];
   // ordine dentro lo stesso anno: medaglie (oro prima, Mondiali prima degli Europei), poi italiano, poi regionale
-  const GROUPS = [
+  const BASE = [
     { label: 'ORO · MONDIALI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'wc' && t.pos === 1 },
     { label: 'ORO · EUROPEI', cls: 'g1', icon: '🥇', test: t => t.medal && t.kind === 'eu' && t.pos === 1 },
     { label: 'ARGENTO · MONDIALI', cls: 'g2', icon: '🥈', test: t => t.medal && t.kind === 'wc' && t.pos === 2 },
@@ -108,11 +108,15 @@
     { label: 'CAMPIONE ITALIANO', cls: 'it', icon: JERSEY(J_IT, 15), test: t => !t.medal && t.kind === 'it' },
     { label: 'CAMPIONE REGIONALE', cls: 'reg', icon: JERSEY(J_REG, 15), test: t => !t.medal && t.kind === 'reg' },
   ];
+  // strada, cronometro e cronoscalata sono titoli diversi: etichette separate
+  const PROVE = [['STRADA', ''], ['CRONOMETRO', ' · CRONOMETRO'], ['CRONOSCALATA', ' · CRONOSCALATA']];
+  const provaKey = t => (t.prova === 'CRONOMETRO' || t.prova === 'CRONOSCALATA') ? t.prova : 'STRADA';
+  const GROUPS = BASE.flatMap(g => PROVE.map(([pv, suf]) => ({ ...g, label: g.label + suf, test: t => g.test(t) && provaKey(t) === pv })));
   const raceHref = t => (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : ''));
   function provaOf(t) { return t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : '')); }
   function tipText(t, withName) { return [t.gara ? tc(t.gara) : '', provaOf(t), catLabelOf(t), t.reg ? tc(t.reg) : '', t.y, withName ? tc(t.n) : ''].filter(Boolean).join(' · '); }
   function chipHtml(t, g, withName) {
-    const sup = t.prova === 'CRONOMETRO' ? 'crono' : (t.prova === 'CRONOSCALATA' ? 'scal.' : '');
+    const sup = '';
     const surname = withName && t.n ? ` <small>${esc(tc(String(t.n).split(/\s+/)[0]))}</small>` : '';
     const body = `<i>${g.icon}</i>${g.label}${sup ? `<sup>${sup}</sup>` : ''}${surname}`;
     const href = withName && t.aid ? '' : raceHref(t);
