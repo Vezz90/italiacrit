@@ -861,7 +861,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 54,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "GRECHISHKIN_VADIM",
@@ -877,7 +877,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 55,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "ZANINI_SIMONE",
@@ -893,7 +893,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 56,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "ALVAREZ_MARTINEZ_HECTOR",
@@ -909,7 +909,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 57,
-    "trend": null
+    "trend": 0
   },
   {
     "atleta_id": "ARSAC_REMI",
@@ -6541,7 +6541,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 409,
-    "trend": null
+    "trend": 0
   },
   {
     "atleta_id": "RUIZ_TERAN_SEBASTIAN",
@@ -6557,6 +6557,6 @@
     "p3": 0,
     "pout": 0,
     "pos": 410,
-    "trend": null
+    "trend": 0
   }
 ]
