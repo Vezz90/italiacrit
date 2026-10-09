@@ -1,0 +1,992 @@
+[
+ {
+  "dup": "BRAFA_FEDERICO",
+  "vera": "BRAFA_FEDERICO_ROSARIO",
+  "unita": true,
+  "slug": "federico-brafa",
+  "nascitaPCS": "06/01/2007",
+  "nascitaIC": "06/01/2007",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "ZANETTI_ALESSANDRO",
+  "vera": "ZANETTI_ALESSANDRO_ROMEO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "28/07/2004",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CASTRO_SEBASTIAN",
+  "vera": "CASTRO_CASTRO_SEBASTIAN_ENRIQUE",
+  "unita": false,
+  "slug": "sebastian-castro-castro",
+  "nascitaPCS": "02/01/2007",
+  "nascitaIC": "02/01/2007",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "CUBILLAS_JAVIER",
+  "vera": "CUBILLAS_SALVADOR_JAVIER",
+  "unita": true,
+  "slug": "javier-cubillas",
+  "nascitaPCS": "28/02/2007",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PARETA_ROGER",
+  "vera": "PARETA_SALA_ROGER",
+  "unita": true,
+  "slug": "roger-pareta",
+  "nascitaPCS": "08/03/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "DANTE_ALESSANDRO",
+  "vera": "DANTE_ALESSANDRO_MARIO",
+  "unita": true,
+  "slug": "alessandro-dante",
+  "nascitaPCS": "11/02/2005",
+  "nascitaIC": "11/02/2005",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "KINGSTON_MATTHEW",
+  "vera": "KINGSTON_MATTHEW_JONATHAN",
+  "unita": true,
+  "slug": "matthew-kingston",
+  "nascitaPCS": "18/03/2002",
+  "nascitaIC": "18/03/2002",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "MARTINEZ_AITOR",
+  "vera": "MARTINEZ_GROSET_AITOR",
+  "unita": true,
+  "slug": "aitor-martinez-groset",
+  "nascitaPCS": "19/12/2008",
+  "nascitaIC": "19/12/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "GAGGIOLI_LUCIANO",
+  "vera": "GAGGIOLI_LUCIANO_WILLIAM",
+  "unita": true,
+  "slug": "luciano-gaggioli1",
+  "nascitaPCS": "05/07/2008",
+  "nascitaIC": "05/07/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "PALOMBI_RAFFAELE",
+  "vera": "PALOMBI_RAFFAELE_LUIGI",
+  "unita": true,
+  "slug": "raffaele-palombi",
+  "nascitaPCS": "05/07/2008",
+  "nascitaIC": "05/07/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "POSADA_JOSE_MANUEL",
+  "vera": "POSADA_FRANCO_JOSE_MANUEL",
+  "unita": true,
+  "slug": "jose-manuel-posada",
+  "nascitaPCS": "01/11/2008",
+  "nascitaIC": "01/11/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "COLAPRICO_FABIO",
+  "vera": "COLAPRICO_FABIO_GIUSEPPE",
+  "unita": true,
+  "slug": "fabio-colaprico",
+  "nascitaPCS": "02/12/2009",
+  "nascitaIC": "02/12/2009",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "GROSSO_MANUEL",
+  "vera": "GROSSO_LA_VALLE_MANUEL",
+  "unita": true,
+  "slug": "manuel-grosso",
+  "nascitaPCS": "03/09/2009",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CANCHON_JUAN_ESTEBAN",
+  "vera": "CANCHON_GIL_JUAN_ESTEBAN",
+  "unita": true,
+  "slug": "juan-esteban-canchon",
+  "nascitaPCS": "25/06/2009",
+  "nascitaIC": "25/06/2009",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "BUONGIORNO_SIMONE",
+  "vera": "BUONGIORNO_SIMONE_LEONARDO",
+  "unita": true,
+  "slug": "simone-buongiorno",
+  "nascitaPCS": "29/03/2006",
+  "nascitaIC": "29/03/2006",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "CRUZ_EDWARD",
+  "vera": "CRUZ_MARTINEZ_EDWARD_SANTIAGO",
+  "unita": false,
+  "slug": "edward-martinez-cruz",
+  "nascitaPCS": "05/07/2006",
+  "nascitaIC": "05/07/2006",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "HERRENO_MARTIN_SANTIAGO",
+  "vera": "HERRENO_POLANIA_MARTIN_SANTIAGO",
+  "unita": true,
+  "slug": "martin-santiago-herreno",
+  "nascitaPCS": "13/09/2006",
+  "nascitaIC": "13/09/2006",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "ZERAY_NAHOM",
+  "vera": "ARAYA_NAHOM_ZERAY",
+  "unita": true,
+  "slug": "nahom-zeray-araya",
+  "nascitaPCS": "12/09/2002",
+  "nascitaIC": "12/09/2002",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "GRUSZCZYNSKI_FILIP",
+  "vera": "GRUSZCZYNSKI_FILIP_JAKUB",
+  "unita": true,
+  "slug": "filip-gruszczynski",
+  "nascitaPCS": "13/02/2005",
+  "nascitaIC": "13/02/2005",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "GONZALEZ_ROBERTO_CARLOS",
+  "vera": "GONZALEZ_ROBERTO",
+  "unita": true,
+  "slug": "roberto-gonzalez",
+  "nascitaPCS": "21/05/1994",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "UMBA_SANTIAGO",
+  "vera": "UMBA_LOPEZ_ABNER_SANTIAGO",
+  "unita": true,
+  "slug": "santiago-umba",
+  "nascitaPCS": "20/11/2002",
+  "nascitaIC": "20/11/2002",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "ROBERTS_JOHN_SHAW",
+  "vera": "ROBERTS_JOHN",
+  "unita": true,
+  "slug": "john-roberts",
+  "nascitaPCS": "23/07/2003",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BLASI_PAULA",
+  "vera": "BLASI_CAIROL_PAULA",
+  "unita": true,
+  "slug": "paula-blasi",
+  "nascitaPCS": "19/02/2003",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SKALNIAK_SOJKA_AGNIESZKA",
+  "vera": "SKALNIAK_AGNIESZKA",
+  "unita": false,
+  "slug": "agnieszka-skalniak-sojka",
+  "nascitaPCS": "22/04/1997",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CLEMMENSEN_THEODOR_AUGUST",
+  "vera": "CLEMMENSEN_THEODOR",
+  "unita": false,
+  "slug": "theodor-august-clemmensen",
+  "nascitaPCS": "24/08/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "M_LLER_ANDERSEN_NOAH_LINDHOLM",
+  "vera": "ANDERSEN_NOAH_LINDHOLM",
+  "unita": false,
+  "slug": "noah-lindholm-moller-andersen",
+  "nascitaPCS": "27/01/2007",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "JASIM_SAIF_JASIM_AL_ALI_ABDULLA",
+  "vera": "JASIM_AL_ALI_ABDULLA",
+  "unita": true,
+  "slug": "abdulla-jasim-al-ali",
+  "nascitaPCS": "17/01/2003",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "RAMIREZ_MATEO",
+  "vera": "RAMIREZ_TORRES_MATEO_PABLO",
+  "unita": true,
+  "slug": "mateo-pablo-ramirez",
+  "nascitaPCS": "09/03/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ALVAREZ_HECTOR",
+  "vera": "ALVAREZ_MARTINEZ_HECTOR",
+  "unita": true,
+  "slug": "hector-alvarez-martinez",
+  "nascitaPCS": "12/12/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MARIVOET_DUARTE",
+  "vera": "MARIVOET_SCHOLIERS_DUARTE",
+  "unita": true,
+  "slug": "duarte-marivoet",
+  "nascitaPCS": "02/02/2005",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CARINGI_ROBERTO",
+  "vera": "CARINGI_ROBERTO_MARCO_MARIA",
+  "unita": true,
+  "slug": "roberto-caringi",
+  "nascitaPCS": "11/02/2008",
+  "nascitaIC": "11/02/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "MEDEOT_TOMAZ",
+  "vera": "LOVER_MEDEOT_TOMAZ",
+  "unita": true,
+  "slug": "tomaz-medeot",
+  "nascitaPCS": "23/04/2008",
+  "nascitaIC": "23/04/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "TRICA_THEODOR",
+  "vera": "TRICA_THEODOR_STEFAN",
+  "unita": true,
+  "slug": "theodor-trica",
+  "nascitaPCS": "01/03/2008",
+  "nascitaIC": "01/03/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "KHATIEB_FARAZ",
+  "vera": "FARAZ_KHATIEB",
+  "unita": true,
+  "slug": "faraz-khatieb",
+  "nascitaPCS": "01/11/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ANDRADE_OMAR",
+  "vera": "ANDRADE_FERNANDEZ_OMAR",
+  "unita": true,
+  "slug": "omar-andrade",
+  "nascitaPCS": "26/02/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "FERNANDEZ_JORGE",
+  "vera": "FERNANDEZ_RUIZ_JORGE_LUIS",
+  "unita": true,
+  "slug": "jorge-fernandez-ruiz",
+  "nascitaPCS": "24/02/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MORENO_DANIEL",
+  "vera": "MORENO_GARCIA_DANIEL_SANTIAGO",
+  "unita": true,
+  "slug": "daniel-moreno-garcia",
+  "nascitaPCS": "08/03/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "RODRIGUEZ_JOSE_EMILIO",
+  "vera": "RODRIGUEZ_DELGADO_JOSE_EMILIO",
+  "unita": true,
+  "slug": "jose-rodriguez-delgado",
+  "nascitaPCS": "09/05/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SANTIAGO_RICARDO",
+  "vera": "SANTIAGO_GARCIA_RICARDO",
+  "unita": true,
+  "slug": "ricardo-santiago",
+  "nascitaPCS": "09/11/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ZAMUDIO_GIANLUIGI",
+  "vera": "ZAMUDIO_PEREZ_GIANLUIGI",
+  "unita": true,
+  "slug": "gianluigi-zamudio-perez",
+  "nascitaPCS": "04/12/2009",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BRAVO_HENRIQUE",
+  "vera": "RIBEIRO_BRAVO_HENRIQUE",
+  "unita": true,
+  "slug": "henrique-ribeiro-bravo",
+  "nascitaPCS": "20/04/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "KUNTARIC_VANJA",
+  "vera": "KUNTARIC_ZIBERT_VANJA",
+  "unita": true,
+  "slug": "vanja-kuntaric",
+  "nascitaPCS": "28/12/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LOPEZ_DIEGO",
+  "vera": "LOPEZ_ORTIZ_DIEGO",
+  "unita": true,
+  "slug": "diego-lopez-ortiz",
+  "nascitaPCS": "13/01/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MORALES_JONATHAN",
+  "vera": "MORALES_ORTIZ_JONATHAN",
+  "unita": false,
+  "slug": "jonathan-morales1",
+  "nascitaPCS": "09/01/2006",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PRIETO_JOSE_JUAN",
+  "vera": "PRIETO_DE_LUNA_JOSE_JUAN",
+  "unita": true,
+  "slug": "jose-juan-prieto",
+  "nascitaPCS": "01/01/2004",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ADRIA_ROGER",
+  "vera": "ADRIA_OLIVERAS_ROGER",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "AGIRRE_JON",
+  "vera": "AGIRRE_EGANA_JON",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ALMEIDA_JOAO",
+  "vera": "ALMEIDA_GONCALVES_JOAO_PEDRO",
+  "unita": false,
+  "slug": "joao-almeida",
+  "nascitaPCS": "05/08/1998",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ALONSO_PABLO",
+  "vera": "MONTES_PABLO_ALONSO",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BALDIE_JACK",
+  "vera": "BALDIE_JACK_WILLIAM",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BALLIANA_ENRICO_ANDREA",
+  "vera": "BALLIANA_ENRICO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "24/01/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BINDA_ROSSETTI",
+  "vera": "BINDA_ROSSETTI_GABRIELE",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BIRKEDAL_JULIUS_L_VSTRUP",
+  "vera": "BIRKEDAL_JULIUS",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BORREMANS_KASPER",
+  "vera": "BORREMANS_KASPER_TOBIAS",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "BRAMINI_GORETTI",
+  "vera": "BRAMINI_GORETTI_GIORGIO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "22/04/2009",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CACCHIO_MICHELE",
+  "vera": "CACCHIO_MICHELE_PIO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "13/02/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CAMARGO_DAVID_ALEJANDRO",
+  "vera": "CAMARGO_HERNANDEZ_DAVID_ALEJANDRO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "17/10/2000",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CAMARGO_DIEGO_ANDRES",
+  "vera": "CAMARGO_PINEDA_DIEGO_ANDRES",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CAMPAGNOLA_FEDERICO",
+  "vera": "CAMPAGNOLA_FEDERICO_PIO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "21/11/2009",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "CSAKI_SZABOLCS",
+  "vera": "SZABOLCS_CSAKI",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "FEDRIZZI_BRANDON",
+  "vera": "FEDRIZZI_BRANDON_DAVIDE",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "01/08/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "FELIPE_QUOTADAMO",
+  "vera": "QUOTADAMO_FELIPE",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "FIALLA_IDA_DAM",
+  "vera": "FIALLA_IDA",
+  "unita": false,
+  "slug": "ida-dam-fialla",
+  "nascitaPCS": "13/08/2008",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "FIOCCHI_FILIPPO",
+  "vera": "FIOCCHI_FILIPPO_MARIA",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "01/09/2009",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "GHELFI_LORENZO",
+  "vera": "GHELFI_LORENZO_MASSIMO",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "19/03/2009",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "GOLLIKER_JOSHUA",
+  "vera": "GOLLIKER_DAVID_JOSHUA",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "HARASIM_MIHNEA_ALEXANDRU",
+  "vera": "HARASIM_MIHNEA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "HIGUITA_SERGIO",
+  "vera": "HIGUITA_SERGIO_ANDRES",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "HOEKS_DAAN",
+  "vera": "HOEKS_DAAN_EDUARD_JAN",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "05/04/2000",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "KELLY_ADAM",
+  "vera": "KELLY_ADAM_JON",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "25/04/2000",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "KNUDSEN_OLIVER",
+  "vera": "KNUDSEN_OLIVER_BECH",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LACERDA_JHEMERSON",
+  "vera": "LACERDA_MILHOMEM_JHEMERSON",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "28/11/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LAMPREA_ZARA_SOFIA",
+  "vera": "LAMPREA_MORALES_ZARA_SOFIA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LOPEZ_JUAN_PEDRO",
+  "vera": "LOPEZ_PEREZ_JUAN_PEDRO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LOTTI_ZENO",
+  "vera": "LOTTI_ZENO_LEONARDO",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "LUDWIG_CECILIE_UTTRUP",
+  "vera": "LUDWIG_UTTRUP_CECILIE",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MACIAS_CESAR",
+  "vera": "MACIAS_ESTRADA_CESAR",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MANION_VINNIE",
+  "vera": "MANION_VINNIE_NICHOLAS",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "21/12/2007",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MARANGON_PAOLO",
+  "vera": "MARANGON_PAOLO_GRAZIANO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "03/10/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MARTINEZ_JUAN_GUILLERMO",
+  "vera": "MARTINEZ_HUERTAS_JUAN_GUILLERMO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "21/11/2004",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MARTINI_MATTIA",
+  "vera": "MARTINI_MATTIA_MURG",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "29/12/2009",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MESSEMER_JOELLE_AMELIE",
+  "vera": "MESSEMER_JOELLE",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MIGHELI_MANUELE",
+  "vera": "MIGHELI_MANUELE_GEROLAMO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "03/01/2007",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MILHOMEM_JHEMERSON",
+  "vera": "LACERDA_MILHOMEM_JHEMERSON",
+  "unita": false,
+  "slug": "jhemerson-milhomem",
+  "nascitaPCS": "28/11/2008",
+  "nascitaIC": "28/11/2008",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "MORGADO_ANTONIO",
+  "vera": "MORGADO_TOMAS_ANTONIO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MUNIZ_JOSE_RAMON",
+  "vera": "MUNIZ_VAZQUEZ_JOSE_RAMON",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "MURGUIALDAY_JOKIN",
+  "vera": "MURGUIALDAY_ELORZA_JOKIN",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "NEIRA_ALEJANDRA",
+  "vera": "DOMINGUEZ_NEIRA_ALEJANDRA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "NOVAL_BENJAMIN",
+  "vera": "NOVAL_SUAREZ_BENJAMIN",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PATTINSON_TOMOS",
+  "vera": "PATTINSON_OWAIN_TOMOS",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "17/10/2005",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PEDERSEN_RASMUS_LUND",
+  "vera": "LUND_RASMUS",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PEREZ_CIRO",
+  "vera": "PEREZ_ALVAREZ_CIRO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "20/03/2005",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PERICAS_ADRIA",
+  "vera": "PERICAS_CAPDEVILA_ADRIA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PESCADOR_DIEGO",
+  "vera": "PESCADOR_CASTRO_DIEGO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PINEDA_NATALIA",
+  "vera": "PINEDA_SOTO_NATALIA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "PLATTNER_JAEL",
+  "vera": "PLATTNER_JAEL_LINDA",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "REISSNER_LENA",
+  "vera": "REISSNER_LENA_CHARLOTTE",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "RICHEZE_ADRIAN",
+  "vera": "RICHEZE_ADRIAN_EZEQUIEL",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "29/04/1989",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "RODRIGUEZ_CARLOS",
+  "vera": "COLOBON_RODRIGUEZ_CARLOS_EDUARDO",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "RUBIO_EINER",
+  "vera": "RUBIO_REYES_EINER_AUGUSTO",
+  "unita": false,
+  "slug": "einer-rubio",
+  "nascitaPCS": "22/02/1998",
+  "nascitaIC": "22/02/1998",
+  "verdict": "STESSA PERSONA"
+ },
+ {
+  "dup": "RUIZ_SEBASTIAN",
+  "vera": "RUIZ_TERAN_SEBASTIAN",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SERRANO_JAVIER",
+  "vera": "SERRANO_RODRIGUEZ_JAVIER",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "17/04/2001",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SKIVILD_ROBIN_JUEL",
+  "vera": "SKIVILD_ROBIN",
+  "unita": false,
+  "slug": "robin-juel-skivild",
+  "nascitaPCS": "21/08/2001",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SOTO_ALEJANDRO",
+  "vera": "SOTO_CERVANTES_ALEJANDRO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "SUAZA_BERNARDO",
+  "vera": "SUAZA_ARANGO_BERNARDO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "TORRES_PABLO",
+  "vera": "RAMIREZ_TORRES_MATEO_PABLO",
+  "unita": false,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "VIERO_GUIDO_BRUNO",
+  "vera": "VIERO_GUIDO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "10/01/2008",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "WALKER_ZACHARY",
+  "vera": "WALKER_ZACHARY_ALBERT",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ZAPATA_MAURICIO",
+  "vera": "ZAPATA_ARBOLEDA_MAURICIO",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ },
+ {
+  "dup": "ZSEMBERY_BOLDIZSAR",
+  "vera": "ZSEMBERY_BOLDIZSAR_PETER",
+  "unita": true,
+  "slug": null,
+  "nascitaPCS": "—",
+  "nascitaIC": "—",
+  "verdict": "non verificabile"
+ }
+]

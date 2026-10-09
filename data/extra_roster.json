@@ -563,14 +563,6 @@
         "pcs_slug": "markel-aranaz"
       },
       {
-        "atleta_id": "CASTRO_SEBASTIAN",
-        "nome": "Sebastián",
-        "cognome": "CASTRO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "sebastian-castro-castro"
-      },
-      {
         "atleta_id": "FORLIN_DANIELE",
         "nome": "Daniele",
         "cognome": "FORLIN",
@@ -1621,14 +1613,6 @@
   "BARDIANI_CSF_7_SABER": {
     "nome": "BARDIANI-CSF 7 SABER",
     "atleti": [
-      {
-        "atleta_id": "CRUZ_EDWARD",
-        "nome": "Edward",
-        "cognome": "CRUZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "edward-martinez-cruz"
-      },
       {
         "atleta_id": "FERRARO_SANTIAGO",
         "nome": "Santiago",
