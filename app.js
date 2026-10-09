@@ -13873,6 +13873,7 @@ window.adminNav = async function(section) {
           <div><button class="admin-edit-btn gr-fb" onclick="window._mgGo()">Crea e inserisci i risultati →</button></div>
         </section>
         <section class="ig-card ig-wide"><h3>Importa un campionato completo da PCS</h3>
+          <p class="ig-note">⚠️ PCS blocca il server del sito: questo pulsante può non funzionare. Mondiali ed Europei 2026 sono già importati; per i prossimi si lancia lo script dal computer.</p>
           <p>Con un clic importa <b>tutte le categorie</b> del campionato (Under 23, Juniores, Donne Elite/Under 23/Juniores, anche a cronometro). Restano esclusi Uomini Elite, Uomini Elite a cronometro e le staffette miste. Vengono inseriti solo gli italiani già presenti in ICS, con la posizione vera e il moltiplicatore scelto.</p>
           <div class="ig-adj" style="align-items:flex-end">
             <label class="ig-f" style="flex:1;min-width:260px"><span>Pagina PCS del campionato</span><input id="ch-url" type="text" value="https://www.procyclingstats.com/race/world-championships-u23-2026-result"></label>
@@ -13906,7 +13907,10 @@ window.adminNav = async function(section) {
           }
           out.innerHTML = html + `</div><p class="ig-note"><b>${totIt}</b> risultati italiani ${dry ? 'da importare' : 'trovati'}${dry ? '' : `, <b>${totSalvati}</b> salvati`}.${dry ? ' Se è tutto giusto premi «Importa tutto».' : ' Controlla le pagine gara e le classifiche.'}</p>`;
           if (!dry) { globalData = await loadAll(); }
-        } catch (e) { out.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>`; }
+        } catch (e) {
+          const blocked = /anti-bot|raggiungibile/i.test(e.message || '');
+          out.innerHTML = `<p class="ig-warn">${esc(e.message || 'Errore')}</p>` + (blocked ? `<p class="ig-note"><b>ProCyclingStats blocca il server del sito</b> (non è un guasto): da qui la lettura non può funzionare. I campionati 2026 (Mondiali ed Europei) sono già stati importati. Per i prossimi campionati chiedi a Claude di lanciare l'importazione dal suo computer, oppure usa «Nuova gara manuale» incollando il sorgente della pagina PCS.</p>` : '');
+        }
       };
       window._mgPreset = (nome, mult) => { document.getElementById('mg-nome').value = nome; document.getElementById('mg-mult').value = String(mult); };
       window._mgPcs = async () => {
