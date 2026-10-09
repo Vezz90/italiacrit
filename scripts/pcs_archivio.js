@@ -50,9 +50,12 @@ function curlPage(url) {
 function fetchPage(slug, year) {
   const clean = String(slug).replace(/^\/+/, '').replace(/\/result\/?$/, '');
   if (/^(race|national-race|stage-race|one-day-race)\//.test(clean)) return { html: curlPage(`https://www.procyclingstats.com/${clean}${/\/\d{4}$/.test(clean) ? '' : '/' + year}/result`), url: clean };
+  // corse a tappe: "nome-stage-5" / "nome-stage-1a" / "nome-gc" -> race/nome/anno/stage-5 | .../gc
+  const st = clean.match(/^(.+)-(stage-\w+|gc)$/);
+  const base = st ? st[1] : clean, tail = st ? st[2] : 'result';
   for (const pre of ['race', 'national-race']) {
-    const html = curlPage(`https://www.procyclingstats.com/${pre}/${clean}/${year}/result`);
-    if (html) return { html, url: `${pre}/${clean}/${year}` };
+    const html = curlPage(`https://www.procyclingstats.com/${pre}/${base}/${year}/${tail}`);
+    if (html) return { html, url: `${pre}/${base}/${year}/${tail}` };
   }
   return { html: null, url: null };
 }
