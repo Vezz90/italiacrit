@@ -25,9 +25,14 @@ const APPLY = process.argv.includes('--apply');
 
 const rows = JSON.parse(fs.readFileSync(path.join(ROOT, 'schede_doppie_verifica.json'), 'utf8'));
 const first = id => String(id).split('_')[0];
+let aliasDone = {}; try { aliasDone = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'atleti_alias.json'), 'utf8')); } catch (_) {}
+const sameTokens = (x, y) => [...String(x).split('_')].sort().join(' ') === [...String(y).split('_')].sort().join(' ');
 const ok = [], no = [];
 for (const r of rows) {
-  const strong = r.overlap >= 3 || (r.team === true && first(r.dup) === first(r.vera));
+  if (aliasDone[r.dup]) continue;
+  // prove: >=3 risultati identici; oppure stessa squadra e stesso cognome principale; oppure i risultati della scheda doppia coincidono
+  // (quasi) tutti con quelli della vera; oppure e' lo stesso nome con le parole in ordine diverso e la stessa squadra
+  const strong = r.overlap >= 3 || (r.team === true && first(r.dup) === first(r.vera)) || (r.overlap >= 1 && r.risultatiDup > 0 && r.overlap / r.risultatiDup >= 0.66) || (r.team === true && sameTokens(r.dup, r.vera));
   (strong ? ok : no).push(r);
 }
 console.log(`Da unire: ${ok.length} · lasciate fuori: ${no.length}`);
