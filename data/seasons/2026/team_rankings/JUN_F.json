@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "SPAGNA",
+    "team_nome": "SPAGNA",
+    "punti": 77,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 10
+  },
+  {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
     "punti": 75,
@@ -117,7 +129,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -129,7 +141,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 1,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "AIRTOX_CARL_RAS",
@@ -141,7 +153,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "S_C_V_BIKE_CADORAGO_ASD",
@@ -153,7 +165,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -177,7 +189,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "GROUWELS_WATERSLEY_R_D",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "CAMS_MAJACO",
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "SCONOSCIUTO",
@@ -213,7 +225,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "LMC_BOGOTA",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "ZHIRAF",
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "REPUBBLICA_CECA",
@@ -261,18 +273,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 22
-  },
-  {
-    "team_id": "SPAGNA",
-    "team_nome": "SPAGNA",
-    "punti": 9,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 2,
     "pos": 23
   },
   {
@@ -514,5 +514,17 @@
     "pout": 0,
     "n_atleti": 2,
     "pos": 43
+  },
+  {
+    "team_id": "COLOMBIA",
+    "team_nome": "COLOMBIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 44
   }
 ]

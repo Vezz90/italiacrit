@@ -848,22 +848,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "BRAVO_HENRIQUE",
-    "cognome": "Bravo",
-    "nome": "Henrique",
-    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
-    "team_nome": "Soudal Quick-Step Devo Team",
-    "punti": 98,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 1,
-    "pos": 54,
-    "trend": 0
-  },
-  {
     "atleta_id": "BORREMANS_KASPER_TOBIAS",
     "cognome": "BORREMANS",
     "nome": "KASPER TOBIAS",
@@ -876,8 +860,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 7,
-    "pos": 55,
-    "trend": 0
+    "pos": 54,
+    "trend": 1
   },
   {
     "atleta_id": "GRECHISHKIN_VADIM",
@@ -892,8 +876,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 3,
-    "pos": 56,
-    "trend": 0
+    "pos": 55,
+    "trend": 1
   },
   {
     "atleta_id": "ZANINI_SIMONE",
@@ -908,8 +892,24 @@
     "p2": 2,
     "p3": 0,
     "pout": 3,
+    "pos": 56,
+    "trend": 1
+  },
+  {
+    "atleta_id": "ALVAREZ_MARTINEZ_HECTOR",
+    "cognome": "ÁLVAREZ",
+    "nome": "Héctor",
+    "team_id": "SPAGNA",
+    "team_nome": "SPAGNA",
+    "punti": 93,
+    "vittorie": 1,
+    "gare": 2,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
     "pos": 57,
-    "trend": 0
+    "trend": null
   },
   {
     "atleta_id": "ARSAC_REMI",
@@ -6526,5 +6526,37 @@
     "pout": 1,
     "pos": 408,
     "trend": 0
+  },
+  {
+    "atleta_id": "PEREZ_ALVAREZ_CIRO",
+    "cognome": "PÉREZ",
+    "nome": "CIRO",
+    "team_id": "URUGUAY",
+    "team_nome": "URUGUAY",
+    "punti": 0,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "pos": 409,
+    "trend": null
+  },
+  {
+    "atleta_id": "RUIZ_TERAN_SEBASTIAN",
+    "cognome": "RUIZ",
+    "nome": "SEBASTIAN",
+    "team_id": "MESSICO",
+    "team_nome": "MESSICO",
+    "punti": 0,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "pos": 410,
+    "trend": null
   }
 ]
