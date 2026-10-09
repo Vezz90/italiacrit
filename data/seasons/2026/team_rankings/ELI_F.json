@@ -312,18 +312,6 @@
     "pos": 26
   },
   {
-    "team_id": "EF_EDUCATION_OATLY",
-    "team_nome": "EF EDUCATION OATLY",
-    "punti": 48,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 27
-  },
-  {
     "team_id": "POLONIA",
     "team_nome": "POLONIA",
     "punti": 48,
@@ -332,8 +320,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "n_atleti": 5,
-    "pos": 28
+    "n_atleti": 6,
+    "pos": 27
   },
   {
     "team_id": "GERMANIA",
@@ -344,8 +332,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 6,
-    "pos": 29
+    "n_atleti": 5,
+    "pos": 28
   },
   {
     "team_id": "FANINI_PRO_CYCLING",
@@ -357,7 +345,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 30
+    "pos": 29
   },
   {
     "team_id": "UAE_DEVELOPMENT_TEAM",
@@ -369,7 +357,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 30
   },
   {
     "team_id": "TIROL_WOMEN_CYCLING",
@@ -381,7 +369,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 32
+    "pos": 31
   },
   {
     "team_id": "TORELLI_CYCLING_TEAM",
@@ -392,6 +380,18 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
+    "n_atleti": 1,
+    "pos": 32
+  },
+  {
+    "team_id": "EF_EDUCATION_OATLY",
+    "team_nome": "EF Education-Oatly",
+    "punti": 36,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
     "n_atleti": 1,
     "pos": 33
   },
@@ -588,6 +588,18 @@
     "pos": 49
   },
   {
+    "team_id": "EF_EDUCATION_AEVOLO",
+    "team_nome": "EF EDUCATION - AEVOLO",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 50
+  },
+  {
     "team_id": "ITALIA",
     "team_nome": "ITALIA",
     "punti": 12,
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "AUSTRIA",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "UNNO_FACTORY_RACING",
@@ -621,7 +633,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "GS_FIAMME_AZZURRE",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "TEAM_ESSERE",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "UNO_X_MOBILITY",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "DUKLA_WOMEN_CYCLING",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "LABORAL_KUTXA_FUNDACION_EUSKADI",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "NAZIONALE_UCRAINA",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
@@ -741,7 +753,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "TEAM_COMOBIKE_ASD",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "TEAM_CINGOLANI_SPECIALIZED",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -789,7 +801,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "DANIMARCA",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 5,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "SPAR_CTO_WOMEN",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "MASSI_BAIX_TER",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "MOVISTAR_TEAM",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "NORVEGIA",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "LUSSEMBURGO",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "SVEZIA",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "FINLANDIA",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "SLOVENIA",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 3,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "REPUBBLICA_CECA",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 3,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "ROMANIA",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "UCRAINA",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "ISRAELE",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "INDIVIDUAL_NEUTRAL_ATHLETES",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "PORTOGALLO",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "TURKIYE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "GRAN_BRETAGNA",
@@ -1005,6 +1017,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   }
 ]

@@ -1258,5 +1258,17 @@
     "pout": 0,
     "n_atleti": 1,
     "pos": 105
+  },
+  {
+    "team_id": "DANIMARCA",
+    "team_nome": "DANIMARCA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 106
   }
 ]

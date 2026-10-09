@@ -6558,5 +6558,21 @@
     "pout": 0,
     "pos": 410,
     "trend": 0
+  },
+  {
+    "atleta_id": "ANDERSEN_NOAH_LINDHOLM",
+    "cognome": "MØLLER ANDERSEN",
+    "nome": "Noah Lindholm",
+    "team_id": "DANIMARCA",
+    "team_nome": "DANIMARCA",
+    "punti": 0,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "pos": 411,
+    "trend": null
   }
 ]
