@@ -105,14 +105,6 @@
         "genere": "M"
       },
       {
-        "atleta_id": "BRAFA_FEDERICO",
-        "nome": "Federico",
-        "cognome": "BRAFA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "federico-brafa"
-      },
-      {
         "atleta_id": "CARMINATI_MIRKO",
         "nome": "Mirko",
         "cognome": "CARMINATI",
@@ -163,13 +155,6 @@
         "atleta_id": "RINALDI_ANDREA",
         "nome": "Andrea",
         "cognome": "Rinaldi",
-        "categoria": "ELI_M",
-        "genere": "M"
-      },
-      {
-        "atleta_id": "ZANETTI_ALESSANDRO",
-        "nome": "Alessandro",
-        "cognome": "Zanetti",
         "categoria": "ELI_M",
         "genere": "M"
       },
@@ -586,14 +571,6 @@
         "pcs_slug": "sebastian-castro-castro"
       },
       {
-        "atleta_id": "CUBILLAS_JAVIER",
-        "nome": "Javier",
-        "cognome": "CUBILLAS",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "javier-cubillas"
-      },
-      {
         "atleta_id": "FORLIN_DANIELE",
         "nome": "Daniele",
         "cognome": "FORLIN",
@@ -632,14 +609,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "filip-novak1"
-      },
-      {
-        "atleta_id": "PARETA_ROGER",
-        "nome": "Roger",
-        "cognome": "PARETA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "roger-pareta"
       },
       {
         "atleta_id": "POMBO_TOMAS",
@@ -726,14 +695,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "francesco-cornacchini"
-      },
-      {
-        "atleta_id": "DANTE_ALESSANDRO",
-        "nome": "Alessandro",
-        "cognome": "DANTE",
-        "categoria": "ELI_M",
-        "genere": "M",
-        "pcs_slug": "alessandro-dante"
       },
       {
         "atleta_id": "GALLI_NICCOLO",
@@ -908,14 +869,6 @@
         "pcs_slug": "will-harding"
       },
       {
-        "atleta_id": "KINGSTON_MATTHEW",
-        "nome": "Matthew",
-        "cognome": "KINGSTON",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "matthew-kingston"
-      },
-      {
         "atleta_id": "LAUDI_LUCA",
         "nome": "Luca",
         "cognome": "LAUDI",
@@ -953,28 +906,12 @@
     "nome": "TEAM VANGI TOMMASINI IL PIRATA",
     "atleti": [
       {
-        "atleta_id": "MARTINEZ_AITOR",
-        "nome": "Aitor",
-        "cognome": "MARTÍNEZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "aitor-martinez-groset"
-      },
-      {
         "atleta_id": "CAPODARCA_MATTEO",
         "nome": "Matteo",
         "cognome": "CAPODARCA",
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "matteo-capodarca"
-      },
-      {
-        "atleta_id": "GAGGIOLI_LUCIANO",
-        "nome": "Luciano",
-        "cognome": "GAGGIOLI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "luciano-gaggioli1"
       }
     ]
   },
@@ -1101,14 +1038,6 @@
         "pcs_slug": "salvatore-leonetti"
       },
       {
-        "atleta_id": "PALOMBI_RAFFAELE",
-        "nome": "Raffaele",
-        "cognome": "PALOMBI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "raffaele-palombi"
-      },
-      {
         "atleta_id": "PASCARELLA_JACOPO",
         "nome": "Jacopo",
         "cognome": "PASCARELLA",
@@ -1165,14 +1094,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "alessandro-fiore"
-      },
-      {
-        "atleta_id": "POSADA_JOSE_MANUEL",
-        "nome": "Jose Manuel",
-        "cognome": "POSADA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "jose-manuel-posada"
       }
     ]
   },
@@ -1210,14 +1131,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "camillo-d-emilio"
-      },
-      {
-        "atleta_id": "GROSSO_MANUEL",
-        "nome": "Manuel",
-        "cognome": "GROSSO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "manuel-grosso"
       },
       {
         "atleta_id": "NURZIA_ZOTTOLA_FRANCESCO",
@@ -1454,16 +1367,7 @@
   },
   "CICLISTICA_TREVIGLIESE": {
     "nome": "CICLISTICA TREVIGLIESE",
-    "atleti": [
-      {
-        "atleta_id": "CANCHON_JUAN_ESTEBAN",
-        "nome": "Juan Esteban",
-        "cognome": "CANCHON",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "juan-esteban-canchon"
-      }
-    ]
+    "atleti": []
   },
   "BRESCIA_F_MAGNI_FLANDRES_LOVE": {
     "nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
@@ -1632,14 +1536,6 @@
     "nome": "BELTRAMI TSA TRE COLLI",
     "atleti": [
       {
-        "atleta_id": "BUONGIORNO_SIMONE",
-        "nome": "Simone",
-        "cognome": "BUONGIORNO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "simone-buongiorno"
-      },
-      {
         "atleta_id": "FRACASSO_MATTIA",
         "nome": "Mattia",
         "cognome": "FRACASSO",
@@ -1748,14 +1644,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "santiago-ferraro"
-      },
-      {
-        "atleta_id": "HERRENO_MARTIN_SANTIAGO",
-        "nome": "Martin Santiago",
-        "cognome": "HERREÑO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "martin-santiago-herreno"
       },
       {
         "atleta_id": "MARCELLUSI_MARTIN",
@@ -1953,14 +1841,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "tetsuo-yamamoto"
-      },
-      {
-        "atleta_id": "ZERAY_NAHOM",
-        "nome": "Nahom",
-        "cognome": "ZERAY",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "nahom-zeray-araya"
       }
     ]
   },
@@ -2006,14 +1886,6 @@
         "categoria": "ELI_M",
         "genere": "M",
         "pcs_slug": "alessandro-fancellu"
-      },
-      {
-        "atleta_id": "GRUSZCZYNSKI_FILIP",
-        "nome": "Filip",
-        "cognome": "GRUSZCZYŃSKI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "filip-gruszczynski"
       },
       {
         "atleta_id": "MAKRAI_BALINT",
@@ -2125,14 +1997,6 @@
         "pcs_slug": "michele-gazzoli"
       },
       {
-        "atleta_id": "GONZALEZ_ROBERTO_CARLOS",
-        "nome": "Roberto Carlos",
-        "cognome": "GONZÁLEZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "roberto-gonzalez"
-      },
-      {
         "atleta_id": "GRANGER_BEN",
         "nome": "Ben",
         "cognome": "GRANGER",
@@ -2179,14 +2043,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "kyrylo-tsarenko"
-      },
-      {
-        "atleta_id": "UMBA_SANTIAGO",
-        "nome": "Santiago",
-        "cognome": "UMBA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "santiago-umba"
       },
       {
         "atleta_id": "VERRANDO_LUCA",
@@ -2322,14 +2178,6 @@
         "pcs_slug": "tallis-pritchard"
       },
       {
-        "atleta_id": "ROBERTS_JOHN_SHAW",
-        "nome": "John Shaw",
-        "cognome": "ROBERTS",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "john-roberts"
-      },
-      {
         "atleta_id": "RYSLETTEN_SOLVOLL_OLIVER",
         "nome": "Oliver",
         "cognome": "RYSLETTEN-SOLVOLL",
@@ -2458,14 +2306,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "elynor-backstedt"
-      },
-      {
-        "atleta_id": "BLASI_PAULA",
-        "nome": "Paula",
-        "cognome": "BLASI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "paula-blasi"
       },
       {
         "atleta_id": "CHAPMAN_BRODIE",
@@ -3151,22 +2991,6 @@
         "pcs_slug": "luca-giaimi"
       },
       {
-        "atleta_id": "JASIM_SAIF_JASIM_AL_ALI_ABDULLA",
-        "nome": "Abdulla",
-        "cognome": "JASIM SAIF JASIM AL-ALI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "abdulla-jasim-al-ali"
-      },
-      {
-        "atleta_id": "RAMIREZ_MATEO",
-        "nome": "Mateo",
-        "cognome": "RAMÍREZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "mateo-pablo-ramirez"
-      },
-      {
         "atleta_id": "SAMBINELLO_ENEA",
         "nome": "Enea",
         "cognome": "SAMBINELLO",
@@ -3417,14 +3241,6 @@
   "LIDL_TREK_FUTURE_RACING": {
     "nome": "LIDL-TREK FUTURE RACING",
     "atleti": [
-      {
-        "atleta_id": "ALVAREZ_HECTOR",
-        "nome": "Héctor",
-        "cognome": "ÁLVAREZ",
-        "categoria": "ELI_M",
-        "genere": "M",
-        "pcs_slug": "hector-alvarez-martinez"
-      },
       {
         "atleta_id": "BENZ_BENEDIKT",
         "nome": "Benedikt",
@@ -3682,14 +3498,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "shunsuke-imamura"
-      },
-      {
-        "atleta_id": "MARIVOET_DUARTE",
-        "nome": "Duarte",
-        "cognome": "MARIVOET",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "duarte-marivoet"
       },
       {
         "atleta_id": "POELVOORDE_TARS",
@@ -5351,14 +5159,6 @@
     "nome": "AUDAX FIORMONTI",
     "atleti": [
       {
-        "atleta_id": "CARINGI_ROBERTO",
-        "nome": "Roberto",
-        "cognome": "CARINGI",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "roberto-caringi"
-      },
-      {
         "atleta_id": "FIGLIOLIA_MATTIA",
         "nome": "Mattia",
         "cognome": "FIGLIOLIA",
@@ -5691,14 +5491,6 @@
         "pcs_slug": "lorenzo-maschio"
       },
       {
-        "atleta_id": "MEDEOT_TOMAZ",
-        "nome": "Tomaz",
-        "cognome": "MEDEOT",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "tomaz-medeot"
-      },
-      {
         "atleta_id": "PETRIC_JAKOB",
         "nome": "Jakob",
         "cognome": "PETRIČ",
@@ -5729,14 +5521,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "joele-tonizzo"
-      },
-      {
-        "atleta_id": "TRICA_THEODOR",
-        "nome": "Theodor",
-        "cognome": "TRICA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "theodor-trica"
       }
     ]
   },
@@ -5758,14 +5542,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "benjamin-grundsoe"
-      },
-      {
-        "atleta_id": "KHATIEB_FARAZ",
-        "nome": "Faraz",
-        "cognome": "KHATIEB",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "faraz-khatieb"
       },
       {
         "atleta_id": "PETROV_YORDAN",
@@ -5805,14 +5581,6 @@
     "nome": "A.R.MONEX PRO CYCLING TEAM",
     "atleti": [
       {
-        "atleta_id": "ANDRADE_OMAR",
-        "nome": "Omar",
-        "cognome": "ANDRADE",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "omar-andrade"
-      },
-      {
         "atleta_id": "CISNEROS_LUIS_ISUHAN",
         "nome": "Luis Isuhan",
         "cognome": "CISNEROS",
@@ -5821,52 +5589,12 @@
         "pcs_slug": "leon-cisneros"
       },
       {
-        "atleta_id": "FERNANDEZ_JORGE",
-        "nome": "Jorge",
-        "cognome": "FERNANDEZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "jorge-fernandez-ruiz"
-      },
-      {
         "atleta_id": "MARMOLEJO_ALEXANDER",
         "nome": "Alexander",
         "cognome": "MARMOLEJO",
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "alexander-marmolejo"
-      },
-      {
-        "atleta_id": "MORENO_DANIEL",
-        "nome": "Daniel",
-        "cognome": "MORENO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "daniel-moreno-garcia"
-      },
-      {
-        "atleta_id": "RODRIGUEZ_JOSE_EMILIO",
-        "nome": "José Emilio",
-        "cognome": "RODRIGUEZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "jose-rodriguez-delgado"
-      },
-      {
-        "atleta_id": "SANTIAGO_RICARDO",
-        "nome": "Ricardo",
-        "cognome": "SANTIAGO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "ricardo-santiago"
-      },
-      {
-        "atleta_id": "ZAMUDIO_GIANLUIGI",
-        "nome": "Gianluigi",
-        "cognome": "ZAMUDIO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "gianluigi-zamudio-perez"
       }
     ]
   },
@@ -6074,14 +5802,6 @@
     "nome": "SOUDAL QUICK-STEP DEVO TEAM",
     "atleti": [
       {
-        "atleta_id": "BRAVO_HENRIQUE",
-        "nome": "Henrique",
-        "cognome": "BRAVO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "henrique-ribeiro-bravo"
-      },
-      {
         "atleta_id": "CISNEROS_JOSE_SAID",
         "nome": "Jose Said",
         "cognome": "CISNEROS",
@@ -6189,14 +5909,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "maks-bahar"
-      },
-      {
-        "atleta_id": "KUNTARIC_VANJA",
-        "nome": "Vanja",
-        "cognome": "KUNTARIČ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "vanja-kuntaric"
       },
       {
         "atleta_id": "MAJNIK_MAKS",
@@ -6462,14 +6174,6 @@
         "pcs_slug": "victor-de-vos"
       },
       {
-        "atleta_id": "LOPEZ_DIEGO",
-        "nome": "Diego",
-        "cognome": "LOPEZ",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "diego-lopez-ortiz"
-      },
-      {
         "atleta_id": "MESSELY_RENE",
         "nome": "René",
         "cognome": "MESSELY",
@@ -6569,14 +6273,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "jose-antonio-prieto"
-      },
-      {
-        "atleta_id": "PRIETO_JOSE_JUAN",
-        "nome": "José Juan",
-        "cognome": "PRIETO",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "jose-juan-prieto"
       },
       {
         "atleta_id": "ZARATE_MICHAEL",

@@ -12487,6 +12487,14 @@ app.get('*', async (req, res, next) => {
   }
 
   const m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
+  if (m && m[1] === 'atleta') {
+    // scheda doppia unita a quella vera (data/atleti_alias.json): 301 verso l'indirizzo giusto
+    try {
+      const al = JSON.parse(fs.readFileSync(path.join(FRONTEND_DIR, 'data', 'atleti_alias.json'), 'utf8'));
+      const real = al[decodeURIComponent(m[2])];
+      if (real) return res.redirect(301, `/atleta/${encodeURIComponent(real)}`);
+    } catch (_) { /* nessun alias */ }
+  }
   if (m && m[1] === 'gara') {
     // gare dell'archivio: l'indirizzo vero e' quello con il nome (301 dal vecchio /gara/CIC_<id> o da uno slug diverso)
     try {

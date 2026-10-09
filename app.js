@@ -17821,10 +17821,21 @@ function athleteRivalsHtml(list) {
     <p class="ath-moment-note">Verde = gare in cui è arrivato davanti, rosso = dietro. Contano solo le gare in cui entrambi sono nei primi 10.</p></section>`;
 }
 
+// Schede doppie unite (data/atleti_alias.json: vecchio id -> id vero): i vecchi link portano alla scheda giusta
+let _aliasFileLoaded = null;
+function _ensureAliasFile() {
+  if (!_aliasFileLoaded) _aliasFileLoaded = loadJson('data/atleti_alias.json').then(j => { if (j && typeof j === 'object') Object.assign(window._athAlias, j); }).catch(() => {});
+  return _aliasFileLoaded;
+}
 async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
+  await _ensureAliasFile();
   const { athletes, calendar } = globalData;
-  if (!athletes[atleta_id] && window._athAlias && window._athAlias[atleta_id] && athletes[window._athAlias[atleta_id]]) atleta_id = window._athAlias[atleta_id];
+  if (!athletes[atleta_id] && window._athAlias && window._athAlias[atleta_id]) {
+    const real = window._athAlias[atleta_id];
+    atleta_id = real;
+    try { if (location.pathname.startsWith('/atleta/')) history.replaceState(null, '', '/atleta/' + encodeURIComponent(real)); } catch (_) {}
+  }
 
   let aLive = athletes[atleta_id];
   if (!aLive) {
