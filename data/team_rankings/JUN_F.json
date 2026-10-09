@@ -320,7 +320,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
+    "n_atleti": 2,
     "pos": 27
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "SVIZZERA",
+    "team_nome": "SVIZZERA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 37
+  },
+  {
     "team_id": "ASS_CICLISTICA_REMO_CALZOLARI_ASD",
     "team_nome": "ASS.CICLISTICA REMO CALZOLARI ASD",
     "punti": 0,
@@ -441,6 +453,126 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 38
+  },
+  {
+    "team_id": "POLONIA",
+    "team_nome": "POLONIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 2,
+    "pos": 39
+  },
+  {
+    "team_id": "GERMANIA",
+    "team_nome": "GERMANIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 40
+  },
+  {
+    "team_id": "LUSSEMBURGO",
+    "team_nome": "LUSSEMBURGO",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 41
+  },
+  {
+    "team_id": "LITUANIA",
+    "team_nome": "LITUANIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 2,
+    "pos": 42
+  },
+  {
+    "team_id": "UCRAINA",
+    "team_nome": "UCRAINA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 3,
+    "pos": 43
+  },
+  {
+    "team_id": "SLOVENIA",
+    "team_nome": "SLOVENIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 3,
+    "pos": 44
+  },
+  {
+    "team_id": "CIPRO",
+    "team_nome": "CIPRO",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 45
+  },
+  {
+    "team_id": "BULGARIA",
+    "team_nome": "BULGARIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 3,
+    "pos": 46
+  },
+  {
+    "team_id": "ROMANIA",
+    "team_nome": "ROMANIA",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 3,
+    "pos": 47
+  },
+  {
+    "team_id": "TURKIYE",
+    "team_nome": "TÜRKIYE",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 2,
+    "pos": 48
   }
 ]
