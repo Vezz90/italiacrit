@@ -14073,6 +14073,7 @@ window.adminNav = async function(section) {
       try {
         const { queue = [] } = await apiCall('/admin/social/queue');
         const autoCfg = await apiCall('/admin/social/auto').catch(() => ({ enabled: false, fb_configured: false }));
+        const vidCfg = await apiCall('/admin/social/video-auto').catch(() => ({ enabled: true, fb_configured: false, posted: [], errors: [] }));
         const pending  = queue.filter(p => p.status === 'pending');
         const done     = queue.filter(p => p.status !== 'pending').slice(-10).reverse();
         const fbSet    = true; // mostrato nel pannello scraper
@@ -14113,6 +14114,13 @@ window.adminNav = async function(section) {
               ${autoCfg.fb_configured ? `<small>Limite di sicurezza: al massimo ${autoCfg.max_per_run || 6} post per ogni aggiornamento, uno per gara, solo gare di oggi e ieri.</small>` : '<small style="color:#ef4444">Facebook non è configurato: servono FB_PAGE_ID e FB_PAGE_TOKEN su Render (vedi Scraper &amp; Config).</small>'}</div>
             <button class="adm-switch" role="switch" aria-checked="${!!autoCfg.enabled}" ${autoCfg.fb_configured || autoCfg.enabled ? '' : 'disabled'} onclick="window._sqAuto(${!autoCfg.enabled})"><i></i></button>
           </div>
+          <div class="adm-auto ${vidCfg.enabled ? 'on' : ''}">
+            <div class="adm-auto-t"><b>Video e dirette su Facebook</b>
+              <span>${vidCfg.enabled ? 'ACCESA: quando colleghi un video o una diretta a una gara, viene pubblicato subito sulla Pagina con il link e i risultati della gara.' : 'Spenta: i video collegati alle gare non vengono pubblicati.'}</span>
+              <small>Solo gare di questi giorni (da 3 giorni fa a domani), un post per video, mai doppioni.${(vidCfg.posted || []).length ? ' Ultimi: ' + vidCfg.posted.slice(0, 3).map(p => `${p.live ? '🔴' : '🎥'} ${esc(String(p.gara_id).replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ').toLowerCase())}`).join(' · ') : ''}</small>
+              ${(vidCfg.errors || []).length ? `<small style="color:#ef4444">Ultimo errore: ${esc(vidCfg.errors[0].error)}</small>` : ''}</div>
+            <button class="adm-switch" role="switch" aria-checked="${!!vidCfg.enabled}" ${vidCfg.fb_configured || vidCfg.enabled ? '' : 'disabled'} onclick="window._sqVideoAuto(${!vidCfg.enabled})"><i></i></button>
+          </div>
           <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
             <button onclick="window._sqQueueNow()" style="background:var(--red-hot);color:#fff;border:none;padding:8px 18px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🔄 Genera post adesso</button>
             ${autoCfg.fb_configured && pending.length ? `<button onclick="window._sqPublishAll()" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:8px 18px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;color:var(--text-primary)">📤 Pubblica ora i post in attesa</button>` : ''}
@@ -14150,6 +14158,10 @@ window.adminNav = async function(section) {
         window._sqAuto = async (on) => {
           if (on && !confirm('Accendere la pubblicazione automatica?\nDa ora ogni nuovo risultato verrà pubblicato da solo sulla pagina Facebook, con il testo scritto dall’AI.')) return;
           try { await apiCall('/admin/social/auto', { method: 'POST', body: { enabled: !!on } }); showToast(on ? '✅ Pubblicazione automatica accesa' : 'Pubblicazione automatica spenta'); adminNav('social-queue'); }
+          catch (e) { showToast(e.message, 'error'); }
+        };
+        window._sqVideoAuto = async (on) => {
+          try { await apiCall('/admin/social/video-auto', { method: 'POST', body: { enabled: !!on } }); showToast(on ? '✅ Video e dirette: pubblicazione automatica accesa' : 'Video e dirette: pubblicazione automatica spenta'); adminNav('social-queue'); }
           catch (e) { showToast(e.message, 'error'); }
         };
         window._sqPublishAll = async () => {

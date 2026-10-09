@@ -3502,6 +3502,7 @@ async function writeVideos(obj) {
     const { error } = await supabase.from('kv_store')
       .upsert({ key: 'videos', value: obj, updated_at: new Date().toISOString() });
     if (error) throw new Error('Supabase write error: ' + error.message);
+    setImmediate(() => publishNewVideosToFacebook(obj).catch(e => console.warn('[social-video]', e.message)));
     return;
   }
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(obj, null, 2));
@@ -8350,6 +8351,103 @@ async function publishPendingSocialAuto({ force = false } = {}) {
   } finally { _socialAutoRunning = false; }
 }
 
+// ── Video e dirette collegati a una gara: pubblicati subito sulla Pagina Facebook ─────────────────────
+// Si attiva da solo quando un video/diretta viene salvato su una gara (writeVideos) e ogni 30 minuti come ripresa.
+// Interruttore: kv "social_video_auto" (acceso di default). Registro anti-doppioni: kv "social_video_log".
+// Alla prima esecuzione tutti i video gia' presenti vengono segnati come "gia' visti" (nessuna pubblicazione arretrata).
+const SOCIAL_VIDEO_AUTO_KEY = 'social_video_auto', SOCIAL_VIDEO_LOG_KEY = 'social_video_log';
+async function _kvGet(key) {
+  if (!supabase) return null;
+  const { data } = await supabase.from('kv_store').select('value').eq('key', key).maybeSingle();
+  return data ? data.value : null;
+}
+async function _kvSet(key, value) {
+  if (!supabase) return;
+  const { error } = await supabase.from('kv_store').upsert({ key, value, updated_at: new Date().toISOString() });
+  if (error) throw new Error('Supabase write error: ' + error.message);
+}
+const _videoKey = u => { const m = String(u || '').match(/(?:v=|youtu\.be\/|\/videos\/|\/live\/)([\w-]{6,})/); return (m ? m[1] : String(u || '')).slice(0, 80); };
+let _videoPostRunning = false, _videoPostAgain = null;
+async function publishNewVideosToFacebook(videos) {
+  if (!supabase || !_fbConfigured()) return { skipped: 'facebook non configurato' };
+  if (_videoPostRunning) { _videoPostAgain = videos; return { skipped: 'in corso' }; }
+  _videoPostRunning = true;
+  try {
+    const cfg = (await _kvGet(SOCIAL_VIDEO_AUTO_KEY)) || { enabled: true };
+    let log = await _kvGet(SOCIAL_VIDEO_LOG_KEY);
+    const all = [];
+    for (const [gid, arr] of Object.entries(videos || {})) {
+      if (!Array.isArray(arr) || gid.includes('::')) continue;     // tappe ancora senza gara reale: si pubblicano quando vengono associate
+      for (const v of arr) if (v && v.url) all.push({ gid, v, key: `${gid}|${_videoKey(v.url)}` });
+    }
+    if (!log) {                                                   // prima volta: tutto quello che c'e' gia' e' "visto"
+      log = { seen: all.map(x => x.key), posted: [] };
+      await _kvSet(SOCIAL_VIDEO_LOG_KEY, log);
+      return { baseline: all.length };
+    }
+    if (!cfg.enabled) return { skipped: 'spento' };
+    const seen = new Set(log.seen || []);
+    const today = Date.now();
+    const calendar = (await readDataJsonFromGH('calendar.json').catch(() => null)) || [];
+    let posted = 0;
+    for (const x of all) {
+      if (seen.has(x.key)) continue;
+      // solo gare vicine nel tempo (da ieri-3 a domani): un video aggiunto a una gara vecchia non va sulla Pagina
+      const d = (x.gid.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || String(x.v.published_at || '').slice(0, 10);
+      const ms = d ? Date.parse(d) : NaN;
+      if (isNaN(ms) || ms < today - 3 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
+      if (posted >= 5) break;
+      const cal = _findCalEntryForNativeGaraId(calendar, x.gid);
+      const nome = cal?.nome || x.gid.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+      const luogo = cal?.luogo || cal?.regione || '';
+      const live = !!x.v.is_live;
+      const title = String(x.v.title || '').replace(/&#x[0-9a-f]+;|&nbsp;/gi, ' ').trim();
+      const siteLink = `${SITE_URL}/gara/${encodeURIComponent(x.gid)}`;
+      const lines = [
+        live ? `🔴 DIRETTA — ${nome}` : `🎥 VIDEO — ${nome}`,
+        [cal?.categoria, luogo].filter(Boolean).join(' · '),
+        live ? 'Segui la gara in diretta 👇' : 'Rivedi la gara 👇',
+        x.v.channel ? `📺 ${x.v.channel}` : '',
+        '',
+        `Risultati e classifiche su Italia Cycling Stats: ${siteLink}`,
+      ].filter((l, i, a) => l !== '' || (a[i - 1] !== '' && i < a.length - 1));
+      try {
+        const fb = await postToFacebook(lines.join('\n'), null, x.v.url);
+        seen.add(x.key); posted++;
+        (log.posted = log.posted || []).push({ gara_id: x.gid, url: x.v.url, live, fb_id: fb.id || fb.post_id || null, at: new Date().toISOString() });
+        if (log.posted.length > 300) log.posted = log.posted.slice(-300);
+        console.log(`[social-video] pubblicato su Facebook: ${live ? 'diretta' : 'video'} ${nome}`);
+      } catch (e) {
+        console.warn('[social-video] pubblicazione fallita:', x.gid, e.message);   // non si segna come visto: ritenta al giro dopo
+        (log.errors = log.errors || []).push({ gara_id: x.gid, url: x.v.url, error: String(e.message).slice(0, 200), at: new Date().toISOString() });
+        log.errors = log.errors.slice(-30);
+      }
+      await new Promise(r => setTimeout(r, 3000));
+    }
+    log.seen = [...seen].slice(-4000);
+    await _kvSet(SOCIAL_VIDEO_LOG_KEY, log);
+    return { posted };
+  } finally {
+    _videoPostRunning = false;
+    if (_videoPostAgain) { const v = _videoPostAgain; _videoPostAgain = null; setImmediate(() => publishNewVideosToFacebook(v).catch(() => {})); }
+  }
+}
+app.get('/api/admin/social/video-auto', requireAdmin, async (req, res) => {
+  try {
+    const cfg = (await _kvGet(SOCIAL_VIDEO_AUTO_KEY)) || { enabled: true };
+    const log = (await _kvGet(SOCIAL_VIDEO_LOG_KEY)) || {};
+    res.json({ enabled: cfg.enabled !== false, fb_configured: _fbConfigured(), posted: (log.posted || []).slice(-8).reverse(), errors: (log.errors || []).slice(-3).reverse() });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/social/video-auto', requireAdmin, async (req, res) => {
+  try {
+    const enabled = !!(req.body && req.body.enabled);
+    if (enabled && !_fbConfigured()) return res.status(400).json({ error: 'Facebook non configurato' });
+    await _kvSet(SOCIAL_VIDEO_AUTO_KEY, { enabled, updated_at: new Date().toISOString() });
+    res.json({ ok: true, enabled });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Chiede a Facebook di rileggere l'anteprima (foto/podio) delle pagine gara dei post recenti: quando una foto
 // arriva dopo la pubblicazione, l'anteprima del post si aggiorna da sola senza ripubblicare.
 // Ogni gara viene riletta al massimo ogni 3 ore, per 4 giorni dopo la pubblicazione.
@@ -12532,6 +12630,8 @@ init()
       autoPodcastFeedsSync();
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(rescrapeRecentFbPosts, SYNC_INTERVAL);
+      setInterval(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), SYNC_INTERVAL);
+      setTimeout(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), 60 * 1000);   // segna come "visti" i video gia' presenti
       setInterval(() => queueSocialPostsForToday().catch(() => {}), SYNC_INTERVAL);   // include i campionati inseriti a mano
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
