@@ -2,9 +2,9 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1956,
-    "vittorie": 29,
-    "p1": 29,
+    "punti": 1911,
+    "vittorie": 28,
+    "p1": 28,
     "p2": 18,
     "p3": 18,
     "pout": 78,
@@ -14,12 +14,12 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 951,
+    "punti": 933,
     "vittorie": 15,
     "p1": 15,
     "p2": 10,
     "p3": 7,
-    "pout": 58,
+    "pout": 57,
     "n_atleti": 13,
     "pos": 2
   },
@@ -36,40 +36,28 @@
     "pos": 3
   },
   {
-    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti": 841,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 2,
-    "p3": 10,
-    "pout": 39,
-    "n_atleti": 9,
-    "pos": 4
-  },
-  {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 838,
+    "punti": 814,
     "vittorie": 9,
     "p1": 9,
     "p2": 6,
     "p3": 6,
-    "pout": 47,
+    "pout": 46,
     "n_atleti": 12,
-    "pos": 5
+    "pos": 4
   },
   {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 833,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 8,
-    "p3": 5,
-    "pout": 49,
-    "n_atleti": 10,
-    "pos": 6
+    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
+    "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
+    "punti": 811,
+    "vittorie": 11,
+    "p1": 11,
+    "p2": 2,
+    "p3": 9,
+    "pout": 39,
+    "n_atleti": 9,
+    "pos": 5
   },
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
@@ -81,19 +69,19 @@
     "p3": 9,
     "pout": 20,
     "n_atleti": 3,
-    "pos": 7
+    "pos": 6
   },
   {
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 754,
-    "vittorie": 5,
-    "p1": 5,
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 797,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 7,
-    "p3": 11,
-    "pout": 48,
+    "p3": 5,
+    "pout": 49,
     "n_atleti": 10,
-    "pos": 8
+    "pos": 7
   },
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
@@ -105,6 +93,18 @@
     "p3": 11,
     "pout": 40,
     "n_atleti": 11,
+    "pos": 8
+  },
+  {
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "team_nome": "CICLISTICA TREVIGLIESE",
+    "punti": 739,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 7,
+    "p3": 11,
+    "pout": 47,
+    "n_atleti": 10,
     "pos": 9
   },
   {
@@ -230,12 +230,12 @@
   {
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
     "team_nome": "TEAM TIEPOLO U19 DEVO",
-    "punti": 391,
+    "punti": 379,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 3,
-    "pout": 23,
+    "pout": 22,
     "n_atleti": 7,
     "pos": 20
   },
