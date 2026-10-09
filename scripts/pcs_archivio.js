@@ -113,7 +113,7 @@ function parse(html) {
     else {
       const byPos = new Map(rows.map(x => [x.pos, key(x.rider)]));
       let hit = 0;
-      for (const c of cic) if (byPos.get(c.posizione) === key(c.atleta_id.replace(/_/g, ' '))) hit++;
+      for (const c of cic) if (byPos.get(c.posizione) === key(String(c.atleta_id || '').replace(/_/g, ' '))) hit++;
       const need = Math.max(2, Math.ceil(cic.length * 0.6));
       if (hit >= need && rows.length <= cic.length) { stato = 'completa'; nota = `PCS ha solo ${rows.length} righe: niente da aggiungere`; stat.scartate++; }
       else if (hit >= need) {
