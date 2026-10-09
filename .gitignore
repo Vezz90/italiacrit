@@ -43,3 +43,4 @@ server/tier-backfill-*.json
 server/tier-backfill.log
 
 scripts/.cache_gare/
+!data/atleti_alias.json
