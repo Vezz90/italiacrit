@@ -54,10 +54,11 @@ async function buildIndex(sb) {
   };
   return {
     size: people.length,
-    match(name) {
+    // maxPrio: considera solo atleti con priorita' <= maxPrio (1 = FCI, 2 = archivio ciclismo.info, 3 = creati da PCS)
+    match(name, maxPrio = 9) {
       const t = tokens(name);
       if (!t.length) return null;
-      const exact = byKey.get(t.slice().sort().join(' ')) || [];
+      const exact = (byKey.get(t.slice().sort().join(' ')) || []).filter(p => p.prio <= maxPrio);
       if (t.length < 2) return choose(exact, []);
       // nomi contenuti uno nell'altro (secondo nome presente solo da una parte)
       const subset = [];
@@ -67,7 +68,7 @@ async function buildIndex(sb) {
         if (p.key === t.slice().sort().join(' ')) continue;
         const superset = t.every(x => p.toks.has(x)) && p.n <= t.length + 2;
         const inner = p.n >= 2 && p.n < t.length && p.n >= t.length - 2 && [...p.toks].every(x => t.includes(x));
-        if (superset || inner) subset.push(p);
+        if ((superset || inner) && p.prio <= maxPrio) subset.push(p);
       }
       return choose(exact, subset);
     },
