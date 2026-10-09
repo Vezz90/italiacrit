@@ -1,0 +1,32 @@
+name: PCS probe
+on:
+  push:
+    paths: ['.github/workflows/pcs-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prova accesso a ProCyclingStats
+        run: |
+          mkdir -p data
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+          out=data/pcs_probe.txt
+          : > $out
+          for s in race/world-championships-u23-2026-result national-race/memorial-faliero-e-clara-vangi-memorial-piero/2025/result; do
+            code=$(curl -s -L -m 30 -A "$UA" -H "Accept-Language: it-IT,it;q=0.9" -o /tmp/p.html -w "%{http_code}" "https://www.procyclingstats.com/$s")
+            rows=$(grep -c 'href="rider/' /tmp/p.html || true)
+            echo "$s | http $code | rider_links $rows | bytes $(wc -c < /tmp/p.html)" >> $out
+          done
+          echo "runner: $(curl -s -m 10 https://api.ipify.org)" >> $out
+      - name: Salva il risultato
+        run: |
+          git config user.name "pcs-probe"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pcs_probe.txt
+          git commit -m "pcs probe" || true
+          git pull --rebase -q || true
+          git push || true
