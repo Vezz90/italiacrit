@@ -1,0 +1,198 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><title>Revisione schede doppie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: barra fissa con i contatori e il pulsante di copia, sotto un elenco di righe a due schede affiancate con la scelta a destra. */
+:root {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --ink: #16212b;
+  --muted: #5d6c79;
+  --line: #d9e0e6;
+  --join: #0f7a5c;
+  --join-bg: #def3ec;
+  --keep: #b4432b;
+  --keep-bg: #fbe6df;
+  --doubt: #8a6200;
+  --doubt-bg: #fbf0cc;
+  --focus: #1f5fbf;
+  --f-head: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181f; --surface: #19222b; --ink: #e7edf2; --muted: #93a3b1; --line: #2b3844;
+    --join: #4fc79f; --join-bg: #14342c; --keep: #f0937c; --keep-bg: #3a211b; --doubt: #e3b94d; --doubt-bg: #372d12; --focus: #7fb0ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181f; --surface: #19222b; --ink: #e7edf2; --muted: #93a3b1; --line: #2b3844;
+  --join: #4fc79f; --join-bg: #14342c; --keep: #f0937c; --keep-bg: #3a211b; --doubt: #e3b94d; --doubt-bg: #372d12; --focus: #7fb0ff;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); padding-inline: 16px; padding-block: 0 48px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+header.top { padding-block: 22px 14px; }
+h1 { font: 700 1.7rem/1.15 var(--f-head); margin: 0 0 6px; text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 68ch; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px; margin-right: auto; }
+.pill { font: 600 .78rem var(--f-body); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); }
+.pill.join { background: var(--join-bg); color: var(--join); border-color: transparent; }
+.pill.keep { background: var(--keep-bg); color: var(--keep); border-color: transparent; }
+.pill.doubt { background: var(--doubt-bg); color: var(--doubt); border-color: transparent; }
+.filters { display: flex; gap: 4px; flex-wrap: wrap; }
+button { font: inherit; cursor: pointer; }
+.filters button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 5px 11px; border-radius: 8px; font-size: .82rem; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.copy { background: var(--join); color: #fff; border: 0; padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+:root[data-theme="dark"] .copy { color: #08201a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .copy { color: #08201a; } }
+button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.list { margin-top: 14px; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 16px; padding: 16px; border-top: 1px solid var(--line); align-items: start; }
+.row:first-child { border-top: 0; }
+.row[data-choice="join"] { box-shadow: inset 4px 0 0 var(--join); }
+.row[data-choice="keep"] { box-shadow: inset 4px 0 0 var(--keep); }
+.row[data-choice="doubt"] { box-shadow: inset 4px 0 0 var(--doubt); }
+.side { min-width: 0; }
+.tag { font: 600 .68rem var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.id { font: 500 .88rem var(--f-mono); overflow-wrap: anywhere; }
+.id a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.id a:hover { text-decoration-color: currentColor; }
+.team { color: var(--muted); font-size: .85rem; margin-top: 2px; overflow-wrap: anywhere; }
+.ev { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: .85rem; color: var(--muted); }
+.ev b { color: var(--ink); font-weight: 600; }
+.sug { font: 600 .74rem var(--f-body); padding: 2px 9px; border-radius: 99px; }
+.sug.unisci { background: var(--join-bg); color: var(--join); }
+.sug.no { background: var(--keep-bg); color: var(--keep); }
+.sug.poche { background: var(--doubt-bg); color: var(--doubt); }
+.choice { display: flex; flex-direction: column; gap: 6px; min-width: 128px; }
+.choice button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 7px 10px; border-radius: 8px; font-size: .85rem; font-weight: 500; text-align: left; }
+.choice button[aria-pressed="true"][data-v="join"] { background: var(--join); color: #fff; border-color: var(--join); }
+.choice button[aria-pressed="true"][data-v="keep"] { background: var(--keep); color: #fff; border-color: var(--keep); }
+.choice button[aria-pressed="true"][data-v="doubt"] { background: var(--doubt); color: #fff; border-color: var(--doubt); }
+:root[data-theme="dark"] .choice button[aria-pressed="true"] { color: #10181f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .choice button[aria-pressed="true"] { color: #10181f; } }
+.note { margin-top: 18px; color: var(--muted); font-size: .85rem; max-width: 70ch; }
+.out { margin-top: 16px; }
+.out textarea { width: 100%; min-height: 160px; font: 500 .82rem/1.5 var(--f-mono); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 12px; resize: vertical; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 9px; font-size: .88rem; }
+@media (max-width: 720px) {
+  .row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .choice { flex-direction: row; flex-wrap: wrap; }
+  .choice button { flex: 1 1 auto; text-align: center; }
+  .bar .copy { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) { .row { transition: box-shadow .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Revisione schede doppie</h1>
+    <p class="lead">29 coppie non unite: a sinistra la scheda creata in passato da PCS, a destra quella già presente in ICS. Apri i due profili con i link, guarda squadra e risultati, poi scegli per ognuna. Le scelte restano salvate in questo browser.</p>
+  </header>
+
+  <div class="bar" role="region" aria-label="Riepilogo e filtri">
+    <div class="counts">
+      <span class="pill join" id="c-join">Unisci 0</span>
+      <span class="pill keep" id="c-keep">Non unire 0</span>
+      <span class="pill doubt" id="c-doubt">Dubbio 0</span>
+      <span class="pill" id="c-todo">Da decidere 29</span>
+    </div>
+    <div class="filters" id="filters">
+      <button type="button" data-f="all" aria-pressed="true">Tutte</button>
+      <button type="button" data-f="todo" aria-pressed="false">Da decidere</button>
+      <button type="button" data-f="join" aria-pressed="false">Unisci</button>
+      <button type="button" data-f="keep" aria-pressed="false">Non unire</button>
+      <button type="button" data-f="doubt" aria-pressed="false">Dubbio</button>
+    </div>
+    <button type="button" class="copy" id="copy">Copia le scelte</button>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <p class="note">«Suggerimento» è la mia lettura dei dati: unire se i risultati coincidono, non unire se squadra e risultati sono diversi, poche informazioni se la scheda doppia non ha risultati propri. Tu conosci i corridori meglio dei dati: l'ultima parola è la tua.</p>
+
+  <div class="out" id="out" hidden>
+    <p class="note" style="margin-top:0">Copia il testo qui sotto e incollalo nella chat con me.</p>
+    <textarea id="outText" readonly aria-label="Scelte da copiare"></textarea>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const PAIRS = [{"d":"CASTRO_SEBASTIAN","v":"CASTRO_CASTRO_SEBASTIAN_ENRIQUE","td":"MOVISTAR TEAM ACADEMY","tv":"TEAM GENERAL SYSTEM","sq":false,"ov":0,"n":44,"pcs":44,"gara":6,"man":1,"sug":"no"},{"d":"COLAPRICO_FABIO","v":"COLAPRICO_FABIO_GIUSEPPE","td":"TEAM BELVEDERE","tv":"ASD 1D+ UN DENTE IN PIU' | UNDENTEINPIU'-PICCOLE CANAGLIE SPES | A.S.D. \"1 D +\"","sq":false,"ov":2,"n":2,"pcs":2,"gara":1,"man":0,"sug":"unisci"},{"d":"CRUZ_EDWARD","v":"CRUZ_MARTINEZ_EDWARD_SANTIAGO","td":"BARDIANI-CSF 7 SABER","tv":"G.S. MASSI' SUPERMERCATI PONTIDA | VANGI-SAMA RICAMBI-IL PIRATA","sq":false,"ov":0,"n":28,"pcs":28,"gara":0,"man":0,"sug":"no"},{"d":"SKALNIAK_SOJKA_AGNIESZKA","v":"SKALNIAK_AGNIESZKA","td":"CANYON SRAM ZONDACRYPTO","tv":"TEAM RYGTER - TKK PACIFIC","sq":false,"ov":0,"n":43,"pcs":42,"gara":1,"man":1,"sug":"no"},{"d":"CLEMMENSEN_THEODOR_AUGUST","v":"CLEMMENSEN_THEODOR","td":"RED BULL-BORA-HANSGROHE ROOKIES","tv":"TEAM GRENKE AUTO EDER","sq":false,"ov":0,"n":37,"pcs":37,"gara":5,"man":0,"sug":"no"},{"d":"M_LLER_ANDERSEN_NOAH_LINDHOLM","v":"ANDERSEN_NOAH_LINDHOLM","td":"RED BULL-BORA-HANSGROHE ROOKIES","tv":"TEAM GRENKE AUTO EDER","sq":false,"ov":0,"n":32,"pcs":32,"gara":6,"man":2,"sug":"no"},{"d":"MORALES_JONATHAN","v":"MORALES_ORTIZ_JONATHAN","td":"PETROLIKE","tv":"A.R. MONEX CYCLING TEAM ","sq":false,"ov":0,"n":3,"pcs":3,"gara":0,"man":0,"sug":"no"},{"d":"ALMEIDA_JOAO","v":"ALMEIDA_GONCALVES_JOAO_PEDRO","td":"SCONOSCIUTO","tv":"AXEON HAGENS BERMAN \t | UNIEURO TREVIGIANI HEMUS 1896","sq":false,"ov":0,"n":51,"pcs":51,"gara":1,"man":0,"sug":"no"},{"d":"ALONSO_PABLO","v":"MONTES_PABLO_ALONSO","td":"SCONOSCIUTO","tv":"CLUB CICLISTICO COLINDRES","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"BINDA_ROSSETTI","v":"BINDA_ROSSETTI_GABRIELE","td":"U.C.A.B. 1925 BIELLA - SEMPERLUX","tv":"G.S. ALZATE BRIANZA - SYSTEM CAR","sq":false,"ov":0,"n":0,"pcs":0,"gara":5,"man":0,"sug":"poche"},{"d":"BIRKEDAL_JULIUS_L_VSTRUP","v":"BIRKEDAL_JULIUS","td":"DENMARK","tv":"GRENKE - AUTO EDER | DANIMARCA | TEAM GRENKE AUTO EDER","sq":false,"ov":2,"n":3,"pcs":0,"gara":3,"man":3,"sug":"unisci"},{"d":"CSAKI_SZABOLCS","v":"SZABOLCS_CSAKI","td":"TEAM UNITED SHIPPING","tv":"S.C.A.P. TRODICA DI MORROVALLE","sq":false,"ov":0,"n":0,"pcs":0,"gara":3,"man":0,"sug":"poche"},{"d":"FELIPE_QUOTADAMO","v":"QUOTADAMO_FELIPE","td":"U.C.A.B. 1925 BIELLA - SEMPERLUX","tv":"U.C.A.B. 1925 BIELLA - SEMPERLUX","sq":true,"ov":0,"n":0,"pcs":0,"gara":2,"man":0,"sug":"unisci"},{"d":"FIALLA_IDA_DAM","v":"FIALLA_IDA","td":"GROUWELS - WATERSLEY R&D","tv":"DANIMARCA","sq":false,"ov":0,"n":20,"pcs":20,"gara":1,"man":0,"sug":"no"},{"d":"FIOCCHI_FILIPPO","v":"FIOCCHI_FILIPPO_MARIA","td":"G.S. BAREGGESE A.S.D","tv":"BUSTO GAROLFO","sq":false,"ov":0,"n":0,"pcs":0,"gara":0,"man":0,"sug":"poche"},{"d":"GHELFI_LORENZO","v":"GHELFI_LORENZO_MASSIMO","td":"LUNIGIANA","tv":"ASD PEDALE CASALESE ARMOFER","sq":false,"ov":0,"n":0,"pcs":0,"gara":2,"man":0,"sug":"poche"},{"d":"GOLLIKER_JOSHUA","v":"GOLLIKER_DAVID_JOSHUA","td":"EF EDUCATION - AEVOLO","tv":"GROUPAMA - FDJ CONTINENTAL TEAM","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"LAMPREA_ZARA_SOFIA","v":"LAMPREA_MORALES_ZARA_SOFIA","td":"COLOMBIA","tv":"LMC BOGOTA' | LMC BOGOTA' ","sq":false,"ov":2,"n":2,"pcs":0,"gara":0,"man":2,"sug":"unisci"},{"d":"LOTTI_ZENO","v":"LOTTI_ZENO_LEONARDO","td":"ASD BLACKSHEEPS","tv":"VELO CLUB S.C. EMPOLI","sq":false,"ov":0,"n":0,"pcs":0,"gara":5,"man":0,"sug":"poche"},{"d":"MILHOMEM_JHEMERSON","v":"LACERDA_MILHOMEM_JHEMERSON","td":"TEAM PIERI CALAMAI","tv":"ASD TEAM PIERI | G.S.BUTESE","sq":true,"ov":0,"n":20,"pcs":20,"gara":1,"man":0,"sug":"poche"},{"d":"MURGUIALDAY_JOKIN","v":"MURGUIALDAY_ELORZA_JOKIN","td":"EUSKALTEL - EUSKADI","tv":"CLUB CICLISTA URBASA","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"PEDERSEN_RASMUS_LUND","v":"LUND_RASMUS","td":"SCONOSCIUTO","tv":"NAZIONALE DANIMARCA","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"REISSNER_LENA","v":"REISSNER_LENA_CHARLOTTE","td":"LKT TEAM","tv":"GERMANIA","sq":false,"ov":0,"n":0,"pcs":0,"gara":2,"man":0,"sug":"poche"},{"d":"RICHEZE_ADRIAN","v":"RICHEZE_ADRIAN_EZEQUIEL","td":"SCONOSCIUTO","tv":"G.S.C. VIRIS LOMELLINA A.S.D. | ORT REALE MUTUA | NORDELETTRICA BOTTOLI RAMONDA","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"RODRIGUEZ_CARLOS","v":"COLOBON_RODRIGUEZ_CARLOS_EDUARDO","td":"SPAIN","tv":"A.S.D. ESPERIA ROLFO V.I.","sq":false,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"poche"},{"d":"RUBIO_EINER","v":"RUBIO_REYES_EINER_AUGUSTO","td":"MOVISTAR TEAM ACADEMY","tv":"ARAN CUCINE VEJUS | VEJUS-TMF","sq":false,"ov":0,"n":55,"pcs":55,"gara":1,"man":0,"sug":"no"},{"d":"RUIZ_SEBASTIAN","v":"RUIZ_TERAN_SEBASTIAN","td":"MESSICO","tv":"A.R. MONEX CYCLING TEAM ","sq":false,"ov":1,"n":1,"pcs":0,"gara":0,"man":1,"sug":"unisci"},{"d":"SKIVILD_ROBIN_JUEL","v":"SKIVILD_ROBIN","td":"DENMARK","tv":"UNO-X DARE DEVELOPMENT TEAM ","sq":false,"ov":0,"n":14,"pcs":14,"gara":1,"man":0,"sug":"no"},{"d":"TORRES_PABLO","v":"RAMIREZ_TORRES_MATEO_PABLO","td":"UAE TEAM EMIRATES GEN-Z","tv":"UAE TEAM EMIRATES GEN-Z | UAE TEAM EMIRATES GEN-Z ","sq":true,"ov":0,"n":0,"pcs":0,"gara":1,"man":0,"sug":"no"}];
+const SITE = 'https://italiacyclingstats.com/atleta/';
+const LABEL = { unisci: 'Suggerisco di unire', no: 'Suggerisco di non unire', poche: 'Poche informazioni' };
+const KEY = 'schede-doppie-scelte-v1';
+let choice = {}, filter = 'all';
+try { choice = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { choice = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(choice)); } catch (e) {} };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const pretty = t => t || 'squadra non indicata';
+
+function evidence(p) {
+  const parts = [];
+  if (p.n > 0) parts.push(`<span><b>${p.ov}</b> risultati identici su ${p.n}</span>`);
+  else parts.push('<span>la scheda doppia non ha risultati propri</span>');
+  parts.push(`<span>stessa squadra: <b>${p.sq === true ? 'sì' : p.sq === false ? 'no' : 'non confrontabile'}</b></span>`);
+  const rows = [];
+  if (p.pcs) rows.push(`${p.pcs} da PCS`);
+  if (p.gara) rows.push(`${p.gara} in classifiche gara`);
+  if (p.man) rows.push(`${p.man} inseriti a mano`);
+  if (rows.length) parts.push(`<span>righe collegate: ${rows.join(', ')}</span>`);
+  parts.push(`<span class="sug ${p.sug}">${LABEL[p.sug]}</span>`);
+  return parts.join('');
+}
+function render() {
+  const el = document.getElementById('list');
+  const shown = PAIRS.filter(p => filter === 'all' ? true : filter === 'todo' ? !choice[p.d] : choice[p.d] === filter);
+  el.innerHTML = shown.map(p => {
+    const c = choice[p.d] || '';
+    const btn = (v, t) => `<button type="button" data-id="${esc(p.d)}" data-v="${v}" aria-pressed="${c === v}">${t}</button>`;
+    return `<div class="row" data-choice="${c}">
+      <div class="side"><div class="tag">Scheda doppia (da PCS)</div><div class="id"><a href="${SITE}${encodeURIComponent(p.d)}" target="_blank" rel="noopener">${esc(p.d)}</a></div><div class="team">${esc(pretty(p.td))}</div></div>
+      <div class="side"><div class="tag">Scheda già in ICS</div><div class="id"><a href="${SITE}${encodeURIComponent(p.v)}" target="_blank" rel="noopener">${esc(p.v)}</a></div><div class="team">${esc(pretty(p.tv).split(' | ').join(' · '))}</div></div>
+      <div class="choice" role="group" aria-label="Scelta per ${esc(p.d)}">${btn('join', 'Unisci')}${btn('keep', 'Non unire')}${btn('doubt', 'Dubbio')}</div>
+      <div class="ev">${evidence(p)}</div>
+    </div>`;
+  }).join('') || '<div class="row"><div class="side">Nessuna coppia in questo filtro.</div></div>';
+  const n = v => PAIRS.filter(p => choice[p.d] === v).length;
+  document.getElementById('c-join').textContent = 'Unisci ' + n('join');
+  document.getElementById('c-keep').textContent = 'Non unire ' + n('keep');
+  document.getElementById('c-doubt').textContent = 'Dubbio ' + n('doubt');
+  document.getElementById('c-todo').textContent = 'Da decidere ' + PAIRS.filter(p => !choice[p.d]).length;
+}
+document.getElementById('list').addEventListener('click', e => {
+  const b = e.target.closest('button[data-id]'); if (!b) return;
+  const id = b.dataset.id, v = b.dataset.v;
+  if (choice[id] === v) delete choice[id]; else choice[id] = v;
+  save(); render();
+});
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('button[data-f]'); if (!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  render();
+});
+function summary() {
+  const grp = (v, t) => { const l = PAIRS.filter(p => choice[p.d] === v).map(p => `  ${p.d} -> ${p.v}`); return l.length ? `${t} (${l.length}):\n${l.join('\n')}` : ''; };
+  const todo = PAIRS.filter(p => !choice[p.d]).map(p => `  ${p.d} -> ${p.v}`);
+  return [grp('join', 'UNISCI'), grp('keep', 'NON UNIRE'), grp('doubt', 'DUBBIO'), todo.length ? `NON DECISE (${todo.length}):\n${todo.join('\n')}` : ''].filter(Boolean).join('\n\n');
+}
+function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { el.hidden = true; }, 2200); }
+document.getElementById('copy').addEventListener('click', async () => {
+  const text = summary();
+  const box = document.getElementById('out'), ta = document.getElementById('outText');
+  ta.value = text; box.hidden = false;
+  try { await navigator.clipboard.writeText(text); toast('Scelte copiate: incollale nella chat'); }
+  catch (e) { ta.focus(); ta.select(); toast('Seleziona il testo e copialo'); }
+});
+render();
+</script>
+</body></html>
