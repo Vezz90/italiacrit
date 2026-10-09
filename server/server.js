@@ -8326,10 +8326,11 @@ async function publishPendingSocialAuto({ force = false } = {}) {
     await writeSocialQueue(queue);
     // solo post recenti (oggi/ieri): niente arretrato quando si accende l'interruttore
     const cutoff = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10);
+    const cutoffChamp = new Date(Date.now() - 10 * 86400000).toISOString().slice(0, 10);
     const todayStr = new Date().toISOString().slice(0, 10);
     const postedToday = queue.filter(p => p.auto && p.status === 'posted' && String(p.posted_at || '').slice(0, 10) === todayStr).length;
     const room = force ? SOCIAL_AUTO_MAX_PER_RUN : Math.max(0, Math.min(SOCIAL_AUTO_MAX_PER_RUN, SOCIAL_AUTO_MAX_PER_DAY - postedToday));
-    const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= cutoff).slice(0, room);
+    const todo = queue.filter(p => p.status === 'pending' && !alreadyPosted.has(p.gara_id) && String(p.date || '').slice(0, 10) >= (p.championship ? cutoffChamp : cutoff)).slice(0, room);
     let posted = 0;
     for (const post of todo) {
       const idx = queue.findIndex(p => p.id === post.id);
@@ -8384,6 +8385,27 @@ async function queueSocialPostsForToday() {
       if (Number(r.posizione) !== 1 || !r.gara_id) continue;
       if (!winners[r.gara_id]) winners[r.gara_id] = r;
     }
+    // Campionati Mondiali/Europei (inseriti a mano o importati da PCS, non passano dallo scraper FCI): si accodano se
+    // negli ultimi 10 giorni e con almeno un italiano nei primi 10 (team ITALIA), uno per categoria/prova.
+    const champGara = new Set();
+    try {
+      const manual = await queries.getAllManualResults();
+      const cutoffM = new Date(Date.now() - 10 * 86400000).toISOString().slice(0, 10);
+      const byG = new Map();
+      for (const r of manual || []) {
+        const d = String(r.data || '').slice(0, 10);
+        if (!d || d < cutoffM || d > today || !/campionat\w*\s+(del\s+mondo|europe)/i.test(r.nome_gara || '')) continue;
+        if (!byG.has(r.gara_id)) byG.set(r.gara_id, []);
+        byG.get(r.gara_id).push(r);
+      }
+      for (const [gid, rows] of byG) {
+        if (!rows.some(r => r.posizione <= 10 && /^ITALIA$/i.test(String(r.team || '').trim()))) continue;
+        const w = rows.find(r => r.posizione === 1);
+        if (!w || winners[gid]) continue;
+        winners[gid] = { ...w, data_gara: String(w.data).slice(0, 10) };
+        champGara.add(gid);
+      }
+    } catch (e) { console.warn('[social] campionati manuali non letti:', e.message); }
     const garaIds = Object.keys(winners);
     if (!garaIds.length) return;
     const queue = await readSocialQueue();
@@ -8413,7 +8435,7 @@ async function queueSocialPostsForToday() {
       try { caption = await _generateAndStoreGaraNarrative(garaId, { fresh: true }); } catch (e) { console.warn('[social] racconto AI non disponibile:', e.message); }
       if (!caption) caption = await generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link });
       caption = _withCredit(caption, media.credit);
-      queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: nome_gara, winner: winner_label, category, winner_team, date, caption, photo_url: photoUrl, link, status: 'pending', fb_post_id: null });
+      queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: nome_gara, winner: winner_label, category, winner_team, date, caption, photo_url: photoUrl, link, status: 'pending', fb_post_id: null, ...(champGara.has(garaId) ? { championship: true } : {}) });
     }
     await writeSocialQueue(queue);
     await publishPendingSocialAuto().catch(e => console.warn('[social] auto-publish error:', e.message));
@@ -12502,6 +12524,7 @@ init()
       autoPodcastFeedsSync();
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(rescrapeRecentFbPosts, SYNC_INTERVAL);
+      setInterval(() => queueSocialPostsForToday().catch(() => {}), SYNC_INTERVAL);   // include i campionati inseriti a mano
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
       setInterval(autoMediaChannelsSync, SYNC_INTERVAL);
