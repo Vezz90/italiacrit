@@ -29,12 +29,14 @@ let aliasDone = {}; try { aliasDone = JSON.parse(fs.readFileSync(path.join(ROOT,
 const sameTokens = (x, y) => [...String(x).split('_')].sort().join(' ') === [...String(y).split('_')].sort().join(' ');
 // stessa data di nascita (PCS = archivio ciclismo.info): prova decisiva, vale anche con squadre e risultati diversi
 let birthSame = new Set(); try { birthSame = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'schede_doppie_nascita.json'), 'utf8')).filter(x => x.verdict === 'STESSA PERSONA').map(x => x.dup)); } catch (_) {}
+// --forza ID1,ID2: schede doppie confermate a mano (o con prove esterne) da unire comunque
+const forzate = new Set(String((process.argv[process.argv.indexOf('--forza') + 1] || '')).split(',').filter(x => x && !x.startsWith('--')));
 const ok = [], no = [];
 for (const r of rows) {
   if (aliasDone[r.dup]) continue;
   // prove: >=3 risultati identici; oppure stessa squadra e stesso cognome principale; oppure i risultati della scheda doppia coincidono
   // (quasi) tutti con quelli della vera; oppure e' lo stesso nome con le parole in ordine diverso e la stessa squadra
-  const strong = birthSame.has(r.dup) || r.overlap >= 3 || (r.team === true && first(r.dup) === first(r.vera)) || (r.overlap >= 1 && r.risultatiDup > 0 && r.overlap / r.risultatiDup >= 0.66) || (r.team === true && sameTokens(r.dup, r.vera));
+  const strong = forzate.has(r.dup) || birthSame.has(r.dup) || r.overlap >= 3 || (r.team === true && first(r.dup) === first(r.vera)) || (r.overlap >= 1 && r.risultatiDup > 0 && r.overlap / r.risultatiDup >= 0.66) || (r.team === true && sameTokens(r.dup, r.vera));
   (strong ? ok : no).push(r);
 }
 console.log(`Da unire: ${ok.length} · lasciate fuori: ${no.length}`);

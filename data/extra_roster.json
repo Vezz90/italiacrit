@@ -2675,14 +2675,6 @@
         "pcs_slug": "maria-martins"
       },
       {
-        "atleta_id": "SKALNIAK_SOJKA_AGNIESZKA",
-        "nome": "Agnieszka",
-        "cognome": "SKALNIAK-SÓJKA",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "agnieszka-skalniak-sojka"
-      },
-      {
         "atleta_id": "VAN_DER_DUIN_MAIKE",
         "nome": "Maike",
         "cognome": "VAN DER DUIN",
@@ -2695,14 +2687,6 @@
   "RED_BULL_BORA_HANSGROHE_ROOKIES": {
     "nome": "RED BULL-BORA-HANSGROHE ROOKIES",
     "atleti": [
-      {
-        "atleta_id": "CLEMMENSEN_THEODOR_AUGUST",
-        "nome": "Theodor August",
-        "cognome": "CLEMMENSEN",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "theodor-august-clemmensen"
-      },
       {
         "atleta_id": "FRIEDL_ANATOL",
         "nome": "Anatol",
@@ -2726,14 +2710,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "michiel-mouris"
-      },
-      {
-        "atleta_id": "M_LLER_ANDERSEN_NOAH_LINDHOLM",
-        "nome": "Noah Lindholm",
-        "cognome": "MØLLER ANDERSEN",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "noah-lindholm-moller-andersen"
       },
       {
         "atleta_id": "PAJUR_ROMET",
@@ -6225,14 +6201,6 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "giosue-epis"
-      },
-      {
-        "atleta_id": "MORALES_JONATHAN",
-        "nome": "Jonathan",
-        "cognome": "MORALES",
-        "categoria": "JUN_M",
-        "genere": "M",
-        "pcs_slug": "jonathan-morales1"
       },
       {
         "atleta_id": "PONOMAR_ANDRII",
