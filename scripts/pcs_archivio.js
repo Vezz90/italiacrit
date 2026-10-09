@@ -122,7 +122,8 @@ function parse(html) {
       if (stato === 'importata' && APPLY) {
         const gid = `CIC_${r.cic_id}`;
         const season = parseInt(String(race.data).slice(0, 4), 10);
-        const out = rows.map(x => ({ gara_id: gid, season, posizione: x.pos, rider_name: x.rider, team_name: x.team || null, distacco: null, pcs_race_slug: fullSlug, atleta_id: known.get(key(x.rider)) || null }));
+        const seenPos = new Set();
+        const out = rows.filter(x => { if (seenPos.has(x.pos)) return false; seenPos.add(x.pos); return true; }).map(x => ({ gara_id: gid, season, posizione: x.pos, rider_name: x.rider, team_name: x.team || null, distacco: null, pcs_race_slug: fullSlug, atleta_id: known.get(key(x.rider)) || null }));
         await sb.from('pcs_gara_results').delete().eq('gara_id', gid);
         for (let i = 0; i < out.length; i += 300) { const { error: e } = await sb.from('pcs_gara_results').insert(out.slice(i, i + 300)); if (e) throw e; }
         await sb.from('entity_overrides').upsert([{ entity_type: 'gara', entity_id: gid, field: 'pcs_race_slug', new_value: fullSlug, edited_by: null }], { onConflict: 'entity_type,entity_id,field' });
