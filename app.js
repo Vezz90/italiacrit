@@ -4774,6 +4774,9 @@ function updateMetaUI() {
 function _resolveVirtualHash() {
   if (window.location.hash) return window.location.hash;
   const p = window.location.pathname;
+  // gare dell'archivio con nome leggibile (/gara/memorial-...-33472): internamente restano CIC_<id>
+  const sg = p.match(/^\/gara\/([a-z0-9][a-z0-9-]*-(\d{3,}))\/?$/);
+  if (sg) return '#/gara/CIC_' + sg[2];
   if (p && p !== '/' && p !== '/index.html') return '#' + p;
   return '#/';
 }
@@ -4869,6 +4872,14 @@ function route() {
   }
 
   updateNavActive(hash);
+
+  // Gara dell'archivio aperta con il vecchio id (CIC_<n>) da navigazione interna: l'indirizzo mostrato diventa quello con il nome
+  const _cm = hash.match(/^#\/gara\/CIC_(\d+)\/?$/);
+  if (_cm) {
+    fetch(`${API_BASE}/cic-race/${_cm[1]}`).then(r => r.ok ? r.json() : null).then(j => {
+      if (j && j.slug && location.pathname === '/gara/CIC_' + _cm[1]) history.replaceState(null, '', '/gara/' + j.slug);
+    }).catch(() => {});
+  }
 
   // Hub — barre animate (sia generale #/hub che per categoria #/hub/CODE/)
   if (hash === '#/hub' || hash === '#/hub/') return renderHubBars();

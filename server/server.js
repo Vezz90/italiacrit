@@ -376,7 +376,83 @@ app.use('/og', (req, res, next) => {
 const _SITEMAP_NOT_TEAMS = new Set(['ABRUZZO', 'BASILICATA', 'CALABRIA', 'CAMPANIA', 'EMILIA_ROMAGNA', 'FRIULI_VENEZIA_GIULIA', 'LAZIO', 'LIGURIA', 'LOMBARDIA', 'MARCHE', 'MOLISE', 'PIEMONTE', 'PUGLIA', 'SARDEGNA', 'SICILIA', 'TOSCANA', 'UMBRIA', 'VALLE_D_AOSTA', 'VENETO', 'BOLZANO', 'TRENTO', 'ITALIA', 'SCONOSCIUTO',
   'AUSTRALIA', 'AUSTRIA', 'BELGIO', 'FRANCIA', 'GERMANIA', 'IRLANDA', 'LETTONIA', 'MESSICO', 'NORVEGIA', 'OLANDA', 'SLOVACCHIA', 'SPAGNA', 'SVIZZERA', 'UCRAINA', 'POLONIA', 'DANIMARCA', 'SLOVENIA', 'CROAZIA', 'REPUBBLICA_CECA', 'REGNO_UNITO', 'STATI_UNITI', 'COLOMBIA', 'PORTOGALLO', 'LUSSEMBURGO', 'UNGHERIA']);
 const _isNotRealTeam = id => _SITEMAP_NOT_TEAMS.has(String(id).toUpperCase()) || /^(SELEZIONE|NAZIONALE|CT_ITALIA|UNDER_|REGIONALE)/.test(String(id).toUpperCase());
+// ── Gare dell'archivio ciclismo.info (CIC_<id>) con URL leggibili ─────────────────────────────
+// /gara/CIC_33472 -> /gara/memorial-faliero-e-clara-vangi-2025-juniores-33472 (301). Il numero finale e'
+// l'identificativo vero: il resto serve a Google e alle persone. Indice in tabella cic_races (refresh_cic_races()).
+const _CIC_CAT_SLUG = { ALLIEVI: 'allievi', JUNIORES: 'juniores', ESORDIENTI1: 'esordienti-1-anno', ESORDIENTI2: 'esordienti-2-anno', ELITE_UNDER23: 'elite-under-23', DONNE_ESORDIENTI: 'donne-esordienti', DONNE_ALLIEVE: 'donne-allieve', DONNE_JUNIORES: 'donne-juniores' };
+const _CIC_CAT_LABEL = { ALLIEVI: 'Allievi', JUNIORES: 'Juniores', ESORDIENTI1: 'Esordienti 1° anno', ESORDIENTI2: 'Esordienti 2° anno', ELITE_UNDER23: 'Elite/Under 23', DONNE_ESORDIENTI: 'Donne Esordienti', DONNE_ALLIEVE: 'Donne Allieve', DONNE_JUNIORES: 'Donne Juniores' };
+const _CIC_SLUG_RE = /^[a-z0-9][a-z0-9-]*-(\d{3,})$/;
+const _slugify = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/['’`]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+function _cicSlug(r) {
+  const year = String(r.data || r.stagione || '').slice(0, 4);
+  return [_slugify(r.nome).slice(0, 70).replace(/-+$/, ''), year, _CIC_CAT_SLUG[r.categoria] || _slugify(r.categoria || ''), r.id].filter(Boolean).join('-');
+}
+const _SMALL_WORDS = new Set(['e', 'di', 'da', 'del', 'della', 'dei', 'delle', 'degli', 'dello', 'in', 'a', 'al', 'alla', 'il', 'la', 'le', 'lo', 'i', 'per', 'con', 'su', 'ai']);
+const _titleCase = s => String(s || '').toLowerCase().replace(/(^|[\s\-\/(])([a-zà-ÿ])/g, (m, p, ch, off) => (off > 0 && _SMALL_WORDS.has(m.trim().replace(/[^a-zà-ÿ]/g, '')) ? m : p + ch.toUpperCase())).replace(/\s+/g, ' ').trim();
+const _titleWords = s => String(s || '').toLowerCase().split(/\s+/).filter(Boolean).map((w, i) => (i > 0 && _SMALL_WORDS.has(w)) ? w : (w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
+async function _cicRaceById(id) {
+  if (!supabase || !/^\d+$/.test(String(id))) return null;
+  const { data } = await supabase.from('cic_races').select('*').eq('id', String(id)).maybeSingle();
+  return data || null;
+}
+async function _cicTop(id, n = 10) {
+  const { data } = await supabase.from('ciclismo_results').select('posizione, atleta_id, team, gara_ciclismo_url')
+    .ilike('gara_ciclismo_url', `%_${id}_2%`).order('posizione', { ascending: true }).limit(n * 3);
+  return (data || []).filter(r => ciclismoGaraId(r.gara_ciclismo_url) === String(id)).slice(0, n);
+}
+const _cicName = id => _titleWords(String(id || '').replace(/_\d+$/, '').replace(/_/g, ' '));
+let _cicAll = { ts: 0, rows: null };
+async function _cicAllRaces() {
+  if (_cicAll.rows && Date.now() - _cicAll.ts < 12 * 3600 * 1000) return _cicAll.rows;
+  if (!supabase) return [];
+  try { await supabase.rpc('refresh_cic_races'); } catch (_) {}   // include le gare archivio aggiunte di recente
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supabase.from('cic_races').select('id, nome, data, categoria, stagione').order('id').range(from, from + 999);
+    if (error || !data || !data.length) break;
+    rows.push(...data);
+    if (data.length < 1000) break;
+  }
+  if (rows.length) _cicAll = { ts: Date.now(), rows };
+  return rows;
+}
+const _CIC_CHUNK = 10000;
+app.get('/sitemap-archivio-:n.xml', async (req, res) => {
+  try {
+    const all = await _cicAllRaces();
+    const n = Math.max(1, parseInt(req.params.n, 10) || 1);
+    const slice = all.slice((n - 1) * _CIC_CHUNK, n * _CIC_CHUNK);
+    if (!slice.length) return res.status(404).send('<!-- vuoto -->');
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
+      slice.map(r => `  <url><loc>https://italiacyclingstats.com/gara/${_cicSlug(r)}</loc>${r.data ? `<lastmod>${String(r.data).slice(0, 10)}</lastmod>` : ''}<changefreq>yearly</changefreq><priority>0.4</priority></url>`).join('\n')
+    }\n</urlset>`;
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=21600');
+    res.send(xml);
+  } catch (e) { res.status(500).send('<!-- errore -->'); }
+});
+app.get('/api/cic-race/:id', async (req, res) => {
+  try {
+    const r = await _cicRaceById(req.params.id);
+    if (!r) return res.status(404).json({ error: 'non trovata' });
+    res.json({ id: r.id, slug: _cicSlug(r) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+// indice: pagine principali (sitemap-pagine.xml) + archivio gare a blocchi
 app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const all = await _cicAllRaces();
+    const parts = Math.ceil(all.length / _CIC_CHUNK);
+    const today = new Date().toISOString().slice(0, 10);
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap-pagine.xml</loc><lastmod>${today}</lastmod></sitemap>\n${
+      Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap-archivio-${i + 1}.xml</loc></sitemap>`).join('\n')
+    }\n</sitemapindex>`;
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(xml);
+  } catch (e) { res.status(500).send('<!-- sitemap error -->'); }
+});
+app.get('/sitemap-pagine.xml', async (req, res) => {
   try {
     const CANONICAL = 'https://italiacyclingstats.com';
     const [athletes, resultsRaw, teams] = await Promise.all([
@@ -12259,8 +12335,9 @@ function _readIndexHtmlTemplate() {
   _indexHtmlTemplateTs = Date.now();
   return _indexHtmlTemplate;
 }
-function _injectHeadTags(html, { title, desc, canonical, ogImage }) {
+function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript }) {
   const t = _ogHtmlEsc(title), d = _ogHtmlEsc(desc), c = _ogHtmlEsc(canonical), img = _ogHtmlEsc(ogImage);
+  if (noscript) html = html.replace(/<body([^>]*)>/i, (m) => `${m}<noscript>${noscript}</noscript>`);
   return html
     .replace(/<title>[^<]*<\/title>/, `<title>${t}</title>`)
     .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${d}" />`)
@@ -12277,6 +12354,26 @@ function _injectHeadTags(html, { title, desc, canonical, ogImage }) {
 // caso si serve la pagina normale, che mostrerà "non trovata" via JS).
 async function _getHeadMetaFor(type, id) {
   if (type === 'gara') {
+    const cicM = id.match(/^CIC_(\d+)$/) || (id === id.toLowerCase() ? id.match(_CIC_SLUG_RE) : null);
+    if (cicM) {
+      const race = await _cicRaceById(cicM[1]);
+      if (!race) return null;
+      const top = await _cicTop(race.id, 10);
+      const year = String(race.data || race.stagione || '').slice(0, 4);
+      const cat = _CIC_CAT_LABEL[race.categoria] || _titleWords(String(race.categoria || '').replace(/_/g, ' '));
+      const nome = _titleWords(race.nome);
+      const dLong = race.data ? new Date(race.data + 'T12:00:00Z').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : year;
+      const luogo = _titleWords(String(race.luogo || '').replace(/\s+/g, ' ').trim()).replace(/\(([a-z]{2})\)/gi, (m, pr) => `(${pr.toUpperCase()})`);
+      const podio = top.slice(0, 3).map((r, i) => `${i + 1}° ${_cicName(r.atleta_id)}${r.team ? ' (' + _titleWords(r.team) + ')' : ''}`).join(', ');
+      const desc = `${dLong}${luogo ? ' — ' + luogo : ''}${race.regione ? ', ' + _titleWords(race.regione) : ''}. ${podio ? podio + '. ' : ''}Ordine d'arrivo e classifica ${cat} di ${nome} ${year}.`.slice(0, 300);
+      const slug = _cicSlug(race);
+      const list = top.map(r => `<li>${r.posizione}° ${_ogHtmlEsc(_cicName(r.atleta_id))}${r.team ? ' — ' + _ogHtmlEsc(_titleWords(r.team)) : ''}</li>`).join('');
+      return {
+        title: `${nome} ${year} - Risultati ${cat} | ICS`, desc,
+        canonical: `${SITE_URL}/gara/${slug}`, ogImage: DEFAULT_OG_IMG,
+        noscript: `<h1>${_ogHtmlEsc(nome)} ${year} — ${_ogHtmlEsc(cat)}</h1><p>${_ogHtmlEsc(desc)}</p>${list ? `<ol>${list}</ol>` : ''}`,
+      };
+    }
     const [calRaw, resultsRaw] = await Promise.all([
       readDataJsonFromGH('calendar.json'), readDataJsonFromGH('results_raw.json'),
     ]);
@@ -12368,6 +12465,20 @@ app.get('*', async (req, res, next) => {
   }
 
   const m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
+  if (m && m[1] === 'gara') {
+    // gare dell'archivio: l'indirizzo vero e' quello con il nome (301 dal vecchio /gara/CIC_<id> o da uno slug diverso)
+    try {
+      const raw = decodeURIComponent(m[2]);
+      const cic = raw.match(/^CIC_(\d+)$/) || (raw === raw.toLowerCase() ? raw.match(_CIC_SLUG_RE) : null);
+      if (cic) {
+        const race = await _cicRaceById(cic[1]);
+        if (race) {
+          const slug = _cicSlug(race);
+          if (raw !== slug) return res.redirect(301, `/gara/${slug}${req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : ''}`);
+        }
+      }
+    } catch (e) { console.warn('[cic-redirect] fallito per', p, ':', e.message); }
+  }
   if (m) {
     try {
       const meta = await _getHeadMetaFor(m[1], decodeURIComponent(m[2]));
