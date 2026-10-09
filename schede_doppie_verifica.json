@@ -1,0 +1,1762 @@
+[
+ {
+  "dup": "BRAFA_FEDERICO",
+  "vera": "BRAFA_FEDERICO_ROSARIO",
+  "nome": "BRAFA Federico",
+  "teamDup": "Biesse - Carrera - Premac",
+  "teamVera": "BIESSE - CARRERA - PREMAC | ENERGY TEAM A.S.D. | U.S.BIASSONO ASD",
+  "team": true,
+  "overlap": 16,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 28,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ZANETTI_ALESSANDRO",
+  "vera": "ZANETTI_ALESSANDRO_ROMEO",
+  "nome": "Zanetti Alessandro",
+  "teamDup": "Ciclistica Rostese",
+  "teamVera": "CICLISTICA ROSTESE | GS MALTINTI LAMPADARI BANCA CAMBIANO | REGIA CONGRESSI SEIECOM VALDARNO",
+  "team": true,
+  "overlap": 11,
+  "risultatiDup": 11,
+  "refs": {
+   "pcs_results": 11,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "CASTRO_SEBASTIAN",
+  "vera": "CASTRO_CASTRO_SEBASTIAN_ENRIQUE",
+  "nome": "CASTRO Sebastián",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "TEAM GENERAL SYSTEM",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 44,
+  "refs": {
+   "pcs_results": 44,
+   "pcs_gara_results": 6,
+   "manual_results": 1
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "CUBILLAS_JAVIER",
+  "vera": "CUBILLAS_SALVADOR_JAVIER",
+  "nome": "CUBILLAS Javier",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "MOVISTAR TEAM ACADEMY | MOVISTAR TEAM ACADEMY ",
+  "team": true,
+  "overlap": 28,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 29,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "PARETA_ROGER",
+  "vera": "PARETA_SALA_ROGER",
+  "nome": "PARETA Roger",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "MOVISTAR TEAM ACADEMY | MOVISTAR TEAM ACADEMY ",
+  "team": true,
+  "overlap": 42,
+  "risultatiDup": 42,
+  "refs": {
+   "pcs_results": 42,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "DANTE_ALESSANDRO",
+  "vera": "DANTE_ALESSANDRO_MARIO",
+  "nome": "DANTE Alessandro",
+  "teamDup": "Solme - Olmo - Arvedi",
+  "teamVera": "ARVEDI CYCLING ASD | POOL CANTU' GB TEAM | S.C. ROMANESE A.S.D.",
+  "team": true,
+  "overlap": 18,
+  "risultatiDup": 18,
+  "refs": {
+   "pcs_results": 18,
+   "pcs_gara_results": 7,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "KINGSTON_MATTHEW",
+  "vera": "KINGSTON_MATTHEW_JONATHAN",
+  "nome": "KINGSTON Matthew",
+  "teamDup": "MG K-VIS COSTRUZIONI E AMBIENTE",
+  "teamVera": "MG.K VIS COSTRUZIONI E AMBIENTE | MG.K VIS - COLORS FOR PEACE | ZAPPI'S RACING TEAM ",
+  "team": true,
+  "overlap": 20,
+  "risultatiDup": 20,
+  "refs": {
+   "pcs_results": 20,
+   "pcs_gara_results": 4,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "MARTINEZ_AITOR",
+  "vera": "MARTINEZ_GROSET_AITOR",
+  "nome": "MARTÍNEZ Aitor",
+  "teamDup": "TEAM VANGI TOMMASINI IL PIRATA",
+  "teamVera": "TEAM VANGI TOMMASINI IL PIRATA",
+  "team": true,
+  "overlap": 36,
+  "risultatiDup": 36,
+  "refs": {
+   "pcs_results": 36,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "GAGGIOLI_LUCIANO",
+  "vera": "GAGGIOLI_LUCIANO_WILLIAM",
+  "nome": "GAGGIOLI Luciano",
+  "teamDup": "TEAM VANGI TOMMASINI IL PIRATA",
+  "teamVera": "TEAM VANGI TOMMASINI IL PIRATA | POLISPORTIVA MONSUMMANESE | TEAM VALDINIEVOLE A.S.D.",
+  "team": true,
+  "overlap": 48,
+  "risultatiDup": 48,
+  "refs": {
+   "pcs_results": 49,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "PALOMBI_RAFFAELE",
+  "vera": "PALOMBI_RAFFAELE_LUIGI",
+  "nome": "PALOMBI Raffaele",
+  "teamDup": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+  "teamVera": "TEAM CESARO-FRANCO BALLERINI | TEAM CESARO ASD",
+  "team": false,
+  "overlap": 4,
+  "risultatiDup": 4,
+  "refs": {
+   "pcs_results": 4,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "POSADA_JOSE_MANUEL",
+  "vera": "POSADA_FRANCO_JOSE_MANUEL",
+  "nome": "POSADA Jose Manuel",
+  "teamDup": "CPS PROFESSIONAL TEAM",
+  "teamVera": "CPS PROFESSIONAL TEAM",
+  "team": true,
+  "overlap": 18,
+  "risultatiDup": 18,
+  "refs": {
+   "pcs_results": 18,
+   "pcs_gara_results": 5,
+   "manual_results": 1
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "COLAPRICO_FABIO",
+  "vera": "COLAPRICO_FABIO_GIUSEPPE",
+  "nome": "COLAPRICO Fabio",
+  "teamDup": "TEAM BELVEDERE",
+  "teamVera": "ASD 1D+ UN DENTE IN PIU' | UNDENTEINPIU'-PICCOLE CANAGLIE SPES | A.S.D. \"1 D +\"",
+  "team": false,
+  "overlap": 2,
+  "risultatiDup": 2,
+  "refs": {
+   "pcs_results": 2,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "GROSSO_MANUEL",
+  "vera": "GROSSO_LA_VALLE_MANUEL",
+  "nome": "GROSSO Manuel",
+  "teamDup": "TEAM BELVEDERE",
+  "teamVera": "A.S.D. BELVEDERE-CICLONE",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CANCHON_JUAN_ESTEBAN",
+  "vera": "CANCHON_GIL_JUAN_ESTEBAN",
+  "nome": "CANCHON Juan Esteban",
+  "teamDup": "CICLISTICA TREVIGLIESE",
+  "teamVera": "CICLISTICA TREVIGLIESE",
+  "team": true,
+  "overlap": 24,
+  "risultatiDup": 24,
+  "refs": {
+   "pcs_results": 24,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "BUONGIORNO_SIMONE",
+  "vera": "BUONGIORNO_SIMONE_LEONARDO",
+  "nome": "BUONGIORNO Simone",
+  "teamDup": "BELTRAMI TSA TRE COLLI",
+  "teamVera": "ENERGY TEAM A.S.D. | ASD V.C.EPOREDIESE",
+  "team": false,
+  "overlap": 18,
+  "risultatiDup": 18,
+  "refs": {
+   "pcs_results": 18,
+   "pcs_gara_results": 7,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CRUZ_EDWARD",
+  "vera": "CRUZ_MARTINEZ_EDWARD_SANTIAGO",
+  "nome": "CRUZ Edward",
+  "teamDup": "BARDIANI-CSF 7 SABER",
+  "teamVera": "G.S. MASSI' SUPERMERCATI PONTIDA | VANGI-SAMA RICAMBI-IL PIRATA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 28,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "HERRENO_MARTIN_SANTIAGO",
+  "vera": "HERRENO_POLANIA_MARTIN_SANTIAGO",
+  "nome": "HERREÑO Martin Santiago",
+  "teamDup": "BARDIANI-CSF 7 SABER",
+  "teamVera": "VF GROUP - BARDIANI CSF - FAIZANE' | TEAM GIORGI A.S.D. | INTERNATIONAL VELEKA TEAM",
+  "team": true,
+  "overlap": 39,
+  "risultatiDup": 39,
+  "refs": {
+   "pcs_results": 39,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ZERAY_NAHOM",
+  "vera": "ARAYA_NAHOM_ZERAY",
+  "nome": "ZERAY Nahom",
+  "teamDup": "TEAM UKYO",
+  "teamVera": "TEAM UKYO | Q36.5 CONTINENTAL CYCLING TEAM | Q36.5 CONTINENTAL CYCLING TEAM ",
+  "team": true,
+  "overlap": 37,
+  "risultatiDup": 37,
+  "refs": {
+   "pcs_results": 38,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "GRUSZCZYNSKI_FILIP",
+  "vera": "GRUSZCZYNSKI_FILIP_JAKUB",
+  "nome": "GRUSZCZYŃSKI Filip",
+  "teamDup": "MBH BANK CSB TELECOM FORT",
+  "teamVera": "BIESSE - CARRERA - PREMAC | BIESSE - CARRERA | ENERGY TEAM A.S.D.",
+  "team": false,
+  "overlap": 39,
+  "risultatiDup": 39,
+  "refs": {
+   "pcs_results": 42,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "GONZALEZ_ROBERTO_CARLOS",
+  "vera": "GONZALEZ_ROBERTO",
+  "nome": "GONZÁLEZ Roberto Carlos",
+  "teamDup": "SOLUTION TECH NIPPO RALI",
+  "teamVera": "MG.K VIS - COLORS FOR PEACE",
+  "team": false,
+  "overlap": 50,
+  "risultatiDup": 50,
+  "refs": {
+   "pcs_results": 51,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "UMBA_SANTIAGO",
+  "vera": "UMBA_LOPEZ_ABNER_SANTIAGO",
+  "nome": "UMBA Santiago",
+  "teamDup": "SOLUTION TECH NIPPO RALI",
+  "teamVera": "SOLUTION TECH NIPPO RALI | XDS ASTANA DEVELOPMENT  | GW SHIMANO SIDERMEC",
+  "team": true,
+  "overlap": 45,
+  "risultatiDup": 45,
+  "refs": {
+   "pcs_results": 45,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ROBERTS_JOHN_SHAW",
+  "vera": "ROBERTS_JOHN",
+  "nome": "ROBERTS John Shaw",
+  "teamDup": "ZAPPI RACING TEAM",
+  "teamVera": "ZAPPI RACING TEAM | ZAPPI CYCLING TEAM ",
+  "team": true,
+  "overlap": 21,
+  "risultatiDup": 21,
+  "refs": {
+   "pcs_results": 22,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "BLASI_PAULA",
+  "vera": "BLASI_CAIROL_PAULA",
+  "nome": "BLASI Paula",
+  "teamDup": "UAE TEAM ADQ",
+  "teamVera": "UAE TEAM ADQ",
+  "team": true,
+  "overlap": 45,
+  "risultatiDup": 45,
+  "refs": {
+   "pcs_results": 46,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "SKALNIAK_SOJKA_AGNIESZKA",
+  "vera": "SKALNIAK_AGNIESZKA",
+  "nome": "SKALNIAK-SÓJKA Agnieszka",
+  "teamDup": "CANYON SRAM ZONDACRYPTO",
+  "teamVera": "TEAM RYGTER - TKK PACIFIC",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 43,
+  "refs": {
+   "pcs_results": 42,
+   "pcs_gara_results": 1,
+   "manual_results": 1
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "CLEMMENSEN_THEODOR_AUGUST",
+  "vera": "CLEMMENSEN_THEODOR",
+  "nome": "CLEMMENSEN Theodor August",
+  "teamDup": "RED BULL-BORA-HANSGROHE ROOKIES",
+  "teamVera": "TEAM GRENKE AUTO EDER",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 37,
+  "refs": {
+   "pcs_results": 37,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "M_LLER_ANDERSEN_NOAH_LINDHOLM",
+  "vera": "ANDERSEN_NOAH_LINDHOLM",
+  "nome": "MØLLER ANDERSEN Noah Lindholm",
+  "teamDup": "RED BULL-BORA-HANSGROHE ROOKIES",
+  "teamVera": "TEAM GRENKE AUTO EDER",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 32,
+  "refs": {
+   "pcs_results": 32,
+   "pcs_gara_results": 6,
+   "manual_results": 2
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "JASIM_SAIF_JASIM_AL_ALI_ABDULLA",
+  "vera": "JASIM_AL_ALI_ABDULLA",
+  "nome": "JASIM SAIF JASIM AL-ALI Abdulla",
+  "teamDup": "UAE TEAM EMIRATES GEN-Z",
+  "teamVera": "UAE TEAM EMIRATES GEN-Z ",
+  "team": true,
+  "overlap": 31,
+  "risultatiDup": 31,
+  "refs": {
+   "pcs_results": 31,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "RAMIREZ_MATEO",
+  "vera": "RAMIREZ_TORRES_MATEO_PABLO",
+  "nome": "RAMÍREZ Mateo",
+  "teamDup": "UAE TEAM EMIRATES GEN-Z",
+  "teamVera": "UAE TEAM EMIRATES GEN-Z | UAE TEAM EMIRATES GEN-Z ",
+  "team": true,
+  "overlap": 24,
+  "risultatiDup": 24,
+  "refs": {
+   "pcs_results": 24,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ALVAREZ_HECTOR",
+  "vera": "ALVAREZ_MARTINEZ_HECTOR",
+  "nome": "ÁLVAREZ Héctor",
+  "teamDup": "LIDL-TREK FUTURE RACING",
+  "teamVera": "LIDL-TREK FUTURE RACING | NAZIONALE SPAGNA",
+  "team": true,
+  "overlap": 49,
+  "risultatiDup": 50,
+  "refs": {
+   "pcs_results": 49,
+   "pcs_gara_results": 0,
+   "manual_results": 4
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "MARIVOET_DUARTE",
+  "vera": "MARIVOET_SCHOLIERS_DUARTE",
+  "nome": "MARIVOET Duarte",
+  "teamDup": "LOTTO -GROUPE WANTY",
+  "teamVera": "LOTTO GROUPE WANTY | UAE TEAM EMIRATES GEN-Z  | BELGIO",
+  "team": true,
+  "overlap": 48,
+  "risultatiDup": 48,
+  "refs": {
+   "pcs_results": 48,
+   "pcs_gara_results": 9,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "CARINGI_ROBERTO",
+  "vera": "CARINGI_ROBERTO_MARCO_MARIA",
+  "nome": "CARINGI Roberto",
+  "teamDup": "AUDAX FIORMONTI",
+  "teamVera": "AUDAX FIORMONTI | ASD MORENO DI BIASE | ASD TEAM CESIDIO LA RUSPA AVEZZANO",
+  "team": true,
+  "overlap": 1,
+  "risultatiDup": 1,
+  "refs": {
+   "pcs_results": 1,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "MEDEOT_TOMAZ",
+  "vera": "LOVER_MEDEOT_TOMAZ",
+  "nome": "MEDEOT Tomaz",
+  "teamDup": "TEAM TIEPOLO U19 DEVO",
+  "teamVera": "TEAM TIEPOLO U19 DEVO | A.S.D. PEDALE RONCHESE",
+  "team": true,
+  "overlap": 21,
+  "risultatiDup": 21,
+  "refs": {
+   "pcs_results": 21,
+   "pcs_gara_results": 16,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "TRICA_THEODOR",
+  "vera": "TRICA_THEODOR_STEFAN",
+  "nome": "TRICA Theodor",
+  "teamDup": "TEAM TIEPOLO U19 DEVO",
+  "teamVera": "TEAM TIEPOLO U19 DEVO | CS OLIMPIA BUCARESTI",
+  "team": true,
+  "overlap": 16,
+  "risultatiDup": 17,
+  "refs": {
+   "pcs_results": 15,
+   "pcs_gara_results": 8,
+   "manual_results": 2
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "KHATIEB_FARAZ",
+  "vera": "FARAZ_KHATIEB",
+  "nome": "KHATIEB Faraz",
+  "teamDup": "VELEKA TEAM",
+  "teamVera": "VELEKA TEAM",
+  "team": true,
+  "overlap": 14,
+  "risultatiDup": 14,
+  "refs": {
+   "pcs_results": 14,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ANDRADE_OMAR",
+  "vera": "ANDRADE_FERNANDEZ_OMAR",
+  "nome": "ANDRADE Omar",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R.MONEX PRO CYCLING TEAM ",
+  "team": true,
+  "overlap": 14,
+  "risultatiDup": 14,
+  "refs": {
+   "pcs_results": 15,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "FERNANDEZ_JORGE",
+  "vera": "FERNANDEZ_RUIZ_JORGE_LUIS",
+  "nome": "FERNANDEZ Jorge",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R.MONEX PRO CYCLING TEAM  | A.R. MONEX CYCLING TEAM ",
+  "team": true,
+  "overlap": 9,
+  "risultatiDup": 9,
+  "refs": {
+   "pcs_results": 9,
+   "pcs_gara_results": 12,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "MORENO_DANIEL",
+  "vera": "MORENO_GARCIA_DANIEL_SANTIAGO",
+  "nome": "MORENO Daniel",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R. MONEX CYCLING TEAM ",
+  "team": true,
+  "overlap": 29,
+  "risultatiDup": 29,
+  "refs": {
+   "pcs_results": 29,
+   "pcs_gara_results": 20,
+   "manual_results": 1
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "RODRIGUEZ_JOSE_EMILIO",
+  "vera": "RODRIGUEZ_DELGADO_JOSE_EMILIO",
+  "nome": "RODRIGUEZ José Emilio",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "MESSICO | A.R.MONEX PRO CYCLING TEAM  | A.R. MONEX CYCLING TEAM ",
+  "team": true,
+  "overlap": 28,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 28,
+   "pcs_gara_results": 22,
+   "manual_results": 2
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "SANTIAGO_RICARDO",
+  "vera": "SANTIAGO_GARCIA_RICARDO",
+  "nome": "SANTIAGO Ricardo",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R.MONEX PRO CYCLING TEAM ",
+  "team": true,
+  "overlap": 21,
+  "risultatiDup": 21,
+  "refs": {
+   "pcs_results": 21,
+   "pcs_gara_results": 15,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ZAMUDIO_GIANLUIGI",
+  "vera": "ZAMUDIO_PEREZ_GIANLUIGI",
+  "nome": "ZAMUDIO Gianluigi",
+  "teamDup": "A.R.MONEX PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R.MONEX PRO CYCLING TEAM ",
+  "team": true,
+  "overlap": 18,
+  "risultatiDup": 18,
+  "refs": {
+   "pcs_results": 18,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "BRAVO_HENRIQUE",
+  "vera": "RIBEIRO_BRAVO_HENRIQUE",
+  "nome": "BRAVO Henrique",
+  "teamDup": "SOUDAL QUICK-STEP DEVO TEAM",
+  "teamVera": "SOUDAL QUICK-STEP DEVO TEAM",
+  "team": true,
+  "overlap": 60,
+  "risultatiDup": 60,
+  "refs": {
+   "pcs_results": 61,
+   "pcs_gara_results": 15,
+   "manual_results": 1
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "KUNTARIC_VANJA",
+  "vera": "KUNTARIC_ZIBERT_VANJA",
+  "nome": "KUNTARIČ Vanja",
+  "teamDup": "POGI TEAM UAE GENERALI",
+  "teamVera": "SLOVENIA NATIONAL TEAM | SLOVENIA NATIONAL TEAM  | POGI TEAM UAE GENERALI",
+  "team": true,
+  "overlap": 34,
+  "risultatiDup": 34,
+  "refs": {
+   "pcs_results": 34,
+   "pcs_gara_results": 15,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "LOPEZ_DIEGO",
+  "vera": "LOPEZ_ORTIZ_DIEGO",
+  "nome": "LOPEZ Diego",
+  "teamDup": "SOUDAL QUICK-STEP JUNIOR TEAM",
+  "teamVera": "NAZIONALE SPAGNA",
+  "team": false,
+  "overlap": 40,
+  "risultatiDup": 40,
+  "refs": {
+   "pcs_results": 41,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MORALES_JONATHAN",
+  "vera": "MORALES_ORTIZ_JONATHAN",
+  "nome": "MORALES Jonathan",
+  "teamDup": "PETROLIKE",
+  "teamVera": "A.R. MONEX CYCLING TEAM ",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 3,
+  "refs": {
+   "pcs_results": 3,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "PRIETO_JOSE_JUAN",
+  "vera": "PRIETO_DE_LUNA_JOSE_JUAN",
+  "nome": "PRIETO José Juan",
+  "teamDup": "PETROLIKE",
+  "teamVera": "PETROLIKE | PETROLIKE ",
+  "team": true,
+  "overlap": 36,
+  "risultatiDup": 36,
+  "refs": {
+   "pcs_results": 36,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ADRIA_ROGER",
+  "vera": "ADRIA_OLIVERAS_ROGER",
+  "nome": "ADRIÀ ROGER",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "EQUIPO LIZARTE",
+  "team": false,
+  "overlap": 44,
+  "risultatiDup": 44,
+  "refs": {
+   "pcs_results": 44,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "AGIRRE_JON",
+  "vera": "AGIRRE_EGANA_JON",
+  "nome": "AGIRRE JON",
+  "teamDup": "EUSKALTEL - EUSKADI",
+  "teamVera": "EQUIPO KERN PHARMA ",
+  "team": false,
+  "overlap": 79,
+  "risultatiDup": 79,
+  "refs": {
+   "pcs_results": 79,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "ALMEIDA_JOAO",
+  "vera": "ALMEIDA_GONCALVES_JOAO_PEDRO",
+  "nome": "ALMEIDA JOÃO",
+  "teamDup": "SCONOSCIUTO",
+  "teamVera": "AXEON HAGENS BERMAN \t | UNIEURO TREVIGIANI HEMUS 1896",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 51,
+  "refs": {
+   "pcs_results": 51,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "ALONSO_PABLO",
+  "vera": "MONTES_PABLO_ALONSO",
+  "nome": "ALONSO PABLO",
+  "teamDup": "SCONOSCIUTO",
+  "teamVera": "CLUB CICLISTICO COLINDRES",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "BALDIE_JACK",
+  "vera": "BALDIE_JACK_WILLIAM",
+  "nome": "BALDIE JACK",
+  "teamDup": "SOLME - OLMO - ARVEDI",
+  "teamVera": "SOLME - OLMO - ARVEDI",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "BALLIANA_ENRICO_ANDREA",
+  "vera": "BALLIANA_ENRICO",
+  "nome": "BALLIANA ENRICO ANDREA",
+  "teamDup": "GALLINA ECOTEK LUCCHINI",
+  "teamVera": "TEAM ECOTEK ZERO24 | TEAM ECOTEK | ARKITANO MTB CLUB -  CARBONHUBO",
+  "team": true,
+  "overlap": 1,
+  "risultatiDup": 3,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 3
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "BINDA_ROSSETTI",
+  "vera": "BINDA_ROSSETTI_GABRIELE",
+  "nome": "BINDA ROSSETTI",
+  "teamDup": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
+  "teamVera": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "BIRKEDAL_JULIUS_L_VSTRUP",
+  "vera": "BIRKEDAL_JULIUS",
+  "nome": "BIRKEDAL JULIUS LØVSTRUP",
+  "teamDup": "DENMARK",
+  "teamVera": "GRENKE - AUTO EDER | DANIMARCA | TEAM GRENKE AUTO EDER",
+  "team": false,
+  "overlap": 2,
+  "risultatiDup": 3,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 3,
+   "manual_results": 3
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "BORREMANS_KASPER",
+  "vera": "BORREMANS_KASPER_TOBIAS",
+  "nome": "BORREMANS KASPER",
+  "teamDup": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+  "teamVera": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM | CANNIBAL B VICTORIUS",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "BRAMINI_GORETTI",
+  "vera": "BRAMINI_GORETTI_GIORGIO",
+  "nome": "BRAMINI GORETTI",
+  "teamDup": "UMBRIA",
+  "teamVera": "BIESSE - CARRERA - PREMAC | G.S.GUBBIO CICLISMO MOCAIANA  | ASD GUBBIO CICLISMO MOCAIANA",
+  "team": false,
+  "overlap": 4,
+  "risultatiDup": 4,
+  "refs": {
+   "pcs_results": 4,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CACCHIO_MICHELE",
+  "vera": "CACCHIO_MICHELE_PIO",
+  "nome": "CACCHIO MICHELE",
+  "teamDup": "TEAM GUERRINI SENAGHESE",
+  "teamVera": "TEAM GUERRINI SENAGHESE | SIDERMEC | POL. FIUMICINESE FA.I.T.ADRIATICA",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CAMARGO_DAVID_ALEJANDRO",
+  "vera": "CAMARGO_HERNANDEZ_DAVID_ALEJANDRO",
+  "nome": "CAMARGO DAVID ALEJANDRO",
+  "teamDup": "GS BORGONUOVO",
+  "teamVera": "A.S.D. U.C. PISTOIESE TEAM | GS BORGONUOVO | U.C. PISTOIESE",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CAMARGO_DIEGO_ANDRES",
+  "vera": "CAMARGO_PINEDA_DIEGO_ANDRES",
+  "nome": "CAMARGO DIEGO ANDRÉS",
+  "teamDup": "PETROLIKE",
+  "teamVera": "PETROLIKE ",
+  "team": true,
+  "overlap": 41,
+  "risultatiDup": 41,
+  "refs": {
+   "pcs_results": 43,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "CAMPAGNOLA_FEDERICO",
+  "vera": "CAMPAGNOLA_FEDERICO_PIO",
+  "nome": "CAMPAGNOLA FEDERICO",
+  "teamDup": "ENERGY TEAM A.S.D.",
+  "teamVera": "EQUIPE CORBETTESE | EQUIPE CORBETTESE A.S.D.",
+  "team": false,
+  "overlap": 11,
+  "risultatiDup": 12,
+  "refs": {
+   "pcs_results": 13,
+   "pcs_gara_results": 4,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "CSAKI_SZABOLCS",
+  "vera": "SZABOLCS_CSAKI",
+  "nome": "CSÁKI SZABOLCS",
+  "teamDup": "TEAM UNITED SHIPPING",
+  "teamVera": "S.C.A.P. TRODICA DI MORROVALLE",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 3,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "FEDRIZZI_BRANDON",
+  "vera": "FEDRIZZI_BRANDON_DAVIDE",
+  "nome": "FEDRIZZI BRANDON",
+  "teamDup": "BORGO MOLINO-VIGNA FIORITA",
+  "teamVera": "BORGO MOLINO-VIGNA FIORITA | PETRUCCI ASSALI STEFEN MAKRO | C.C. FORTI E VELOCI",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "FELIPE_QUOTADAMO",
+  "vera": "QUOTADAMO_FELIPE",
+  "nome": "FELIPE QUOTADAMO",
+  "teamDup": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
+  "teamVera": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "FIALLA_IDA_DAM",
+  "vera": "FIALLA_IDA",
+  "nome": "FIALLA IDA DAM",
+  "teamDup": "GROUWELS - WATERSLEY R&D",
+  "teamVera": "DANIMARCA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 20,
+  "refs": {
+   "pcs_results": 20,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "FIOCCHI_FILIPPO",
+  "vera": "FIOCCHI_FILIPPO_MARIA",
+  "nome": "FIOCCHI FILIPPO",
+  "teamDup": "G.S. BAREGGESE A.S.D",
+  "teamVera": "BUSTO GAROLFO",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 0,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "GHELFI_LORENZO",
+  "vera": "GHELFI_LORENZO_MASSIMO",
+  "nome": "GHELFI LORENZO",
+  "teamDup": "LUNIGIANA",
+  "teamVera": "ASD PEDALE CASALESE ARMOFER",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "GOLLIKER_JOSHUA",
+  "vera": "GOLLIKER_DAVID_JOSHUA",
+  "nome": "GOLLIKER JOSHUA",
+  "teamDup": "EF EDUCATION - AEVOLO",
+  "teamVera": "GROUPAMA - FDJ CONTINENTAL TEAM",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "HARASIM_MIHNEA_ALEXANDRU",
+  "vera": "HARASIM_MIHNEA",
+  "nome": "HARASIM MIHNEA-ALEXANDRU",
+  "teamDup": "TEAM SKYLINE",
+  "teamVera": "TEAM SKYLINE",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 9,
+  "refs": {
+   "pcs_results": 9,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "HIGUITA_SERGIO",
+  "vera": "HIGUITA_SERGIO_ANDRES",
+  "nome": "HIGUITA SERGIO",
+  "teamDup": "XDS ASTANA TEAM",
+  "teamVera": "MANZANA POSTOBON TEAM",
+  "team": false,
+  "overlap": 56,
+  "risultatiDup": 56,
+  "refs": {
+   "pcs_results": 56,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "HOEKS_DAAN",
+  "vera": "HOEKS_DAAN_EDUARD_JAN",
+  "nome": "HOEKS DAAN",
+  "teamDup": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+  "teamVera": "GS MALTINTI LAMPADARI BANCA CAMBIANO | MG.K VIS - COLORS FOR PEACE - VPM | WPG AMSTERDAM JUNIOR",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "KELLY_ADAM",
+  "vera": "KELLY_ADAM_JON",
+  "nome": "KELLY ADAM",
+  "teamDup": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+  "teamVera": "MG.K VIS COSTRUZIONI E AMBIENTE | BRITISH CYCLING FEDERATION",
+  "team": false,
+  "overlap": 6,
+  "risultatiDup": 6,
+  "refs": {
+   "pcs_results": 6,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "KNUDSEN_OLIVER",
+  "vera": "KNUDSEN_OLIVER_BECH",
+  "nome": "KNUDSEN OLIVER",
+  "teamDup": "ASD SWATT CLUB",
+  "teamVera": "V.C.MENDRISIO",
+  "team": false,
+  "overlap": 28,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 28,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "LACERDA_JHEMERSON",
+  "vera": "LACERDA_MILHOMEM_JHEMERSON",
+  "nome": "LACERDA JHEMERSON",
+  "teamDup": "TEAM PIERI CALAMAI",
+  "teamVera": "ASD TEAM PIERI | G.S.BUTESE",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "LAMPREA_ZARA_SOFIA",
+  "vera": "LAMPREA_MORALES_ZARA_SOFIA",
+  "nome": "LAMPREA ZARA SOFÍA",
+  "teamDup": "COLOMBIA",
+  "teamVera": "LMC BOGOTA' | LMC BOGOTA' ",
+  "team": false,
+  "overlap": 2,
+  "risultatiDup": 2,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 0,
+   "manual_results": 2
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "LOPEZ_JUAN_PEDRO",
+  "vera": "LOPEZ_PEREZ_JUAN_PEDRO",
+  "nome": "LÓPEZ JUAN PEDRO",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "KOMETA CYCLING TEAM | POLARTEC KOMETA",
+  "team": false,
+  "overlap": 61,
+  "risultatiDup": 61,
+  "refs": {
+   "pcs_results": 61,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "LOTTI_ZENO",
+  "vera": "LOTTI_ZENO_LEONARDO",
+  "nome": "LOTTI ZENO",
+  "teamDup": "ASD BLACKSHEEPS",
+  "teamVera": "VELO CLUB S.C. EMPOLI",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "LUDWIG_CECILIE_UTTRUP",
+  "vera": "LUDWIG_UTTRUP_CECILIE",
+  "nome": "LUDWIG CECILIE UTTRUP",
+  "teamDup": "DANIMARCA",
+  "teamVera": "NAZIONALE DANIMARCA",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 1,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 0,
+   "manual_results": 1
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MACIAS_CESAR",
+  "vera": "MACIAS_ESTRADA_CESAR",
+  "nome": "MACÍAS CÉSAR",
+  "teamDup": "PETROLIKE",
+  "teamVera": "PETROLIKE ",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MANION_VINNIE",
+  "vera": "MANION_VINNIE_NICHOLAS",
+  "nome": "MANION VINNIE",
+  "teamDup": "WWV HAGENS BERMAN - JAYCO",
+  "teamVera": "WORK SERVICE CORATTI | TEAM CORATTI",
+  "team": false,
+  "overlap": 19,
+  "risultatiDup": 19,
+  "refs": {
+   "pcs_results": 19,
+   "pcs_gara_results": 3,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MARANGON_PAOLO",
+  "vera": "MARANGON_PAOLO_GRAZIANO",
+  "nome": "MARANGON PAOLO",
+  "teamDup": "PIEMONTE",
+  "teamVera": "TEAM GUERRINI SENAGHESE | TEAM GIORGI A.S.D. | MADONNA DI CAMPAGNA",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MARTINEZ_JUAN_GUILLERMO",
+  "vera": "MARTINEZ_HUERTAS_JUAN_GUILLERMO",
+  "nome": "MARTINEZ JUAN GUILLERMO",
+  "teamDup": "Q36.5 CONTINENTAL TEAM",
+  "teamVera": "Q36.5 CONTINENTAL CYCLING TEAM",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 63,
+  "refs": {
+   "pcs_results": 63,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MARTINI_MATTIA",
+  "vera": "MARTINI_MATTIA_MURG",
+  "nome": "MARTINI MATTIA",
+  "teamDup": "SS AQUILA",
+  "teamVera": "POL. MILLELUCI CICLISMO",
+  "team": false,
+  "overlap": 5,
+  "risultatiDup": 5,
+  "refs": {
+   "pcs_results": 5,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MESSEMER_JOELLE_AMELIE",
+  "vera": "MESSEMER_JOELLE",
+  "nome": "MESSEMER JOELLE AMELIE",
+  "teamDup": "CANYON//SRAM GENERATION",
+  "teamVera": "NAZIONALE GERMANIA",
+  "team": false,
+  "overlap": 45,
+  "risultatiDup": 45,
+  "refs": {
+   "pcs_results": 45,
+   "pcs_gara_results": 4,
+   "manual_results": 2
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MIGHELI_MANUELE",
+  "vera": "MIGHELI_MANUELE_GEROLAMO",
+  "nome": "MIGHELI MANUELE",
+  "teamDup": "POLISPORTIVA TRIPETETOLO SEANESE",
+  "teamVera": "GB TEAM POOL CANTU' A.S.D. | POOL CANTU'-GB JUNIOR TEAM | VELO CLUB S.C. EMPOLI",
+  "team": false,
+  "overlap": 13,
+  "risultatiDup": 13,
+  "refs": {
+   "pcs_results": 13,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MILHOMEM_JHEMERSON",
+  "vera": "LACERDA_MILHOMEM_JHEMERSON",
+  "nome": "MILHOMEM JHEMERSON",
+  "teamDup": "TEAM PIERI CALAMAI",
+  "teamVera": "ASD TEAM PIERI | G.S.BUTESE",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 20,
+  "refs": {
+   "pcs_results": 20,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MORGADO_ANTONIO",
+  "vera": "MORGADO_TOMAS_ANTONIO",
+  "nome": "MORGADO ANTÓNIO",
+  "teamDup": "UAE TEAM EMIRATES - XRG",
+  "teamVera": "AXEON HAGENS BERMAN \t | PORTOGALLO",
+  "team": false,
+  "overlap": 63,
+  "risultatiDup": 63,
+  "refs": {
+   "pcs_results": 63,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MUNIZ_JOSE_RAMON",
+  "vera": "MUNIZ_VAZQUEZ_JOSE_RAMON",
+  "nome": "MUÑIZ JOSÉ RAMÓN",
+  "teamDup": "PETROLIKE",
+  "teamVera": "PETROLIKE ",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "MURGUIALDAY_JOKIN",
+  "vera": "MURGUIALDAY_ELORZA_JOKIN",
+  "nome": "MURGUIALDAY JOKIN",
+  "teamDup": "EUSKALTEL - EUSKADI",
+  "teamVera": "CLUB CICLISTA URBASA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "NEIRA_ALEJANDRA",
+  "vera": "DOMINGUEZ_NEIRA_ALEJANDRA",
+  "nome": "NEIRA ALEJANDRA",
+  "teamDup": "SPAIN",
+  "teamVera": "SPAGNA",
+  "team": false,
+  "overlap": 32,
+  "risultatiDup": 34,
+  "refs": {
+   "pcs_results": 32,
+   "pcs_gara_results": 1,
+   "manual_results": 4
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "NOVAL_BENJAMIN",
+  "vera": "NOVAL_SUAREZ_BENJAMIN",
+  "nome": "NOVAL BENJAMÍN",
+  "teamDup": "SPAIN",
+  "teamVera": "SPAGNA | NAZIONALE SPAGNA",
+  "team": false,
+  "overlap": 26,
+  "risultatiDup": 28,
+  "refs": {
+   "pcs_results": 28,
+   "pcs_gara_results": 4,
+   "manual_results": 4
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "PATTINSON_TOMOS",
+  "vera": "PATTINSON_OWAIN_TOMOS",
+  "nome": "PATTINSON TOMOS",
+  "teamDup": "EF EDUCATION - AEVOLO",
+  "teamVera": "TEAM VISMA | LEASE A BIKE DEVELOPMENT | TEAM VISMA | LEASE A BIKE DEVELO",
+  "team": false,
+  "overlap": 54,
+  "risultatiDup": 54,
+  "refs": {
+   "pcs_results": 54,
+   "pcs_gara_results": 12,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "PEDERSEN_RASMUS_LUND",
+  "vera": "LUND_RASMUS",
+  "nome": "PEDERSEN RASMUS LUND",
+  "teamDup": "SCONOSCIUTO",
+  "teamVera": "NAZIONALE DANIMARCA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "PEREZ_CIRO",
+  "vera": "PEREZ_ALVAREZ_CIRO",
+  "nome": "PÉREZ CIRO",
+  "teamDup": "AVC AIX EN PROVENCE DOLE",
+  "teamVera": "MG.K VIS COSTRUZIONI E AMBIENTE | MG.K VIS - COLORS FOR PEACE",
+  "team": false,
+  "overlap": 40,
+  "risultatiDup": 40,
+  "refs": {
+   "pcs_results": 40,
+   "pcs_gara_results": 3,
+   "manual_results": 1
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "PERICAS_ADRIA",
+  "vera": "PERICAS_CAPDEVILA_ADRIA",
+  "nome": "PERICAS ADRIÀ",
+  "teamDup": "UAE TEAM EMIRATES - XRG",
+  "teamVera": "UAE TEAM EMIRATES GEN-Z  | NAZIONALE SPAGNA",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "PESCADOR_DIEGO",
+  "vera": "PESCADOR_CASTRO_DIEGO",
+  "nome": "PESCADOR DIEGO",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "GW ERCO SHIMANO  | TALENTOS COLOMBIA STRONGAM ",
+  "team": false,
+  "overlap": 43,
+  "risultatiDup": 43,
+  "refs": {
+   "pcs_results": 43,
+   "pcs_gara_results": 5,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "PINEDA_NATALIA",
+  "vera": "PINEDA_SOTO_NATALIA",
+  "nome": "PINEDA NATALIA",
+  "teamDup": "A.R. MONEX WOMEN'S PRO CYCLING TEAM",
+  "teamVera": "A.R.MONEX PRO CYCLING TEAM | A.R.MONEX PRO CYCLING TEAM ",
+  "team": true,
+  "overlap": 4,
+  "risultatiDup": 4,
+  "refs": {
+   "pcs_results": 4,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "PLATTNER_JAEL",
+  "vera": "PLATTNER_JAEL_LINDA",
+  "nome": "PLATTNER JAEL",
+  "teamDup": "SWITZERLAND",
+  "teamVera": "SWISS CYCLING ",
+  "team": false,
+  "overlap": 5,
+  "risultatiDup": 6,
+  "refs": {
+   "pcs_results": 5,
+   "pcs_gara_results": 1,
+   "manual_results": 1
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "REISSNER_LENA",
+  "vera": "REISSNER_LENA_CHARLOTTE",
+  "nome": "REISSNER LENA",
+  "teamDup": "LKT TEAM",
+  "teamVera": "GERMANIA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 2,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "RICHEZE_ADRIAN",
+  "vera": "RICHEZE_ADRIAN_EZEQUIEL",
+  "nome": "RICHEZE ADRIÁN",
+  "teamDup": "SCONOSCIUTO",
+  "teamVera": "G.S.C. VIRIS LOMELLINA A.S.D. | ORT REALE MUTUA | NORDELETTRICA BOTTOLI RAMONDA",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "RODRIGUEZ_CARLOS",
+  "vera": "COLOBON_RODRIGUEZ_CARLOS_EDUARDO",
+  "nome": "RODRÍGUEZ CARLOS",
+  "teamDup": "SPAIN",
+  "teamVera": "A.S.D. ESPERIA ROLFO V.I.",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "RUBIO_EINER",
+  "vera": "RUBIO_REYES_EINER_AUGUSTO",
+  "nome": "RUBIO EINER",
+  "teamDup": "MOVISTAR TEAM ACADEMY",
+  "teamVera": "ARAN CUCINE VEJUS | VEJUS-TMF",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 55,
+  "refs": {
+   "pcs_results": 55,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "RUIZ_SEBASTIAN",
+  "vera": "RUIZ_TERAN_SEBASTIAN",
+  "nome": "RUIZ SEBASTIAN",
+  "teamDup": "MESSICO",
+  "teamVera": "A.R. MONEX CYCLING TEAM ",
+  "team": false,
+  "overlap": 1,
+  "risultatiDup": 1,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 0,
+   "manual_results": 1
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "SERRANO_JAVIER",
+  "vera": "SERRANO_RODRIGUEZ_JAVIER",
+  "nome": "SERRANO JAVIER",
+  "teamDup": "TEAM POLTI VISITMALTA",
+  "teamVera": "EOLO KOMETA | BIESSE ARVEDI ASD",
+  "team": false,
+  "overlap": 38,
+  "risultatiDup": 38,
+  "refs": {
+   "pcs_results": 38,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "SKIVILD_ROBIN_JUEL",
+  "vera": "SKIVILD_ROBIN",
+  "nome": "SKIVILD ROBIN JUEL",
+  "teamDup": "DENMARK",
+  "teamVera": "UNO-X DARE DEVELOPMENT TEAM ",
+  "team": false,
+  "overlap": 0,
+  "risultatiDup": 14,
+  "refs": {
+   "pcs_results": 14,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "DA CONTROLLARE"
+ },
+ {
+  "dup": "SOTO_ALEJANDRO",
+  "vera": "SOTO_CERVANTES_ALEJANDRO",
+  "nome": "SOTO ALEJANDRO",
+  "teamDup": "SPAIN",
+  "teamVera": "SPAGNA",
+  "team": false,
+  "overlap": 39,
+  "risultatiDup": 39,
+  "refs": {
+   "pcs_results": 40,
+   "pcs_gara_results": 4,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "SUAZA_BERNARDO",
+  "vera": "SUAZA_ARANGO_BERNARDO",
+  "nome": "SUAZA BERNARDO",
+  "teamDup": "PETROLIKE",
+  "teamVera": "COLOMBIA",
+  "team": false,
+  "overlap": 18,
+  "risultatiDup": 18,
+  "refs": {
+   "pcs_results": 20,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "TORRES_PABLO",
+  "vera": "RAMIREZ_TORRES_MATEO_PABLO",
+  "nome": "TORRES PABLO",
+  "teamDup": "UAE TEAM EMIRATES GEN-Z",
+  "teamVera": "UAE TEAM EMIRATES GEN-Z | UAE TEAM EMIRATES GEN-Z ",
+  "team": true,
+  "overlap": 0,
+  "risultatiDup": 0,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ },
+ {
+  "dup": "VIERO_GUIDO_BRUNO",
+  "vera": "VIERO_GUIDO",
+  "nome": "VIERO GUIDO BRUNO",
+  "teamDup": "NORDEST PETRUCCI ASSALI STEFEN",
+  "teamVera": "NORDEST PETRUCCI ASSALI STEFEN | PETRUCCI ASSALI STEFEN MAKRO | ASD BRUNO GAIGA C.A.M.P.I.",
+  "team": true,
+  "overlap": 1,
+  "risultatiDup": 1,
+  "refs": {
+   "pcs_results": 0,
+   "pcs_gara_results": 1,
+   "manual_results": 1
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "WALKER_ZACHARY",
+  "vera": "WALKER_ZACHARY_ALBERT",
+  "nome": "WALKER ZACHARY",
+  "teamDup": "RIME DRALI",
+  "teamVera": "RIME DRALI",
+  "team": true,
+  "overlap": 17,
+  "risultatiDup": 17,
+  "refs": {
+   "pcs_results": 18,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ZAPATA_MAURICIO",
+  "vera": "ZAPATA_ARBOLEDA_MAURICIO",
+  "nome": "ZAPATA MAURICIO",
+  "teamDup": "PETROLIKE",
+  "teamVera": "PETROLIKE ",
+  "team": true,
+  "overlap": 31,
+  "risultatiDup": 31,
+  "refs": {
+   "pcs_results": 31,
+   "pcs_gara_results": 1,
+   "manual_results": 0
+  },
+  "verdict": "sicura"
+ },
+ {
+  "dup": "ZSEMBERY_BOLDIZSAR",
+  "vera": "ZSEMBERY_BOLDIZSAR_PETER",
+  "nome": "ZSEMBERY BOLDIZSÁR",
+  "teamDup": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+  "teamVera": "MBHBANK ",
+  "team": false,
+  "overlap": 8,
+  "risultatiDup": 8,
+  "refs": {
+   "pcs_results": 8,
+   "pcs_gara_results": 3,
+   "manual_results": 0
+  },
+  "verdict": "probabile"
+ }
+]
