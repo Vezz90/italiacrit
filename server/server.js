@@ -8367,7 +8367,7 @@ async function _kvSet(key, value) {
   if (error) throw new Error('Supabase write error: ' + error.message);
 }
 const _videoKey = u => { const m = String(u || '').match(/(?:v=|youtu\.be\/|\/videos\/|\/live\/)([\w-]{6,})/); return (m ? m[1] : String(u || '')).slice(0, 80); };
-let _videoPostRunning = false, _videoPostAgain = null;
+let _videoPostRunning = false, _videoPostAgain = null, _nextLiveDue = null;
 async function publishNewVideosToFacebook(videos) {
   if (!supabase || !_fbConfigured()) return { skipped: 'facebook non configurato' };
   if (_videoPostRunning) { _videoPostAgain = videos; return { skipped: 'in corso' }; }
@@ -8390,12 +8390,27 @@ async function publishNewVideosToFacebook(videos) {
     const today = Date.now();
     const calendar = (await readDataJsonFromGH('calendar.json').catch(() => null)) || [];
     let posted = 0;
+    let nextDue = null;                       // prossimo momento in cui una diretta programmata va pubblicata
     for (const x of all) {
       if (seen.has(x.key)) continue;
-      // solo gare vicine nel tempo (da ieri-3 a domani): un video aggiunto a una gara vecchia non va sulla Pagina
-      const d = (x.gid.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || String(x.v.published_at || '').slice(0, 10);
-      const ms = d ? Date.parse(d) : NaN;
-      if (isNaN(ms) || ms < today - 3 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
+      const sched = x.v.is_live && x.v.scheduled_start ? Date.parse(x.v.scheduled_start) : NaN;
+      let startNote = '';
+      if (!isNaN(sched)) {
+        // diretta con orario: si pubblica 5 minuti prima dell'inizio (o subito, se e' gia' iniziata da meno di 6 ore)
+        const due = sched - 5 * 60000;
+        if (today < due) {
+          if (due - today < 48 * 3600000) nextDue = nextDue == null ? due : Math.min(nextDue, due);
+          continue;                           // non ancora: si riprova al prossimo controllo (ogni minuto vicino all'orario)
+        }
+        if (today > sched + 6 * 3600000) { seen.add(x.key); continue; }   // diretta finita da un pezzo
+        const mins = Math.round((sched - today) / 60000);
+        startNote = mins > 1 ? `tra ${mins} minuti (ore ${new Date(sched).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' })})` : 'IN CORSO';
+      } else {
+        // senza orario (o video normale): solo gare vicine nel tempo (da 3 giorni fa a domani); un video su una gara vecchia non va sulla Pagina
+        const d = (x.gid.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || String(x.v.published_at || '').slice(0, 10);
+        const ms = d ? Date.parse(d) : NaN;
+        if (isNaN(ms) || ms < today - 3 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
+      }
       if (posted >= 5) break;
       const cal = _findCalEntryForNativeGaraId(calendar, x.gid);
       const nome = cal?.nome || x.gid.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
@@ -8404,7 +8419,7 @@ async function publishNewVideosToFacebook(videos) {
       const title = String(x.v.title || '').replace(/&#x[0-9a-f]+;|&nbsp;/gi, ' ').trim();
       const siteLink = `${SITE_URL}/gara/${encodeURIComponent(x.gid)}`;
       const lines = [
-        live ? `🔴 DIRETTA — ${nome}` : `🎥 VIDEO — ${nome}`,
+        live ? `🔴 DIRETTA${startNote ? ' ' + startNote : ''} — ${nome}` : `🎥 VIDEO — ${nome}`,
         [cal?.categoria, luogo].filter(Boolean).join(' · '),
         live ? 'Segui la gara in diretta 👇' : 'Rivedi la gara 👇',
         x.v.channel ? `📺 ${x.v.channel}` : '',
@@ -8426,6 +8441,7 @@ async function publishNewVideosToFacebook(videos) {
     }
     log.seen = [...seen].slice(-4000);
     await _kvSet(SOCIAL_VIDEO_LOG_KEY, log);
+    _nextLiveDue = nextDue;
     return { posted };
   } finally {
     _videoPostRunning = false;
@@ -12631,6 +12647,8 @@ init()
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(rescrapeRecentFbPosts, SYNC_INTERVAL);
       setInterval(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), SYNC_INTERVAL);
+      // ogni minuto: se una diretta programmata e' a meno di 5 minuti dall'inizio la si pubblica subito
+      setInterval(() => { if (_nextLiveDue && Date.now() >= _nextLiveDue) readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}); }, 60 * 1000);
       setTimeout(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), 60 * 1000);   // segna come "visti" i video gia' presenti
       setInterval(() => queueSocialPostsForToday().catch(() => {}), SYNC_INTERVAL);   // include i campionati inseriti a mano
       setInterval(autoYoutubeSync, SYNC_INTERVAL);

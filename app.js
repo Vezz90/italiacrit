@@ -14116,7 +14116,7 @@ window.adminNav = async function(section) {
           </div>
           <div class="adm-auto ${vidCfg.enabled ? 'on' : ''}">
             <div class="adm-auto-t"><b>Video e dirette su Facebook</b>
-              <span>${vidCfg.enabled ? 'ACCESA: quando colleghi un video o una diretta a una gara, viene pubblicato subito sulla Pagina con il link e i risultati della gara.' : 'Spenta: i video collegati alle gare non vengono pubblicati.'}</span>
+              <span>${vidCfg.enabled ? 'ACCESA: un video collegato a una gara viene pubblicato subito sulla Pagina; una diretta con orario viene pubblicata 5 minuti prima dell’inizio (senza orario, subito).' : 'Spenta: i video collegati alle gare non vengono pubblicati.'}</span>
               <small>Solo gare di questi giorni (da 3 giorni fa a domani), un post per video, mai doppioni.${(vidCfg.posted || []).length ? ' Ultimi: ' + vidCfg.posted.slice(0, 3).map(p => `${p.live ? '🔴' : '🎥'} ${esc(String(p.gara_id).replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ').toLowerCase())}`).join(' · ') : ''}</small>
               ${(vidCfg.errors || []).length ? `<small style="color:#ef4444">Ultimo errore: ${esc(vidCfg.errors[0].error)}</small>` : ''}</div>
             <button class="adm-switch" role="switch" aria-checked="${!!vidCfg.enabled}" ${vidCfg.fb_configured || vidCfg.enabled ? '' : 'disabled'} onclick="window._sqVideoAuto(${!vidCfg.enabled})"><i></i></button>
