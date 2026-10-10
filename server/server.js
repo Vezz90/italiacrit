@@ -8367,6 +8367,37 @@ async function _kvSet(key, value) {
   if (error) throw new Error('Supabase write error: ' + error.message);
 }
 const _videoKey = u => { const m = String(u || '').match(/(?:v=|youtu\.be\/|\/videos\/|\/live\/)([\w-]{6,})/); return (m ? m[1] : String(u || '')).slice(0, 80); };
+// Sezioni "speciali" della pagina Media: non sono gare, il post parla del video e rimanda alla sezione
+const _VIDEO_SECTIONS = {
+  '__PROGRAMMI_TV__': { label: 'Programma TV', emoji: '📺', page: 'programmi-tv' },
+  '__PRESENTAZIONI__': { label: 'Presentazione di squadra', emoji: '🎽', page: 'presentazioni' },
+  '__ALTRO__': { label: 'Video', emoji: '🎥', page: 'altro' },
+};
+const _decodeEntities = s => String(s || '').replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(+d))
+  .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/\s+/g, ' ').trim();
+async function _videoCaptionAI({ kind, nome, categoria, luogo, title, channel, description }) {
+  const ai = getAnthropic();
+  if (!ai) return null;
+  try {
+    const msg = await ai.messages.create({
+      model: 'claude-sonnet-5', thinking: { type: 'disabled' }, max_tokens: 220,
+      messages: [{ role: 'user', content: `Scrivi il testo di un post Facebook in italiano per presentare un contenuto video ai follower di una pagina di ciclismo giovanile e dilettantistico italiano.
+Regole: massimo 2-3 righe brevi (non oltre 260 caratteri), tono vivace, 1 o 2 emoji adatte al contenuto, nessun hashtag, nessun link, nessuna virgoletta attorno al testo. Parla di CIO' CHE SI GUARDA nel video, usando SOLO i dati qui sotto: non inventare nomi, risultati, vincitori o dettagli che non compaiono. Se e' una diretta dillo chiaramente (se c'e' l'orario, citalo); se e' un video di una gara gia' disputata o di altro tipo (festa, presentazione, intervista, programma) non dire che e' in diretta e non scrivere "rivedi la gara" se non e' una gara.
+
+Tipo di contenuto: ${kind}
+Gara: ${nome || '— (non e\' una gara)'}
+Categoria: ${categoria || '—'}
+Luogo: ${luogo || '—'}
+Titolo del video: ${title || '—'}
+Canale: ${channel || '—'}
+Descrizione: ${String(description || '').slice(0, 400) || '—'}` }],
+    });
+    const tb = msg.content.find(b => b.type === 'text');
+    let out = tb ? tb.text.trim() : '';
+    out = out.replace(/https?:\/\/\S+/g, '').replace(/#\w+/g, '').replace(/^["“«]|["”»]$/g, '').replace(/[ \t]+\n/g, '\n').trim();
+    return out && out.length >= 10 && out.length <= 420 ? out : null;
+  } catch (e) { console.warn('[social-video] testo AI non disponibile:', e.message); return null; }
+}
 let _videoPostRunning = false, _videoPostAgain = null, _nextLiveDue = null;
 async function publishNewVideosToFacebook(videos) {
   if (!supabase || !_fbConfigured()) return { skipped: 'facebook non configurato' };
@@ -8412,19 +8443,26 @@ async function publishNewVideosToFacebook(videos) {
         if (isNaN(ms) || ms < today - 3 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
       }
       if (posted >= 5) break;
-      const cal = _findCalEntryForNativeGaraId(calendar, x.gid);
-      const nome = cal?.nome || x.gid.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+      const section = _VIDEO_SECTIONS[x.gid] || (x.gid.startsWith('__') ? { label: 'Video', emoji: '🎥', page: 'video' } : null);
+      const cal = section ? null : _findCalEntryForNativeGaraId(calendar, x.gid);
+      const nome = section ? '' : (cal?.nome || x.gid.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' '));
       const luogo = cal?.luogo || cal?.regione || '';
       const live = !!x.v.is_live;
-      const title = String(x.v.title || '').replace(/&#x[0-9a-f]+;|&nbsp;/gi, ' ').trim();
-      const siteLink = `${SITE_URL}/gara/${encodeURIComponent(x.gid)}`;
+      const title = _decodeEntities(x.v.title);
+      const siteLink = section ? `${SITE_URL}/media/${section.page}` : `${SITE_URL}/gara/${encodeURIComponent(x.gid)}`;
+      const kind = live ? (startNote === 'IN CORSO' ? 'DIRETTA IN CORSO' : startNote ? `DIRETTA ${startNote}` : 'DIRETTA') : (section ? section.label.toUpperCase() : 'VIDEO (gara gia\' disputata)');
+      // testo: scritto dall'AI su cio' che si guarda (titolo del video, gara, canale), con ripiego sul titolo
+      let body = await _videoCaptionAI({ kind, nome, categoria: cal?.categoria || '', luogo, title, channel: x.v.channel, description: _decodeEntities(x.v.description) });
+      if (!body) {
+        body = live
+          ? `🔴 DIRETTA${startNote ? ' ' + startNote : ''} — ${nome || title}${[cal?.categoria, luogo].filter(Boolean).length ? '\n' + [cal?.categoria, luogo].filter(Boolean).join(' · ') : ''}`
+          : `${section ? section.emoji : '🎥'} ${title}${nome ? '\n' + nome + (cal?.categoria ? ' · ' + cal.categoria : '') : ''}`;
+      }
       const lines = [
-        live ? `🔴 DIRETTA${startNote ? ' ' + startNote : ''} — ${nome}` : `🎥 VIDEO — ${nome}`,
-        [cal?.categoria, luogo].filter(Boolean).join(' · '),
-        live ? 'Segui la gara in diretta 👇' : 'Rivedi la gara 👇',
-        x.v.channel ? `📺 ${x.v.channel}` : '',
+        body,
         '',
-        `Risultati e classifiche su Italia Cycling Stats: ${siteLink}`,
+        x.v.channel ? `📺 ${x.v.channel}` : '',
+        section ? `Altri video su Italia Cycling Stats: ${siteLink}` : `Risultati e classifiche su Italia Cycling Stats: ${siteLink}`,
       ].filter((l, i, a) => l !== '' || (a[i - 1] !== '' && i < a.length - 1));
       try {
         const fb = await postToFacebook(lines.join('\n'), null, x.v.url);
