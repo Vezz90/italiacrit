@@ -8373,7 +8373,8 @@ const _VIDEO_SECTIONS = {
   '__PRESENTAZIONI__': { label: 'Presentazione di squadra', emoji: '🎽', page: 'presentazioni' },
   '__ALTRO__': { label: 'Video', emoji: '🎥', page: 'altro' },
 };
-const _decodeEntities = s => String(s || '').replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(+d))
+const _decodeEntities = s => { let o = String(s || ''), prev; for (let i = 0; i < 3 && o !== prev; i++) { prev = o; o = _decodeEntitiesOnce(o); } return o; };
+const _decodeEntitiesOnce = s => String(s || '').replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(+d))
   .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/\s+/g, ' ').trim();
 async function _videoCaptionAI({ kind, nome, categoria, luogo, title, channel, description }) {
   const ai = getAnthropic();
