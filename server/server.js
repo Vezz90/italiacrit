@@ -12745,6 +12745,7 @@ init()
       setInterval(() => { if (_nextLiveDue && Date.now() >= _nextLiveDue) readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}); }, 60 * 1000);
       setTimeout(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), 60 * 1000);   // segna come "visti" i video gia' presenti
       setInterval(() => queueSocialPostsForToday().catch(() => {}), SYNC_INTERVAL);   // include i campionati inseriti a mano
+      scheduleSocialQueue(20000);   // dopo ogni avvio: recupera subito eventuali gare inserite a mano mentre il server era fermo
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
       setInterval(autoMediaChannelsSync, SYNC_INTERVAL);
