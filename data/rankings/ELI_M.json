@@ -240,6 +240,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BICELLI_MICHELE",
+    "cognome": "BICELLI",
+    "nome": "MICHELE",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 187,
+    "vittorie": 1,
+    "gare": 10,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 8,
+    "pos": 16,
+    "trend": 13
+  },
+  {
     "atleta_id": "CATTANI_ALESSANDRO",
     "cognome": "CATTANI",
     "nome": "ALESSANDRO",
@@ -252,8 +268,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 5,
-    "pos": 16,
-    "trend": 0
+    "pos": 17,
+    "trend": -1
   },
   {
     "atleta_id": "BUDA_SIMONE",
@@ -268,8 +284,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 9,
-    "pos": 17,
-    "trend": 0
+    "pos": 18,
+    "trend": -1
   },
   {
     "atleta_id": "FEDE_GABRIEL",
@@ -284,8 +300,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 12,
-    "pos": 18,
-    "trend": 0
+    "pos": 19,
+    "trend": -1
   },
   {
     "atleta_id": "FERMANELLI_MARCO",
@@ -300,8 +316,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 12,
-    "pos": 19,
-    "trend": 0
+    "pos": 20,
+    "trend": -1
   },
   {
     "atleta_id": "DE_CASSAN_DAVIDE",
@@ -316,8 +332,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 20,
-    "trend": 0
+    "pos": 21,
+    "trend": -1
   },
   {
     "atleta_id": "BOCK_MAX",
@@ -332,8 +348,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "pos": 21,
-    "trend": 0
+    "pos": 22,
+    "trend": -1
   },
   {
     "atleta_id": "GARIBBO_NICOLO",
@@ -348,8 +364,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 22,
-    "trend": 0
+    "pos": 23,
+    "trend": -1
   },
   {
     "atleta_id": "BONALDO_ANTONIO",
@@ -364,8 +380,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 13,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -1
   },
   {
     "atleta_id": "MARTINI_MARCO",
@@ -380,8 +396,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 7,
-    "pos": 24,
-    "trend": 0
+    "pos": 25,
+    "trend": -1
   },
   {
     "atleta_id": "ZUMSTEIN_MELK",
@@ -396,8 +412,8 @@
     "p2": 0,
     "p3": 4,
     "pout": 2,
-    "pos": 25,
-    "trend": 0
+    "pos": 26,
+    "trend": -1
   },
   {
     "atleta_id": "BOZZOLA_MIRKO",
@@ -412,8 +428,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 3,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -1
   },
   {
     "atleta_id": "BAMBAGIONI_TOMMASO",
@@ -428,8 +444,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 27,
-    "trend": 0
+    "pos": 28,
+    "trend": -1
   },
   {
     "atleta_id": "MENGHINI_ALESSIO",
@@ -444,24 +460,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 5,
-    "pos": 28,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BICELLI_MICHELE",
-    "cognome": "BICELLI",
-    "nome": "MICHELE",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 157,
-    "vittorie": 0,
-    "gare": 9,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 8,
     "pos": 29,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "OIOLI_MANUEL",
@@ -544,6 +544,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ZUMSTEG_NICOLA",
+    "cognome": "ZUMSTEG",
+    "nome": "NICOLA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 134,
+    "vittorie": 1,
+    "gare": 6,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 3,
+    "pos": 35,
+    "trend": 13
+  },
+  {
     "atleta_id": "VESCO_LEONARDO",
     "cognome": "VESCO",
     "nome": "LEONARDO",
@@ -556,8 +572,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 9,
-    "pos": 35,
-    "trend": 0
+    "pos": 36,
+    "trend": -1
   },
   {
     "atleta_id": "BAGNARA_LUCA",
@@ -572,8 +588,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 7,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "SCALCO_MATTEO",
@@ -588,8 +604,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "MELLANO_LUDOVICO_MARIA",
@@ -604,8 +620,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "ROSSI_LEONARDO",
@@ -620,8 +636,8 @@
     "p2": 1,
     "p3": 3,
     "pout": 5,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "FANTINI_CHRISTIAN",
@@ -636,8 +652,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 7,
-    "pos": 40,
-    "trend": 0
+    "pos": 41,
+    "trend": -1
   },
   {
     "atleta_id": "DE_LONGHI_LORENZO",
@@ -652,8 +668,8 @@
     "p2": 1,
     "p3": 3,
     "pout": 7,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "ANSALONI_EMANUELE",
@@ -668,8 +684,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 4,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "BIEHL_KEVIN",
@@ -684,8 +700,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 9,
-    "pos": 43,
-    "trend": 0
+    "pos": 44,
+    "trend": -1
   },
   {
     "atleta_id": "QUAGLIA_TOMMASO",
@@ -700,8 +716,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 5,
-    "pos": 44,
-    "trend": 0
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "AGOSTINACCHIO_FILIPPO",
@@ -716,8 +732,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 45,
-    "trend": 0
+    "pos": 46,
+    "trend": -1
   },
   {
     "atleta_id": "SCARSO_ANDREA",
@@ -732,8 +748,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 10,
-    "pos": 46,
-    "trend": 0
+    "pos": 47,
+    "trend": -1
   },
   {
     "atleta_id": "BIANCALANI_ANDREA",
@@ -748,24 +764,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 2,
-    "pos": 47,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ZUMSTEG_NICOLA",
-    "cognome": "ZUMSTEG",
-    "nome": "NICOLA",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 110,
-    "vittorie": 1,
-    "gare": 5,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
     "pos": 48,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GAMBA_THOMAS",

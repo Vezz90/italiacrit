@@ -567,7 +567,7 @@
     "team_nome": "UAE TEAM ADQ",
     "punti": 51,
     "vittorie": 0,
-    "gare": 4,
+    "gare": 3,
     "p1": 0,
     "p2": 0,
     "p3": 1,
@@ -3565,22 +3565,6 @@
     "p3": 0,
     "pout": 0,
     "pos": 223,
-    "trend": 0
-  },
-  {
-    "atleta_id": "HABERLIN_STEFFI",
-    "cognome": "HÄBERLIN",
-    "nome": "STEFFI",
-    "team_id": "SVIZZERA",
-    "team_nome": "SVIZZERA",
-    "punti": 0,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "pos": 224,
     "trend": 0
   }
 ]
