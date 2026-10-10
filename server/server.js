@@ -4959,6 +4959,11 @@ async function _ensureManualAthleteProfile({ atletaId, cognome, nome, teamId, te
 // solo endpoint e permessi diversi. edited_by traccia sempre il vero utente
 // che ha inviato la riga (admin o appassionato), utile per capire la fonte
 // in caso di correzioni da fare.
+let _socialQueueTimer = null;
+function scheduleSocialQueue(ms = 90000) {
+  clearTimeout(_socialQueueTimer);
+  _socialQueueTimer = setTimeout(() => queueSocialPostsForToday().catch(e => console.warn('[social] queue:', e.message)), ms);
+}
 async function _submitManualResult(req, res) {
   try {
     const garaId = req.params.garaId;
@@ -5071,6 +5076,7 @@ async function _submitManualResult(req, res) {
       punti_effettivi: puntiEffettiviFinal,
       edited_by: req.user.id,
     });
+    if (req.user && req.user.role === 'admin') scheduleSocialQueue();   // pubblicazione automatica dopo 90 s (le altre righe del podio arrivano a ruota)
     res.json({ ok: true, row });
   } catch (e) { res.status(500).json({ error: e.message }); }
 }
@@ -8591,6 +8597,18 @@ async function queueSocialPostsForToday() {
         champGara.add(gid);
       }
     } catch (e) { console.warn('[social] campionati manuali non letti:', e.message); }
+    // Risultati inseriti a mano da un ADMIN (gara non ancora/mai nello scraper FCI), di oggi o ieri. Quelli inseriti da utenti
+    // normali (foto ordine d'arrivo, genitori, media) non si pubblicano da soli: non sono verificati.
+    try {
+      const { data: admins } = await supabase.from('users').select('id').eq('role', 'admin');
+      const adminIds = new Set((admins || []).map(a => a.id));
+      const manual2 = await queries.getAllManualResults();
+      for (const r of manual2 || []) {
+        const d = String(r.data || '').slice(0, 10);
+        if ((d !== today && d !== yesterday) || Number(r.posizione) !== 1 || !r.gara_id || !adminIds.has(r.edited_by)) continue;
+        if (!winners[r.gara_id]) winners[r.gara_id] = { ...r, data_gara: d };
+      }
+    } catch (e) { console.warn('[social] gare manuali admin non lette:', e.message); }
     const garaIds = Object.keys(winners);
     if (!garaIds.length) return;
     const queue = await readSocialQueue();
