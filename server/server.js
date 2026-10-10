@@ -8398,6 +8398,37 @@ Descrizione: ${String(description || '').slice(0, 400) || '—'}` }],
     return out && out.length >= 10 && out.length <= 420 ? out : null;
   } catch (e) { console.warn('[social-video] testo AI non disponibile:', e.message); return null; }
 }
+const _ytIdOf = u => { const s = String(u || ''); if (!/(?:youtube\.com|youtu\.be)/i.test(s)) return null; const m = s.match(/[?&]v=([\w-]{6,20})/) || s.match(/youtu\.be\/([\w-]{6,20})/) || s.match(/youtube\.com\/(?:shorts|embed|live)\/([\w-]{6,20})/); return m ? m[1] : null; };
+// Dove porta il post: sempre il NOSTRO sito, con il lettore incorporato (mai youtube.com)
+function _watchUrlFor(gid, v, section) {
+  const id = _ytIdOf(v && v.url);
+  if (id) return `${SITE_URL}/media/${v.is_live ? 'live' : 'video'}/${id}`;
+  return section ? `${SITE_URL}/media/${section.page}` : `${SITE_URL}/gara/${encodeURIComponent(gid)}`;   // video non YouTube (es. Facebook): pagina della gara/sezione, dove si vede incorporato
+}
+const _thumbCache = new Map();
+async function _ytThumb(id) {
+  if (_thumbCache.has(id)) return _thumbCache.get(id);
+  let url = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+  try { const r = await fetch(`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`, { method: 'HEAD', signal: AbortSignal.timeout(5000) }); if (r.ok) url = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`; } catch (_) {}
+  _thumbCache.set(id, url); return url;
+}
+// meta tag (titolo, descrizione, miniatura) per /media/live/:id e /media/video/:id: servono all'anteprima di Facebook e a Google
+async function _videoHeadMeta(kind, id) {
+  const videos = await readVideos();
+  let hit = null, gid = null;
+  for (const [g, arr] of Object.entries(videos || {})) {
+    if (!Array.isArray(arr)) continue;
+    for (const v of arr) { if (v && _ytIdOf(v.url) === id && (!hit || !!v.is_live === (kind === 'live'))) { hit = v; gid = g; } }
+  }
+  if (!hit) return null;
+  const title = _decodeEntities(hit.title) || 'Video';
+  const section = _VIDEO_SECTIONS[gid] || null;
+  let nome = '';
+  if (!section && gid && !gid.startsWith('__') && !gid.startsWith('CIC_')) { const cal = _findCalEntryForNativeGaraId((await readDataJsonFromGH('calendar.json').catch(() => null)) || [], gid); nome = cal && cal.nome || ''; }
+  const live = !!hit.is_live;
+  const desc = [live ? 'Diretta' : (section ? section.label : 'Video'), hit.channel, nome].filter(Boolean).join(' · ') + ' — guardalo su Italia Cycling Stats.';
+  return { title: `${live ? '🔴 ' : ''}${title} | ICS`, desc, canonical: `${SITE_URL}/media/${kind}/${id}`, ogImage: await _ytThumb(id) };
+}
 let _videoPostRunning = false, _videoPostAgain = null, _nextLiveDue = null;
 async function publishNewVideosToFacebook(videos) {
   if (!supabase || !_fbConfigured()) return { skipped: 'facebook non configurato' };
@@ -8424,6 +8455,7 @@ async function publishNewVideosToFacebook(videos) {
     let nextDue = null;                       // prossimo momento in cui una diretta programmata va pubblicata
     for (const x of all) {
       if (seen.has(x.key)) continue;
+      if (x.gid.startsWith('CIC_')) { seen.add(x.key); continue; }   // gara storica: niente post
       const sched = x.v.is_live && x.v.scheduled_start ? Date.parse(x.v.scheduled_start) : NaN;
       let startNote = '';
       if (!isNaN(sched)) {
@@ -8440,7 +8472,7 @@ async function publishNewVideosToFacebook(videos) {
         // senza orario (o video normale): solo gare vicine nel tempo (da 3 giorni fa a domani); un video su una gara vecchia non va sulla Pagina
         const d = (x.gid.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || String(x.v.published_at || '').slice(0, 10);
         const ms = d ? Date.parse(d) : NaN;
-        if (isNaN(ms) || ms < today - 3 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
+        if (isNaN(ms) || ms < today - 7 * 86400000 || ms > today + 2 * 86400000) { seen.add(x.key); continue; }
       }
       if (posted >= 5) break;
       const section = _VIDEO_SECTIONS[x.gid] || (x.gid.startsWith('__') ? { label: 'Video', emoji: '🎥', page: 'video' } : null);
@@ -8465,9 +8497,9 @@ async function publishNewVideosToFacebook(videos) {
         section ? `Altri video su Italia Cycling Stats: ${siteLink}` : `Risultati e classifiche su Italia Cycling Stats: ${siteLink}`,
       ].filter((l, i, a) => l !== '' || (a[i - 1] !== '' && i < a.length - 1));
       try {
-        const fb = await postToFacebook(lines.join('\n'), null, x.v.url);
+        const fb = await postToFacebook(lines.join('\n'), null, _watchUrlFor(x.gid, x.v, section));
         seen.add(x.key); posted++;
-        (log.posted = log.posted || []).push({ gara_id: x.gid, url: x.v.url, live, fb_id: fb.id || fb.post_id || null, at: new Date().toISOString() });
+        (log.posted = log.posted || []).push({ gara_id: x.gid, url: x.v.url, watch: _watchUrlFor(x.gid, x.v, section), live, fb_id: fb.id || fb.post_id || null, at: new Date().toISOString() });
         if (log.posted.length > 300) log.posted = log.posted.slice(-300);
         console.log(`[social-video] pubblicato su Facebook: ${live ? 'diretta' : 'video'} ${nome}`);
       } catch (e) {
@@ -12638,6 +12670,11 @@ app.get('*', async (req, res, next) => {
     if (m) return res.redirect(302, `/og/media/${encodeURIComponent(m[1])}`);
   }
 
+  const mv = p.match(/^\/media\/(live|video)\/([\w-]{6,20})\/?$/);
+  if (mv) {
+    try { const meta = await _videoHeadMeta(mv[1], mv[2]); if (meta) return res.send(_injectHeadTags(_readIndexHtmlTemplate(), meta)); }
+    catch (e) { console.warn('[video-meta] fallito per', p, ':', e.message); }
+  }
   const m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
   if (m && m[1] === 'atleta') {
     // scheda doppia unita a quella vera (data/atleti_alias.json): 301 verso l'indirizzo giusto
