@@ -8313,7 +8313,15 @@ function fbPostFor(post, fbPosts) {
 
 // Se la pubblicazione automatica e' accesa (e Facebook configurato) pubblica i post in attesa piu' recenti.
 let _socialAutoRunning = false;
-async function publishPendingSocialAuto({ force = false } = {}) {
+// Registra l'esito dell'ultimo giro (anche i motivi per cui NON si pubblica) e lo mostra nel pannello Coda Social
+async function publishPendingSocialAuto(opts = {}) {
+  let res;
+  try { res = await _publishPendingSocialAutoInner(opts); }
+  catch (e) { res = { error: String(e.message || e).slice(0, 200) }; }
+  try { await _kvSet('social_auto_last', { at: new Date().toISOString(), force: !!opts.force, ...res }); } catch (_) {}
+  return res;
+}
+async function _publishPendingSocialAutoInner({ force = false } = {}) {
   if (_socialAutoRunning) return { skipped: 'in corso' };
   const cfg = await readSocialAuto();
   if (!cfg.enabled && !force) return { skipped: 'spento' };
@@ -10051,7 +10059,7 @@ app.post('/api/admin/social/instagram', requireAdmin, async (req, res) => {
 
 // Interruttore "pubblica automaticamente su Facebook\"
 app.get('/api/admin/social/auto', requireAdmin, async (req, res) => {
-  try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN, max_per_day: SOCIAL_AUTO_MAX_PER_DAY }); }
+  try { const cfg = await readSocialAuto(); res.json({ enabled: !!cfg.enabled, fb_configured: _fbConfigured(), max_per_run: SOCIAL_AUTO_MAX_PER_RUN, max_per_day: SOCIAL_AUTO_MAX_PER_DAY, last: await _kvGet('social_auto_last').catch(() => null) }); }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/social/auto', requireAdmin, async (req, res) => {

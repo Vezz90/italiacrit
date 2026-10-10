@@ -14111,6 +14111,7 @@ window.adminNav = async function(section) {
           <div class="adm-auto ${autoCfg.enabled ? 'on' : ''}">
             <div class="adm-auto-t"><b>Pubblicazione automatica su Facebook</b>
               <span>${autoCfg.enabled ? 'ACCESA: ogni nuovo risultato viene pubblicato da solo, con il testo scritto dall’AI (titolo, racconto, podio e hashtag), con la foto della gara se c’è.' : 'Spenta: i post restano qui in attesa e li pubblichi tu.'}</span>
+              ${autoCfg.last ? `<small style="display:block;margin-top:4px">Ultimo giro automatico: ${esc(new Date(autoCfg.last.at).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }))} — ${autoCfg.last.error ? '⚠️ errore: ' + esc(autoCfg.last.error) : autoCfg.last.skipped ? '⏸ non pubblicato: ' + esc(autoCfg.last.skipped) : '✅ pubblicati ' + (autoCfg.last.posted || 0)}</small>` : ''}
               ${autoCfg.fb_configured ? `<small>Limite di sicurezza: al massimo ${autoCfg.max_per_run || 6} post per ogni aggiornamento, uno per gara, solo gare di oggi e ieri.</small>` : '<small style="color:#ef4444">Facebook non è configurato: servono FB_PAGE_ID e FB_PAGE_TOKEN su Render (vedi Scraper &amp; Config).</small>'}</div>
             <button class="adm-switch" role="switch" aria-checked="${!!autoCfg.enabled}" ${autoCfg.fb_configured || autoCfg.enabled ? '' : 'disabled'} onclick="window._sqAuto(${!autoCfg.enabled})"><i></i></button>
           </div>
@@ -14166,7 +14167,7 @@ window.adminNav = async function(section) {
         };
         window._sqPublishAll = async () => {
           if (!confirm('Pubblicare adesso su Facebook i post in attesa (al massimo 6, solo gare di oggi e ieri)?')) return;
-          try { const r = await apiCall('/admin/social/publish-pending', { method: 'POST' }); showToast(`📤 Pubblicati ${r.posted || 0} post`); adminNav('social-queue'); }
+          try { const r = await apiCall('/admin/social/publish-pending', { method: 'POST' }); showToast(r.skipped ? `⏸ Non pubblicato: ${r.skipped}` : r.error ? `⚠️ ${r.error}` : `📤 Pubblicati ${r.posted || 0} post`, r.skipped || r.error ? 'error' : undefined); adminNav('social-queue'); }
           catch (e) { showToast(e.message, 'error'); }
         };
         window._sqQueueNow = async () => {
