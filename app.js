@@ -14084,7 +14084,7 @@ window.adminNav = async function(section) {
         };
         const renderCard = (p, editable) => `
           <div id="sq-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px;display:flex;gap:14px;align-items:flex-start">
-            ${p.photo_url ? `<img src="${esc(p.photo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0" loading="lazy"/>` : `<div style="width:90px;height:90px;background:var(--bg-elevated);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📷</div>`}
+            ${p.photo_url ? `<img src="${esc(p.photo_url + (p.photo_url.includes('/api/og-image/') ? (p.photo_url.includes('?') ? '&' : '?') + '_v=' + Math.floor(Date.now() / 60000) : ''))}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0" loading="lazy"/>` : `<div style="width:90px;height:90px;background:var(--bg-elevated);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📷</div>`}
             <div style="flex:1;min-width:0">
               <div style="font-weight:700;margin-bottom:2px">${esc(p.gara_name)}</div>
               <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">🥇 ${esc(p.winner||'—')} · ${esc(p.category||'')} · ${esc(p.date||'')}</div>
