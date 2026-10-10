@@ -1359,8 +1359,11 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
           .map(r => ({ data: r.data || '', posizione: Number(r.posizione) || null, gara: r.gara_name || '', questa_gara: false }));
       }
     } catch { /* PCS opzionale, non bloccare */ }
+    // "esito": etichetta esatta della posizione, cosi' l'AI non la deve interpretare (13° non e' "top ten")
+    const esitoDi = pos => !pos ? 'senza classifica' : pos === 1 ? 'vittoria' : pos <= 3 ? `podio (${pos}° posto)` : pos <= 5 ? `top 5 (${pos}° posto)` : pos <= 10 ? `top 10 (${pos}° posto)` : `${pos}° posto (fuori dalla top 10)`;
     tutti_i_risultati_stagione_vincitore = [...nativeRows, ...extraRows]
-      .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0));
+      .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0))
+      .map(r => ({ ...r, esito: esitoDi(r.posizione) }));
   }
   // Bug reale: le righe PCS-fallback (vedi _pcsResultsFallback) non hanno un
   // vero team_id (non lo forniamo, solo il nome squadra) e lo lasciano ''
@@ -1430,6 +1433,8 @@ Struttura richiesta:
 Regole importanti sui dati stagionali del vincitore (LEGGI CON ATTENZIONE, è la causa più comune di errore): "tutti_i_risultati_stagione_vincitore" è l'elenco COMPLETO di ogni risultato ottenuto dal vincitore in stagione fino ad oggi compreso (non un campione ridotto) — {data, posizione, gara, questa_gara}. Prima di scrivere qualunque numero di vittorie/podi, CONTA TU STESSO quante righe hanno posizione=1 (vittorie) e quante hanno posizione tra 1 e 3 (podi) in quell'elenco: il totale deve corrispondere esattamente al campo "stagione_vincitore" (vittorie_totali_stagione_QUESTA_INCLUSA / podi_totali_stagione_QUESTO_INCLUSO), che è il conteggio ufficiale di riferimento — se non corrispondono, fidati di "stagione_vincitore". NON limitarti a guardare solo le ultime 3-4 righe dell'elenco: scorrilo tutto. Se il conteggio è 1, è davvero la prima vittoria stagionale — non scrivere mai "prima vittoria" se è maggiore di 1. Per dare colore al racconto puoi citare 1-2 gare specifiche (nome/posizione) prese da "tutti_i_risultati_stagione_vincitore", ma il numero totale citato nel testo deve sempre essere quello ufficiale.
 
 Stesso principio per "stagione_team_del_vincitore": se utile, puoi accennare al buon momento stagionale del team (es. "Nª vittoria stagionale per il team" o "N° podio stagionale"), usando SOLO quei numeri ufficiali, senza inventare classifiche o piazzamenti del team non forniti. Non è obbligatorio menzionarlo se non aggiunge nulla al racconto.
+
+Regola sui piazzamenti citati (OBBLIGATORIA): quando nel testo nomini un risultato precedente del vincitore, usa ESATTAMENTE il campo "esito" di quella riga. Scrivi "top ten", "top 10", "top five" o "podio" SOLO se l'"esito" dice proprio così; un 13° posto resta "13° posto" (o non lo citi), mai "top ten". Non arrotondare mai una posizione per farla sembrare migliore e non citare un risultato che non e' nell'elenco.
 
 Altre regole: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
 
