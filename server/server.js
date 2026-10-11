@@ -8273,29 +8273,37 @@ const _withCredit = (text, credit) => {
 // Post gia' presenti sulla pagina Facebook (anche pubblicati a mano): evita doppioni.
 // Una gara conta come gia' condivisa se un post della pagina, uscito entro 10 giorni dalla gara,
 // contiene il suo link oppure tutte le parole significative del suo nome.
-let _fbFeedCache = { ts: 0, posts: null };
+let _fbFeedCache = { ts: 0, posts: null }, _fbFeedLastError = '';
 async function fetchFbPagePosts({ fresh = false } = {}) {
   if (!_fbConfigured()) return null;
   if (!fresh && _fbFeedCache.posts && Date.now() - _fbFeedCache.ts < 5 * 60 * 1000) return _fbFeedCache.posts;
-  try {
-    const posts = [];
-    let url = `https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}/posts?fields=message,link,created_time,attachments%7Btitle,description,url%7D&limit=100&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
-    for (let i = 0; i < 3 && url; i++) {
-      const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
-      const j = await r.json();
-      if (j.error) throw new Error(j.error.message);
-      for (const x of (j.data || [])) {
-        const att = (x.attachments && x.attachments.data && x.attachments.data[0]) || {};
-        posts.push({ created: x.created_time || '', text: [x.message, x.link, att.title, att.description, att.url].filter(Boolean).join(' ') });
+  // 1o tentativo completo (100 post con allegati); se Facebook rifiuta ("troppi dati", timeout) 2o piu' leggero (25 post, senza allegati)
+  const attempts = [
+    { fields: 'message,link,created_time,attachments%7Btitle,description,url%7D', limit: 100, pages: 3 },
+    { fields: 'message,link,created_time', limit: 25, pages: 2 },
+  ];
+  for (const a of attempts) {
+    try {
+      const posts = [];
+      let url = `https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}/posts?fields=${a.fields}&limit=${a.limit}&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
+      for (let i = 0; i < a.pages && url; i++) {
+        const r = await fetch(url, { signal: AbortSignal.timeout(20000) });
+        const j = await r.json();
+        if (j.error) throw new Error(`${j.error.message} (code ${j.error.code}${j.error.error_subcode ? '/' + j.error.error_subcode : ''})`);
+        for (const x of (j.data || [])) {
+          const att = (x.attachments && x.attachments.data && x.attachments.data[0]) || {};
+          posts.push({ created: x.created_time || '', text: [x.message, x.link, att.title, att.description, att.url].filter(Boolean).join(' ') });
+        }
+        url = j.paging && j.paging.next;
       }
-      url = j.paging && j.paging.next;
+      _fbFeedCache = { ts: Date.now(), posts }; _fbFeedLastError = '';
+      return posts;
+    } catch (e) {
+      _fbFeedLastError = String(e.message || e).slice(0, 220);
+      console.warn('[social] lettura post pagina Facebook fallita:', _fbFeedLastError);
     }
-    _fbFeedCache = { ts: Date.now(), posts };
-    return posts;
-  } catch (e) {
-    console.warn('[social] lettura post pagina Facebook fallita:', e.message);
-    return null;
   }
+  return null;
 }
 const _fbNorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const _FB_STOP = new Set(['gran', 'premio', 'trofeo', 'della', 'delle', 'degli', 'dello', 'memorial', 'classifica', 'generale', 'prova', 'tappa', 'prima', 'seconda', 'terza', 'quarta', 'quinta', 'sesta', 'settima', 'ottava', 'giro', 'coppa', 'città', 'citta']);
@@ -8341,7 +8349,7 @@ async function _publishPendingSocialAutoInner({ force = false } = {}) {
     const queue = await readSocialQueue();
     const alreadyPosted = new Set(queue.filter(p => p.status === 'posted').map(p => p.gara_id));
     const fbPosts = await fetchFbPagePosts({ fresh: true });
-    if (!fbPosts) return { skipped: 'non riesco a leggere i post della pagina Facebook: per evitare doppioni non pubblico' };
+    if (!fbPosts) return { skipped: 'non riesco a leggere i post della pagina Facebook: per evitare doppioni non pubblico', fb_error: _fbFeedLastError };
     for (let i = 0; i < queue.length; i++) {
       const q = queue[i];
       if (q.status !== 'pending') continue;
