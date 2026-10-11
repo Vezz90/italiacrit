@@ -8419,7 +8419,11 @@ function _hdPickPhotosForCat(rawList, catCodes) {
   const catP = rawList.filter(p => catCodes.some(c => p.gara_id.includes(c)));
   const picked = [...(catP.length >= 3 ? catP : rawList)];
   for (let i = picked.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [picked[i],picked[j]]=[picked[j],picked[i]]; }
-  return picked;
+  // le foto delle gare degli ultimi 10 giorni vanno in testa (prima le piu' recenti): l'hero mostra l'ultima gara, non una a caso
+  const cut = _hdCutDate(null, 10);
+  const dOf = p => (String(p.gara_id).match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
+  const recent = picked.filter(p => dOf(p) >= cut).sort((x, y) => dOf(y).localeCompare(dOf(x)));
+  return recent.length ? [...recent, ...picked.filter(p => dOf(p) < cut)] : picked;
 }
 
 function _hdCutDate(fromDate, days) {
