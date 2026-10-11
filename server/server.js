@@ -12011,8 +12011,12 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
       for (const alias of aliases) {
         const entry = src[alias];
         if (entry && (entry.url || entry.filename)) {
-          const buf = await toImage(entry.url || entry.filename, srcCredit);
-          if (buf) return buf;
+          // se il file principale non e' raggiungibile (il bucket di xpix risponde a tratti 503) si prova con le altre foto dello stesso album
+          const cands = [...new Set([entry.url || entry.filename, ...(Array.isArray(entry.photos) ? entry.photos : [])].filter(Boolean))].slice(0, 5);
+          for (const c of cands) {
+            const buf = await toImage(c, srcCredit);
+            if (buf) return buf;
+          }
         }
       }
     }
