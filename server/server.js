@@ -417,6 +417,11 @@ async function _cicAllRaces() {
   return rows;
 }
 const _CIC_CHUNK = 10000;
+// Cloudflare instrada sul Render solo /sitemap.xml*: le sitemap figlie sono quindi raggiunte come /sitemap.xml?p=pagine e ?p=archivio-N
+app.use((req, res, next) => {
+  if (req.path === '/sitemap.xml' && req.query.p) req.url = '/sitemap-' + String(req.query.p).replace(/[^a-z0-9-]/gi, '') + '.xml';
+  next();
+});
 app.get('/sitemap-archivio-:n.xml', async (req, res) => {
   try {
     const all = await _cicAllRaces();
@@ -444,8 +449,8 @@ app.get('/sitemap.xml', async (req, res) => {
     const all = await _cicAllRaces();
     const parts = Math.ceil(all.length / _CIC_CHUNK);
     const today = new Date().toISOString().slice(0, 10);
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap-pagine.xml</loc><lastmod>${today}</lastmod></sitemap>\n${
-      Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap-archivio-${i + 1}.xml</loc></sitemap>`).join('\n')
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=pagine</loc><lastmod>${today}</lastmod></sitemap>\n${
+      Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=archivio-${i + 1}</loc></sitemap>`).join('\n')
     }\n</sitemapindex>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=3600');
