@@ -79,7 +79,10 @@
     const out = [];
     for (const p of (media.up.get(gid) || [])) out.push(p.url);
     const ns = noSuffix(gid);
-    for (const e of media.ext) if (e.gara_id === gid || noSuffix(e.gara_id) === ns) out.push(...e.urls);
+    const gd = (String(gid).match(/\d{4}-\d{2}-\d{2}/) || [])[0], gn = String(gid).replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
+    // stessa data e nome che inizia uguale: l'album xpix puo' avere il nome lungo della gara (es. "79_GIRO_DEL_PIAVE_MEMORIAL_...") mentre il risultato ha quello corto
+    const near = x => { const xd = (String(x).match(/\d{4}-\d{2}-\d{2}/) || [])[0]; if (!gd || xd !== gd) return false; const xn = String(x).replace(/_\d{4}-\d{2}-\d{2}.*$/, ''); return xn.length > 8 && gn.length > 8 && (xn.startsWith(gn) || gn.startsWith(xn)); };
+    for (const e of media.ext) if (e.gara_id === gid || noSuffix(e.gara_id) === ns || near(e.gara_id)) out.push(...e.urls);
     return out;
   }
   function raceVideos(gid) {
