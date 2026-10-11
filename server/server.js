@@ -12098,11 +12098,16 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   // (Bassano Monte Grappa: foto xpix.it verificata veloce da sola, quindi
   // il rallentamento viene dal fetch delle foto profilo dei 3 del podio).
   const photoSubtitle = [dateShort, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
+  const _photoP = _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle, adjust, cal);
+  let _timedOut = false;
   const photoBuf = await Promise.race([
-    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle, adjust, cal),
-    new Promise(resolve => setTimeout(() => resolve(null), 8000)),
+    _photoP,
+    new Promise(resolve => setTimeout(() => { _timedOut = true; resolve(null); }, 8000)),
   ]);
   if (photoBuf) return photoBuf;
+  // Il percorso con foto e' solo lento (non fallito): si serve subito la card senza foto, ma appena la foto e' pronta sostituisce
+  // quella in cache (altrimenti la versione senza foto resterebbe 30 minuti, anche per lo scraper di Facebook).
+  if (_timedOut && !adjust) _photoP.then(b => { if (b) _ogCache.set(`gara_${garaId}`, { buf: b, ts: Date.now() }); }).catch(() => {});
 
   // 2) Niente foto né video (o il percorso foto ha impiegato troppo): la
   // stessa card "lista risultati" mostrata
