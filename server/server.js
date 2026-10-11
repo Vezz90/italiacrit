@@ -8278,28 +8278,31 @@ async function fetchFbPagePosts({ fresh = false } = {}) {
   if (!_fbConfigured()) return null;
   if (!fresh && _fbFeedCache.posts && Date.now() - _fbFeedCache.ts < 5 * 60 * 1000) return _fbFeedCache.posts;
   // 1o tentativo completo (100 post con allegati); se Facebook rifiuta ("troppi dati", timeout) 2o piu' leggero (25 post, senza allegati)
+  // Facebook rifiuta a volte campi aggregati (errore "deprecate_post_aggregated_fields_for_attachement"): si scende a richieste via via piu' semplici
   const attempts = [
-    { fields: 'message,link,created_time,attachments%7Btitle,description,url%7D', limit: 100, pages: 3 },
-    { fields: 'message,link,created_time', limit: 25, pages: 2 },
+    { edge: 'published_posts', fields: 'message,created_time,permalink_url', limit: 100, pages: 3 },
+    { edge: 'posts', fields: 'message,created_time', limit: 50, pages: 2 },
+    { edge: 'feed', fields: 'message,created_time', limit: 50, pages: 2 },
+    { edge: 'posts', fields: 'message,link,created_time,attachments%7Btitle,description,url%7D', limit: 100, pages: 3 },
   ];
   for (const a of attempts) {
     try {
       const posts = [];
-      let url = `https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}/posts?fields=${a.fields}&limit=${a.limit}&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
+      let url = `https://graph.facebook.com/v19.0/${process.env.FB_PAGE_ID}/${a.edge}?fields=${a.fields}&limit=${a.limit}&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
       for (let i = 0; i < a.pages && url; i++) {
         const r = await fetch(url, { signal: AbortSignal.timeout(20000) });
         const j = await r.json();
         if (j.error) throw new Error(`${j.error.message} (code ${j.error.code}${j.error.error_subcode ? '/' + j.error.error_subcode : ''})`);
         for (const x of (j.data || [])) {
           const att = (x.attachments && x.attachments.data && x.attachments.data[0]) || {};
-          posts.push({ created: x.created_time || '', text: [x.message, x.link, att.title, att.description, att.url].filter(Boolean).join(' ') });
+          posts.push({ created: x.created_time || '', text: [x.message, x.link, x.permalink_url, att.title, att.description, att.url].filter(Boolean).join(' ') });
         }
         url = j.paging && j.paging.next;
       }
       _fbFeedCache = { ts: Date.now(), posts }; _fbFeedLastError = '';
       return posts;
     } catch (e) {
-      _fbFeedLastError = String(e.message || e).slice(0, 220);
+      _fbFeedLastError = (a.edge + ': ' + String(e.message || e)).slice(0, 260);
       console.warn('[social] lettura post pagina Facebook fallita:', _fbFeedLastError);
     }
   }
