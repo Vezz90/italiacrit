@@ -29393,7 +29393,12 @@ async function renderRisultati() {
     const q = risSearchQuery.toLowerCase();
     races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
   }
-  if (risQueryGenere) races = races.filter(r => r.genere === risQueryGenere);
+  // Le card "di oggi" in attesa non hanno ancora risultati: genere e categoria si ricavano dalla riga di calendario
+  // (campo categoria), altrimenti i filtri Uomini/Donne/categoria le scartavano (si vedevano solo con "Tutti").
+  const _pendBand = c => String(c || '').replace(/^ES\d/, 'ES').replace(/_[MF]$/, '');
+  const _pendGen = ev => { const l = String(ev._categoriaLabel || '').toUpperCase(); if (!l || /PROMISCUA|OPEN|M\/F|MULTICATEGORIA|PIU' CATEGORIE/.test(l)) return ''; return /DONNE|DONNA|ALLIEVE|JUNIORES F|FEMMIN/.test(l) ? 'F' : 'M'; };
+  const _pendCatOk = (ev, codes) => { const l = ev._categoriaLabel; if (!l) return true; const bands = _calBandsOf(l); return !bands.size || codes.some(c => bands.has(_pendBand(c))); };
+  if (risQueryGenere) races = races.filter(r => r._pending ? (!_pendGen(r) || _pendGen(r) === risQueryGenere) : r.genere === risQueryGenere);
   // Filtro hub (top-nav, es. "Elite / U23"): confronta i CODICI categoria
   // esatti (activeHub.catCodes, es. ['ELI_M']) contro le chiavi di byCategory
   // — che ora sono sempre codici (getRankingFileCode), mai etichette testuali.
@@ -29403,6 +29408,7 @@ async function renderRisultati() {
   // sottostringa non c'entrava più nulla ed escludeva TUTTE le gare.
   if (activeHub && activeHub.catCodes && activeHub.catCodes.length) {
     races = races.filter(function(ev) {
+      if (ev._pending) return _pendCatOk(ev, activeHub.catCodes) && (!activeHub.gender || !_pendGen(ev) || _pendGen(ev) === activeHub.gender);
       return Object.keys(ev.byCategory || {}).some(function(c) {
         return activeHub.catCodes.includes(c);
       });
@@ -29418,7 +29424,7 @@ async function renderRisultati() {
   const allCatsSet = new Set();
   races.forEach(r => Object.keys(r.byCategory||{}).forEach(c => allCatsSet.add(c)));
   const allCats = [...allCatsSet].sort();
-  if (risQueryCat) races = races.filter(r => r.byCategory && r.byCategory[risQueryCat]);
+  if (risQueryCat) races = races.filter(r => r._pending ? (_pendCatOk(r, [risQueryCat]) && (!_pendGen(r) || _pendGen(r) === risQueryCat.slice(-1))) : (r.byCategory && r.byCategory[risQueryCat]));
 
   // Un cambio filtro deve ripartire dal primo batch (altrimenti si vedrebbe
   // "0 di 20" o card residue del filtro precedente); il click su "Vedi di
