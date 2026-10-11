@@ -24578,7 +24578,14 @@ async function renderGara(gara_id) {
   if (_evBase && data) {
     for (const r of resultsRaw) {
       if (!r.gara_id || r.data !== data) continue;
-      if (_raceBaseName(r.nome_gara) !== _evBase) continue;
+      const _rb = _raceBaseName(r.nome_gara);
+      if (_rb !== _evBase) {
+        // la FCI a volte da' alle categorie dello stesso evento nomi diversi solo per una coda descrittiva
+        // (es. "GRAN FINALE ROSA" / "GRAN FINALE ROSA ULTIMA PROVA DEL TROFEO ROSA"): stessa data, stessa regione, uno e' l'inizio dell'altro
+        const [sh, lo] = _rb.length <= _evBase.length ? [_rb, _evBase] : [_evBase, _rb];
+        const okPrefix = sh.split(' ').length >= 2 && lo.startsWith(sh + ' ') && (!r.regione || !results[0]?.regione || r.regione === results[0].regione);
+        if (!okPrefix) continue;
+      }
       // NB: qui va usata la categoria della GARA (dal suo gara_id), non
       // quella dell'atleta — niente getRankingFileCode(): applicherebbe
       // ATHLETE_GENDER_FIXES, pensato per correggere il genere/categoria di
