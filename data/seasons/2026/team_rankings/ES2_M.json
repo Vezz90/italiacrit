@@ -38,14 +38,26 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 554,
+    "punti": 569,
     "vittorie": 9,
     "p1": 9,
     "p2": 10,
-    "p3": 10,
-    "pout": 40,
+    "p3": 11,
+    "pout": 41,
     "n_atleti": 5,
     "pos": 4
+  },
+  {
+    "team_id": "MAZZANO_A_S_D",
+    "team_nome": "MAZZANO A.S.D.",
+    "punti": 490,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 11,
+    "p3": 9,
+    "pout": 29,
+    "n_atleti": 4,
+    "pos": 5
   },
   {
     "team_id": "TEAM_NIBALI",
@@ -57,18 +69,6 @@
     "p3": 8,
     "pout": 30,
     "n_atleti": 5,
-    "pos": 5
-  },
-  {
-    "team_id": "MAZZANO_A_S_D",
-    "team_nome": "MAZZANO A.S.D.",
-    "punti": 473,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 11,
-    "p3": 9,
-    "pout": 28,
-    "n_atleti": 4,
     "pos": 6
   },
   {
@@ -146,12 +146,12 @@
   {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
     "team_nome": "S. C. MINCIO-CHIESE A.S.D",
-    "punti": 368,
+    "punti": 374,
     "vittorie": 9,
     "p1": 9,
     "p2": 7,
     "p3": 4,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 4,
     "pos": 13
   },
@@ -182,12 +182,12 @@
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 336,
+    "punti": 348,
     "vittorie": 4,
     "p1": 4,
     "p2": 6,
     "p3": 7,
-    "pout": 25,
+    "pout": 27,
     "n_atleti": 5,
     "pos": 16
   },
@@ -314,10 +314,10 @@
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
     "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 204,
+    "punti": 216,
     "vittorie": 3,
     "p1": 3,
-    "p2": 4,
+    "p2": 5,
     "p3": 4,
     "pout": 16,
     "n_atleti": 3,
@@ -890,12 +890,12 @@
   {
     "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
     "team_nome": "G.S. CERNUSCHESE TINO GADDA A.S.D.",
-    "punti": 67,
+    "punti": 68,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 0,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 2,
     "pos": 75
   },
@@ -1080,6 +1080,18 @@
     "pos": 90
   },
   {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 44,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 91
+  },
+  {
     "team_id": "U_C_SANGIULIANESE",
     "team_nome": "U.C. SANGIULIANESE",
     "punti": 43,
@@ -1089,7 +1101,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "VC_SAN_VENDEMIANO",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
@@ -1113,18 +1125,6 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 93
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 41,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
     "pos": 94
   },
   {

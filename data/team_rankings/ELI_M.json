@@ -2,21 +2,21 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1678,
+    "punti": 1686,
     "vittorie": 16,
     "p1": 16,
     "p2": 16,
     "p3": 8,
-    "pout": 59,
+    "pout": 60,
     "n_atleti": 13,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 1299,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 1329,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 14,
     "p3": 12,
     "pout": 46,
@@ -38,11 +38,11 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 1110,
+    "punti": 1130,
     "vittorie": 12,
     "p1": 12,
     "p2": 10,
-    "p3": 8,
+    "p3": 9,
     "pout": 58,
     "n_atleti": 9,
     "pos": 4
@@ -50,10 +50,10 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 955,
+    "punti": 979,
     "vittorie": 5,
     "p1": 5,
-    "p2": 8,
+    "p2": 9,
     "p3": 4,
     "pout": 47,
     "n_atleti": 14,
@@ -218,14 +218,26 @@
   {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
-    "punti": 311,
+    "punti": 323,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 6,
     "pos": 19
+  },
+  {
+    "team_id": "ASD_SWATT_CLUB",
+    "team_nome": "ASD SWATT CLUB",
+    "punti": 309,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 2,
+    "pout": 11,
+    "n_atleti": 6,
+    "pos": 20
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
@@ -237,18 +249,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 9,
-    "pos": 20
-  },
-  {
-    "team_id": "ASD_SWATT_CLUB",
-    "team_nome": "ASD SWATT CLUB",
-    "punti": 275,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 2,
-    "pout": 7,
-    "n_atleti": 6,
     "pos": 21
   },
   {
@@ -662,12 +662,12 @@
   {
     "team_id": "ARAN_CUCINE_VEJUS",
     "team_nome": "ARAN CUCINE VEJUS",
-    "punti": 50,
+    "punti": 54,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 3,
     "pos": 56
   },

@@ -2,23 +2,23 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 514,
+    "punti": 522,
     "vittorie": 14,
     "p1": 14,
     "p2": 7,
     "p3": 3,
-    "pout": 32,
+    "pout": 34,
     "n_atleti": 5,
     "pos": 1
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 485,
+    "punti": 495,
     "vittorie": 13,
     "p1": 13,
     "p2": 8,
-    "p3": 8,
+    "p3": 9,
     "pout": 20,
     "n_atleti": 3,
     "pos": 2
@@ -26,9 +26,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 445,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 460,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 7,
     "p3": 8,
     "pout": 33,
@@ -170,38 +170,50 @@
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 103,
+    "punti": 120,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
+    "p2": 2,
     "p3": 1,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 3,
     "pos": 15
   },
   {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 98,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 1,
-    "pos": 16
-  },
-  {
     "team_id": "GAZZANIGHESE_ASD",
     "team_nome": "GAZZANIGHESE ASD",
-    "punti": 96,
+    "punti": 99,
     "vittorie": 2,
     "p1": 2,
     "p2": 3,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 16
+  },
+  {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 99,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 11,
     "n_atleti": 1,
     "pos": 17
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 96,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pout": 15,
+    "n_atleti": 2,
+    "pos": 18
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -212,18 +224,6 @@
     "p2": 3,
     "p3": 2,
     "pout": 1,
-    "n_atleti": 2,
-    "pos": 18
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 92,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 14,
     "n_atleti": 2,
     "pos": 19
   },
@@ -384,6 +384,18 @@
     "pos": 32
   },
   {
+    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
+    "team_nome": "UNIONE CICLISTICA OSSANESGA",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 33
+  },
+  {
     "team_id": "VALLE_D_AOSTA",
     "team_nome": "VALLE D'AOSTA",
     "punti": 20,
@@ -393,7 +405,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "TRENTO",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
@@ -417,7 +429,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -429,7 +441,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "LOMBARDIA",
@@ -441,18 +453,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 6,
-    "pos": 37
-  },
-  {
-    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
-    "team_nome": "UNIONE CICLISTICA OSSANESGA",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
     "pos": 38
   },
   {

@@ -1,5 +1,21 @@
 [
   {
+    "atleta_id": "KUCHYNSKAYA_EVA",
+    "cognome": "KUCHYNSKAYA",
+    "nome": "EVA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 349,
+    "vittorie": 16,
+    "gare": 30,
+    "p1": 16,
+    "p2": 2,
+    "p3": 1,
+    "pout": 11,
+    "pos": 1,
+    "trend": 1
+  },
+  {
     "atleta_id": "DI_PARDO_BEATRICE",
     "cognome": "DI",
     "nome": "PARDO BEATRICE",
@@ -12,24 +28,8 @@
     "p2": 6,
     "p3": 1,
     "pout": 2,
-    "pos": 1,
-    "trend": 0
-  },
-  {
-    "atleta_id": "KUCHYNSKAYA_EVA",
-    "cognome": "KUCHYNSKAYA",
-    "nome": "EVA",
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 334,
-    "vittorie": 15,
-    "gare": 29,
-    "p1": 15,
-    "p2": 2,
-    "p3": 1,
-    "pout": 11,
     "pos": 2,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MANNELLI_MATILDE",
@@ -69,13 +69,13 @@
     "nome": "GRETA",
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 196,
+    "punti": 199,
     "vittorie": 1,
-    "gare": 23,
+    "gare": 24,
     "p1": 1,
     "p2": 3,
     "p3": 4,
-    "pout": 15,
+    "pout": 16,
     "pos": 5,
     "trend": 0
   },
@@ -133,13 +133,13 @@
     "nome": "MARGHERITA",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 164,
+    "punti": 169,
     "vittorie": 3,
-    "gare": 24,
+    "gare": 25,
     "p1": 3,
     "p2": 1,
     "p3": 3,
-    "pout": 16,
+    "pout": 17,
     "pos": 9,
     "trend": 0
   },
@@ -149,15 +149,31 @@
     "nome": "GIORGIA",
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 154,
+    "punti": 162,
+    "vittorie": 1,
+    "gare": 23,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 18,
+    "pos": 10,
+    "trend": 0
+  },
+  {
+    "atleta_id": "NERI_SARA",
+    "cognome": "NERI",
+    "nome": "SARA",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 157,
     "vittorie": 1,
     "gare": 22,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 17,
-    "pos": 10,
-    "trend": 0
+    "pout": 16,
+    "pos": 11,
+    "trend": 1
   },
   {
     "atleta_id": "SAMBI_CORINNA",
@@ -172,24 +188,8 @@
     "p2": 2,
     "p3": 3,
     "pout": 14,
-    "pos": 11,
-    "trend": 0
-  },
-  {
-    "atleta_id": "NERI_SARA",
-    "cognome": "NERI",
-    "nome": "SARA",
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 151,
-    "vittorie": 1,
-    "gare": 21,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 15,
     "pos": 12,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "SFORZINI_SELENE",
@@ -197,13 +197,13 @@
     "nome": "SELENE",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 143,
+    "punti": 147,
     "vittorie": 1,
-    "gare": 18,
+    "gare": 19,
     "p1": 1,
     "p2": 3,
     "p3": 4,
-    "pout": 10,
+    "pout": 11,
     "pos": 13,
     "trend": 0
   },
@@ -213,11 +213,11 @@
     "nome": "AURORA",
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 134,
+    "punti": 146,
     "vittorie": 2,
-    "gare": 17,
+    "gare": 18,
     "p1": 2,
-    "p2": 2,
+    "p2": 3,
     "p3": 2,
     "pout": 11,
     "pos": 14,
@@ -400,6 +400,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "TESTA_CAROLINA",
+    "cognome": "TESTA",
+    "nome": "CAROLINA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 81,
+    "vittorie": 3,
+    "gare": 11,
+    "p1": 3,
+    "p2": 1,
+    "p3": 1,
+    "pout": 6,
+    "pos": 26,
+    "trend": 3
+  },
+  {
     "atleta_id": "CIANTI_NOEMI",
     "cognome": "CIANTI",
     "nome": "NOEMI",
@@ -412,8 +428,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 13,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -1
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -428,8 +444,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 11,
-    "pos": 27,
-    "trend": 0
+    "pos": 28,
+    "trend": -1
   },
   {
     "atleta_id": "CAPPAI_ARIANNA",
@@ -444,24 +460,8 @@
     "p2": 5,
     "p3": 0,
     "pout": 0,
-    "pos": 28,
-    "trend": 0
-  },
-  {
-    "atleta_id": "TESTA_CAROLINA",
-    "cognome": "TESTA",
-    "nome": "CAROLINA",
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 71,
-    "vittorie": 3,
-    "gare": 10,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
     "pos": 29,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CARLINO_MARIA_VITTORIA",
@@ -1152,6 +1152,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "VALTULINI_SARA",
+    "cognome": "VALTULINI",
+    "nome": "SARA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 7,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 73,
+    "trend": 2
+  },
+  {
     "atleta_id": "DANELUZZI_ALICE",
     "cognome": "DANELUZZI",
     "nome": "ALICE",
@@ -1164,8 +1180,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 73,
-    "trend": 0
+    "pos": 74,
+    "trend": -1
+  },
+  {
+    "atleta_id": "VERGANI_CAMILLA",
+    "cognome": "VERGANI",
+    "nome": "CAMILLA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 6,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 75,
+    "trend": 1
   },
   {
     "atleta_id": "TRAPASSI_SOFIA",
@@ -1180,40 +1212,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 74,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VALTULINI_SARA",
-    "cognome": "VALTULINI",
-    "nome": "SARA",
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 5,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "pos": 75,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VERGANI_CAMILLA",
-    "cognome": "VERGANI",
-    "nome": "CAMILLA",
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 5,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "pos": 76,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "ANNOSCIA_ANNA",
