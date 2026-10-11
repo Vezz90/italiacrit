@@ -8595,7 +8595,8 @@ async function rescrapeRecentFbPosts() {
 // Genera e accoda un post per ogni gara con risultato di oggi/ieri ancora non in coda.
 async function queueSocialPostsForToday() {
   try {
-    const results = readDataJson('results_raw.json') || [];
+    // dati aggiornati dallo scraper (GitHub Pages), NON il file locale del server: quello resta fermo al momento dell'ultimo deploy
+    const results = (await readDataJsonFromGH('results_raw.json', { fresh: true })) || readDataJson('results_raw.json') || [];
     const today     = new Date().toISOString().slice(0, 10);
     const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
     const winners = {};
@@ -12778,7 +12779,7 @@ init()
       // ogni minuto: se una diretta programmata e' a meno di 5 minuti dall'inizio la si pubblica subito
       setInterval(() => { if (_nextLiveDue && Date.now() >= _nextLiveDue) readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}); }, 60 * 1000);
       setTimeout(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), 60 * 1000);   // segna come "visti" i video gia' presenti
-      setInterval(() => queueSocialPostsForToday().catch(() => {}), SYNC_INTERVAL);   // include i campionati inseriti a mano
+      setInterval(() => queueSocialPostsForToday().catch(() => {}), 10 * 60 * 1000);   // include i campionati inseriti a mano
       scheduleSocialQueue(20000);   // dopo ogni avvio: recupera subito eventuali gare inserite a mano mentre il server era fermo
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
