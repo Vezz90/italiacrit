@@ -926,6 +926,29 @@ async function _resolveGaraResults(id, cal, resultsRaw, calendar) {
       }
     }
   }
+  // Ultimo tentativo: i risultati inseriti a mano stanno sotto un id (es. nome lungo) e la FCI li ha poi pubblicati sotto un altro
+  // (nome corto): stessa data, stesso suffisso categoria (_ELI_M), nome che e' l'inizio dell'altro. Le righe manuali doppie vengono scartate,
+  // quindi l'id originale resta senza risultati e il post gia' pubblicato perdeva foto e podio.
+  if (!results.length && resultsRaw) {
+    const m = String(id).match(/^(.*?)_(\d{4}-\d{2}-\d{2})(_[A-Z0-9]+_[MF])?$/);
+    if (m) {
+      const [, nm, dt, cat] = m;
+      const words = s => String(s).split('_').filter(Boolean);
+      const found = new Map();
+      for (const r of resultsRaw) {
+        if (!r.gara_id || r.gara_id === id || r.data !== dt) continue;
+        const m2 = String(r.gara_id).match(/^(.*?)_(\d{4}-\d{2}-\d{2})(_[A-Z0-9]+_[MF])?$/);
+        if (!m2 || (m2[3] || '') !== (cat || '')) continue;
+        const a1 = words(nm), a2 = words(m2[1]);
+        const [sh, lo] = a1.length <= a2.length ? [a1, a2] : [a2, a1];
+        if (sh.length >= 2 && sh.every((w, i) => lo[i] === w)) found.set(r.gara_id, true);
+      }
+      if (found.size === 1) {
+        const nid = [...found.keys()][0];
+        results = resultsRaw.filter(r => r.gara_id === nid).sort((a, b) => a.posizione - b.posizione);
+      }
+    }
+  }
   return results;
 }
 
