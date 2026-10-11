@@ -9003,29 +9003,13 @@ app.get('/api/xpix-image', async (req, res) => {
       res.set('Cache-Control', 'public, max-age=86400');
       return res.send(cached.buf);
     }
-    const https = require('https');
-    const u = new URL(target);
-    const proxyReq = https.request(
-      { hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
-        headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 },
-      proxyRes => {
-        if (proxyRes.statusCode !== 200) { res.status(502).send('fetch fallito'); proxyRes.resume(); return; }
-        const chunks = [];
-        proxyRes.on('data', c => chunks.push(c));
-        proxyRes.on('end', () => {
-          const buf = Buffer.concat(chunks);
-          const ct = proxyRes.headers['content-type'] || 'image/jpeg';
-          _xpixImgCache.set(target, { buf, ct, ts: Date.now() });
-          if (_xpixImgCache.size > 500) _xpixImgCache.delete(_xpixImgCache.keys().next().value);
-          res.set('Content-Type', ct);
-          res.set('Cache-Control', 'public, max-age=86400');
-          res.send(buf);
-        });
-      }
-    );
-    proxyReq.on('error', () => res.status(502).send('errore proxy'));
-    proxyReq.on('timeout', () => { proxyReq.destroy(); res.status(504).send('timeout'); });
-    proxyReq.end();
+    const got = await _fetchWithRetry(target, { tries: 4, timeout: 15000 });
+    if (!got.buf) return res.status(502).send('fetch fallito');
+    _xpixImgCache.set(target, { buf: got.buf, ct: got.ct, ts: Date.now() });
+    if (_xpixImgCache.size > 500) _xpixImgCache.delete(_xpixImgCache.keys().next().value);
+    res.set('Content-Type', got.ct);
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.send(got.buf);
   } catch (e) { res.status(500).send(e.message); }
 });
 
@@ -11335,6 +11319,7 @@ ${contextParts.join('\n\n')}
 // ══════════════════════════════════════════════════════════════════════════════
 
 const _ogCache = new Map(); // key → { buf, ts }
+const _ogShortLived = new Set(); // chiavi la cui card e' un ripiego senza foto: restano in cache solo ~90 s
 const OG_TTL   = 30 * 60 * 1000; // 30 minuti
 // Deduplica generazioni concorrenti per la stessa chiave: senza questa mappa,
 // due richieste quasi simultanee sulla stessa immagine ancora non in cache
@@ -11352,7 +11337,11 @@ async function _ogGenerateDeduped(cacheKey, generator) {
   const promise = (async () => {
     try {
       const buf = await generator();
-      if (buf) { _ogCache.set(cacheKey, { buf, ts: Date.now() }); return buf; }
+      if (buf) {
+        const short = _ogShortLived.delete(cacheKey);
+        _ogCache.set(cacheKey, { buf, ts: short ? Date.now() - OG_TTL + 90 * 1000 : Date.now() });
+        return buf;
+      }
       // Generazione fallita (timeout, foto irraggiungibile, ecc.): se esiste
       // già una versione buona precedente (anche scaduta), la riserviamo
       // invece di cadere sul logo generico. Senza questo, basta che Facebook
@@ -11713,6 +11702,20 @@ function _extractYouTubeId(url) {
 // Scarica una foto (file locale in uploads/ o URL) come buffer grezzo, senza
 // ridimensionarla — il resize/crop dipende da dove verrà usata (sfondo pieno
 // per le gare, pannello stretto per le card atleta/team a due colonne).
+// Il bucket di xpix risponde a tratti 503 (sovraccarico): si riprova qualche volta prima di arrendersi
+async function _fetchWithRetry(url, { tries = 4, timeout = 12000 } = {}) {
+  let last = null;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(timeout), headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ItaliaCyclingStatsBot/1.0; +https://italiacyclingstats.com)' } });
+      if (r.ok) return { buf: Buffer.from(await r.arrayBuffer()), ct: r.headers.get('content-type') || 'image/jpeg', status: 200 };
+      last = r.status;
+      if (r.status < 500 && r.status !== 429) break;
+    } catch (e) { last = e.message; }
+    await new Promise(res => setTimeout(res, 500 * (i + 1)));
+  }
+  return { buf: null, ct: null, status: last };
+}
 async function _fetchRawImageBuffer(filename) {
   if (!filename) return null;
   try {
@@ -11726,12 +11729,9 @@ async function _fetchRawImageBuffer(filename) {
     // User-Agent generico di Node/undici usato di default da fetch() — le
     // foto xpix nella card di condivisione fallivano silenziosamente e
     // ricadevano sul logo statico, senza errore visibile nei log.
-    const r = await fetch(url, {
-      signal: AbortSignal.timeout(8000),
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ItaliaCyclingStatsBot/1.0; +https://italiacyclingstats.com)' },
-    });
-    if (!r.ok) { console.error(`[og-image] fetch fallito (${r.status}) per ${url}`); return null; }
-    return Buffer.from(await r.arrayBuffer());
+    const got = await _fetchWithRetry(url, { tries: 4, timeout: 8000 });
+    if (!got.buf) { console.error(`[og-image] fetch fallito (${got.status}) per ${url}`); return null; }
+    return got.buf;
   } catch (e) { console.error(`[og-image] fetch eccezione per ${filename}:`, e.message); return null; }
 }
 
@@ -12107,7 +12107,11 @@ async function _generateGaraOgBuffer(garaId, adjust) {
   if (photoBuf) return photoBuf;
   // Il percorso con foto e' solo lento (non fallito): si serve subito la card senza foto, ma appena la foto e' pronta sostituisce
   // quella in cache (altrimenti la versione senza foto resterebbe 30 minuti, anche per lo scraper di Facebook).
-  if (_timedOut && !adjust) _photoP.then(b => { if (b) _ogCache.set(`gara_${garaId}`, { buf: b, ts: Date.now() }); }).catch(() => {});
+  if (!adjust) {
+    _photoP.then(b => { if (b) _ogCache.set(`gara_${garaId}`, { buf: b, ts: Date.now() }); }).catch(() => {});
+    // senza la foto la card e' un ripiego: scade dopo ~90 s (non 30 min) cosi' al giro dopo si riprova con la foto
+    _ogShortLived.add(`gara_${garaId}`);
+  }
 
   // 2) Niente foto né video (o il percorso foto ha impiegato troppo): la
   // stessa card "lista risultati" mostrata
