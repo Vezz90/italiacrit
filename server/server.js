@@ -12767,6 +12767,11 @@ init()
       autoICSync();
       autoMediaChannelsSync();
       autoPodcastFeedsSync();
+      // lettura risultati FCI ogni 30 min nella stagione, senza dipendere dal cron di GitHub (che nei fatti gira ogni 3-6 ore)
+      setInterval(() => {
+        const month = new Date().getMonth() + 1;
+        if (month >= 3 && month <= 10 && Date.now() - _lastScrapeTrigger >= 30 * 60 * 1000) { _lastScrapeTrigger = Date.now(); triggerScrapeWorkflow(); }
+      }, 5 * 60 * 1000);
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(rescrapeRecentFbPosts, SYNC_INTERVAL);
       setInterval(() => readVideos().then(v => publishNewVideosToFacebook(v)).catch(() => {}), SYNC_INTERVAL);
