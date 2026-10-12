@@ -30964,7 +30964,7 @@
   "TEAM_MENDELSPECK_E_WORK": {
     "id": "TEAM_MENDELSPECK_E_WORK",
     "nome": "TEAM MENDELSPECK E-WORK",
-    "punti_totali": 148,
+    "punti_totali": 158,
     "atleti": [
       "GRITTI_ILARIA",
       "GIULIANI_GIULIA",
@@ -31269,8 +31269,8 @@
         "atleta_cognome": "GIULIANI",
         "atleta_nome": "GIULIA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -31294,7 +31294,7 @@
     ],
     "punti_per_cat": {
       "JUN_F": 29,
-      "ELI_F": 119
+      "ELI_F": 129
     }
   },
   "CYCLING_CAFE_RACING_TEAM": {
@@ -31328,7 +31328,7 @@
   "PETRUCCI_GAUSS_CYCLING_TEAM": {
     "id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti_totali": 467,
+    "punti_totali": 475,
     "atleti": [
       "BONISSI_EMMA",
       "INVERNIZZI_VIOLA",
@@ -32069,8 +32069,8 @@
         "atleta_cognome": "DANSHINA",
         "atleta_nome": "POLINA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -32169,7 +32169,7 @@
     ],
     "punti_per_cat": {
       "JUN_F": 382,
-      "ELI_F": 85
+      "ELI_F": 93
     }
   },
   "GCD_PEDALE_MANZANESE": {
@@ -106162,7 +106162,7 @@
   "BORN_TO_WIN_BTC_CITY_LJUBLJANA": {
     "id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
     "nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti_totali": 139,
+    "punti_totali": 142,
     "atleti": [
       "LAUDI_IRENE",
       "BASILICO_VALENTINA",
@@ -106463,8 +106463,8 @@
         "atleta_cognome": "LAUDI",
         "atleta_nome": "IRENE",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -106487,13 +106487,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 139
+      "ELI_F": 142
     }
   },
   "TOP_GIRLS_FASSA_BORTOLO": {
     "id": "TOP_GIRLS_FASSA_BORTOLO",
     "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 280,
+    "punti_totali": 297,
     "atleti": [
       "REGHINI_CHIARA",
       "DE_VALLIER_ELISA",
@@ -106949,8 +106949,8 @@
         "atleta_cognome": "REGHINI",
         "atleta_nome": "CHIARA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -106964,8 +106964,8 @@
         "atleta_cognome": "SPIMI",
         "atleta_nome": "SHARON",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -107003,13 +107003,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 280
+      "ELI_F": 297
     }
   },
   "VINI_FANTINI_BEPINK": {
     "id": "VINI_FANTINI_BEPINK",
     "nome": "VINI FANTINI - BEPINK",
-    "punti_totali": 213,
+    "punti_totali": 216,
     "atleti": [
       "SEGATO_GAIA",
       "VALTULINI_ELISA",
@@ -107419,8 +107419,8 @@
         "atleta_cognome": "SEGATO",
         "atleta_nome": "GAIA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -107434,8 +107434,8 @@
         "atleta_cognome": "ARICI",
         "atleta_nome": "SOFIA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -107488,7 +107488,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 213
+      "ELI_F": 216
     }
   },
   "U_C_CONSCIO_PEDALE_DEL_SILE": {
@@ -141241,7 +141241,7 @@
   "ISOLMANT_PREMAC_VITTORIA": {
     "id": "ISOLMANT_PREMAC_VITTORIA",
     "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 435,
+    "punti_totali": 454,
     "atleti": [
       "CRESTANELLO_LARA",
       "PEGOLO_CHANTAL",
@@ -141861,8 +141861,8 @@
         "atleta_cognome": "PEGOLO",
         "atleta_nome": "CHANTAL",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -141876,8 +141876,8 @@
         "atleta_cognome": "BISSO",
         "atleta_nome": "GIULIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -141930,7 +141930,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 430,
+      "ELI_F": 449,
       "JUN_F": 5
     }
   },
@@ -191905,7 +191905,7 @@
   "TOYOTA_VALENCIA_SAV": {
     "id": "TOYOTA_VALENCIA_SAV",
     "nome": "TOYOTA VALENCIA SAV",
-    "punti_totali": 117,
+    "punti_totali": 123,
     "atleti": [
       "VALGONEN_VALERIA"
     ],
@@ -192023,8 +192023,8 @@
         "atleta_cognome": "VALGONEN",
         "atleta_nome": "VALERIA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "PIEMONTE",
         "km": "81.000",
@@ -192047,7 +192047,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 117
+      "ELI_F": 123
     }
   },
   "ST_KILDA_CYCLING_CLUB": {

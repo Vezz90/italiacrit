@@ -2,7 +2,7 @@
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 543,
+    "punti": 562,
     "vittorie": 9,
     "p1": 9,
     "p2": 6,
@@ -14,7 +14,7 @@
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 424,
+    "punti": 441,
     "vittorie": 3,
     "p1": 3,
     "p2": 9,
@@ -26,7 +26,7 @@
   {
     "team_id": "VINI_FANTINI_BEPINK",
     "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 403,
+    "punti": 406,
     "vittorie": 7,
     "p1": 7,
     "p2": 2,
@@ -86,7 +86,7 @@
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 209,
+    "punti": 219,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
@@ -134,7 +134,7 @@
   {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
     "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti": 139,
+    "punti": 142,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
@@ -146,7 +146,7 @@
   {
     "team_id": "TOYOTA_VALENCIA_SAV",
     "team_nome": "TOYOTA VALENCIA SAV",
-    "punti": 117,
+    "punti": 123,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 93,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 4,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 18
+  },
+  {
     "team_id": "SVIZZERA",
     "team_nome": "SVIZZERA",
     "punti": 86,
@@ -213,18 +225,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 18
-  },
-  {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 85,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 4,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 19
   },
   {
