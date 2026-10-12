@@ -215,6 +215,23 @@ def main():
             dn = yb['nums'][y2] - ya['nums'][y1]; dy = y2 - y1
             if dy > 0:
                 s += 2.5 if 1 <= dn <= dy else -2
+        elif A['nums'] and B['nums']:
+            # serie intercalate (es. 2020 "Ezio Del Rosso", 2021-2024 "Del Rosso", 2025 "Ezio Del Rosso"): si guardano le coppie di anni vicini
+            ok = bad = 0
+            for x, nx in A['nums'].items():
+                for y, ny in B['nums'].items():
+                    d = y - x
+                    if d == 0 or abs(d) > 3:
+                        continue
+                    dn = (ny - nx) if d > 0 else (nx - ny)
+                    if 1 <= dn <= abs(d):
+                        ok += 1
+                    else:
+                        bad += 1
+            if ok and not bad:
+                s += 2.5
+            elif bad and not ok:
+                s -= 2
         return s
 
     buckets = collections.defaultdict(list)
@@ -237,6 +254,22 @@ def main():
                 elif sc >= 4:
                     review.append({'a': a[0], 'b': b[0], 'luogo': info[a]['loc'] or info[b]['loc'], 'g': g, 'band': bnd,
                                    'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'sim': round(sc / 10, 2), 'score': round(sc, 1)})
+    # nome "corto" con una sola parola distintiva (es. "GRAN PREMIO DEL ROSSO") + nome esteso della stessa gara ("GRAN PREMIO EZIO DEL ROSSO"):
+    # il corto e' trattato come generico (legato al luogo) e non verrebbe mai fuso. Si unisce solo se le parole sono contenute,
+    # il luogo coincide, le date sono vicine e i numeri d'edizione si susseguono (punteggio alto, non solo il nome).
+    for kg in [k for k in groups if k[3]]:
+        for kn in [k for k in groups if not k[3] and k[1] == kg[1] and k[2] == kg[2]]:
+            if info[kg]['loc'] != info[kn]['loc'] or not info[kg]['loc'] or not (info[kg]['ta'] <= info[kn]['ta']):
+                continue
+            sc = score(kg, kn)
+            if sc >= 6 and info[kg]['nums'] and info[kn]['nums'] and uf.f(kg) != uf.f(kn):
+                # le serie gia' unite non devono avere due edizioni nello stesso anno (sarebbero gare diverse)
+                ya = set().union(*(info[x]['years'] for x in groups if uf.f(x) == uf.f(kg)))
+                yb = set().union(*(info[x]['years'] for x in groups if uf.f(x) == uf.f(kn)))
+                if ya & yb:
+                    continue
+                uf.u(kg, kn); auto += 1
+                auto_log.append({'a': kg[0], 'b': kn[0], 'g': kg[1], 'band': kg[2], 'score': round(sc, 1), 'anni_a': sorted(info[kg]['years']), 'anni_b': sorted(info[kn]['years']), 'luogo': info[kg]['loc'], 'regola': 'nome corto + esteso'})
     review.sort(key=lambda r: -r['score'])
     review = review[:600]
     # fusioni/separazioni manuali
