@@ -72,10 +72,26 @@ def same_race(c, m):
         return True
     a, b = toks(c['nome']), toks(m['nome'])
     common = a & b
+    lc, lm = norm(c.get('luogo')), norm(m.get('luogo'))
+    luogo_ok = bool(lc) and bool(lm) and (lc in lm or lm in lc)
+    if lc and lm and not luogo_ok:
+        return False                      # nomi di serie condivisi (es. "Giro di Puglia Challenge"): servono luoghi uguali
     if len(common) >= 2:
         return True
-    lc, lm = norm(c.get('luogo')), norm(m.get('luogo'))
-    return bool(common) and bool(lc) and bool(lm) and (lc in lm or lm in lc)
+    return bool(common) and luogo_ok
+
+
+def moved_to(c, items):
+    # la stessa gara con un'altra data: stesso nome, oppure stesso luogo e almeno una parola distintiva in comune
+    for x in items:
+        if x['data'] == c['data']:
+            continue
+        if core(x['nome']) == core(c['nome']):
+            return x
+        lc, lm = norm(c.get('luogo')), norm(x.get('luogo'))
+        if lc and lm and (lc in lm or lm in lc) and (toks(c['nome']) & toks(x['nome'])):
+            return x
+    return None
 
 
 def days(a, b):
@@ -212,8 +228,10 @@ def main():
                 near = [x for x in same if days(x['data'], c['data']) <= 10]
                 if near:
                     continue                                    # gara a tappe (Members ha una riga sola) o data di poco diversa: la teniamo
-                if same:
-                    report['da_controllare'].append({'id': c['id'], 'motivo': f"su Members con altra data: {same[0]['data']}"})
+                mv = moved_to(c, mem.values())
+                if mv:
+                    to_remove.add(c['id']); ex['ids'][c['id']] = f"sparita: spostata su Members al {mv['data']}"
+                    report['rimosse'].append({'id': c['id'], 'nome': c['nome'], 'data': c['data'], 'spostata_al': mv['data']})
                     continue
                 to_remove.add(c['id']); ex['ids'][c['id']] = 'sparita da Members (cancellata dalla FCI)'
                 report['rimosse'].append({'id': c['id'], 'nome': c['nome'], 'data': c['data']})

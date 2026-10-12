@@ -92,9 +92,9 @@ for c in missing:
         stato = 'SPOSTATA su Members'; nuova = m['data']; nota = m['nome']
     else:
         # stesso nome in altra data?
-        same = [x for x in mem.values() if mcs.core(x['nome']) == mcs.core(c['nome']) and x['data'] != c['data']]
-        if same:
-            stato = 'SPOSTATA su Members'; nuova = same[0]['data']; nota = same[0]['nome']
+        mv = mcs.moved_to(c, mem.values())
+        if mv:
+            stato = 'SPOSTATA su Members'; nuova = mv['data']; nota = mv['nome']
         else:
             stato = 'SPARITA da Members'
     near = results_near(c)

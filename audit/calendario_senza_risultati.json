@@ -156,18 +156,6 @@
   "fci_id": "178706"
  },
  {
-  "id": "RINVIATA_4_MEMORIAL_GERMANO_VITTONI_2026-03-22",
-  "nome": "RINVIATA-------4° MEMORIAL GERMANO VITTONI",
-  "data": "2026-03-22",
-  "categoria": "Juniores",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome nel nostro calendario)",
-  "nuova_data": "2026-04-12",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-12",
-  "nota": "RINVIATA-------4° MEMORIAL GERMANO VITTONI",
-  "fci_id": ""
- },
- {
   "id": "SETTIMANA_INTERNAZIONALE_COPPI_E_BARTALI_2026-03-25",
   "nome": "SETTIMANA INTERNAZIONALE COPPI E BARTALI",
   "data": "2026-03-25",
@@ -420,30 +408,6 @@
   "fci_id": "179764"
  },
  {
-  "id": "RINVIATA_A_DATA_DA_DESTINARSI_COPPA_MARIA_SS_DI_GULFI_ALLIEVI_COPPA_SICILIA_2026-04-19",
-  "nome": "RINVIATA A DATA DA DESTINARSI COPPA MARIA SS DI GULFI - ALLIEVI - COPPA SICILIA",
-  "data": "2026-04-19",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "ANNULLATA/RINVIATA (nome nel nostro calendario)",
-  "nuova_data": "2026-07-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-26",
-  "nota": "RINVIATA A DATA DA DESTINARSI COPPA MARIA SS DI GULFI - ALLIEVI - COPPA SICILIA",
-  "fci_id": "180051"
- },
- {
-  "id": "RINVIATA_A_DATA_DA_DESTINARSI_COPPA_MARIA_SS_DI_GULFI_JUNIORES_COPPA_SICILIA_2026-04-19",
-  "nome": "RINVIATA A DATA DA DESTINARSI COPPA MARIA SS DI GULFI - JUNIORES - COPPA SICILIA",
-  "data": "2026-04-19",
-  "categoria": "Juniores",
-  "regione": "SICILIA",
-  "stato": "ANNULLATA/RINVIATA (nome nel nostro calendario)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "RINVIATA A DATA DA DESTINARSI COPPA MARIA SS DI GULFI - JUNIORES - COPPA SICILIA",
-  "fci_id": "180083"
- },
- {
   "id": "TOUR_OF_THE_ALPS_2026-04-20",
   "nome": "TOUR OF THE ALPS",
   "data": "2026-04-20",
@@ -576,18 +540,6 @@
   "fci_id": "179953"
  },
  {
-  "id": "51_GIRO_DELLA_PROVINCIA_DI_ROVIGO_MEMORIAL_ORLANDO_PATRESE_2026-05-02",
-  "nome": "51° GIRO DELLA PROVINCIA DI ROVIGO - MEMORIAL ORLANDO PATRESE",
-  "data": "2026-05-02",
-  "categoria": "Elite e Under 23",
-  "regione": "VENETO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-04-19",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-19",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "67_GP_U_C_A_T_2026-05-03",
   "nome": "67° GP U.C.A.T.",
   "data": "2026-05-03",
@@ -660,18 +612,6 @@
   "fci_id": "179778"
  },
  {
-  "id": "GARA_SU_STRADA_SAMATZAI_2026-05-10",
-  "nome": "GARA SU  STRADA SAMATZAI",
-  "data": "2026-05-10",
-  "categoria": "Promiscua  All - Jun",
-  "regione": "SARDEGNA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-06-14",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "",
-  "fci_id": "181760"
- },
- {
   "id": "GIORNATA_DEL_CICLISMO_2026-05-10",
   "nome": "GIORNATA DEL CICLISMO",
   "data": "2026-05-10",
@@ -713,7 +653,7 @@
   "data": "2026-05-10",
   "categoria": "Esordienti 2° anno",
   "regione": "LOMBARDIA",
-  "stato": "REGOLARE: su Members, risultati non pubblicati",
+  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
   "nuova_data": "2026-05-01",
   "risultati_alla_nuova_data": "risultati simili il 2026-05-01",
   "nota": "",
@@ -766,18 +706,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "179415"
- },
- {
-  "id": "GIORNATA_AZZURRA_ESORDIENTI_ED_ALLIEVI_STRADA_2026-05-17",
-  "nome": "GIORNATA AZZURRA ESORDIENTI ED ALLIEVI STRADA",
-  "data": "2026-05-17",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "PUGLIA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-04-04",
-  "risultati_alla_nuova_data": "SI (2026-04-04)",
-  "nota": "GIORNATA AZZURRA ESORDIENTI ED ALLIEVI STRADA",
-  "fci_id": ""
  },
  {
   "id": "M_O_COMUNE_DI_VIDOR_TROFEO_SARTORI_TERMOIDRAULICA_2026-05-17",
@@ -840,18 +768,6 @@
   "fci_id": "179633"
  },
  {
-  "id": "RINVIATA_MEMORIAL_DARIO_E_FRANCESCO_MARRONE_2026-05-28",
-  "nome": "RINVIATA MEMORIAL DARIO E FRANCESCO MARRONE",
-  "data": "2026-05-28",
-  "categoria": "Crono Multicategoria da Esordienti m/f",
-  "regione": "ABRUZZO",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "RINVIATA MEMORIAL DARIO E FRANCESCO MARRONE",
-  "fci_id": "180432"
- },
- {
   "id": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29",
   "nome": "2* GRAN PREMIO MSTC - LA PALLADIANA",
   "data": "2026-05-29",
@@ -900,90 +816,6 @@
   "fci_id": "181172"
  },
  {
-  "id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31",
-  "nome": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-  "data": "2026-05-31",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01",
-  "nome": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-  "data": "2026-06-01",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
-  "id": "2_TROFEO_SARAS_2026-06-02",
-  "nome": "2° TROFEO SARAS",
-  "data": "2026-06-02",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SARDEGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02",
-  "nome": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-  "data": "2026-06-02",
-  "categoria": "Elite-Under23",
-  "regione": "ABRUZZO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-06-14",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_BICITECH_MASTER_SPORT_ALLIEVI_2026-06-02",
-  "nome": "TROFEO BICITECH MASTER SPORT - ALLIEVI",
-  "data": "2026-06-02",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-08-23",
-  "risultati_alla_nuova_data": "risultati simili il 2026-08-23",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_BICITECH_MASTER_SPORT_ESORDIENTI_COPPA_SICILIA_2026-06-02",
-  "nome": "TROFEO BICITECH MASTER SPORT - ESORDIENTI - COPPA SICILIA",
-  "data": "2026-06-02",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-07-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03",
-  "nome": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-  "data": "2026-06-03",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
   "id": "6_TROFEO_ISOLA_RIZZA_BY_NIGHT_ON_THE_ROAD_2026-06-04",
   "nome": "6° Trofeo Isola Rizza By Night on the road",
   "data": "2026-06-04",
@@ -996,18 +828,6 @@
   "fci_id": "182042"
  },
  {
-  "id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04",
-  "nome": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-  "data": "2026-06-04",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
   "id": "14_NOTTURNA_DI_ORSAGO_2026-06-05",
   "nome": "14^ NOTTURNA DI ORSAGO",
   "data": "2026-06-05",
@@ -1018,78 +838,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "180257"
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05",
-  "nome": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
-  "data": "2026-06-05",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06",
-  "nome": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-  "data": "2026-06-06",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
-  "id": "3_TROFEO_SAN_GIUSEPPE_ALLIEVI_2026-06-07",
-  "nome": "3°TROFEO SAN GIUSEPPE ALLIEVI",
-  "data": "2026-06-07",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-03-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-03-15",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "3_TROFEO_SAN_GIUSEPPE_ESORDIENTI_2026-06-07",
-  "nome": "3° TROFEO SAN GIUSEPPE ESORDIENTI",
-  "data": "2026-06-07",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-03-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-03-15",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07",
-  "nome": "GIRO D'ITALIA WOMEN CLASSIFICA GENERALE",
-  "data": "2026-06-07",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_D_ITALIA_WOMEN_NONA_TAPPA_2026-06-07",
-  "nome": "GIRO D'ITALIA WOMEN NONA TAPPA",
-  "data": "2026-06-07",
-  "categoria": "Elite-Under23",
-  "regione": "UNDER",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-05-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-14",
-  "nota": "GIRO D'ITALIA WOMEN",
-  "fci_id": ""
  },
  {
   "id": "GRANPREMIO_RESCALDESE_5_TROFEO_COLOMBO_GROUP_2026-06-07",
@@ -1126,42 +874,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "181220"
- },
- {
-  "id": "TROFEO_CITTA_TERME_VIGLIATORE_ALLIEVI_2026-06-07",
-  "nome": "TROFEO CITTA' TERME VIGLIATORE - ALLIEVI",
-  "data": "2026-06-07",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_CITTA_TERME_VIGLIATORE_ESORDIENTI_COPPA_SICILIA_2026-06-07",
-  "nome": "TROFEO CITTA' TERME VIGLIATORE - ESORDIENTI - COPPA SICILIA",
-  "data": "2026-06-07",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-06-28",
-  "risultati_alla_nuova_data": "risultati simili il 2026-06-28",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_MADONNA_DEL_CAVATORE_2026-06-07",
-  "nome": "TROFEO MADONNA DEL CAVATORE",
-  "data": "2026-06-07",
-  "categoria": "Juniores",
-  "regione": "TOSCANA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
  },
  {
   "id": "TR_LA_TECNOMEDICA_MEMORIAL_PATRIZIO_NICCHI_2026-06-07",
@@ -1296,54 +1008,6 @@
   "fci_id": ""
  },
  {
-  "id": "3_MEM_FERRARI_2026-06-21",
-  "nome": "3° Mem. FERRARI",
-  "data": "2026-06-21",
-  "categoria": "Esordienti 1° anno",
-  "regione": "EMILIA ROMAGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "79_GIRO_DEL_PIAVE_2026-06-21",
-  "nome": "79° GIRO DEL PIAVE",
-  "data": "2026-06-21",
-  "categoria": "Elite e Under 23",
-  "regione": "VENETO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-10-10",
-  "risultati_alla_nuova_data": "risultati simili il 2026-10-10",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "7_TROFEO_CITTA_DI_CARRUBBA_MEMORIAL_GIUSEPPE_TROVATO_JUNIORES_2026-06-21",
-  "nome": "7° TROFEO CITTA' DI CARRUBBA - MEMORIAL GIUSEPPE TROVATO - JUNIORES",
-  "data": "2026-06-21",
-  "categoria": "Juniores",
-  "regione": "SICILIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_NEONELI_IN_FESTA_2026-06-21",
-  "nome": "TROFEO NEONELI IN FESTA",
-  "data": "2026-06-21",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SARDEGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "5_NOTTURNA_CASTEL_ROMANO_2026-06-26",
   "nome": "5^ NOTTURNA CASTEL ROMANO",
   "data": "2026-06-26",
@@ -1368,30 +1032,6 @@
   "fci_id": "181374"
  },
  {
-  "id": "GP_GIANNI_E_TINO_SEMPER_NOBISCUM_2026-06-28",
-  "nome": "GP GIANNI E TINO \"SEMPER NOBISCUM\"",
-  "data": "2026-06-28",
-  "categoria": "Allievi",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-06-27",
-  "risultati_alla_nuova_data": "SI (2026-06-27)",
-  "nota": "GP GIANNI E TINO \"SEMPER NOBISCUM\"",
-  "fci_id": ""
- },
- {
-  "id": "GP_GIANNI_E_TINO_SEMPER_NOBISCUM_ASSEGNAZIONE_MAGLIA_CAMP_PROV_PN_2026-06-28",
-  "nome": "GP GIANNI E TINO \"SEMPER NOBISCUM\" - ASSEGNAZIONE MAGLIA CAMP. PROV. PN",
-  "data": "2026-06-28",
-  "categoria": "Esordienti 1° anno",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-06-27",
-  "risultati_alla_nuova_data": "SI (2026-06-27)",
-  "nota": "GP GIANNI E TINO \"SEMPER NOBISCUM\" - ASSEGNAZIONE MAGLIA CAMP. PROV. PN",
-  "fci_id": ""
- },
- {
   "id": "G_P_HAWAIKI_MEMORIAL_GIUSEPPE_QUARGENTAN_M_O_ITAS_ASSICURA_2026-06-28",
   "nome": "G.P. HAWAIKI - MEMORIAL GIUSEPPE QUARGENTAN - M.O. ITAS ASSICURA",
   "data": "2026-06-28",
@@ -1402,30 +1042,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "179737"
- },
- {
-  "id": "TROFEO_SQUILLARIO_2026-06-28",
-  "nome": "TROFEO SQUILLARIO",
-  "data": "2026-06-28",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_CITTA_DI_CAMPI_BISENZIO_MEMORIAL_GASTONE_NENCINI_2026-07-01",
-  "nome": "TROFEO CITTA' DI CAMPI BISENZIO - MEMORIAL GASTONE NENCINI",
-  "data": "2026-07-01",
-  "categoria": "TIPO PISTA PIU' CATEGORIE",
-  "regione": "TOSCANA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-07-04",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-04",
-  "nota": "",
-  "fci_id": ""
  },
  {
   "id": "19_TROFEO_EDIL_SISTEM_16_GIORNATA_DELLA_BICICLETTA_2026-07-05",
@@ -1488,54 +1104,6 @@
   "fci_id": "181386"
  },
  {
-  "id": "CRONOSCALATA_ENEMONZO_2026-07-11",
-  "nome": "CRONOSCALATA ENEMONZO",
-  "data": "2026-07-11",
-  "categoria": "Crono Multicategoria da Esordienti m/f",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "1_GIORNATA_ROSA_DI_LUGO_2026-07-12",
-  "nome": "1^ GIORNATA ROSA DI LUGO",
-  "data": "2026-07-12",
-  "categoria": "Donne Allieve",
-  "regione": "VENETO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-08-23",
-  "risultati_alla_nuova_data": "risultati simili il 2026-08-23",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "36_CASUT_CIMOLAIS_2026-07-12",
-  "nome": "36° CASUT - CIMOLAIS",
-  "data": "2026-07-12",
-  "categoria": "Allievi",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "36° CASUT - CIMOLAIS - RINVIATA",
-  "fci_id": ""
- },
- {
-  "id": "36_CASUT_CIMOLAIS_RINVIATA_2026-07-12",
-  "nome": "36° CASUT - CIMOLAIS - RINVIATA",
-  "data": "2026-07-12",
-  "categoria": "Allievi",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "36° CASUT - CIMOLAIS - RINVIATA",
-  "fci_id": "180415"
- },
- {
   "id": "43_TR_M_P_FILTRI_31_TR_IVO_GALVANICA_10_TROFEO_CIE_INTERNATIONAL_2026-07-12",
   "nome": "43° TR.M.P. FILTRI - 31° TR.IVO GALVANICA - 10° TROFEO CIE INTERNATIONAL",
   "data": "2026-07-12",
@@ -1565,21 +1133,9 @@
   "data": "2026-07-12",
   "categoria": "Allievi",
   "regione": "SICILIA",
-  "stato": "REGOLARE: su Members, risultati non pubblicati",
+  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
   "nuova_data": "2026-07-26",
   "risultati_alla_nuova_data": "risultati simili il 2026-07-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "COPPA_MADONNA_DEL_CARMELO_ESORDIENTI_2026-07-12",
-  "nome": "COPPA MADONNA DEL CARMELO - ESORDIENTI",
-  "data": "2026-07-12",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-08-08",
-  "risultati_alla_nuova_data": "risultati simili il 2026-08-08",
   "nota": "",
   "fci_id": ""
  },
@@ -1644,78 +1200,6 @@
   "fci_id": "181396"
  },
  {
-  "id": "CIOCIARIA_IN_GIRO_2026-07-17",
-  "nome": "CIOCIARIA IN GIRO",
-  "data": "2026-07-17",
-  "categoria": "Juniores a tappe",
-  "regione": "LAZIO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-07-18",
-  "risultati_alla_nuova_data": "SI (2026-07-18)",
-  "nota": "CIOCIARIA IN GIRO",
-  "fci_id": ""
- },
- {
-  "id": "2_TROFEO_FLAMINIO_SULAS_2026-07-18",
-  "nome": "2° TROFEO FLAMINIO SULAS",
-  "data": "2026-07-18",
-  "categoria": "TIPO PISTA PIU' CATEGORIE",
-  "regione": "SARDEGNA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-03",
-  "risultati_alla_nuova_data": "",
-  "nota": "2° TROFEO FLAMINIO SULAS",
-  "fci_id": ""
- },
- {
-  "id": "GP_BUSATTO_LEGNAMI_2026-07-18",
-  "nome": "GP BUSATTO LEGNAMI",
-  "data": "2026-07-18",
-  "categoria": "Allievi",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_COMUNE_DI_BRENTINO_BELLUNO_2026-07-18",
-  "nome": "TROFEO COMUNE DI BRENTINO BELLUNO",
-  "data": "2026-07-18",
-  "categoria": "Juniores",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "41_COPPA_S_SALVATORE_ABATE_3_MEMORIAL_TURI_CANNAVO_ALLIEVI_2026-07-19",
-  "nome": "41° COPPA S.SALVATORE ABATE 3° MEMORIAL TURI CANNAVO - ALLIEVI",
-  "data": "2026-07-19",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "41_COPPA_S_SALVATORE_ABATE_3_MEMORIAL_TURI_CANNAVO_ESORDIENTI_COPPA_SICILIA_2026-07-19",
-  "nome": "41° COPPA S.SALVATORE ABATE 3° MEMORIAL TURI CANNAVO - ESORDIENTI - COPPA SICILIA",
-  "data": "2026-07-19",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-07-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "41_GP_CITTA_DI_MONTEGRANARO_2026-07-19",
   "nome": "41° GP CITTA' DI MONTEGRANARO",
   "data": "2026-07-19",
@@ -1750,42 +1234,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "180610"
- },
- {
-  "id": "1_TROFEO_IO_CORRO_CON_TE_MEMORIAL_FRANCESCO_MAZZOLENI_E_GERMANO_NICOLINO_2026-07-25",
-  "nome": "1° TROFEO \"IO CORRO CON TE\" MEMORIAL FRANCESCO MAZZOLENI E GERMANO NICOLINO",
-  "data": "2026-07-25",
-  "categoria": "Elite s.c. e Under 23",
-  "regione": "PIEMONTE",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "RINVIATA_1_TROFEO_IO_CORRO_CON_TE_M_FRANCESCO_MAZZOLENI_E_GERMANO_NICOLINO_2026-07-25",
-  "nome": "----RINVIATA ----------1° TROFEO \"IO CORRO CON TE\" M FRANCESCO MAZZOLENI E GERMANO NICOLINO-",
-  "data": "2026-07-25",
-  "categoria": "Elite s.c. e Under 23",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome nel nostro calendario)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "----RINVIATA ----------1° TROFEO \"IO CORRO CON TE\" M FRANCESCO MAZZOLENI E GERMANO NICOLINO-",
-  "fci_id": "181592"
- },
- {
-  "id": "32_TROFEO_PANIFICO_VESCOVI_2026-07-26",
-  "nome": "32° TROFEO PANIFICO VESCOVI",
-  "data": "2026-07-26",
-  "categoria": "Allievi",
-  "regione": "TOSCANA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
  },
  {
   "id": "44_TROFEO_ROSSI_7A_M_ORO_LOCATELLI_ROSSI_13_G_P_ANA_CASSINONE_2026-07-26",
@@ -1836,18 +1284,6 @@
   "fci_id": ""
  },
  {
-  "id": "TROFEO_CITTA_DI_CORBETTA_2026-07-26",
-  "nome": "Trofeo Città di Corbetta",
-  "data": "2026-07-26",
-  "categoria": "Allievi",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28",
   "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
   "data": "2026-07-28",
@@ -1860,144 +1296,12 @@
   "fci_id": "182617"
  },
  {
-  "id": "GIRO_GIOVANI_2026-07-29",
-  "nome": "GIRO GIOVANI",
-  "data": "2026-07-29",
-  "categoria": "Juniores a tappe",
-  "regione": "EMILIA ROMAGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "NOTTURNA_DELL_INCLUSIONE_2026-07-31",
-  "nome": "NOTTURNA DELL'INCLUSIONE",
-  "data": "2026-07-31",
-  "categoria": "TIPO PISTA PIU' CATEGORIE",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "4_MEMORIAL_CLAUDIA_BALDO_2026-08-01",
-  "nome": "4° Memorial  CLAUDIA BALDO",
-  "data": "2026-08-01",
-  "categoria": "Donne Esordienti",
-  "regione": "LOMBARDIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-04-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_MONTE_GIBERTO_2026-08-01",
-  "nome": "TROFEO MONTE GIBERTO",
-  "data": "2026-08-01",
-  "categoria": "Allievi",
-  "regione": "MARCHE",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "19_TROFEO_SUPERMARKET_DELLA_CALZATURA_2026-08-02",
-  "nome": "19° TROFEO \"SUPERMARKET DELLA CALZATURA\"",
-  "data": "2026-08-02",
-  "categoria": "Allievi",
-  "regione": "TRENTO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "2_MEMORIAL_SERGIO_FERRARI_2026-08-02",
-  "nome": "2° MEMORIAL SERGIO FERRARI",
-  "data": "2026-08-02",
-  "categoria": "Allievi",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "4_MEMORIAL_FRANCO_TONOLI_2026-08-02",
-  "nome": "4° Memorial FRANCO TONOLI",
-  "data": "2026-08-02",
-  "categoria": "Esordienti 1° anno",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "ALLIEVI_2026-08-02",
-  "nome": "ALLIEVI",
-  "data": "2026-08-02",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-04-24",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-24",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "ESORDIENTI_1_2_ANNO_2026-08-02",
-  "nome": "ESORDIENTI 1°/2° ANNO",
-  "data": "2026-08-02",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "PIEMONTE",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-03-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-03-15",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "PROMISCUA_DONNE_ESORDIENTI_DONNE_ALLIEVE_2026-08-02",
-  "nome": "PROMISCUA DONNE ESORDIENTI-DONNE ALLIEVE",
-  "data": "2026-08-02",
-  "categoria": "Promiscua De - Da",
-  "regione": "PIEMONTE",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-03-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-03-15",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "TROFEO_ANTONIO_TRAPLETTI_A_M_2026-08-02",
   "nome": "TROFEO ANTONIO TRAPLETTI A.M.",
   "data": "2026-08-02",
   "categoria": "Esordienti 1°/2° anno",
   "regione": "LOMBARDIA",
   "stato": "REGOLARE: su Members, risultati non pubblicati",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_GROTTAZZOLINA_2026-08-02",
-  "nome": "TROFEO GROTTAZZOLINA",
-  "data": "2026-08-02",
-  "categoria": "Allievi",
-  "regione": "MARCHE",
-  "stato": "SPARITA da Members",
   "nuova_data": "",
   "risultati_alla_nuova_data": "",
   "nota": "",
@@ -2052,18 +1356,6 @@
   "fci_id": ""
  },
  {
-  "id": "GRAN_PREMIO_DMT_ALE_2026-08-09",
-  "nome": "GRAN PREMIO DMT - ALE'",
-  "data": "2026-08-09",
-  "categoria": "Juniores",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "G_P_CITTA_DI_FONTANAFREDDA_2026-08-09",
   "nome": "G.P.  CITTÀ DI  FONTANAFREDDA",
   "data": "2026-08-09",
@@ -2100,42 +1392,6 @@
   "fci_id": "180451"
  },
  {
-  "id": "G_P_DEL_CICLAMINO_2026-08-09",
-  "nome": "G.P. DEL CICLAMINO",
-  "data": "2026-08-09",
-  "categoria": "Esordienti 1° anno",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TR_CITTA_DI_MONTE_S_GIOVANNI_CAMPANO_GP_CICLISMO_OGGI_E_DOMANI_2026-08-09",
-  "nome": "TR. CITTA' DI MONTE S.GIOVANNI CAMPANO -GP CICLISMO OGGI E DOMANI",
-  "data": "2026-08-09",
-  "categoria": "Allievi",
-  "regione": "LAZIO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-12-31",
-  "risultati_alla_nuova_data": "",
-  "nota": "TR. CITTA' DI MONTE S.GIOVANNI CAMPANO -GP CICLISMO OGGI E DOMANI",
-  "fci_id": ""
- },
- {
-  "id": "18_TROFEO_BALACCO_PAPONI_2026-08-11",
-  "nome": "18° TROFEO BALACCO PAPONI",
-  "data": "2026-08-11",
-  "categoria": "Juniores",
-  "regione": "MARCHE",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-08-09",
-  "risultati_alla_nuova_data": "SI (2026-08-09)",
-  "nota": "18° TROFEO BALACCO PAPONI",
-  "fci_id": ""
- },
- {
   "id": "G_P_43_FESTA_DELLO_SPORT_3_MEMORIAL_GIUSEPPE_BERTOLDO_2026-08-14",
   "nome": "G.p. 43° FESTA DELLO SPORT - 3° MEMORIAL GIUSEPPE  BERTOLDO",
   "data": "2026-08-14",
@@ -2160,174 +1416,6 @@
   "fci_id": "180259"
  },
  {
-  "id": "10_TROFEO_DONINI_LOGISTICA_2026-08-15",
-  "nome": "10° TROFEO DONINI LOGISTICA",
-  "data": "2026-08-15",
-  "categoria": "Promiscua De - Da",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "--------RINVIATA-----------10° TROFEO DONINI LOGISTICA",
-  "fci_id": ""
- },
- {
-  "id": "17_MEMORIAL_MAURIZIO_BERTOLINI_2026-08-15",
-  "nome": "17° MEMORIAL MAURIZIO BERTOLINI",
-  "data": "2026-08-15",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "-----------RINVIATA----------17° MEMORIAL MAURIZIO BERTOLINI",
-  "fci_id": ""
- },
- {
-  "id": "21_TROFEO_COMUNE_PIEVE_VERGONTE_2026-08-15",
-  "nome": "21° TROFEO COMUNE PIEVE VERGONTE",
-  "data": "2026-08-15",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "-----RINVIATA---------21° TROFEO COMUNE PIEVE VERGONTE",
-  "fci_id": ""
- },
- {
-  "id": "46_TROFEO_G_S_PIANCAMUNO_2026-08-15",
-  "nome": "46° TROFEO G.S. PIANCAMUNO",
-  "data": "2026-08-15",
-  "categoria": "Juniores",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "PICCOLA_ROUBAIX_DEL_BASSO_VERONESE_5_MEM_TOAJARI_E_VICENTINI_2026-08-15",
-  "nome": "PICCOLA ROUBAIX DEL BASSO VERONESE  5° MEM  TOAJARI E  VICENTINI",
-  "data": "2026-08-15",
-  "categoria": "Esordienti 1° anno",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "PICCOLA_ROUBAIX_DEL_BASSO_VERONESE_6_MEMORIAL_ITALO_TOAJARI_2026-08-15",
-  "nome": "PICCOLA ROUBAIX DEL BASSO VERONESE  6° MEMORIAL ITALO TOAJARI",
-  "data": "2026-08-15",
-  "categoria": "Allievi",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "RINVIATA_10_TROFEO_DONINI_LOGISTICA_2026-08-15",
-  "nome": "--------RINVIATA-----------10° TROFEO DONINI LOGISTICA",
-  "data": "2026-08-15",
-  "categoria": "Promiscua De - Da",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "--------RINVIATA-----------10° TROFEO DONINI LOGISTICA",
-  "fci_id": "180139"
- },
- {
-  "id": "RINVIATA_17_MEMORIAL_MAURIZIO_BERTOLINI_2026-08-15",
-  "nome": "-----------RINVIATA----------17° MEMORIAL MAURIZIO BERTOLINI",
-  "data": "2026-08-15",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "-----------RINVIATA----------17° MEMORIAL MAURIZIO BERTOLINI",
-  "fci_id": "180138"
- },
- {
-  "id": "RINVIATA_21_TROFEO_COMUNE_PIEVE_VERGONTE_2026-08-15",
-  "nome": "-----RINVIATA---------21° TROFEO COMUNE PIEVE VERGONTE",
-  "data": "2026-08-15",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome su Members)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "-----RINVIATA---------21° TROFEO COMUNE PIEVE VERGONTE",
-  "fci_id": "180137"
- },
- {
-  "id": "GIRO_ROSA_DELLA_PROVINCIA_DI_ROVIGO_2026-08-16",
-  "nome": "GIRO ROSA DELLA PROVINCIA DI ROVIGO",
-  "data": "2026-08-16",
-  "categoria": "Donne Open",
-  "regione": "VENETO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-04-19",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-19",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_DELL_UVA_ALLIEVI_2026-08-16",
-  "nome": "TROFEO DELL'UVA - ALLIEVI",
-  "data": "2026-08-16",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-10-11",
-  "risultati_alla_nuova_data": "risultati simili il 2026-09-26",
-  "nota": "TROFEO DELL'UVA - ALLIEVI",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_DELL_UVA_ESORDIENTI_COPPA_SICILIA_2026-08-16",
-  "nome": "TROFEO DELL'UVA - ESORDIENTI - COPPA SICILIA",
-  "data": "2026-08-16",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-10-11",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-26",
-  "nota": "TROFEO DELL'UVA - ESORDIENTI - COPPA SICILIA",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_DELL_UVA_JUNIORES_2026-08-16",
-  "nome": "TROFEO DELL'UVA - JUNIORES",
-  "data": "2026-08-16",
-  "categoria": "Juniores",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-09-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-09-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "KERMESSE_DI_SERA_TIPO_PISTA_2026-08-19",
-  "nome": "KERMESSE DI SERA TIPO PISTA",
-  "data": "2026-08-19",
-  "categoria": "TIPO PISTA PIU' CATEGORIE",
-  "regione": "TRENTO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20",
   "nome": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
   "data": "2026-08-20",
@@ -2340,42 +1428,6 @@
   "fci_id": "180140"
  },
  {
-  "id": "5_TROFEO_MAZZARRA_SANT_ANDREA_LA_CULLA_DEI_VIVAI_ALLIEVI_2026-08-23",
-  "nome": "5^ TROFEO MAZZARRA' SANT'ANDREA LA CULLA DEI VIVAI - ALLIEVI",
-  "data": "2026-08-23",
-  "categoria": "Allievi",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-08-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-08-30",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "5_TROFEO_MAZZARRA_SANT_ANDREA_LA_CULLA_DEI_VIVAI_ESORDIENTI_2026-08-23",
-  "nome": "5^ TROFEO MAZZARRA' SANT'ANDREA LA CULLA DEI VIVAI - ESORDIENTI",
-  "data": "2026-08-23",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SICILIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-08-30",
-  "risultati_alla_nuova_data": "risultati simili il 2026-08-30",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "COLLEGNO_SESTRIERE_2026-08-23",
-  "nome": "COLLEGNO SESTRIERE",
-  "data": "2026-08-23",
-  "categoria": "Juniores",
-  "regione": "PIEMONTE",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "GRAN_PREMIO_COMUNE_DI_MARCARIA_2026-08-23",
   "nome": "Gran Premio Comune di Marcaria",
   "data": "2026-08-23",
@@ -2385,18 +1437,6 @@
   "nuova_data": "",
   "risultati_alla_nuova_data": "",
   "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "TROFEO_CITTA_DI_CEPRANO_GP_CICLISMO_OGGI_E_DOMANI_2026-08-23",
-  "nome": "TROFEO CITTA' DI CEPRANO-GP CICLISMO OGGI E DOMANI",
-  "data": "2026-08-23",
-  "categoria": "Allievi",
-  "regione": "LAZIO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-12-31",
-  "risultati_alla_nuova_data": "",
-  "nota": "TROFEO CITTA' DI CEPRANO-GP CICLISMO OGGI E DOMANI",
   "fci_id": ""
  },
  {
@@ -2448,18 +1488,6 @@
   "fci_id": "182686"
  },
  {
-  "id": "GIOVANISSIMI_2026-08-31",
-  "nome": "GIOVANISSIMI",
-  "data": "2026-08-31",
-  "categoria": "TIPO PISTA PIU' CATEGORIE",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "2_TROFEO_SANT_EGIDIO_2026-09-02",
   "nome": "2° TROFEO SANT'EGIDIO",
   "data": "2026-09-02",
@@ -2496,30 +1524,6 @@
   "fci_id": "179456"
  },
  {
-  "id": "1_CRONOMETRO_DELTA_BIKES_2026-09-05",
-  "nome": "1° CRONOMETRO DELTA BIKES",
-  "data": "2026-09-05",
-  "categoria": "Crono Multicategoria da Elite m/f",
-  "regione": "LOMBARDIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "4_TROFEO_DELL_UVA_2026-09-05",
-  "nome": "4° TROFEO DELL’UVA",
-  "data": "2026-09-05",
-  "categoria": "Juniores",
-  "regione": "TOSCANA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-09-26",
-  "risultati_alla_nuova_data": "risultati simili il 2026-09-26",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "12_GP_VERNICIATURA_F2_2_MEMORIAL_GIANNI_FELTRIN_2026-09-06",
   "nome": "12° GP  VERNICIATURA F2 - 2° MEMORIAL \"GIANNI\" FELTRIN",
   "data": "2026-09-06",
@@ -2530,18 +1534,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "179789"
- },
- {
-  "id": "ALLIEVI_2026-09-06",
-  "nome": "ALLIEVI",
-  "data": "2026-09-06",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-04-24",
-  "risultati_alla_nuova_data": "risultati simili il 2026-04-24",
-  "nota": "",
-  "fci_id": ""
  },
  {
   "id": "GP_COMUNE_DI_CASTELFR_EMILIA_2026-09-06",
@@ -2652,18 +1644,6 @@
   "fci_id": "180707"
  },
  {
-  "id": "108_GIRO_DEL_CASENTINO_2026-09-13",
-  "nome": "108°  GIRO DEL CASENTINO",
-  "data": "2026-09-13",
-  "categoria": "Elite e Under 23",
-  "regione": "TOSCANA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "1_GP_SICC_TECH_47_GP_COMUNE_VILLADOSE_8_MEMORIAL_BETTONTE_2026-09-13",
   "nome": "1° GP SICC Tech - 47° GP COMUNE VILLADOSE - 8° MEMORIAL BETTONTE",
   "data": "2026-09-13",
@@ -2688,30 +1668,6 @@
   "fci_id": "179558"
  },
  {
-  "id": "37_MEMORIAL_FRANCESCO_TURCI_37_COPPA_COCIF_2026-09-13",
-  "nome": "37° MEMORIAL FRANCESCO TURCI - 37° COPPA COCIF",
-  "data": "2026-09-13",
-  "categoria": "Esordienti 1° anno",
-  "regione": "EMILIA ROMAGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "64_GP_SAN_MICHELE_2026-09-13",
-  "nome": "64° GP SAN MICHELE",
-  "data": "2026-09-13",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "PIEMONTE",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-05-17",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-17",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "90_TROFEO_BOTTECHIA_2026-09-13",
   "nome": "90° TROFEO BOTTECHIA",
   "data": "2026-09-13",
@@ -2722,18 +1678,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "179809"
- },
- {
-  "id": "COPPA_COMUNE_DI_MONTI_2026-09-13",
-  "nome": "COPPA COMUNE DI MONTI",
-  "data": "2026-09-13",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "SARDEGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
  },
  {
   "id": "TROFEO_MATTEOTTI_2026-09-13",
@@ -2760,90 +1704,6 @@
   "fci_id": ""
  },
  {
-  "id": "IL_GIRO_D_ABRUZZO_SECONDA_TAPPA_2026-09-16",
-  "nome": "IL GIRO D'ABRUZZO SECONDA TAPPA",
-  "data": "2026-09-16",
-  "categoria": "A tappe Classe 1 pro",
-  "regione": "ABRUZZO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-01",
-  "nota": "IL GIRO D'ABRUZZO",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_MEDITERRANEO_IN_ROSA_2026-09-17",
-  "nome": "GIRO MEDITERRANEO IN ROSA",
-  "data": "2026-09-17",
-  "categoria": "Donne Elite a tappe",
-  "regione": "CAMPANIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-05-09",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-09",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "IL_GIRO_D_ABRUZZO_TERZA_TAPPA_2026-09-17",
-  "nome": "IL GIRO D'ABRUZZO TERZA TAPPA",
-  "data": "2026-09-17",
-  "categoria": "A tappe Classe 1 pro",
-  "regione": "ABRUZZO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-01",
-  "nota": "IL GIRO D'ABRUZZO",
-  "fci_id": ""
- },
- {
-  "id": "IL_GIRO_D_ABRUZZO_CLASSIFICA_GENERALE_2026-09-18",
-  "nome": "IL GIRO D'ABRUZZO CLASSIFICA GENERALE",
-  "data": "2026-09-18",
-  "categoria": "A tappe Classe 1 pro",
-  "regione": "ABRUZZO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-01",
-  "nota": "IL GIRO D'ABRUZZO",
-  "fci_id": ""
- },
- {
-  "id": "IL_GIRO_D_ABRUZZO_QUARTA_TAPPA_2026-09-18",
-  "nome": "IL GIRO D'ABRUZZO QUARTA TAPPA",
-  "data": "2026-09-18",
-  "categoria": "A tappe Classe 1 pro",
-  "regione": "ABRUZZO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-15",
-  "risultati_alla_nuova_data": "risultati simili il 2026-05-01",
-  "nota": "IL GIRO D'ABRUZZO",
-  "fci_id": ""
- },
- {
-  "id": "1_GRAN_PREMIO_ALLIEVI_ROMANO_D_EZZELINO_2026-09-20",
-  "nome": "1° Gran Premio Allievi Romano d\\'Ezzelino",
-  "data": "2026-09-20",
-  "categoria": "Allievi",
-  "regione": "VENETO",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-10-04",
-  "risultati_alla_nuova_data": "risultati simili il 2026-10-04",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "1_GRAN_PREMIO_ESORDIENTI_ROMANO_D_EZZELINO_2026-09-20",
-  "nome": "1° Gran Premio Esordienti Romano d\\'Ezzelino",
-  "data": "2026-09-20",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "VENETO",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "3_GP_U_C_PALAZZOLO_3_MEMORIAL_BRUNO_RAGAZZO_2026-09-20",
   "nome": "3° GP U.C. PALAZZOLO - 3° MEMORIAL BRUNO RAGAZZO",
   "data": "2026-09-20",
@@ -2854,42 +1714,6 @@
   "risultati_alla_nuova_data": "",
   "nota": "",
   "fci_id": "179812"
- },
- {
-  "id": "40_MEMORIAL_F_VANORE_2_MEMORIAL_MIMI_FERRAIUOLO_2026-09-20",
-  "nome": "40' MEMORIAL F.VANORE 2' MEMORIAL MIMÌ FERRAIUOLO",
-  "data": "2026-09-20",
-  "categoria": "Allievi",
-  "regione": "CAMPANIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "40_MEMORIAL_F_VANORE_2_MEMORIAL_MIMI_FERRAIUOLO_2026-09-20_ALLIEVI",
-  "nome": "40' MEMORIAL F.VANORE 2' MEMORIAL MIMÌ FERRAIUOLO",
-  "data": "2026-09-20",
-  "categoria": "Allievi",
-  "regione": "CAMPANIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": "180554"
- },
- {
-  "id": "40_MEMORIAL_F_VANORE_2_MEMORIAL_MIMI_FERRAIUOLO_2026-09-20_ESORDIENTI_1_2_ANNO",
-  "nome": "40' MEMORIAL F.VANORE 2' MEMORIAL MIMÌ FERRAIUOLO",
-  "data": "2026-09-20",
-  "categoria": "Esordienti 1°/2° anno",
-  "regione": "CAMPANIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": "180555"
  },
  {
   "id": "DA_DEFINIRE_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-09-20",
@@ -2904,30 +1728,6 @@
   "fci_id": ""
  },
  {
-  "id": "GIRO_DELLA_ROMAGNA_ALLIEVI_2026-09-20",
-  "nome": "Giro della Romagna Allievi",
-  "data": "2026-09-20",
-  "categoria": "Allievi",
-  "regione": "EMILIA ROMAGNA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "GIRO_DI_CAMPANIA_2026-09-20",
-  "nome": "GIRO DI CAMPANIA",
-  "data": "2026-09-20",
-  "categoria": "Classe 1 pro",
-  "regione": "CAMPANIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": "182894"
- },
- {
   "id": "GP_CITTA_DI_MARANELLO_2026-09-20",
   "nome": "GP  CITTA' di MARANELLO",
   "data": "2026-09-20",
@@ -2940,112 +1740,16 @@
   "fci_id": ""
  },
  {
-  "id": "TROFEO_CICLISTI_IERI_OGGI_DOMANI_CHALLENGE_D_AMORE_2026-09-20",
-  "nome": "TROFEO CICLISTI IERI-OGGI-DOMANI CHALLENGE D’AMORE",
-  "data": "2026-09-20",
-  "categoria": "Allievi",
-  "regione": "CAMPANIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "4_COSTA_DEI_TRULLI_GIRO_DI_PUGLIA_CHALLENGE_2026-09-25",
-  "nome": "4^ COSTA DEI TRULLI - GIRO DI PUGLIA CHALLENGE",
-  "data": "2026-09-25",
-  "categoria": "Elite e Under 23",
-  "regione": "PUGLIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "PAPA_ELIO_GRAN_PREMIO_GIORGIO_MARE_2026-09-25",
-  "nome": "\"PAPÀ ELIO\" GRAN PREMIO GIORGIO MARE",
-  "data": "2026-09-25",
-  "categoria": "Crono Multicategoria da Esordienti m/f",
-  "regione": "MARCHE",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-09-26",
-  "risultati_alla_nuova_data": "SI (2026-09-26)",
-  "nota": "\"PAPÀ ELIO\" GRAN PREMIO GIORGIO MARE",
-  "fci_id": ""
- },
- {
-  "id": "66_COPPA_MESSAPICA_GIRO_DI_PUGLIA_CHALLENGE_2026-09-26",
-  "nome": "66^ COPPA MESSAPICA - GIRO DI PUGLIA CHALLENGE",
-  "data": "2026-09-26",
-  "categoria": "Elite e Under 23",
-  "regione": "PUGLIA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-09-27",
-  "risultati_alla_nuova_data": "risultati simili il 2026-09-27",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "6_GRAN_PREMIO_CITRECOLOR_2026-09-27",
-  "nome": "6° GRAN PREMIO CITRECOLOR",
-  "data": "2026-09-27",
-  "categoria": "Juniores",
-  "regione": "VENETO",
-  "stato": "SPOSTATA su Members",
-  "nuova_data": "2026-08-23",
-  "risultati_alla_nuova_data": "SI (2026-08-23)",
-  "nota": "6° GRAN PREMIO CITRECOLOR",
-  "fci_id": ""
- },
- {
-  "id": "73_COPPA_LANCIOTTO_BALLERINI_MEMORIAL_GASTONE_NENCINI_2026-09-27",
-  "nome": "73^ COPPA LANCIOTTO BALLERINI - MEMORIAL GASTONE NENCINI",
-  "data": "2026-09-27",
-  "categoria": "Juniores",
-  "regione": "TOSCANA",
-  "stato": "POSSIBILE SPOSTAMENTO (risultati simili ad altra data, DA VERIFICARE)",
-  "nuova_data": "2026-07-04",
-  "risultati_alla_nuova_data": "risultati simili il 2026-07-04",
-  "nota": "",
-  "fci_id": ""
- },
- {
   "id": "76_TARGA_CROCIFISSO_GIRO_DI_PUGLIA_CHALLENGE_2026-09-27",
   "nome": "76^ TARGA CROCIFISSO – GIRO DI PUGLIA CHALLENGE",
   "data": "2026-09-27",
   "categoria": "Elite e Under 23",
   "regione": "PUGLIA",
-  "stato": "REGOLARE: su Members, risultati non pubblicati",
-  "nuova_data": "",
+  "stato": "SPOSTATA su Members",
+  "nuova_data": "2026-10-18",
   "risultati_alla_nuova_data": "",
-  "nota": "",
+  "nota": "76^ TARGA CROCIFISSO",
   "fci_id": ""
- },
- {
-  "id": "89_COPPA_SAN_VITO_2026-09-27",
-  "nome": "89^  COPPA SAN VITO",
-  "data": "2026-09-27",
-  "categoria": "Juniores",
-  "regione": "FRIULI VENEZIA GIULIA",
-  "stato": "SPARITA da Members",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "",
-  "fci_id": ""
- },
- {
-  "id": "GARA_RINVIATA_AL_27_09_TROFEO_SQUILLARIO_2026-09-27",
-  "nome": "GARA RINVIATA AL 27.09 -----TROFEO SQUILLARIO",
-  "data": "2026-09-27",
-  "categoria": "Allievi",
-  "regione": "PIEMONTE",
-  "stato": "ANNULLATA/RINVIATA (nome nel nostro calendario)",
-  "nuova_data": "",
-  "risultati_alla_nuova_data": "",
-  "nota": "GARA RINVIATA AL 27.09 -----TROFEO SQUILLARIO",
-  "fci_id": "180075"
  },
  {
   "id": "GP_CITTA_DI_MONSUMMANO_2026-09-27",
