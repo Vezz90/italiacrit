@@ -10486,19 +10486,6 @@
     "fci_id": "178674"
   },
   {
-    "id": "TROFEO_TESSILE_MODA_COMUNI_DI_VALDENGO_E_BIELLA_2026-10-11",
-    "nome": "TROFEO TESSILE & MODA - COMUNI DI VALDENGO E BIELLA",
-    "data": "2026-10-11",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Donne Elite",
-    "luogo": "VALDENGO - BIELLA",
-    "fci_id": "178707"
-  },
-  {
     "id": "VENETO_WOMEN_2026-10-14",
     "nome": "VENETO WOMEN",
     "data": "2026-10-14",
@@ -10536,18 +10523,6 @@
     "luogo": "CABIATE"
   },
   {
-    "id": "3_MEMORIAL_ANDREA_GABRIELI_2026-10-11",
-    "nome": "3° MEMORIAL ANDREA GABRIELI",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "RALDON"
-  },
-  {
     "id": "13_GRAN_PREMIO_VALLI_DEL_NATISONE_2026-10-11",
     "nome": "13° GRAN PREMIO VALLI DEL NATISONE",
     "data": "2026-10-11",
@@ -10559,30 +10534,6 @@
     "categoria": "Juniores",
     "luogo": "SAN PIETRO AL NATISONE",
     "fci_id": "180469"
-  },
-  {
-    "id": "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11",
-    "nome": "39° MEMORIAL MARCELLINO PATTERI",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SARDEGNA",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "SINISCOLA"
-  },
-  {
-    "id": "12_TROFEO_DANILO_FUSARO_2026-10-11",
-    "nome": "12° Trofeo DANILO FUSARO",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Juniores",
-    "luogo": "SIRMIONE"
   },
   {
     "id": "COPPA_CITTA_DI_BOZZOLO_2026-10-20",
@@ -15757,32 +15708,6 @@
     "fci_id": "178998"
   },
   {
-    "id": "TROFEO_DELL_UVA_ESORDIENTI_COPPA_SICILIA_2026-10-11",
-    "nome": "TROFEO DELL'UVA - ESORDIENTI - COPPA SICILIA",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SICILIA",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "MARSALA",
-    "fci_id": "180033"
-  },
-  {
-    "id": "TROFEO_DELL_UVA_ALLIEVI_2026-10-11",
-    "nome": "TROFEO DELL'UVA - ALLIEVI",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SICILIA",
-    "categoria": "Allievi",
-    "luogo": "MARSALA",
-    "fci_id": "180066"
-  },
-  {
     "id": "TR_CITTA_DI_MONTE_S_GIOVANNI_CAMPANO_GP_CICLISMO_OGGI_E_DOMANI_2026-12-31",
     "nome": "TR. CITTA' DI MONTE S.GIOVANNI CAMPANO -GP CICLISMO OGGI E DOMANI",
     "data": "2026-12-31",
@@ -17999,18 +17924,6 @@
     "categoria": "Elite s.c. e Under 23",
     "luogo": "CASTIGLION FIBOCCHI (AR)",
     "fci_id": "182755"
-  },
-  {
-    "id": "64_GP_SAN_MICHELE_2026-10-11",
-    "nome": "64° GP SAN MICHELE",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "ROSTA TO"
   },
   {
     "id": "PICCOLO_LOMBARDIA_JUNIORES_2026-10-11",
@@ -23422,58 +23335,6 @@
     "regione": "LOMBARDIA",
     "categoria": "Esordienti 2° anno",
     "luogo": "CARBONATE"
-  },
-  {
-    "id": "64_GP_SAN_MICHELE_2026-10-11_ESORDIENTI_1_2_ANNO",
-    "fci_id": "180149",
-    "nome": "64° GP SAN MICHELE",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "ROSTA TO"
-  },
-  {
-    "id": "64_GP_SAN_MICHELE_2026-10-11_ALLIEVI",
-    "fci_id": "180151",
-    "nome": "64° GP SAN MICHELE",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Allievi",
-    "luogo": "ROSTA TO"
-  },
-  {
-    "id": "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11_ESORDIENTI_1_2_ANNO",
-    "fci_id": "181784",
-    "nome": "39° MEMORIAL MARCELLINO PATTERI",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SARDEGNA",
-    "categoria": "Esordienti 1°/2° anno",
-    "luogo": "SINISCOLA"
-  },
-  {
-    "id": "39_MEMORIAL_MARCELLINO_PATTERI_2026-10-11_PROMISCUA_ALL_JUN",
-    "fci_id": "181785",
-    "nome": "39° MEMORIAL MARCELLINO PATTERI",
-    "data": "2026-10-11",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SARDEGNA",
-    "categoria": "Promiscua  All - Jun",
-    "luogo": "SINISCOLA"
   },
   {
     "id": "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ESORDIENTI_1_ANNO",

@@ -1077,6 +1077,18 @@ async def run_cycle():
     if should_rescrape:
         print("Calendario da FCI: caricamento gare nuove..." if calendar else "Scaricamento calendario automatico dalla FCI...")
         fresh_calendar = scrape_calendar_fci(CURRENT_YEAR)
+        # Gare annullate o sparite dalla FCI/Members (data/calendar_exclude.json): non vanno riaggiunte e, se presenti, si tolgono
+        try:
+            with open(DATA_DIR / "calendar_exclude.json", "r", encoding="utf-8") as f:
+                _ex = json.load(f)
+        except Exception:
+            _ex = {}
+        _ex_ids, _ex_fci = set((_ex.get("ids") or {}).keys()), set((_ex.get("fci_ids") or {}).keys())
+        if _ex_ids or _ex_fci:
+            _n0 = len(calendar)
+            calendar = [g for g in calendar if g["id"] not in _ex_ids and str(g.get("fci_id") or "") not in _ex_fci]
+            fresh_calendar = [g for g in fresh_calendar if g["id"] not in _ex_ids and str(g.get("fci_id") or "") not in _ex_fci]
+            if _n0 != len(calendar): print(f"Calendario: {_n0 - len(calendar)} gare escluse (annullate/sparite) tolte.")
         existing_ids = {g["id"] for g in calendar}
         existing_by_fci = {g["fci_id"]: g for g in calendar if g.get("fci_id")}
         added = renamed = 0
