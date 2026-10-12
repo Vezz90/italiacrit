@@ -8303,6 +8303,7 @@ async function fetchFbPagePosts({ fresh = false } = {}) {
   // 1o tentativo completo (100 post con allegati); se Facebook rifiuta ("troppi dati", timeout) 2o piu' leggero (25 post, senza allegati)
   // Facebook rifiuta a volte campi aggregati (errore "deprecate_post_aggregated_fields_for_attachement"): si scende a richieste via via piu' semplici
   const attempts = [
+    { edge: 'published_posts', fields: 'message,link,created_time,permalink_url', limit: 100, pages: 3 },
     { edge: 'published_posts', fields: 'message,created_time,permalink_url', limit: 100, pages: 3 },
     { edge: 'posts', fields: 'message,created_time', limit: 50, pages: 2 },
     { edge: 'feed', fields: 'message,created_time', limit: 50, pages: 2 },
@@ -8344,6 +8345,14 @@ function fbPostFor(post, fbPosts) {
   for (const f of fbPosts) {
     const raw = f.text || '';
     if (gid && (raw.includes(gid) || raw.includes(encodeURIComponent(gid)))) return f;
+    // un post nostro che porta al link di un'ALTRA categoria dello stesso evento (es. Allievi vs Esordienti) non vale come post di questa:
+    // senza questo controllo, pubblicata una categoria, le altre con lo stesso nome risultavano "gia' presenti" e non uscivano mai
+    const _lm = raw.match(/italiacyclingstats\.com\/gara\/([^\s?#]+)/);
+    if (_lm && gid) {
+      let other = _lm[1]; try { other = decodeURIComponent(other); } catch (_) {}
+      const catOf = s => (String(s).match(/_([A-Z0-9]+_[MF])$/) || [])[1] || '';
+      if (catOf(other) && catOf(gid) && catOf(other) !== catOf(gid)) continue;
+    }
     if (!need.length) continue;
     if (!isNaN(base)) {
       const c = Date.parse(f.created);
