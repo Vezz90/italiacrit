@@ -8319,7 +8319,7 @@ async function fetchFbPagePosts({ fresh = false } = {}) {
         if (j.error) throw new Error(`${j.error.message} (code ${j.error.code}${j.error.error_subcode ? '/' + j.error.error_subcode : ''})`);
         for (const x of (j.data || [])) {
           const att = (x.attachments && x.attachments.data && x.attachments.data[0]) || {};
-          posts.push({ created: x.created_time || '', text: [x.message, x.link, x.permalink_url, att.title, att.description, att.url].filter(Boolean).join(' ') });
+          posts.push({ id: x.id || '', created: x.created_time || '', text: [x.message, x.link, x.permalink_url, att.title, att.description, att.url].filter(Boolean).join(' ') });
         }
         url = j.paging && j.paging.next;
       }
@@ -8345,6 +8345,12 @@ function fbPostFor(post, fbPosts) {
   for (const f of fbPosts) {
     const raw = f.text || '';
     if (gid && (raw.includes(gid) || raw.includes(encodeURIComponent(gid)))) return f;
+    // post gia' pubblicato da noi per un'altra categoria dello stesso evento (riconosciuto dal suo id): non conta per questa
+    const _ownGid = fbPosts._own && f.id ? fbPosts._own.get(String(f.id)) : null;
+    if (_ownGid && gid && _ownGid !== gid) {
+      const cOf = s => (String(s).match(/_([A-Z0-9]+_[MF])$/) || [])[1] || '';
+      if (cOf(_ownGid) && cOf(gid) && cOf(_ownGid) !== cOf(gid)) continue;
+    }
     // un post nostro che porta al link di un'ALTRA categoria dello stesso evento (es. Allievi vs Esordienti) non vale come post di questa:
     // senza questo controllo, pubblicata una categoria, le altre con lo stesso nome risultavano "gia' presenti" e non uscivano mai
     const _lm = raw.match(/italiacyclingstats\.com\/gara\/([^\s?#]+)/);
@@ -8384,6 +8390,7 @@ async function _publishPendingSocialAutoInner({ force = false } = {}) {
     const queue = await readSocialQueue();
     const alreadyPosted = new Set(queue.filter(p => p.status === 'posted').map(p => p.gara_id));
     const fbPosts = await fetchFbPagePosts({ fresh: true });
+    if (fbPosts) fbPosts._own = new Map(queue.filter(q => q.fb_post_id).map(q => [String(q.fb_post_id), q.gara_id]));
     if (!fbPosts) return { skipped: 'non riesco a leggere i post della pagina Facebook: per evitare doppioni non pubblico', fb_error: _fbFeedLastError };
     for (let i = 0; i < queue.length; i++) {
       const q = queue[i];
@@ -8678,6 +8685,7 @@ async function queueSocialPostsForToday() {
     const xpix = await readXpixPhotos();
     const ic   = await readICPhotos();
     const fbPosts = await fetchFbPagePosts();
+    if (fbPosts) fbPosts._own = new Map(queue.filter(q => q.fb_post_id).map(q => [String(q.fb_post_id), q.gara_id]));
     for (const garaId of garaIds) {
       if (existing.has(garaId)) continue;
       const r = winners[garaId];
