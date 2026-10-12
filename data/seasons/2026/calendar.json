@@ -6710,19 +6710,6 @@
     "fci_id": "180844"
   },
   {
-    "id": "TROFEO_CITTA_DI_SANGIULIANO_MILANES_VALEVOLE_COME_PROVA_UNICA_DI_CAMPIONATO_PROVINCIALE_2026-05-10",
-    "nome": "TROFEO CITTÀ DI SANGIULIANO MILANES_Valevole come prova unica di campionato provinciale",
-    "data": "2026-05-10",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Esordienti 2° anno",
-    "luogo": "SAN GIULIANO MILANESE",
-    "fci_id": "180845"
-  },
-  {
     "id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10",
     "nome": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-05-10",
@@ -14008,18 +13995,6 @@
     "fci_id": "180574"
   },
   {
-    "id": "COPPA_MADONNA_DEL_CARMELO_ALLIEVI_COPPA_SICILIA_2026-07-12",
-    "nome": "COPPA MADONNA DEL CARMELO - ALLIEVI - COPPA SICILIA",
-    "data": "2026-07-12",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "SICILIA",
-    "categoria": "Allievi",
-    "luogo": "SAN FILIPPO DEL MELA"
-  },
-  {
     "id": "GARA_2026-07-12",
     "nome": "GARA",
     "data": "2026-07-12",
@@ -21072,18 +21047,6 @@
     "categoria": "Elite e Under 23",
     "luogo": "CEGLIE MESSAPICA",
     "fci_id": "178996"
-  },
-  {
-    "id": "76_TARGA_CROCIFISSO_GIRO_DI_PUGLIA_CHALLENGE_2026-09-27",
-    "nome": "76^ TARGA CROCIFISSO – GIRO DI PUGLIA CHALLENGE",
-    "data": "2026-09-27",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PUGLIA",
-    "categoria": "Elite e Under 23",
-    "luogo": "POLIGNANO A MARE"
   },
   {
     "id": "CIRCUITO_DI_MANZOLINO_2026-09-27",
