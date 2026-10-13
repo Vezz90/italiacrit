@@ -1785,7 +1785,7 @@
   "BELTRAMI_TSA_TRE_COLLI": {
     "id": "BELTRAMI_TSA_TRE_COLLI",
     "nome": "BELTRAMI TSA TRE COLLI",
-    "punti_totali": 826,
+    "punti_totali": 866,
     "atleti": [
       "BIANCALANI_ANDREA",
       "BELLERI_MICHAEL",
@@ -1845,6 +1845,51 @@
         "regione": "TOSCANA",
         "km": "124.000",
         "media": "47.409"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "BASSO_DAVIDE",
+        "atleta_cognome": "BASSO",
+        "atleta_nome": "DAVIDE",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "BELLERI_MICHAEL",
+        "atleta_cognome": "BELLERI",
+        "atleta_nome": "MICHAEL",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "BIANCALANI_ANDREA",
+        "atleta_cognome": "BIANCALANI",
+        "atleta_nome": "ANDREA",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
       },
       {
         "gara_id": "79_GIRO_DEL_PIAVE_2026-10-10_ELI_M",
@@ -2748,16 +2793,16 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 826
+      "ELI_M": 866
     }
   },
   "MG_K_VIS_COSTRUZIONI_E_AMBIENTE": {
     "id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
     "nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti_totali": 329,
+    "punti_totali": 357,
     "atleti": [
       "WOOD_GEORGE",
-      "HARDING_WILLIAM",
+      "HARDING_WILLIAM_REES",
       "PARRAVANO_FRANCESCO",
       "MISHANKOV_MAKSIM",
       "CANTONI_ANDREA",
@@ -2787,9 +2832,9 @@
         "gara_id": "74_COPPA_DEL_MOBILIO_GARA_IN_LINEA_2026-10-13_ELI_M",
         "nome_gara": "74 COPPA DEL MOBILIO GARA IN LINEA",
         "data": "2026-10-13",
-        "atleta_id": "HARDING_WILLIAM",
+        "atleta_id": "HARDING_WILLIAM_REES",
         "atleta_cognome": "HARDING",
-        "atleta_nome": "WILLIAM",
+        "atleta_nome": "WILLIAM REES",
         "posizione": 6,
         "punti_effettivi": 10,
         "moltiplicatore": 2,
@@ -2799,12 +2844,42 @@
         "media": "47.409"
       },
       {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "HARDING_WILLIAM_REES",
+        "atleta_cognome": "HARDING",
+        "atleta_nome": "WILLIAM REES",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "WOOD_GEORGE",
+        "atleta_cognome": "WOOD",
+        "atleta_nome": "GEORGE",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
         "gara_id": "76_GRAN_PREMIO_CALVATONE_2026-10-06_ELI_M",
         "nome_gara": "76 GRAN PREMIO CALVATONE",
         "data": "2026-10-06",
-        "atleta_id": "HARDING_WILLIAM",
+        "atleta_id": "HARDING_WILLIAM_REES",
         "atleta_cognome": "HARDING",
-        "atleta_nome": "WILLIAM",
+        "atleta_nome": "WILLIAM REES",
         "posizione": 3,
         "punti_effettivi": 20,
         "moltiplicatore": 2,
@@ -3130,17 +3205,18 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 329
+      "ELI_M": 357
     }
   },
   "A_S_D_S_C_PADOVANI": {
     "id": "A_S_D_S_C_PADOVANI",
     "nome": "A.S.D. S.C. PADOVANI",
-    "punti_totali": 1630,
+    "punti_totali": 1676,
     "atleti": [
       "BONALDO_ANTONIO",
       "BERTONCELLI_KEVIN",
       "SCARSO_ANDREA",
+      "ALARI_SAMUELE",
       "MASCIARELLI_STEFANO",
       "PIGNATTI_JACOPO",
       "QUAGLIA_TOMMASO",
@@ -3197,6 +3273,51 @@
         "regione": "TOSCANA",
         "km": "124.000",
         "media": "47.409"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "ALARI_SAMUELE",
+        "atleta_cognome": "ALARI",
+        "atleta_nome": "SAMUELE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "BERTONCELLI_KEVIN",
+        "atleta_cognome": "BERTONCELLI",
+        "atleta_nome": "KEVIN",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "BONALDO_ANTONIO",
+        "atleta_cognome": "BONALDO",
+        "atleta_nome": "ANTONIO",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
       },
       {
         "gara_id": "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_ELI_M",
@@ -4640,13 +4761,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1630
+      "ELI_M": 1676
     }
   },
   "TEAM_HOPPLA": {
     "id": "TEAM_HOPPLA",
     "nome": "TEAM HOPPLA'",
-    "punti_totali": 1144,
+    "punti_totali": 1146,
     "atleti": [
       "STEFANELLI_ANDREA",
       "MAGLI_LORENZO",
@@ -4688,6 +4809,21 @@
         "regione": "TOSCANA",
         "km": "124.000",
         "media": "47.409"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "MAGLI_LORENZO",
+        "atleta_cognome": "MAGLI",
+        "atleta_nome": "LORENZO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
       },
       {
         "gara_id": "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_ELI_M",
@@ -6026,7 +6162,217 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1144
+      "ELI_M": 1146
+    }
+  },
+  "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO": {
+    "id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "punti_totali": 78,
+    "atleti": [
+      "SGHERRI_GIACOMO",
+      "BOLOGNESI_FILIPPO",
+      "FRIUS_ALESSIO"
+    ],
+    "risultati": [
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "atleta_id": "SGHERRI_GIACOMO",
+        "atleta_cognome": "SGHERRI",
+        "atleta_nome": "GIACOMO",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "72_GRAN_PREMIO_CICLISTICO_DI_SANNAZZARO_2026-09-23_ELI_M",
+        "nome_gara": "72 GRAN PREMIO CICLISTICO DI SANNAZZARO",
+        "data": "2026-09-23",
+        "atleta_id": "BOLOGNESI_FILIPPO",
+        "atleta_cognome": "BOLOGNESI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "140.000",
+        "media": "46.927"
+      },
+      {
+        "gara_id": "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_ELI_M",
+        "nome_gara": "85 COPPA CIUFFENNA 98 COPPA ANTICA",
+        "data": "2026-09-15",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "163.900",
+        "media": "42.596"
+      },
+      {
+        "gara_id": "6_GIRO_DEI_PRATI_STABILI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-09-12_ELI_M",
+        "nome_gara": "6 GIRO DEI PRATI STABILI PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-09-12",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "137.000",
+        "media": "42.422"
+      },
+      {
+        "gara_id": "6_GIRO_DEI_PRATI_STABILI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-09-12_ELI_M",
+        "nome_gara": "6 GIRO DEI PRATI STABILI PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-09-12",
+        "atleta_id": "SGHERRI_GIACOMO",
+        "atleta_cognome": "SGHERRI",
+        "atleta_nome": "GIACOMO",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "137.000",
+        "media": "42.422"
+      },
+      {
+        "gara_id": "57_GRAN_PREMIO_CHIANTI_COLLINE_D_ELSA_2026-08-25_ELI_M",
+        "nome_gara": "57 GRAN PREMIO CHIANTI COLLINE D'ELSA",
+        "data": "2026-08-25",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "120.000",
+        "media": "41.162"
+      },
+      {
+        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
+        "nome_gara": "ALTA PADOVANA TOUR",
+        "data": "2026-07-25",
+        "atleta_id": "BOLOGNESI_FILIPPO",
+        "atleta_cognome": "BOLOGNESI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "139.340",
+        "media": "47.341"
+      },
+      {
+        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
+        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
+        "data": "2026-07-05",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "161.600",
+        "media": "43.419"
+      },
+      {
+        "gara_id": "9_TROFEO_MEMORIAL_CLETO_MAULE_2026-06-14_ELI_M",
+        "nome_gara": "9 TROFEO MEMORIAL CLETO MAULE",
+        "data": "2026-06-14",
+        "atleta_id": "SGHERRI_GIACOMO",
+        "atleta_cognome": "SGHERRI",
+        "atleta_nome": "GIACOMO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "140.000",
+        "media": "45.981"
+      },
+      {
+        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
+        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
+        "data": "2026-06-13",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "41.751"
+      },
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "atleta_id": "FRIUS_ALESSIO",
+        "atleta_cognome": "FRIUS",
+        "atleta_nome": "ALESSIO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-04",
+        "atleta_id": "BOLOGNESI_FILIPPO",
+        "atleta_cognome": "BOLOGNESI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "101.200",
+        "media": ""
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 78
     }
   },
   "BIESSE_CARRERA_PREMAC": {
@@ -175846,201 +176192,6 @@
     ],
     "punti_per_cat": {
       "ELI_M": 269
-    }
-  },
-  "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO": {
-    "id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
-    "nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "punti_totali": 62,
-    "atleti": [
-      "BOLOGNESI_FILIPPO",
-      "FRIUS_ALESSIO",
-      "SGHERRI_GIACOMO"
-    ],
-    "risultati": [
-      {
-        "gara_id": "72_GRAN_PREMIO_CICLISTICO_DI_SANNAZZARO_2026-09-23_ELI_M",
-        "nome_gara": "72 GRAN PREMIO CICLISTICO DI SANNAZZARO",
-        "data": "2026-09-23",
-        "atleta_id": "BOLOGNESI_FILIPPO",
-        "atleta_cognome": "BOLOGNESI",
-        "atleta_nome": "FILIPPO",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "140.000",
-        "media": "46.927"
-      },
-      {
-        "gara_id": "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_ELI_M",
-        "nome_gara": "85 COPPA CIUFFENNA 98 COPPA ANTICA",
-        "data": "2026-09-15",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "163.900",
-        "media": "42.596"
-      },
-      {
-        "gara_id": "6_GIRO_DEI_PRATI_STABILI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-09-12_ELI_M",
-        "nome_gara": "6 GIRO DEI PRATI STABILI PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-09-12",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "137.000",
-        "media": "42.422"
-      },
-      {
-        "gara_id": "6_GIRO_DEI_PRATI_STABILI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-09-12_ELI_M",
-        "nome_gara": "6 GIRO DEI PRATI STABILI PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-09-12",
-        "atleta_id": "SGHERRI_GIACOMO",
-        "atleta_cognome": "SGHERRI",
-        "atleta_nome": "GIACOMO",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "137.000",
-        "media": "42.422"
-      },
-      {
-        "gara_id": "57_GRAN_PREMIO_CHIANTI_COLLINE_D_ELSA_2026-08-25_ELI_M",
-        "nome_gara": "57 GRAN PREMIO CHIANTI COLLINE D'ELSA",
-        "data": "2026-08-25",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "120.000",
-        "media": "41.162"
-      },
-      {
-        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
-        "nome_gara": "ALTA PADOVANA TOUR",
-        "data": "2026-07-25",
-        "atleta_id": "BOLOGNESI_FILIPPO",
-        "atleta_cognome": "BOLOGNESI",
-        "atleta_nome": "FILIPPO",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "139.340",
-        "media": "47.341"
-      },
-      {
-        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
-        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
-        "data": "2026-07-05",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "161.600",
-        "media": "43.419"
-      },
-      {
-        "gara_id": "9_TROFEO_MEMORIAL_CLETO_MAULE_2026-06-14_ELI_M",
-        "nome_gara": "9 TROFEO MEMORIAL CLETO MAULE",
-        "data": "2026-06-14",
-        "atleta_id": "SGHERRI_GIACOMO",
-        "atleta_cognome": "SGHERRI",
-        "atleta_nome": "GIACOMO",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "140.000",
-        "media": "45.981"
-      },
-      {
-        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
-        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
-        "data": "2026-06-13",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "41.751"
-      },
-      {
-        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
-        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-06-06",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "138.800",
-        "media": "44.270"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "atleta_id": "FRIUS_ALESSIO",
-        "atleta_cognome": "FRIUS",
-        "atleta_nome": "ALESSIO",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-04",
-        "atleta_id": "BOLOGNESI_FILIPPO",
-        "atleta_cognome": "BOLOGNESI",
-        "atleta_nome": "FILIPPO",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "101.200",
-        "media": ""
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 62
     }
   },
   "OVERALL_TRE_COLLI_CYCLING_TEAM": {
