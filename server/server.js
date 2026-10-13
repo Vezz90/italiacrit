@@ -460,6 +460,25 @@ app.get('/sitemap-archivio-:n.xml', async (req, res) => {
 const _formaCache = new Map();
 const _formaTokens = s => new Set(String(s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^A-Z0-9]+/)
   .filter(w => w.length >= 4 && !/^(GRAN|PREMIO|TROFEO|COPPA|MEMORIAL|CLASSIFICA|GENERALE|TAPPA|PRIMA|SECONDA|TERZA|QUARTA|QUINTA)$/.test(w)));
+// Stagionalita' di ogni categoria: in quali mesi si fanno i punti (quota sul totale dell'anno), da tutto lo storico top 10.
+// Serve alla scheda Forma per capire se un corridore rende in un mese perche' e' il SUO mese o perche' lo e' per tutti.
+let _formaBase = { ts: 0, data: null };
+const _FORMA_KEY = { ESORDIENTI1: 'ES', ESORDIENTI2: 'ES', ALLIEVI: 'AL', JUNIORES: 'JU', ELITE_UNDER23: 'EL', DONNE_ESORDIENTI: 'ES_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JU_F' };
+app.get('/api/forma/baseline', async (req, res) => {
+  try {
+    if (_formaBase.data && Date.now() - _formaBase.ts < 24 * 3600 * 1000) { res.set('Cache-Control', 'public, max-age=3600'); return res.json(_formaBase.data); }
+    const q = await rawQuery(`select categoria, extract(month from data)::int as m,
+        sum(case posizione when 1 then 15 when 2 then 12 when 3 then 10 when 4 then 8 when 5 then 6 when 6 then 5 when 7 then 4 when 8 then 3 when 9 then 2 when 10 then 1 else 0 end)::float as pts
+      from ciclismo_results where data is not null group by 1, 2`).then(r => r.rows);
+    const sums = {};
+    for (const r of q) { const k = _FORMA_KEY[r.categoria]; if (!k) continue; (sums[k] = sums[k] || Array(12).fill(0))[r.m - 1] += Number(r.pts) || 0; }
+    const shares = {};
+    for (const k of Object.keys(sums)) { const tot = sums[k].reduce((a, b) => a + b, 0) || 1; shares[k] = sums[k].map(v => Math.round(1e5 * v / tot) / 1e5); }
+    _formaBase = { ts: Date.now(), data: { shares } };
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.json(_formaBase.data);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/atleta/:id/forma', async (req, res) => {
   try {
     const id = String(req.params.id || '').slice(0, 120);

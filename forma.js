@@ -8,7 +8,8 @@
   var MESI_L = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   var CAT = { ESORDIENTI1: 'Esord. 1', ESORDIENTI2: 'Esord. 2', ALLIEVI: 'Allievi', JUNIORES: 'Juniores', ELITE_UNDER23: 'Elite/U23' };
   var MIN_RISULTATI = 15, MIN_STAGIONI = 2;
-  var state = { rows: null, mode: 'all', id: null, cat: 'all' };
+  var state = { rows: null, mode: 'all', id: null, cat: 'all', base: null };
+  var basePromise = null;
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(n) { return (Math.round(n * 10) / 10).toString().replace('.', ','); }
@@ -144,29 +145,34 @@
     return h + '</tbody></table>';
   }
 
-  function bars(a) {
-    var max = Math.max.apply(null, a.mon.map(function (x) { return x.avg; })) || 1;
+  function bars(a, rl) {
+    var max = Math.max.apply(null, a.mon.map(function (x) { return x.avg; }).concat(rl ? rl.exp : [])) || 1;
     var h = '<div class="fm-bars">';
     a.mon.forEach(function (x) {
       var isGold = a.gold && a.gold.m === x.m;
-      h += '<div class="fm-bar' + (isGold ? ' fm-gold' : '') + '" title="' + MESI_L[x.m] + ': ' + fmt(x.avg) + ' punti in media per anno"><b>' + (x.avg ? fmt(x.avg) : '') + '</b><i style="height:' + Math.round(100 * x.avg / max * 0.82) + '%"></i></div>';
+      h += '<div class="fm-bar' + (isGold ? ' fm-gold' : '') + '" title="' + MESI_L[x.m] + ': ' + fmt(x.avg) + ' punti in media per anno' + (rl ? ' (per la sua categoria ci si aspetterebbe ' + fmt(rl.exp[x.m]) + ')' : '') + '"><b>' + (x.avg ? fmt(x.avg) : '') + '</b><i style="height:' + Math.round(100 * x.avg / max * 0.82) + '%"></i>'
+        + (rl ? '<u class="fm-exp" style="bottom:' + Math.round(100 * rl.exp[x.m] / max * 0.82) + '%"></u>' : '') + '</div>';
     });
     h += '<div class="fm-avgline" style="bottom:' + Math.round(100 * a.mean / max * 0.82) + '%"><span>media mensile ' + fmt(a.mean) + '</span></div></div>';
     return h + '<div class="fm-labels">' + MESI.map(function (m) { return '<span>' + m + '</span>'; }).join('') + '</div>';
   }
 
-  function table(a) {
+  function table(a, rl) {
     var anyCov = Object.keys(a.covered).length > 0;
-    var h = '<div class="fm-scroll"><table class="fm-mt"><thead><tr><th>Mese</th><th>Punti medi / anno</th><th>Indice</th>'
+    var h = '<div class="fm-scroll"><table class="fm-mt"><thead><tr><th>Mese</th><th>Punti medi / anno</th><th>Indice</th>' + (rl ? '<th>vs categoria</th>' : '')
       + (anyCov ? '<th>Gare disputate</th><th>% top 10</th><th>Pos. media</th>' : '<th>Risultati top 10</th>') + '<th>Podi</th><th>Vitt.</th><th>Estero</th></tr></thead><tbody>';
     a.mon.forEach(function (x) {
       if (!x.n) return;
       var cl = x.idx >= 130 ? 'hi' : x.idx <= 60 ? 'lo' : 'mid';
+      var r = rl ? rl.rel[x.m] : null;
+      var rc = r === null ? '' : r >= 1.3 ? 'fm-ra' : r <= 0.7 ? 'fm-rb' : 'fm-rm';
       h += '<tr' + (a.gold && a.gold.m === x.m ? ' class="fm-goldrow"' : '') + '><td>' + MESI_L[x.m] + '</td><td>' + fmt(x.avg) + '</td><td><span class="fm-idx fm-' + cl + '">' + x.idx + '</span></td>'
+        + (rl ? '<td>' + (r === null ? '–' : '<span class="fm-rel ' + rc + '">×' + fmt(r) + '</span>') + '</td>' : '')
         + (anyCov ? '<td>' + (x.ncov || '–') + '</td><td>' + (x.ncov ? Math.round(100 * x.topCov / x.ncov) + '%' : '–') + '</td><td>' + (x.posAvg !== null ? fmt(x.posAvg) + '°' : '–') + '</td>' : '<td>' + x.top10 + '</td>')
         + '<td>' + x.pod + '</td><td>' + x.w + '</td><td>' + (x.fr || '–') + '</td></tr>';
     });
     return h + '</tbody></table></div><p class="fm-small">Indice 100 = la sua media mensile (sopra 130 mese forte, sotto 60 debole).'
+      + (rl ? ' «vs categoria» confronta i suoi punti del mese con quelli attesi da un corridore della sua categoria con lo stesso totale: ×1,0 = come tutti, sopra ×1,3 il mese è davvero suo.' : '')
       + (anyCov ? ' «Gare disputate», «% top 10» e «Pos. media» contano solo gli anni in cui PCS ci dà tutte le gare.' : '') + '</p>';
   }
 
@@ -183,21 +189,49 @@
     var a = analyze(sel, state.mode);
     if (!a) { host.innerHTML = catBar + '<div class="fm-card">Nessun risultato per questa categoria.</div>'; bindCat(host); return; }
     var posLine = (a.nowW.pos !== null && a.avgPos !== null) ? '<br>Posizione media: <b>' + fmt(a.nowW.pos) + '°</b> (di solito in questo periodo ' + fmt(a.avgPos) + '°)' : '';
+    var rl = relative(a, sel, isFemale(state.rows));
     var ft = formaTxt(a);
     var formCard = '<div class="fm-card"><h3>Forma di adesso</h3><div class="fm-big ' + ft.cls + '">' + ft.t + '</div>'
       + '<div class="fm-small">Ultimi 45 giorni: <b>' + a.nowW.tot + ' punti</b> (' + ris(a.nowW.n) + ')<br>Stesso periodo negli anni scorsi: ' + fmt(a.avgP) + ' punti in media' + posLine + '</div></div>';
     var goldCard = a.gold
       ? '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big fm-accent">' + MESI_L[a.gold.m] + '</div><div class="fm-small">' + fmt(a.gold.avg) + ' punti in media per anno · ' + a.gold.w + ' vittorie e ' + a.gold.pod + ' podi in ' + a.gold.el + ' stagioni</div></div>'
       : '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big">—</div><div class="fm-small">Dati ancora troppo pochi</div></div>';
+    var distCard = (rl && rl.best)
+      ? '<div class="fm-card"><h3>Dove si distingue</h3><div class="fm-big fm-accent">' + MESI_L[rl.best.m] + '</div><div class="fm-small"><b>×' + fmt(rl.best.r) + '</b> rispetto a un corridore della sua categoria con lo stesso totale: in quel mese rende più di quanto fanno gli altri</div></div>'
+      : (rl ? '<div class="fm-card"><h3>Dove si distingue</h3><div class="fm-big">—</div><div class="fm-small">Nessun mese si stacca in modo netto dalla sua categoria</div></div>' : '');
     var srcTxt = a.hasPcs
       ? a.icsN + ' da ICS/ciclismo.info + <b>' + a.pcsOnly + ' solo PCS</b> (' + (a.pcsOnly - a.fOnly) + ' in Italia, ' + a.fOnly + ' all\'estero)'
       : 'solo ICS/ciclismo.info: nessun dato PCS per questo corridore';
     var carCard = '<div class="fm-card"><h3>Carriera nei dati</h3><div class="fm-big">' + a.first + '–' + a.last + '</div><div class="fm-small">' + a.tot + ' risultati · ' + a.pod + ' podi · ' + a.wins + ' vittorie<br>' + srcTxt + '</div></div>';
-    host.innerHTML = catBar + '<div class="fm-grid">' + goldCard + formCard + carCard + '</div>'
+    host.innerHTML = catBar + '<div class="fm-grid">' + goldCard + formCard + distCard + carCard + '</div>'
       + '<div class="fm-card fm-section"><h2>Anno per anno, mese per mese</h2><p class="fm-small">Punti nel mese (scala base del sito) e numero di gare. ★ = vittoria · 🌍 = almeno un risultato all\'estero. Il colore è relativo al suo mese migliore; «0» = ha corso ma mai nei primi 10.</p><div class="fm-scroll">' + heat(a) + '</div></div>'
-      + '<div class="fm-card fm-section"><h2>Quando rende di più</h2><p class="fm-small">Punti medi per ogni anno di attività. In arancione il mese d\'oro; la linea tratteggiata è la sua media mensile.</p>' + bars(a) + table(a) + '</div>'
+      + '<div class="fm-card fm-section"><h2>Quando rende di più</h2><p class="fm-small">Punti medi per ogni anno di attività. In arancione il mese d\'oro; la linea tratteggiata è la sua media mensile.' + (rl ? ' Il trattino scuro su ogni barra è quanto farebbe in quel mese un corridore della sua categoria con lo stesso totale: barra sopra il trattino = mese che lo distingue.' : '') + '</p>' + bars(a, rl) + table(a, rl) + '</div>'
       + '<p class="fm-note"><b>Come sono uniti i dati.</b> ICS/ciclismo.info (dal 2007) contiene solo i primi 10 di ogni gara. PCS aggiunge tutte le gare, anche all\'estero e oltre il 10° posto, ma solo per gli anni importati e per i corridori presenti su PCS. Dove PCS manca, un mese vuoto può voler dire «non ha corso» oppure «ha corso fuori dai primi 10». Le gare presenti in entrambe le fonti sono contate una volta sola. I punti sono quelli base del regolamento, indicativi per le gare fuori ICS.</p>';
     bindCat(host);
+  }
+
+  function isFemale(rows) { return rows.some(function (x) { return /donn/i.test(String(x[2] || '')); }); }
+  // Quanto renderebbe in ogni mese un corridore con il suo stesso totale annuo che segue la stagionalita' della sua categoria
+  // (da tutto lo storico): se lui supera quel valore, il mese e' davvero suo e non e' solo il mese in cui tutti fanno punti.
+  function relative(a, sel, female) {
+    if (!state.base || !state.base.shares) return null;
+    var w = {}, tot = 0;
+    sel.forEach(function (x) {
+      var g = x[6], p = PTS[x[1]] || 0;
+      if (!g || !p) return;
+      var k = g + (female ? '_F' : '');
+      if (!state.base.shares[k]) return;
+      w[k] = (w[k] || 0) + p; tot += p;
+    });
+    if (!tot) return null;
+    var mix = []; for (var m0 = 0; m0 < 12; m0++) mix.push(0);
+    Object.keys(w).forEach(function (k) { var sh = state.base.shares[k]; for (var m = 0; m < 12; m++) mix[m] += (w[k] / tot) * sh[m]; });
+    var T = a.mon.reduce(function (s, x) { return s + x.avg; }, 0);
+    var exp = mix.map(function (v) { return T * v; });
+    var rel = a.mon.map(function (x, m) { return (exp[m] > 0.4 && x.el >= 2) ? x.avg / exp[m] : null; });
+    var best = null;
+    a.mon.forEach(function (x, m) { if (rel[m] !== null && x.top10 >= 3 && x.avg >= 3 && (!best || rel[m] > best.r)) best = { m: m, r: rel[m] }; });
+    return { exp: exp, rel: rel, best: best };
   }
 
   function bindCat(host) {
@@ -217,7 +251,9 @@
     mountAthlete: function (id) {
       state.id = id; state.rows = null; state.mode = 'all'; state.cat = 'all';
       var base = (typeof API_BASE !== 'undefined') ? API_BASE : '/api';
-      return fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!basePromise) basePromise = fetch(base + '/forma/baseline').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+      return Promise.all([fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma').then(function (r) { return r.ok ? r.json() : null; }), basePromise]).then(function (res) {
+        var d = res[0]; state.base = res[1];
         if (state.id !== id || !d || !enough(d.rows)) return;
         state.rows = d.rows;
         var tab = document.getElementById('ath-tab-f'), host = document.getElementById('ath-forma');

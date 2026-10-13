@@ -13800,3 +13800,7 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .fm-teaser:hover { border-color: var(--border-active); }
 .fm-go { color: var(--red-hot); font-weight: 700; white-space: nowrap; }
 @media (max-width: 640px) { .fm-big { font-size: 1.6rem; } }
+.fm-bar { position: relative; }
+.fm-exp { position: absolute; left: 12%; right: 12%; height: 0; border-top: 2.5px solid var(--text-primary); opacity: .85; pointer-events: none; }
+.fm-rel { display: inline-block; min-width: 46px; padding: 1px 8px; border-radius: 999px; font-weight: 800; font-size: .78rem; text-align: center; }
+.fm-ra { background: rgba(16,185,129,.2); color: #047857; } .fm-rb { background: var(--bg-elevated); color: var(--text-secondary); } .fm-rm { background: rgba(120,130,150,.16); color: var(--text-primary); }
