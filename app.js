@@ -29911,6 +29911,13 @@ let _shareGaraStyle = 'winner';
 // resettata ad ogni apertura della modale. offsetX/offsetY sono in pixel
 // "canvas" (spazio dell'immagine finale, non dello schermo).
 let _shareImgAdjust = { scale: 1, offsetX: 0, offsetY: 0 };
+// Piattaforma su cui sono stati misurati gli spostamenti (pixel di quel formato). Cosi' la stessa regolazione fatta sul post
+// vale anche per la storia e per gli altri formati (spostamenti riportati in proporzione al nuovo riquadro).
+let _shareAdjustPlat = 'instagram';
+function _adjustFor(platKey) {
+  const a = _shareImgAdjust, from = SHARE_PLATFORMS[_shareAdjustPlat] || SHARE_PLATFORMS.instagram, to = SHARE_PLATFORMS[platKey] || from;
+  return { scale: a.scale, offsetX: a.offsetX * to.w / from.w, offsetY: a.offsetY * to.h / from.h };
+}
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
 let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv' | 'altro' | 'creator'
@@ -31870,7 +31877,7 @@ async function generateShareCanvas(type, payload, platKey) {
     // generico senza che sembri un errore del sito.
     window._sharePhotoLoadFailed = !!(payload.photo_url && !photoImg);
     if (photoImg) {
-      (isWinner ? _bgPhotoBottom : _bgPhoto)(ctx,p.w,p.h,photoImg,_shareImgAdjust);
+      (isWinner ? _bgPhotoBottom : _bgPhoto)(ctx,p.w,p.h,photoImg,_adjustFor(platKey));
     } else _bg(ctx,p.w,p.h);
     if (isWinner) _drawGaraWinner(ctx,p.w,p.h,payload,logo,xpixLogo);
     else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap,xpixLogo);
@@ -31911,7 +31918,7 @@ const _SVGS = {
 // ── Modale principale ──────────────────────────────────────
 window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='instagram';
-  _shareGaraStyle='winner'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
+  _shareGaraStyle='winner'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0}; _shareAdjustPlat='instagram';
   // "Riscalda" subito la generazione della grafica OG lato server (appena si
   // apre la modale, prima ancora che l'utente scelga Facebook): la prima
   // generazione può richiedere alcuni secondi (foto + composizione avatar),
@@ -32054,7 +32061,7 @@ async function _updateIgShareBtn(){
   try {
     if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid));
     info=_igPostedCache[gid];
-  } catch { btn.disabled=false; btn.textContent = kind==='story' ? '📸 Pubblica la storia su Instagram' : '📸 Pubblica nel feed di Instagram'; return; }
+  } catch { btn.disabled=false; btn.textContent = kind==='story' ? '📸 Pubblica le 2 storie su Instagram' : '📸 Pubblica nel feed di Instagram'; return; }
   const accs = info.accounts && info.accounts.length ? info.accounts : [{key:'ics',label:'ICS',feed:info.feed,story:info.story,suggested:true}];
   const box=document.getElementById('share-ig-accs');
   const prevSel = {}; box.querySelectorAll('input').forEach(i=>{ prevSel[i.value]=i.checked; });
@@ -32079,7 +32086,7 @@ function _refreshIgBtn(){
   const all=document.querySelectorAll('#share-ig-accs input').length;
   btn.disabled = !sel.length;
   btn.textContent = !sel.length ? (all ? '✓ Già pubblicato' : '📸 Pubblica su Instagram')
-    : `📸 Pubblica ${kind==='story'?'la storia':'nel feed'} su ${sel.join(' + ')}`;
+    : `📸 Pubblica ${kind==='story'?'le 2 storie':'nel feed'} su ${sel.join(' + ')}`;
 }
 window.publishShareToInstagram = async function(){
   const k=_sharePlatKey;
@@ -32095,25 +32102,21 @@ window.publishShareToInstagram = async function(){
   const name=_sharePayload?.name||gid;
   const who=btn.textContent.replace(/^.* su /,'');
   if(!confirm(kind==='story'
-    ? `Pubblicare ora la storia su ${who}?\n\n${name}\n(${_shareGaraStyle==='winner'?'grafica Vincitore':'grafica Risultati'})`
+    ? `Pubblicare ora le storie su ${who}?\n\n${name}\n2 storie di fila: Vincitore + Risultati (stessa foto e inquadratura del post).`
     : `Pubblicare ora il post su ${who}?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
   const old=btn.textContent; btn.disabled=true; btn.textContent='⏳ Pubblico su Instagram…';
   try{
     let images=[];
-    if(kind==='feed'){
-      // post nel feed = carosello: prima la grafica Vincitore, poi quella con i Risultati (come nel download)
-      const prev=_shareGaraStyle;
-      try{
-        for(const st of ['winner','results']){
-          _shareGaraStyle=st;
-          const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
-          images.push(cv.toDataURL('image/jpeg',0.9));
-        }
-      } finally { _shareGaraStyle=prev; }
-    } else {
-      const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
-      images=[cv.toDataURL('image/jpeg',0.92)];
-    }
+    // Feed = carosello (Vincitore, poi Risultati); storia = due storie di fila con le stesse due grafiche.
+    // L'inquadratura della foto e' quella regolata nella modale (vale per tutti i formati): niente da rifare per la storia.
+    const prev=_shareGaraStyle;
+    try{
+      for(const st of ['winner','results']){
+        _shareGaraStyle=st;
+        const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+        images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9));
+      }
+    } finally { _shareGaraStyle=prev; }
     const r=await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,images,accounts}});
     delete _igPostedCache[gid];
     const bad=(r.results||[]).filter(x=>!x.ok);
@@ -32137,7 +32140,7 @@ window._onShareZoom=function(pct){
   _shareZoomTimer=setTimeout(()=>{ _refreshPreview(); }, 180);
 };
 window.resetShareImgAdjust=async function(){
-  _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
+  _shareImgAdjust={scale:1,offsetX:0,offsetY:0}; _shareAdjustPlat=_sharePlatKey;
   const s=document.getElementById('share-zoom-slider'); if(s)s.value=100;
   await _refreshPreview();
 };
@@ -32154,6 +32157,8 @@ function _initShareDragHandlers(){
   img._dragBound=true;
   const start=(x,y)=>{
     if(_shareType!=='gara') return;
+    // gli spostamenti diventano quelli del formato su cui si sta trascinando (la regolazione fatta altrove si conserva in proporzione)
+    _shareImgAdjust = _adjustFor(_sharePlatKey); _shareAdjustPlat = _sharePlatKey;
     _shareDrag={x,y,ox:_shareImgAdjust.offsetX,oy:_shareImgAdjust.offsetY};
     img.style.cursor='grabbing';
   };
@@ -32195,8 +32200,9 @@ async function _refreshPreview(){
     // restare quella).
     if (_sharePlatKey === 'facebook' && ['gara','atleta','team','class'].includes(_shareType) && _sharePayload?._id) {
       let url = `${API_BASE}/og-image/${_shareType}/${encodeURIComponent(_sharePayload._id)}`;
-      if (_shareType === 'gara' && (_shareImgAdjust.scale > 1.001 || Math.abs(_shareImgAdjust.offsetX) > 0.5 || Math.abs(_shareImgAdjust.offsetY) > 0.5)) {
-        url += `?s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
+      const _fa = _adjustFor('facebook');
+      if (_shareType === 'gara' && (_fa.scale > 1.001 || Math.abs(_fa.offsetX) > 0.5 || Math.abs(_fa.offsetY) > 0.5)) {
+        url += `?s=${_fa.scale.toFixed(3)}&ox=${Math.round(_fa.offsetX)}&oy=${Math.round(_fa.offsetY)}`;
       }
       await new Promise(resolve => { preview.onload = resolve; preview.onerror = resolve; preview.src = url; });
       loading.style.display='none'; preview.style.display='block';
@@ -32321,8 +32327,9 @@ function _ogUrl(type, payload) {
 function _buildFbShareUrl() {
   let url = _ogUrl(_shareType, _sharePayload);
   if (!url) return null;
-  if (_shareType === 'gara' && (_shareImgAdjust.scale > 1.001 || Math.abs(_shareImgAdjust.offsetX) > 0.5 || Math.abs(_shareImgAdjust.offsetY) > 0.5)) {
-    const qs = `s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
+  const _fa = _adjustFor('facebook');
+  if (_shareType === 'gara' && (_fa.scale > 1.001 || Math.abs(_fa.offsetX) > 0.5 || Math.abs(_fa.offsetY) > 0.5)) {
+    const qs = `s=${_fa.scale.toFixed(3)}&ox=${Math.round(_fa.offsetX)}&oy=${Math.round(_fa.offsetY)}`;
     url += (url.includes('?') ? '&' : '?') + qs;
   }
   return url;

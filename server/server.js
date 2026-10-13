@@ -12387,6 +12387,15 @@ async function postToInstagram(kind, imageUrl, caption, accKey = 'ics') {
       kids.push(k.id);
     }
     creation = await post(`${base}/${st.ig.id}/media`, { media_type: 'CAROUSEL', children: kids.join(','), caption, access_token: token });
+  } else if (kind === 'story' && urls.length > 1) {
+    // piu' storie di fila (es. Vincitore + Risultati): una per immagine, nell'ordine
+    let last = null;
+    for (const u of urls) {
+      const c = await post(`${base}/${st.ig.id}/media`, { image_url: u, media_type: 'STORIES', access_token: token });
+      await waitReady(c.id);
+      last = await post(`${base}/${st.ig.id}/media_publish`, { creation_id: c.id, access_token: token });
+    }
+    return last;
   } else {
     const body = { image_url: urls[0], access_token: token };
     if (kind === 'story') body.media_type = 'STORIES'; else body.caption = caption;
@@ -12485,7 +12494,7 @@ app.post('/api/admin/social/instagram/publish-image', requireAdmin, async (req, 
     const id = String(b.gara_id || '');
     const kind = b.kind === 'story' ? 'story' : 'feed';
     if (!id) return res.status(400).json({ error: 'Gara mancante' });
-    const rawImgs = (Array.isArray(b.images) && b.images.length ? b.images : [b.image]).slice(0, kind === 'feed' ? 10 : 1);
+    const rawImgs = (Array.isArray(b.images) && b.images.length ? b.images : [b.image]).slice(0, kind === 'feed' ? 10 : 4);
     const bufs = [];
     for (const im of rawImgs) {
       const m = /^data:image\/jpeg;base64,(.+)$/.exec(String(im || ''));
