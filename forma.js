@@ -8,7 +8,7 @@
   var MESI_L = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   var CAT = { ESORDIENTI1: 'Esord. 1', ESORDIENTI2: 'Esord. 2', ALLIEVI: 'Allievi', JUNIORES: 'Juniores', ELITE_UNDER23: 'Elite/U23' };
   var MIN_RISULTATI = 15, MIN_STAGIONI = 2;
-  var state = { rows: null, mode: 'all', id: null };
+  var state = { rows: null, mode: 'all', id: null, cat: 'all' };
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(n) { return (Math.round(n * 10) / 10).toString().replace('.', ','); }
@@ -21,6 +21,44 @@
     if (/allie/i.test(s)) return 'Allievi';
     if (/esord/i.test(s)) return /2/.test(s) ? 'Esord. 2' : /1/.test(s) ? 'Esord. 1' : 'Esordienti';
     return '';
+  }
+
+  var GRP_L = { ES: 'Esordienti', AL: 'Allievi', JU: 'Juniores', EL: 'Elite/U23' };
+  var GRP_ORDER = ['ES', 'AL', 'JU', 'EL'];
+  function grpOf(c) {
+    var s = String(c || '');
+    if (!s) return '';
+    if (/elite|u23|under/i.test(s)) return 'EL';
+    if (/junior/i.test(s)) return 'JU';
+    if (/allie/i.test(s)) return 'AL';
+    if (/esord/i.test(s)) return 'ES';
+    return '';
+  }
+  // Aggiunge a ogni riga il gruppo di categoria (indice 6). Le righe solo-PCS non hanno categoria: prendono quella dell'anno
+  // (la piu' frequente tra le righe con categoria); se l'anno non ne ha, quella dell'anno vicino piu' prossimo.
+  function withGroups(rows) {
+    var cnt = {};
+    rows.forEach(function (x) {
+      var g = grpOf(x[2]); if (!g) return;
+      var y = x[0].slice(0, 4); (cnt[y] = cnt[y] || {})[g] = (cnt[y][g] || 0) + 1;
+    });
+    var yg = {};
+    Object.keys(cnt).forEach(function (y) { var best = '', n = 0; Object.keys(cnt[y]).forEach(function (g) { if (cnt[y][g] > n) { n = cnt[y][g]; best = g; } }); yg[y] = best; });
+    var known = Object.keys(yg).map(Number).sort(function (a, b) { return a - b; });
+    function near(y) {
+      if (yg[y]) return yg[y];
+      var bestD = 99, g = '';
+      known.forEach(function (k) { var d = Math.abs(k - y); if (d < bestD) { bestD = d; g = yg[k]; } });
+      return g;
+    }
+    return rows.map(function (x) { return x.slice(0, 6).concat([grpOf(x[2]) || near(+x[0].slice(0, 4))]); });
+  }
+  // Testo della "forma di adesso": percentuale se il confronto ha una base solida, altrimenti differenza in punti (le percentuali su pochi punti ingannano)
+  function formaTxt(a) {
+    if (!a.nPrev) return { t: '—', cls: '' };
+    if (a.avgP >= 15) return { t: (a.diff >= 0 ? '+' : '') + a.diff + '%', cls: a.diff >= 0 ? 'fm-up' : 'fm-down' };
+    var d = Math.round(a.nowW.tot - a.avgP);
+    return { t: (d >= 0 ? '+' : '') + d + (Math.abs(d) === 1 ? ' punto' : ' punti'), cls: d >= 0 ? 'fm-up' : 'fm-down' };
   }
 
   function analyze(all, mode) {
@@ -83,7 +121,7 @@
     var fOnly = pcsOnly.filter(function (x) { return x[5] && String(x[5]).toLowerCase() !== 'it'; }).length;
     return { Y0: Y0, M0: M0, cells: cells, ey: ey, first: first, last: last, mon: mon, gold: gold, nowW: nowW, avgP: avgP, avgPos: avgPos, maxCell: maxCell,
       tot: tot, wins: wins, pod: pod, mean: mean, covered: covered, pcsOnly: pcsOnly.length, fOnly: fOnly, icsN: all.length - pcsOnly.length, hasPcs: Object.keys(pcsYear).length > 0,
-      diff: avgP ? Math.round(100 * (nowW.tot - avgP) / avgP) : null };
+      nPrev: prevPts.length, diff: avgP ? Math.round(100 * (nowW.tot - avgP) / avgP) : null };
   }
 
   function heat(a) {
@@ -133,10 +171,20 @@
   }
 
   function paint(host) {
-    var a = analyze(state.rows, state.mode);
-    if (!a) { host.innerHTML = '<div class="fm-card">Nessun risultato per questa fonte.</div>'; return; }
+    var rowsG = withGroups(state.rows);
+    var cntG = {}; rowsG.forEach(function (x) { cntG[x[6]] = (cntG[x[6]] || 0) + 1; });
+    var present = GRP_ORDER.filter(function (g) { return cntG[g] >= 3; });
+    if (state.cat !== 'all' && present.indexOf(state.cat) < 0) state.cat = 'all';
+    var sel = state.cat === 'all' ? rowsG : rowsG.filter(function (x) { return x[6] === state.cat; });
+    var catBar = present.length >= 2
+      ? '<div class="fm-toggle" role="group" aria-label="Categoria"><button type="button" data-c="all" aria-pressed="' + (state.cat === 'all') + '">Tutte le categorie</button>'
+        + present.map(function (g) { return '<button type="button" data-c="' + g + '" aria-pressed="' + (state.cat === g) + '">' + GRP_L[g] + '</button>'; }).join('') + '</div>'
+      : '';
+    var a = analyze(sel, state.mode);
+    if (!a) { host.innerHTML = catBar + '<div class="fm-card">Nessun risultato per questa categoria.</div>'; bindCat(host); return; }
     var posLine = (a.nowW.pos !== null && a.avgPos !== null) ? '<br>Posizione media: <b>' + fmt(a.nowW.pos) + '°</b> (di solito in questo periodo ' + fmt(a.avgPos) + '°)' : '';
-    var formCard = '<div class="fm-card"><h3>Forma di adesso</h3><div class="fm-big ' + (a.diff === null ? '' : a.diff >= 0 ? 'fm-up' : 'fm-down') + '">' + (a.diff === null ? '—' : (a.diff >= 0 ? '+' : '') + a.diff + '%') + '</div>'
+    var ft = formaTxt(a);
+    var formCard = '<div class="fm-card"><h3>Forma di adesso</h3><div class="fm-big ' + ft.cls + '">' + ft.t + '</div>'
       + '<div class="fm-small">Ultimi 45 giorni: <b>' + a.nowW.tot + ' punti</b> (' + ris(a.nowW.n) + ')<br>Stesso periodo negli anni scorsi: ' + fmt(a.avgP) + ' punti in media' + posLine + '</div></div>';
     var goldCard = a.gold
       ? '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big fm-accent">' + MESI_L[a.gold.m] + '</div><div class="fm-small">' + fmt(a.gold.avg) + ' punti in media per anno · ' + a.gold.w + ' vittorie e ' + a.gold.pod + ' podi in ' + a.gold.el + ' stagioni</div></div>'
@@ -145,10 +193,17 @@
       ? a.icsN + ' da ICS/ciclismo.info + <b>' + a.pcsOnly + ' solo PCS</b> (' + (a.pcsOnly - a.fOnly) + ' in Italia, ' + a.fOnly + ' all\'estero)'
       : 'solo ICS/ciclismo.info: nessun dato PCS per questo corridore';
     var carCard = '<div class="fm-card"><h3>Carriera nei dati</h3><div class="fm-big">' + a.first + '–' + a.last + '</div><div class="fm-small">' + a.tot + ' risultati · ' + a.pod + ' podi · ' + a.wins + ' vittorie<br>' + srcTxt + '</div></div>';
-    host.innerHTML = '<div class="fm-grid">' + goldCard + formCard + carCard + '</div>'
+    host.innerHTML = catBar + '<div class="fm-grid">' + goldCard + formCard + carCard + '</div>'
       + '<div class="fm-card fm-section"><h2>Anno per anno, mese per mese</h2><p class="fm-small">Punti nel mese (scala base del sito) e numero di gare. ★ = vittoria · 🌍 = almeno un risultato all\'estero. Il colore è relativo al suo mese migliore; «0» = ha corso ma mai nei primi 10.</p><div class="fm-scroll">' + heat(a) + '</div></div>'
       + '<div class="fm-card fm-section"><h2>Quando rende di più</h2><p class="fm-small">Punti medi per ogni anno di attività. In arancione il mese d\'oro; la linea tratteggiata è la sua media mensile.</p>' + bars(a) + table(a) + '</div>'
       + '<p class="fm-note"><b>Come sono uniti i dati.</b> ICS/ciclismo.info (dal 2007) contiene solo i primi 10 di ogni gara. PCS aggiunge tutte le gare, anche all\'estero e oltre il 10° posto, ma solo per gli anni importati e per i corridori presenti su PCS. Dove PCS manca, un mese vuoto può voler dire «non ha corso» oppure «ha corso fuori dai primi 10». Le gare presenti in entrambe le fonti sono contate una volta sola. I punti sono quelli base del regolamento, indicativi per le gare fuori ICS.</p>';
+    bindCat(host);
+  }
+
+  function bindCat(host) {
+    Array.prototype.forEach.call(host.querySelectorAll('.fm-toggle button'), function (b) {
+      b.onclick = function () { state.cat = b.dataset.c; paint(host); };
+    });
   }
 
   function enough(rows) {
@@ -160,7 +215,7 @@
   // Chiamata da renderAtleta: scarica le righe, e se ce ne sono abbastanza mostra la scheda "Forma" e il richiamo nella scheda "Stagione".
   window.Forma = {
     mountAthlete: function (id) {
-      state.id = id; state.rows = null; state.mode = 'all';
+      state.id = id; state.rows = null; state.mode = 'all'; state.cat = 'all';
       var base = (typeof API_BASE !== 'undefined') ? API_BASE : '/api';
       return fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
         if (state.id !== id || !d || !enough(d.rows)) return;
@@ -172,7 +227,7 @@
         var a = analyze(state.rows, 'all'), tz = document.getElementById('ath-forma-teaser');
         if (tz && a && a.gold) {
           tz.innerHTML = '<a class="fm-teaser" href="#" onclick="window._athTab(\'f\');return false;"><span>📅 Mese d\'oro: <b>' + MESI_L[a.gold.m] + '</b>'
-            + (a.diff !== null ? ' · forma di adesso <b class="' + (a.diff >= 0 ? 'fm-up' : 'fm-down') + '">' + (a.diff >= 0 ? '+' : '') + a.diff + '%</b> rispetto al solito' : '') + '</span><span class="fm-go">Vedi la scheda Forma ›</span></a>';
+            + (a.nPrev ? ' · forma di adesso <b class="' + formaTxt(a).cls + '">' + formaTxt(a).t + '</b> rispetto al solito' : '') + '</span><span class="fm-go">Vedi la scheda Forma ›</span></a>';
         }
       }).catch(function () {});
     }
