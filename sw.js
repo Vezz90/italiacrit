@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
   './style.css',
   './app.js',
   './home.js',
+  './forma.js',
   './risultati.js',
   './elenchi.js',
   './almanacco.js',
