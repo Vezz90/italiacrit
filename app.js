@@ -4856,7 +4856,10 @@ function route() {
   // nuova pagina o distruggerlo.
   window.minimizeLivePlayer?.();
 
-  const hash = _resolveVirtualHash();
+  const _hashFull = _resolveVirtualHash();
+  // La query (es. "#/admin?tab=video-yt", link delle notifiche) non fa parte del percorso: finiva nel confronto delle rotte e
+  // mostrava la pagina 404. Resta nell'URL pulito (location.search), la rotta si decide sul solo percorso.
+  const hash = _hashFull.split('?')[0];
 
   // Normalizza un URL con #/ nella barra indirizzi nella forma pulita
   // equivalente (es. #/gara/xxx → /gara/xxx). Un link con #/ aperto
@@ -4867,8 +4870,8 @@ function route() {
   // il link già condiviso (limite del protocollo, non del codice), ma da
   // qui in poi chi ricondivide dalla barra indirizzi ottiene il link giusto.
   if (window.location.hash) {
-    const cleanPath = hash.slice(1) || '/';
-    if (window.location.pathname !== cleanPath) history.replaceState(null, '', cleanPath);
+    const cleanPath = _hashFull.slice(1) || '/';
+    if (window.location.pathname + window.location.search !== cleanPath) history.replaceState(null, '', cleanPath);
   }
 
   updateNavActive(hash);
@@ -12505,7 +12508,7 @@ async function renderAdmin() {
     'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
-  const tabParam = new URLSearchParams(hashQuery).get('tab');
+  const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
   if (tabParam && ADMIN_SECTIONS.includes(tabParam)) _adminSection = tabParam;
 
   // Carica la sezione di default
@@ -12557,6 +12560,7 @@ window.adminNav = async function(section) {
         <div class="adm-h"><h2>Code automatiche</h2></div>
         <div class="adm-grid">
           ${card('foto-xpix', '◈', 'xpix in coda', 'ov-xpix', 'Album foto trovati da collegare')}
+          ${card('foto-ic', '📷', 'ciclismo.info in coda', 'ov-ic', 'Foto trovate su ciclismo.info')}
           ${card('video-yt', '▶', 'YouTube in coda', 'ov-yt', 'Video trovati sui canali')}
         </div>
         <div class="adm-h"><h2>Scorciatoie</h2></div>
@@ -12570,11 +12574,14 @@ window.adminNav = async function(section) {
         </div>`;
       // Carica i contatori
       try {
-        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ, tlPend, alboRev, alboMan] = await Promise.all([
-          apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
-          apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
-          apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
-          apiCall('/admin/yt/queue').catch(()=>({queue:[]})),
+        const _failed = new Set();   // contatori che non si sono caricati: si mostra "!" invece di uno 0 che inganna
+        const _safe = (id, p, fb) => p.catch(() => { _failed.add(id); return fb; });
+        const [photos, xpixQ, vidPend, ytQ, icQ, pendProf, usersD, socialQ, tlPend, alboRev, alboMan] = await Promise.all([
+          _safe('ov-foto-pending', apiCall('/admin/race-photos/pending'), {photos:[]}),
+          _safe('ov-xpix', apiCall('/admin/xpix/queue'), {queue:[]}),
+          _safe('ov-video-pending', apiCall('/admin/videos/pending'), {videos:[]}),
+          _safe('ov-yt', apiCall('/admin/youtube/queue'), {queue:[]}),
+          _safe('ov-ic', apiCall('/admin/ic/queue'), {queue:[]}),
           fetch(`${API_BASE}/admin/pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({pending:[]})),
           fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
           apiCall('/admin/social/queue').catch(()=>({queue:[]})),
@@ -12587,6 +12594,7 @@ window.adminNav = async function(section) {
         const xpixPend    = (xpixQ.queue||[]).filter(q=>q.status==='pending').length;
         const vidPend2    = (vidPend.videos||[]).length;
         const ytPend      = (ytQ.queue||[]).filter(q=>q.status==='pending').length;
+        const icPend      = (icQ.queue||[]).filter(q=>q.status==='pending').length;
         const profPend    = (pendProf.pending||[]).length;
         const utentiCount = (usersD.users||[]).length;
         const socialPend  = (socialQ.queue||[]).filter(q=>q.status==='pending').length;
@@ -12597,12 +12605,14 @@ window.adminNav = async function(section) {
         setPending('ov-xpix', xpixPend);
         setPending('ov-video-pending', vidPend2);
         setPending('ov-yt', ytPend);
+        setPending('ov-ic', icPend);
+        _failed.forEach(id => { const el = document.getElementById(id); if (el) { el.textContent = '!'; el.title = 'Non sono riuscito a caricare questo dato'; } });
         setPending('ov-profili-pending', profPend);
         setPending('ov-social', socialPend);
         setPending('ov-tl', tlPendCount);
         setPending('ov-albo', alboPend);
         const ut = document.getElementById('ov-utenti'); if (ut) ut.textContent = utentiCount;
-        const tot = fotoPend + vidPend2 + profPend + tlPendCount + alboPend + socialPend;
+        const tot = fotoPend + vidPend2 + profPend + tlPendCount + alboPend + socialPend + xpixPend + ytPend + icPend;
         const tEl = document.getElementById('adm-total'); if (tEl) tEl.textContent = tot ? `${tot} element${tot === 1 ? 'o' : 'i'} da guardare` : '✅ Tutto in ordine';
         // Aggiorna badge sidebar
         const setBadge = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
@@ -12610,6 +12620,7 @@ window.adminNav = async function(section) {
         setBadge('badge-xpix', xpixPend);
         setBadge('badge-video-pending', vidPend2);
         setBadge('badge-yt', ytPend);
+        setBadge('badge-ic', icPend);
         setBadge('badge-profili-pending', profPend);
         setBadge('badge-social', socialPend);
         setBadge('badge-team-lineage', tlPendCount);

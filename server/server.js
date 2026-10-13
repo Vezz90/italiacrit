@@ -195,6 +195,23 @@ async function sendPushToAll({ title, body, url }) {
   return { sent };
 }
 
+// Notifica SOLO agli admin: nuovi elementi da rivedere (foto xpix, foto ciclismo.info, video YouTube), con il totale in attesa.
+// Il link porta direttamente alla sezione admin giusta (la query dopo # e' gestita dal router).
+const _REVIEW_KINDS = {
+  xpix: { emoji: '📸', label: 'foto xpix',            tab: 'foto-xpix' },
+  ic:   { emoji: '📷', label: 'foto ciclismo.info',   tab: 'foto-ic' },
+  yt:   { emoji: '🎥', label: 'video YouTube',        tab: 'video-yt' },
+};
+async function notifyAdminsReview(kind, added, pending) {
+  const k = _REVIEW_KINDS[kind];
+  if (!k || !added) return { sent: 0 };
+  return sendPushToAdmins({
+    title: `${k.emoji} Da controllare: ${k.label}`,
+    body: `${added} nuov${added === 1 ? 'o' : 'i'} · ${pending != null ? pending : added} in attesa di revisione`,
+    url: `/#/admin?tab=${k.tab}`,
+  });
+}
+
 // Invia una push alle sole subscription di un utente specifico
 async function sendPushToUser(userId, { title, body, url }) {
   if (!webpush || !VAPID_PUBLIC || !VAPID_PRIVATE || !userId) return { sent: 0 };
@@ -7490,14 +7507,9 @@ async function autoYoutubeSync() {
     const r = await doYoutubeSync();
     if (r.added) {
       console.log(`[yt-auto] ${r.added} nuovi video aggiunti alla coda`);
-      await sendPushToAll({
-        title: '🎥 Nuovi video disponibili',
-        body: `${r.added} nuovi video di gare sono stati trovati`,
-        // Punta direttamente alla coda di revisione video (Admin → Video
-        // YouTube), non a /#/risultati — prima il click sulla notifica non
-        // portava mai alla pagina giusta (segnalato dall'utente).
-        url: '/#/admin?tab=video-yt',
-      });
+      // solo agli admin (e' la coda di revisione): il link usa la query nell'hash, ora gestita dal router
+      const _yq = await readYTQueue().catch(() => []);
+      await notifyAdminsReview('yt', r.added, _yq.filter(q => q.status === 'pending').length);
     }
   } catch (e) { console.warn('[yt-auto] Errore:', e.message); }
 }
@@ -8823,10 +8835,18 @@ app.delete('/api/admin/photos/:source/:gara_id', requireAdmin, async (req, res) 
 });
 
 async function doICSync(maxNew = 60) {
-  const queue     = await readICQueue();
-  // knownUrls = già in coda (pending/approved/dismissed) OPPURE già controllate senza foto
-  const knownUrls = new Set(queue.map(q => q.gara_url));
-  const { results, checkedNoPhoto } = await fetchItaliaciclismoCandidates(knownUrls, maxNew);
+  let queue       = await readICQueue();
+  const nowMs     = Date.now();
+  // Le foto su ciclismo.info arrivano anche dopo giorni: una gara trovata "senza foto" si ricontrolla ogni ~20 ore finche'
+  // ha meno di 21 giorni (max 10 tentativi). Prima restava "senza foto" per sempre e le foto uscite dopo non si vedevano mai.
+  const _raceTs   = u => { const m = String(u).match(/_(\d{4})_(\d{2})_(\d{2})_/); return m ? Date.parse(`${m[1]}-${m[2]}-${m[3]}`) : NaN; };
+  const _recheck  = q => q.status === 'no_photo' && (nowMs - _raceTs(q.gara_url)) < 21 * 86400000
+    && (!q.checked_at || nowMs - Date.parse(q.checked_at) > 20 * 3600000) && (q.tries || 1) < 10;
+  // knownUrls = già in coda (pending/approved/dismissed) OPPURE già controllate senza foto (e non da ricontrollare)
+  const knownUrls = new Set(queue.filter(q => !_recheck(q)).map(q => q.gara_url));
+  const { results, checkedNoPhoto } = await fetchItaliaciclismoCandidates(knownUrls, Math.max(maxNew, 100));
+  const foundUrls = new Set(results.map(r => r.gara_url));
+  queue = queue.filter(q => !(q.status === 'no_photo' && foundUrls.has(q.gara_url)));   // ora ha foto: via il vecchio "senza foto"
   let added = 0;
   for (const c of results) {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -8846,7 +8866,9 @@ async function doICSync(maxNew = 60) {
   }
   // Marca le gare senza foto così non vengono riprovate ogni volta (slot liberi per le altre)
   for (const url of (checkedNoPhoto || [])) {
-    queue.push({ id: 'np_' + Math.random().toString(36).slice(2, 9), gara_url: url, status: 'no_photo' });
+    const old = queue.find(q => q.status === 'no_photo' && q.gara_url === url);
+    if (old) { old.checked_at = new Date().toISOString(); old.tries = (old.tries || 1) + 1; }
+    else queue.push({ id: 'np_' + Math.random().toString(36).slice(2, 9), gara_url: url, status: 'no_photo', checked_at: new Date().toISOString(), tries: 1 });
   }
   // Conserva non-pending (approved/dismissed/no_photo) + max 200 pending recenti
   const nonPending = queue.filter(q => q.status !== 'pending');
@@ -8873,11 +8895,7 @@ async function autoICSync() {
     const r = await doICSync(60);
     if (r.added) {
       console.log(`[ic-auto] ${r.added} nuove foto gara aggiunte alla coda`);
-      await sendPushToAll({
-        title: '📷 Nuove foto disponibili',
-        body: `${r.added} nuove foto di gare da ciclismo.info`,
-        url: '/#/risultati',
-      });
+      await notifyAdminsReview('ic', r.added, r.total);
     }
   } catch (e) { console.warn('[ic-auto] Errore:', e.message); }
 }
@@ -10602,6 +10620,7 @@ async function autoXpixSync() {
       const pending    = queue.filter(q => q.status === 'pending').slice(0, 200);
       await writeXpixQueue([...nonPending, ...pending]);
       console.log(`[xpix-auto] ${added} nuovi album aggiunti alla coda`);
+      await notifyAdminsReview('xpix', added, pending.length);
     }
   } catch (e) {
     console.warn('[xpix-auto] Errore:', e.message);
