@@ -165,14 +165,13 @@
       if (!x.n) return;
       var cl = x.idx >= 130 ? 'hi' : x.idx <= 60 ? 'lo' : 'mid';
       var r = rl ? rl.rel[x.m] : null;
-      var rc = r === null ? '' : r >= 1.3 ? 'fm-ra' : r <= 0.7 ? 'fm-rb' : 'fm-rm';
       h += '<tr' + (a.gold && a.gold.m === x.m ? ' class="fm-goldrow"' : '') + '><td>' + MESI_L[x.m] + '</td><td>' + fmt(x.avg) + '</td><td><span class="fm-idx fm-' + cl + '">' + x.idx + '</span></td>'
-        + (rl ? '<td>' + (r === null ? '–' : '<span class="fm-rel ' + rc + '">×' + fmt(r) + '</span>') + '</td>' : '')
+        + (rl ? '<td>' + (r === null ? '–' : relBadge(r)) + '</td>' : '')
         + (anyCov ? '<td>' + (x.ncov || '–') + '</td><td>' + (x.ncov ? Math.round(100 * x.topCov / x.ncov) + '%' : '–') + '</td><td>' + (x.posAvg !== null ? fmt(x.posAvg) + '°' : '–') + '</td>' : '<td>' + x.top10 + '</td>')
         + '<td>' + x.pod + '</td><td>' + x.w + '</td><td>' + (x.fr || '–') + '</td></tr>';
     });
     return h + '</tbody></table></div><p class="fm-small">Indice 100 = la sua media mensile (sopra 130 mese forte, sotto 60 debole).'
-      + (rl ? ' «vs categoria» confronta i suoi punti del mese con quelli attesi da un corridore della sua categoria con lo stesso totale: ×1,0 = come tutti, sopra ×1,3 il mese è davvero suo.' : '')
+      + (rl ? ' «vs categoria» confronta i suoi punti del mese con quelli attesi da un corridore della sua categoria con lo stesso totale: ▲ sopra (oltre il 15% in più), ▼ sotto (oltre il 15% in meno), ＝ in linea.' : '')
       + (anyCov ? ' «Gare disputate», «% top 10» e «Pos. media» contano solo gli anni in cui PCS ci dà tutte le gare.' : '') + '</p>';
   }
 
@@ -197,7 +196,7 @@
       ? '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big fm-accent">' + MESI_L[a.gold.m] + '</div><div class="fm-small">' + fmt(a.gold.avg) + ' punti in media per anno · ' + a.gold.w + ' vittorie e ' + a.gold.pod + ' podi in ' + a.gold.el + ' stagioni</div></div>'
       : '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big">—</div><div class="fm-small">Dati ancora troppo pochi</div></div>';
     var distCard = (rl && rl.best)
-      ? '<div class="fm-card"><h3>Dove si distingue</h3><div class="fm-big fm-accent">' + MESI_L[rl.best.m] + '</div><div class="fm-small"><b>×' + fmt(rl.best.r) + '</b> rispetto a un corridore della sua categoria con lo stesso totale: in quel mese rende più di quanto fanno gli altri</div></div>'
+      ? '<div class="fm-card"><h3>Dove si distingue</h3><div class="fm-big fm-accent">' + MESI_L[rl.best.m] + '</div><div class="fm-small"><span class="fm-rel fm-ra">▲</span> In quel mese rende più di quanto fanno gli altri della sua categoria a parità di totale (' + (rl.best.r >= 2 ? 'più del doppio' : '+' + Math.round((rl.best.r - 1) * 100) + '%') + ')</div></div>'
       : (rl ? '<div class="fm-card"><h3>Dove si distingue</h3><div class="fm-big">—</div><div class="fm-small">Nessun mese si stacca in modo netto dalla sua categoria</div></div>' : '');
     var srcTxt = a.hasPcs
       ? a.icsN + ' da ICS/ciclismo.info + <b>' + a.pcsOnly + ' solo PCS</b> (' + (a.pcsOnly - a.fOnly) + ' in Italia, ' + a.fOnly + ' all\'estero)'
@@ -232,6 +231,13 @@
     var best = null;
     a.mon.forEach(function (x, m) { if (rel[m] !== null && x.top10 >= 3 && x.avg >= 3 && (!best || rel[m] > best.r)) best = { m: m, r: rel[m] }; });
     return { exp: exp, rel: rel, best: best };
+  }
+
+  function relBadge(r) {
+    var pct = Math.round((r - 1) * 100), tip = (pct > 0 ? '+' : '') + pct + '% rispetto alla sua categoria';
+    if (r >= 1.15) return '<span class="fm-rel fm-ra" title="' + tip + '" aria-label="sopra la sua categoria">▲</span>';
+    if (r <= 0.85) return '<span class="fm-rel fm-rb" title="' + tip + '" aria-label="sotto la sua categoria">▼</span>';
+    return '<span class="fm-rel fm-rm" title="in linea con la sua categoria" aria-label="in linea con la sua categoria">＝</span>';
   }
 
   function bindCat(host) {
