@@ -17611,8 +17611,8 @@ window.setAtletaResultsSort = function(mode) {
 };
 
 window._athTab = function(k) {
-  const on = k === 'c' ? 'c' : 's';
-  ['s', 'c'].forEach(x => {
+  const on = (k === 'c' || k === 'f') ? k : 's';
+  ['s', 'c', 'f'].forEach(x => {
     const t = document.getElementById('ath-tab-' + x), p = document.getElementById('ath-panel-' + x);
     if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
     if (p) p.hidden = x !== on;
@@ -18264,12 +18264,14 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina atleta">
       <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
       <button class="ath-tab" role="tab" id="ath-tab-c" aria-selected="false" aria-controls="ath-panel-c" onclick="window._athTab('c')">Carriera</button>
+      <button class="ath-tab" role="tab" id="ath-tab-f" aria-selected="false" aria-controls="ath-panel-f" onclick="window._athTab('f')" hidden>Forma</button>
     </div>
     <div id="ath-panel-s" role="tabpanel" aria-labelledby="ath-tab-s">
     ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
+    <div id="ath-forma-teaser"></div>
     ${_athSafe(() => athleteRaceProfileHtml(risultatiStrada))}
     ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
     ${_rankChartHtml}
@@ -18314,6 +18316,9 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div id="ath-panel-c" role="tabpanel" aria-labelledby="ath-tab-c" hidden>
       <div id="atleta-pcs-widget"></div>
     </div>
+    <div id="ath-panel-f" role="tabpanel" aria-labelledby="ath-tab-f" hidden>
+      <div id="ath-forma"></div>
+    </div>
     </div>
   `);
 
@@ -18339,6 +18344,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // professionista, con risultati PCS veri: quella pillola non va tolta).
   _loadCiclismoStorico(atleta_id, selYear, risultati.length);
   if (window.Titoli) window.Titoli.mountAthlete(atleta_id, 'atleta-titles');
+  if (window.Forma) window.Forma.mountAthlete(atleta_id);   // scheda "Forma" (solo se ci sono abbastanza risultati)
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {

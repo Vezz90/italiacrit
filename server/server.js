@@ -453,6 +453,44 @@ app.get('/sitemap-archivio-:n.xml', async (req, res) => {
     res.send(xml);
   } catch (e) { res.status(500).send('<!-- errore -->'); }
 });
+// ── Forma per mese (scheda del profilo atleta) ─────────────────────────────────────────────────────
+// Unisce, senza doppioni, i risultati dello storico ciclismo.info (solo top 10), della stagione in corso (file FCI) e di PCS
+// (tutte le gare, anche estere e oltre il 10 posto). Il browser riceve le righe e calcola/disegna la scheda.
+// Riga: [data, posizione, categoria, nome gara, fonte ('I' = nostri dati, 'IP' = in entrambi, 'P' = solo PCS), paese]
+const _formaCache = new Map();
+const _formaTokens = s => new Set(String(s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^A-Z0-9]+/)
+  .filter(w => w.length >= 4 && !/^(GRAN|PREMIO|TROFEO|COPPA|MEMORIAL|CLASSIFICA|GENERALE|TAPPA|PRIMA|SECONDA|TERZA|QUARTA|QUINTA)$/.test(w)));
+app.get('/api/atleta/:id/forma', async (req, res) => {
+  try {
+    const id = String(req.params.id || '').slice(0, 120);
+    const hit = _formaCache.get(id);
+    if (hit && Date.now() - hit.ts < 6 * 3600 * 1000) { res.set('Cache-Control', 'public, max-age=1800'); return res.json(hit.data); }
+    if (!supabase) return res.json({ rows: [] });
+    const [ic, pcs] = await Promise.all([
+      supabase.from('ciclismo_results').select('data,posizione,categoria,nome_gara').eq('atleta_id', id).order('data').limit(3000),
+      supabase.from('pcs_results').select('data,posizione,gara_name,country').eq('atleta_id', id).not('data', 'is', null).not('posizione', 'is', null).order('data').limit(3000),
+    ]);
+    const items = (ic.data || []).map(r => ({ r: [r.data, r.posizione, r.categoria || '', String(r.nome_gara || '').slice(0, 48), 'I', ''] }));
+    const lastIc = items.length ? items[items.length - 1].r[0] : '2000-01-01';
+    // stagione in corso (e ultime gare non ancora nello storico) dal file risultati FCI
+    const raw = (await readDataJsonFromGH('results_raw.json').catch(() => null)) || [];
+    for (const x of raw) {
+      if (x.atleta_id === id && x.data > lastIc && x.posizione >= 1) items.push({ r: [x.data, x.posizione, x.categoria || '', String(x.nome_gara || '').slice(0, 48), 'I', ''] });
+    }
+    for (const p of (pcs.data || [])) {
+      const pt = _formaTokens(p.gara_name);
+      const same = items.find(x => x.r[0] === p.data && (x.r[1] === p.posizione || [..._formaTokens(x.r[3])].filter(w => pt.has(w)).length >= 2));
+      if (same) { if (same.r[4] === 'I') same.r[4] = 'IP'; continue; }
+      items.push({ r: [p.data, p.posizione, '', String(p.gara_name || '').slice(0, 48), 'P', p.country || ''] });
+    }
+    const rows = items.map(x => x.r).sort((a, b) => a[0].localeCompare(b[0]));
+    const data = { rows };
+    _formaCache.set(id, { ts: Date.now(), data });
+    if (_formaCache.size > 2000) _formaCache.delete(_formaCache.keys().next().value);
+    res.set('Cache-Control', 'public, max-age=1800');
+    res.json(data);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/cic-race/:id', async (req, res) => {
   try {
     const r = await _cicRaceById(req.params.id);
