@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forma per mese · prova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f5f8; --card: #ffffff; --ink: #0f1830; --muted: #5d6783; --line: #dfe3ec;
+    --red: #e3182d; --blue: #2459e6; --good: #14915b; --bad: #c2410c;
+    --hz: #dfe4ee; --h0: #eef0f5; --h1: #fbd9dd; --h2: #f5a3ab; --h3: #ea5361; --h4: #c8101f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1220; --card: #131c30; --ink: #eef1f8; --muted: #94a0bd; --line: #243049;
+      --good: #34d399; --bad: #fb923c;
+      --hz: #2a3652; --h0: #19233a; --h1: #4a2230; --h2: #7d2a3a; --h3: #b8344a; --h4: #ef4357;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1220; --card: #131c30; --ink: #eef1f8; --muted: #94a0bd; --line: #243049;
+    --good: #34d399; --bad: #fb923c;
+    --hz: #2a3652; --h0: #19233a; --h1: #4a2230; --h2: #7d2a3a; --h3: #b8344a; --h4: #ef4357;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Inter, system-ui, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1, h2, h3, .num { font-family: "Inter Tight", Inter, sans-serif; letter-spacing: -.01em; }
+  .tag { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--red); }
+  h1 { margin: 4px 0 4px; font-size: 1.9rem; line-height: 1.1; }
+  .sub { color: var(--muted); max-width: 70ch; margin: 0 0 18px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+  .tabs button { font: 600 .9rem Inter, sans-serif; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  .tabs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .tabs button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-bottom: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .card h3 { margin: 0 0 2px; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+  .big { font-size: 2.1rem; font-weight: 800; line-height: 1.1; margin: 4px 0; }
+  .small { color: var(--muted); font-size: .85rem; }
+  .up { color: var(--good); } .down { color: var(--bad); }
+  .section { margin-top: 22px; }
+  .section h2 { font-size: 1.15rem; margin: 0 0 4px; }
+  .scroll { overflow-x: auto; }
+  table.heat { border-collapse: separate; border-spacing: 3px; min-width: 640px; width: 100%; }
+  .heat th { font: 600 .72rem Inter, sans-serif; color: var(--muted); text-align: center; padding: 2px 0; text-transform: uppercase; letter-spacing: .05em; }
+  .heat th.y { text-align: right; padding-right: 8px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .heat td { height: 34px; text-align: center; border-radius: 6px; font: 700 .78rem "Inter Tight", sans-serif; font-variant-numeric: tabular-nums; position: relative; min-width: 38px; }
+  .heat td small { display: block; font: 500 .62rem Inter, sans-serif; opacity: .8; line-height: 1; }
+  .heat td.k0 { background: var(--h0); color: var(--muted); font-weight: 500; }
+  .heat td.k1 { background: var(--h1); color: var(--ink); } .heat td.k2 { background: var(--h2); color: var(--ink); }
+  .heat td.k3 { background: var(--h3); color: #fff; } .heat td.k4 { background: var(--h4); color: #fff; }
+  .heat td.kz { background: var(--hz); color: var(--muted); font-weight: 600; }
+  .heat td .ft { position: absolute; bottom: 1px; right: 3px; font-size: .58rem; }
+  .heat td.fut { background: transparent; background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--line) 5px 6px); color: transparent; }
+  .heat td .w { position: absolute; top: 2px; right: 3px; font-size: .62rem; }
+  .cat { font: 500 .62rem Inter, sans-serif; color: var(--muted); margin-left: 6px; }
+  .bars { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; align-items: end; height: 190px; margin-top: 12px; padding-top: 6px; border-bottom: 1px solid var(--line); position: relative; }
+  .bar { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; position: relative; }
+  .bar i { display: block; width: 100%; max-width: 46px; border-radius: 6px 6px 0 0; background: var(--blue); min-height: 2px; }
+  .bar.gold i { background: var(--red); }
+  .bar b { font: 700 .75rem "Inter Tight", sans-serif; margin-bottom: 3px; font-variant-numeric: tabular-nums; }
+  .labels { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-top: 4px; text-align: center; font: 600 .72rem Inter, sans-serif; color: var(--muted); text-transform: uppercase; }
+  .avgline { position: absolute; left: 0; right: 0; border-top: 1.5px dashed var(--muted); opacity: .7; }
+  .avgline span { position: absolute; right: 0; top: -17px; font: 600 .68rem Inter, sans-serif; color: var(--muted); background: var(--card); padding: 0 4px; }
+  table.mt { width: 100%; border-collapse: collapse; margin-top: 12px; font-variant-numeric: tabular-nums; }
+  .mt th, .mt td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; font-size: .88rem; }
+  .mt th:first-child, .mt td:first-child { text-align: left; }
+  .mt th { font: 700 .7rem Inter, sans-serif; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .mt tr.gold td { font-weight: 700; }
+  .idx { display: inline-block; min-width: 44px; padding: 1px 8px; border-radius: 999px; font-weight: 700; font-size: .8rem; }
+  .idx.hi { background: rgba(227,24,45,.14); color: var(--red); } .idx.lo { background: var(--h0); color: var(--muted); } .idx.mid { background: rgba(36,89,230,.12); color: var(--blue); }
+  .note { margin-top: 22px; padding: 12px 14px; border-left: 3px solid var(--red); background: var(--card); border-radius: 0 8px 8px 0; color: var(--muted); font-size: .86rem; }
+  .legend { display: flex; gap: 6px; align-items: center; font-size: .75rem; color: var(--muted); margin: 6px 0 0; flex-wrap: wrap; }
+  .legend i { width: 18px; height: 12px; border-radius: 3px; display: inline-block; }
+  @media (max-width: 640px) { h1 { font-size: 1.5rem; } .big { font-size: 1.7rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="tag">Prova · Statistica atleta</span>
+  <h1 id="title">Forma per mese</h1>
+  <p class="sub">In quali mesi un corridore rende di più, calcolato su tutto lo storico (dal 2007). Ogni risultato nei primi 10 vale i punti base del sito (anche per le gare estere e fuori ICS, a titolo indicativo): 1° = 15, 2° = 12, 3° = 10, 4° = 8, 5° = 6, 6° = 5, 7° = 4, 8° = 3, 9° = 2, 10° = 1.</p>
+  <div class="tabs" id="tabs" role="group" aria-label="Scegli il corridore"></div>
+  <div class="tabs" id="src" role="group" aria-label="Fonte dei dati"><button type="button" data-m="all">Tutte le fonti (ICS + PCS)</button><button type="button" data-m="ics">Solo risultati ICS</button></div>
+  <div id="out"></div>
+  <div class="note">
+    <b>Come sono uniti i dati.</b> ICS/ciclismo.info (dal 2007) contiene solo i primi 10 di ogni gara. PCS aggiunge tutte le gare del corridore, anche all'estero e oltre il 10° posto, ma solo per gli anni importati e per i corridori presenti su PCS. Dove PCS manca, un mese vuoto può voler dire «non ha corso» oppure «ha corso fuori dai primi 10». Le gare presenti in entrambe le fonti sono contate una volta sola.
+  </div>
+</div>
+<script src="forma_dati.js"></script>
+<script>
+(function () {
+  var PTS = {1:15,2:12,3:10,4:8,5:6,6:5,7:4,8:3,9:2,10:1};
+  var MESI = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  var MESI_L = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  var CAT = {ESORDIENTI1:'Esord. 1',ESORDIENTI2:'Esord. 2',ALLIEVI:'Allievi',JUNIORES:'Juniores',ELITE_UNDER23:'Elite/U23'};
+  var TODAY = new Date(); var Y0 = TODAY.getFullYear(), M0 = TODAY.getMonth();
+  var cur = 0, srcMode = 'all';          // 'all' = ICS + PCS (estero e gare fuori ICS), 'ics' = solo risultati ICS
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmt(n){ return (Math.round(n * 10) / 10).toString().replace('.', ','); }
+  function ris(n) { return n + (n === 1 ? ' risultato' : ' risultati'); }
+  function cap(s) { return s.replace(/\b(\w)(\w*)/g, function (_, f, t) { return f + t.toLowerCase(); }); }
+  function catName(c) {
+    if (CAT[c]) return CAT[c];
+    var s = String(c || '');
+    if (/elite|u23|under/i.test(s)) return 'Elite/U23'; if (/junior/i.test(s)) return 'Juniores'; if (/allie/i.test(s)) return 'Allievi'; if (/esord/i.test(s)) return /2/.test(s) ? 'Esord. 2' : /1/.test(s) ? 'Esord. 1' : 'Esordienti';
+    return '';
+  }
+
+  function analyze(r) {
+    var rows = r.rows.filter(function (x) { return srcMode === 'all' || x[4] !== 'P'; });
+    if (!rows.length) return null;
+    // anni "coperti da PCS": li' conosciamo TUTTE le gare (anche oltre il 10 posto), non solo la top 10
+    var pcsYear = {};
+    r.rows.forEach(function (x) { if (x[4] !== 'I') { var y = +x[0].slice(0, 4); pcsYear[y] = (pcsYear[y] || 0) + 1; } });
+    var covered = {}; Object.keys(pcsYear).forEach(function (y) { if (pcsYear[y] >= 3) covered[y] = true; });
+    if (srcMode === 'ics') covered = {};
+    var cells = {}, years = {};
+    rows.forEach(function (x) {
+      var y = +x[0].slice(0, 4), m = +x[0].slice(5, 7) - 1, k = y + '-' + m, pos = x[1];
+      var c = cells[k] || (cells[k] = { y: y, m: m, pts: 0, n: 0, top10: 0, pod: 0, w: 0, sumPos: 0, foreign: 0, cat: '' });
+      c.pts += PTS[pos] || 0; c.n++; c.sumPos += pos; if (pos <= 10) c.top10++; if (pos <= 3) c.pod++; if (pos === 1) c.w++;
+      if (x[5] && x[5].toLowerCase() !== 'it') c.foreign++;
+      if (x[2]) c.cat = x[2];
+      years[y] = 1;
+    });
+    var ys = Object.keys(years).map(Number).sort(function (a, b) { return a - b; });
+    var first = ys[0], last = ys[ys.length - 1];
+    var ey = []; for (var y = first; y <= Math.max(last, Y0); y++) ey.push(y);
+    var mon = MESI.map(function (_, m) {
+      var pts = 0, el = 0, n = 0, top10 = 0, pod = 0, w = 0, fr = 0, ncov = 0, topCov = 0, podCov = 0, sumPosCov = 0;
+      ey.forEach(function (y) {
+        if (y === Y0 && m > M0) return; el++;
+        var c = cells[y + '-' + m];
+        if (!c) return;
+        pts += c.pts; n += c.n; top10 += c.top10; pod += c.pod; w += c.w; fr += c.foreign;
+        if (covered[y]) { ncov += c.n; topCov += c.top10; podCov += c.pod; sumPosCov += c.sumPos; }
+      });
+      return { m: m, avg: el ? pts / el : 0, el: el, n: n, top10: top10, pod: pod, w: w, fr: fr, ncov: ncov, topCov: topCov, posAvg: ncov ? sumPosCov / ncov : null };
+    });
+    var mean = mon.reduce(function (s, x) { return s + x.avg; }, 0) / 12 || 1;
+    mon.forEach(function (x) { x.idx = Math.round(100 * x.avg / mean); });
+    var cand = mon.filter(function (x) { return x.el >= 2 && x.top10 >= 4; }).sort(function (a, b) { return b.avg - a.avg; });
+    var gold = cand[0] || null;
+    // forma di adesso: ultimi 45 giorni vs stessa finestra negli anni precedenti
+    var W = 45, end = new Date(); end.setHours(0, 0, 0, 0);
+    function win(e) {
+      var s = new Date(e); s.setDate(s.getDate() - W);
+      var tot = 0, n = 0, sp = 0;
+      rows.forEach(function (x) { var d = new Date(x[0] + 'T00:00:00'); if (d > s && d <= e) { tot += PTS[x[1]] || 0; n++; sp += x[1]; } });
+      return { tot: tot, n: n, pos: n ? sp / n : null };
+    }
+    var nowW = win(end), prevPts = [], prevPos = [];
+    ey.forEach(function (y) { if (y >= Y0) return; var e2 = new Date(end); e2.setFullYear(y); var w2 = win(e2); prevPts.push(w2.tot); if (covered[y] && w2.pos !== null) prevPos.push(w2.pos); });
+    var avgP = prevPts.length ? prevPts.reduce(function (a, b) { return a + b; }, 0) / prevPts.length : 0;
+    var avgPos = prevPos.length ? prevPos.reduce(function (a, b) { return a + b; }, 0) / prevPos.length : null;
+    var maxCell = 0; Object.keys(cells).forEach(function (k) { maxCell = Math.max(maxCell, cells[k].pts); });
+    var tot = rows.length, wins = rows.filter(function (x) { return x[1] === 1; }).length, pod = rows.filter(function (x) { return x[1] <= 3; }).length;
+    var pcsOnly = r.rows.filter(function (x) { return x[4] === 'P'; }), fOnly = pcsOnly.filter(function (x) { return x[5] && x[5].toLowerCase() !== 'it'; }).length;
+    return { cells: cells, ey: ey, first: first, last: last, mon: mon, gold: gold, nowW: nowW, avgP: avgP, avgPos: avgPos, maxCell: maxCell, tot: tot, wins: wins, pod: pod, mean: mean, covered: covered, pcsOnly: pcsOnly.length, fOnly: fOnly, icsN: r.rows.length - pcsOnly.length, hasPcs: Object.keys(pcsYear).length > 0 };
+  }
+
+  function heat(a) {
+    var h = '<table class="heat"><thead><tr><th></th>' + MESI.map(function (m) { return '<th>' + m + '</th>'; }).join('') + '</tr></thead><tbody>';
+    a.ey.forEach(function (y) {
+      var catLbl = '';
+      for (var m = 0; m < 12; m++) { var c = a.cells[y + '-' + m]; if (c && c.cat) catLbl = catName(c.cat); }
+      h += '<tr><th class="y">' + y + '<span class="cat">' + esc(catLbl) + (a.covered[y] ? ' · tutte le gare' : '') + '</span></th>';
+      for (var m2 = 0; m2 < 12; m2++) {
+        if (y === Y0 && m2 > M0) { h += '<td class="fut">·</td>'; continue; }
+        var c2 = a.cells[y + '-' + m2];
+        if (!c2) { h += '<td class="k0">–</td>'; continue; }
+        var rr = a.maxCell ? c2.pts / a.maxCell : 0, k = c2.pts === 0 ? 'z' : rr > .66 ? 4 : rr > .4 ? 3 : rr > .2 ? 2 : 1;
+        var lbl = a.covered[y] ? c2.n + (c2.n === 1 ? ' gara' : ' gare') : c2.n + ' top10';
+        h += '<td class="k' + k + '" title="' + MESI_L[m2] + ' ' + y + ': ' + c2.n + (a.covered[y] ? ' gare disputate' : ' risultati nei primi 10') + ', ' + c2.top10 + ' nei primi 10, ' + c2.pod + ' podi, ' + c2.w + ' vittorie' + (c2.foreign ? ', ' + c2.foreign + ' all\'estero' : '') + ', posizione media ' + fmt(c2.sumPos / c2.n) + '">' + c2.pts + '<small>' + lbl + '</small>' + (c2.w ? '<span class="w">★' + (c2.w > 1 ? c2.w : '') + '</span>' : '') + (c2.foreign ? '<span class="ft">🌍</span>' : '') + '</td>';
+      }
+      h += '</tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
+  function bars(a) {
+    var max = Math.max.apply(null, a.mon.map(function (x) { return x.avg; })) || 1;
+    var h = '<div class="bars">';
+    a.mon.forEach(function (x) {
+      var isGold = a.gold && a.gold.m === x.m;
+      h += '<div class="bar' + (isGold ? ' gold' : '') + '" title="' + MESI_L[x.m] + ': ' + fmt(x.avg) + ' punti in media per anno"><b>' + (x.avg ? fmt(x.avg) : '') + '</b><i style="height:' + Math.round(100 * x.avg / max * 0.82) + '%"></i></div>';
+    });
+    h += '<div class="avgline" style="bottom:' + Math.round(100 * a.mean / max * 0.82) + '%"><span>media mensile ' + fmt(a.mean) + '</span></div></div>';
+    return h + '<div class="labels">' + MESI.map(function (m) { return '<span>' + m + '</span>'; }).join('') + '</div>';
+  }
+
+  function table(a) {
+    var anyCov = Object.keys(a.covered).length > 0;
+    var h = '<div class="scroll"><table class="mt"><thead><tr><th>Mese</th><th>Punti medi / anno</th><th>Indice</th>' + (anyCov ? '<th>Gare disputate</th><th>% nei top 10</th><th>Pos. media</th>' : '<th>Risultati top 10</th>') + '<th>Podi</th><th>Vitt.</th><th>Estero</th></tr></thead><tbody>';
+    a.mon.forEach(function (x) {
+      if (!x.n) return;
+      var cl = x.idx >= 130 ? 'hi' : x.idx <= 60 ? 'lo' : 'mid';
+      h += '<tr' + (a.gold && a.gold.m === x.m ? ' class="gold"' : '') + '><td>' + MESI_L[x.m] + '</td><td>' + fmt(x.avg) + '</td><td><span class="idx ' + cl + '">' + x.idx + '</span></td>'
+        + (anyCov ? '<td>' + (x.ncov || '–') + '</td><td>' + (x.ncov ? Math.round(100 * x.topCov / x.ncov) + '%' : '–') + '</td><td>' + (x.posAvg !== null ? fmt(x.posAvg) + '°' : '–') + '</td>' : '<td>' + x.top10 + '</td>')
+        + '<td>' + x.pod + '</td><td>' + x.w + '</td><td>' + (x.fr || '–') + '</td></tr>';
+    });
+    return h + '</tbody></table></div><p class="small">Indice 100 = la sua media mensile (sopra 130 = mese forte, sotto 60 = debole).' + (anyCov ? ' «Gare disputate», «% nei top 10» e «Pos. media» contano solo gli anni in cui PCS ci dà tutte le gare.' : '') + '</p>';
+  }
+
+  function render() {
+    var r = FORMA_DATA[cur], a = analyze(r);
+    document.getElementById('title').textContent = 'Forma per mese · ' + cap(r.nome);
+    var out = document.getElementById('out');
+    if (!a) { out.innerHTML = '<div class="card">Nessun risultato per questa fonte.</div>'; return; }
+    var diff = a.avgP ? Math.round(100 * (a.nowW.tot - a.avgP) / a.avgP) : null;
+    var posLine = (a.nowW.pos !== null && a.avgPos !== null) ? '<br>Posizione media: <b>' + fmt(a.nowW.pos) + '°</b> (di solito in questo periodo ' + fmt(a.avgPos) + '°)' : '';
+    var formCard = '<div class="card"><h3>Forma di adesso</h3><div class="big num ' + (diff === null ? '' : diff >= 0 ? 'up' : 'down') + '">' + (diff === null ? '—' : (diff >= 0 ? '+' : '') + diff + '%') + '</div>'
+      + '<div class="small">Ultimi 45 giorni: <b>' + a.nowW.tot + ' punti</b> (' + ris(a.nowW.n) + ')<br>Stesso periodo negli anni scorsi: ' + fmt(a.avgP) + ' punti in media' + posLine + '</div></div>';
+    var goldCard = a.gold
+      ? '<div class="card"><h3>Il suo mese d\'oro</h3><div class="big num" style="color:var(--red)">' + MESI_L[a.gold.m] + '</div><div class="small">' + fmt(a.gold.avg) + ' punti in media per anno · ' + a.gold.w + ' vittorie e ' + a.gold.pod + ' podi in ' + a.gold.el + ' stagioni</div></div>'
+      : '<div class="card"><h3>Il suo mese d\'oro</h3><div class="big num">—</div><div class="small">Dati ancora troppo pochi</div></div>';
+    var srcTxt = a.hasPcs
+      ? a.icsN + ' da ICS/ciclismo.info + <b>' + a.pcsOnly + ' solo PCS</b> (' + (a.pcsOnly - a.fOnly) + ' in Italia, ' + a.fOnly + ' all\'estero)'
+      : 'solo ICS/ciclismo.info: <b>nessun dato PCS</b> per questo corridore';
+    var carCard = '<div class="card"><h3>Carriera nei dati</h3><div class="big num">' + a.first + '–' + a.last + '</div><div class="small">' + a.tot + ' risultati · ' + a.pod + ' podi · ' + a.wins + ' vittorie<br>' + srcTxt + '</div></div>';
+    out.innerHTML =
+      '<div class="grid">' + goldCard + formCard + carCard + '</div>'
+      + '<div class="card section"><h2>Anno per anno, mese per mese</h2><p class="small">Punti nel mese (scala base del sito) e numero di gare. ★ = vittoria · 🌍 = c\'è almeno un risultato all\'estero. Il colore è relativo al suo mese migliore; «0» = ha corso ma mai nei primi 10.</p><div class="scroll">' + heat(a) + '</div>'
+      + '<div class="legend">poco <i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i> tanto &nbsp;·&nbsp; <i style="background:var(--hz)"></i> gare senza piazzamento &nbsp;·&nbsp; – nessun dato</div></div>'
+      + '<div class="card section"><h2>Quando rende di più</h2><p class="small">Punti medi per ogni anno di attività. In rosso il mese d\'oro; la linea tratteggiata è la sua media mensile.</p>' + bars(a) + table(a) + '</div>';
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (b, i) { b.setAttribute('aria-pressed', i === cur ? 'true' : 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('#src button'), function (b) { b.setAttribute('aria-pressed', b.dataset.m === srcMode ? 'true' : 'false'); });
+  }
+
+  var tabs = document.getElementById('tabs');
+  FORMA_DATA.forEach(function (r, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = cap(r.nome);
+    b.onclick = function () { cur = i; render(); }; tabs.appendChild(b);
+  });
+  render();
+  document.getElementById('src').addEventListener('click', function (e) { var m = e.target.dataset && e.target.dataset.m; if (m) { srcMode = m; render(); } });
+})();
+</script>
+</body>
+</html>
