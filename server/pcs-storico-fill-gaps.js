@@ -37,6 +37,8 @@ if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.lo
 
 const args = process.argv.slice(2);
 const LIMIT = parseInt((args.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '') || null;
+// --atleta-id=ID1,ID2: solo questi atleti (es. per colmare subito un profilo segnalato, senza aspettare l'intera lista)
+const ONLY_IDS = new Set(String((args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || '').split(',').filter(Boolean));
 
 // Stessa identica logica di estrazione tabella risultati di
 // pcs-athlete-import-storico.js (extractResultsOnly) — duplicata qui
@@ -101,7 +103,9 @@ async function extractResultsOnly(page, season) {
         if (raceLink) {
           const href = raceLink.getAttribute('href') || '';
           pcs_url = href.replace(/^\/+/, '');
-          const m = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+)\/\d{4}\/?(.*)$/i);
+          let m = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+)\/\d{4}\/?(.*)$/i);
+          // nuovo formato dei link PCS (da settembre 2026): race/<gara>-<anno>-<result|stage-N|gc|...> invece di race/<gara>/<anno>/<...>
+          if (!m) { const n = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+?)-(\d{4})(?:-(.+))?$/i); if (n) m = [n[0], n[1], n[3] || '']; }
           if (m) {
             const stagePart = m[2] && m[2] !== 'result' ? '-' + m[2].replace(/\//g, '-') : '';
             pcs_race_slug = m[1] + stagePart; isStage = !!stagePart; tourSlug = m[1];
@@ -151,14 +155,14 @@ async function findGaps(sb) {
   const thByAtleta = new Map(), resByAtleta = new Map(), slugByAtleta = new Map();
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('pcs_team_history').select('atleta_id, season').order('atleta_id').order('season').range(from, from + PAGE - 1);
+    const { data, error } = await (ONLY_IDS.size ? sb.from('pcs_team_history').select('atleta_id, season').in('atleta_id', [...ONLY_IDS]) : sb.from('pcs_team_history').select('atleta_id, season')).order('atleta_id').order('season').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) { if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set()); thByAtleta.get(r.atleta_id).add(r.season); }
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null).order('id').range(from, from + PAGE - 1);
+    const { data, error } = await (ONLY_IDS.size ? sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', [...ONLY_IDS]) : sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null)).order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) {
@@ -169,15 +173,16 @@ async function findGaps(sb) {
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('pcs_results').select('atleta_id, season').order('id').range(from, from + PAGE - 1);
+    const { data, error } = await (ONLY_IDS.size ? sb.from('pcs_results').select('atleta_id, season').in('atleta_id', [...ONLY_IDS]) : sb.from('pcs_results').select('atleta_id, season')).order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) { if (!resByAtleta.has(r.atleta_id)) resByAtleta.set(r.atleta_id, new Set()); resByAtleta.get(r.atleta_id).add(r.season); }
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('entity_overrides').select('entity_id, new_value')
-      .eq('entity_type', 'atleta').eq('field', 'pcs_slug').order('id').range(from, from + PAGE - 1);
+    let q = sb.from('entity_overrides').select('entity_id, new_value').eq('entity_type', 'atleta').eq('field', 'pcs_slug');
+    if (ONLY_IDS.size) q = q.in('entity_id', [...ONLY_IDS]);
+    const { data, error } = await q.order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) slugByAtleta.set(r.entity_id, r.new_value);
@@ -201,6 +206,7 @@ async function findGaps(sb) {
 
   console.log('=== PCS Storico: colma i buchi (squadra nota ma risultati mancanti) ===\n');
   let gaps = await findGaps(sb);
+  if (ONLY_IDS.size) gaps = gaps.filter(g => ONLY_IDS.has(g.atletaId));
   console.log(`Atleti con anni mancanti: ${gaps.length}`);
   if (LIMIT) gaps = gaps.slice(0, LIMIT);
   const totalYears = gaps.reduce((n, g) => n + g.missing.length, 0);

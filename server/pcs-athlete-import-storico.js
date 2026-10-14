@@ -309,7 +309,9 @@ async function extractResultsOnly(page, season) {
         if (raceLink) {
           const href = raceLink.getAttribute('href') || '';
           pcs_url = href.replace(/^\/+/, '');
-          const m = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+)\/\d{4}\/?(.*)$/i);
+          let m = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+)\/\d{4}\/?(.*)$/i);
+          // nuovo formato dei link PCS (da settembre 2026): race/<gara>-<anno>-<result|stage-N|gc|...> invece di race/<gara>/<anno>/<...>
+          if (!m) { const n = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+?)-(\d{4})(?:-(.+))?$/i); if (n) m = [n[0], n[1], n[3] || '']; }
           if (m) {
             const stagePart = m[2] && m[2] !== 'result' ? '-' + m[2].replace(/\//g, '-') : '';
             pcs_race_slug = m[1] + stagePart; isStage = !!stagePart; tourSlug = m[1];
