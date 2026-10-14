@@ -18501,6 +18501,11 @@ async function _injectTeamClubHistory(team_id) {
   for (const n of nodes) { const y = Number(n.season); if (y && y < curYear) (idsByYear[y] = idsByYear[y] || new Set()).add(n.team_id); }
   const hasChain = nodes.length > 0;
   if (!hasChain) for (let y = curYear - 1; y >= curYear - 6; y--) idsByYear[y] = new Set([team_id]);
+  else {
+    // un nome vale per tutti gli anni in cui il club l'ha usato (non solo quelli a ridosso del cambio): ogni anno cerca tutti i nomi della catena
+    const allIds = new Set(nodes.map(n => n.team_id));
+    for (let y = curYear - 1; y >= 2007; y--) idsByYear[y] = allIds;
+  }
   const years = Object.keys(idsByYear).map(Number).sort((a, b) => b - a);
   if (!years.length) return;
   el.innerHTML = '<div class="hx-none" style="padding:6px 0">Carico la storia del club…</div>';
