@@ -42,6 +42,9 @@ if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea serve
 
 const args = process.argv.slice(2);
 const MIN_RIDERS  = parseInt((args.find(a => a.startsWith('--min-riders=')) || '').split('=')[1] || '') || 3;
+const ELITE_ONLY = args.includes('--elite-only');
+const DRY = args.includes('--dry');
+const MIN_NAME_SIM = 0.6;   // stesso club con nome appena ritoccato (G.S. Mobilieri Ponsacco -> Ciclistica Mobilieri Ponsacco)
 const MIN_OVERLAP = parseFloat((args.find(a => a.startsWith('--min-overlap=')) || '').split('=')[1] || '') || 0.3;
 
 // Stesso ID che userebbe il sito per una squadra con questo nome (slug
@@ -70,24 +73,24 @@ function nameSimilarity(a, b) {
   const ws = require('ws');
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
-  console.log('=== Rilevamento storico squadre (Elite/U23 Uomini) ===\n');
+  console.log('=== Rilevamento storico squadre (tutte le categorie) ===\n');
   console.log(`Soglie: minimo ${MIN_RIDERS} corridori in comune, overlap >= ${MIN_OVERLAP}\n`);
 
-  // 1. Tutte le righe atleta/stagione/team di Elite/U23 Uomini, paginato
-  //    (PostgREST limita a 1000 righe per risposta di default).
+  // 1. Righe atleta/stagione/team (tutte le categorie, salvo --elite-only), una stagione per volta per non andare in timeout.
+  // Scorrimento a chiave (id crescente, senza filtri sulla colonna stagione): la query filtrata per stagione andava in statement timeout.
   const rows = [];
-  for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from('ciclismo_results')
-      .select('atleta_id, stagione, team')
-      .eq('categoria', 'ELITE_UNDER23')
-      .not('atleta_id', 'is', null)
-      .not('team', 'is', null)
-      .range(from, from + 999);
-    if (error) throw error;
+  for (let lastId = 0, fails = 0; ;) {
+    let q = sb.from('ciclismo_results').select('id, atleta_id, stagione, team, categoria').gt('id', lastId).order('id').limit(1000);
+    const { data, error } = await q;
+    if (error) { if (++fails > 5) throw error; await new Promise(r => setTimeout(r, 2000)); continue; }
+    fails = 0;
     if (!data.length) break;
-    rows.push(...data);
+    for (const r of data) if (r.atleta_id && r.team && (!ELITE_ONLY || r.categoria === 'ELITE_UNDER23')) rows.push({ atleta_id: r.atleta_id, stagione: r.stagione, team: r.team });
+    lastId = data[data.length - 1].id;
     if (data.length < 1000) break;
+    if (rows.length % 50000 < 1000) process.stdout.write(`  ${rows.length} righe, id ${lastId}`);
   }
+  console.log('');
   console.log(`${rows.length} righe atleta/stagione/team caricate\n`);
 
   // 2. Roster per (team, stagione)
@@ -115,7 +118,7 @@ function nameSimilarity(a, b) {
     const teamsTo   = [...teamsBySeason.get(sTo)];
     for (const teamFrom of teamsFrom) {
       const rosterFrom = rosters.get(rosterKey(teamFrom, sFrom));
-      if (!rosterFrom || rosterFrom.size < MIN_RIDERS) continue;
+      if (!rosterFrom) continue;
       const teamIdFrom = teamIdFromName(teamFrom);
       for (const teamTo of teamsTo) {
         const teamIdTo = teamIdFromName(teamTo);
@@ -131,12 +134,14 @@ function nameSimilarity(a, b) {
         // identità reale sul sito, il nome no.
         if (teamIdTo === teamIdFrom) continue;
         const rosterTo = rosters.get(rosterKey(teamTo, sTo));
-        if (!rosterTo || rosterTo.size < MIN_RIDERS) continue;
+        if (!rosterTo) continue;
         let common = 0;
         for (const aid of rosterFrom) if (rosterTo.has(aid)) common++;
-        if (common < MIN_RIDERS) continue;
+        const sim = nameSimilarity(teamFrom, teamTo);
         const overlapRatio = common / Math.min(rosterFrom.size, rosterTo.size);
-        if (overlapRatio < MIN_OVERLAP) continue;
+        const byRoster = common >= MIN_RIDERS && overlapRatio >= MIN_OVERLAP;
+        const byName = sim >= MIN_NAME_SIM && common >= 1;   // nelle giovanili i roster ruotano molto: basta un atleta in comune + nome quasi uguale
+        if (!byRoster && !byName) continue;
         candidates.push({
           team_id_from: teamIdFrom, team_from: teamFrom, season_from: sFrom,
           team_id_to: teamIdTo, team_to: teamTo, season_to: sTo,
@@ -151,6 +156,7 @@ function nameSimilarity(a, b) {
 
   // 4. Upsert in team_lineage come 'pending' (idempotente: ON CONFLICT
   //    aggiorna solo i numeri, non tocca lo status se già rivisto).
+  if (DRY) { console.log('--dry: nessuna scrittura'); for (const c of candidates.slice(0, 5000)) console.log(`  ${c.overlap_ratio} sim ${c.name_similarity}  ${c.team_from} (${c.season_from}) -> ${c.team_to} (${c.season_to}) [${c.common_riders}]`); process.exit(0); }
   let inserted = 0, skippedReviewed = 0;
   for (const c of candidates) {
     const { data: existing } = await sb.from('team_lineage')

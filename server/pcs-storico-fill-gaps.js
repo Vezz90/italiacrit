@@ -187,11 +187,22 @@ async function findGaps(sb) {
   }
   for (let b = 0; b < ids.length; b += BATCH) {
     const chunk = ids.slice(b, b + BATCH);
-    const [th, cr, pr] = await Promise.all([
-      pageAll(() => sb.from('pcs_team_history').select('atleta_id, season').in('atleta_id', chunk).order('atleta_id').order('season')),
-      pageAll(() => sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', chunk).order('id')),
-      pageAll(() => sb.from('pcs_results').select('atleta_id, season').in('atleta_id', chunk).order('id')),
-    ]);
+    // un blocco che va in timeout si spezza a meta' e si riprova (alcuni atleti hanno migliaia di righe)
+    const fetchChunk = async (ch, depth = 0) => {
+      try {
+        return await Promise.all([
+          pageAll(() => sb.from('pcs_team_history').select('atleta_id, season').in('atleta_id', ch).order('atleta_id').order('season')),
+          pageAll(() => sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', ch).order('id')),
+          pageAll(() => sb.from('pcs_results').select('atleta_id, season').in('atleta_id', ch).order('id')),
+        ]);
+      } catch (e) {
+        if (ch.length === 1) { if (depth < 3) { await new Promise(r => setTimeout(r, 3000)); return fetchChunk(ch, depth + 1); } return [[], [], []]; }
+        const mid = Math.ceil(ch.length / 2);
+        const a = await fetchChunk(ch.slice(0, mid), depth), c = await fetchChunk(ch.slice(mid), depth);
+        return [a[0].concat(c[0]), a[1].concat(c[1]), a[2].concat(c[2])];
+      }
+    };
+    const [th, cr, pr] = await fetchChunk(chunk);
     const want = new Map(), have = new Map();
     for (const r of th) { if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(r.season); }
     for (const r of cr) { const y = parseInt(r.stagione, 10); if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(y); }
