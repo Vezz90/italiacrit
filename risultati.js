@@ -191,7 +191,7 @@
         <button class="rs-miss" id="ris-missing-toggle" type="button" onclick="window.risToggleMissing()" aria-pressed="${o.missing}">⚠ Gare senza risultati</button>
       </div>
       <div id="ris-pend"></div>
-      <div class="hx-layout"><div class="hx-col" id="ris-cards"></div><aside class="hx-col" id="ris-side"></aside></div>
+      <div class="hx-layout"><div class="hx-col"><div id="ris-pro"></div><div id="ris-cards"></div></div><aside class="hx-col" id="ris-side"></aside></div>
     </div>`;
   }
 
