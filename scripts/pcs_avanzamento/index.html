@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recupero storico PCS</title>
+<style>
+  :root { --bg:#f3f5f9; --card:#fff; --ink:#0f1830; --muted:#5d6783; --line:#dfe3ec; --acc:#ff6b00; --ok:#14915b; --bad:#c2410c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1220; --card:#131c30; --ink:#eef1f8; --muted:#94a0bd; --line:#243049; --ok:#34d399; --bad:#fb923c; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 60px; }
+  h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
+  .pill { display:inline-block; padding:3px 11px; border-radius:999px; font-weight:700; font-size:.8rem; }
+  .run { background: rgba(20,145,91,.16); color: var(--ok); } .stop { background: rgba(194,65,12,.16); color: var(--bad); } .done { background: rgba(255,107,0,.18); color: var(--acc); }
+  .bar { height: 16px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .bar i { display:block; height:100%; background: var(--acc); width:0; transition: width .6s; }
+  .grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 16px 0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 15px; }
+  .card h3 { margin:0; font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+  .big { font-size: 1.7rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height:1.15; margin-top:3px; }
+  .small { color:var(--muted); font-size:.82rem; }
+  h2 { font-size:1rem; margin: 22px 0 8px; }
+  table { width:100%; border-collapse:collapse; font-variant-numeric: tabular-nums; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  th, td { text-align:left; padding:7px 12px; border-bottom:1px solid var(--line); font-size:.85rem; }
+  th { color:var(--muted); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; }
+  td.n, th.n { text-align:right; }
+  pre { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:.78rem; overflow:auto; margin:0; white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Recupero storico PCS <span id="stato" class="pill stop">in attesa</span></h1>
+  <p class="sub">Anni di carriera degli atleti che su PCS ci sono ma da noi non hanno risultati. Si aggiorna da solo ogni 5 secondi.</p>
+
+  <div class="card">
+    <h3>Avanzamento (anni)</h3>
+    <div class="big" id="pct">—</div>
+    <div class="bar"><i id="barra"></i></div>
+    <div class="small" id="det">—</div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>Atleti completati</h3><div class="big" id="ath">—</div><div class="small" id="athS"></div></div>
+    <div class="card"><h3>Risultati recuperati</h3><div class="big" id="rows">—</div><div class="small" id="rowsS"></div></div>
+    <div class="card"><h3>Velocità</h3><div class="big" id="vel">—</div><div class="small" id="velS"></div></div>
+    <div class="card"><h3>Tempo stimato</h3><div class="big" id="eta">—</div><div class="small" id="etaS"></div></div>
+    <div class="card"><h3>Esito degli anni</h3><div class="big" id="esito">—</div><div class="small">con risultati · vuoti su PCS · falliti</div></div>
+    <div class="card"><h3>Ora sta leggendo</h3><div class="small" id="cur" style="margin-top:8px;color:var(--ink)">—</div></div>
+  </div>
+
+  <h2>Ultimi atleti completati</h2>
+  <table><thead><tr><th>Atleta</th><th class="n">Anni</th><th class="n">Con risultati</th><th class="n">Righe</th><th>Quando</th></tr></thead><tbody id="recent"></tbody></table>
+
+  <h2>Ultime righe del log <span class="small" id="logf"></span></h2>
+  <pre id="log">—</pre>
+</div>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  function n(x) { return (x == null) ? '—' : Number(x).toLocaleString('it-IT'); }
+  function dur(ms) { if (!isFinite(ms) || ms < 0) return '—'; var m = Math.round(ms / 60000), h = Math.floor(m / 60), d = Math.floor(h / 24); if (d >= 1) return d + ' g ' + (h % 24) + ' h'; if (h >= 1) return h + ' h ' + (m % 60) + ' min'; return m + ' min'; }
+  function ago(t) { var s = Math.round((Date.now() - Date.parse(t)) / 1000); return s < 60 ? s + ' s fa' : s < 3600 ? Math.round(s / 60) + ' min fa' : Math.round(s / 3600) + ' h fa'; }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function tick() {
+    fetch('/progress.json').then(function (r) { return r.json(); }).then(function (d) {
+      var p = d.progress;
+      if (!p) { $('stato').textContent = 'non avviato'; return; }
+      var fresh = (Date.parse(d.now) - Date.parse(p.updated)) < 90000;
+      var st = $('stato'); st.className = 'pill ' + (p.finished ? 'done' : fresh ? 'run' : 'stop'); st.textContent = p.finished ? 'completato' : fresh ? 'in corso' : 'fermo';
+      var pct = p.yearsTotal ? Math.min(100, 100 * p.yearsDone / p.yearsTotal) : 0;
+      $('pct').textContent = pct.toFixed(1).replace('.', ',') + '%'; $('barra').style.width = pct + '%';
+      $('det').textContent = n(p.yearsDone) + ' anni su ' + n(p.yearsTotal) + ' · avviato ' + new Date(p.started).toLocaleString('it-IT');
+      $('ath').textContent = n(p.athletesDone) + ' / ' + n(p.athletesTotal); $('athS').textContent = Math.round(100 * p.athletesDone / (p.athletesTotal || 1)) + '% degli atleti';
+      $('rows').textContent = n(p.rows); $('rowsS').textContent = p.athletesDone ? '≈ ' + Math.round(p.rows / p.athletesDone) + ' per atleta' : '';
+      var el = Date.parse(p.updated) - Date.parse(p.started), perMin = el > 60000 ? p.yearsDone / (el / 60000) : 0;
+      $('vel').textContent = perMin ? perMin.toFixed(1).replace('.', ',') + ' anni/min' : '—'; $('velS').textContent = p.workers + ' lettori in parallelo';
+      var left = p.yearsTotal - p.yearsDone; $('eta').textContent = perMin ? dur(left / perMin * 60000) : '—'; $('etaS').textContent = perMin ? 'mancano ' + n(left) + ' anni' : '';
+      $('esito').textContent = n(p.yearsWithResults) + ' · ' + n(p.yearsEmpty) + ' · ' + n(p.yearsFailed);
+      var cur = Object.keys(p.current || {}).map(function (k) { return p.current[k]; }).filter(Boolean); $('cur').innerHTML = cur.length ? cur.map(esc).join('<br>') : '—';
+      $('recent').innerHTML = (p.recent || []).map(function (r) { return '<tr><td>' + esc(r.id) + '</td><td class="n">' + r.years + '</td><td class="n">' + r.ok + '</td><td class="n">' + n(r.rows) + '</td><td>' + ago(r.t) + '</td></tr>'; }).join('');
+      $('logf').textContent = d.log.file; $('log').textContent = d.log.lines.join('\n') || '—';
+    }).catch(function () { $('stato').textContent = 'pagina non raggiungibile'; });
+  }
+  tick(); setInterval(tick, 5000);
+</script>
+</body>
+</html>

@@ -27,6 +27,7 @@
   }
 })();
 
+const fs = require('fs'), path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const ws = require('ws');
 const { launchPcsBrowser, gotoPcsPage, humanDelay, withTimeout } = require('./pcs-browser');
@@ -138,47 +139,29 @@ async function upsertResults(sb, rows) {
   if (error) throw error;
 }
 
+// ── Elenco dei "buchi": per ogni atleta con profilo PCS, gli anni in cui PCS dovrebbe avere risultati e noi no ──────────────────────
+// Si interroga a blocchi di atleti (IN su atleta_id) invece di scorrere intere tabelle da centinaia di migliaia di righe: la scansione
+// completa andava in "statement timeout". Gli anni gia' visitati (anche quelli senza risultati su PCS) si ricordano in pcs-fillgaps-state.json,
+// cosi' un anno vuoto non ricompare all'infinito e il lavoro si puo' fermare e riprendere in qualsiasi momento.
+const STATE_FILE = path.join(__dirname, 'pcs-fillgaps-state.json');
+const PROGRESS_FILE = path.join(__dirname, 'logs', 'fillgaps-progress.json');
+let state = {};
+try { state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); } catch (_) {}
+let _stateDirty = false;
+function markYear(aid, y, r) { state[`${aid}|${y}`] = { r, t: new Date().toISOString() }; _stateDirty = true; }
+function saveState() { if (!_stateDirty) return; try { fs.writeFileSync(STATE_FILE, JSON.stringify(state)); _stateDirty = false; } catch (_) {} }
+function yearDone(aid, y) {
+  const s = state[`${aid}|${y}`];
+  if (!s) return false;
+  if (s.r === 'ok') return true;
+  const days = (Date.now() - Date.parse(s.t)) / 86400000;
+  return s.r === 'empty' ? days < 90 : days < 0.5;      // vuoto: si ricontrolla dopo 90 giorni; errore: dopo 12 ore
+}
+
 async function findGaps(sb) {
-  // thByAtleta = ogni anno che PCS "dovrebbe" avere per l'atleta: sia dalla
-  // storia squadra, SIA dagli anni già coperti da ciclismo.info — che
-  // pubblica solo i primi arrivati, quindi anche un anno "coperto" può
-  // nascondere un piazzamento più basso visibile solo su PCS (richiesta
-  // esplicita dell'utente, stessa correzione fatta in
-  // pcs-athlete-import-storico.js).
-  // .order() esplicito su TUTTE le pagine qui sotto — senza, PostgREST non
-  // garantisce una paginazione stabile su una tabella modificata da altri
-  // scraper MENTRE la si sta scansionando (successo dal vivo: i risultati
-  // 2025 di Ginestra Lorenzo, scritti giorni prima, sono stati saltati
-  // perché scritti prima della sessione MA la tabella intera continuava a
-  // crescere altrove durante la scansione a pagine, spostando i confini
-  // delle pagine già "viste" — segnalato dall'utente).
-  const thByAtleta = new Map(), resByAtleta = new Map(), slugByAtleta = new Map();
+  const currentYear = new Date().getFullYear();
+  const slugByAtleta = new Map();
   const PAGE = 1000;
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await (ONLY_IDS.size ? sb.from('pcs_team_history').select('atleta_id, season').in('atleta_id', [...ONLY_IDS]) : sb.from('pcs_team_history').select('atleta_id, season')).order('atleta_id').order('season').range(from, from + PAGE - 1);
-    if (error) throw error;
-    if (!data || !data.length) break;
-    for (const r of data) { if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set()); thByAtleta.get(r.atleta_id).add(r.season); }
-    if (data.length < PAGE) break;
-  }
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await (ONLY_IDS.size ? sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', [...ONLY_IDS]) : sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null)).order('id').range(from, from + PAGE - 1);
-    if (error) throw error;
-    if (!data || !data.length) break;
-    for (const r of data) {
-      const y = parseInt(r.stagione, 10);
-      if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set());
-      thByAtleta.get(r.atleta_id).add(y);
-    }
-    if (data.length < PAGE) break;
-  }
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await (ONLY_IDS.size ? sb.from('pcs_results').select('atleta_id, season').in('atleta_id', [...ONLY_IDS]) : sb.from('pcs_results').select('atleta_id, season')).order('id').range(from, from + PAGE - 1);
-    if (error) throw error;
-    if (!data || !data.length) break;
-    for (const r of data) { if (!resByAtleta.has(r.atleta_id)) resByAtleta.set(r.atleta_id, new Set()); resByAtleta.get(r.atleta_id).add(r.season); }
-    if (data.length < PAGE) break;
-  }
   for (let from = 0; ; from += PAGE) {
     let q = sb.from('entity_overrides').select('entity_id, new_value').eq('entity_type', 'atleta').eq('field', 'pcs_slug');
     if (ONLY_IDS.size) q = q.in('entity_id', [...ONLY_IDS]);
@@ -188,58 +171,118 @@ async function findGaps(sb) {
     for (const r of data) slugByAtleta.set(r.entity_id, r.new_value);
     if (data.length < PAGE) break;
   }
-
-  const currentYear = new Date().getFullYear();
+  const ids = [...slugByAtleta.keys()];
   const out = [];
-  for (const [atletaId, seasons] of thByAtleta) {
-    const slug = slugByAtleta.get(atletaId);
-    if (!slug) continue;
-    const have = resByAtleta.get(atletaId) || new Set();
-    const missing = [...seasons].filter(y => y <= currentYear && !have.has(y)).sort((a, b) => a - b);
-    if (missing.length) out.push({ atletaId, slug, missing });
+  const BATCH = 100;
+  async function pageAll(build) {
+    const rows = [];
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await build().range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!data || !data.length) break;
+      rows.push(...data);
+      if (data.length < PAGE) break;
+    }
+    return rows;
   }
+  for (let b = 0; b < ids.length; b += BATCH) {
+    const chunk = ids.slice(b, b + BATCH);
+    const [th, cr, pr] = await Promise.all([
+      pageAll(() => sb.from('pcs_team_history').select('atleta_id, season').in('atleta_id', chunk).order('atleta_id').order('season')),
+      pageAll(() => sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', chunk).order('id')),
+      pageAll(() => sb.from('pcs_results').select('atleta_id, season').in('atleta_id', chunk).order('id')),
+    ]);
+    const want = new Map(), have = new Map();
+    for (const r of th) { if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(r.season); }
+    for (const r of cr) { const y = parseInt(r.stagione, 10); if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(y); }
+    for (const r of pr) { if (!have.has(r.atleta_id)) have.set(r.atleta_id, new Set()); have.get(r.atleta_id).add(r.season); }
+    for (const aid of chunk) {
+      const seasons = want.get(aid); if (!seasons) continue;
+      const h = have.get(aid) || new Set();
+      const missing = [...seasons].filter(y => y && y <= currentYear && !h.has(y) && !yearDone(aid, y)).sort((x, y) => x - y);
+      if (missing.length) out.push({ atletaId: aid, slug: slugByAtleta.get(aid), missing, active: seasons.has(currentYear) || h.has(currentYear) });
+    }
+    process.stdout.write(`\r  scansione ${Math.min(b + BATCH, ids.length)}/${ids.length} atleti, ${out.length} con anni mancanti…`);
+  }
+  process.stdout.write('\n');
+  // priorita': prima chi e' attivo quest'anno, poi chi ha piu' anni mancanti
+  out.sort((a, b) => (b.active - a.active) || (b.missing.length - a.missing.length));
   return out;
 }
 
+const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers=')) || '').split('=')[1] || '2', 10) || 2);
+
 (async () => {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
+  fs.mkdirSync(path.join(__dirname, 'logs'), { recursive: true });
 
   console.log('=== PCS Storico: colma i buchi (squadra nota ma risultati mancanti) ===\n');
   let gaps = await findGaps(sb);
-  if (ONLY_IDS.size) gaps = gaps.filter(g => ONLY_IDS.has(g.atletaId));
   console.log(`Atleti con anni mancanti: ${gaps.length}`);
   if (LIMIT) gaps = gaps.slice(0, LIMIT);
   const totalYears = gaps.reduce((n, g) => n + g.missing.length, 0);
-  console.log(`Anni totali da recuperare: ${totalYears}\n`);
+  console.log(`Anni totali da recuperare: ${totalYears} · lavoratori in parallelo: ${WORKERS}\n`);
 
-  let { browser, context, page } = await launchPcsBrowser();
-  let done = 0, errors = 0, totalRows = 0, i = 0;
-
-  for (const g of gaps) {
-    i++;
-    process.stdout.write(`(${i}/${gaps.length}) ${g.atletaId} [${g.slug}] anni: ${g.missing.join(',')} … `);
-    let rowsForAthlete = 0;
-    for (const y of g.missing) {
-      await humanDelay(i);
-      if (page.isClosed() || browser.isConnected?.() === false) {
-        try { await context.close().catch(() => {}); await browser.close().catch(() => {}); } catch {}
-        ({ browser, context, page } = await launchPcsBrowser());
-      }
-      const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { onLog: msg => process.stdout.write('\n  ' + msg) });
-      if (!nav.ok) continue;
-      let yearResults;
-      try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
-      catch { continue; }
-      if (yearResults.length) {
-        const rows = yearResults.map(r => ({ atleta_id: g.atletaId, pcs_slug: g.slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
-        try { await upsertResults(sb, rows); rowsForAthlete += rows.length; totalRows += rows.length; }
-        catch (e) { errors++; process.stdout.write(`ERRORE DB ${y}: ${e.message} `); }
-      }
-    }
-    done++;
-    console.log(`✓ +${rowsForAthlete} ris.`);
+  // stato per la pagina di avanzamento (si legge da logs/fillgaps-progress.json)
+  const prog = {
+    started: new Date().toISOString(), updated: new Date().toISOString(), finished: false, workers: WORKERS,
+    athletesTotal: gaps.length, athletesDone: 0, yearsTotal: totalYears, yearsDone: 0, yearsWithResults: 0, yearsEmpty: 0, yearsFailed: 0,
+    rows: 0, errors: 0, challenges: 0, current: {}, recent: [],
+  };
+  let lastWrite = 0;
+  function writeProgress(force) {
+    const now = Date.now();
+    if (!force && now - lastWrite < 3000) return;
+    lastWrite = now; prog.updated = new Date().toISOString();
+    try { fs.writeFileSync(PROGRESS_FILE, JSON.stringify(prog)); } catch (_) {}
+    saveState();
   }
+  writeProgress(true);
 
+  let { browser, context, page: firstPage } = await launchPcsBrowser();
+  let nextIdx = 0, stop = false;
+
+  async function worker(w) {
+    let page = w === 0 ? firstPage : await context.newPage();
+    while (!stop) {
+      const gi = nextIdx++;
+      if (gi >= gaps.length) break;
+      const g = gaps[gi];
+      let rowsForAthlete = 0, yearsOk = 0;
+      for (const y of g.missing) {
+        prog.current[w] = `${g.atletaId} ${y}`; writeProgress();
+        await humanDelay(gi);
+        if (page.isClosed()) {
+          if (browser.isConnected?.() === false) { stop = true; console.error('Browser chiuso: esco, il wrapper riparte'); break; }
+          page = await context.newPage();
+        }
+        const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { onLog: msg => { if (/sfida|challenge/i.test(msg)) prog.challenges++; } });
+        prog.yearsDone++;
+        if (!nav.ok) { if (nav.notFound) { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; } else { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; } continue; }
+        let yearResults;
+        try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
+        catch { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; continue; }
+        if (yearResults.length) {
+          const rows = yearResults.map(r => ({ atleta_id: g.atletaId, pcs_slug: g.slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country || null }));
+          // stessa chiave (atleta, stagione, gara) due volte nello stesso anno (es. gara disputata due volte): Postgres rifiuta l'upsert, si tiene la prima
+          { const seenK = new Set(); for (let k = rows.length - 1; k >= 0; k--) { const kk = rows[k].pcs_race_slug; if (seenK.has(kk)) rows.splice(k, 1); else seenK.add(kk); } }
+          try { await upsertResults(sb, rows); rowsForAthlete += rows.length; prog.rows += rows.length; prog.yearsWithResults++; yearsOk++; markYear(g.atletaId, y, 'ok'); }
+          catch (e) { prog.errors++; markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; console.error(`ERRORE DB ${g.atletaId} ${y}: ${e.message}`); }
+        } else { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; }
+        writeProgress();
+      }
+      prog.athletesDone++;
+      prog.recent.unshift({ id: g.atletaId, years: g.missing.length, ok: yearsOk, rows: rowsForAthlete, t: new Date().toISOString() });
+      if (prog.recent.length > 30) prog.recent.pop();
+      prog.current[w] = '';
+      console.log(`(${prog.athletesDone}/${gaps.length}) ${g.atletaId} [${g.slug}] anni ${g.missing.join(',')} → +${rowsForAthlete} ris.`);
+      writeProgress(true);
+    }
+  }
+  await Promise.all(Array.from({ length: WORKERS }, (_, w) => worker(w)));
+
+  prog.finished = !stop; writeProgress(true);
   try { await context.close(); await browser.close(); } catch {}
-  console.log(`\n=== Completato === atleti: ${done}/${gaps.length} | risultati recuperati: ${totalRows} | errori: ${errors}`);
-})().catch(e => { console.error('ERRORE FATALE', e); process.exit(1); });
+  console.log(`\n=== Completato === atleti: ${prog.athletesDone}/${gaps.length} | anni con risultati: ${prog.yearsWithResults} | vuoti: ${prog.yearsEmpty} | falliti: ${prog.yearsFailed} | righe: ${prog.rows} | errori: ${prog.errors}`);
+  if (stop) process.exit(2);
+})().catch(e => { console.error('ERRORE FATALE', e); saveState(); process.exit(1); });

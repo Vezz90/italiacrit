@@ -44,3 +44,6 @@ server/tier-backfill.log
 
 scripts/.cache_gare/
 !data/atleti_alias.json
+
+server/logs/
+server/pcs-fillgaps-state.json
