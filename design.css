@@ -13804,3 +13804,7 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .fm-exp { position: absolute; left: 12%; right: 12%; height: 0; border-top: 2.5px solid var(--text-primary); opacity: .85; pointer-events: none; }
 .fm-rel { display: inline-block; min-width: 34px; padding: 1px 9px; border-radius: 999px; font-weight: 800; font-size: .8rem; text-align: center; line-height: 1.4; }
 .fm-ra { background: rgba(16,185,129,.2); color: #059669; } .fm-rb { background: rgba(239,68,68,.16); color: #dc2626; } .fm-rm { background: rgba(120,130,150,.16); color: var(--text-secondary); }
+/* Almanacco, "Record di sempre": nomi e valori bianchi su pannello bianco in tema chiaro (il bianco resta solo sui pannelli scuri della dashboard) */
+.am-recs .hx-si-r { color: var(--text-primary); }
+body.light-mode .am-recs .hx-si-r .up { color: #047857; }
+body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
