@@ -4749,12 +4749,19 @@ async function _fetchAllPcsResultRiders() {
   const all = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
+    // Il roster "extra" descrive gli atleti di OGGI: le gare dell'archivio storico (CIC_*) e quelle di stagioni passate (data nel gara_id)
+    // sono state importate da PCS con tutti i partecipanti, ma non devono far comparire corridori di anni fa nel roster della squadra di allora.
     const { data, error } = await supabase
       .from('pcs_gara_results').select('atleta_id, rider_name, team_name, gara_id')
-      .not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+      .not('atleta_id', 'is', null).not('gara_id', 'like', 'CIC\\_%').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
-    all.push(...data);
+    const _cy = new Date().getFullYear();
+    for (const r of data) {
+      const yr = parseInt(((String(r.gara_id || '')).match(/(\d{4})-\d{2}-\d{2}/) || [])[1] || '0', 10);
+      if (yr && yr < _cy) continue;
+      all.push(r);
+    }
     if (data.length < PAGE) break;
   }
   return all;
