@@ -485,10 +485,13 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
     const hit = _formaCache.get(id);
     if (hit && Date.now() - hit.ts < 6 * 3600 * 1000) { res.set('Cache-Control', 'public, max-age=1800'); return res.json(hit.data); }
     if (!supabase) return res.json({ rows: [] });
-    const [ic, pcs] = await Promise.all([
+    const [ic, pcs, th] = await Promise.all([
       supabase.from('ciclismo_results').select('data,posizione,categoria,nome_gara').eq('atleta_id', id).order('data').limit(3000),
       supabase.from('pcs_results').select('data,posizione,gara_name,country').eq('atleta_id', id).not('data', 'is', null).not('posizione', 'is', null).order('data').limit(3000),
+      supabase.from('pcs_team_history').select('season,tier').eq('atleta_id', id).limit(100),
     ]);
+    const pro = {};   // anni in cui corre in una squadra professionistica (WorldTour / ProTeam): le righe solo-PCS di quegli anni sono 'Professionisti'
+    for (const t of (th.data || [])) if (t.tier === 'WT' || t.tier === 'PRT') pro[t.season] = 1;
     const items = (ic.data || []).map(r => ({ r: [r.data, r.posizione, r.categoria || '', String(r.nome_gara || '').slice(0, 48), 'I', ''] }));
     const lastIc = items.length ? items[items.length - 1].r[0] : '2000-01-01';
     // stagione in corso (e ultime gare non ancora nello storico) dal file risultati FCI
@@ -503,7 +506,7 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
       items.push({ r: [p.data, p.posizione, '', String(p.gara_name || '').slice(0, 48), 'P', p.country || ''] });
     }
     const rows = items.map(x => x.r).sort((a, b) => a[0].localeCompare(b[0]));
-    const data = { rows };
+    const data = { rows, pro };
     _formaCache.set(id, { ts: Date.now(), data });
     if (_formaCache.size > 2000) _formaCache.delete(_formaCache.keys().next().value);
     res.set('Cache-Control', 'public, max-age=1800');

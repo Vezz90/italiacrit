@@ -8,7 +8,7 @@
   var MESI_L = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   var CAT = { ESORDIENTI1: 'Esord. 1', ESORDIENTI2: 'Esord. 2', ALLIEVI: 'Allievi', JUNIORES: 'Juniores', ELITE_UNDER23: 'Elite/U23' };
   var MIN_RISULTATI = 15, MIN_STAGIONI = 2;
-  var state = { rows: null, mode: 'all', id: null, cat: 'all', base: null };
+  var state = { pro: {}, rows: null, mode: 'all', id: null, cat: 'all', base: null };
   var basePromise = null;
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -24,8 +24,8 @@
     return '';
   }
 
-  var GRP_L = { ES: 'Esordienti', AL: 'Allievi', JU: 'Juniores', EL: 'Elite/U23' };
-  var GRP_ORDER = ['ES', 'AL', 'JU', 'EL'];
+  var GRP_L = { ES: 'Esordienti', AL: 'Allievi', JU: 'Juniores', EL: 'Elite/U23', PR: 'Professionisti' };
+  var GRP_ORDER = ['ES', 'AL', 'JU', 'EL', 'PR'];
   function grpOf(c) {
     var s = String(c || '');
     if (!s) return '';
@@ -38,7 +38,7 @@
   // Aggiunge a ogni riga il gruppo di categoria (indice 6). Le righe solo-PCS non hanno categoria: prendono quella dell'anno
   // (la piu' frequente tra le righe con categoria); se l'anno non ne ha, quella dell'anno vicino piu' prossimo.
   function withGroups(rows) {
-    var cnt = {};
+    var cnt = {}, pro = state.pro || {};
     rows.forEach(function (x) {
       var g = grpOf(x[2]); if (!g) return;
       var y = x[0].slice(0, 4); (cnt[y] = cnt[y] || {})[g] = (cnt[y][g] || 0) + 1;
@@ -52,7 +52,8 @@
       known.forEach(function (k) { var d = Math.abs(k - y); if (d < bestD) { bestD = d; g = yg[k]; } });
       return g;
     }
-    return rows.map(function (x) { return x.slice(0, 6).concat([grpOf(x[2]) || near(+x[0].slice(0, 4))]); });
+    // anni in squadra WorldTour/ProTeam: le righe PCS (senza categoria) sono da professionista; nel passaggio da under 23 le righe con categoria restano Elite/U23
+    return rows.map(function (x) { var yy = +x[0].slice(0, 4); return x.slice(0, 6).concat([grpOf(x[2]) || (pro[yy] ? 'PR' : near(yy))]); });
   }
   // Testo della "forma di adesso": percentuale se il confronto ha una base solida, altrimenti differenza in punti (le percentuali su pochi punti ingannano)
   function formaTxt(a) {
@@ -130,6 +131,7 @@
     a.ey.forEach(function (y) {
       var catLbl = '';
       for (var m = 0; m < 12; m++) { var c = a.cells[y + '-' + m]; if (c && c.cat) catLbl = catName(c.cat); }
+      if (!catLbl && state.pro && state.pro[y]) catLbl = 'Professionisti';
       h += '<tr><th class="fm-y">' + y + '<span class="fm-cat">' + esc(catLbl) + (a.covered[y] ? ' · tutte le gare' : '') + '</span></th>';
       for (var m2 = 0; m2 < 12; m2++) {
         if (y === a.Y0 && m2 > a.M0) { h += '<td class="fm-fut">·</td>'; continue; }
@@ -261,7 +263,7 @@
       return Promise.all([fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma').then(function (r) { return r.ok ? r.json() : null; }), basePromise]).then(function (res) {
         var d = res[0]; state.base = res[1];
         if (state.id !== id || !d || !enough(d.rows)) return;
-        state.rows = d.rows;
+        state.rows = d.rows; state.pro = d.pro || {};
         var tab = document.getElementById('ath-tab-f'), host = document.getElementById('ath-forma');
         if (!tab || !host) return;
         tab.hidden = false;
