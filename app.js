@@ -17387,6 +17387,8 @@ async function _ensurePcsAthletesLoaded() {
           team_attuale: teamNome, team_id: tid, categoria: p.categoria || '', genere: p.genere || 'M',
           punti_totali: 0, risultati: [], roster_only: true,
         };
+      } else if (globalData.athletes[aid].roster_only && globalData.athletes[aid].team_id && globalData.athletes[aid].team_id !== tid) {
+        continue;   // gia' assegnato a un altro team da un altro roster: non finisce in due squadre
       }
       if (!Array.isArray(globalData.teams[tid].atleti)) globalData.teams[tid].atleti = [];
       if (!globalData.teams[tid].atleti.includes(aid)) globalData.teams[tid].atleti.push(aid);
@@ -21537,6 +21539,8 @@ async function renderTeam(team_id, opts = {}) {
               team_attuale: globalData.teams[team_id].nome, team_id, categoria: p.categoria || '', genere: p.genere || 'M',
               punti_totali: 0, risultati: [], roster_only: true,
             };
+          } else if (globalData.athletes[aid].roster_only && globalData.athletes[aid].team_id && globalData.athletes[aid].team_id !== team_id) {
+            continue;   // gia' assegnato a un altro team da un altro roster
           }
           if (!globalData.teams[team_id].atleti.includes(aid)) globalData.teams[team_id].atleti.push(aid);
         }
