@@ -423,6 +423,7 @@
         <section class="hx-herogrid">${heroHtml}<div class="hx-sidecol">${sideHtml}</div></section>
         <section><div class="hx-ph"><h2>Ultime gare</h2><a href="#/risultati">Tutti i risultati →</a></div><div class="hx-rlist">${rest.map(g => raceCard(g, media, today)).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div>${restAll.length > rest.length ? `<button type="button" class="hx-more" id="hx-more">Carica altre gare (${restAll.length - rest.length})</button>` : ''}</section>
         <section class="hx-panel"><div class="hx-ph"><h2>Oggi su ICS</h2></div><div class="hx-stats">${st.map(s => `<div class="hx-st">${ic(s[0])}<b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div></section>
+        <div id="hx-pro"></div>
         ${siHtml}
       </div>
       <aside class="hx-col" aria-label="Laterale">
@@ -435,6 +436,8 @@
     </div>`);
     document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; hx.n = 12; render(); }; });
     wireYear();
+    // gare professionistiche in Italia (senza punti ICS): solo senza filtri di categoria/regione/tipo
+    if (window.ProRaces && !hx.cat && !hx.reg && !hx.tipo) window.ProRaces.mount('hx-pro', curYear(), { sex: hx.sex, limit: 3 });
     const more = $('hx-more'); if (more) more.onclick = () => { const y = window.scrollY; hx.n += 12; render().then(() => window.scrollTo(0, y)); };
     [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 12; render(); }; });
     // classifiche a destra: atleti e team (foto profilo / logo piccoli)

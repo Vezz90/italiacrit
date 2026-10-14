@@ -29558,6 +29558,7 @@ async function renderRisultati() {
           <button id="ris-missing-toggle" onclick="window.risToggleMissing()" style="margin:8px 0 0;padding:8px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;cursor:pointer;border:1px solid ${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'};background:${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${risShowMissing ? '#fff' : 'var(--text-secondary)'}">⚠ Gare senza risultati</button>
           <span class="ranking-count" id="ris-count"></span>
         </div>
+        <div id="ris-pro"></div>
         <div class="risultati-feed" style="margin-top:20px" id="ris-cards"></div>
       </div>
     `);
@@ -29592,6 +29593,13 @@ async function renderRisultati() {
   if (countEl) countEl.textContent = totalRaces > visibleRaces.length
     ? `${visibleRaces.length} di ${totalRaces} gare`
     : `${totalRaces} gare trovate`;
+
+  // Gare professionistiche in Italia (WorldTour / ProSeries, da PCS, senza punti): solo quando non ci sono filtri che le escluderebbero
+  if (window.ProRaces && document.getElementById('ris-pro')) {
+    const proOk = !risQueryCat && !risQueryRegion && !risQueryTipo && !risShowMissing;
+    if (proOk) window.ProRaces.mount('ris-pro', Number(_loadedSeasonYear()), { sex: risQueryGenere || (activeHub && activeHub.gender) || '', month: risQueryMonth, limit: risQueryMonth ? 0 : 6 });
+    else document.getElementById('ris-pro').innerHTML = '';
+  }
 
   // Always: rebuild only the cards area
   if (cardsEl && window.RisV2) {

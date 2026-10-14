@@ -513,6 +513,31 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
     res.json(data);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
+// Gare professionistiche in Italia (WorldTour / ProSeries, da PCS) — niente punti ICS, servono a riempire Home e Risultati.
+// Vedi server/pcs-pro-italy-import.js. Per ogni gara: dati + podio (primi 3 dell'arrivo completo).
+const _proRacesCache = new Map();
+app.get('/api/data/pro-races', async (req, res) => {
+  try {
+    const season = parseInt(req.query.season, 10) || new Date().getFullYear();
+    const hit = _proRacesCache.get(season);
+    if (hit && Date.now() - hit.ts < 30 * 60 * 1000) { res.set('Cache-Control', 'public, max-age=600'); return res.json(hit.data); }
+    if (!supabase) return res.json({ races: [] });
+    const { data: races, error } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, circuit, winner_name')
+      .eq('season', season).not('winner_name', 'is', null).order('data_end', { ascending: false }).limit(100);
+    if (error) throw error;
+    let pod = [];
+    if (races.length) {
+      const r2 = await supabase.from('pcs_race_full_results').select('pcs_race_slug, posizione, atleta_id, nome_completo, team, country')
+        .eq('season', season).in('pcs_race_slug', races.map(r => r.pcs_race_slug)).lte('posizione', 3).order('posizione').limit(1000);
+      if (r2.error) throw r2.error;
+      pod = r2.data || [];
+    }
+    const out = { races: races.map(r => ({ ...r, femminile: r.circuit === 24, podio: pod.filter(p => p.pcs_race_slug === r.pcs_race_slug).map(p => ({ pos: p.posizione, nome: p.nome_completo, team: p.team, country: p.country, atleta_id: p.atleta_id })) })) };
+    _proRacesCache.set(season, { ts: Date.now(), data: out });
+    res.set('Cache-Control', 'public, max-age=600');
+    res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/cic-race/:id', async (req, res) => {
   try {
     const r = await _cicRaceById(req.params.id);
