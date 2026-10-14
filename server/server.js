@@ -5466,13 +5466,17 @@ app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
       const missing = (pcsRows || []).filter(p => !haveGaraIds.has(p.gara_id));
       if (missing.length) {
         const gids = [...new Set(missing.map(p => p.gara_id.replace(/^CIC_/, '')))];
+        // UNA sola ricerca su cic_races (id, nome, data, ...) invece di una ILIKE lenta per ogni gara: con l'import PCS delle gare storiche
+        // un atleta puo' avere decine di gare "solo PCS" e la pagina impiegava oltre 10 secondi.
+        const { data: cicRows } = await supabase.from('cic_races').select('id, nome, data, categoria, regione, luogo, stagione').in('id', gids);
+        const cicById = new Map((cicRows || []).map(r => [String(r.id), r]));
+        const _slugN = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
         for (const gid of gids) {
-          const { data: sample } = await supabase
-            .from('ciclismo_results')
-            .select('gara_ciclismo_url, nome_gara, data, regione, luogo, stagione, categoria')
-            .ilike('gara_ciclismo_url', `%_${gid}_2%`)
-            .limit(1).maybeSingle();
-          if (!sample || ciclismoGaraId(sample.gara_ciclismo_url) !== gid) continue;
+          const c = cicById.get(gid);
+          if (!c || !c.data) continue;
+          const d = String(c.data).slice(0, 10).split('-');
+          const sample = { stagione: c.stagione, categoria: c.categoria, regione: c.regione, luogo: c.luogo, nome_gara: c.nome, data: c.data,
+            gara_ciclismo_url: `http://archivio.ciclismo.info/gara_archivio_${gid}_${d[0]}_${d[1]}_${d[2]}_${_slugN(c.nome)}.htm` };
           const p = missing.find(m => m.gara_id === 'CIC_' + gid);
           risultati.push({
             stagione: sample.stagione, categoria: sample.categoria, team: (p.team_name || '').toUpperCase(),
