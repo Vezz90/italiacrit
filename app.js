@@ -17612,6 +17612,16 @@ window.setAtletaResultsSort = function(mode) {
   _athSafe(_atletaGroupStageRows);
 };
 
+// Pagina team: Stagione / Carriera (la storia del club si calcola solo alla prima apertura della scheda)
+window._tmTab = function(k) {
+  const on = k === 'c' ? 'c' : 's';
+  ['s', 'c'].forEach(x => {
+    const t = document.getElementById('tm-tab-' + x), p = document.getElementById('tm-panel-' + x);
+    if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
+    if (p) p.hidden = x !== on;
+  });
+  if (on === 'c' && !window._tmClubLoaded && window._tmClubId) { window._tmClubLoaded = true; _injectTeamClubHistory(window._tmClubId); }
+};
 window._athTab = function(k) {
   const on = (k === 'c' || k === 'f') ? k : 's';
   ['s', 'c', 'f'].forEach(x => {
@@ -18507,7 +18517,7 @@ async function _injectTeamClubHistory(team_id) {
     for (let y = curYear - 1; y >= 2007; y--) idsByYear[y] = allIds;
   }
   const years = Object.keys(idsByYear).map(Number).sort((a, b) => b - a);
-  if (!years.length) return;
+  if (!years.length) { el.innerHTML = '<div class="hx-none" style="padding:10px 0">Nessuna stagione nell’archivio storico per questo club.</div>'; return; }
   el.innerHTML = '<div class="hx-none" style="padding:6px 0">Carico la storia del club…</div>';
   const rows = [];
   await Promise.all(years.map(async y => {
@@ -18550,7 +18560,7 @@ async function _injectTeamClubHistory(team_id) {
   rows.sort((a, b) => b.y - a.y);
   const host = document.getElementById('team-club-history');
   if (!host) return;
-  if (!rows.length) { host.innerHTML = ''; return; }
+  if (!rows.length) { host.innerHTML = '<div class="hx-none" style="padding:10px 0">Nessuna stagione nell’archivio storico per questo club.</div>'; return; }
   const tcs = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
   const totPts = rows.reduce((s, r) => s + r.pts, 0);
   const catLine = r => r.cats.map(c => { const v = r.tmCats[c]; return `${esc(_ciclismoCatLabel(c))}${v ? ` ${v.pos}° (${v.punti} pt)` : ''}`; }).join(' · ');
@@ -21961,8 +21971,13 @@ async function renderTeam(team_id, opts = {}) {
       </div>
     </div>
     <div id="team-lineage-bar"></div>
-    <div id="team-club-history"></div>
     <div id="team-titles"></div>
+    <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina team">
+      <button class="ath-tab" role="tab" id="tm-tab-s" aria-selected="true" aria-controls="tm-panel-s" onclick="window._tmTab('s')">Stagione</button>
+      <button class="ath-tab" role="tab" id="tm-tab-c" aria-selected="false" aria-controls="tm-panel-c" onclick="window._tmTab('c')">Carriera</button>
+    </div>
+    <div id="tm-panel-c" role="tabpanel" aria-labelledby="tm-tab-c" hidden><div id="team-club-history"></div></div>
+    <div id="tm-panel-s" role="tabpanel" aria-labelledby="tm-tab-s">
     ${profileYearRow('team', team_id, selYear)}
 
     <div id="team-native-content">
@@ -22024,7 +22039,9 @@ async function renderTeam(team_id, opts = {}) {
     </div>
     </div>
     <div id="team-ciclismo-content"></div>
+    </div>
   `);
+  window._tmClubId = team_id; window._tmClubLoaded = false;
 
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
@@ -22032,7 +22049,6 @@ async function renderTeam(team_id, opts = {}) {
   _athSafe(() => _athDecorateRows('team-results-tbody'));
   _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
-  _injectTeamClubHistory(team_id);
   if (window.Titoli) window.Titoli.mountTeam(team_id, 'team-titles', teamViewCat);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
   _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
