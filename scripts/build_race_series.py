@@ -48,6 +48,7 @@ def base_name(nome):
 
 
 def canon_tokens(base):
+    base = re.sub(r'([A-Z])(\d)', r'\1 \2', re.sub(r'(\d)([A-Z])', r'\1 \2', base))   # UNDER21 -> UNDER 21
     s = ' ' + base + ' '
     s = s.replace(' G P ', ' GRAN PREMIO ')
     toks = []
@@ -59,6 +60,50 @@ def canon_tokens(base):
 
 def key_tokens(base):
     return frozenset(t for t in canon_tokens(base) if t not in STOP and len(t) > 1)
+
+
+def lev(a, b):
+    if a == b: return 0
+    if abs(len(a) - len(b)) > 3: return 9
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def tok_eq(x, y):
+    """Stessa parola scritta in modo diverso: abbreviazione (PREF/PREFABBRICATI), refuso (PICOLA/PICCOLA), desinenza (NERVIANO/NERVIANESI)."""
+    if x == y: return True
+    m = min(len(x), len(y))
+    if m >= 3 and (x.startswith(y) or y.startswith(x)): return True
+    if m >= 5 and lev(x, y) <= (1 if m < 8 else 2): return True
+    cp = 0
+    for a, b in zip(x, y):
+        if a != b: break
+        cp += 1
+    return m >= 6 and cp >= max(5, int(0.75 * m))
+
+
+ORD = {'PRIMA', 'SECONDA', 'TERZA', 'QUARTA', 'QUINTA', 'SESTA', 'SETTIMA', 'OTTAVA', 'NONA', 'DECIMA', 'PROLOGO', 'UNICA', 'FINALE'}
+
+
+def fuzzy_name_pts(ta, tb):
+    if not ta or not tb: return 0
+    if (ta & ORD) != (tb & ORD) and (ta & ORD) and (tb & ORD): return 0      # tappe/prove con numero diverso: non e' la stessa gara
+    small, big = sorted((list(ta), list(tb)), key=len)
+    used = set(); m = 0
+    for x in small:
+        for y in big:
+            if y not in used and tok_eq(x, y):
+                used.add(y); m += 1; break
+    if m == len(small): return 2 if len(small) >= 2 else 1
+    if m >= 2 and m / len(small) >= 0.6: return 1
+    ca, cb = ''.join(sorted(ta)), ''.join(sorted(tb))
+    if lev(ca, cb) <= max(1, min(len(ca), len(cb)) // 10): return 2      # stessa dicitura scritta unita/divisa (COLORSERVICE / COLOR SERVICE)
+    return 0
 
 
 def disc(base):
@@ -199,6 +244,8 @@ def main():
                 name_pts = 2 if min(len(ta), len(tb)) >= 2 else 1
             elif len(ta & tb) / len(ta | tb) >= 0.5:
                 name_pts = 1
+        if name_pts == 0:
+            name_pts = fuzzy_name_pts(ta, tb)       # abbreviazioni, refusi e desinenze diverse
         s += name_pts
         score.last_name = name_pts
         if A['loc'] and A['loc'] == B['loc']:
@@ -253,7 +300,7 @@ def main():
                         auto_log.append({'a': a[0], 'b': b[0], 'g': g, 'band': bnd, 'score': round(sc, 1), 'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'luogo': info[a]['loc']})
                 elif sc >= 4:
                     review.append({'a': a[0], 'b': b[0], 'luogo': info[a]['loc'] or info[b]['loc'], 'g': g, 'band': bnd,
-                                   'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'sim': round(sc / 10, 2), 'score': round(sc, 1)})
+                                   'anni_a': sorted(info[a]['years']), 'anni_b': sorted(info[b]['years']), 'sim': round(sc / 10, 2), 'score': round(sc, 1), '_ka': a, '_kb': b})
     # nome "corto" con una sola parola distintiva (es. "GRAN PREMIO DEL ROSSO") + nome esteso della stessa gara ("GRAN PREMIO EZIO DEL ROSSO"):
     # il corto e' trattato come generico (legato al luogo) e non verrebbe mai fuso. Si unisce solo se le parole sono contenute,
     # il luogo coincide, le date sono vicine e i numeri d'edizione si susseguono (punteggio alto, non solo il nome).
@@ -271,13 +318,21 @@ def main():
                 uf.u(kg, kn); auto += 1
                 auto_log.append({'a': kg[0], 'b': kn[0], 'g': kg[1], 'band': kg[2], 'score': round(sc, 1), 'anni_a': sorted(info[kg]['years']), 'anni_b': sorted(info[kn]['years']), 'luogo': info[kg]['loc'], 'regola': 'nome corto + esteso'})
     review.sort(key=lambda r: -r['score'])
-    review = review[:600]
     # fusioni/separazioni manuali
     for a, b in manual.get('merge', []):
         ka = [k for k in groups if k[0] == base_name(a) and not k[3]]; kb = [k for k in groups if k[0] == base_name(b) and not k[3]]
         for x in ka:
             for y in kb:
                 if x[1] == y[1] and x[2] == y[2] and (not manual_band(a, b) or x[2] == manual_band(a, b)): uf.u(x, y)
+    # la coda di revisione non deve proporre coppie gia' unite (anche per via di altre fusioni): si tolgono solo dopo tutte le unioni
+    review = [r for r in review if uf.f(r['_ka']) != uf.f(r['_kb'])]
+    seen_pairs = set(); rv = []
+    for r in review:
+        k = (uf.f(r['_ka']), uf.f(r['_kb']))
+        if k in seen_pairs or (k[1], k[0]) in seen_pairs: continue      # stessa coppia di serie gia' proposta
+        seen_pairs.add(k)
+        rv.append({x: y for x, y in r.items() if not x.startswith('_')})
+    review = rv[:600]
     # serie
     series = collections.defaultdict(list)
     for k, lst in groups.items():
