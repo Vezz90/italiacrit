@@ -20315,16 +20315,34 @@ function _resolveHistoricalTeamId(teamName, preferId) {
   return bestScore >= 0.6 ? best : null;
 }
 
+// Anno senza nessun risultato (pillola vuota dentro la carriera): la pagina deve dirlo chiaramente, senza lasciare risultati, riepiloghi,
+// media o grafici dell'anno guardato prima.
+function _athEmptyYearView(atletaId, anno) {
+  document.querySelectorAll('#profile-year-row .year-pill').forEach(b => { const on = b.dataset.year === String(anno); b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'; b.style.color = on ? '#fff' : 'var(--text-secondary)'; });
+  const $ = id => document.getElementById(id);
+  const sl = document.querySelector('.ath-stand-lbl'); if (sl) sl.textContent = 'STAGIONE ' + anno;
+  document.querySelectorAll('.ath-standing-extra').forEach(e => { e.style.display = 'none'; });
+  const pts = $('atleta-pts-display'); if (pts) pts.style.display = 'none';
+  const lab = $('atleta-stats-italia-label'); if (lab) lab.textContent = 'RISULTATI ' + anno;
+  const bar = $('atleta-stats-italia-bar');
+  if (bar) bar.innerHTML = ['1° Posto', '2° Posto', '3° Posto', '4°-10° Posti'].map(l => `<div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">0</span><span class="athlete-stat-label">${l}</span></div>`).join('');
+  const estero = $('atleta-stats-estero'); if (estero) estero.style.display = 'none';
+  const snote = $('atleta-stats-note'); if (snote) snote.textContent = '';
+  const title = $('atleta-results-title'); if (title) title.textContent = `RISULTATI ${anno}`;
+  const note = $('atleta-ciclismo-note'); if (note) note.style.display = 'none';
+  const sort = $('atleta-sort-btns'); if (sort) sort.style.display = 'none';
+  const th = $('atleta-results-thead'); if (th) th.innerHTML = '';
+  const tb = $('atleta-results-tbody'); if (tb) tb.innerHTML = `<tr><td colspan="9" class="empty-state">Nessun risultato registrato nel ${esc(anno)}</td></tr>`;
+  const nat = $('atleta-media-nativo'); if (nat) nat.style.display = 'none';
+  const cmp = $('season-compare-inject'); if (cmp) cmp.style.display = 'none';
+  try { _renderCiclismoMedia('atleta-ciclismo-media', [], []); } catch (_) {}
+  const cc = $('atleta-ciclismo-media'); if (cc) cc.innerHTML = '';
+  const ch = $('atleta-cumul-chart-wrap'); if (ch) ch.innerHTML = '';
+}
 window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
   const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-  if (!rows.length) {
-    // anno senza risultati (pillola vuota dentro la carriera): si evidenzia e si dice chiaramente che non ci sono risultati
-    document.querySelectorAll('#profile-year-row .year-pill').forEach(b => { const on = b.dataset.year === String(anno); b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'; b.style.color = on ? '#fff' : 'var(--text-secondary)'; });
-    const tb = document.getElementById('atleta-results-tbody');
-    if (tb) tb.innerHTML = `<tr><td colspan="9" class="empty-state">Nessun risultato registrato nel ${esc(anno)}</td></tr>`;
-    return;
-  }
+  if (!rows.length) { _athEmptyYearView(atletaId, anno); return; }
   const italiaRows = rows.slice(); // solo ciclismo.info, prima del merge PCS sotto — per il riepilogo "ITALIA"
 
   // Risultati importati a mano da PCS per una di queste gare (bottone
