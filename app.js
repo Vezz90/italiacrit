@@ -20315,6 +20315,16 @@ function _resolveHistoricalTeamId(teamName, preferId) {
   return bestScore >= 0.6 ? best : null;
 }
 
+// Punti della stagione guardata: se per quell'anno non ci sono punti si mostra 0 e nessuna posizione in classifica (mai quelli della stagione in corso).
+function _athSetSeasonPoints(value) {
+  const d = document.getElementById('atleta-pts-display'); if (!d) return;
+  d.style.display = '';
+  const v = d.querySelector('.athlete-pts-value'); if (v) { v.textContent = value == null ? 0 : value; v.removeAttribute('data-base'); }
+  const l = d.querySelector('.athlete-pts-label'); if (l) l.textContent = 'PUNTI STAGIONE';
+  const dots = d.querySelectorAll('.athlete-pts-dot');
+  if (dots[1]) dots[1].style.display = 'none';
+  const rank = d.querySelector('.ath-rank-block'); if (rank) rank.style.display = 'none';
+}
 // Anno senza nessun risultato (pillola vuota dentro la carriera): la pagina deve dirlo chiaramente, senza lasciare risultati, riepiloghi,
 // media o grafici dell'anno guardato prima.
 function _athEmptyYearView(atletaId, anno) {
@@ -20322,7 +20332,8 @@ function _athEmptyYearView(atletaId, anno) {
   const $ = id => document.getElementById(id);
   const sl = document.querySelector('.ath-stand-lbl'); if (sl) sl.textContent = 'STAGIONE ' + anno;
   document.querySelectorAll('.ath-standing-extra').forEach(e => { e.style.display = 'none'; });
-  const pts = $('atleta-pts-display'); if (pts) pts.style.display = 'none';
+  _athSetSeasonPoints(0);
+  _athShowHistoricBlocks([]);   // Il momento / Ultimi risultati / Migliori: niente di un altro anno
   const lab = $('atleta-stats-italia-label'); if (lab) lab.textContent = 'RISULTATI ' + anno;
   const bar = $('atleta-stats-italia-bar');
   if (bar) bar.innerHTML = ['1° Posto', '2° Posto', '3° Posto', '4°-10° Posti'].map(l => `<div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">0</span><span class="athlete-stat-label">${l}</span></div>`).join('');
@@ -20463,8 +20474,9 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
       if (secondDot) secondDot.style.display = 'none';
       if (secondBlock) secondBlock.style.display = 'none';
     } else {
-      ptsDisplay.style.display = 'none';
+      _athSetSeasonPoints(0);
     }
+    const _rb = ptsDisplay.querySelector('.ath-rank-block'); if (_rb) _rb.style.display = 'none';
   }
 
   // Riepilogo podi — ITALIA (solo ciclismo.info) separato da ALTRI RISULTATI
@@ -20595,7 +20607,7 @@ window.setAtletaPcsYear = (atletaId, anno) => {
   const ptsDisplay = document.getElementById('atleta-pts-display');
   // barra/distacchi valgono solo per la stagione in corso
   document.querySelectorAll('.ath-standing-extra').forEach(e => { e.style.display = 'none'; });
-  if (ptsDisplay) ptsDisplay.style.display = 'none';
+  if (ptsDisplay) _athSetSeasonPoints(0);   // anni PCS: nessun punto ICS e nessuna posizione
 
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
   const label = document.getElementById('atleta-stats-italia-label');
