@@ -98,7 +98,7 @@
       count[r.gara_id] = (count[r.gara_id] || 0) + 1;
       if (!r.posizione || r.posizione > 3) continue;
       let g = map.get(r.gara_id);
-      if (!g) { g = { id: r.gara_id, nome: r.nome_gara, data: r.data, _ptsPro: r.regione === 'PRO', code: codeOf(r.gara_id), km: r.km, media: r.media, tipo: r.tipo, molt: r.moltiplicatore || 1, top: [] }; map.set(r.gara_id, g); }
+      if (!g) { g = { id: r.gara_id, nome: r.nome_gara, data: r.data, code: codeOf(r.gara_id), km: r.km, media: r.media, tipo: r.tipo, molt: r.moltiplicatore || 1, top: [] }; map.set(r.gara_id, g); }
       g.top.push(r);
     }
     const calMap = globalData.garaToCalId || {};
@@ -367,7 +367,7 @@
     const proEv0 = window.ProRaces ? await window.ProRaces.events(curYear()).catch(() => []) : [];
     const base0 = buildRaces();
     // gare femminili pro con punti (righe manuali "PRO"): in Home resta la card pro con l'arrivo completo
-    const baseRaces = base0.filter(g => !(g._ptsPro && proEv0.some(p => window._proSameRace && window._proSameRace(p.nome, p.data, g.nome, g.data))));
+    const baseRaces = base0.filter(g => !(g.top.every(r => r._manualId != null) && proEv0.some(p => window._proSameRace && window._proSameRace(p.nome, p.data, g.nome, g.data))));
     const proEv = window._proDropDuplicates ? window._proDropDuplicates(proEv0, baseRaces) : proEv0;
     if (window._proAttachCalIds) window._proAttachCalIds(proEv);
     const pro = proEv.map(e => ({ id: e.id, nome: e.nome, data: e.data, code: e._proCode, km: '', media: '', tipo: 'internazionale', molt: 1, top: e.byCategory[e._proCode].results, luogo: '', regione: '', n: 0, _pro: true, _proClasse: e._proClasse }));

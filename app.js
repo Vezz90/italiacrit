@@ -19929,7 +19929,7 @@ async function renderGaraStorica(ciclismoGaraId) {
   let _extAlbum = null;
   const _ptsMap = {};
   if (isPro) {
-    for (const x of (globalData?.resultsRaw || [])) if (x.regione === 'PRO' && x.atleta_id && window._proSameRace(x.nome_gara, x.data, payload?.race?.nome, payload?.race?.data)) _ptsMap[x.atleta_id] = x.punti_effettivi;
+    for (const x of (globalData?.resultsRaw || [])) if (x._manualId != null && x.genere === 'F' && x.atleta_id && window._proSameRace(x.nome_gara, x.data, payload?.race?.nome, payload?.race?.data)) _ptsMap[x.atleta_id] = x.punti_effettivi;
     for (const r of rows) if (!r.atleta_id && window.ProRaces) r.atleta_id = window.ProRaces.athleteId(r.nome_completo);
     if (_calId) { try { const pm = await loadRisPhotos(); _extAlbum = (_risExtPhotosMap && _risExtPhotosMap[_calId]) || pm[_calId] || null; } catch {} }
   }
@@ -29509,7 +29509,7 @@ async function renderRisultati() {
   if (!risShowMissing && window.ProRaces) {
     try { const _peAll = await window.ProRaces.events(Number(_loadedSeasonYear()));
       // gare femminili pro che danno punti (righe manuali con regione "PRO"): in elenco resta la card pro con l'arrivo completo, i punti sono nella pagina a punti
-      for (const m of Object.values(eventMap).filter(e => e.regione === 'PRO')) { if (_peAll.some(p => window._proSameRace(p.nome, p.data, m.nome, m.data))) delete eventMap[m.id]; }
+      for (const m of Object.values(eventMap).filter(e => !e._pro && Object.values(e.byCategory || {}).every(cd => (cd.results || []).length && cd.results.every(r => r._manualId != null)))) { if (_peAll.some(p => window._proSameRace(p.nome, p.data, m.nome, m.data))) delete eventMap[m.id]; }
       const _pe = window._proDropDuplicates(_peAll, Object.values(eventMap)); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
   }
 
