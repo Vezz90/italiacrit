@@ -29,10 +29,10 @@
   function grpOf(c) {
     var s = String(c || '');
     if (!s) return '';
-    if (/elite|u23|under/i.test(s)) return 'EL';
-    if (/junior/i.test(s)) return 'JU';
-    if (/allie/i.test(s)) return 'AL';
-    if (/esord/i.test(s)) return 'ES';
+    if (/elite|u23|under|^ELI_/i.test(s)) return 'EL';
+    if (/junior|^JUN_/i.test(s)) return 'JU';
+    if (/allie|^AL\d?_/i.test(s)) return 'AL';
+    if (/esord|^ES\d?_/i.test(s)) return 'ES';
     return '';
   }
   // Aggiunge a ogni riga il gruppo di categoria (indice 6). Le righe solo-PCS non hanno categoria: prendono quella dell'anno
@@ -262,7 +262,7 @@
       state.id = id; state.rows = null; state.mode = 'all'; state.cat = 'all';
       var base = (typeof API_BASE !== 'undefined') ? API_BASE : '/api';
       if (!basePromise) basePromise = fetch(base + '/forma/baseline').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
-      return Promise.all([fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma').then(function (r) { return r.ok ? r.json() : null; }), basePromise]).then(function (res) {
+      return Promise.all([fetch(base + '/atleta/' + encodeURIComponent(id) + '/forma?v=2').then(function (r) { return r.ok ? r.json() : null; }), basePromise]).then(function (res) {
         var d = res[0]; state.base = res[1];
         if (state.id !== id || !d || !enough(d.rows)) return;
         state.rows = d.rows; state.pro = d.pro || {};
