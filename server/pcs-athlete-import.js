@@ -291,6 +291,28 @@ function matchGaraId(calMap, dateStr, pcsCat, pcsName, atletaGenere) {
 // verificato dal vivo: un solo caricamento basta per tutto, dimezzando le
 // richieste rispetto a visitare separatamente /rider/{slug} e /rider/{slug}/{anno}.
 
+// PCS, per una stagione in cui il corridore non ha risultati, serve la pagina dell'ULTIMA stagione: senza controllo quei risultati venivano
+// salvati con l'anno richiesto (Di Sante: gare del 2020 salvate come 2026). L'anno vero sta nel link della gara.
+function urlYear(u) {
+  const s = String(u || '');
+  let m = s.match(/race\/[^/]+\/((?:19|20)\d{2})(?:\/|$)/);
+  if (m) return +m[1];
+  m = s.match(/race\/.+?-((?:19|20)\d{2})(?:-[a-z0-9-]+)?$/i);
+  return m ? +m[1] : null;
+}
+// Ciclocross e gare invernali: lo slug porta l'anno d'inizio stagione (gara di gennaio con anno precedente nello slug): si accetta l'anno vicino a cavallo d'anno.
+function yearMatches(r, season) {
+  const y = urlYear(r.pcs_url);
+  if (y == null || y === season) return true;
+  const mo = parseInt(String(r.data || '').slice(5, 7), 10);
+  return (y === season - 1 && mo >= 1 && mo <= 3) || (y === season + 1 && mo >= 11);
+}
+function onlyThisSeason(rows, season) {
+  const withYear = rows.filter(r => urlYear(r.pcs_url) != null);
+  if (withYear.length && withYear.every(r => !yearMatches(r, season))) return [];
+  return rows.filter(r => yearMatches(r, season));
+}
+
 async function extractProfileAndResults(page, season) {
   const info = await page.evaluate(() => {
     const h1 = document.querySelector('h1');
@@ -1181,7 +1203,8 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
       i--;
       continue;
     }
-    const { photo, socials, results, teamHistory } = extracted;
+    const { photo, socials, teamHistory } = extracted;
+    const results = onlyThisSeason(extracted.results || [], SEASON);
 
     // Anti-collisione omonimi (Juniores) — vedi commento in cima al file.
     let targetAtletaId = atletaId;
