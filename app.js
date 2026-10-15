@@ -19846,20 +19846,27 @@ function _rerenderCurrentGaraPage() {
 
 // Le gare pro (PRO_<slug>_<anno>) non hanno un id di calendario FCI, ma foto e video (xpix, caricati a mano, dirette) sono
 // salvati con quello: si collega la gara alla riga di calendario pro con la stessa data e le stesse parole del nome.
-function _proCalIdFor(nome, data, isStageOrGc) {
+function _proCalIdFor(nome, data, isStageOrGc, genere) {
   const cal = globalData?.calendar || [];
   const toks = s => [..._calNameTokens(String(s || '').replace(/\s+[–-]\s+.*$/, ''))];
   const ev = new Set(toks(nome));
   const d0 = new Date(data + 'T00:00:00');
   let best = null, bestN = 0;
   for (const c of cal) {
-    if (!_PRO_CAL_RE.test(c.categoria || '') || !c.data) continue;
+    if (!c.data) continue;
+    // stesso sesso (le gare donne si riconoscono da categoria/nome) e mai una gara giovanile omonima (es. "Piccolo Trofeo Alfredo Binda")
+    const isW = /DONNE|DONNA|WOMEN|FEMMIN/i.test(`${c.categoria || ''} ${c.nome || ''}`);
+    if (genere && (genere === 'F') !== isW) continue;
+    if (/ESORDIENT|ALLIEV|GIOVANISSIM/i.test(c.categoria || '') && !/ELITE|PRO|UCI/i.test(c.categoria || '')) continue;
     const delta = Math.round((d0 - new Date(c.data + 'T00:00:00')) / 86400000);
     if (isStageOrGc ? (delta < 0 || delta > 21) : delta !== 0) continue;
     const core = toks(c.nome);
-    if (!core.length || !core.every(w => ev.has(w))) continue;
-    if (core.length === 1 && core[0].length < 6) continue;
-    if (core.length > bestN) { best = c.id; bestN = core.length; }
+    if (!core.length || !ev.size) continue;
+    // il nome piu' corto deve stare tutto in quello piu' lungo (es. "VENETO WOMEN" / "Veneto Women", "GIRO DELL'EMILIA DONNE" / "Giro dell'Emilia Internazionale Donne Elite")
+    const [small, big] = core.length <= ev.size ? [core, ev] : [[...ev], new Set(core)];
+    if (!small.every(w => big.has(w))) continue;
+    if (small.length === 1 && small[0].length < 6) continue;
+    if (small.length > bestN) { best = c.id; bestN = small.length; }
   }
   return best;
 }
@@ -19880,7 +19887,7 @@ window._proAttachCalIds = function (events) {
   globalData.garaToCalId = globalData.garaToCalId || {};
   for (const e of events || []) {
     if (globalData.garaToCalId[e.id]) continue;
-    const id = _proCalIdFor(e.nome, e.data, / – /.test(e.nome));
+    const id = _proCalIdFor(e.nome, e.data, / – /.test(e.nome), e.genere);
     if (id) globalData.garaToCalId[e.id] = id;
   }
 };
@@ -19910,7 +19917,7 @@ async function renderGaraStorica(ciclismoGaraId) {
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];
   // gara pro: media (foto xpix/caricate, video) sotto l'id di calendario se c'e', e atleti collegati ai nostri profili dal nome
-  const _calId = isPro ? _proCalIdFor(payload?.race?.nome, payload?.race?.data, / – /.test(payload?.race?.nome || '')) : null;
+  const _calId = isPro ? _proCalIdFor(payload?.race?.nome, payload?.race?.data, / – /.test(payload?.race?.nome || ''), payload?.race?.genere) : null;
   const _mKey = _calId || garaKey;
   let _extAlbum = null;
   if (isPro) {
