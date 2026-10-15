@@ -525,7 +525,7 @@ app.get('/api/data/pro-races', async (req, res) => {
   try {
     const season = parseInt(req.query.season, 10) || new Date().getFullYear();
     const hit = _proRacesCache.get(season);
-    if (hit && Date.now() - hit.ts < 20 * 60 * 1000) { res.set('Cache-Control', 'public, max-age=300'); return res.json(hit.data); }
+    if (hit && Date.now() - hit.ts < 5 * 60 * 1000) { res.set("Cache-Control", "public, max-age=120"); return res.json(hit.data); }
     if (!supabase) return res.json({ races: [] });
     const { data: races, error } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, circuit, parent_slug, stage_no, stage_route, is_gc')
       .eq('season', season).not('winner_name', 'is', null).order('data_end', { ascending: false }).limit(400);
