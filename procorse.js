@@ -35,6 +35,6 @@
   window.ProRaces = {
     athleteId: athleteId,
     events: function (season) { return load(season).then(function (rs) { return rs.map(toEvent); }); },
-    label: function (classe) { return /WWT/.test(classe) ? "Women's WorldTour" : /UWT/.test(classe) ? 'WorldTour' : 'ProSeries'; }
+    label: function (classe) { return /WWT/.test(classe) ? "Women's WorldTour" : /UWT/.test(classe) ? 'WorldTour' : /Pro/i.test(classe) ? 'ProSeries' : 'UCI ' + classe; }
   };
 })();

@@ -75,7 +75,9 @@
     })();
     return mediaPromise;
   }
-  function racePhotos(media, gid) {
+  function racePhotos(media, gid0) {
+    // gare pro (PRO_...): foto e video stanno sotto l'id della riga di calendario collegata (vedi _proAttachCalIds)
+    const gid = (globalData.garaToCalId || {})[gid0] && String(gid0).startsWith('PRO_') ? globalData.garaToCalId[gid0] : gid0;
     const out = [];
     for (const p of (media.up.get(gid) || [])) out.push(p.url);
     const ns = noSuffix(gid);
@@ -86,7 +88,7 @@
     return out;
   }
   function raceVideos(gid) {
-    const v = (globalData.videos || {})[toCalId(gid)];
+    const v = (globalData.videos || {})[String(gid).startsWith('PRO_') && (globalData.garaToCalId || {})[gid] ? globalData.garaToCalId[gid] : toCalId(gid)];
     return Array.isArray(v) ? v.length : 0;
   }
 
