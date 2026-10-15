@@ -19844,6 +19844,35 @@ function _rerenderCurrentGaraPage() {
   return renderGara(id);
 }
 
+// Le gare pro (PRO_<slug>_<anno>) non hanno un id di calendario FCI, ma foto e video (xpix, caricati a mano, dirette) sono
+// salvati con quello: si collega la gara alla riga di calendario pro con la stessa data e le stesse parole del nome.
+function _proCalIdFor(nome, data, isStageOrGc) {
+  const cal = globalData?.calendar || [];
+  const toks = s => [..._calNameTokens(String(s || '').replace(/\s+[–-]\s+.*$/, ''))];
+  const ev = new Set(toks(nome));
+  const d0 = new Date(data + 'T00:00:00');
+  let best = null, bestN = 0;
+  for (const c of cal) {
+    if (!_PRO_CAL_RE.test(c.categoria || '') || !c.data) continue;
+    const delta = Math.round((d0 - new Date(c.data + 'T00:00:00')) / 86400000);
+    if (isStageOrGc ? (delta < 0 || delta > 21) : delta !== 0) continue;
+    const core = toks(c.nome);
+    if (!core.length || !core.every(w => ev.has(w))) continue;
+    if (core.length === 1 && core[0].length < 6) continue;
+    if (core.length > bestN) { best = c.id; bestN = core.length; }
+  }
+  return best;
+}
+window._proAttachCalIds = function (events) {
+  if (!globalData) return;
+  globalData.garaToCalId = globalData.garaToCalId || {};
+  for (const e of events || []) {
+    if (globalData.garaToCalId[e.id]) continue;
+    const id = _proCalIdFor(e.nome, e.data, / – /.test(e.nome));
+    if (id) globalData.garaToCalId[e.id] = id;
+  }
+};
+
 async function renderGaraStorica(ciclismoGaraId) {
   // Gare professionistiche in Italia (id PRO_<slug>_<anno>, dati PCS, senza punti): stessa pagina, altra sorgente dati
   const isPro = String(ciclismoGaraId).startsWith('PRO_');
@@ -19868,6 +19897,14 @@ async function renderGaraStorica(ciclismoGaraId) {
   const rows = payload?.risultati || [];
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];
+  // gara pro: media (foto xpix/caricate, video) sotto l'id di calendario se c'e', e atleti collegati ai nostri profili dal nome
+  const _calId = isPro ? _proCalIdFor(payload?.race?.nome, payload?.race?.data, / – /.test(payload?.race?.nome || '')) : null;
+  const _mKey = _calId || garaKey;
+  let _extAlbum = null;
+  if (isPro) {
+    for (const r of rows) if (!r.atleta_id && window.ProRaces) r.atleta_id = window.ProRaces.athleteId(r.nome_completo);
+    if (_calId) { try { const pm = await loadRisPhotos(); _extAlbum = (_risExtPhotosMap && _risExtPhotosMap[_calId]) || pm[_calId] || null; } catch {} }
+  }
   // Esposto per il tag picker di foto/video (vedi _rpBindRiderSearch): i
   // partecipanti di una gara storica ciclismo.info non sono quasi mai in
   // globalData.athletes (bulk della SOLA stagione nativa caricata), quindi
@@ -19915,7 +19952,7 @@ async function renderGaraStorica(ciclismoGaraId) {
   // usano una tabella diversa e non hanno ancora il tag).
   let uploadedPhotos = [];
   try {
-    const upRes = await apiCall(`/race-photos/${encodeURIComponent(garaKey)}`);
+    const upRes = await apiCall(`/race-photos/${encodeURIComponent(_mKey)}`);
     uploadedPhotos = upRes?.photos || [];
   } catch { /* nessuna foto caricata, non bloccare */ }
 
@@ -19969,7 +20006,7 @@ async function renderGaraStorica(ciclismoGaraId) {
   // dal vivo: "ho caricato il video ma non si vede"). Chiave sempre unica
   // (garaKey), niente lookup multi-chiave per categoria/annata esordienti
   // (quello serve solo alle gare native con più categorie sullo stesso id).
-  const garaVideos = (globalData?.videos && globalData.videos[garaKey]) || [];
+  const garaVideos = (globalData?.videos && (globalData.videos[_mKey] || globalData.videos[garaKey])) || [];
   const _vClickStorico = (v) => {
     const k = videoKind(v.url);
     const t = esc((v.title || '').replace(/'/g, "\\'"));
@@ -19986,8 +20023,8 @@ async function renderGaraStorica(ciclismoGaraId) {
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
   };
   const _vAdminBtns = (i) => _isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-    <button onclick="event.stopPropagation();window.adminEditVideo('${esc(garaKey)}',${i},${!!garaVideos[i]?.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
-    <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(garaKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
+    <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_mKey)}',${i},${!!garaVideos[i]?.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
+    <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_mKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
   </div>` : '';
   const _buildVideoElStorico = (v, i, cls = 'gara-media-half gara-media-video') => `<div class="${cls}" onclick="${_vClickStorico(v)}">
     ${_vThumbStorico(v)}
@@ -20008,10 +20045,14 @@ async function renderGaraStorica(ciclismoGaraId) {
   const scrapedForGrid = mediaList.map(m => ({
     src: mediaUrl(m.photo_url), posizione: m.posizione, credit: '', photoId: null, atletaIds: '',
   }));
-  const allPhotos = [...uploadedForGrid, ...scrapedForGrid];
+  // album esterno (xpix / ciclismo.info) collegato dall'id di calendario
+  const extForGrid = _extAlbum ? (Array.isArray(_extAlbum.photos) && _extAlbum.photos.length ? _extAlbum.photos : [_extAlbum.url]).filter(Boolean).slice(0, 60).map(u => ({
+    src: icProxy(u), posizione: null, credit: /xpix/i.test(String(u)) ? 'xpix.it' : (_extAlbum.photographer || ''), photoId: null, atletaIds: '',
+  })) : [];
+  const allPhotos = [...uploadedForGrid, ...scrapedForGrid, ...extForGrid];
   const [heroPhotoObj, ...restPhotoObjs] = allPhotos;
   const _photoClick = p => p.photoId
-    ? `window.openPhotoLightbox('${esc(p.src)}',{photoId:${p.photoId},garaId:'${esc(garaKey)}',current:'${esc(p.atletaIds)}',credit:'${esc(p.credit.replace(/'/g, ''))}'})`
+    ? `window.openPhotoLightbox('${esc(p.src)}',{photoId:${p.photoId},garaId:'${esc(_mKey)}',current:'${esc(p.atletaIds)}',credit:'${esc(p.credit.replace(/'/g, ''))}'})`
     : `openPhotoLightbox('${esc(p.src)}')`;
   const _heroPhotoEl = heroPhotoObj ? `<div class="gara-media-half gara-media-photo" style="cursor:zoom-in;position:relative" onclick="${_photoClick(heroPhotoObj)}">
     <img id="gara-hero-img" src="${esc(heroPhotoObj.src)}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
@@ -20062,10 +20103,10 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>` : '';
 
   const uploadBtnHtml = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(_mKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
     : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
   const addVideoBtnHtml = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(garaKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(_mKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
     : '';
   const mediaSectionHtml = (_heroMedia || _gallery || extraVideosHtml || uploadBtnHtml || addVideoBtnHtml) ? `
     <div class="comp-section" style="margin-top:16px">
@@ -20077,7 +20118,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       ${_gallery}
       ${extraVideosHtml}
     </div>` : '';
-  const adminBtnsHtml = (_isAdmin && !isPro) ? `
+  const adminBtnsHtml = (_isAdmin && isPro) ? adminEditBtn('gara', garaKey) : (_isAdmin && !isPro) ? `
       ${adminEditBtn('gara', garaKey)}
       <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(garaKey)}')">⬇ Importa PCS</button>
       <button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(garaKey)}')">↺ Rimatch Atleti PCS</button>
@@ -29438,7 +29479,7 @@ async function renderRisultati() {
 
   // Gare professionistiche in Italia (WorldTour/ProSeries da PCS, senza punti): stesse card delle altre, alla loro data
   if (!risShowMissing && window.ProRaces) {
-    try { for (const ev of await window.ProRaces.events(Number(_loadedSeasonYear()))) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
+    try { const _pe = await window.ProRaces.events(Number(_loadedSeasonYear())); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
   }
 
   let races = risShowMissing
