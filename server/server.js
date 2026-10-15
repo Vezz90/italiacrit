@@ -577,7 +577,8 @@ app.get('/api/data/pro-race/:id', async (req, res) => {
     res.set('Cache-Control', 'public, max-age=300');
     res.json({
       race: { id: ev.id, nome: r.nome, data: ev.data, classe: r.classe, genere: ev.genere, parent: r.parent_slug ? `PRO_${r.parent_slug}_${season}` : null, route: r.stage_route },
-      risultati: _proDedupe(rows).map(x => ({ ...x, categoria: ev.genere === 'F' ? 'PRO_F' : 'PRO_M', data: ev.data, nome_gara: r.nome, regione: '', luogo: r.stage_route || '' })),
+      risultati: _proDedupe(rows).map(x => ({ ...x, distacco: /^\d{1,3}\.\d{1,3}$/.test(String(x.distacco || '')) ? null : x.distacco,   // a volte PCS importato come "distacco" la velocita' media (cronometro)
+       categoria: ev.genere === 'F' ? 'PRO_F' : 'PRO_M', data: ev.data, nome_gara: r.nome, regione: '', luogo: r.stage_route || '' })),
       media: [],
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
