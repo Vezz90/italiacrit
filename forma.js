@@ -37,6 +37,8 @@
   }
   // Aggiunge a ogni riga il gruppo di categoria (indice 6). Le righe solo-PCS non hanno categoria: prendono quella dell'anno
   // (la piu' frequente tra le righe con categoria); se l'anno non ne ha, quella dell'anno vicino piu' prossimo.
+  // il nome gara PCS porta la categoria ("World Championships WJ - Road Race"): MJ/WJ = Juniores, MU/WU = Under 23
+  function grpFromName(n) { var s = String(n || ''); if (/\b[MW]J\b/.test(s)) return 'JU'; if (/\b[MW]U\b/.test(s)) return 'EL'; return ''; }
   function withGroups(rows) {
     var cnt = {}, pro = state.pro || {};
     rows.forEach(function (x) {
@@ -53,7 +55,7 @@
       return g;
     }
     // anni in squadra WorldTour/ProTeam: le righe PCS (senza categoria) sono da professionista; nel passaggio da under 23 le righe con categoria restano Elite/U23
-    return rows.map(function (x) { var yy = +x[0].slice(0, 4); return x.slice(0, 6).concat([grpOf(x[2]) || (pro[yy] ? 'PR' : near(yy))]); });
+    return rows.map(function (x) { var yy = +x[0].slice(0, 4); return x.slice(0, 6).concat([grpOf(x[2]) || (x[4] === 'P' ? grpFromName(x[3]) : '') || (pro[yy] ? 'PR' : near(yy))]); });
   }
   // Testo della "forma di adesso": percentuale se il confronto ha una base solida, altrimenti differenza in punti (le percentuali su pochi punti ingannano)
   function formaTxt(a) {

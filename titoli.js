@@ -83,10 +83,39 @@
     return list.filter(t => { const k = `${t.y}|${t.kind}|${t.aid}|${String(t.prova || '')}|${t.medal ? t.pos : ''}|${t.reg}|${t.gid || ''}`; if (seen.has(k)) return false; seen.add(k); return true; });
   }
 
+  // Anni passati dei professionisti (e di chi non e' nell'archivio ciclismo.info): titoli italiani e medaglie Europei/Mondiali dai risultati PCS.
+  // Il nome gara PCS porta tutto: "National Championships Italy WE - ITT (NC)", "World Championships ME - Road Race (WC)", "... (CC)".
+  const CAT_OF = { ME: 'ELI_M', MU: 'ELI_M', MJ: 'JUN_M', WE: 'ELI_F', WU: 'ELI_F', WJ: 'JUN_F' };
+  const pcsCache = {};
+  async function pcsTitles(id) {
+    if (!pcsCache[id]) pcsCache[id] = apiCall('/pcs-results/atleta/' + encodeURIComponent(id)).catch(() => []);
+    const rows = await pcsCache[id], cur = typeof _loadedSeasonYear === 'function' ? +_loadedSeasonYear() : new Date().getFullYear();
+    const g = globalData && globalData.athletes && globalData.athletes[id];
+    const out = [];
+    for (const r of (Array.isArray(rows) ? rows : [])) {
+      const name = String(r.gara_name || ''), pos = +r.posizione, y = +String(r.data || r.season || '').slice(0, 4);
+      if (!pos || pos > 3 || !y || y >= cur || /TTT|team|relay|mixed|staffett/i.test(name)) continue;
+      const cm = name.match(/\b([MW][EUJ])\b/), code = cm ? CAT_OF[cm[1]] : '';
+      const prova = /\bITT\b|time trial|cronometro/i.test(name) ? 'CRONOMETRO' : 'STRADA';
+      let kind = null;
+      if (/\(NC\)/.test(name) && /Italy/i.test(name)) { if (pos !== 1) continue; kind = 'it'; }
+      else if (/\(WC\)/.test(name) && /World Championships/i.test(name)) kind = 'wc';
+      else if (/\(CC\)/.test(name) && /Europe/i.test(name)) kind = 'eu';
+      if (!kind) continue;
+      out.push({ y, kind, cat: null, catCode: code, reg: '', aid: id, n: g ? `${g.cognome || ''} ${g.nome || ''}`.trim() : '', team: '', gid: '', gara: name.replace(/\s*\((?:NC|WC|CC)\)\s*$/, ''), pos, prova, pcs: true, medal: kind !== 'it' });
+    }
+    return out;
+  }
+
   async function athleteTitles(id) {
     await load();
     const extra = (window._athExtraTitles && window._athExtraTitles[id]) || [];
-    return uniq([...nativeFor(id), ...extra, ...(byAth[athKey(id)] || [])]);
+    const base = uniq([...nativeFor(id), ...extra, ...(byAth[athKey(id)] || [])]);
+    // dai risultati PCS solo cio' che l'archivio non ha gia' (stesso anno, tipo, prova e posizione)
+    const have = new Set(base.map(t => `${t.y}|${t.kind}|${provaKey(t)}|${t.medal ? t.pos : 1}|${t.catCode || ''}`));
+    const have2 = new Set(base.map(t => `${t.y}|${t.kind}|${provaKey(t)}|${t.medal ? t.pos : 1}`));
+    const fromPcs = (await pcsTitles(id)).filter(t => !have2.has(`${t.y}|${t.kind}|${provaKey(t)}|${t.medal ? t.pos : 1}`) && !have.has(`${t.y}|${t.kind}|${provaKey(t)}|${t.medal ? t.pos : 1}|${t.catCode || ''}`));
+    return uniq([...base, ...fromPcs]);
   }
   async function teamTitles(teamId) {
     await load();

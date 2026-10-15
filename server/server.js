@@ -492,6 +492,8 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
     ]);
     const pro = {};   // anni in cui corre in una squadra professionistica (WorldTour / ProTeam): le righe solo-PCS di quegli anni sono 'Professionisti'
     for (const t of (th.data || [])) if (t.tier === 'WT' || t.tier === 'PRT') pro[t.season] = 1;
+    // senza storico squadre: un anno con gare di classe UWT / WWT / Pro / HC e' un anno da professionista
+    for (const p of (pcs.data || [])) if (/\((?:[12]\.)?(?:UWT|WWT|Pro|HC)\)/.test(String(p.gara_name || ''))) pro[String(p.data).slice(0, 4)] = 1;
     const items = (ic.data || []).map(r => ({ r: [r.data, r.posizione, r.categoria || '', String(r.nome_gara || '').slice(0, 48), 'I', ''] }));
     const lastIc = items.length ? items[items.length - 1].r[0] : '2000-01-01';
     // stagione in corso (e ultime gare non ancora nello storico) dal file risultati FCI

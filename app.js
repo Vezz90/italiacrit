@@ -19214,8 +19214,8 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   // prima dei risultati — indipendente da quale anno è selezionato.
   const bdEl = document.getElementById('atleta-birthdate-full');
   if (bdEl && payload?.data_nascita) bdEl.textContent = payload.data_nascita;
-  if (!risultati.length) return;
-  try {
+  // senza risultati ciclismo.info (es. un professionista) si va avanti lo stesso: gli anni PCS devono comparire tra le pillole
+  if (risultati.length) try {
     const _by = (window._athBirthYearOv || {})[atletaId] || _athBirthYear(payload?.data_nascita);
     window._athCatPath[atletaId] = athleteCategoryPath(risultati, _loadedSeasonYear(), athleteHomeCat(atletaId), _by);
   } catch (_) {}
