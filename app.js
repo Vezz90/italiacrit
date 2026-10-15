@@ -19278,8 +19278,12 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const emptyYears = new Set();
   {
     const known = new Set([...nativeYears, ...allExtraYears].map(Number).filter(Boolean));
-    if (known.size) {
-      const lo = Math.min(...known), hi = Math.max(...known);
+    // l'intervallo va dal primo all'ULTIMO anno con risultati veri (ciclismo.info, PCS, ICS): la pillola della stagione in corso
+    // non allunga la carriera se l'atleta non ha niente nell'anno in corso
+    const real = new Set([...Object.keys(perAnno), ...Object.keys(pcsPerAnno)].map(Number).filter(Boolean));
+    if (nativeCount > 0) [...nativeYears].map(Number).filter(Boolean).forEach(y => real.add(y));
+    if (real.size) {
+      const lo = Math.min(...real), hi = Math.max(...real);
       for (let y = lo; y <= hi; y++) if (!known.has(y)) emptyYears.add(String(y));
       allExtraYears = [...new Set([...allExtraYears.map(String), ...emptyYears])].sort((a, b) => b - a);
     }

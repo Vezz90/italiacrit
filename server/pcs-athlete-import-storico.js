@@ -240,7 +240,7 @@ async function extractProfileAndResults(page, season) {
     return out;
   }).catch(() => []);
 
-  const results = await extractResultsOnly(page, season);
+  const results = onlyThisSeason(await extractResultsOnly(page, season), season);
 
   return { photo, socials, birthYear, teamHistory, results };
 }
@@ -250,6 +250,29 @@ async function extractProfileAndResults(page, season) {
 // stagioni professionistiche (la storia squadra dà tutti gli anni in un
 // colpo solo, ma i risultati riga-per-riga sono solo quelli della singola
 // pagina/anno visitato, serve una visita per anno).
+// PCS, per un anno in cui il corridore non ha risultati, serve la pagina dell'ULTIMA stagione: senza controllo quei risultati venivano
+// salvati con l'anno richiesto (Branchini: 12 righe del 2026 copiate su 2018-2025). L'anno vero sta nel link della gara.
+function urlYear(u) {
+  const s = String(u || '');
+  let m = s.match(/race\/[^/]+\/((?:19|20)\d{2})(?:\/|$)/);
+  if (m) return +m[1];
+  m = s.match(/race\/.+?-((?:19|20)\d{2})(?:-[a-z0-9-]+)?$/i);
+  return m ? +m[1] : null;
+}
+// Ciclocross e gare invernali: lo slug porta l'anno d'inizio della stagione (es. ...-2025 per una gara di gennaio 2026), quindi si accetta
+// anche l'anno vicino quando la data cade a cavallo (gen-mar con anno-1, nov-dic con anno+1).
+function yearMatches(r, season) {
+  const y = urlYear(r.pcs_url);
+  if (y == null || y === season) return true;
+  const mo = parseInt(String(r.data || '').slice(5, 7), 10);
+  return (y === season - 1 && mo >= 1 && mo <= 3) || (y === season + 1 && mo >= 11);
+}
+function onlyThisSeason(rows, season) {
+  const withYear = rows.filter(r => urlYear(r.pcs_url) != null);
+  if (withYear.length && withYear.every(r => !yearMatches(r, season))) return [];      // pagina di un'altra stagione: nessun risultato per questo anno
+  return rows.filter(r => yearMatches(r, season));
+}
+
 async function extractResultsOnly(page, season) {
   return page.evaluate((season) => {
     const rows = [];
@@ -739,7 +762,7 @@ async function loadAtletiStorici(sb) {
       const navY = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}/${y}`, { onLog: msg => process.stdout.write('\n' + msg) });
       if (!navY.ok) continue;
       let yearResults;
-      try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
+      try { yearResults = onlyThisSeason(await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'), y); }
       catch { continue; }
       if (yearResults.length) {
         const rowsY = yearResults.map(r => ({ atleta_id: targetAtletaId, pcs_slug: slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));

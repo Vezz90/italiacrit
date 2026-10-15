@@ -45,6 +45,29 @@ const ONLY_IDS = new Set(String((args.find(a => a.startsWith('--atleta-id=')) ||
 // pcs-athlete-import-storico.js (extractResultsOnly) — duplicata qui
 // apposta, per non dover esportare nulla dallo script principale e non
 // rischiare di alterarne il comportamento.
+// PCS, per un anno in cui il corridore non ha risultati, serve la pagina dell'ULTIMA stagione: senza controllo quei risultati venivano
+// salvati con l'anno richiesto (Branchini: 12 righe del 2026 copiate su 2018-2025). L'anno vero sta nel link della gara.
+function urlYear(u) {
+  const s = String(u || '');
+  let m = s.match(/race\/[^/]+\/((?:19|20)\d{2})(?:\/|$)/);
+  if (m) return +m[1];
+  m = s.match(/race\/.+?-((?:19|20)\d{2})(?:-[a-z0-9-]+)?$/i);
+  return m ? +m[1] : null;
+}
+// Ciclocross e gare invernali: lo slug porta l'anno d'inizio della stagione (es. ...-2025 per una gara di gennaio 2026), quindi si accetta
+// anche l'anno vicino quando la data cade a cavallo (gen-mar con anno-1, nov-dic con anno+1).
+function yearMatches(r, season) {
+  const y = urlYear(r.pcs_url);
+  if (y == null || y === season) return true;
+  const mo = parseInt(String(r.data || '').slice(5, 7), 10);
+  return (y === season - 1 && mo >= 1 && mo <= 3) || (y === season + 1 && mo >= 11);
+}
+function onlyThisSeason(rows, season) {
+  const withYear = rows.filter(r => urlYear(r.pcs_url) != null);
+  if (withYear.length && withYear.every(r => !yearMatches(r, season))) return [];      // pagina di un'altra stagione: nessun risultato per questo anno
+  return rows.filter(r => yearMatches(r, season));
+}
+
 async function extractResultsOnly(page, season) {
   return page.evaluate((season) => {
     const rows = [];
@@ -277,7 +300,7 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
         prog.yearsDone++;
         if (!nav.ok) { if (nav.notFound) { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; } else { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; } continue; }
         let yearResults;
-        try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
+        try { yearResults = onlyThisSeason(await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'), y); }
         catch { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; continue; }
         if (yearResults.length) {
           const rows = yearResults.map(r => ({ atleta_id: g.atletaId, pcs_slug: g.slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country || null }));
