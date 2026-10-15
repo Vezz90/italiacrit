@@ -516,10 +516,24 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
 // Gare professionistiche in Italia (WorldTour / ProSeries, da PCS) — niente punti ICS, compaiono in Risultati/Home come le altre gare.
 // Vedi server/pcs-pro-italy-import.js. Id pubblico: PRO_<slug>_<stagione>. Le corse a tappe hanno una voce per tappa + la classifica generale.
 const _proRacesCache = new Map();
+// Lo stesso arrivo puo' stare in pcs_race_full_results due volte (importatore delle gare "extra" + importatore pro, con maiuscole diverse):
+// un corridore compare una volta sola per gara. Si tiene la riga con posizione e, a parita', quella col cognome in maiuscolo (importatore pro).
+const _proNorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+const _proDedupe = rows => {
+  const best = new Map();
+  for (const r of rows) {
+    const k = _proNorm(r.nome_completo);
+    const score = (r.posizione ? 2 : 0) + (/^\S*[A-ZÀ-Ý]{2,}/.test(String(r.nome_completo || '').split(' ')[0]) && String(r.nome_completo).split(' ')[0] === String(r.nome_completo).split(' ')[0].toUpperCase() ? 1 : 0);
+    const cur = best.get(k);
+    if (!cur || score > cur.score) best.set(k, { score, r });
+  }
+  return [...best.values()].map(x => x.r).sort((a, b) => (a.posizione || 9999) - (b.posizione || 9999));
+};
+const _proFemale = c => c === 24 || c === 16;
 const _proEvent = (r, pod) => ({
   id: `PRO_${r.pcs_race_slug}_${r.season}`, nome: r.nome, data: (r.is_gc ? r.data_end : r.data_start), classe: r.classe,
-  genere: r.circuit === 24 ? 'F' : 'M', parent: r.parent_slug || null, stage_no: r.stage_no || null, route: r.stage_route || null, is_gc: !!r.is_gc,
-  top3: (pod || []).sort((a, b) => a.posizione - b.posizione).slice(0, 3).map(p => ({ posizione: p.posizione, nome_completo: p.nome_completo, team: p.team, country: p.country, atleta_id: p.atleta_id, distacco: p.distacco })),
+  genere: _proFemale(r.circuit) ? 'F' : 'M', parent: r.parent_slug || null, stage_no: r.stage_no || null, route: r.stage_route || null, is_gc: !!r.is_gc,
+  top3: _proDedupe(pod || []).filter(p => p.posizione).slice(0, 3).map(p => ({ posizione: p.posizione, nome_completo: p.nome_completo, team: p.team, country: p.country, atleta_id: p.atleta_id, distacco: p.distacco })),
 });
 app.get('/api/data/pro-races', async (req, res) => {
   try {
@@ -533,7 +547,7 @@ app.get('/api/data/pro-races', async (req, res) => {
     const pod = [];
     for (let i = 0; i < races.length; i += 40) {
       const r2 = await supabase.from('pcs_race_full_results').select('pcs_race_slug, posizione, atleta_id, nome_completo, team, country, distacco')
-        .eq('season', season).in('pcs_race_slug', races.slice(i, i + 40).map(r => r.pcs_race_slug)).lte('posizione', 3).limit(1000);
+        .eq('season', season).in('pcs_race_slug', races.slice(i, i + 40).map(r => r.pcs_race_slug)).lte('posizione', 12).limit(3000);
       if (r2.error) throw r2.error;
       pod.push(...(r2.data || []));
     }
@@ -563,7 +577,7 @@ app.get('/api/data/pro-race/:id', async (req, res) => {
     res.set('Cache-Control', 'public, max-age=300');
     res.json({
       race: { id: ev.id, nome: r.nome, data: ev.data, classe: r.classe, genere: ev.genere, parent: r.parent_slug ? `PRO_${r.parent_slug}_${season}` : null, route: r.stage_route },
-      risultati: rows.map(x => ({ ...x, categoria: ev.genere === 'F' ? 'PRO_F' : 'PRO_M', data: ev.data, nome_gara: r.nome, regione: '', luogo: r.stage_route || '' })),
+      risultati: _proDedupe(rows).map(x => ({ ...x, categoria: ev.genere === 'F' ? 'PRO_F' : 'PRO_M', data: ev.data, nome_gara: r.nome, regione: '', luogo: r.stage_route || '' })),
       media: [],
     });
   } catch (e) { res.status(500).json({ error: e.message }); }

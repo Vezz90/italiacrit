@@ -30,8 +30,11 @@ const SEASONS = (argv('season') || String(new Date().getFullYear())).split(',').
 const STAGES = args.includes('--stages');   // rivisita anche le gare finite per importarne le tappe
 const FORCE = args.includes('--force'), DRY = args.includes('--dry-run');
 const LIMIT = parseInt(argv('limit') || '', 10) || Infinity;
-// 1 = UCI WorldTour, 24 = Women's WorldTour, 26 = ProSeries
-const CIRCUITS = [1, 24, 26];
+// 1 = UCI WorldTour, 24 = Women's WorldTour, 26 = ProSeries, 16 = Women Elite, 13 = Europe Tour. Del 13 e del 16 solo le classi da 1.1 in su
+// (le 1.2/2.2/U23 sono le gare con punti ICS gia' nel circuito FCI). Le donne vanno elaborate prima del 13 per non scambiare una gara per maschile.
+const CIRCUITS = [1, 24, 16, 26, 13];
+const FEMALE_CIRCUITS = new Set([24, 16]);
+const CLASS_OK = /UWT|WWT|Pro|^[12]\.1$|^[12]\.HC$/i;
 
 function parseCalendar(html, season, circuit) {
   const $ = cheerio.load(html), out = [];
@@ -44,13 +47,15 @@ function parseCalendar(html, season, circuit) {
     const href = (a.attr('href') || '').trim();
     const m = href.match(/^race\/(.+?)-(\d{4})(?:-.*)?$/);
     if (!m) return;
+    const classe = $(tds[4]).text().trim();
+    if (!CLASS_OK.test(classe)) return;
     const dm = $(tds[0]).text().match(/(\d{2})\.(\d{2})(?:\s*-\s*(\d{2})\.(\d{2}))?/);
     if (!dm) return;
     const start = `${season}-${dm[2]}-${dm[1]}`, end = dm[3] ? `${season}-${dm[4]}-${dm[3]}` : start;
     const w = $(tds[3]).find('a').first();
     out.push({
       pcs_race_slug: m[1], season: +m[2], nome: a.text().replace(/\s+/g, ' ').trim(), data_start: start, data_end: end,
-      classe: $(tds[4]).text().trim(), circuit, country: 'it', pcs_url: href,
+      classe, circuit, country: 'it', pcs_url: href,
       winner_name: w.text().replace(/\s+/g, ' ').trim() || null, winner_slug: (w.attr('href') || '').replace(/^rider\//, '') || null,
     });
   });
@@ -72,7 +77,7 @@ function parseResults(html) {
     rows.push({
       posizione: parseInt(posText, 10), pcs_slug: (a.attr('href') || '').replace(/^rider\//, ''), nome_completo: nome,
       team: (teamA.length ? teamA.text() : $tr.find('td.cu600').first().text()).trim() || null, country: flag || null,
-      distacco: ($tr.find('td.time').first().text() || $tr.find('td.ar').not(':has(a)').last().text()).replace(/\s+/g, ' ').trim() || null,
+      distacco: (() => { const s = ($tr.find('td.time').first().text() || $tr.find('td.ar').not(':has(a)').last().text()).replace(/\s+/g, ' ').trim(); const m = s.match(/^(.+?)\1$/); return (m ? m[1] : s) || null; })(),
     });
   });
   return rows;
@@ -116,7 +121,7 @@ function parseResults(html) {
     for (const season of SEASONS) for (const c of CIRCUITS) {
       const nav = await go(`https://www.procyclingstats.com/races.php?year=${season}&circuit=${c}&class=&filter=Filter`, 'table');
       if (!nav.ok) { console.log(`calendario ${season} circuito ${c}: non letto`, JSON.stringify(nav)); continue; }
-      races.push(...parseCalendar(await page.content(), season, c));
+      for (const x of parseCalendar(await page.content(), season, c)) if (!races.some(y => y.pcs_race_slug === x.pcs_race_slug && y.season === x.season)) races.push(x);
       await humanDelay(c);
     }
     console.log(`${races.length} gare in Italia nei circuiti pro:`);

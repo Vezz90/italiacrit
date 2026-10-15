@@ -19863,6 +19863,18 @@ function _proCalIdFor(nome, data, isStageOrGc) {
   }
   return best;
 }
+// Una gara pro che abbiamo gia' tra i risultati FCI (stessa data, stesse parole del nome) non va duplicata: resta quella con i punti.
+window._proDropDuplicates = function (proEvents, existing) {
+  const toks = s => [..._calNameTokens(String(s || '').replace(/\s+[–-]\s+.*$/, ''))];
+  const byDate = {};
+  for (const e of existing || []) { if (e && e.data && e.nome) (byDate[e.data] = byDate[e.data] || []).push(new Set(toks(e.nome))); }
+  return (proEvents || []).filter(p => {
+    const mine = toks(p.nome);
+    if (!mine.length) return true;
+    const sameDay = byDate[p.data] || [];
+    return !sameDay.some(s => { const hit = mine.filter(w => s.has(w)).length; return hit >= Math.min(2, mine.length); });
+  });
+};
 window._proAttachCalIds = function (events) {
   if (!globalData) return;
   globalData.garaToCalId = globalData.garaToCalId || {};
@@ -29479,7 +29491,7 @@ async function renderRisultati() {
 
   // Gare professionistiche in Italia (WorldTour/ProSeries da PCS, senza punti): stesse card delle altre, alla loro data
   if (!risShowMissing && window.ProRaces) {
-    try { const _pe = await window.ProRaces.events(Number(_loadedSeasonYear())); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
+    try { const _pe = window._proDropDuplicates(await window.ProRaces.events(Number(_loadedSeasonYear())), Object.values(eventMap)); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
   }
 
   let races = risShowMissing
