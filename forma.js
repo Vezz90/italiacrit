@@ -65,7 +65,8 @@
     return { t: (d >= 0 ? '+' : '') + d + (Math.abs(d) === 1 ? ' punto' : ' punti'), cls: d >= 0 ? 'fm-up' : 'fm-down' };
   }
 
-  function analyze(all, mode) {
+  // onlyActive: con una categoria scelta le medie contano solo gli anni in cui ha corso in quella categoria (gli anni vuoti in mezzo non diluiscono)
+  function analyze(all, mode, onlyActive) {
     var TODAY = new Date(), Y0 = TODAY.getFullYear(), M0 = TODAY.getMonth();
     var rows = all.filter(function (x) { return mode === 'all' || x[4] !== 'P'; });
     if (!rows.length) return null;
@@ -85,7 +86,8 @@
     });
     var ys = Object.keys(years).map(Number).sort(function (a, b) { return a - b; });
     var first = ys[0], last = ys[ys.length - 1];
-    var ey = []; for (var y2 = first; y2 <= Math.max(last, Y0); y2++) ey.push(y2);
+    var ey = [];
+    if (onlyActive) ey = ys.slice(); else for (var y2 = first; y2 <= Math.max(last, Y0); y2++) ey.push(y2);
     var mon = MESI.map(function (_, m) {
       var pts = 0, el = 0, n = 0, top10 = 0, pod = 0, w = 0, fr = 0, ncov = 0, topCov = 0, sumPosCov = 0;
       ey.forEach(function (yy) {
@@ -192,13 +194,16 @@
       ? '<div class="fm-toggle" role="group" aria-label="Categoria"><button type="button" data-c="all" aria-pressed="' + (state.cat === 'all') + '">Tutte le categorie</button>'
         + present.map(function (g) { return '<button type="button" data-c="' + g + '" aria-pressed="' + (state.cat === g) + '">' + GRP_L[g] + '</button>'; }).join('') + '</div>'
       : '';
-    var a = analyze(sel, state.mode);
+    var a = analyze(sel, state.mode, state.cat !== 'all');
     if (!a) { host.innerHTML = catBar + '<div class="fm-card">Nessun risultato per questa categoria.</div>'; bindCat(host); return; }
     var posLine = (a.nowW.pos !== null && a.avgPos !== null) ? '<br>Posizione media: <b>' + fmt(a.nowW.pos) + '°</b> (di solito in questo periodo ' + fmt(a.avgPos) + '°)' : '';
     var rl = relative(a, sel, isFemale(state.rows));
     var ft = formaTxt(a);
+    // categoria non piu' corsa quest'anno: la forma di adesso non ha senso (niente confronto con "zero")
+    var stale = state.cat !== 'all' && a.last < a.Y0;
+    if (stale) ft = { t: '—', cls: '' };
     var formCard = '<div class="fm-card"><h3>Forma di adesso</h3><div class="fm-big ' + ft.cls + '">' + ft.t + '</div>'
-      + '<div class="fm-small">Ultimi 45 giorni: <b>' + a.nowW.tot + ' punti</b> (' + ris(a.nowW.n) + ')<br>Stesso periodo negli anni scorsi: ' + fmt(a.avgP) + ' punti in media' + posLine + '</div></div>';
+      + '<div class="fm-small">' + (stale ? 'Non corre più in questa categoria: ultimo anno ' + a.last + '.' : 'Ultimi 45 giorni: <b>' + a.nowW.tot + ' punti</b> (' + ris(a.nowW.n) + ')<br>Stesso periodo negli anni scorsi: ' + fmt(a.avgP) + ' punti in media' + posLine) + '</div></div>';
     var goldCard = a.gold
       ? '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big fm-accent">' + MESI_L[a.gold.m] + '</div><div class="fm-small">' + fmt(a.gold.avg) + ' punti in media per anno · ' + a.gold.w + ' vittorie e ' + a.gold.pod + ' podi in ' + a.gold.el + ' stagioni</div></div>'
       : '<div class="fm-card"><h3>Il suo mese d\'oro</h3><div class="fm-big">—</div><div class="fm-small">Dati ancora troppo pochi</div></div>';
