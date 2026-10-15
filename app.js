@@ -3257,6 +3257,7 @@ function badgeMult(m, tipo, isCR = false, isCI = false) {
 
 function catLabel(code) {
   const map = {
+    PRO_M:'Professionisti', PRO_F:'Donne Professioniste',
     ES_M: 'Esordienti M',
     ES1_M:'Esordienti 1° Anno', 
     ES2_M:'Esordienti 2° Anno', 
@@ -5063,6 +5064,7 @@ function route() {
     // eventuale suffisso leggibile dopo l'id (es. "CIC_1620-trofeo-sintofarm-
     // 2008", vedi _ciclismoGaraHref) è puramente cosmetico/SEO: si legge solo
     // la parte numerica iniziale, il resto viene ignorato dal router.
+    if (m_gara[1].startsWith('PRO_')) return renderGaraStorica(m_gara[1]);   // gare professionistiche in Italia (PCS), stessa pagina delle storiche
     if (m_gara[1].startsWith('CIC_')) {
       const numId = (m_gara[1].slice(4).match(/^\d+/) || [])[0];
       return renderGaraStorica(numId || m_gara[1].slice(4));
@@ -19837,12 +19839,16 @@ window.ciclismoRimatchGara = async (ciclismoGaraId) => {
 function _rerenderCurrentGaraPage() {
   const id = window._currentGaraId;
   if (!id) return;
+  if (String(id).startsWith('PRO_')) return renderGaraStorica(id);
   if (String(id).startsWith('CIC_')) return renderGaraStorica(id.slice(4));
   return renderGara(id);
 }
 
 async function renderGaraStorica(ciclismoGaraId) {
-  const garaKey = 'CIC_' + ciclismoGaraId;
+  // Gare professionistiche in Italia (id PRO_<slug>_<anno>, dati PCS, senza punti): stessa pagina, altra sorgente dati
+  const isPro = String(ciclismoGaraId).startsWith('PRO_');
+  const garaKey = isPro ? String(ciclismoGaraId) : 'CIC_' + ciclismoGaraId;
+  const _srcPath = isPro ? `/data/pro-race/${encodeURIComponent(ciclismoGaraId)}` : `/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`;
   window._currentGaraId = garaKey;
   // Un solo tentativo poteva mostrare "pagina non trovata" per una gara che
   // esiste davvero, se Supabase rispondeva 200 con dati vuoti per un
@@ -19853,10 +19859,10 @@ async function renderGaraStorica(ciclismoGaraId) {
   // secondi (osservato dal vivo: 8s su un tentativo).
   let payload;
   try {
-    payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
+    payload = await apiCall(_srcPath);
     for (let wait = 2000; !payload?.risultati?.length && wait <= 4000; wait += 2000) {
       await new Promise(r => setTimeout(r, wait));
-      payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
+      payload = await apiCall(_srcPath);
     }
   } catch { return renderNotFound(); }
   const rows = payload?.risultati || [];
@@ -19876,7 +19882,7 @@ async function renderGaraStorica(ciclismoGaraId) {
   // come fa _loadGaraPcsExt sulle gare native (lì il circuito ICS è sempre
   // completo 1-10, qui può avere buchi in mezzo).
   try {
-    const pcsRows = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaKey)}`);
+    const pcsRows = isPro ? [] : await apiCall(`/pcs-results/gara/${encodeURIComponent(garaKey)}`);
     const havePos = new Set(rows.map(r => r.posizione));
     // Un corridore può già essere presente in ciclismo_results con una
     // posizione DIVERSA da quella PCS (la numerazione di ciclismo.info ha
@@ -19943,7 +19949,7 @@ async function renderGaraStorica(ciclismoGaraId) {
         </td>
         <td class="td-hide-mobile">${teamLink}</td>
         ${cats.length > 1 ? `<td class="td-hide-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</td>` : ''}
-        <td class="td-hide-mobile">—</td>
+        <td class="td-hide-mobile">${esc(r.distacco && !/^,+$/.test(r.distacco) ? r.distacco : '—')}</td>
         <td class="td-hide-mobile" style="text-align:right">—</td>
         <td class="td-hide-mobile" style="text-align:right">—</td>
         <td class="td-pts">—</td>
@@ -20071,7 +20077,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       ${_gallery}
       ${extraVideosHtml}
     </div>` : '';
-  const adminBtnsHtml = _isAdmin ? `
+  const adminBtnsHtml = (_isAdmin && !isPro) ? `
       ${adminEditBtn('gara', garaKey)}
       <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(garaKey)}')">⬇ Importa PCS</button>
       <button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(garaKey)}')">↺ Rimatch Atleti PCS</button>
@@ -20084,7 +20090,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       <div class="race-name-display">${esc(first.nome_gara)}</div>
       <div class="race-meta-row">
         <span>${fmtDate(first.data)}</span>
-        ${cats.length === 1 ? `<span class="race-meta-sep">|</span><span>${esc(String(cats[0]).replace(/_/g, ' '))}</span>` : ''}
+        ${isPro ? `<span class="race-meta-sep">|</span><span><b>PRO · ${esc(payload?.race?.classe || '')}</b></span>` : (cats.length === 1 ? `<span class="race-meta-sep">|</span><span>${esc(String(cats[0]).replace(/_/g, ' '))}</span>` : '')}
         ${first.regione ? `<span class="race-meta-sep">|</span><span>${esc(first.regione)}</span>` : ''}
         ${first.luogo ? `<span class="race-meta-sep">|</span><span>📍 ${esc(first.luogo)}</span>` : ''}
       </div>
@@ -20093,7 +20099,8 @@ async function renderGaraStorica(ciclismoGaraId) {
       <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
       ${adminBtnsHtml}
     </div>
-    <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
+    ${isPro && payload?.race?.parent ? `<div style="margin-top:10px"><a class="btn-share" href="/gara/${esc(payload.race.parent)}">← Classifica generale</a></div>` : ''}
+    <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:${isPro ? 'none' : 'flex'};flex-wrap:wrap;gap:8px;margin:14px 0 2px">
       <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
       <button id="tab-albo" class="tab-btn" style="opacity:.55" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro <span id="tab-albo-spin" style="display:inline-block;width:9px;height:9px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-left:4px;vertical-align:middle;animation:spin .8s linear infinite"></span></button>
     </div>
@@ -20118,10 +20125,10 @@ async function renderGaraStorica(ciclismoGaraId) {
       <div id="gara-pcs-ext"></div>
     </div>
     <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
-    <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">${isPro ? 'Gara professionistica (UCI) · risultati da ProCyclingStats · nessun punto ICS.' : 'Dati storici — archivio in fase di validazione.'}</div>
     </div>
   `);
-  _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M', band: _ALBO_BAND_OF[String(cats[0] || '').toUpperCase()] || 'ELI' });
+  if (!isPro) _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M', band: _ALBO_BAND_OF[String(cats[0] || '').toUpperCase()] || 'ELI' });
 
   // (I risultati PCS sono già stati uniti a "rows" più sopra, per riempire
   // eventuali buchi nel podio — niente chiamata separata a _loadGaraPcsExt,
@@ -29429,6 +29436,11 @@ async function renderRisultati() {
     }
   }
 
+  // Gare professionistiche in Italia (WorldTour/ProSeries da PCS, senza punti): stesse card delle altre, alla loro data
+  if (!risShowMissing && window.ProRaces) {
+    try { for (const ev of await window.ProRaces.events(Number(_loadedSeasonYear()))) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
+  }
+
   let races = risShowMissing
     ? missingRaces
     : [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||'') || (b._seq - a._seq))];
@@ -29558,7 +29570,6 @@ async function renderRisultati() {
           <button id="ris-missing-toggle" onclick="window.risToggleMissing()" style="margin:8px 0 0;padding:8px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;cursor:pointer;border:1px solid ${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'};background:${risShowMissing ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${risShowMissing ? '#fff' : 'var(--text-secondary)'}">⚠ Gare senza risultati</button>
           <span class="ranking-count" id="ris-count"></span>
         </div>
-        <div id="ris-pro"></div>
         <div class="risultati-feed" style="margin-top:20px" id="ris-cards"></div>
       </div>
     `);
@@ -29593,13 +29604,6 @@ async function renderRisultati() {
   if (countEl) countEl.textContent = totalRaces > visibleRaces.length
     ? `${visibleRaces.length} di ${totalRaces} gare`
     : `${totalRaces} gare trovate`;
-
-  // Gare professionistiche in Italia (WorldTour / ProSeries, da PCS, senza punti): solo quando non ci sono filtri che le escluderebbero
-  if (window.ProRaces && document.getElementById('ris-pro')) {
-    const proOk = !risQueryCat && !risQueryRegion && !risQueryTipo && !risShowMissing;
-    if (proOk) window.ProRaces.mount('ris-pro', Number(_loadedSeasonYear()), { sex: risQueryGenere || (activeHub && activeHub.gender) || '', month: risQueryMonth, limit: risQueryMonth ? 0 : 6 });
-    else document.getElementById('ris-pro').innerHTML = '';
-  }
 
   // Always: rebuild only the cards area
   if (cardsEl && window.RisV2) {

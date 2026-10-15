@@ -57,6 +57,7 @@
     const out = [];
     // gara a tappe / a prove: etichetta con la tappa (es. "2ª Tappa") per ritrovare la serie
     try { if (typeof _stageBaseName === 'function' && _stageBaseName(race.nome)) out.push(`<span class="rs-bd" style="background:rgba(61,123,255,.14);color:#3D7BFF">${esc(_stageSuffixLabel(race.nome))}</span>`); } catch {}
+    if (race._pro) out.push(`<span class="rs-bd" style="background:var(--text-primary);color:var(--bg-elevated)">PRO · ${esc(window.ProRaces ? window.ProRaces.label(race._proClasse) : '')}</span>`);
     if (race.campionato_italiano) out.push('<span class="rs-bd ci">CAMP. ITALIANO</span>');
     else if (race.campionato_regionale) out.push('<span class="rs-bd cr">CAMP. REGIONALE</span>');
     else if ((race.mult || 1) >= 2) out.push(`<span class="rs-bd m${race.mult >= 3 ? 3 : 2}">×${race.mult}</span>`);
@@ -191,7 +192,7 @@
         <button class="rs-miss" id="ris-missing-toggle" type="button" onclick="window.risToggleMissing()" aria-pressed="${o.missing}">⚠ Gare senza risultati</button>
       </div>
       <div id="ris-pend"></div>
-      <div class="hx-layout"><div class="hx-col"><div id="ris-pro"></div><div id="ris-cards"></div></div><aside class="hx-col" id="ris-side"></aside></div>
+      <div class="hx-layout"><div class="hx-col" id="ris-cards"></div><aside class="hx-col" id="ris-side"></aside></div>
     </div>`;
   }
 

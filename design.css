@@ -13808,24 +13808,3 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .am-recs .hx-si-r { color: var(--text-primary); }
 body.light-mode .am-recs .hx-si-r .up { color: #047857; }
 body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
-
-/* ── Gare professionistiche in Italia (procorse.js) ── */
-.pr-sec { margin: 28px 0 8px; }
-.pr-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 12px; }
-.pr-title h2 { margin: 0; font: 800 1.05rem/1.2 var(--font-heading, inherit); }
-.pr-title span { color: var(--text-muted); font-size: .78rem; }
-.pr-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-.pr-card { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 14px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
-.pr-card:hover, .pr-card:focus-visible { border-color: var(--accent, #ff6b00); outline: none; }
-.pr-card h3 { margin: 0; font: 800 1rem/1.25 var(--font-heading, inherit); text-wrap: balance; }
-.pr-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.pr-badge { font: 800 .64rem/1 var(--font-heading, inherit); letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: var(--text-primary); color: var(--bg-elevated); }
-.pr-d { color: var(--text-muted); font-size: .76rem; font-variant-numeric: tabular-nums; }
-.pr-pod { display: flex; flex-direction: column; gap: 4px; }
-.pr-p { display: grid; grid-template-columns: 20px 1fr; column-gap: 8px; font-size: .86rem; font-weight: 600; }
-.pr-p i { font-style: normal; font-weight: 800; color: var(--text-muted); text-align: center; }
-.pr-p1 i { color: var(--accent, #ff6b00); }
-.pr-p small { grid-column: 2; color: var(--text-muted); font-weight: 400; font-size: .72rem; }
-.pr-p a { color: inherit; }
-.pr-f { display: flex; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border-subtle); font-size: .72rem; color: var(--text-muted); }
-.pr-f b { color: var(--text-primary); font-weight: 700; }

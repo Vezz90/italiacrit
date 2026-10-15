@@ -513,29 +513,59 @@ app.get('/api/atleta/:id/forma', async (req, res) => {
     res.json(data);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
-// Gare professionistiche in Italia (WorldTour / ProSeries, da PCS) — niente punti ICS, servono a riempire Home e Risultati.
-// Vedi server/pcs-pro-italy-import.js. Per ogni gara: dati + podio (primi 3 dell'arrivo completo).
+// Gare professionistiche in Italia (WorldTour / ProSeries, da PCS) — niente punti ICS, compaiono in Risultati/Home come le altre gare.
+// Vedi server/pcs-pro-italy-import.js. Id pubblico: PRO_<slug>_<stagione>. Le corse a tappe hanno una voce per tappa + la classifica generale.
 const _proRacesCache = new Map();
+const _proEvent = (r, pod) => ({
+  id: `PRO_${r.pcs_race_slug}_${r.season}`, nome: r.nome, data: (r.is_gc ? r.data_end : r.data_start), classe: r.classe,
+  genere: r.circuit === 24 ? 'F' : 'M', parent: r.parent_slug || null, stage_no: r.stage_no || null, route: r.stage_route || null, is_gc: !!r.is_gc,
+  top3: (pod || []).sort((a, b) => a.posizione - b.posizione).slice(0, 3).map(p => ({ posizione: p.posizione, nome_completo: p.nome_completo, team: p.team, country: p.country, atleta_id: p.atleta_id, distacco: p.distacco })),
+});
 app.get('/api/data/pro-races', async (req, res) => {
   try {
     const season = parseInt(req.query.season, 10) || new Date().getFullYear();
     const hit = _proRacesCache.get(season);
-    if (hit && Date.now() - hit.ts < 30 * 60 * 1000) { res.set('Cache-Control', 'public, max-age=600'); return res.json(hit.data); }
+    if (hit && Date.now() - hit.ts < 20 * 60 * 1000) { res.set('Cache-Control', 'public, max-age=300'); return res.json(hit.data); }
     if (!supabase) return res.json({ races: [] });
-    const { data: races, error } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, circuit, winner_name')
-      .eq('season', season).not('winner_name', 'is', null).order('data_end', { ascending: false }).limit(100);
+    const { data: races, error } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, circuit, parent_slug, stage_no, stage_route, is_gc')
+      .eq('season', season).not('winner_name', 'is', null).order('data_end', { ascending: false }).limit(400);
     if (error) throw error;
-    let pod = [];
-    if (races.length) {
-      const r2 = await supabase.from('pcs_race_full_results').select('pcs_race_slug, posizione, atleta_id, nome_completo, team, country')
-        .eq('season', season).in('pcs_race_slug', races.map(r => r.pcs_race_slug)).lte('posizione', 3).order('posizione').limit(1000);
+    const pod = [];
+    for (let i = 0; i < races.length; i += 40) {
+      const r2 = await supabase.from('pcs_race_full_results').select('pcs_race_slug, posizione, atleta_id, nome_completo, team, country, distacco')
+        .eq('season', season).in('pcs_race_slug', races.slice(i, i + 40).map(r => r.pcs_race_slug)).lte('posizione', 3).limit(1000);
       if (r2.error) throw r2.error;
-      pod = r2.data || [];
+      pod.push(...(r2.data || []));
     }
-    const out = { races: races.map(r => ({ ...r, femminile: r.circuit === 24, podio: pod.filter(p => p.pcs_race_slug === r.pcs_race_slug).map(p => ({ pos: p.posizione, nome: p.nome_completo, team: p.team, country: p.country, atleta_id: p.atleta_id })) })) };
+    const out = { races: races.map(r => _proEvent(r, pod.filter(p => p.pcs_race_slug === r.pcs_race_slug))) };
     _proRacesCache.set(season, { ts: Date.now(), data: out });
-    res.set('Cache-Control', 'public, max-age=600');
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+// Arrivo completo di una gara pro, con la forma che la pagina gara storica gia' usa ({risultati:[{posizione, nome_completo, team, ...}]})
+app.get('/api/data/pro-race/:id', async (req, res) => {
+  try {
+    const m = String(req.params.id || '').match(/^PRO_(.+)_(\d{4})$/);
+    if (!m || !supabase) return res.status(404).json({ error: 'non trovata' });
+    const [, slug, season] = m;
+    const { data: r, error } = await supabase.from('pro_races').select('*').eq('pcs_race_slug', slug).eq('season', parseInt(season, 10)).maybeSingle();
+    if (error) throw error;
+    if (!r) return res.status(404).json({ error: 'non trovata' });
+    const rows = [];
+    for (let from = 0; from < 1500; from += 1000) {
+      const q = await supabase.from('pcs_race_full_results').select('posizione, atleta_id, nome_completo, team, country, distacco').eq('pcs_race_slug', slug).eq('season', parseInt(season, 10)).order('posizione').range(from, from + 999);
+      if (q.error) throw q.error;
+      rows.push(...(q.data || []));
+      if ((q.data || []).length < 1000) break;
+    }
+    const ev = _proEvent(r, []);
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json({
+      race: { id: ev.id, nome: r.nome, data: ev.data, classe: r.classe, genere: ev.genere, parent: r.parent_slug ? `PRO_${r.parent_slug}_${season}` : null, route: r.stage_route },
+      risultati: rows.map(x => ({ ...x, categoria: ev.genere === 'F' ? 'PRO_F' : 'PRO_M', data: ev.data, nome_gara: r.nome, regione: '', luogo: r.stage_route || '' })),
+      media: [],
+    });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.get('/api/cic-race/:id', async (req, res) => {

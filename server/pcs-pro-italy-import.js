@@ -170,7 +170,7 @@ function parseResults(html) {
         const sr = parseResults(await page.content());
         if (!sr.length) { await humanDelay(i); continue; }   // tappa non ancora corsa
         const info = await page.evaluate(() => document.body.innerText);
-        const dm = info.match(/Date:\s*(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+        const dm = info.match(/Date:?\s*(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
         const mon = dm && MON[dm[2].toLowerCase()];
         if (!dm || !mon) { console.log(`  ${s.t}: data non trovata`); continue; }
         const date = `${dm[3]}-${String(mon).padStart(2, '0')}-${String(dm[1]).padStart(2, '0')}`;

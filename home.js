@@ -183,7 +183,7 @@
       ? `<div class="hx-rk-m">${cover(g.code, '')}${photos[0] ? `<img src="${esc(photos[0])}" alt="" loading="lazy" onerror="this.remove()">` : ''}${vids && !photos.length ? '<span class="hx-play">▶</span>' : ''}<div class="hx-chips">${photos.length ? `<span>📷 ${photos.length}</span>` : ''}${vids ? `<span>▶ ${vids}</span>` : ''}</div></div>`
       : `<div class="hx-spine" style="--sp:${col}"></div>`;
     const top = podium(g).map(t => `<li><i class="hx-med p${t.pos}">${t.pos}</i><span class="nm">${esc(t.nome)}</span><span class="g">${esc(t.gap)}</span></li>`).join('');
-    return `<a class="hx-rk ${has ? '' : 'nomedia'}" href="#/gara/${encodeURIComponent(g.id)}">${media$}<div class="hx-rk-b"><div class="hx-rk-h"><span class="hx-bd ${b[1] ? 'hot' : ''}">${b[0]}</span><span>${esc(catLabel(g.code))}</span>${g.prov ? '<span class="hx-bd" style="background:#64748B" title="Ordine d’arrivo da PCS, in attesa dei risultati FCI">PROVV.</span>' : ''}${km ? `<span>·</span><span class="num">${km} km</span>` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><div class="hx-loc">${esc(g.luogo || g.regione || '')}</div><ol class="hx-top3">${top}</ol></div></a>`;
+    return `<a class="hx-rk ${has ? '' : 'nomedia'}" href="#/gara/${encodeURIComponent(g.id)}">${media$}<div class="hx-rk-b"><div class="hx-rk-h"><span class="hx-bd ${b[1] ? 'hot' : ''}">${b[0]}</span><span>${esc(catLabel(g.code))}${g._pro ? ' · ' + esc(window.ProRaces.label(g._proClasse)) : ''}</span>${g.prov ? '<span class="hx-bd" style="background:#64748B" title="Ordine d’arrivo da PCS, in attesa dei risultati FCI">PROVV.</span>' : ''}${km ? `<span>·</span><span class="num">${km} km</span>` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><div class="hx-loc">${esc(g.luogo || g.regione || '')}</div><ol class="hx-top3">${top}</ol></div></a>`;
   }
 
   function stats(races, today) {
@@ -363,7 +363,9 @@
 
   async function paint(media, myId) {
     if (hx.year && hx.year !== curYear()) return paintPast(hx.year, myId);
-    const all = [...buildRaces(), ...await provisional().catch(() => [])].sort(sortRaces);
+    // gare professionistiche in Italia (WorldTour/ProSeries da PCS, senza punti): stesse card, alla loro data
+    const pro = window.ProRaces ? (await window.ProRaces.events(curYear()).catch(() => [])).map(e => ({ id: e.id, nome: e.nome, data: e.data, code: e._proCode, km: '', media: '', tipo: 'internazionale', molt: 1, top: e.byCategory[e._proCode].results, luogo: '', regione: '', n: 0, _pro: true, _proClasse: e._proClasse })) : [];
+    const all = [...buildRaces(), ...pro, ...await provisional().catch(() => [])].sort(sortRaces);
     const today = iso(new Date());
     const regs = [...new Set(all.map(g => g.regione).filter(Boolean))].sort();
     const tipi = [...new Set(all.map(g => g.tipo).filter(Boolean))].sort();
@@ -374,7 +376,7 @@
     const hero = head.find(hasPh) || head[0];
     const side = [...head.filter(g => g !== hero && hasPh(g)), ...head.filter(g => g !== hero && !hasPh(g))].slice(0, 2);
     const restAll = list.filter(g => g !== hero && !side.includes(g)), rest = restAll.slice(0, hx.n);
-    const scopeRaces = all.filter(g => g.code.endsWith('_' + hx.sex) && (!hx.cat || g.code === hx.cat));
+    const scopeRaces = all.filter(g => !g._pro && g.code.endsWith('_' + hx.sex) && (!hx.cat || g.code === hx.cat));
     const st = stats(scopeRaces, today), si = intelligence(scopeRaces, today);
     // rivalità: con una categoria scelta le 3 più accese di quella; altrimenti la più accesa di OGNI categoria
     const riv = hx.cat ? await rivalries(hx.cat, 3) : (await Promise.all(cats.map(c => rivalries(c, 1)))).flat();
@@ -423,7 +425,6 @@
         <section class="hx-herogrid">${heroHtml}<div class="hx-sidecol">${sideHtml}</div></section>
         <section><div class="hx-ph"><h2>Ultime gare</h2><a href="#/risultati">Tutti i risultati →</a></div><div class="hx-rlist">${rest.map(g => raceCard(g, media, today)).join('') || '<div class="hx-none">Nessuna altra gara con questi filtri.</div>'}</div>${restAll.length > rest.length ? `<button type="button" class="hx-more" id="hx-more">Carica altre gare (${restAll.length - rest.length})</button>` : ''}</section>
         <section class="hx-panel"><div class="hx-ph"><h2>Oggi su ICS</h2></div><div class="hx-stats">${st.map(s => `<div class="hx-st">${ic(s[0])}<b>${s[1]}</b><span>${s[2]}</span></div>`).join('')}</div></section>
-        <div id="hx-pro"></div>
         ${siHtml}
       </div>
       <aside class="hx-col" aria-label="Laterale">
@@ -436,8 +437,6 @@
     </div>`);
     document.querySelectorAll('.hx-seg button').forEach(b => { b.onclick = () => { hx.sex = b.dataset.sex; hx.cat = ''; hx.n = 12; render(); }; });
     wireYear();
-    // gare professionistiche in Italia (senza punti ICS): solo senza filtri di categoria/regione/tipo
-    if (window.ProRaces && !hx.cat && !hx.reg && !hx.tipo) window.ProRaces.mount('hx-pro', curYear(), { sex: hx.sex, limit: 3 });
     const more = $('hx-more'); if (more) more.onclick = () => { const y = window.scrollY; hx.n += 12; render().then(() => window.scrollTo(0, y)); };
     [['hx-cat', 'cat'], ['hx-reg', 'reg'], ['hx-tipo', 'tipo']].forEach(([id, k]) => { const el = $(id); if (el) el.onchange = () => { hx[k] = el.value; hx.n = 12; render(); }; });
     // classifiche a destra: atleti e team (foto profilo / logo piccoli)
