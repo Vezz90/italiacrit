@@ -130,7 +130,10 @@
 
   function heat(a) {
     var h = '<table class="fm-heat"><thead><tr><th></th>' + MESI.map(function (m) { return '<th>' + m + '</th>'; }).join('') + '</tr></thead><tbody>';
-    a.ey.forEach(function (y) {
+    // con una categoria scelta restano solo gli anni in cui ha davvero risultati in quella categoria (niente righe vuote degli altri anni)
+    var yrs = a.ey;
+    if (state.cat !== 'all') yrs = yrs.filter(function (y) { for (var m = 0; m < 12; m++) if (a.cells[y + '-' + m]) return true; return false; });
+    yrs.forEach(function (y) {
       var catLbl = '';
       for (var m = 0; m < 12; m++) { var c = a.cells[y + '-' + m]; if (c && c.cat) catLbl = catName(c.cat); }
       if (!catLbl && state.pro && state.pro[y]) catLbl = 'Professionisti';
