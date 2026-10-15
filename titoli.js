@@ -94,7 +94,7 @@
     const out = [];
     for (const r of (Array.isArray(rows) ? rows : [])) {
       const name = String(r.gara_name || ''), pos = +r.posizione, y = +String(r.data || r.season || '').slice(0, 4);
-      if (!pos || pos > 3 || !y || y >= cur || /TTT|team|relay|mixed|staffett/i.test(name)) continue;
+      if (!pos || pos > 3 || !y || y > cur || /TTT|team|relay|mixed|staffett/i.test(name)) continue;   // anche la stagione in corso: i professionisti non sono nei risultati ICS (il doppione con quelli nativi si toglie sotto)
       const cm = name.match(/\b([MW][EUJ])\b/), code = cm ? CAT_OF[cm[1]] : '';
       const prova = /\bITT\b|time trial|cronometro/i.test(name) ? 'CRONOMETRO' : 'STRADA';
       let kind = null;
