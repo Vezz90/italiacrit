@@ -19265,9 +19265,19 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   // pillole venivano scritte lì dentro senza errori ma restavano invisibili
   // (bug osservato dal vivo: le pillole PCS non comparivano mai).
   const freshYearRow = document.getElementById('profile-year-row') || yearRow;
-  const allExtraYears = [...new Set([...ciclismoOnlyYears, ...pcsOnlyYears])].sort((a, b) => b - a);
+  let allExtraYears = [...new Set([...ciclismoOnlyYears, ...pcsOnlyYears])].sort((a, b) => b - a);
+  // anni senza nessun risultato dentro la carriera (es. 2015 tra 2014 e 2016): pillola comunque, con la pagina vuota
+  const emptyYears = new Set();
+  {
+    const known = new Set([...nativeYears, ...allExtraYears].map(Number).filter(Boolean));
+    if (known.size) {
+      const lo = Math.min(...known), hi = Math.max(...known);
+      for (let y = lo; y <= hi; y++) if (!known.has(y)) emptyYears.add(String(y));
+      allExtraYears = [...new Set([...allExtraYears.map(String), ...emptyYears])].sort((a, b) => b - a);
+    }
+  }
   const pillsHtml = allExtraYears.map(y => {
-    const isPcs = !ciclismoOnlyYears.includes(y);
+    const isPcs = !emptyYears.has(String(y)) && !ciclismoOnlyYears.includes(y);
     const attr = isPcs ? 'data-pcs="1"' : 'data-ciclismo="1"';
     const handler = isPcs ? 'setAtletaPcsYear' : 'setAtletaCiclismoYear';
     return `<button class="year-pill" data-year="${esc(y)}" ${attr} onclick="window.${handler}('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`;
@@ -20293,7 +20303,13 @@ function _resolveHistoricalTeamId(teamName, preferId) {
 window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
   const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-  if (!rows.length) return;
+  if (!rows.length) {
+    // anno senza risultati (pillola vuota dentro la carriera): si evidenzia e si dice chiaramente che non ci sono risultati
+    document.querySelectorAll('#profile-year-row .year-pill').forEach(b => { const on = b.dataset.year === String(anno); b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'; b.style.color = on ? '#fff' : 'var(--text-secondary)'; });
+    const tb = document.getElementById('atleta-results-tbody');
+    if (tb) tb.innerHTML = `<tr><td colspan="9" class="empty-state">Nessun risultato registrato nel ${esc(anno)}</td></tr>`;
+    return;
+  }
   const italiaRows = rows.slice(); // solo ciclismo.info, prima del merge PCS sotto — per il riepilogo "ITALIA"
 
   // Risultati importati a mano da PCS per una di queste gare (bottone

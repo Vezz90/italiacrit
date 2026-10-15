@@ -158,6 +158,11 @@ function yearDone(aid, y) {
   return s.r === 'empty' ? days < 90 : days < 0.5;      // vuoto: si ricontrolla dopo 90 giorni; errore: dopo 12 ore
 }
 
+// Atleti appena collegati a PCS (pcs-retry-notfound.js): non hanno storico squadre, quindi gli anni da recuperare sono TUTTI quelli
+// dal primo anno noto a oggi (gli anni senza gare su PCS restano vuoti e si ricordano come tali).
+const SPAN_FILE = path.join(__dirname, 'pcs-span-ids.json');
+let SPAN = new Set(); try { SPAN = new Set(JSON.parse(fs.readFileSync(SPAN_FILE, 'utf8'))); } catch (_) {}
+
 async function findGaps(sb) {
   const currentYear = new Date().getFullYear();
   const slugByAtleta = new Map();
@@ -209,6 +214,7 @@ async function findGaps(sb) {
     for (const r of pr) { if (!have.has(r.atleta_id)) have.set(r.atleta_id, new Set()); have.get(r.atleta_id).add(r.season); }
     for (const aid of chunk) {
       const seasons = want.get(aid); if (!seasons) continue;
+      if (SPAN.has(aid)) { const mn = Math.min(...seasons); for (let y = mn; y <= currentYear; y++) seasons.add(y); }
       const h = have.get(aid) || new Set();
       const missing = [...seasons].filter(y => y && y <= currentYear && !h.has(y) && !yearDone(aid, y)).sort((x, y) => x - y);
       if (missing.length) out.push({ atletaId: aid, slug: slugByAtleta.get(aid), missing, active: seasons.has(currentYear) || h.has(currentYear) });
