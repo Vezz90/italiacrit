@@ -27,6 +27,7 @@ if (!SUPABASE_SECRET) { console.error('SUPABASE_SECRET mancante in .env.local');
 const args = process.argv.slice(2);
 const argv = n => (args.find(a => a.startsWith(`--${n}=`)) || '').split('=')[1];
 const SEASONS = (argv('season') || String(new Date().getFullYear())).split(',').map(Number);
+const STAGES = args.includes('--stages');   // rivisita anche le gare finite per importarne le tappe
 const FORCE = args.includes('--force'), DRY = args.includes('--dry-run');
 const LIMIT = parseInt(argv('limit') || '', 10) || Infinity;
 // 1 = UCI WorldTour, 24 = Women's WorldTour, 26 = ProSeries
@@ -123,29 +124,62 @@ function parseResults(html) {
 
     const { data: have } = await sb.from('pro_races').select('pcs_race_slug, season, winner_name').in('season', SEASONS);
     const doneSet = new Set((have || []).filter(r => r.winner_name).map(r => `${r.pcs_race_slug}|${r.season}`));
-    const todo = races.filter(r => r.data_end < today && (FORCE || !doneSet.has(`${r.pcs_race_slug}|${r.season}`))).slice(0, LIMIT);
-    console.log(`\n${todo.length} da importare (concluse${FORCE ? '' : ', non gia\' fatte'})\n`);
+    const recent = new Date(Date.now() - 45 * 86400000).toISOString().slice(0, 10);   // gare recenti: si ricontrolla se sono usciti nuovi arrivi di tappa
+    const todo = races.filter(r => r.data_start <= today && (FORCE || STAGES || r.data_end >= recent || !doneSet.has(`${r.pcs_race_slug}|${r.season}`))).slice(0, LIMIT);
+    console.log(`\n${todo.length} da controllare\n`);
+
+    const MON = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 };
+    async function save(entry, rows) {
+      const win = rows.find(x => x.posizione === 1);
+      if (win) { entry.winner_name = win.nome_completo; entry.winner_slug = win.pcs_slug; }
+      if (DRY) { console.log(`[DRY] ${entry.nome}: ${rows.length} righe, vince ${entry.winner_name}`); return true; }
+      const seen = new Set();
+      const ins = rows.filter(x => { const k = x.posizione + '|' + x.nome_completo; if (seen.has(k)) return false; seen.add(k); return true; })
+        .map(x => ({ pcs_race_slug: entry.pcs_race_slug, season: entry.season, posizione: x.posizione, pcs_slug: x.pcs_slug || null, atleta_id: slugToId.get(x.pcs_slug) || null, nome_completo: x.nome_completo, team: x.team, country: x.country, distacco: x.distacco }));
+      const e1 = (await sb.from('pcs_race_full_results').upsert(ins, { onConflict: 'pcs_race_slug,season,posizione,nome_completo' })).error;
+      if (e1) { console.log('  errore salvataggio arrivo:', e1.message); return false; }
+      const e2 = (await sb.from('pro_races').upsert(entry, { onConflict: 'pcs_race_slug,season' })).error;
+      if (e2) { console.log('  errore salvataggio gara:', e2.message); return false; }
+      made++; nRows += ins.length;
+      console.log(`  ✓ ${entry.nome}: ${ins.length} righe, vince ${entry.winner_name}`);
+      return true;
+    }
 
     for (let i = 0; i < todo.length; i++) {
       const r = todo[i];
-      process.stdout.write(`(${i + 1}/${todo.length}) ${r.nome} ${r.season} … `);
+      console.log(`(${i + 1}/${todo.length}) ${r.nome} ${r.season}`);
       const nav = await go(`https://www.procyclingstats.com/${r.pcs_url}`, 'table.results');
-      if (!nav.ok) { console.log(nav.notFound ? 'non trovata' : 'errore, riprovo al prossimo giro'); continue; }
+      if (!nav.ok) { console.log(nav.notFound ? '  non trovata' : '  errore, riprovo al prossimo giro'); continue; }
+      // tappe: dal menu a tendina della pagina (race/<slug>-<anno>-stage-N, prologue)
+      const stages = await page.evaluate(() => [...document.querySelectorAll('select option')].map(o => ({ v: o.value, t: o.textContent.replace(/\s+/g, ' ').trim() })).filter(o => /^race\/.+-(stage-\d+[a-z]?|prologue)$/.test(o.v)));
       const rows = parseResults(await page.content());
-      if (!rows.length) { console.log('nessun arrivo'); await humanDelay(i); continue; }
-      const win = rows.find(x => x.posizione === 1);
-      if (win) { r.winner_name = win.nome_completo; r.winner_slug = win.pcs_slug; }
-      if (DRY) { console.log(`[DRY] ${rows.length} righe, vince ${r.winner_name}`); continue; }
-      const seen = new Set();
-      const ins = rows.filter(x => { const k = x.posizione + '|' + x.nome_completo; if (seen.has(k)) return false; seen.add(k); return true; })
-        .map(x => ({ pcs_race_slug: r.pcs_race_slug, season: r.season, posizione: x.posizione, pcs_slug: x.pcs_slug || null, atleta_id: slugToId.get(x.pcs_slug) || null, nome_completo: x.nome_completo, team: x.team, country: x.country, distacco: x.distacco }));
-      const e1 = (await sb.from('pcs_race_full_results').upsert(ins, { onConflict: 'pcs_race_slug,season,posizione,nome_completo' })).error;
-      if (e1) { console.log('errore salvataggio arrivo:', e1.message); continue; }
-      const e2 = (await sb.from('pro_races').upsert(r, { onConflict: 'pcs_race_slug,season' })).error;
-      if (e2) { console.log('errore salvataggio gara:', e2.message); continue; }
-      made++; nRows += ins.length;
-      console.log(`✓ ${ins.length} righe, vince ${r.winner_name}`);
+      const isStageRace = stages.length > 0;
+      if (rows.length && (FORCE || STAGES || !doneSet.has(`${r.pcs_race_slug}|${r.season}`) || r.data_end >= recent)) {
+        const gc = { ...r, is_gc: isStageRace, nome: isStageRace ? `${r.nome} – Classifica generale` : r.nome };
+        if (isStageRace) gc.pcs_race_slug = r.pcs_race_slug + '-gc';
+        await save(gc, rows);
+      } else if (!rows.length) console.log('  nessun arrivo');
       await humanDelay(i);
+      for (const s of stages) {
+        const m = s.v.match(/^race\/(.+?)-(\d{4})-(stage-(\d+[a-z]?)|prologue)$/);
+        if (!m) continue;
+        const slug = `${r.pcs_race_slug}-${m[3]}`;
+        if (!FORCE && doneSet.has(`${slug}|${r.season}`)) continue;
+        const sn = await go(`https://www.procyclingstats.com/${s.v}`, 'table.results');
+        if (!sn.ok) { console.log(`  ${s.t}: non letta`); continue; }
+        const sr = parseResults(await page.content());
+        if (!sr.length) { await humanDelay(i); continue; }   // tappa non ancora corsa
+        const info = await page.evaluate(() => document.body.innerText);
+        const dm = info.match(/Date:\s*(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+        const mon = dm && MON[dm[2].toLowerCase()];
+        if (!dm || !mon) { console.log(`  ${s.t}: data non trovata`); continue; }
+        const date = `${dm[3]}-${String(mon).padStart(2, '0')}-${String(dm[1]).padStart(2, '0')}`;
+        if (date > today) { await humanDelay(i); continue; }
+        const route = (s.t.split('|')[1] || s.t.replace(/^(Stage \d+[a-z]?|Prologue)\s*/i, '')).trim();
+        const label = /prologue/i.test(m[3]) ? 'Prologo' : `Tappa ${m[4]}`;
+        await save({ pcs_race_slug: slug, season: r.season, nome: `${r.nome} – ${label}`, data_start: date, data_end: date, classe: r.classe, circuit: r.circuit, country: 'it', pcs_url: s.v, parent_slug: r.pcs_race_slug, stage_no: parseInt(m[4], 10) || 0, stage_route: route || null, is_gc: false, winner_name: null, winner_slug: null }, sr);
+        await humanDelay(i);
+      }
     }
   } finally { await browser.close().catch(() => {}); }
   console.log(`\n=== ${DRY ? 'Simulazione' : 'Completato'} === gare: ${made} · righe: ${nRows}`);
