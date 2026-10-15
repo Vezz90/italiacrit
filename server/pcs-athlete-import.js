@@ -970,6 +970,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     for (const e of entries) {
       let a = fciAll.get(e.atleta_id) || phantoms.get(e.atleta_id);
       if (!a) a = await getManualAthlete(e.atleta_id);
+      if (!a && e.cognome) a = { atleta_id: e.atleta_id, cognome: e.cognome, nome: e.nome || '' };   // profilo appena creato (pcs-create-missing-athletes.js)
       if (!a) { skipped++; continue; }
       athMap.set(e.atleta_id, a);
       if (e.slug) idsFileSlugs.set(e.atleta_id, e.slug);
