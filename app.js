@@ -19322,7 +19322,10 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
     } catch { /* in dubbio, non toccare la pillola */ hasPcsThisYear = true; }
     if (!hasPcsThisYear) {
       yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === String(nativeSelYear)) b.remove(); });
-      window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
+      // si apre l'anno PIU' RECENTE con risultati (ciclismo.info o PCS), non il piu' vecchio
+      const _latest = [...ciclismoOnlyYears, ...pcsOnlyYears].map(String).sort((x, y) => y - x)[0];
+      if (_latest && pcsOnlyYears.map(String).includes(_latest) && !ciclismoOnlyYears.map(String).includes(_latest)) window.setAtletaPcsYear(atletaId, _latest);
+      else window.setAtletaCiclismoYear(atletaId, _latest || ciclismoOnlyYears[0]);
     }
   }
 }
