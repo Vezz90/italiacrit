@@ -19870,6 +19870,13 @@ function _proCalIdFor(nome, data, isStageOrGc, genere) {
   }
   return best;
 }
+// Stessa gara? stessa data e almeno due parole distintive del nome in comune (una sola se il nome ne ha una sola)
+window._proSameRace = function (nameA, dateA, nameB, dateB) {
+  if (dateA !== dateB) return false;
+  const toks = s => [..._calNameTokens(String(s || '').replace(/\s+[–-]\s+.*$/, ''))];
+  const a = toks(nameA), b = new Set(toks(nameB));
+  return a.length > 0 && a.filter(w => b.has(w)).length >= Math.min(2, a.length);
+};
 // Una gara pro che abbiamo gia' tra i risultati FCI (stessa data, stesse parole del nome) non va duplicata: resta quella con i punti.
 window._proDropDuplicates = function (proEvents, existing) {
   const toks = s => [..._calNameTokens(String(s || '').replace(/\s+[–-]\s+.*$/, ''))];
@@ -19920,7 +19927,9 @@ async function renderGaraStorica(ciclismoGaraId) {
   const _calId = isPro ? _proCalIdFor(payload?.race?.nome, payload?.race?.data, / – /.test(payload?.race?.nome || ''), payload?.race?.genere) : null;
   const _mKey = _calId || garaKey;
   let _extAlbum = null;
+  const _ptsMap = {};
   if (isPro) {
+    for (const x of (globalData?.resultsRaw || [])) if (x.regione === 'PRO' && x.atleta_id && window._proSameRace(x.nome_gara, x.data, payload?.race?.nome, payload?.race?.data)) _ptsMap[x.atleta_id] = x.punti_effettivi;
     for (const r of rows) if (!r.atleta_id && window.ProRaces) r.atleta_id = window.ProRaces.athleteId(r.nome_completo);
     if (_calId) { try { const pm = await loadRisPhotos(); _extAlbum = (_risExtPhotosMap && _risExtPhotosMap[_calId]) || pm[_calId] || null; } catch {} }
   }
@@ -20008,7 +20017,7 @@ async function renderGaraStorica(ciclismoGaraId) {
         <td class="td-hide-mobile">${esc(r.distacco && !/^,+$/.test(r.distacco) ? r.distacco : '—')}</td>
         <td class="td-hide-mobile" style="text-align:right">—</td>
         <td class="td-hide-mobile" style="text-align:right">—</td>
-        <td class="td-pts">—</td>
+        <td class="td-pts">${isPro && r.atleta_id && _ptsMap[r.atleta_id] != null ? esc(_ptsMap[r.atleta_id]) : '—'}</td>
       </tr>`;
     }).join('');
 
@@ -20185,7 +20194,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       <div id="gara-pcs-ext"></div>
     </div>
     <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
-    <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">${isPro ? 'Gara professionistica (UCI) · risultati da ProCyclingStats · nessun punto ICS.' : 'Dati storici — archivio in fase di validazione.'}</div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">${isPro ? (Object.keys(_ptsMap).length ? 'Gara professionistica (UCI) · risultati da ProCyclingStats · punti ICS (×3) alle atlete italiane in archivio.' : 'Gara professionistica (UCI) · risultati da ProCyclingStats · nessun punto ICS.') : 'Dati storici — archivio in fase di validazione.'}</div>
     </div>
   `);
   if (!isPro) _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara, luogo: first.luogo || '', gender: /^DONNE/i.test(String(cats[0] || '')) ? 'F' : 'M', band: _ALBO_BAND_OF[String(cats[0] || '').toUpperCase()] || 'ELI' });
@@ -29498,7 +29507,10 @@ async function renderRisultati() {
 
   // Gare professionistiche in Italia (WorldTour/ProSeries da PCS, senza punti): stesse card delle altre, alla loro data
   if (!risShowMissing && window.ProRaces) {
-    try { const _pe = window._proDropDuplicates(await window.ProRaces.events(Number(_loadedSeasonYear())), Object.values(eventMap)); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
+    try { const _peAll = await window.ProRaces.events(Number(_loadedSeasonYear()));
+      // gare femminili pro che danno punti (righe manuali con regione "PRO"): in elenco resta la card pro con l'arrivo completo, i punti sono nella pagina a punti
+      for (const m of Object.values(eventMap).filter(e => e.regione === 'PRO')) { if (_peAll.some(p => window._proSameRace(p.nome, p.data, m.nome, m.data))) delete eventMap[m.id]; }
+      const _pe = window._proDropDuplicates(_peAll, Object.values(eventMap)); window._proAttachCalIds(_pe); for (const ev of _pe) if (!eventMap[ev.id]) eventMap[ev.id] = ev; } catch (e) { console.warn('[pro] non disponibili', e); }
   }
 
   let races = risShowMissing
@@ -29506,7 +29518,7 @@ async function renderRisultati() {
     : [...pendingToday, ...Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||'') || (b._seq - a._seq))];
 
   // Extract all regions, filtering out category false positives
-  const badRegions = ['JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
+  const badRegions = ['PRO', 'JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
   const allRegions = [...new Set(races.map(r => r.regione).filter(Boolean))].filter(r => !badRegions.includes(r.toUpperCase())).sort();
 
   // Apply filters
