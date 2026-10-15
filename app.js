@@ -19050,6 +19050,14 @@ function countryFlagImg(code) {
 // il vecchio link diretto a procyclingstats.com su questi risultati.
 async function showPcsRaceModal(raceSlug, season, raceName) {
   if (!raceSlug) return;
+  // Gare pro che abbiamo gia' in Risultati (WorldTour/ProSeries/1.1 in Italia, anche le singole tappe): si apre la nostra pagina, non il riquadro PCS
+  try {
+    if (window.ProRaces) {
+      const evs = await window.ProRaces.events(Number(season));
+      const hit = evs.find(e => e.id === `PRO_${raceSlug}_${season}`);
+      if (hit) { const a = document.createElement('a'); a.href = `/gara/${hit.id}`; document.body.appendChild(a); a.click(); a.remove(); return; }
+    }
+  } catch (_) { /* si ripiega sul riquadro PCS */ }
   document.getElementById('pcs-race-modal')?.remove();
   const modalHtml = `
     <div id="pcs-race-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
