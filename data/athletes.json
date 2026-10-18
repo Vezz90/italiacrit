@@ -1492,6 +1492,542 @@
       }
     ]
   },
+  "HARDING_WILLIAM_REES": {
+    "id": "HARDING_WILLIAM_REES",
+    "nome": "WILLIAM REES",
+    "cognome": "HARDING",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 80,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_GARA_IN_LINEA_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO GARA IN LINEA",
+        "data": "2026-10-13",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "124.000",
+        "media": "47.409"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "76_GRAN_PREMIO_CALVATONE_2026-10-06_ELI_M",
+        "nome_gara": "76 GRAN PREMIO CALVATONE",
+        "data": "2026-10-06",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "99.000",
+        "media": "46.035"
+      }
+    ]
+  },
+  "FRIGGI_VITTORIO": {
+    "id": "FRIGGI_VITTORIO",
+    "nome": "VITTORIO",
+    "cognome": "FRIGGI",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 48,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
+        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
+        "data": "2026-07-05",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "161.600",
+        "media": "43.419"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "39_FIRENZE_EMPOLI_2026-02-21_ELI_M",
+        "nome_gara": "39 FIRENZE EMPOLI",
+        "data": "2026-02-21",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "149.000",
+        "media": "42.393"
+      }
+    ]
+  },
+  "RUBIO_SIERRA_EDWIN_FABIAN": {
+    "id": "RUBIO_SIERRA_EDWIN_FABIAN",
+    "nome": "SIERRA EDWIN FABIAN",
+    "cognome": "RUBIO",
+    "team_attuale": "ARAN CUCINE VEJUS",
+    "team_id": "ARAN_CUCINE_VEJUS",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 54,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_ELI_M",
+        "nome_gara": "75 GRAN PREMIO EZIO DEL ROSSO",
+        "data": "2026-10-11",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "180.000",
+        "media": "42.353"
+      },
+      {
+        "gara_id": "75_TROFEO_MADONNA_DEL_ROSARIO_49_TROFEO_MARIO_ZANCHI_2026-10-05_ELI_M",
+        "nome_gara": "75 TROFEO MADONNA DEL ROSARIO 49 TROFEO MARIO ZANCHI",
+        "data": "2026-10-05",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "141.000",
+        "media": "43.891"
+      },
+      {
+        "gara_id": "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_ELI_M",
+        "nome_gara": "85 COPPA CIUFFENNA 98 COPPA ANTICA",
+        "data": "2026-09-15",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "163.900",
+        "media": "42.596"
+      },
+      {
+        "gara_id": "29_TROFEO_S_S_ADDOLORATA_2026-09-06_ELI_M",
+        "nome_gara": "29 TROFEO S S ADDOLORATA",
+        "data": "2026-09-06",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "115.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_CIRCUITO_DI_CESA_2026-09-01_ELI_M",
+        "nome_gara": "103 CIRCUITO DI CESA",
+        "data": "2026-09-01",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "169.800",
+        "media": "42.585"
+      },
+      {
+        "gara_id": "4_MEMORIAL_MANNUCCI_ALESSIO_EZIO_2026-07-28_ELI_M",
+        "nome_gara": "4 MEMORIAL MANNUCCI ALESSIO EZIO",
+        "data": "2026-07-28",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "82.100",
+        "media": "41.136"
+      }
+    ]
+  },
+  "MARCOZZI_MATTIA": {
+    "id": "MARCOZZI_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "MARCOZZI",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      }
+    ]
+  },
+  "CANTONI_ANDREA": {
+    "id": "CANTONI_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "CANTONI",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 63,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "54_GRAN_PREMIO_INDUSTRIA_COMMERCIO_ARTIGIANATO_CARNAGHESE_2026-08-29_ELI_M",
+        "nome_gara": "54 GRAN PREMIO INDUSTRIA COMMERCIO ARTIGIANATO CARNAGHESE",
+        "data": "2026-08-29",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "170.000",
+        "media": ""
+      },
+      {
+        "gara_id": "36_TROFEO_S_C_CORSANICO_2026-08-23_ELI_M",
+        "nome_gara": "36 TROFEO S C CORSANICO",
+        "data": "2026-08-23",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "154.200",
+        "media": "40.261"
+      },
+      {
+        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
+        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
+        "data": "2026-05-23",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "170.300",
+        "media": ""
+      },
+      {
+        "gara_id": "50_COPPA_CADUTI_DI_REDA_2026-04-05_ELI_M",
+        "nome_gara": "50 COPPA CADUTI DI REDA",
+        "data": "2026-04-05",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "148.300",
+        "media": "41.788"
+      }
+    ]
+  },
+  "WOOD_GEORGE": {
+    "id": "WOOD_GEORGE",
+    "nome": "GEORGE",
+    "cognome": "WOOD",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 62,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_GARA_IN_LINEA_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO GARA IN LINEA",
+        "data": "2026-10-13",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "124.000",
+        "media": "47.409"
+      },
+      {
+        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
+        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
+        "data": "2026-10-13",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "32.800",
+        "media": "48.275"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      }
+    ]
+  },
+  "GAGGINI_GIONA": {
+    "id": "GAGGINI_GIONA",
+    "nome": "GIONA",
+    "cognome": "GAGGINI",
+    "team_attuale": "U.C. PREGNANA",
+    "team_id": "U_C_PREGNANA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 14,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "U.C. PREGNANA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "U.C. PREGNANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      }
+    ]
+  },
+  "SIMONETTI_MATTIA": {
+    "id": "SIMONETTI_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "SIMONETTI",
+    "team_attuale": "A.S.D. U.C. PISTOIESE TEAM",
+    "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 28,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "A.S.D. U.C. PISTOIESE TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      },
+      {
+        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
+        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-19",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "A.S.D. U.C. PISTOIESE TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UMBRIA",
+        "km": "143.000",
+        "media": "43.116"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. U.C. PISTOIESE TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      }
+    ]
+  },
+  "RIZZI_GABRIELE": {
+    "id": "RIZZI_GABRIELE",
+    "nome": "GABRIELE",
+    "cognome": "RIZZI",
+    "team_attuale": "U.C. PREGNANA",
+    "team_id": "U_C_PREGNANA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "U.C. PREGNANA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      }
+    ]
+  },
+  "DE_ANGELIS_MATTEO": {
+    "id": "DE_ANGELIS_MATTEO",
+    "nome": "ANGELIS MATTEO",
+    "cognome": "DE",
+    "team_attuale": "ARAN CUCINE VEJUS",
+    "team_id": "ARAN_CUCINE_VEJUS",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "76_TARGA_CROCIFISSO_2026-10-18_ELI_M",
+        "nome_gara": "76 TARGA CROCIFISSO",
+        "data": "2026-10-18",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "ARAN CUCINE VEJUS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PUGLIA",
+        "km": "108.000",
+        "media": "43.306"
+      }
+    ]
+  },
   "BIANCALANI_ANDREA": {
     "id": "BIANCALANI_ANDREA",
     "nome": "ANDREA",
@@ -1605,57 +2141,6 @@
         "regione": "VENETO",
         "km": "83.000",
         "media": "46.005"
-      }
-    ]
-  },
-  "WOOD_GEORGE": {
-    "id": "WOOD_GEORGE",
-    "nome": "GEORGE",
-    "cognome": "WOOD",
-    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 52,
-    "risultati": [
-      {
-        "gara_id": "74_COPPA_DEL_MOBILIO_GARA_IN_LINEA_2026-10-13_ELI_M",
-        "nome_gara": "74 COPPA DEL MOBILIO GARA IN LINEA",
-        "data": "2026-10-13",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "124.000",
-        "media": "47.409"
-      },
-      {
-        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
-        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
-        "data": "2026-10-13",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "32.800",
-        "media": "48.275"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
       }
     ]
   },
@@ -2056,57 +2541,6 @@
         "regione": "TOSCANA",
         "km": "176.600",
         "media": "41.134"
-      }
-    ]
-  },
-  "HARDING_WILLIAM_REES": {
-    "id": "HARDING_WILLIAM_REES",
-    "nome": "WILLIAM REES",
-    "cognome": "HARDING",
-    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 50,
-    "risultati": [
-      {
-        "gara_id": "74_COPPA_DEL_MOBILIO_GARA_IN_LINEA_2026-10-13_ELI_M",
-        "nome_gara": "74 COPPA DEL MOBILIO GARA IN LINEA",
-        "data": "2026-10-13",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "124.000",
-        "media": "47.409"
-      },
-      {
-        "gara_id": "74_COPPA_DEL_MOBILIO_CRONOMETRO_2026-10-13_ELI_M",
-        "nome_gara": "74 COPPA DEL MOBILIO CRONOMETRO",
-        "data": "2026-10-13",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "32.800",
-        "media": "48.275"
-      },
-      {
-        "gara_id": "76_GRAN_PREMIO_CALVATONE_2026-10-06_ELI_M",
-        "nome_gara": "76 GRAN PREMIO CALVATONE",
-        "data": "2026-10-06",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "99.000",
-        "media": "46.035"
       }
     ]
   },
@@ -3965,96 +4399,6 @@
         "regione": "TOSCANA",
         "km": "180.000",
         "media": "44.040"
-      }
-    ]
-  },
-  "RUBIO_SIERRA_EDWIN_FABIAN": {
-    "id": "RUBIO_SIERRA_EDWIN_FABIAN",
-    "nome": "SIERRA EDWIN FABIAN",
-    "cognome": "RUBIO",
-    "team_attuale": "ARAN CUCINE VEJUS",
-    "team_id": "ARAN_CUCINE_VEJUS",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 34,
-    "risultati": [
-      {
-        "gara_id": "75_GRAN_PREMIO_EZIO_DEL_ROSSO_2026-10-11_ELI_M",
-        "nome_gara": "75 GRAN PREMIO EZIO DEL ROSSO",
-        "data": "2026-10-11",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "180.000",
-        "media": "42.353"
-      },
-      {
-        "gara_id": "75_TROFEO_MADONNA_DEL_ROSARIO_49_TROFEO_MARIO_ZANCHI_2026-10-05_ELI_M",
-        "nome_gara": "75 TROFEO MADONNA DEL ROSARIO 49 TROFEO MARIO ZANCHI",
-        "data": "2026-10-05",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "141.000",
-        "media": "43.891"
-      },
-      {
-        "gara_id": "85_COPPA_CIUFFENNA_98_COPPA_ANTICA_2026-09-15_ELI_M",
-        "nome_gara": "85 COPPA CIUFFENNA 98 COPPA ANTICA",
-        "data": "2026-09-15",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "163.900",
-        "media": "42.596"
-      },
-      {
-        "gara_id": "29_TROFEO_S_S_ADDOLORATA_2026-09-06_ELI_M",
-        "nome_gara": "29 TROFEO S S ADDOLORATA",
-        "data": "2026-09-06",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "115.000",
-        "media": ""
-      },
-      {
-        "gara_id": "103_CIRCUITO_DI_CESA_2026-09-01_ELI_M",
-        "nome_gara": "103 CIRCUITO DI CESA",
-        "data": "2026-09-01",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "169.800",
-        "media": "42.585"
-      },
-      {
-        "gara_id": "4_MEMORIAL_MANNUCCI_ALESSIO_EZIO_2026-07-28_ELI_M",
-        "nome_gara": "4 MEMORIAL MANNUCCI ALESSIO EZIO",
-        "data": "2026-07-28",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ARAN CUCINE VEJUS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "82.100",
-        "media": "41.136"
       }
     ]
   },
@@ -157474,70 +157818,6 @@
       }
     ]
   },
-  "CANTONI_ANDREA": {
-    "id": "CANTONI_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "CANTONI",
-    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 51,
-    "risultati": [
-      {
-        "gara_id": "54_GRAN_PREMIO_INDUSTRIA_COMMERCIO_ARTIGIANATO_CARNAGHESE_2026-08-29_ELI_M",
-        "nome_gara": "54 GRAN PREMIO INDUSTRIA COMMERCIO ARTIGIANATO CARNAGHESE",
-        "data": "2026-08-29",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "170.000",
-        "media": ""
-      },
-      {
-        "gara_id": "36_TROFEO_S_C_CORSANICO_2026-08-23_ELI_M",
-        "nome_gara": "36 TROFEO S C CORSANICO",
-        "data": "2026-08-23",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "154.200",
-        "media": "40.261"
-      },
-      {
-        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
-        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-        "data": "2026-05-23",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "170.300",
-        "media": ""
-      },
-      {
-        "gara_id": "50_COPPA_CADUTI_DI_REDA_2026-04-05_ELI_M",
-        "nome_gara": "50 COPPA CADUTI DI REDA",
-        "data": "2026-04-05",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "148.300",
-        "media": "41.788"
-      }
-    ]
-  },
   "PONOMAR_ANDRII": {
     "id": "PONOMAR_ANDRII",
     "nome": "ANDRII",
@@ -187039,57 +187319,6 @@
       }
     ]
   },
-  "FRIGGI_VITTORIO": {
-    "id": "FRIGGI_VITTORIO",
-    "nome": "VITTORIO",
-    "cognome": "FRIGGI",
-    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
-        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
-        "data": "2026-07-05",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "161.600",
-        "media": "43.419"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "39_FIRENZE_EMPOLI_2026-02-21_ELI_M",
-        "nome_gara": "39 FIRENZE EMPOLI",
-        "data": "2026-02-21",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "149.000",
-        "media": "42.393"
-      }
-    ]
-  },
   "DELLA_TORRE_CARLO": {
     "id": "DELLA_TORRE_CARLO",
     "nome": "TORRE CARLO",
@@ -210758,44 +210987,6 @@
       }
     ]
   },
-  "SIMONETTI_MATTIA": {
-    "id": "SIMONETTI_MATTIA",
-    "nome": "MATTIA",
-    "cognome": "SIMONETTI",
-    "team_attuale": "A.S.D. U.C. PISTOIESE TEAM",
-    "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 22,
-    "risultati": [
-      {
-        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
-        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-19",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "A.S.D. U.C. PISTOIESE TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "UMBRIA",
-        "km": "143.000",
-        "media": "43.116"
-      },
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "A.S.D. U.C. PISTOIESE TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
-      }
-    ]
-  },
   "NANNINI_ANDREA": {
     "id": "NANNINI_ANDREA",
     "nome": "ANDREA",
@@ -211352,31 +211543,6 @@
         "posizione": 4,
         "punti_effettivi": 8,
         "team": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
-      }
-    ]
-  },
-  "GAGGINI_GIONA": {
-    "id": "GAGGINI_GIONA",
-    "nome": "GIONA",
-    "cognome": "GAGGINI",
-    "team_attuale": "U.C. PREGNANA",
-    "team_id": "U_C_PREGNANA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "U.C. PREGNANA",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PUGLIA",
