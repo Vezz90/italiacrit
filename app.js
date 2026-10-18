@@ -20128,7 +20128,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     _heroMedia = `<div class="gara-hero-media">${_heroVideoEl}</div>`;
   }
 
-  const _gallery = restPhotoObjs.length ? `<div class="race-gallery">${restPhotoObjs.map(p => `
+  const _gallery = restPhotoObjs.length ? `<div class="race-gallery rg-strip">${restPhotoObjs.map(p => `
     <div class="race-gallery-item">
       <img src="${esc(p.src)}" alt="Foto gara" loading="lazy" onclick="${_photoClick(p)}" style="cursor:zoom-in"/>
       ${p.credit ? `<div class="race-gallery-caption">${esc(p.credit)}</div>` : ''}

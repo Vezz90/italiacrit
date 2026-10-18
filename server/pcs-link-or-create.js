@@ -41,7 +41,7 @@ async function hasHistory(id) { const q = await sb.from('ciclismo_results').sele
   Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8'))).forEach(addKnown);
   (await all('entity_overrides', 'entity_id', q => q.in('entity_type', ['atleta', 'pcs_atleta']))).forEach(x => addKnown(x.entity_id));
 
-  let races = (await sb.from('pro_races').select('pcs_race_slug,season,circuit,classe,nome,data_start,pcs_url')).data || [];
+  let races = (await sb.from('pro_races').select('pcs_race_slug,season,circuit,classe,nome,data_start,pcs_url,country')).data || [];
   if (SEASON) races = races.filter(r => String(r.season) === SEASON);
   const riders = new Map(); // pcs_slug -> {nome, team, country, female, rows}
   for (const r of races) {
@@ -120,7 +120,7 @@ async function hasHistory(id) { const q = await sb.from('ciclismo_results').sele
   for (const r of races) {
     for (let from = 0; ; from += 1000) {
       const q = await sb.from('pcs_race_full_results').select('atleta_id,pcs_slug,posizione,distacco,country').eq('pcs_race_slug', r.pcs_race_slug).eq('season', r.season).not('atleta_id', 'is', null).not('posizione', 'is', null).range(from, from + 999);
-      const rows = (q.data || []).filter(x => ids.includes(x.atleta_id) && !realSeasons.has(x.atleta_id + '|' + r.season)).map(x => ({ atleta_id: x.atleta_id, pcs_slug: x.pcs_slug, season: r.season, gara_name: r.nome, data: r.data_start, posizione: x.posizione, distacco: x.distacco, pcs_race_slug: r.pcs_race_slug, gara_id: null, country: x.country, pcs_url: r.pcs_url }));
+      const rows = (q.data || []).filter(x => ids.includes(x.atleta_id) && !realSeasons.has(x.atleta_id + '|' + r.season)).map(x => ({ atleta_id: x.atleta_id, pcs_slug: x.pcs_slug, season: r.season, gara_name: r.nome, data: r.data_start, posizione: x.posizione, distacco: x.distacco, pcs_race_slug: r.pcs_race_slug, gara_id: null, country: r.country || 'it', pcs_url: r.pcs_url }));
       if (rows.length) { const u = await sb.from('pcs_results').upsert(rows, { onConflict: 'atleta_id,season,pcs_race_slug', ignoreDuplicates: true }); up(u); mirrored += rows.length; rows.forEach(x => mirror.add(x.atleta_id + '|' + x.season)); }
       if (!q.data || q.data.length < 1000) break;
     }

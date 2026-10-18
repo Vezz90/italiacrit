@@ -13811,3 +13811,8 @@ a.ttl-chip:hover { border-color: var(--accent, #F2750F); }
 .am-recs .hx-si-r { color: var(--text-primary); }
 body.light-mode .am-recs .hx-si-r .up { color: #047857; }
 body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
+
+/* galleria foto di una gara: una sola fascia che scorre in orizzontale (in griglia 2 colonne con decine di foto occupava migliaia di pixel) */
+.race-gallery.rg-strip { display: flex; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; gap: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding-bottom: 6px; scrollbar-width: thin; }
+.race-gallery.rg-strip .race-gallery-item { flex: 0 0 220px; scroll-snap-align: start; }
+@media (max-width: 480px) { .race-gallery.rg-strip { grid-template-columns: none; } .race-gallery.rg-strip .race-gallery-item { flex-basis: 68%; } }
