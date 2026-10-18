@@ -25,9 +25,11 @@ const toks = s => new Set(strip(s).split(' ').filter(Boolean));
 const STOP = new Set(['a', 's', 'd', 'asd', 'ssd', 'sc', 'gs', 'uc', 'team', 'club', 'cycling', 'ciclistica', 'polisportiva', 'societa', 'dilettantistica', 'sport', 'e', 'di', 'del', 'della', 'the', 'srl', 'snc', 'a.s.d', 'pol', 'ssdarl']);
 
 function searchTerms(name) {
+  // nomi FCI e nomi PCS spesso differiscono nello sponsor: si provano piu combinazioni (max 4 ricerche)
   const w = strip(name).split(' ').filter(x => x && !STOP.has(x) && x.length > 1);
-  const t1 = w.slice(0, 4).join('+'), t2 = w.slice(0, 2).join('+');
-  return [...new Set([t1, t2].filter(Boolean))];
+  const longest = [...w].sort((a, b) => b.length - a.length);
+  const t = [w.slice(0, 4).join('+'), w.slice(0, 2).join('+'), w.slice(-2).join('+'), longest[0], longest[1]];
+  return [...new Set(t.filter(Boolean))].slice(0, 4);
 }
 
 (async () => {

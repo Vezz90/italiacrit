@@ -186,6 +186,7 @@ function yearDone(aid, y) {
 const MIRROR_FILE = path.join(__dirname, 'pcs-pro-mirror.json');   // "atleta|stagione" con solo gli arrivi copiati dalle gare pro
 let MIRROR = new Set(); try { MIRROR = new Set(JSON.parse(fs.readFileSync(MIRROR_FILE, 'utf8'))); } catch (_) {}
 const saveMirror = () => { try { fs.writeFileSync(MIRROR_FILE, JSON.stringify([...MIRROR])); } catch (_) {} };
+const { createPhotoRefresher } = require('./pcs-photo-lib');   // controlla la foto profilo nella stessa visita (nessuna richiesta in piu)
 const SPAN_FILE = path.join(__dirname, 'pcs-span-ids.json');
 let SPAN = new Set(); try { SPAN = new Set(JSON.parse(fs.readFileSync(SPAN_FILE, 'utf8'))); } catch (_) {}
 
@@ -283,6 +284,7 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
   }
   writeProgress(true);
 
+  let photoRef = null; try { photoRef = await createPhotoRefresher(sb); console.log(`foto profilo: controllo attivo (${photoRef.size} foto note)`); } catch (e) { console.warn('controllo foto non attivo:', e.message); }
   let { browser, context, page: firstPage } = await launchPcsBrowser();
   let nextIdx = 0, stop = false;
 
@@ -303,6 +305,7 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
         const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { onLog: msg => { if (/sfida|challenge/i.test(msg)) prog.challenges++; } });
         prog.yearsDone++;
         if (!nav.ok) { if (nav.notFound) { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; } else { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; } continue; }
+        if (photoRef) { try { await photoRef.check(page, g.atletaId, g.slug); } catch (_) {} }   // la pagina anno mostra la foto attuale
         let yearResults;
         try { yearResults = onlyThisSeason(await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'), y); }
         catch { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; continue; }
