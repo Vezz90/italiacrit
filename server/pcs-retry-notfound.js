@@ -44,12 +44,22 @@ function candidates(id) {
     const q = await sb.from('entity_overrides').select('entity_id').eq('field', 'pcs_slug').order('id').range(from, from + 999);
     if (!q.data || !q.data.length) break; q.data.forEach(x => have.add(x.entity_id)); if (q.data.length < 1000) break;
   }
-  let ids = nf.filter(id => !have.has(id) && (!ONLY.size || ONLY.has(id)));
+  let ids = nf.filter(id => !have.has(id) && (!ONLY.size || ONLY.has(id)) && !(state[id] && Date.now() - state[id] < 30 * 864e5));
   // stagioni su ciclismo.info + anno di nascita noto
   const seasons = {};
-  for (let i = 0; i < ids.length; i += 100) {
-    const ch = ids.slice(i, i + 100), q = await sb.from('ciclismo_results').select('atleta_id, stagione').in('atleta_id', ch);
-    for (const x of q.data || []) (seasons[x.atleta_id] = seasons[x.atleta_id] || new Set()).add(x.stagione);
+  // elenco gia calcolato (pcs-retry-todo.json: [id, stagioni], dal piu lungo): evita minuti di query prima di cominciare. --refresh lo ricalcola
+  const TODO = path.join(__dirname, 'pcs-retry-todo.json');
+  const useTodo = !args.includes('--refresh') && fs.existsSync(TODO) && !ONLY.size;
+  if (useTodo) { const t = JSON.parse(fs.readFileSync(TODO, 'utf8')); const keep = new Set(t.map(x => x[0])); t.forEach(([id, n]) => { seasons[id] = new Set(Array.from({ length: n }, (_, k) => k)); }); ids = ids.filter(id => keep.has(id)); }
+  for (let i = 0; !useTodo && i < ids.length; i += 100) {
+    // un atleta alla volta, paginando: una richiesta restituisce al massimo 1000 righe e il conteggio veniva troncato
+    for (const aid of ids.slice(i, i + 100)) {
+      for (let from = 0; ; from += 1000) {
+        const q = await sb.from('ciclismo_results').select('stagione').eq('atleta_id', aid).range(from, from + 999);
+        for (const x of q.data || []) (seasons[aid] = seasons[aid] || new Set()).add(x.stagione);
+        if (!q.data || q.data.length < 1000) break;
+      }
+    }
   }
   const birth = {};
   for (let i = 0; i < ids.length; i += 100) {
@@ -81,7 +91,13 @@ function candidates(id) {
       const pcsTok = tokens(info.h1), ours = [...tokens(label)];
       const nameOk = ours.length && ours.every(t => pcsTok.has(t) || [...pcsTok].some(p => p.startsWith(t) || t.startsWith(p)));
       const by = (info.txt.match(/Date of birth:\s*\d{1,2}\w*\s+\w+\s+(\d{4})/) || [])[1];
-      const birthOk = !birth[id] || !by || Math.abs(parseInt(by, 10) - birth[id]) <= 1;
+      let birthOk = !birth[id] || !by || Math.abs(parseInt(by, 10) - birth[id]) <= 1;
+      // anno di nascita non noto da noi: l'eta su PCS deve essere compatibile con il nostro primo anno (omonimi piu vecchi: Pietro Ferrari, Salvatore Caruso)
+      if (nameOk && birthOk && !birth[id] && by) {
+        const cd = (await sb.from('ciclismo_results').select('stagione, categoria').eq('atleta_id', id).limit(300)).data || [];
+        const ys = cd.map(r => parseInt(r.stagione, 10)).filter(Boolean);
+        if (ys.length) { const age = Math.min(...ys) - parseInt(by, 10), youth = cd.some(r => /ESORDIENT|ALLIEVI|JUNIORES/i.test(r.categoria || '')); birthOk = age >= 6 && age <= (youth ? 19 : 45); if (!birthOk) console.log(`    scartato ${slug}: nato nel ${by} ma da noi compare dal ${Math.min(...ys)}${youth ? ' tra i giovani' : ''}`); }
+      }
       if (nameOk && birthOk) { hit = slug; break; }
       await humanDelay(i);
     }

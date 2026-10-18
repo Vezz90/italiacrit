@@ -1,0 +1,123 @@
+[
+ {
+  "id": "BILBAO_PELLO",
+  "tipo": "creato",
+  "m": [
+   [
+    "BILBAO_PELO",
+    "1 lettera"
+   ]
+  ]
+ },
+ {
+  "id": "JOHANNESSEN_TOBIAS_HALLAND",
+  "tipo": "creato",
+  "m": [
+   [
+    "JOHANNESSEN_TOBIAS",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "JOHANNESSEN_ANDERS_HALLAND",
+  "tipo": "creato",
+  "m": [
+   [
+    "JOHANNESSEN_ANDERS",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "BUITRAGO_SANTIAGO",
+  "tipo": "creato",
+  "m": [
+   [
+    "BUITRAGO_SANCHEZ_SANTIAGO",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "BOILARD_SIMONE",
+  "tipo": "creato",
+  "m": [
+   [
+    "SIMONE_SIMONE",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "PIERGIOVANNI_FEDERICA_DAMIANA",
+  "tipo": "creato",
+  "m": [
+   [
+    "PIERGIOVANNI_FEDERICA",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "AYUSO_JUAN",
+  "tipo": "creato",
+  "m": [
+   [
+    "AYUSO_PESQUERA_JUAN",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "SIMMONS_COLBY",
+  "tipo": "creato",
+  "m": [
+   [
+    "SIMMONS_COLBI",
+    "1 lettera"
+   ]
+  ]
+ },
+ {
+  "id": "MARTIN_GUILLAUME",
+  "tipo": "creato",
+  "m": [
+   [
+    "MARTIN_GUILLAUM",
+    "1 lettera"
+   ]
+  ]
+ },
+ {
+  "id": "MARTINEZ_DANIEL_FELIPE",
+  "tipo": "creato",
+  "m": [
+   [
+    "MARTINEZ_DANIEL",
+    "incluso"
+   ]
+  ]
+ },
+ {
+  "id": "MARTIN_MARCO",
+  "tipo": "creato",
+  "m": [
+   [
+    "MARTINA_MARCO",
+    "1 lettera"
+   ]
+  ]
+ },
+ {
+  "id": "BICELLI_MICHELE",
+  "tipo": "dubbio",
+  "slug": "michele-bicelli1",
+  "m": [
+   [
+    "BICELLI_MICHELE_2009",
+    "incluso"
+   ]
+  ]
+ }
+]

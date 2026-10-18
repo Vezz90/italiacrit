@@ -27,7 +27,7 @@ if (!SUPABASE_SECRET) { console.error('SUPABASE_SECRET mancante in .env.local');
 const args = process.argv.slice(2);
 const argv = n => (args.find(a => a.startsWith(`--${n}=`)) || '').split('=')[1];
 const SEASONS = (argv('season') || String(new Date().getFullYear())).split(',').map(Number);
-const STAGES = args.includes('--stages');   // rivisita anche le gare finite per importarne le tappe
+const STAGES = args.includes('--stages') || args.includes('--oggi');   // rivisita anche le gare finite per importarne le tappe
 const FORCE = args.includes('--force'), DRY = args.includes('--dry-run');
 const LIMIT = parseInt(argv('limit') || '', 10) || Infinity;
 // 1 = UCI WorldTour, 24 = Women's WorldTour, 26 = ProSeries, 16 = Women Elite, 13 = Europe Tour. Del 13 e del 16 solo le classi da 1.1 in su
@@ -130,7 +130,10 @@ function parseResults(html) {
     const { data: have } = await sb.from('pro_races').select('pcs_race_slug, season, winner_name').in('season', SEASONS);
     const doneSet = new Set((have || []).filter(r => r.winner_name).map(r => `${r.pcs_race_slug}|${r.season}`));
     const recent = new Date(Date.now() - 45 * 86400000).toISOString().slice(0, 10);   // gare recenti: si ricontrolla se sono usciti nuovi arrivi di tappa
-    const todo = races.filter(r => r.data_start <= today && (FORCE || STAGES || r.data_end >= recent || !doneSet.has(`${r.pcs_race_slug}|${r.season}`))).slice(0, LIMIT);
+    const OGGI = args.includes('--oggi');   // controllo ricorrente: solo gare di oggi/ieri ancora senza vincitore salvato (tappe comprese)
+    const ieri = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const ONLY = new Set((argv('only') || '').split(',').filter(Boolean));   // --only=veneto-classic,altra-gara: solo queste gare
+    const todo = races.filter(r => (!ONLY.size || ONLY.has(r.pcs_race_slug)) && (!OGGI || (r.data_end >= ieri && !doneSet.has(`${r.pcs_race_slug}|${r.season}`))) && r.data_start <= today && (FORCE || STAGES || r.data_end >= recent || !doneSet.has(`${r.pcs_race_slug}|${r.season}`))).slice(0, LIMIT);
     console.log(`\n${todo.length} da controllare\n`);
 
     const MON = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 };
@@ -188,4 +191,9 @@ function parseResults(html) {
     }
   } finally { await browser.close().catch(() => {}); }
   console.log(`\n=== ${DRY ? 'Simulazione' : 'Completato'} === gare: ${made} · righe: ${nRows}`);
+  // ogni corridore importato deve avere un profilo: collega a quelli esistenti o ne crea di nuovi (solo database, nessun accesso a PCS)
+  if (!DRY && nRows > 0) {
+    const r = require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'pcs-link-or-create.js')], { stdio: 'inherit' });
+    if (r.status) console.log('ATTENZIONE: collegamento profili non completato (codice ' + r.status + '), rilanciare: node pcs-link-or-create.js');
+  }
 })().catch(e => { console.error('ERRORE FATALE', e); process.exit(1); });

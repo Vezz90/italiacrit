@@ -1210,7 +1210,18 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     // Anti-collisione omonimi (Juniores) — vedi commento in cima al file.
     let targetAtletaId = atletaId;
     const curCat = currentCategoriaMap.get(atletaId);
-    const badSeason = implausibleEarliestSeasonForJun(curCat?.categoria, teamHistory, SEASON);
+    let badSeason = implausibleEarliestSeasonForJun(curCat?.categoria, teamHistory, SEASON);
+    // stessa protezione per chi ha gia un passato giovanile da noi (Esordienti/Allievi/Juniores): una carriera PCS che parte 12+ anni prima
+    // del nostro primo anno e di un omonimo piu vecchio (es. Pietro Ferrari, Salvatore Caruso)
+    if (!badSeason && !String(atletaId).match(/_\d{4}$/)) {
+      try {
+        const cq = await sb.from('ciclismo_results').select('stagione, categoria').eq('atleta_id', atletaId).limit(300);
+        const cd = cq.data || [], ys = cd.map(r => parseInt(r.stagione, 10)).filter(Boolean);
+        const youth = cd.some(r => /ESORDIENT|ALLIEVI|JUNIORES/i.test(r.categoria || ''));
+        const pcsMin = Math.min(...[...(teamHistory || []).map(t => t.season), ...(results || []).map(r => parseInt(String(r.data || '').slice(0, 4), 10))].filter(Boolean));
+        if (youth && ys.length && Number.isFinite(pcsMin) && pcsMin < Math.min(...ys) - 12) badSeason = pcsMin;
+      } catch (_) {}
+    }
     if (badSeason) {
       targetAtletaId = `${atletaId}_${badSeason}`;
       disambiguated++;

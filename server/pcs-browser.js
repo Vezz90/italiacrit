@@ -171,7 +171,9 @@ async function humanDelay(index = 0) {
   // tentativo NON ha un suo delay dedicato (solo questo, una volta per
   // atleta), quindi è tempo di caricamento pagina reale, non artificiale.
   // Ridurre questo delay aiuta ma non risolve quel caso.
-  const base = 3000 + Math.random() * 1000; // 3-4s, media ~3.5s
+  // 16/10/2026: con 3-4s (e 3 lavoratori in parallelo) PCS ha bloccato l'IP. Pausa prudente 9-12s, regolabile con PCS_DELAY_MS.
+  const min = parseInt(process.env.PCS_DELAY_MS || '9000', 10);
+  const base = min + Math.random() * Math.max(1000, min / 3);
   await sleep(base);
 }
 

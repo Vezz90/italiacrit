@@ -1,0 +1,125 @@
+{
+ "link": [],
+ "create": [],
+ "ambiguous": [
+  {
+   "slug": "michael-leonard1",
+   "nome": "LEONARD Michael",
+   "ids": [
+    "LEONARD_MICHAEL"
+   ]
+  },
+  {
+   "slug": "matthew-fox2",
+   "nome": "Fox Matthew",
+   "ids": [
+    "FOX_MATTHEW"
+   ]
+  },
+  {
+   "slug": "filippo-magli2",
+   "nome": "Magli Filippo",
+   "ids": [
+    "MAGLI_FILIPPO"
+   ]
+  },
+  {
+   "slug": "benjamin-thomas-2",
+   "nome": "Thomas Benjamin",
+   "ids": [
+    "THOMAS_BENJAMIN"
+   ]
+  },
+  {
+   "slug": "nicola-rossi1",
+   "nome": "Rossi Nicola",
+   "ids": [
+    "ROSSI_NICOLA"
+   ]
+  },
+  {
+   "slug": "michele-bicelli1",
+   "nome": "Bicelli Michele",
+   "ids": [
+    "BICELLI_MICHELE"
+   ]
+  },
+  {
+   "slug": "ivo-emanuel-alves",
+   "nome": "Oliveira Ivo",
+   "ids": [
+    "OLIVEIRA_IVO"
+   ]
+  },
+  {
+   "slug": "david-paumann1",
+   "nome": "PAUMANN David",
+   "ids": [
+    "PAUMANN_DAVID"
+   ]
+  },
+  {
+   "slug": "maeva-plagniol1",
+   "nome": "Plagniol Maéva",
+   "ids": [
+    "PLAGNIOL_MAEVA"
+   ]
+  },
+  {
+   "slug": "kahsay-tsige-kirosd",
+   "nome": "Kiros Kahsay Tsige",
+   "ids": [
+    "KIROS_KAHSAY_TSIGE"
+   ]
+  },
+  {
+   "slug": "kasper-andersen1",
+   "nome": "ANDERSEN Kasper",
+   "ids": [
+    "ANDERSEN_KASPER"
+   ]
+  },
+  {
+   "slug": "george-wood1",
+   "nome": "Wood George",
+   "ids": [
+    "WOOD_GEORGE"
+   ]
+  },
+  {
+   "slug": "david-gaffney1",
+   "nome": "GAFFNEY David",
+   "ids": [
+    "GAFFNEY_DAVID"
+   ]
+  },
+  {
+   "slug": "matar-peretz-hardeball",
+   "nome": "PERETZ HERDEVALL Matar",
+   "ids": [
+    "PERETZ_HERDEVALL_MATAR"
+   ]
+  },
+  {
+   "slug": "patrick-casey1",
+   "nome": "CASEY Patrick",
+   "ids": [
+    "CASEY_PATRICK"
+   ]
+  },
+  {
+   "slug": "emilio-garcia1",
+   "nome": "Garcia Emilio",
+   "ids": [
+    "GARCIA_EMILIO"
+   ]
+  },
+  {
+   "slug": "heidi-antikainen1",
+   "nome": "ANTIKAINEN Heidi",
+   "ids": [
+    "ANTIKAINEN_HEIDI"
+   ]
+  }
+ ]
+}
