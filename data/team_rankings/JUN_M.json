@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1956,
+    "punti": 1960,
     "vittorie": 29,
     "p1": 29,
     "p2": 18,
     "p3": 18,
-    "pout": 78,
+    "pout": 79,
     "n_atleti": 14,
     "pos": 1
   },
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 951,
+    "punti": 959,
     "vittorie": 15,
     "p1": 15,
     "p2": 10,
     "p3": 7,
-    "pout": 58,
+    "pout": 59,
     "n_atleti": 13,
     "pos": 2
   },
@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
+    "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
+    "punti": 860,
+    "vittorie": 11,
+    "p1": 11,
+    "p2": 2,
+    "p3": 11,
+    "pout": 41,
+    "n_atleti": 9,
+    "pos": 4
+  },
+  {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
     "punti": 853,
@@ -45,18 +57,6 @@
     "p3": 6,
     "pout": 47,
     "n_atleti": 12,
-    "pos": 4
-  },
-  {
-    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti": 850,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 2,
-    "p3": 10,
-    "pout": 41,
-    "n_atleti": 9,
     "pos": 5
   },
   {
@@ -84,27 +84,27 @@
     "pos": 7
   },
   {
+    "team_id": "TEAM_ECOTEK_ZERO24",
+    "team_nome": "TEAM ECOTEK ZERO24",
+    "punti": 764,
+    "vittorie": 10,
+    "p1": 10,
+    "p2": 15,
+    "p3": 11,
+    "pout": 41,
+    "n_atleti": 11,
+    "pos": 8
+  },
+  {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 759,
+    "punti": 761,
     "vittorie": 5,
     "p1": 5,
     "p2": 7,
     "p3": 11,
-    "pout": 49,
+    "pout": 50,
     "n_atleti": 10,
-    "pos": 8
-  },
-  {
-    "team_id": "TEAM_ECOTEK_ZERO24",
-    "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 746,
-    "vittorie": 10,
-    "p1": 10,
-    "p2": 14,
-    "p3": 11,
-    "pout": 40,
-    "n_atleti": 11,
     "pos": 9
   },
   {
@@ -146,12 +146,12 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 592,
+    "punti": 597,
     "vittorie": 9,
     "p1": 9,
     "p2": 10,
     "p3": 6,
-    "pout": 28,
+    "pout": 29,
     "n_atleti": 6,
     "pos": 13
   },
@@ -350,13 +350,13 @@
   {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
-    "punti": 183,
+    "punti": 186,
     "vittorie": 0,
     "p1": 0,
     "p2": 4,
     "p3": 2,
-    "pout": 23,
-    "n_atleti": 6,
+    "pout": 24,
+    "n_atleti": 7,
     "pos": 30
   },
   {
@@ -912,6 +912,18 @@
     "pos": 76
   },
   {
+    "team_id": "S_C_FAGNANO_NUOVA",
+    "team_nome": "S.C. FAGNANO NUOVA",
+    "punti": 37,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 77
+  },
+  {
     "team_id": "STAR_CYCLING_LAB",
     "team_nome": "STAR CYCLING LAB",
     "punti": 37,
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "TEAM_SERIO",
@@ -933,7 +945,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
@@ -945,7 +957,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "PC_BAIX_EBRE",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -981,7 +993,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "SCONOSCIUTO",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1017,18 +1029,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 5,
-    "pos": 85
-  },
-  {
-    "team_id": "S_C_FAGNANO_NUOVA",
-    "team_nome": "S.C. FAGNANO NUOVA",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 86
   },
   {
@@ -1404,6 +1404,18 @@
     "pos": 117
   },
   {
+    "team_id": "ASD_TEAM_PIERI",
+    "team_nome": "ASD TEAM PIERI",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 118
+  },
+  {
     "team_id": "GI_ESSE_PRO_CYCLING",
     "team_nome": "GI ESSE PRO CYCLING",
     "punti": 4,
@@ -1413,7 +1425,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 118
+    "pos": 119
   },
   {
     "team_id": "DAL_RISO_AL_ROSA",
@@ -1425,7 +1437,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 119
+    "pos": 120
   },
   {
     "team_id": "CASANO",
@@ -1437,24 +1449,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 120
+    "pos": 121
   },
   {
     "team_id": "CICLI_LUCCHINI",
     "team_nome": "CICLI LUCCHINI",
     "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 121
-  },
-  {
-    "team_id": "ASD_TEAM_PIERI",
-    "team_nome": "ASD TEAM PIERI",
-    "punti": 3,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
