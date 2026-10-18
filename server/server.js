@@ -7997,6 +7997,8 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
       added++;
     }
 
+    try { await hydrateXpixPending(queue, 8); } catch (e) { console.warn('[xpix-sync] foto:', e.message); }
+
     // Riconcilia con le foto GIÀ pubblicate: se un album è presente in xpix_photos
     // ma in coda risulta ancora "pending" (es. la coda era stata resettata), segnalo
     // come approvato — così non ricompare tra le foto da approvare.
@@ -10741,13 +10743,29 @@ async function ensureScraperMediaProfiles() {
 }
 
 // Sync xpix automatica ogni 6 ore (senza richiedere azione admin)
+// Gli album trovati dalla sync entrano in coda senza foto (veloce): le scarica subito qui, e riprova a ogni giro per quelli ancora vuoti
+// (xpix a volte carica le foto dopo aver creato l'album). Prima restavano vuoti finche qualcuno premeva "Ricarica foto".
+async function hydrateXpixPending(queue, max = 6) {
+  let done = 0, filled = 0;
+  for (const it of queue) {
+    if (done >= max) break;
+    if (it.status !== 'pending' || (it.photos && it.photos.length) || !it.album_id) continue;
+    if (Date.now() - Date.parse(it.added_at || 0) > 5 * 864e5) continue;   // album vecchi di oltre 5 giorni: solo a mano
+    done++;
+    try {
+      const ph = await fetchPhotosForAlbum({ id: it.album_id, slug: it.album_slug });
+      if (ph.length) { it.photos = ph; it.photo_url = it.photo_url || ph[0]; it.photo_count = ph.length; filled++; }
+    } catch (e) { console.warn('[xpix-auto] foto album', it.album_slug, e.message); }
+  }
+  return filled;
+}
+
 async function autoXpixSync() {
   try {
     console.log('[xpix-auto] Avvio sync automatica...');
     const queue      = await readXpixQueue();
     const knownSlugs = new Set(queue.map(q => q.album_slug));
     const candidates = await fetchXpixCandidates(knownSlugs, 30);
-    if (!candidates.length) { console.log('[xpix-auto] Nessun nuovo album'); return; }
     let added = 0;
     for (const c of candidates) {
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -10757,14 +10775,15 @@ async function autoXpixSync() {
         status: 'pending', added_at: new Date().toISOString() });
       added++;
     }
-    if (added) {
+    const filled = await hydrateXpixPending(queue);
+    if (added || filled) {
       // Mantieni max 200 pending
       const nonPending = queue.filter(q => q.status !== 'pending');
       const pending    = queue.filter(q => q.status === 'pending').slice(0, 200);
       await writeXpixQueue([...nonPending, ...pending]);
-      console.log(`[xpix-auto] ${added} nuovi album aggiunti alla coda`);
-      await notifyAdminsReview('xpix', added, pending.length);
-    }
+      console.log(`[xpix-auto] ${added} nuovi album aggiunti alla coda, foto caricate per ${filled}`);
+      if (added) await notifyAdminsReview('xpix', added, pending.length);
+    } else console.log('[xpix-auto] Nessun nuovo album');
   } catch (e) {
     console.warn('[xpix-auto] Errore:', e.message);
   }

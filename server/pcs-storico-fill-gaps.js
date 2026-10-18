@@ -183,6 +183,9 @@ function yearDone(aid, y) {
 
 // Atleti appena collegati a PCS (pcs-retry-notfound.js): non hanno storico squadre, quindi gli anni da recuperare sono TUTTI quelli
 // dal primo anno noto a oggi (gli anni senza gare su PCS restano vuoti e si ricordano come tali).
+const MIRROR_FILE = path.join(__dirname, 'pcs-pro-mirror.json');   // "atleta|stagione" con solo gli arrivi copiati dalle gare pro
+let MIRROR = new Set(); try { MIRROR = new Set(JSON.parse(fs.readFileSync(MIRROR_FILE, 'utf8'))); } catch (_) {}
+const saveMirror = () => { try { fs.writeFileSync(MIRROR_FILE, JSON.stringify([...MIRROR])); } catch (_) {} };
 const SPAN_FILE = path.join(__dirname, 'pcs-span-ids.json');
 let SPAN = new Set(); try { SPAN = new Set(JSON.parse(fs.readFileSync(SPAN_FILE, 'utf8'))); } catch (_) {}
 
@@ -234,7 +237,8 @@ async function findGaps(sb) {
     const want = new Map(), have = new Map();
     for (const r of th) { if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(r.season); }
     for (const r of cr) { const y = parseInt(r.stagione, 10); if (!want.has(r.atleta_id)) want.set(r.atleta_id, new Set()); want.get(r.atleta_id).add(y); }
-    for (const r of pr) { if (!have.has(r.atleta_id)) have.set(r.atleta_id, new Set()); have.get(r.atleta_id).add(r.season); }
+    // stagioni con solo gli arrivi copiati dalle gare pro (pcs-pro-mirror.json) non contano come recuperate: il recupero le sostituisce
+    for (const r of pr) { if (MIRROR.has(r.atleta_id + '|' + r.season)) continue; if (!have.has(r.atleta_id)) have.set(r.atleta_id, new Set()); have.get(r.atleta_id).add(r.season); }
     for (const aid of chunk) {
       const seasons = want.get(aid); if (!seasons) continue;
       if (SPAN.has(aid)) { const mn = Math.min(...seasons); for (let y = mn; y <= currentYear; y++) seasons.add(y); }
@@ -306,7 +310,7 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
           const rows = yearResults.map(r => ({ atleta_id: g.atletaId, pcs_slug: g.slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country || null }));
           // stessa chiave (atleta, stagione, gara) due volte nello stesso anno (es. gara disputata due volte): Postgres rifiuta l'upsert, si tiene la prima
           { const seenK = new Set(); for (let k = rows.length - 1; k >= 0; k--) { const kk = rows[k].pcs_race_slug; if (seenK.has(kk)) rows.splice(k, 1); else seenK.add(kk); } }
-          try { await upsertResults(sb, rows); rowsForAthlete += rows.length; prog.rows += rows.length; prog.yearsWithResults++; yearsOk++; markYear(g.atletaId, y, 'ok'); }
+          try { if (MIRROR.has(g.atletaId + '|' + y)) { await sb.from('pcs_results').delete().eq('atleta_id', g.atletaId).eq('season', y); MIRROR.delete(g.atletaId + '|' + y); saveMirror(); } await upsertResults(sb, rows); rowsForAthlete += rows.length; prog.rows += rows.length; prog.yearsWithResults++; yearsOk++; markYear(g.atletaId, y, 'ok'); }
           catch (e) { prog.errors++; markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; console.error(`ERRORE DB ${g.atletaId} ${y}: ${e.message}`); }
         } else { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; }
         writeProgress();
