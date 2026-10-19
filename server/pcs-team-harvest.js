@@ -16,6 +16,7 @@ const arg = n => (args.find(a => a.startsWith(`--${n}=`)) || '').split('=').slic
 const LIMIT = parseInt(arg('limit') || '0', 10) || Infinity, OFFSET = parseInt(arg('offset') || '0', 10);
 const CATS = (arg('cat') || 'JUNIORES,ELITE_UNDER23').split(',').filter(Boolean);
 const ONLY_TEAM = arg('team');
+const OLD = args.includes('--old');   // squadre degli anni passati (ciclismo.info) assenti nel 2026 e non gia coperte dalle catene trovate
 const OUT = path.join(__dirname, 'pcs-teams-harvest.json');
 let data = {}; try { data = JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch (_) {}
 const save = () => fs.writeFileSync(OUT, JSON.stringify(data));
@@ -34,7 +35,8 @@ function searchTerms(name) {
 
 (async () => {
   // le nostre squadre del 2026 con i loro atleti
-  const teams = new Map(); // nome -> Set(atleta_id)
+  const teams = new Map(); // nome -> Set(atleta_id)   (solo 2026; con --old si usa byYear)
+  const byYear = new Map(), names2026 = new Set();
   // pagine piccole e nuovi tentativi: la lettura con filtro stagione/categoria andava in timeout
   for (let last = 0, fails = 0; ;) {
     const q = await sb.from('ciclismo_results').select('id,atleta_id,team,categoria,stagione').gt('id', last).order('id').limit(500);
@@ -42,18 +44,35 @@ function searchTerms(name) {
     fails = 0;
     if (!q.data.length) break;
     for (const x of q.data) {
-      if (x.stagione !== '2026' || !CATS.includes(x.categoria)) continue;
+      if (!CATS.includes(x.categoria)) continue;
       const t = String(x.team || '').trim().toUpperCase(); if (!t || !x.atleta_id) continue;
-      (teams.get(t) || teams.set(t, new Set()).get(t)).add(x.atleta_id);
+      if (x.stagione === '2026') { names2026.add(t); if (!OLD) (teams.get(t) || teams.set(t, new Set()).get(t)).add(x.atleta_id); }
+      else if (OLD) { const m = byYear.get(t) || byYear.set(t, new Map()).get(t); const y = parseInt(x.stagione, 10); (m.get(y) || m.set(y, new Set()).get(y)).add(x.atleta_id); }
     }
     last = q.data[q.data.length - 1].id; if (q.data.length < 500) break;
   }
   const slugOf = new Map();
   for (let from = 0; ; from += 1000) { const q = await sb.from('entity_overrides').select('entity_id,new_value').eq('entity_type', 'atleta').eq('field', 'pcs_slug').order('id').range(from, from + 999); (q.data || []).forEach(x => slugOf.set(x.entity_id, x.new_value)); if (!q.data || q.data.length < 1000) break; }
-  let list = [...teams.entries()].sort((a, b) => b[1].size - a[1].size);
+  let list;
+  if (OLD) {
+    // indice delle rose gia raccolte: anno -> elenco di Set(slug)
+    const rosters = new Map();
+    for (const d of Object.values(data)) if (d.status === 'ok') for (const [y, se] of Object.entries(d.seasons || {})) (rosters.get(+y) || rosters.set(+y, []).get(+y)).push(new Set(se.roster.map(r => r.slug)));
+    list = [];
+    for (const [name, m] of byYear) {
+      if (names2026.has(name) || data[name]) continue;
+      const y = Math.max(...m.keys()), ids = m.get(y);
+      const slugs = [...ids].map(i => slugOf.get(i)).filter(Boolean);
+      // gia coperta: almeno 2 dei nostri atleti (con slug) stanno in una rosa gia raccolta dello stesso anno
+      if ((rosters.get(y) || []).some(r => slugs.filter(x => r.has(x)).length >= 2)) continue;
+      if (ids.size < 3) continue;   // squadre minuscole: troppo poco per verificare con la rosa
+      list.push([name, ids, y]);
+    }
+    list.sort((a, b) => b[1].size - a[1].size);
+  } else list = [...teams.entries()].map(([n, ids]) => [n, ids, 2026]).sort((a, b) => b[1].size - a[1].size);
   if (ONLY_TEAM) list = list.filter(([n]) => n === ONLY_TEAM.toUpperCase());
   list = list.filter(([n]) => !data[n] || data[n].status === 'errore').slice(OFFSET, OFFSET + LIMIT);
-  console.log(`squadre ${CATS.join('+')} 2026: ${teams.size} · da fare: ${list.length}`);
+  console.log(`squadre ${CATS.join('+')} ${OLD ? 'del passato' : '2026'}: ${OLD ? byYear.size : teams.size} · da fare: ${list.length}`);
 
   let { browser, context, page } = await launchPcsBrowser();
   async function go(url, sel) {
@@ -92,7 +111,7 @@ function searchTerms(name) {
   };
 
   for (let i = 0; i < list.length; i++) {
-    const [name, idsSet] = list[i], ids = [...idsSet];
+    const [name, idsSet, refYear] = list[i], ids = [...idsSet];
     let found = null, tried = 0;
     for (const term of searchTerms(name)) {
       const s = await go(`https://www.procyclingstats.com/search.php?term=${term}&searchfilter=teams`);
@@ -103,22 +122,23 @@ function searchTerms(name) {
         let t = await readTeam(c); tried++; await humanDelay(i);
         if (!t) continue;
         // pagina del 2026 (o dell'anno piu recente) per confrontare con la nostra rosa attuale
-        const cur = t.years.find(y => /^2026\b/.test(y.label)) || t.years[0];
-        if (cur && !c.startsWith(cur.url)) { t = await readTeam(cur.url); await humanDelay(i); if (!t) continue; }
+        const cur = t.years.find(y => y.label.startsWith(String(refYear))) || (OLD ? null : t.years[0]);
+        if (!cur) continue;   // la squadra non ha quell'anno
+        if (!c.startsWith(cur.url)) { t = await readTeam(cur.url); await humanDelay(i); if (!t) continue; }
         const ov = overlap(ids, t.roster);
         if (ov >= 2 && ov >= Math.min(ids.length, t.roster.length) * 0.25) { found = { pcs: c.replace(/-\d{4}$/, ''), years: t.years, overlap: ov, roster2026: t.roster.length }; break; }
       }
       if (found) break;
     }
-    if (!found) { data[name] = { status: 'non trovata', athletes: ids.length, tried, at: new Date().toISOString() }; console.log(`(${i + 1}/${list.length}) ${name}: non su PCS`); save(); continue; }
+    if (!found) { data[name] = { status: 'non trovata', refYear, athletes: ids.length, tried, at: new Date().toISOString() }; console.log(`(${i + 1}/${list.length}) ${name}: non su PCS`); save(); continue; }
     const seasons = {};
     for (const y of found.years) {
       const ty = await readTeam(y.url); await humanDelay(i);
       const yr = (y.label.match(/^(\d{4})/) || [])[1];
       if (ty && yr) seasons[yr] = { name: y.label.replace(/^\d{4}\s*\|\s*/, ''), url: y.url, roster: ty.roster };
     }
-    data[name] = { status: 'ok', pcs: found.pcs, overlap: found.overlap, athletes: ids.length, seasons, at: new Date().toISOString() };
-    console.log(`(${i + 1}/${list.length}) ${name} → ${found.pcs} · rosa 2026 ${found.overlap}/${ids.length} nostri · anni ${Object.keys(seasons).join(',')} ✓`);
+    data[name] = { status: 'ok', refYear, pcs: found.pcs, overlap: found.overlap, athletes: ids.length, seasons, at: new Date().toISOString() };
+    console.log(`(${i + 1}/${list.length}) ${name} → ${found.pcs} · rosa ${refYear} ${found.overlap}/${ids.length} nostri · anni ${Object.keys(seasons).join(',')} ✓`);
     save();
   }
   save();

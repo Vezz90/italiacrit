@@ -1225,7 +1225,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
     if (badSeason) {
       targetAtletaId = `${atletaId}_${badSeason}`;
       disambiguated++;
-      process.stdout.write(`\n  ⚠ possibile omonimo: "${ath.cognome} ${ath.nome}" è ${curCat.categoria} nella stagione corrente, ma PCS mostra una carriera dal ${badSeason} — creo profilo separato "${targetAtletaId}".\n`);
+      process.stdout.write(`\n  ⚠ possibile omonimo: "${ath.cognome} ${ath.nome}" è ${(curCat && curCat.categoria) || 'giovanile'} nella stagione corrente, ma PCS mostra una carriera dal ${badSeason} — creo profilo separato "${targetAtletaId}".\n`);
       try {
         await sb.from('manual_athletes').upsert({
           atleta_id: targetAtletaId, cognome: ath.cognome, nome: ath.nome,
