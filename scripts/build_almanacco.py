@@ -152,14 +152,14 @@ def main():
             if vv:
                 dyn.append({'team': team_names.get(k, k), 'k': k, 'titles': [[y, ci(c), p] for y, c, p in vv], 'streak': longest_streak([y for y, _, _ in vv])})
         dyn.sort(key=lambda d: (-len(d['titles']), -d['streak']))
-        # record
+        # record (200 per lista: servono per sommare le stagioni dal 2026 senza perdere chi e appena fuori dai primi)
         wins, podi = collections.Counter(), collections.Counter()
         for (aid, c), n in wins_c.items():
             if c in catset: wins[aid] += n
         for (aid, c), n in podi_c.items():
             if c in catset: podi[aid] += n
-        wins_top = [{'id': aid, 'n': an(aid), 'w': w, 'p': podi[aid]} for aid, w in wins.most_common(25)]
-        podi_top = [{'id': aid, 'n': an(aid), 'w': wins[aid], 'p': p} for aid, p in podi.most_common(25)]
+        wins_top = [{'id': aid, 'n': an(aid), 'w': w, 'p': podi[aid]} for aid, w in wins.most_common(200)]
+        podi_top = [{'id': aid, 'n': an(aid), 'w': wins[aid], 'p': p} for aid, p in podi.most_common(200)]
         best_seasons = [{'id': aid, 'n': an(aid), 'y': y, 'c': ci(c), 'p': p} for p, aid, y, c in sorted((x for x in season_pts if x[3] in catset), reverse=True)[:30]]
         best_tseasons = [{'team': team_names.get(k, k), 'y': y, 'c': ci(c), 'p': p} for p, k, y, c in sorted((x for x in tseason_pts if x[3] in catset), reverse=True)[:20]]
         # salti in classifica (stessa categoria, anno su anno)

@@ -39,7 +39,7 @@
     const seasons = (idx && idx.seasons ? idx.seasons : []).map(Number).filter(y => y >= 2026);
     await Promise.all(seasons.flatMap(y => Object.entries(CODE_CI).map(async ([code, ci]) => {
       const live = idx && +idx.current === y;
-      try { ((await loadJson(`data/seasons/${y}/rankings/${code}.json`)) || []).slice(0, 25).forEach(r => out.ath.push({ id: r.atleta_id, n: `${r.cognome || ''} ${r.nome || ''}`.trim(), y, c: ci, p: r.punti || 0, live })); } catch (_) {}
+      try { ((await loadJson(`data/seasons/${y}/rankings/${code}.json`)) || []).forEach(r => out.ath.push({ id: r.atleta_id, n: `${r.cognome || ''} ${r.nome || ''}`.trim(), y, c: ci, p: r.punti || 0, w: r.p1 != null ? r.p1 : (r.vittorie || 0), pd: (r.p1 || 0) + (r.p2 || 0) + (r.p3 || 0), live })); } catch (_) {}
       try { ((await loadJson(`data/seasons/${y}/team_rankings/${code}.json`)) || []).slice(0, 10).forEach(t => out.teams.push({ team: t.team_nome, y, c: ci, p: t.punti || 0, live })); } catch (_) {}
     })));
     st.modern = out;
@@ -48,7 +48,7 @@
 
   async function loadData() {
     if (st.data) return st.data;
-    st.data = await loadJson('data/almanacco.json?v=20261019');   // la versione cambia a ogni rigenerazione: evita copie vecchie in cache
+    st.data = await loadJson('data/almanacco.json?v=20261019b');   // la versione cambia a ogni rigenerazione: evita copie vecchie in cache
     return st.data;
   }
 
@@ -123,14 +123,27 @@
     const seasonRows = arr => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('');
     const teamRows = arr => arr.map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('');
     const sec = S(d), m = st.modern || { ath: [], teams: [] };
+    // vittorie e podi: totale archivio + stagioni dal 2026 (sono conteggi di piazzamenti, si possono sommare)
+    const tot = new Map();
+    for (const r of sec.winsTop.concat(sec.podiTop)) if (!tot.has(r.id)) tot.set(r.id, { id: r.id, n: r.n, w: r.w || 0, p: r.p || 0 });
+    for (const r of m.ath) {
+      if (!inSel(r.c)) continue;
+      const t = tot.get(r.id) || tot.set(r.id, { id: r.id, n: r.n, w: 0, p: 0 }).get(r.id);
+      t.w += r.w; t.p += r.pd;
+    }
+    const all = [...tot.values()];
+    const topW = all.filter(x => x.w > 0).sort((a, b) => b.w - a.w || b.p - a.p).slice(0, 8);
+    const topP = all.filter(x => x.p > 0).sort((a, b) => b.p - a.p || b.w - a.w).slice(0, 8);
     const mAth = m.ath.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
     const mTeam = m.teams.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
     const none = '<div class="am-none">Nessuna stagione ancora archiviata.</div>';
-    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2><small>Le stagioni vanno tenute separate: fino al ${d.to} classifiche e punti arrivano da ciclismo.info, dal ${d.to + 1} si usano gli ordini d'arrivo e il regolamento punti di ICS</small></div>
+    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2><small>Vittorie e podi sommano tutte le stagioni, dal ${d.from} a oggi. Per le stagioni e i team da record le ere restano separate: fino al ${d.to} classifiche e punti arrivano da ciclismo.info, dal ${d.to + 1} si usa il regolamento punti di ICS</small></div>
+      <div class="am-recs">
+        <div class="hx-panel"><h3>Più vittorie</h3>${list(topW, r => `${r.w} vitt.`)}</div>
+        <div class="hx-panel"><h3>Più podi</h3>${list(topP, r => `${r.p} podi`)}</div>
+      </div>
       <h3 class="am-era">${d.from}–${d.to} <small>ciclismo.info</small></h3>
       <div class="am-recs">
-        <div class="hx-panel"><h3>Più vittorie</h3>${list(sec.winsTop.slice(0, 8), r => `${r.w} vitt.`)}</div>
-        <div class="hx-panel"><h3>Più podi</h3>${list(sec.podiTop.slice(0, 8), r => `${r.p} podi`)}</div>
         <div class="hx-panel"><h3>Stagioni da record</h3>${seasonRows(sec.bestSeasons.slice(0, 8))}</div>
         <div class="hx-panel"><h3>Team da record</h3>${teamRows(sec.bestTeamSeasons.slice(0, 8))}</div>
       </div>
