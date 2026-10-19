@@ -11,13 +11,20 @@
   const MEN = [4, 3, 2, 1, 0];     // ELITE, JUN, AL, ES2, ES1
   const WOMEN = [7, 6, 5];         // DONNE JUN, AL, ES
   // categoria archivio -> codice classifica nativa (stagione in corso)
-  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 6: 'AL_F', 7: 'JUN_F' };
-  const st = { data: null, sex: 'M', live: null };
+  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: 'ES_F', 6: 'AL_F', 7: 'JUN_F' };
+  const st = { data: null, sex: 'M', cat: null, period: 'arch', live: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
 
   const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
   const nm = n => tc(String(n || '').replace(/\s+/g, ' ').trim());
   const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const link = (id, name) => id ? `<a href="/atleta/${encodeURIComponent(id)}">${esc(nm(name))}</a>` : esc(nm(name));
+
+  // dati del sottoinsieme scelto: una categoria, oppure tutto il sesso (numeri reali, calcolati dallo script)
+  function S(d) {
+    if (st.cat != null && d.cat && d.cat[d.cats[st.cat]]) return d.cat[d.cats[st.cat]];
+    return (d.sex && d.sex[st.sex]) || d;
+  }
+  const selLabel = () => `${st.sex === 'M' ? 'Uomini' : 'Donne'}${st.cat != null ? ' · ' + SHORT[st.cat] : ''}`;
 
   async function loadData() {
     if (st.data) return st.data;
@@ -40,18 +47,20 @@
   }
 
   function kpis(d) {
-    const races = d.racesPerYear.reduce((s, r) => s + r.n, 0);
+    const sec = S(d), who = selLabel();
+    const races = sec.counts && sec.counts.races != null ? sec.counts.races : sec.racesPerYear.reduce((a, r) => a + r.n, 0);
     const tiles = [
       [d.to - d.from + 1, 'stagioni in archivio', `${d.from}–${d.to}`],
-      [fmt(races), 'gare archiviate', 'con podio e classifiche'],
-      [fmt(d.counts.athletes), 'atleti nel database', 'dal 2007 a oggi'],
-      [fmt(d.counts.teams), 'squadre diverse', 'con le variazioni di nome'],
+      [fmt(races), 'gare archiviate', who],
+      [fmt(sec.counts ? sec.counts.athletes : d.counts.athletes), 'atleti nel database', who],
+      [fmt(sec.counts ? sec.counts.teams : d.counts.teams), 'squadre diverse', 'con le variazioni di nome'],
     ];
     return `<div class="am-kpis">${tiles.map(t => `<div class="am-kpi"><b>${t[0]}</b><span>${t[1]}</span><small>${t[2]}</small></div>`).join('')}</div>`;
   }
 
   function hallHtml(d) {
-    const top = d.hall.filter(h => (h.titles[0][1] >= 5) === (st.sex === 'F')).slice(0, 6);
+    const top = S(d).hall.filter(h => (h.titles[0][1] >= 5) === (st.sex === 'F')).slice(0, 6);
+    if (!top.length) return '';
     const chips = h => h.titles.map(t => `<i title="${esc(SHORT[t[1]])} ${t[0]}">${t[0]} · ${SHORT[t[1]]}</i>`).join('');
     return `<section class="am-sec"><div class="hx-ph"><h2>Sala dei campioni</h2><small>Chi ha vinto più classifiche finali</small></div>
       <div class="am-hall">${top.map((h, i) => `<a class="am-champ" href="/atleta/${encodeURIComponent(h.id)}" style="--c1:${['#C99400', '#6E7A90', '#B26A2C'][i] || '#33415F'};--c2:${['#5A3F00', '#2A3342', '#4A2A0E'][i] || '#16213D'}">
@@ -59,15 +68,15 @@
   }
 
   function multiHtml(d) {
-    const top = d.multi.filter(h => (h.titles[0][1] >= 5) === (st.sex === 'F')).slice(0, 8);
+    const top = S(d).multi.filter(h => (h.titles[0][1] >= 5) === (st.sex === 'F')).slice(0, 8);
     if (!top.length) return '';
     return `<section class="am-sec"><div class="hx-ph"><h2>Campioni in più categorie</h2><small>Hanno vinto la classifica finale salendo di categoria</small></div>
       <div class="am-multi">${top.map(h => `<a class="am-mrow" href="/atleta/${encodeURIComponent(h.id)}"><b>${esc(nm(h.n))}</b><span class="am-path">${h.titles.map(t => `<i>${t[0]}<em>${SHORT[t[1]]}</em></i>`).join('<u>›</u>')}</span><small>${h.cats} categorie</small></a>`).join('')}</div></section>`;
   }
 
   function albo(d) {
-    const cols = st.sex === 'M' ? MEN : WOMEN;
-    const hallIds = new Set(d.hall.map(h => h.id));
+    const cols = st.cat != null ? [st.cat] : (st.sex === 'M' ? MEN : WOMEN);
+    const hallIds = new Set(S(d).hall.map(h => h.id));
     const years = Object.keys(d.perYear).map(Number).sort((a, b) => b - a);
     const head = `<tr><th>Anno</th>${cols.map(c => `<th>${SHORT[c]}</th>`).join('')}</tr>`;
     const live = st.live || {};
@@ -82,7 +91,8 @@
   }
 
   function dynasties(d) {
-    const top = d.dynasties.filter(x => x.titles.length >= 2).slice(0, 10);
+    const top = S(d).dynasties.filter(x => x.titles.length >= 2).slice(0, 10);
+    if (!top.length) return '';
     return `<section class="am-sec"><div class="hx-ph"><h2>Dinastie dei team</h2><small>Classifica a squadre vinta più volte</small></div>
       <div class="am-dyn">${top.map((x, i) => `<div class="am-drow"><span class="am-rk">${i + 1}</span><div class="am-dn"><b>${esc(tc(x.team))}</b><div class="am-chips">${x.titles.map(t => `<i>${t[0]} · ${SHORT[t[1]]}</i>`).join('')}</div></div><div class="am-dc"><b>${x.titles.length}</b><small>titoli${x.streak > 1 ? ` · ${x.streak} anni di fila` : ''}</small></div></div>`).join('')}</div></section>`;
   }
@@ -90,15 +100,15 @@
   function records(d) {
     const list = (arr, fn) => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}</span><span class="up">${fn(r)}</span></a>`).join('');
     return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2></div><div class="am-recs">
-      <div class="hx-panel"><h3>Più vittorie</h3>${list(d.winsTop.slice(0, 8), r => `${r.w} vitt.`)}</div>
-      <div class="hx-panel"><h3>Più podi</h3>${list(d.podiTop.slice(0, 8), r => `${r.p} podi`)}</div>
-      <div class="hx-panel"><h3>Stagioni da record</h3>${d.bestSeasons.slice(0, 8).map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('')}</div>
-      <div class="hx-panel"><h3>Team da record</h3>${d.bestTeamSeasons.slice(0, 8).map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('')}</div>
+      <div class="hx-panel"><h3>Più vittorie</h3>${list(S(d).winsTop.slice(0, 8), r => `${r.w} vitt.`)}</div>
+      <div class="hx-panel"><h3>Più podi</h3>${list(S(d).podiTop.slice(0, 8), r => `${r.p} podi`)}</div>
+      <div class="hx-panel"><h3>Stagioni da record</h3>${S(d).bestSeasons.slice(0, 8).map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('')}</div>
+      <div class="hx-panel"><h3>Team da record</h3>${S(d).bestTeamSeasons.slice(0, 8).map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('')}</div>
     </div></section>`;
   }
 
   function racesChart(d) {
-    const rows = d.racesPerYear, W = 720, H = 190, pl = 8, pb = 24, pt = 20, max = Math.max(...rows.map(r => r.n));
+    const rows = S(d).racesPerYear, W = 720, H = 190, pl = 8, pb = 24, pt = 20, max = Math.max(...rows.map(r => r.n));
     const bw = (W - pl * 2) / rows.length;
     const bars = rows.map((r, i) => {
       const h = Math.max(2, (H - pb - pt) * r.n / max), x = pl + i * bw + 3, y = H - pb - h, low = r.n < max * 0.45;
@@ -109,9 +119,32 @@
   }
 
   function rises(d) {
-    if (!d.rises.length) return '';
+    if (!S(d).rises.length) return '';
     return `<section class="am-sec"><div class="hx-ph"><h2>I salti più grandi</h2><small>Da fuori dai primi 30 a un posto fra i primi 10, nella stessa categoria</small></div>
-      <div class="am-rises">${d.rises.slice(0, 10).map(r => `<a class="am-rise" href="/atleta/${encodeURIComponent(r.id)}"><b>${esc(nm(r.n))}</b><span>${r.y} · ${SHORT[r.c]}</span><em>${r.from}° → ${r.to}°</em></a>`).join('')}</div></section>`;
+      <div class="am-rises">${S(d).rises.slice(0, 10).map(r => `<a class="am-rise" href="/atleta/${encodeURIComponent(r.id)}"><b>${esc(nm(r.n))}</b><span>${r.y} · ${SHORT[r.c]}</span><em>${r.from}° → ${r.to}°</em></a>`).join('')}</div></section>`;
+  }
+
+  // ---- dal 2026: stagione in corso (dati del sito, punti del regolamento ICS) ----
+  function seasonRes(ci) {
+    const code = NATIVE[ci];
+    return globalData.resultsRaw.filter(r => getRankingFileCode(r) === code);
+  }
+  function seasonView(d, cur) {
+    const head = `<div class="hx-ph"><h2>Stagione ${cur}</h2><small>In corso · dati del sito, punti secondo il regolamento ICS · ${esc(selLabel())}</small></div>`;
+    if (st.cat != null) {
+      try {
+        const code = NATIVE[st.cat];
+        const html = _renderStatisticheCat(code, seasonRes(st.cat), globalData.athletes, globalData.calendar, '', globalData.resultsRaw, { asHtml: true });
+        return `<section class="am-sec">${head}<div class="am-season">${html || ''}</div></section>`;
+      } catch (_) { return `<section class="am-sec">${head}<div class="hx-none">Dati non disponibili per questa categoria.</div></section>`; }
+    }
+    const cols = st.sex === 'M' ? MEN : WOMEN;
+    const cards = cols.map(ci => {
+      const res = seasonRes(ci);
+      const races = new Set(res.map(r => r.gara_id)).size, ath = new Set(res.map(r => r.atleta_id)).size, wins = res.filter(r => r.posizione === 1).length;
+      return `<button type="button" class="am-scard" data-cat="${ci}"><b>${SHORT[ci]}</b><span><em>${fmt(races)}</em> gare</span><span><em>${fmt(ath)}</em> atleti</span><span><em>${fmt(wins)}</em> vittorie</span><i>Apri ›</i></button>`;
+    }).join('');
+    return `<section class="am-sec">${head}<div class="am-scards">${cards}</div><p class="am-note">Scegli una categoria per vederne i numeri, i record e le classifiche della stagione.</p></section>`;
   }
 
   async function render() {
@@ -126,13 +159,16 @@
     setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
     const paint = () => {
       setPage(`<div class="hx-wrap am-wrap">
-        <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">almanacco ${d.from}–${cur}</span>
-          <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div><div class="hx-seg" role="group" aria-label="Sezione"><button type="button" aria-pressed="true">Almanacco</button><button type="button" id="am-go-season" aria-pressed="false">Stagione ${cur}</button></div></div></div>
-        ${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}
+        <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">${st.period === 'now' ? `stagione ${cur}` : `almanacco ${d.from}–${d.to}`}</span>
+          <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div>
+            <div class="hx-seg" role="group" aria-label="Periodo"><button type="button" data-per="arch" aria-pressed="${st.period === 'arch'}">${d.from}–${d.to}</button><button type="button" data-per="now" aria-pressed="${st.period === 'now'}">Dal ${cur}</button></div></div></div>
+        <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${(st.sex === 'M' ? MEN : WOMEN).map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
+        ${st.period === 'now' ? seasonView(d, cur) : `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}`}
         <p class="am-note">Fonte: classifiche e risultati pubblicati da ciclismo.info (2007–${d.to}) e dati FCI per la stagione in corso. Confrontare i punti fra anni diversi ha senso solo dentro la stessa fonte.</p>
       </div>`);
-      document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; paint(); }; });
-      const go = document.getElementById('am-go-season'); if (go) go.onclick = () => navTo('/statistiche/stagione');
+      document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
+      document.querySelectorAll('.am-wrap [data-per]').forEach(b => { b.onclick = () => { st.period = b.dataset.per; paint(); }; });
+      document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });
     };
     paint();
   }

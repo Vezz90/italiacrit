@@ -13820,3 +13820,17 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 /* credit della foto sulle card (Home e Risultati): in alto a destra sulle card grandi, in basso a destra sulle miniature */
 .ph-credit { position: absolute; right: 6px; top: 6px; z-index: 3; background: rgba(5,12,24,.7); color: #fff; font: 600 9.5px/1 inherit; padding: 3px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap; }
 .hx-rk-m .ph-credit, .rs-mm .ph-credit { top: auto; bottom: 6px; }
+
+/* Statistiche: filtro categoria, periodo e vista "dal 2026" */
+.am-filter { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px; }
+.am-filter button { border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); border-radius: 999px; padding: 0 14px; height: 34px; font: 600 12.5px/1 inherit; cursor: pointer; }
+.am-filter button:hover { border-color: var(--hx-navy); color: var(--text-primary); }
+.am-filter button[aria-pressed="true"] { background: var(--hx-navy); border-color: var(--hx-navy); color: #fff; }
+.am-scards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; margin-top: 12px; }
+.am-scard { position: relative; display: flex; flex-direction: column; gap: 3px; text-align: left; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); border-radius: 10px; padding: 14px 16px 30px; cursor: pointer; font: inherit; }
+.am-scard b { color: var(--text-primary); font-size: 1.05rem; }
+.am-scard em { font-style: normal; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.am-scard i { position: absolute; right: 14px; bottom: 10px; font-style: normal; font-size: .75rem; color: var(--accent, #2459E6); }
+.am-scard:hover { border-color: var(--hx-navy); }
+.am-season { margin-top: 12px; }
+@media (max-width: 640px) { .am-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
