@@ -158,8 +158,11 @@ def main():
             if c in catset: wins[aid] += n
         for (aid, c), n in podi_c.items():
             if c in catset: podi[aid] += n
-        wins_top = [{'id': aid, 'n': an(aid), 'w': w, 'p': podi[aid]} for aid, w in wins.most_common(200)]
-        podi_top = [{'id': aid, 'n': an(aid), 'w': wins[aid], 'p': p} for aid, p in podi.most_common(200)]
+        def span(aid):
+            ys = [y for (y, c) in ath[aid]['s'] if c in catset]
+            return [min(ys), max(ys)] if ys else []
+        wins_top = [{'id': aid, 'n': an(aid), 'w': w, 'p': podi[aid], 'y': span(aid)} for aid, w in wins.most_common(200)]
+        podi_top = [{'id': aid, 'n': an(aid), 'w': wins[aid], 'p': p, 'y': span(aid)} for aid, p in podi.most_common(200)]
         best_seasons = [{'id': aid, 'n': an(aid), 'y': y, 'c': ci(c), 'p': p} for p, aid, y, c in sorted((x for x in season_pts if x[3] in catset), reverse=True)[:30]]
         best_tseasons = [{'team': team_names.get(k, k), 'y': y, 'c': ci(c), 'p': p} for p, k, y, c in sorted((x for x in tseason_pts if x[3] in catset), reverse=True)[:20]]
         # salti in classifica (stessa categoria, anno su anno)

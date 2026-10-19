@@ -48,7 +48,7 @@
 
   async function loadData() {
     if (st.data) return st.data;
-    st.data = await loadJson('data/almanacco.json?v=20261019b');   // la versione cambia a ogni rigenerazione: evita copie vecchie in cache
+    st.data = await loadJson('data/almanacco.json?v=20261019c');   // la versione cambia a ogni rigenerazione: evita copie vecchie in cache
     return st.data;
   }
 
@@ -119,17 +119,19 @@
   }
 
   function records(d) {
-    const list = (arr, fn) => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}</span><span class="up">${fn(r)}</span></a>`).join('');
+    const yrs = y => (!y || !y.length) ? '' : (y[0] === y[1] ? `${y[0]}` : `${y[0]}–${y[1]}`);
+    const list = (arr, fn) => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}${yrs(r.y) ? `<small>${yrs(r.y)}</small>` : ''}</span><span class="up">${fn(r)}</span></a>`).join('');
     const seasonRows = arr => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('');
     const teamRows = arr => arr.map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('');
     const sec = S(d), m = st.modern || { ath: [], teams: [] };
     // vittorie e podi: totale archivio + stagioni dal 2026 (sono conteggi di piazzamenti, si possono sommare)
     const tot = new Map();
-    for (const r of sec.winsTop.concat(sec.podiTop)) if (!tot.has(r.id)) tot.set(r.id, { id: r.id, n: r.n, w: r.w || 0, p: r.p || 0 });
+    for (const r of sec.winsTop.concat(sec.podiTop)) if (!tot.has(r.id)) tot.set(r.id, { id: r.id, n: r.n, w: r.w || 0, p: r.p || 0, y: (r.y || []).slice() });
     for (const r of m.ath) {
       if (!inSel(r.c)) continue;
-      const t = tot.get(r.id) || tot.set(r.id, { id: r.id, n: r.n, w: 0, p: 0 }).get(r.id);
+      const t = tot.get(r.id) || tot.set(r.id, { id: r.id, n: r.n, w: 0, p: 0, y: [] }).get(r.id);
       t.w += r.w; t.p += r.pd;
+      if (r.w || r.pd) t.y = t.y.length ? [Math.min(t.y[0], r.y), Math.max(t.y[1], r.y)] : [r.y, r.y];   // le stagioni dal 2026 allungano l'arco
     }
     const all = [...tot.values()];
     const topW = all.filter(x => x.w > 0).sort((a, b) => b.w - a.w || b.p - a.p).slice(0, 8);
