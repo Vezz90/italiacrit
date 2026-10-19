@@ -11,7 +11,7 @@
   const MEN = [4, 3, 2, 1, 0];     // ELITE, JUN, AL, ES2, ES1
   const WOMEN = [7, 6, 5];         // DONNE JUN, AL, ES
   // categoria archivio -> codice classifica nativa (stagione in corso)
-  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: 'ES_F', 6: 'AL_F', 7: 'JUN_F' };
+  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: ['ES1_F', 'ES2_F'], 6: 'AL_F', 7: 'JUN_F' };
   const st = { data: null, sex: 'M', cat: null, period: 'arch', live: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
 
   const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
@@ -36,7 +36,8 @@
   async function loadLive() {
     if (st.live) return st.live;
     const out = {};
-    await Promise.all(Object.entries(NATIVE).map(async ([ci, code]) => {
+    await Promise.all(Object.entries(NATIVE).map(async ([ci, code0]) => {
+      const code = [].concat(code0)[0];
       try {
         const rk = await loadRanking(code);
         if (rk && rk[0]) out[ci] = { id: rk[0].atleta_id, n: `${rk[0].cognome || ''} ${rk[0].nome || ''}`.trim(), p: rk[0].punti };
@@ -125,17 +126,22 @@
   }
 
   // ---- dal 2026: stagione in corso (dati del sito, punti del regolamento ICS) ----
+  const codesOf = ci => [].concat(NATIVE[ci]);   // una o piu annate
   function seasonRes(ci) {
-    const code = NATIVE[ci];
-    return globalData.resultsRaw.filter(r => getRankingFileCode(r) === code);
+    const set = new Set(codesOf(ci));
+    return globalData.resultsRaw.filter(r => set.has(getRankingFileCode(r)));
   }
   function seasonView(d, cur) {
     const head = `<div class="hx-ph"><h2>Stagione ${cur}</h2><small>In corso · dati del sito, punti secondo il regolamento ICS · ${esc(selLabel())}</small></div>`;
     if (st.cat != null) {
       try {
-        const code = NATIVE[st.cat];
-        const html = _renderStatisticheCat(code, seasonRes(st.cat), globalData.athletes, globalData.calendar, '', globalData.resultsRaw, { asHtml: true });
-        return `<section class="am-sec">${head}<div class="am-season">${html || ''}</div></section>`;
+        const codes = codesOf(st.cat);
+        const html = codes.map(code => {
+          const res = globalData.resultsRaw.filter(r => getRankingFileCode(r) === code);
+          const inner = _renderStatisticheCat(code, res, globalData.athletes, globalData.calendar, '', globalData.resultsRaw, { asHtml: true }) || '';
+          return codes.length > 1 ? `<h3 class="am-sub">${esc(typeof catLabel === 'function' ? catLabel(code) : code)}</h3>${inner}` : inner;
+        }).join('');
+        return `<section class="am-sec">${head}<div class="am-season">${html}</div></section>`;
       } catch (_) { return `<section class="am-sec">${head}<div class="hx-none">Dati non disponibili per questa categoria.</div></section>`; }
     }
     const cols = st.sex === 'M' ? MEN : WOMEN;

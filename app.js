@@ -27103,7 +27103,8 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     if (r.punti_effettivi > 0) c.atleti.add(r.atleta_id);
     c.pts[r.atleta_id] = (c.pts[r.atleta_id]||0) + (r.punti_effettivi||0);
   });
-  const _catRowsAll = RANKING_CODES.filter(c => _catCompareAll[c]).map(key => {
+  // il confronto si limita alle categorie dello stesso sesso della categoria aperta
+  const _catRowsAll = RANKING_CODES.filter(c => _catCompareAll[c] && /_F$/.test(c) === /_F$/.test(catKey)).map(key => {
     const c = _catCompareAll[key];
     const top = Object.values(c.pts).sort((a,b)=>b-a);
     const equil = top.length >= 2 ? Math.round((top[Math.min(9,top.length-1)] / top[0]) * 100) : 0;
