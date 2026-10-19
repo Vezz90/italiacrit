@@ -56646,8 +56646,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 1,
@@ -56660,7 +56660,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 172
   },
   {
@@ -56670,8 +56670,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 2,
@@ -56684,7 +56684,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 172
   },
   {
@@ -56694,8 +56694,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 3,
@@ -56708,7 +56708,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 172
   },
   {
@@ -56718,8 +56718,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 4,
@@ -56732,7 +56732,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 172
   },
   {
@@ -56742,8 +56742,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 5,
@@ -56756,7 +56756,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 172
   },
   {
@@ -56766,8 +56766,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 6,
@@ -56780,7 +56780,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 172
   },
   {
@@ -56790,8 +56790,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 7,
@@ -56804,7 +56804,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 172
   },
   {
@@ -56814,8 +56814,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 8,
@@ -56828,7 +56828,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 172
   },
   {
@@ -56838,8 +56838,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 9,
@@ -56852,7 +56852,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 172
   },
   {
@@ -56862,8 +56862,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 10,
@@ -56876,7 +56876,7 @@
     "km": "67.000",
     "media": "41.572",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 172
   },
   {
@@ -56886,8 +56886,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 1,
@@ -56900,7 +56900,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 173
   },
   {
@@ -56910,8 +56910,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 2,
@@ -56924,7 +56924,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 173
   },
   {
@@ -56934,8 +56934,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 3,
@@ -56948,7 +56948,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 173
   },
   {
@@ -56958,8 +56958,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 4,
@@ -56972,7 +56972,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 173
   },
   {
@@ -56982,8 +56982,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 5,
@@ -56996,7 +56996,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 173
   },
   {
@@ -57006,8 +57006,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 6,
@@ -57020,7 +57020,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 173
   },
   {
@@ -57030,8 +57030,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 7,
@@ -57044,7 +57044,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 173
   },
   {
@@ -57054,8 +57054,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 8,
@@ -57068,7 +57068,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 173
   },
   {
@@ -57078,8 +57078,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 9,
@@ -57092,7 +57092,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 173
   },
   {
@@ -57102,8 +57102,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BASILICATA",
     "posizione": 10,
@@ -57116,7 +57116,7 @@
     "km": "63.000",
     "media": "30.984",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 173
   },
   {
@@ -60246,8 +60246,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 1,
@@ -60260,7 +60260,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 187
   },
   {
@@ -60270,8 +60270,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 2,
@@ -60284,7 +60284,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 187
   },
   {
@@ -60294,8 +60294,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 3,
@@ -60308,7 +60308,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 187
   },
   {
@@ -60318,8 +60318,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 4,
@@ -60332,7 +60332,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 187
   },
   {
@@ -60342,8 +60342,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 5,
@@ -60356,7 +60356,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 187
   },
   {
@@ -60366,8 +60366,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 6,
@@ -60380,7 +60380,7 @@
     "km": "33.000",
     "media": "34.605",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 187
   },
   {
@@ -60390,8 +60390,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 1,
@@ -60404,7 +60404,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 188
   },
   {
@@ -60414,8 +60414,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 2,
@@ -60428,7 +60428,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 188
   },
   {
@@ -60438,8 +60438,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 3,
@@ -60452,7 +60452,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 188
   },
   {
@@ -60462,8 +60462,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 4,
@@ -60476,7 +60476,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 188
   },
   {
@@ -60486,8 +60486,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 5,
@@ -60500,7 +60500,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 188
   },
   {
@@ -60510,8 +60510,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 6,
@@ -60524,7 +60524,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 188
   },
   {
@@ -60534,8 +60534,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 7,
@@ -60548,7 +60548,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 188
   },
   {
@@ -60558,8 +60558,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 8,
@@ -60572,7 +60572,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 188
   },
   {
@@ -60582,8 +60582,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 9,
@@ -60596,7 +60596,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 188
   },
   {
@@ -60606,8 +60606,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "BOLZANO",
     "posizione": 10,
@@ -60620,7 +60620,7 @@
     "km": "33.000",
     "media": "35.956",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 188
   },
   {
@@ -109518,8 +109518,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 1,
@@ -109532,7 +109532,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 400
   },
   {
@@ -109542,8 +109542,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 2,
@@ -109556,7 +109556,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 400
   },
   {
@@ -109566,8 +109566,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 3,
@@ -109580,7 +109580,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 400
   },
   {
@@ -109590,8 +109590,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 4,
@@ -109604,7 +109604,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 400
   },
   {
@@ -109614,8 +109614,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 5,
@@ -109628,7 +109628,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 400
   },
   {
@@ -109638,8 +109638,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 6,
@@ -109652,7 +109652,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 400
   },
   {
@@ -109662,8 +109662,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 7,
@@ -109676,7 +109676,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 400
   },
   {
@@ -109686,8 +109686,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 8,
@@ -109700,7 +109700,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 400
   },
   {
@@ -109710,8 +109710,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 9,
@@ -109724,7 +109724,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 400
   },
   {
@@ -109734,8 +109734,8 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 10,
@@ -109748,7 +109748,7 @@
     "km": "115.000",
     "media": "41.317",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 400
   },
   {
@@ -110478,8 +110478,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 1,
@@ -110492,7 +110492,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 405
   },
   {
@@ -110502,8 +110502,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 2,
@@ -110516,7 +110516,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 405
   },
   {
@@ -110526,8 +110526,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 3,
@@ -110540,7 +110540,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 405
   },
   {
@@ -110550,8 +110550,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 4,
@@ -110564,7 +110564,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 405
   },
   {
@@ -110574,8 +110574,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 5,
@@ -110588,7 +110588,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 405
   },
   {
@@ -110598,8 +110598,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 6,
@@ -110612,7 +110612,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 405
   },
   {
@@ -110622,8 +110622,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 7,
@@ -110636,7 +110636,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 405
   },
   {
@@ -110646,8 +110646,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 8,
@@ -110660,7 +110660,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 405
   },
   {
@@ -110670,8 +110670,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 9,
@@ -110684,7 +110684,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 405
   },
   {
@@ -110694,8 +110694,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 10,
@@ -110708,7 +110708,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 405
   },
   {
@@ -110718,8 +110718,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 1,
@@ -110732,7 +110732,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 406
   },
   {
@@ -110742,8 +110742,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 2,
@@ -110756,7 +110756,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 406
   },
   {
@@ -110766,8 +110766,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 3,
@@ -110780,7 +110780,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 406
   },
   {
@@ -110790,8 +110790,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 4,
@@ -110804,7 +110804,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 406
   },
   {
@@ -110814,8 +110814,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 5,
@@ -110828,7 +110828,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 406
   },
   {
@@ -110838,8 +110838,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 6,
@@ -110852,7 +110852,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 406
   },
   {
@@ -110862,8 +110862,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 7,
@@ -110876,7 +110876,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 406
   },
   {
@@ -110886,8 +110886,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 8,
@@ -110900,7 +110900,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 406
   },
   {
@@ -110910,8 +110910,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 9,
@@ -110924,7 +110924,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 406
   },
   {
@@ -110934,8 +110934,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 10,
@@ -110948,7 +110948,7 @@
     "km": "32.880",
     "media": "36.000",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 406
   },
   {
@@ -111846,8 +111846,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 1,
@@ -111860,7 +111860,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 414
   },
   {
@@ -111870,8 +111870,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 2,
@@ -111884,7 +111884,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 414
   },
   {
@@ -111894,8 +111894,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 3,
@@ -111908,7 +111908,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 414
   },
   {
@@ -111918,8 +111918,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 4,
@@ -111932,7 +111932,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 414
   },
   {
@@ -111942,8 +111942,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 5,
@@ -111956,7 +111956,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 414
   },
   {
@@ -111966,8 +111966,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 6,
@@ -111980,7 +111980,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 414
   },
   {
@@ -111990,8 +111990,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 7,
@@ -112004,7 +112004,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 414
   },
   {
@@ -112014,8 +112014,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 8,
@@ -112028,7 +112028,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 414
   },
   {
@@ -112038,8 +112038,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 9,
@@ -112052,7 +112052,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 414
   },
   {
@@ -112062,8 +112062,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 10,
@@ -112076,7 +112076,7 @@
     "km": "66.000",
     "media": "34.485",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 414
   },
   {
@@ -122790,8 +122790,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 1,
@@ -122804,7 +122804,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 461
   },
   {
@@ -122814,8 +122814,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 2,
@@ -122828,7 +122828,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 461
   },
   {
@@ -122838,8 +122838,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 3,
@@ -122852,7 +122852,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 461
   },
   {
@@ -122862,8 +122862,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 4,
@@ -122876,7 +122876,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 461
   },
   {
@@ -122886,8 +122886,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 5,
@@ -122900,7 +122900,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 461
   },
   {
@@ -122910,8 +122910,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 6,
@@ -122924,7 +122924,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 461
   },
   {
@@ -122934,8 +122934,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 7,
@@ -122948,7 +122948,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 461
   },
   {
@@ -122958,8 +122958,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 8,
@@ -122972,7 +122972,7 @@
     "km": "49.300",
     "media": "34.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 461
   },
   {
@@ -124566,8 +124566,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 1,
@@ -124580,7 +124580,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 471
   },
   {
@@ -124590,8 +124590,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 2,
@@ -124604,7 +124604,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 471
   },
   {
@@ -124614,8 +124614,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 3,
@@ -124628,7 +124628,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 471
   },
   {
@@ -124638,8 +124638,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 4,
@@ -124652,7 +124652,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 471
   },
   {
@@ -124662,8 +124662,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 5,
@@ -124676,7 +124676,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 471
   },
   {
@@ -124686,8 +124686,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 1,
@@ -124700,7 +124700,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 472
   },
   {
@@ -124710,8 +124710,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 2,
@@ -124724,7 +124724,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 472
   },
   {
@@ -124734,8 +124734,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 3,
@@ -124748,7 +124748,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 472
   },
   {
@@ -124758,8 +124758,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 4,
@@ -124772,7 +124772,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 472
   },
   {
@@ -124782,8 +124782,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 5,
@@ -124796,7 +124796,7 @@
     "km": "22.400",
     "media": "33.600",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 472
   },
   {
@@ -124806,8 +124806,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 1,
@@ -124820,7 +124820,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 473
   },
   {
@@ -124830,8 +124830,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 2,
@@ -124844,7 +124844,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 473
   },
   {
@@ -124854,8 +124854,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 3,
@@ -124868,7 +124868,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 473
   },
   {
@@ -124878,8 +124878,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 4,
@@ -124892,7 +124892,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 473
   },
   {
@@ -124902,8 +124902,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 5,
@@ -124916,7 +124916,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 473
   },
   {
@@ -124926,8 +124926,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 6,
@@ -124940,7 +124940,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 473
   },
   {
@@ -124950,8 +124950,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 7,
@@ -124964,7 +124964,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 473
   },
   {
@@ -124974,8 +124974,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 8,
@@ -124988,7 +124988,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 473
   },
   {
@@ -124998,8 +124998,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 9,
@@ -125012,7 +125012,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 473
   },
   {
@@ -125022,8 +125022,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "CAMPANIA",
     "posizione": 10,
@@ -125036,7 +125036,7 @@
     "km": "29.000",
     "media": "28.065",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 473
   },
   {
@@ -181086,8 +181086,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 1,
@@ -181100,7 +181100,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 727
   },
   {
@@ -181110,8 +181110,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 2,
@@ -181124,7 +181124,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 727
   },
   {
@@ -181134,8 +181134,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 3,
@@ -181148,7 +181148,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 727
   },
   {
@@ -181158,8 +181158,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 4,
@@ -181172,7 +181172,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 727
   },
   {
@@ -181182,8 +181182,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 5,
@@ -181196,7 +181196,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 727
   },
   {
@@ -181206,8 +181206,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 6,
@@ -181220,7 +181220,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 727
   },
   {
@@ -181230,8 +181230,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 7,
@@ -181244,7 +181244,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 727
   },
   {
@@ -181254,8 +181254,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 8,
@@ -181268,7 +181268,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 727
   },
   {
@@ -181278,8 +181278,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 9,
@@ -181292,7 +181292,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 727
   },
   {
@@ -181302,8 +181302,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "posizione": 10,
@@ -181316,7 +181316,7 @@
     "km": "73.200",
     "media": "43.485",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 727
   },
   {
@@ -193542,8 +193542,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 1,
@@ -193556,7 +193556,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 784
   },
   {
@@ -193566,8 +193566,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 2,
@@ -193580,7 +193580,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 784
   },
   {
@@ -193590,8 +193590,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 3,
@@ -193604,7 +193604,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 784
   },
   {
@@ -193614,8 +193614,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 4,
@@ -193628,7 +193628,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 784
   },
   {
@@ -193638,8 +193638,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 5,
@@ -193652,7 +193652,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 784
   },
   {
@@ -193662,8 +193662,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 6,
@@ -193676,7 +193676,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 784
   },
   {
@@ -193686,8 +193686,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 7,
@@ -193700,7 +193700,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 784
   },
   {
@@ -193710,8 +193710,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 8,
@@ -193724,7 +193724,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 784
   },
   {
@@ -193734,8 +193734,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 9,
@@ -193748,7 +193748,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 784
   },
   {
@@ -193758,8 +193758,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "MARCHE",
     "posizione": 10,
@@ -193772,7 +193772,7 @@
     "km": "70.000",
     "media": "40.000",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 784
   },
   {
@@ -236286,8 +236286,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 1,
@@ -236300,7 +236300,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 981
   },
   {
@@ -236310,8 +236310,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 2,
@@ -236324,7 +236324,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 981
   },
   {
@@ -236334,8 +236334,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 3,
@@ -236348,7 +236348,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 981
   },
   {
@@ -236358,8 +236358,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 4,
@@ -236372,7 +236372,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 981
   },
   {
@@ -236382,8 +236382,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 5,
@@ -236396,7 +236396,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 981
   },
   {
@@ -236406,8 +236406,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 6,
@@ -236420,7 +236420,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 981
   },
   {
@@ -236430,8 +236430,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 7,
@@ -236444,7 +236444,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 981
   },
   {
@@ -236454,8 +236454,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 8,
@@ -236468,7 +236468,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 981
   },
   {
@@ -236478,8 +236478,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 9,
@@ -236492,7 +236492,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 981
   },
   {
@@ -236502,8 +236502,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "VENETO",
     "posizione": 10,
@@ -236516,7 +236516,7 @@
     "km": "114.000",
     "media": "42.790",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 981
   },
   {
@@ -267366,8 +267366,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 1,
@@ -267380,7 +267380,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 1121
   },
   {
@@ -267390,8 +267390,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 2,
@@ -267404,7 +267404,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 1121
   },
   {
@@ -267414,8 +267414,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 3,
@@ -267428,7 +267428,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 1121
   },
   {
@@ -267438,8 +267438,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 4,
@@ -267452,7 +267452,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 1121
   },
   {
@@ -267462,8 +267462,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 5,
@@ -267476,7 +267476,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 1121
   },
   {
@@ -267486,8 +267486,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 6,
@@ -267500,7 +267500,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 1121
   },
   {
@@ -267510,8 +267510,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 7,
@@ -267524,7 +267524,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 1121
   },
   {
@@ -267534,8 +267534,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 8,
@@ -267548,7 +267548,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 1121
   },
   {
@@ -267558,8 +267558,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 9,
@@ -267572,7 +267572,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 1121
   },
   {
@@ -267582,8 +267582,8 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "LIGURIA",
     "posizione": 10,
@@ -267596,7 +267596,7 @@
     "km": "105.000",
     "media": "36.635",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 1121
   },
   {
@@ -279126,8 +279126,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 1,
@@ -279140,7 +279140,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 1172
   },
   {
@@ -279150,8 +279150,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 2,
@@ -279164,7 +279164,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 1172
   },
   {
@@ -279174,8 +279174,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 3,
@@ -279188,7 +279188,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 1172
   },
   {
@@ -279198,8 +279198,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 4,
@@ -279212,7 +279212,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 1172
   },
   {
@@ -279222,8 +279222,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 5,
@@ -279236,7 +279236,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 1172
   },
   {
@@ -279246,8 +279246,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 6,
@@ -279260,7 +279260,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 1172
   },
   {
@@ -279270,8 +279270,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 7,
@@ -279284,7 +279284,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 1172
   },
   {
@@ -279294,8 +279294,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 8,
@@ -279308,7 +279308,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 1172
   },
   {
@@ -279318,8 +279318,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 9,
@@ -279332,7 +279332,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 1172
   },
   {
@@ -279342,8 +279342,8 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "TRENTO",
     "posizione": 10,
@@ -279356,7 +279356,7 @@
     "km": "51.800",
     "media": "41.887",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 1172
   },
   {
@@ -311022,8 +311022,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 1,
@@ -311036,7 +311036,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 1316
   },
   {
@@ -311046,8 +311046,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 2,
@@ -311060,7 +311060,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 1316
   },
   {
@@ -311070,8 +311070,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 3,
@@ -311084,7 +311084,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 1316
   },
   {
@@ -311094,8 +311094,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 4,
@@ -311108,7 +311108,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 1316
   },
   {
@@ -311118,8 +311118,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 5,
@@ -311132,7 +311132,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 1316
   },
   {
@@ -311142,8 +311142,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 6,
@@ -311156,7 +311156,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 1316
   },
   {
@@ -311166,8 +311166,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 7,
@@ -311180,7 +311180,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 1316
   },
   {
@@ -311190,8 +311190,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 8,
@@ -311204,7 +311204,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 1316
   },
   {
@@ -311214,8 +311214,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 9,
@@ -311228,7 +311228,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 1316
   },
   {
@@ -311238,8 +311238,8 @@
     "categoria": "Esordienti 1° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 10,
@@ -311252,7 +311252,7 @@
     "km": "25.000",
     "media": "32.154",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 1316
   },
   {
@@ -311262,8 +311262,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 1,
@@ -311276,7 +311276,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 15,
-    "punti_effettivi": 15,
+    "punti_effettivi": 30,
     "_scrape_seq": 1317
   },
   {
@@ -311286,8 +311286,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 2,
@@ -311300,7 +311300,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 12,
-    "punti_effettivi": 12,
+    "punti_effettivi": 24,
     "_scrape_seq": 1317
   },
   {
@@ -311310,8 +311310,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 3,
@@ -311324,7 +311324,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 10,
-    "punti_effettivi": 10,
+    "punti_effettivi": 20,
     "_scrape_seq": 1317
   },
   {
@@ -311334,8 +311334,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 4,
@@ -311348,7 +311348,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 8,
-    "punti_effettivi": 8,
+    "punti_effettivi": 16,
     "_scrape_seq": 1317
   },
   {
@@ -311358,8 +311358,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 5,
@@ -311372,7 +311372,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 6,
-    "punti_effettivi": 6,
+    "punti_effettivi": 12,
     "_scrape_seq": 1317
   },
   {
@@ -311382,8 +311382,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 6,
@@ -311396,7 +311396,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 5,
-    "punti_effettivi": 5,
+    "punti_effettivi": 10,
     "_scrape_seq": 1317
   },
   {
@@ -311406,8 +311406,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 7,
@@ -311420,7 +311420,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 4,
-    "punti_effettivi": 4,
+    "punti_effettivi": 8,
     "_scrape_seq": 1317
   },
   {
@@ -311430,8 +311430,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 8,
@@ -311444,7 +311444,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 3,
-    "punti_effettivi": 3,
+    "punti_effettivi": 6,
     "_scrape_seq": 1317
   },
   {
@@ -311454,8 +311454,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 9,
@@ -311468,7 +311468,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 2,
-    "punti_effettivi": 2,
+    "punti_effettivi": 4,
     "_scrape_seq": 1317
   },
   {
@@ -311478,8 +311478,8 @@
     "categoria": "Esordienti 2° Anno",
     "genere": "F",
     "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
     "posizione": 10,
@@ -311492,7 +311492,7 @@
     "km": "25.000",
     "media": "33.321",
     "punti_base": 1,
-    "punti_effettivi": 1,
+    "punti_effettivi": 2,
     "_scrape_seq": 1317
   },
   {

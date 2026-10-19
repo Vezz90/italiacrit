@@ -3020,7 +3020,7 @@
   "NORDEST_PETRUCCI_ASSALI_STEFEN": {
     "id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti_totali": 745,
+    "punti_totali": 770,
     "atleti": [
       "CORRADINI_ALESSANDRO",
       "VIERO_GUIDO",
@@ -3626,8 +3626,8 @@
         "atleta_cognome": "VIERO",
         "atleta_nome": "GUIDO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -3641,8 +3641,8 @@
         "atleta_cognome": "SCAMPERLE",
         "atleta_nome": "NICOLO'",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -3656,8 +3656,8 @@
         "atleta_cognome": "ZANOLINI",
         "atleta_nome": "ERIC",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -3965,13 +3965,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 745
+      "JUN_M": 770
     }
   },
   "TEAM_GUERRINI_SENAGHESE": {
     "id": "TEAM_GUERRINI_SENAGHESE",
     "nome": "TEAM GUERRINI SENAGHESE",
-    "punti_totali": 851,
+    "punti_totali": 891,
     "atleti": [
       "COLOSIO_FRANCESCO",
       "MAGGIONI_MATTEO",
@@ -4851,8 +4851,8 @@
         "atleta_cognome": "AYALA ARELLANO",
         "atleta_nome": "EDUARD EMANUEL",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -4866,8 +4866,8 @@
         "atleta_cognome": "MAGGIONI",
         "atleta_nome": "MATTEO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -4956,8 +4956,8 @@
         "atleta_cognome": "GATTA",
         "atleta_nome": "GABRIELE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -4971,8 +4971,8 @@
         "atleta_cognome": "CACCHIO",
         "atleta_nome": "MICHELE PIO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -4986,8 +4986,8 @@
         "atleta_cognome": "ZANESI",
         "atleta_nome": "FILIPPO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -5001,8 +5001,8 @@
         "atleta_cognome": "ROTA",
         "atleta_nome": "MARCO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -5265,13 +5265,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 851
+      "JUN_M": 891
     }
   },
   "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK": {
     "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti_totali": 1251,
+    "punti_totali": 1271,
     "atleti": [
       "PAOLINELLI_GIANMARCO",
       "IACONETA_LORENZO",
@@ -6636,8 +6636,8 @@
         "atleta_cognome": "MANONI",
         "atleta_nome": "ANDREA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -6681,8 +6681,8 @@
         "atleta_cognome": "VITALI",
         "atleta_nome": "GIULIO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -7321,7 +7321,7 @@
     ],
     "punti_per_cat": {
       "JUN_M": 597,
-      "AL_M": 603,
+      "AL_M": 623,
       "ES2_M": 31,
       "ES1_M": 20
     }
@@ -9455,7 +9455,7 @@
   "FDB_SPORT_CLUB": {
     "id": "FDB_SPORT_CLUB",
     "nome": "FDB SPORT CLUB",
-    "punti_totali": 468,
+    "punti_totali": 480,
     "atleti": [
       "TOFFALORI_LEONARDO",
       "DALLA_BONA_THOMAS",
@@ -10199,8 +10199,8 @@
         "atleta_cognome": "DALLA",
         "atleta_nome": "BONA THOMAS",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -10493,7 +10493,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 174,
+      "JUN_M": 186,
       "AL_M": 89,
       "ES1_M": 175,
       "ES2_M": 30
@@ -13763,7 +13763,7 @@
   "ARAN_CUCINE_VEJUS": {
     "id": "ARAN_CUCINE_VEJUS",
     "nome": "ARAN CUCINE VEJUS",
-    "punti_totali": 159,
+    "punti_totali": 171,
     "atleti": [
       "RUBIO_SIERRA_EDWIN_FABIAN",
       "DE_ANGELIS_MATTEO",
@@ -13960,8 +13960,8 @@
         "atleta_cognome": "ASTOLFI",
         "atleta_nome": "FLAVIO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -13990,8 +13990,8 @@
         "atleta_cognome": "LUIS",
         "atleta_nome": "RUBIO NICOLAS SMITH",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -14044,8 +14044,8 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 74,
-      "ES1_M": 85
+      "ELI_M": 76,
+      "ES1_M": 95
     }
   },
   "U_C_PREGNANA": {
@@ -14216,7 +14216,7 @@
   "BELTRAMI_TSA_TRE_COLLI": {
     "id": "BELTRAMI_TSA_TRE_COLLI",
     "nome": "BELTRAMI TSA TRE COLLI",
-    "punti_totali": 853,
+    "punti_totali": 866,
     "atleti": [
       "BIANCALANI_ANDREA",
       "BELLERI_MICHAEL",
@@ -14585,8 +14585,8 @@
         "atleta_cognome": "GARBI",
         "atleta_nome": "PIERLUIGI",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -14600,8 +14600,8 @@
         "atleta_cognome": "ROSSI",
         "atleta_nome": "LEONARDO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -15224,7 +15224,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 853
+      "ELI_M": 866
     }
   },
   "A_S_D_S_C_PADOVANI": {
@@ -16786,7 +16786,7 @@
   "TEAM_HOPPLA": {
     "id": "TEAM_HOPPLA",
     "nome": "TEAM HOPPLA'",
-    "punti_totali": 1127,
+    "punti_totali": 1146,
     "atleti": [
       "STEFANELLI_ANDREA",
       "MAGLI_LORENZO",
@@ -17557,8 +17557,8 @@
         "atleta_cognome": "BRUNO",
         "atleta_nome": "ANDREA ALFIO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -17572,8 +17572,8 @@
         "atleta_cognome": "GIALLI",
         "atleta_nome": "MATTEO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -18181,7 +18181,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 1127
+      "ELI_M": 1146
     }
   },
   "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO": {
@@ -26606,7 +26606,7 @@
   "FAIZANE_CSZ_SANDRIGO_BIKE": {
     "id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti_totali": 379,
+    "punti_totali": 380,
     "atleti": [
       "CECCATO_EDOARDO",
       "STORTI_MICHELE",
@@ -27303,8 +27303,8 @@
         "atleta_cognome": "CECCATO",
         "atleta_nome": "EDOARDO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -27567,7 +27567,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 219,
+      "JUN_M": 220,
       "AL_M": 160
     }
   },
@@ -34704,7 +34704,7 @@
   "U_C_PIASCO": {
     "id": "U_C_PIASCO",
     "nome": "U.C. PIASCO",
-    "punti_totali": 345,
+    "punti_totali": 355,
     "atleti": [
       "GUGNINO_LUCA",
       "COMETTO_FILIPPO",
@@ -35068,8 +35068,8 @@
         "atleta_cognome": "GUGNINO",
         "atleta_nome": "LUCA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -35182,7 +35182,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 345
+      "JUN_M": 355
     }
   },
   "BFT_BURZONI": {
@@ -36318,7 +36318,7 @@
   "BREGANZE_MILLENIUM": {
     "id": "BREGANZE_MILLENIUM",
     "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 649,
+    "punti_totali": 656,
     "atleti": [
       "LAGHI_CLARISSA",
       "RAPPORTI_LINDA",
@@ -36960,8 +36960,8 @@
         "atleta_cognome": "MORO",
         "atleta_nome": "ELENA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -37710,8 +37710,8 @@
         "atleta_cognome": "CRESTANI",
         "atleta_nome": "ELISA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -37765,8 +37765,8 @@
     ],
     "punti_per_cat": {
       "JUN_F": 422,
-      "ES1_F": 68,
-      "ES2_F": 112,
+      "ES1_F": 71,
+      "ES2_F": 116,
       "AL_F": 47
     }
   },
@@ -38984,7 +38984,7 @@
   "GCD_PEDALE_MANZANESE": {
     "id": "GCD_PEDALE_MANZANESE",
     "nome": "GCD PEDALE MANZANESE",
-    "punti_totali": 415,
+    "punti_totali": 442,
     "atleti": [
       "D_AIUTO_SEBASTIANO",
       "TODARO_ALBERTO",
@@ -39525,8 +39525,8 @@
         "atleta_cognome": "D'AIUTO",
         "atleta_nome": "SEBASTIANO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -39540,8 +39540,8 @@
         "atleta_cognome": "TODARO",
         "atleta_nome": "ALBERTO",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -39579,13 +39579,13 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 415
+      "AL_M": 442
     }
   },
   "ASD_VELOCE_CLUB_BORGO": {
     "id": "ASD_VELOCE_CLUB_BORGO",
     "nome": "ASD VELOCE CLUB BORGO",
-    "punti_totali": 1189,
+    "punti_totali": 1255,
     "atleti": [
       "VOLTOLINI_VICTOR",
       "DONANZAN_MARGHERITA",
@@ -39984,8 +39984,8 @@
         "atleta_cognome": "VOLTOLINI",
         "atleta_nome": "RAMIRO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -40029,8 +40029,8 @@
         "atleta_cognome": "FONTANARI",
         "atleta_nome": "LORENZO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -40044,8 +40044,8 @@
         "atleta_cognome": "SALVATI",
         "atleta_nome": "GABRIELE GERARDO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -40059,8 +40059,8 @@
         "atleta_cognome": "D'AQUILIO",
         "atleta_nome": "JACOPO",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -40074,8 +40074,8 @@
         "atleta_cognome": "MOSNA",
         "atleta_nome": "RICCARDO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -40614,8 +40614,8 @@
         "atleta_cognome": "DONANZAN",
         "atleta_nome": "MARGHERITA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -40629,8 +40629,8 @@
         "atleta_cognome": "PELLEGRINI",
         "atleta_nome": "GIULIA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -42018,17 +42018,17 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 256,
-      "ES2_F": 329,
+      "AL_M": 264,
+      "ES2_F": 340,
       "AL_F": 73,
-      "ES2_M": 359,
-      "ES1_M": 172
+      "ES2_M": 391,
+      "ES1_M": 187
     }
   },
   "IND_FORNITURE_MORO_C_G_CAPITAL": {
     "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti_totali": 1525,
+    "punti_totali": 1546,
     "atleti": [
       "FOFFANO_PIETRO",
       "ZAGO_GABRIELE",
@@ -43760,8 +43760,8 @@
         "atleta_cognome": "BONATO",
         "atleta_nome": "TOMMASO",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -43775,8 +43775,8 @@
         "atleta_cognome": "VENDRAMIN",
         "atleta_nome": "JACOPO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -43790,8 +43790,8 @@
         "atleta_cognome": "MARINETTO",
         "atleta_nome": "LORENZO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "114.000",
@@ -44955,7 +44955,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 551,
-      "JUN_M": 484,
+      "JUN_M": 505,
       "ES1_M": 250,
       "ES2_M": 240
     }
@@ -44963,7 +44963,7 @@
   "LIBERTAS_RAIFFEISEN_LAIVES_ASD": {
     "id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
     "nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
-    "punti_totali": 287,
+    "punti_totali": 317,
     "atleti": [
       "MACAS_JIMENEZ_PIER_DAVIDE",
       "MACAS_JIMENEZ_LUIS_MAURI",
@@ -45024,8 +45024,8 @@
         "atleta_cognome": "MACAS",
         "atleta_nome": "JIMENEZ PIER DAVIDE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -45039,8 +45039,8 @@
         "atleta_cognome": "MACAS",
         "atleta_nome": "JIMENEZ LUIS MAURI",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -45054,8 +45054,8 @@
         "atleta_cognome": "QUINTERO",
         "atleta_nome": "TORRES THOMAS",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -45459,8 +45459,8 @@
         "atleta_cognome": "MACAS",
         "atleta_nome": "JIMENEZ PIER DAVIDE",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -45573,14 +45573,14 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 272,
-      "ES2_M": 15
+      "AL_M": 300,
+      "ES2_M": 17
     }
   },
   "C_C_FORTI_E_VELOCI": {
     "id": "C_C_FORTI_E_VELOCI",
     "nome": "C.C. FORTI E VELOCI",
-    "punti_totali": 853,
+    "punti_totali": 905,
     "atleti": [
       "BENEDETTI_PIETRO",
       "TRAINOTTI_NICOLO",
@@ -45771,8 +45771,8 @@
         "atleta_cognome": "TRAINOTTI",
         "atleta_nome": "NICOLO'",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -45786,8 +45786,8 @@
         "atleta_cognome": "COVI",
         "atleta_nome": "FRANCESCO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -45801,8 +45801,8 @@
         "atleta_cognome": "PEDERZOLLI",
         "atleta_nome": "MARTINO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -45816,8 +45816,8 @@
         "atleta_cognome": "REVOLTI",
         "atleta_nome": "PIETRO",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -45831,8 +45831,8 @@
         "atleta_cognome": "BERNARDI",
         "atleta_nome": "GIOVANNI",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -45846,8 +45846,8 @@
         "atleta_cognome": "COZZINI",
         "atleta_nome": "FRANCESCO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -45861,8 +45861,8 @@
         "atleta_cognome": "SICHERI",
         "atleta_nome": "YURI",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -47016,8 +47016,8 @@
         "atleta_cognome": "TRAINOTTI",
         "atleta_nome": "NICOLO'",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -47031,8 +47031,8 @@
         "atleta_cognome": "COVI",
         "atleta_nome": "FRANCESCO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -47280,15 +47280,15 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 402,
-      "ES2_M": 432,
-      "ES1_M": 19
+      "AL_M": 424,
+      "ES2_M": 457,
+      "ES1_M": 24
     }
   },
   "CICLISTICA_DRO": {
     "id": "CICLISTICA_DRO",
     "nome": "CICLISTICA DRO",
-    "punti_totali": 182,
+    "punti_totali": 193,
     "atleti": [
       "VALENTI_PIETRO",
       "ZULBERTI_NICOLA",
@@ -47378,8 +47378,8 @@
         "atleta_cognome": "VALENTI",
         "atleta_nome": "PIETRO",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -47663,8 +47663,8 @@
         "atleta_cognome": "VALENTI",
         "atleta_nome": "PIETRO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -47687,7 +47687,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 182
+      "AL_M": 193
     }
   },
   "FERALPI_MONTECLARENSE_ASD": {
@@ -58638,7 +58638,7 @@
   "UC_EMPOLESE": {
     "id": "UC_EMPOLESE",
     "nome": "UC EMPOLESE",
-    "punti_totali": 865,
+    "punti_totali": 886,
     "atleti": [
       "GASTASINI_MATTIA",
       "DI_STEFANO_GIACOMO",
@@ -59116,8 +59116,8 @@
         "atleta_cognome": "GASTASINI",
         "atleta_nome": "MATTIA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -59131,8 +59131,8 @@
         "atleta_cognome": "PACELLA",
         "atleta_nome": "LORENZO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -59146,8 +59146,8 @@
         "atleta_cognome": "CANTINI",
         "atleta_nome": "FILIPPO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -60745,7 +60745,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 184,
+      "AL_M": 205,
       "ES2_M": 351,
       "ES1_M": 330
     }
@@ -60753,7 +60753,7 @@
   "U_S_MONTECORONA": {
     "id": "U_S_MONTECORONA",
     "nome": "U.S. MONTECORONA",
-    "punti_totali": 492,
+    "punti_totali": 540,
     "atleti": [
       "DAL_MOLIN_SAMUEL",
       "GHIOTTO_MARCO",
@@ -61002,8 +61002,8 @@
         "atleta_cognome": "DAL MOLIN",
         "atleta_nome": "SAMUEL",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -61017,8 +61017,8 @@
         "atleta_cognome": "GHIOTTO",
         "atleta_nome": "MARCO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -61032,8 +61032,8 @@
         "atleta_cognome": "VICENTINI",
         "atleta_nome": "MIRKO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -61047,8 +61047,8 @@
         "atleta_cognome": "CAVADA",
         "atleta_nome": "GIULIANO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "67.000",
@@ -61062,8 +61062,8 @@
         "atleta_cognome": "MENDINI",
         "atleta_nome": "ALEX",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -61077,8 +61077,8 @@
         "atleta_cognome": "MOSER",
         "atleta_nome": "ERIK",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -62097,8 +62097,8 @@
         "atleta_cognome": "FORADORI",
         "atleta_nome": "STEFANO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -62112,8 +62112,8 @@
         "atleta_cognome": "GHIOTTO",
         "atleta_nome": "MARCO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -62211,16 +62211,16 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 314,
+      "AL_M": 340,
       "JUN_M": 41,
-      "ES1_M": 135,
+      "ES1_M": 157,
       "ES2_M": 2
     }
   },
   "TEAM_PIU_SPORT": {
     "id": "TEAM_PIU_SPORT",
     "nome": "TEAM PIU'SPORT",
-    "punti_totali": 432,
+    "punti_totali": 436,
     "atleti": [
       "CAORSI_ELIA",
       "GARSI_NICOLA",
@@ -62507,8 +62507,8 @@
         "atleta_cognome": "CAORSI",
         "atleta_nome": "ELIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -62951,7 +62951,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 117,
+      "AL_M": 121,
       "ES1_M": 315
     }
   },
@@ -65211,7 +65211,7 @@
   "U_C_CITTA_DI_CASTELLO_A_S_D": {
     "id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti_totali": 231,
+    "punti_totali": 239,
     "atleti": [
       "BUCCI_TOMMASO",
       "LONGARI_VITTORIO",
@@ -65545,8 +65545,8 @@
         "atleta_cognome": "LONGARI",
         "atleta_nome": "VITTORIO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -65809,7 +65809,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 176,
+      "AL_M": 184,
       "ES1_M": 49,
       "AL_F": 6
     }
@@ -65922,7 +65922,7 @@
   "S_C_CESANO_MADERNO": {
     "id": "S_C_CESANO_MADERNO",
     "nome": "S.C. CESANO MADERNO",
-    "punti_totali": 1257,
+    "punti_totali": 1290,
     "atleti": [
       "BRACCO_NICOLE",
       "CANU_NICOLE",
@@ -66758,8 +66758,8 @@
         "atleta_cognome": "MARIANI",
         "atleta_nome": "MARGHERITA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -66773,8 +66773,8 @@
         "atleta_cognome": "SANNA",
         "atleta_nome": "ELISA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -66788,8 +66788,8 @@
         "atleta_cognome": "CERAME",
         "atleta_nome": "AURORA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -66803,8 +66803,8 @@
         "atleta_cognome": "SPINONI",
         "atleta_nome": "MICHELLE",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -68288,8 +68288,8 @@
         "atleta_cognome": "SFORZINI",
         "atleta_nome": "SELENE",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -68463,8 +68463,8 @@
     ],
     "punti_per_cat": {
       "AL_F": 409,
-      "ES2_F": 462,
-      "ES1_F": 386
+      "ES2_F": 483,
+      "ES1_F": 398
     }
   },
   "GS_CICLI_FIORIN_ASD": {
@@ -71520,7 +71520,7 @@
   "SCUOLA_CICLISMO_VERSO_L_IRIDE": {
     "id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti_totali": 834,
+    "punti_totali": 851,
     "atleti": [
       "LUNA_ALESSANDRA",
       "KUCHYNSKAYA_EVA",
@@ -71993,8 +71993,8 @@
         "atleta_cognome": "LUNA",
         "atleta_nome": "ALESSANDRA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -72953,8 +72953,8 @@
         "atleta_cognome": "LUNA",
         "atleta_nome": "ALESSANDRA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -73052,7 +73052,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 437,
+      "ES2_F": 454,
       "ES1_F": 381,
       "AL_F": 16
     }
@@ -73060,7 +73060,7 @@
   "UC_DONORATICO": {
     "id": "UC_DONORATICO",
     "nome": "UC DONORATICO",
-    "punti_totali": 869,
+    "punti_totali": 876,
     "atleti": [
       "PELLEGRINI_LETIZIA",
       "LEPORE_EMMA",
@@ -74719,8 +74719,8 @@
         "atleta_cognome": "GORGA",
         "atleta_nome": "GRETA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -74734,8 +74734,8 @@
         "atleta_cognome": "LEPORE",
         "atleta_nome": "EMMA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -74878,8 +74878,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 119,
-      "ES1_F": 228,
+      "ES2_F": 120,
+      "ES1_F": 234,
       "ES1_M": 395,
       "ES2_M": 127
     }
@@ -74975,7 +74975,7 @@
   "HG_CYCLING_TEAM": {
     "id": "HG_CYCLING_TEAM",
     "nome": "HG CYCLING TEAM",
-    "punti_totali": 948,
+    "punti_totali": 1007,
     "atleti": [
       "DAZZANI_MYA",
       "SFERRAGATTA_EMANUELA",
@@ -75629,8 +75629,8 @@
         "atleta_cognome": "LOMBARDI",
         "atleta_nome": "SAMUELE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -75644,8 +75644,8 @@
         "atleta_cognome": "SFERRAGATTA",
         "atleta_nome": "EMANUELA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -75659,8 +75659,8 @@
         "atleta_cognome": "ALFANO",
         "atleta_nome": "VITTORIA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -76499,8 +76499,8 @@
         "atleta_cognome": "DAZZANI",
         "atleta_nome": "MYA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -76514,8 +76514,8 @@
         "atleta_cognome": "SFERRAGATTA",
         "atleta_nome": "EMANUELA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -76613,16 +76613,16 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 501,
-      "ES1_M": 238,
+      "ES2_F": 522,
+      "ES1_M": 261,
       "AL_F": 155,
-      "ES1_F": 54
+      "ES1_F": 69
     }
   },
   "BUSTO_GAROLFO": {
     "id": "BUSTO_GAROLFO",
     "nome": "BUSTO GAROLFO",
-    "punti_totali": 999,
+    "punti_totali": 1004,
     "atleti": [
       "PESSINA_ELENA",
       "NARDELLI_GIORGIA",
@@ -78641,8 +78641,8 @@
         "atleta_cognome": "NARDELLI",
         "atleta_nome": "GIORGIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -78786,7 +78786,7 @@
     ],
     "punti_per_cat": {
       "ES2_F": 96,
-      "ES1_F": 142,
+      "ES1_F": 147,
       "ES2_M": 569,
       "ES1_M": 192
     }
@@ -78794,7 +78794,7 @@
   "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
     "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti_totali": 1284,
+    "punti_totali": 1324,
     "atleti": [
       "ANDREOLI_ALICE",
       "BALDACCI_MATTEO",
@@ -79666,8 +79666,8 @@
         "atleta_cognome": "DI",
         "atleta_nome": "PARDO BEATRICE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -80296,8 +80296,8 @@
         "atleta_cognome": "BALDACCI",
         "atleta_nome": "MATTEO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -81061,8 +81061,8 @@
         "atleta_cognome": "DI",
         "atleta_nome": "PARDO BEATRICE",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -81076,8 +81076,8 @@
         "atleta_cognome": "SAMBI",
         "atleta_nome": "CORINNA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -81091,8 +81091,8 @@
         "atleta_cognome": "ANDREOLI",
         "atleta_nome": "ALICE",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -81235,9 +81235,9 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 90,
-      "AL_M": 428,
-      "ES1_F": 434,
+      "ES2_F": 92,
+      "AL_M": 429,
+      "ES1_F": 471,
       "AL_F": 322,
       "ES1_M": 10
     }
@@ -83326,7 +83326,7 @@
   "BICIFESTIVAL": {
     "id": "BICIFESTIVAL",
     "nome": "BICIFESTIVAL",
-    "punti_totali": 261,
+    "punti_totali": 269,
     "atleti": [
       "NERI_SARA",
       "BOGA_MELISSA_MAIA",
@@ -83856,8 +83856,8 @@
         "atleta_cognome": "NERI",
         "atleta_nome": "SARA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -83925,7 +83925,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 143,
+      "ES1_F": 151,
       "AL_F": 83,
       "ES2_F": 35
     }
@@ -85402,7 +85402,7 @@
   "OFF_ALBERTI_U_C_VAL_D_ILLASI": {
     "id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti_totali": 663,
+    "punti_totali": 680,
     "atleti": [
       "FASOLI_TOMMASO",
       "DA_CAMPO_THOMAS",
@@ -85587,8 +85587,8 @@
         "atleta_cognome": "FASOLI",
         "atleta_nome": "TOMMASO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -85602,8 +85602,8 @@
         "atleta_cognome": "NORDERA",
         "atleta_nome": "LUCA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -86412,8 +86412,8 @@
         "atleta_cognome": "CASAROTTI",
         "atleta_nome": "CARLOTTA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -86496,8 +86496,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 341,
-      "ES2_F": 318,
+      "ES2_M": 348,
+      "ES2_F": 328,
       "ES1_M": 1,
       "AL_M": 3
     }
@@ -88123,7 +88123,7 @@
   "GALLINA_LUCCHINI_ECOTEK": {
     "id": "GALLINA_LUCCHINI_ECOTEK",
     "nome": "GALLINA LUCCHINI ECOTEK",
-    "punti_totali": 433,
+    "punti_totali": 439,
     "atleti": [
       "BONOMETTI_MICHELE",
       "CRESCIOLI_GIOSUE",
@@ -88504,8 +88504,8 @@
         "atleta_cognome": "BONOMETTI",
         "atleta_nome": "MICHELE",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -88843,7 +88843,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 433
+      "ELI_M": 439
     }
   },
   "SOLME_OLMO_ARVEDI": {
@@ -91701,7 +91701,7 @@
   "VPM_MORETTI_SCS": {
     "id": "VPM_MORETTI_SCS",
     "nome": "VPM MORETTI SCS",
-    "punti_totali": 215,
+    "punti_totali": 223,
     "atleti": [
       "NOCERINO_CIRO",
       "DE_LAURENTIIS_GIUSEPPE",
@@ -91859,8 +91859,8 @@
         "atleta_cognome": "PICCINI",
         "atleta_nome": "MATTIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -91874,8 +91874,8 @@
         "atleta_cognome": "NOCERINO",
         "atleta_nome": "CIRO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -92168,7 +92168,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 215
+      "ELI_M": 223
     }
   },
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
@@ -100425,7 +100425,7 @@
   "ASD_PEDALE_CASALESE_ARMOFER": {
     "id": "ASD_PEDALE_CASALESE_ARMOFER",
     "nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti_totali": 633,
+    "punti_totali": 648,
     "atleti": [
       "ROCCIA_MANUEL",
       "VERZIERA_MARCO",
@@ -101491,8 +101491,8 @@
         "atleta_cognome": "SASSO",
         "atleta_nome": "MIRCO",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -101506,8 +101506,8 @@
         "atleta_cognome": "CALONI",
         "atleta_nome": "MATTIA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -101920,7 +101920,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 103,
+      "JUN_M": 118,
       "ES2_M": 220,
       "AL_M": 310
     }
@@ -103225,7 +103225,7 @@
   "TEAM_CORATTI": {
     "id": "TEAM_CORATTI",
     "nome": "TEAM CORATTI",
-    "punti_totali": 1225,
+    "punti_totali": 1246,
     "atleti": [
       "FERRARO_LORENZO",
       "BANINI_TOMMASO",
@@ -103449,8 +103449,8 @@
         "atleta_cognome": "FIACCO",
         "atleta_nome": "ANDREA",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -103464,8 +103464,8 @@
         "atleta_cognome": "MONTANARO",
         "atleta_nome": "NICOLO'",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -105140,7 +105140,7 @@
     "punti_per_cat": {
       "JUN_M": 608,
       "ES1_M": 133,
-      "AL_M": 469,
+      "AL_M": 490,
       "AL_F": 15
     }
   },
@@ -108441,7 +108441,7 @@
   "U_C_CONSCIO_PEDALE_DEL_SILE": {
     "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 939,
+    "punti_totali": 948,
     "atleti": [
       "D_APOLLONIO_REBECCA",
       "FERRANTE_MAYA",
@@ -110238,8 +110238,8 @@
         "atleta_cognome": "PIN",
         "atleta_nome": "MATILDE",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -110253,8 +110253,8 @@
         "atleta_cognome": "VETTORELLO",
         "atleta_nome": "GAIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -110323,9 +110323,9 @@
     ],
     "punti_per_cat": {
       "JUN_F": 330,
-      "ES1_F": 116,
+      "ES1_F": 120,
       "AL_F": 338,
-      "ES2_F": 155
+      "ES2_F": 160
     }
   },
   "CANTURINO_1902_A_S_D": {
@@ -110529,7 +110529,7 @@
   "SPORT_CLUB_BRESCIA_FLANDRES_LOVE": {
     "id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti_totali": 791,
+    "punti_totali": 792,
     "atleti": [
       "COCCA_EMMA",
       "CERETTI_ALICE",
@@ -111000,8 +111000,8 @@
         "atleta_cognome": "DASOLI",
         "atleta_nome": "EMMA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -111970,7 +111970,7 @@
     ],
     "punti_per_cat": {
       "AL_F": 473,
-      "ES2_F": 160,
+      "ES2_F": 161,
       "ES1_F": 158
     }
   },
@@ -112880,7 +112880,7 @@
   "G_C_SOSSANO_1975": {
     "id": "G_C_SOSSANO_1975",
     "nome": "G.C. SOSSANO 1975",
-    "punti_totali": 469,
+    "punti_totali": 491,
     "atleti": [
       "SELLA_ANNA",
       "PAVIN_LAVINIA_MARIA_GIOVANNA",
@@ -113326,8 +113326,8 @@
         "atleta_cognome": "BORGATO",
         "atleta_nome": "NOEMI",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -113341,8 +113341,8 @@
         "atleta_cognome": "SELLA",
         "atleta_nome": "ANNA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -114205,7 +114205,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 202,
+      "ES2_F": 224,
       "ES1_F": 63,
       "AL_F": 44,
       "ES1_M": 75,
@@ -114215,7 +114215,7 @@
   "G_C_NOVENTANA": {
     "id": "G_C_NOVENTANA",
     "nome": "G.C. NOVENTANA",
-    "punti_totali": 161,
+    "punti_totali": 164,
     "atleti": [
       "BORSETTO_LINDA",
       "CLEMENTE_GINEVRA",
@@ -114666,8 +114666,8 @@
         "atleta_cognome": "CLEMENTE",
         "atleta_nome": "GINEVRA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -114675,14 +114675,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_F": 132,
+      "ES2_F": 135,
       "AL_F": 29
     }
   },
   "GS_CAPANNORI": {
     "id": "GS_CAPANNORI",
     "nome": "GS CAPANNORI",
-    "punti_totali": 477,
+    "punti_totali": 494,
     "atleti": [
       "MANNELLI_MATILDE",
       "CIANTI_NOEMI",
@@ -115558,8 +115558,8 @@
         "atleta_cognome": "MANNELLI",
         "atleta_nome": "MATILDE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -115573,8 +115573,8 @@
         "atleta_cognome": "VOLLERO",
         "atleta_nome": "SUSANNA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -115672,7 +115672,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 449,
+      "ES1_F": 466,
       "AL_F": 15,
       "ES2_F": 8,
       "ES1_M": 5
@@ -115681,7 +115681,7 @@
   "TEAM_VALDINIEVOLE_A_S_D": {
     "id": "TEAM_VALDINIEVOLE_A_S_D",
     "nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti_totali": 277,
+    "punti_totali": 295,
     "atleti": [
       "CERONE_ANTONIO",
       "LODOVISI_LORENZO",
@@ -116012,8 +116012,8 @@
         "atleta_cognome": "MENICI",
         "atleta_nome": "DUCCIO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -116027,8 +116027,8 @@
         "atleta_cognome": "LODOVISI",
         "atleta_nome": "LORENZO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -116246,13 +116246,13 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 277
+      "AL_M": 295
     }
   },
   "ASD_TEAM_PETRUCCI": {
     "id": "ASD_TEAM_PETRUCCI",
     "nome": "ASD TEAM PETRUCCI",
-    "punti_totali": 562,
+    "punti_totali": 564,
     "atleti": [
       "YAKOV_KRISTIYAN_IVANOV",
       "CHIANESE_ALESSANDRO",
@@ -116623,8 +116623,8 @@
         "atleta_cognome": "SPERI",
         "atleta_nome": "CHIARA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -117775,13 +117775,13 @@
       "AL_M": 199,
       "ES1_M": 192,
       "ES2_M": 141,
-      "ES2_F": 30
+      "ES2_F": 32
     }
   },
   "CAMB_KE": {
     "id": "CAMB_KE",
     "nome": "CAMB!KE",
-    "punti_totali": 515,
+    "punti_totali": 592,
     "atleti": [
       "APRILE_MICHELE",
       "LEO_GABRIELE",
@@ -117938,8 +117938,8 @@
         "atleta_cognome": "APRILE",
         "atleta_nome": "MICHELE",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -117953,8 +117953,8 @@
         "atleta_cognome": "LEO",
         "atleta_nome": "GABRIELE",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -118118,8 +118118,8 @@
         "atleta_cognome": "LEO",
         "atleta_nome": "GABRIELE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -118133,8 +118133,8 @@
         "atleta_cognome": "PICCOLO",
         "atleta_nome": "MATTEO",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -118148,8 +118148,8 @@
         "atleta_cognome": "DI",
         "atleta_nome": "PAOLO PASQUALE",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -118163,8 +118163,8 @@
         "atleta_cognome": "SAVARESE",
         "atleta_nome": "EMANUELE",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -118178,8 +118178,8 @@
         "atleta_cognome": "APRILE",
         "atleta_nome": "MICHELE",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -118193,8 +118193,8 @@
         "atleta_cognome": "DESIDERIO",
         "atleta_nome": "VINCENZO",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -118208,8 +118208,8 @@
         "atleta_cognome": "CIARAVOLA",
         "atleta_nome": "EMIDIO FRANCESCO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -118223,8 +118223,8 @@
         "atleta_cognome": "DE",
         "atleta_nome": "MARTINO GENNARO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -118997,9 +118997,9 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 277,
-      "ES1_M": 170,
-      "ES2_M": 68
+      "AL_M": 335,
+      "ES1_M": 182,
+      "ES2_M": 75
     }
   },
   "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO": {
@@ -127453,7 +127453,7 @@
   "TEAM_CESARO_NERI_LUCCHINI": {
     "id": "TEAM_CESARO_NERI_LUCCHINI",
     "nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti_totali": 1717,
+    "punti_totali": 1797,
     "atleti": [
       "VITO_VINCENZO",
       "COLETTA_FRANCESCO",
@@ -127842,8 +127842,8 @@
         "atleta_cognome": "GLIOTTONE",
         "atleta_nome": "GIOVANNI",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -127857,8 +127857,8 @@
         "atleta_cognome": "MONTELLA",
         "atleta_nome": "ANDREA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -127872,8 +127872,8 @@
         "atleta_cognome": "RAGOZZINO",
         "atleta_nome": "MIRKO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -127887,8 +127887,8 @@
         "atleta_cognome": "AMICO",
         "atleta_nome": "ALESSANDRO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -127902,8 +127902,8 @@
         "atleta_cognome": "RIZZUTI",
         "atleta_nome": "TOMMASO LUIGI",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -128322,8 +128322,8 @@
         "atleta_cognome": "GLIOTTONE",
         "atleta_nome": "GIOVANNI",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -128337,8 +128337,8 @@
         "atleta_cognome": "MONTELLA",
         "atleta_nome": "ANDREA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -128352,8 +128352,8 @@
         "atleta_cognome": "RIZZUTI",
         "atleta_nome": "TOMMASO LUIGI",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "49.300",
@@ -128367,8 +128367,8 @@
         "atleta_cognome": "VITO",
         "atleta_nome": "VINCENZO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -128382,8 +128382,8 @@
         "atleta_cognome": "COLETTA",
         "atleta_nome": "FRANCESCO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -128397,8 +128397,8 @@
         "atleta_cognome": "VARINI",
         "atleta_nome": "ALESSANDRO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -128412,8 +128412,8 @@
         "atleta_cognome": "DE",
         "atleta_nome": "VITO LUIGI",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -130551,8 +130551,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 1012,
-      "AL_M": 363,
+      "ES2_M": 1046,
+      "AL_M": 409,
       "ES1_M": 281,
       "AL_F": 61
     }
@@ -135099,7 +135099,7 @@
   "V_C_LUGANO": {
     "id": "V_C_LUGANO",
     "nome": "V.C. LUGANO",
-    "punti_totali": 180,
+    "punti_totali": 192,
     "atleti": [
       "ARATARI_LORENZO",
       "PUSTOVAROV_ALEXANDER"
@@ -135233,8 +135233,8 @@
         "atleta_cognome": "PUSTOVAROV",
         "atleta_nome": "ALEXANDER",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -135437,7 +135437,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 180
+      "ES2_M": 192
     }
   },
   "PEDALE_BREMBILLESE": {
@@ -143357,7 +143357,7 @@
   "A_R_MONEX_PRO_CYCLING_TEAM": {
     "id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti_totali": 1252,
+    "punti_totali": 1283,
     "atleti": [
       "SEMOLI_SERENA",
       "RODRIGUEZ_DELGADO_JOSE_EMILIO",
@@ -144457,8 +144457,8 @@
         "atleta_cognome": "SEGURA MEDINA",
         "atleta_nome": "IVAN",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -144472,8 +144472,8 @@
         "atleta_cognome": "ALVAREZ",
         "atleta_nome": "GONZALEZ BRAULIO ELEAZAR",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -144487,8 +144487,8 @@
         "atleta_cognome": "PROBERT",
         "atleta_nome": "GONZALES PAUL",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -145190,7 +145190,7 @@
       "JUN_M": 426,
       "JUN_F": 183,
       "AL_F": 170,
-      "AL_M": 401
+      "AL_M": 432
     }
   },
   "HORIZONS_CYCLING_CLUB": {
@@ -147664,7 +147664,7 @@
   "U_C_GIORGIONE": {
     "id": "U_C_GIORGIONE",
     "nome": "U.C. GIORGIONE",
-    "punti_totali": 1147,
+    "punti_totali": 1169,
     "atleti": [
       "BASSO_GAIA",
       "MOCELLIN_GRETA",
@@ -148367,8 +148367,8 @@
         "atleta_cognome": "BASSO",
         "atleta_nome": "GAIA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -148382,8 +148382,8 @@
         "atleta_cognome": "STELLA",
         "atleta_nome": "AURORA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -148397,8 +148397,8 @@
         "atleta_cognome": "GUIDOLIN",
         "atleta_nome": "GIORGIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -149741,8 +149741,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 550,
-      "ES2_F": 207,
+      "ES1_F": 568,
+      "ES2_F": 211,
       "AL_F": 388,
       "ELI_F": 2
     }
@@ -149750,7 +149750,7 @@
   "G_S_MOSOLE": {
     "id": "G_S_MOSOLE",
     "nome": "G.S. MOSOLE",
-    "punti_totali": 373,
+    "punti_totali": 386,
     "atleti": [
       "GUIDOLIN_GIOIA",
       "MOINO_ALESSIA",
@@ -149931,8 +149931,8 @@
         "atleta_cognome": "GUIDOLIN",
         "atleta_nome": "GIOIA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -149946,8 +149946,8 @@
         "atleta_cognome": "MOINO",
         "atleta_nome": "ALESSIA",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -150675,7 +150675,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 247,
+      "ES1_F": 260,
       "ES1_M": 101,
       "ES2_M": 25
     }
@@ -151185,7 +151185,7 @@
   "ASS_NE_CICLISTICA_DILETT_VALVASONE": {
     "id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti_totali": 188,
+    "punti_totali": 192,
     "atleti": [
       "PASIN_GAIA",
       "DEOTTO_EMMA",
@@ -151354,8 +151354,8 @@
         "atleta_cognome": "PASIN",
         "atleta_nome": "GAIA",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -151678,7 +151678,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 54,
+      "ES1_F": 58,
       "AL_F": 115,
       "ES2_F": 19
     }
@@ -153223,7 +153223,7 @@
   "POMORIE": {
     "id": "POMORIE",
     "nome": "POMORIE",
-    "punti_totali": 89,
+    "punti_totali": 91,
     "atleti": [
       "TANCHEV_VIKTOR",
       "RUSEV_GEORGI"
@@ -153312,8 +153312,8 @@
         "atleta_cognome": "TANCHEV",
         "atleta_nome": "VIKTOR",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -153336,13 +153336,13 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 89
+      "AL_M": 91
     }
   },
   "VELO_CLUB_CATTOLICA": {
     "id": "VELO_CLUB_CATTOLICA",
     "nome": "VELO CLUB CATTOLICA",
-    "punti_totali": 360,
+    "punti_totali": 382,
     "atleti": [
       "BARTOLUCCI_SAMUELE",
       "CHIUSI_GIULIO",
@@ -153940,8 +153940,8 @@
         "atleta_cognome": "BARTOLUCCI",
         "atleta_nome": "SAMUELE",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -153955,8 +153955,8 @@
         "atleta_cognome": "AMADORI",
         "atleta_nome": "MARCO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -153970,8 +153970,8 @@
         "atleta_cognome": "SEBASTIANI",
         "atleta_nome": "PIETRO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -153985,8 +153985,8 @@
         "atleta_cognome": "LOTTI",
         "atleta_nome": "MATTIA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -154369,7 +154369,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 242,
+      "AL_M": 264,
       "ES2_M": 112,
       "ES1_M": 6
     }
@@ -154377,7 +154377,7 @@
   "S_C_D_ALMA_JUVENTUS_FANO": {
     "id": "S_C_D_ALMA_JUVENTUS_FANO",
     "nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti_totali": 201,
+    "punti_totali": 202,
     "atleti": [
       "CARDELLINI_TOMMASO",
       "GIANNETTI_DAVIDE",
@@ -154802,8 +154802,8 @@
         "atleta_cognome": "RINGHINI",
         "atleta_nome": "SIMONE",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -155021,7 +155021,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 37,
+      "AL_M": 38,
       "ES1_M": 103,
       "ES2_M": 61
     }
@@ -159558,7 +159558,7 @@
   "TEAM_GIUNIGOR_B_BIKE": {
     "id": "TEAM_GIUNIGOR_B_BIKE",
     "nome": "TEAM GIUNIGOR - B.BIKE",
-    "punti_totali": 119,
+    "punti_totali": 121,
     "atleti": [
       "IOVINO_ANTONINO",
       "AURICCHIO_DANIEL_ALEANDRO",
@@ -159663,8 +159663,8 @@
         "atleta_cognome": "AURICCHIO",
         "atleta_nome": "DANIEL ALEANDRO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -159868,14 +159868,14 @@
     ],
     "punti_per_cat": {
       "ES1_M": 25,
-      "ES2_M": 88,
+      "ES2_M": 90,
       "AL_M": 6
     }
   },
   "A_S_A_C_I_EVONACICLI": {
     "id": "A_S_A_C_I_EVONACICLI",
     "nome": "A.S.A.C.I. - EVONACICLI",
-    "punti_totali": 510,
+    "punti_totali": 540,
     "atleti": [
       "DI_STEFANO_LEONARDO",
       "BUTTARAZZI_GIULIA",
@@ -160019,8 +160019,8 @@
         "atleta_cognome": "BUTTARAZZI",
         "atleta_nome": "GIULIA",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -160034,8 +160034,8 @@
         "atleta_cognome": "BUTTARAZZI",
         "atleta_nome": "SOFIA",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -160049,8 +160049,8 @@
         "atleta_cognome": "CARLINO",
         "atleta_nome": "MARIA VITTORIA",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -160794,7 +160794,7 @@
     ],
     "punti_per_cat": {
       "ES1_M": 141,
-      "ES1_F": 251,
+      "ES1_F": 281,
       "AL_F": 24,
       "ES2_F": 94
     }
@@ -160802,7 +160802,7 @@
   "IL_PIRATA_SAMA_RICAMBI_OTC": {
     "id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti_totali": 991,
+    "punti_totali": 1001,
     "atleti": [
       "COLETTA_NICCOLO_GIOVANNI",
       "CIPOLLA_JONATHAN",
@@ -161225,8 +161225,8 @@
         "atleta_cognome": "COLETTA",
         "atleta_nome": "NICCOLO GIOVANNI",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -162374,7 +162374,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 639,
+      "ES2_M": 649,
       "ES1_M": 352
     }
   },
@@ -164799,7 +164799,7 @@
   "QUILIANO_BIKE_SPEED_WHEEL": {
     "id": "QUILIANO_BIKE_SPEED_WHEEL",
     "nome": "QUILIANO BIKE SPEED WHEEL",
-    "punti_totali": 145,
+    "punti_totali": 155,
     "atleti": [
       "CANU_EDOARDO",
       "DI_DOMENICO_MATTIA",
@@ -164965,8 +164965,8 @@
         "atleta_cognome": "ZUNINO",
         "atleta_nome": "SIMONE",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -165110,7 +165110,7 @@
     ],
     "punti_per_cat": {
       "ES2_M": 72,
-      "AL_M": 73
+      "AL_M": 83
     }
   },
   "A_S_D_CASTIGLIONESE": {
@@ -166729,7 +166729,7 @@
   "SS_AQUILA": {
     "id": "SS_AQUILA",
     "nome": "SS AQUILA",
-    "punti_totali": 259,
+    "punti_totali": 261,
     "atleti": [
       "BARTOLI_ALESSIO",
       "LACORCIA_ALESSANDRO",
@@ -167167,8 +167167,8 @@
         "atleta_cognome": "BENEVIERI",
         "atleta_nome": "FILIPPO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -167313,7 +167313,7 @@
     "punti_per_cat": {
       "ES1_M": 73,
       "AL_M": 81,
-      "JUN_M": 105
+      "JUN_M": 107
     }
   },
   "A_S_D_CICLI_TONTI_CATTOLICA": {
@@ -177558,7 +177558,7 @@
   "MEBLO_JOGI_PRO_CONCRETE": {
     "id": "MEBLO_JOGI_PRO_CONCRETE",
     "nome": "MEBLO JOGI PRO-CONCRETE",
-    "punti_totali": 105,
+    "punti_totali": 115,
     "atleti": [
       "REPSE_URBAN",
       "OLENIK_TIM",
@@ -177820,8 +177820,8 @@
         "atleta_cognome": "MARINIC",
         "atleta_nome": "BORUT",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -177835,8 +177835,8 @@
         "atleta_cognome": "NEDELJKOVIC",
         "atleta_nome": "ZAK",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "TRENTO",
         "km": "51.800",
@@ -177860,7 +177860,7 @@
     ],
     "punti_per_cat": {
       "JUN_M": 17,
-      "AL_M": 68,
+      "AL_M": 78,
       "ES2_M": 20
     }
   },
@@ -183529,7 +183529,7 @@
   "S_C_RECANATI_MARINELLI_CANTARINI": {
     "id": "S_C_RECANATI_MARINELLI_CANTARINI",
     "nome": "S.C.RECANATI MARINELLI CANTARINI",
-    "punti_totali": 450,
+    "punti_totali": 465,
     "atleti": [
       "PIERANGELINI_RICCARDO",
       "SDRUCCIOLI_DAVIDE",
@@ -184027,8 +184027,8 @@
         "atleta_cognome": "SDRUCCIOLI",
         "atleta_nome": "DAVIDE",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -184042,8 +184042,8 @@
         "atleta_cognome": "PIERANGELINI",
         "atleta_nome": "RICCARDO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -184381,7 +184381,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 450
+      "AL_M": 465
     }
   },
   "A_S_D_S_C_CERETOLESE_1969": {
@@ -185083,7 +185083,7 @@
   "S_C_ROMANESE_ASD": {
     "id": "S_C_ROMANESE_ASD",
     "nome": "S.C. ROMANESE ASD",
-    "punti_totali": 448,
+    "punti_totali": 467,
     "atleti": [
       "RESCA_PIETRO",
       "ORENGO_EDOARDO",
@@ -185255,8 +185255,8 @@
         "atleta_cognome": "RESCA",
         "atleta_nome": "PIETRO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -185270,8 +185270,8 @@
         "atleta_cognome": "SPADA",
         "atleta_nome": "EDOARDO SEBASTIEN",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -185285,8 +185285,8 @@
         "atleta_cognome": "MARCHESI",
         "atleta_nome": "MATTEO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -185765,8 +185765,8 @@
         "atleta_cognome": "ORENGO",
         "atleta_nome": "EDOARDO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -185954,8 +185954,8 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 265,
-      "JUN_M": 183
+      "AL_M": 279,
+      "JUN_M": 188
     }
   },
   "ALBA_BRA_LANGHE_ROERO": {
@@ -193861,7 +193861,7 @@
   "GIUSFREDI": {
     "id": "GIUSFREDI",
     "nome": "GIUSFREDI",
-    "punti_totali": 191,
+    "punti_totali": 206,
     "atleti": [
       "GIRALDI_DAVIDE",
       "MUSCIA_VINCENZO",
@@ -193937,8 +193937,8 @@
         "atleta_cognome": "GIRALDI",
         "atleta_nome": "DAVIDE",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -194276,7 +194276,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 191
+      "AL_M": 206
     }
   },
   "S_C_OZIERESE": {
@@ -194690,7 +194690,7 @@
   "C_C_APPENNINICO_1907": {
     "id": "C_C_APPENNINICO_1907",
     "nome": "C.C. APPENNINICO 1907",
-    "punti_totali": 165,
+    "punti_totali": 173,
     "atleti": [
       "VELAJ_CHRISTIAN",
       "CECCARELLI_ILARY"
@@ -194914,8 +194914,8 @@
         "atleta_cognome": "CECCARELLI",
         "atleta_nome": "ILARY",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -194954,7 +194954,7 @@
     ],
     "punti_per_cat": {
       "ES1_M": 105,
-      "ES2_F": 60
+      "ES2_F": 68
     }
   },
   "LOCO_BIKERS": {
@@ -196104,7 +196104,7 @@
   "ASD_GUBBIO_CICLISMO_MOCAIANA": {
     "id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
     "nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti_totali": 571,
+    "punti_totali": 576,
     "atleti": [
       "BATTISTELLI_FILIPPO",
       "CARRARA_TARARA_RAFFAELE",
@@ -196603,8 +196603,8 @@
         "atleta_cognome": "CARRARA TARARA",
         "atleta_nome": "RAFFAELE",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "UMBRIA",
         "km": "73.200",
@@ -197048,7 +197048,7 @@
     ],
     "punti_per_cat": {
       "ES2_M": 399,
-      "AL_M": 22,
+      "AL_M": 27,
       "ES1_M": 150
     }
   },
@@ -200318,7 +200318,7 @@
   "MENTECORPO_TEAM": {
     "id": "MENTECORPO_TEAM",
     "nome": "MENTECORPO TEAM",
-    "punti_totali": 49,
+    "punti_totali": 59,
     "atleti": [
       "PELLEGRINI_ALESSANDRO",
       "CORDIOLI_GIANLUCA",
@@ -200363,8 +200363,8 @@
         "atleta_cognome": "PELLEGRINI",
         "atleta_nome": "ALESSANDRO",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -200417,7 +200417,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 49
+      "ELI_M": 59
     }
   },
   "TEAM_GAIAPLAST_BIBANESE": {
@@ -201743,7 +201743,7 @@
   "IL_PIRATA_VANGI_OTC": {
     "id": "IL_PIRATA_VANGI_OTC",
     "nome": "IL PIRATA VANGI OTC",
-    "punti_totali": 409,
+    "punti_totali": 413,
     "atleti": [
       "D_ANDREA_RICCARDO",
       "LORETO_ROSARIO",
@@ -201822,8 +201822,8 @@
         "atleta_cognome": "ALBA",
         "atleta_nome": "SAMUELE",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BASILICATA",
         "km": "63.000",
@@ -202566,7 +202566,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 409
+      "AL_M": 413
     }
   },
   "MULTICAR_GRUPPO_AMARU": {
@@ -203589,7 +203589,7 @@
   "ASD_1D_UN_DENTE_IN_PIU": {
     "id": "ASD_1D_UN_DENTE_IN_PIU",
     "nome": "ASD 1D+ UN DENTE IN PIU'",
-    "punti_totali": 132,
+    "punti_totali": 135,
     "atleti": [
       "LIPPOLIS_ANTONIO",
       "PALAZZO_ANTHONY",
@@ -203729,8 +203729,8 @@
         "atleta_cognome": "LIPPOLIS",
         "atleta_nome": "ANTONIO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -203873,7 +203873,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 98,
+      "AL_M": 101,
       "ES1_M": 34
     }
   },
@@ -205059,7 +205059,7 @@
   "G_S_MASSI_SUPERMERCATI_PONTIDA": {
     "id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
     "nome": "G.S. MASSI' SUPERMERCATI PONTIDA",
-    "punti_totali": 120,
+    "punti_totali": 121,
     "atleti": [
       "BASILICO_RICCARDO",
       "ABELLA_GABRIELE",
@@ -205194,8 +205194,8 @@
         "atleta_cognome": "BASILICO",
         "atleta_nome": "RICCARDO",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "105.000",
@@ -205248,7 +205248,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 120
+      "JUN_M": 121
     }
   },
   "NIPPO_NUOVACOMAUTO_OBOR": {
@@ -206745,7 +206745,7 @@
   "PIESSE_CYCLING_TEAM": {
     "id": "PIESSE_CYCLING_TEAM",
     "nome": "PIESSE CYCLING TEAM",
-    "punti_totali": 166,
+    "punti_totali": 172,
     "atleti": [
       "SCOTTONI_ETTORE",
       "SELLATI_DAVIDE"
@@ -206894,8 +206894,8 @@
         "atleta_cognome": "SCOTTONI",
         "atleta_nome": "ETTORE",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "70.000",
@@ -207023,7 +207023,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 166
+      "AL_M": 172
     }
   },
   "A_S_D_AF_ARREDAMENTI_TEAM_CICLING": {
@@ -208132,7 +208132,7 @@
   "U_S_C_S_I_RUBANO": {
     "id": "U_S_C_S_I_RUBANO",
     "nome": "U.S. C.S.I. RUBANO",
-    "punti_totali": 37,
+    "punti_totali": 39,
     "atleti": [
       "BILLIATO_ARIANNA"
     ],
@@ -208190,8 +208190,8 @@
         "atleta_cognome": "BILLIATO",
         "atleta_nome": "ARIANNA",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "VENETO",
         "km": "32.880",
@@ -208259,13 +208259,13 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 37
+      "ES1_F": 39
     }
   },
   "CICLISTICA_BORDIGHERA": {
     "id": "CICLISTICA_BORDIGHERA",
     "nome": "CICLISTICA BORDIGHERA",
-    "punti_totali": 79,
+    "punti_totali": 81,
     "atleti": [
       "GROSSO_MATTEO",
       "DAMI_GABRIELE",
@@ -208341,8 +208341,8 @@
         "atleta_cognome": "TALIA",
         "atleta_nome": "LISANDRO LORENZO",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "LIGURIA",
         "km": "66.000",
@@ -208591,7 +208591,7 @@
     ],
     "punti_per_cat": {
       "ES1_M": 54,
-      "AL_M": 25
+      "AL_M": 27
     }
   },
   "CICLISTICA_ARMA_TAGGIA": {
@@ -208625,7 +208625,7 @@
   "G_S_ALTO_ADIGE_SUDTIROLPOST": {
     "id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
     "nome": "G.S. ALTO ADIGE - SUDTIROLPOST",
-    "punti_totali": 95,
+    "punti_totali": 103,
     "atleti": [
       "ZANOLINI_PABLO",
       "FORNARO_CHRISTIAN",
@@ -208642,8 +208642,8 @@
         "atleta_cognome": "ZANOLINI",
         "atleta_nome": "PABLO",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -208891,14 +208891,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 83,
+      "ES1_M": 91,
       "ES2_M": 12
     }
   },
   "U_S_AURORA_TRENTO": {
     "id": "U_S_AURORA_TRENTO",
     "nome": "U.S. AURORA TRENTO",
-    "punti_totali": 17,
+    "punti_totali": 23,
     "atleti": [
       "BONAFEDE_LEONARDO",
       "PAOLI_ANDREA"
@@ -208912,8 +208912,8 @@
         "atleta_cognome": "BONAFEDE",
         "atleta_nome": "LEONARDO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "BOLZANO",
         "km": "33.000",
@@ -208966,7 +208966,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 17
+      "ES1_M": 23
     }
   },
   "ASD_TEAM_ALTO_BRADANO": {
@@ -212237,7 +212237,7 @@
   "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO": {
     "id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
     "nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
-    "punti_totali": 83,
+    "punti_totali": 91,
     "atleti": [
       "SIMS_OLIVER_EDWARD_ANTHONY",
       "DI_PRIMA_CHRISTIAN",
@@ -212282,8 +212282,8 @@
         "atleta_cognome": "SIMS",
         "atleta_nome": "OLIVER EDWARD ANTHONY",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "115.000",
@@ -212351,7 +212351,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 83
+      "ELI_M": 91
     }
   },
   "CICLISTICA_PIERIS": {
@@ -217025,7 +217025,7 @@
   "FREE_BIKE_LT_LOGISTICA_AMBIENTALE": {
     "id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
     "nome": "FREE BIKE LT - LOGISTICA AMBIENTALE",
-    "punti_totali": 42,
+    "punti_totali": 43,
     "atleti": [
       "DE_GREGORIO_ELISA"
     ],
@@ -217053,8 +217053,8 @@
         "atleta_cognome": "DE",
         "atleta_nome": "GREGORIO ELISA",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "29.000",
@@ -217107,7 +217107,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_F": 42
+      "AL_F": 43
     }
   },
   "ASD_TIRRENO_BIKE_CICLI_FATATO": {
@@ -218062,7 +218062,7 @@
   "A_S_D_AMICISUPERSKI": {
     "id": "A_S_D_AMICISUPERSKI",
     "nome": "A.S.D. AMICISUPERSKI",
-    "punti_totali": 47,
+    "punti_totali": 59,
     "atleti": [
       "MAZZA_CARMEN",
       "MASSA_MARTINA",
@@ -218077,8 +218077,8 @@
         "atleta_cognome": "MAZZA",
         "atleta_nome": "CARMEN",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -218092,8 +218092,8 @@
         "atleta_cognome": "MASSA",
         "atleta_nome": "MARTINA",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "CAMPANIA",
         "km": "22.400",
@@ -218191,8 +218191,8 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 6,
-      "ES1_F": 31,
+      "ES1_M": 12,
+      "ES1_F": 37,
       "AL_M": 10
     }
   },
@@ -221398,7 +221398,7 @@
   "A_S_D_CICLISTICA_G_BONZAGNI": {
     "id": "A_S_D_CICLISTICA_G_BONZAGNI",
     "nome": "A.S.D CICLISTICA G.BONZAGNI",
-    "punti_totali": 10,
+    "punti_totali": 13,
     "atleti": [
       "LODI_ATENA"
     ],
@@ -221441,8 +221441,8 @@
         "atleta_cognome": "LODI",
         "atleta_nome": "ATENA",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
         "km": "25.000",
@@ -221450,7 +221450,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 10
+      "ES1_F": 13
     }
   },
   "TEAM_GO_FAST_PUGLIA_ARADEO": {
