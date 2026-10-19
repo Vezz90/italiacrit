@@ -807,25 +807,17 @@ const queries = {
   // per una gara del 2008 appariva sotto il 2026). Recuperata qui con un
   // JOIN sulla stessa gara in ciclismo_results (stesso numero incorporato
   // nell'URL originale), niente da cambiare lato frontend oltre a leggerla.
+  // La stagione si legge da cic_races (indice sull'id) invece di cercare l'indirizzo con una espressione regolare in tutta ciclismo_results:
+  // 9.000 chiamate da 7 secondi l'una avevano saturato il database (20/10/2026).
   getApprovedRacePhotos: (gara_id) =>
     all(`SELECT rp.*, cr.stagione AS ciclismo_stagione FROM race_photos rp
-         LEFT JOIN LATERAL (
-           SELECT stagione FROM ciclismo_results
-           WHERE rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\'
-             AND gara_ciclismo_url ~ ('_' || substring(rp.gara_id from 5) || '_[0-9]{4}_[0-9]{2}_[0-9]{2}_')
-           LIMIT 1
-         ) cr ON true
+         LEFT JOIN cic_races cr ON rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\' AND cr.id = substring(rp.gara_id from 5)
          WHERE rp.gara_id = $1 AND rp.status = 'approved' ORDER BY rp.created_at DESC`,
         [gara_id]),
 
   getAllApprovedRacePhotos: () =>
     all(`SELECT rp.*, cr.stagione AS ciclismo_stagione FROM race_photos rp
-         LEFT JOIN LATERAL (
-           SELECT stagione FROM ciclismo_results
-           WHERE rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\'
-             AND gara_ciclismo_url ~ ('_' || substring(rp.gara_id from 5) || '_[0-9]{4}_[0-9]{2}_[0-9]{2}_')
-           LIMIT 1
-         ) cr ON true
+         LEFT JOIN cic_races cr ON rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\' AND cr.id = substring(rp.gara_id from 5)
          WHERE rp.status = 'approved' ORDER BY rp.created_at DESC`),
 
   getPendingRacePhotos: () =>
