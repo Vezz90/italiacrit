@@ -369,6 +369,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/photos', express.static(UPLOADS_DIR));
 // Le foto caricate stanno nello storage Supabase: si servono anche dal nostro dominio (/photos/<file>), cosi Google Immagini le associa al sito
+// Stessa foto sotto l'indirizzo della gara (/gara/<id>/foto/<file>): Cloudflare instrada su Render i percorsi /gara/*, non /photos/*
+app.get('/gara/:id/foto/:file', async (req, res, next) => {
+  try {
+    const name = String(req.params.file || '');
+    if (!supabase || !/^[\w.-]+\.(jpe?g|png|webp)$/i.test(name)) return next();
+    const r = await fetch(`https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public/photos/${encodeURIComponent(name)}`);
+    if (!r.ok) return next();
+    res.set('Content-Type', r.headers.get('content-type') || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=604800');
+    res.send(Buffer.from(await r.arrayBuffer()));
+  } catch (_) { next(); }
+});
 app.get('/photos/*', async (req, res, next) => {
   try {
     const name = decodeURIComponent(req.path.replace(/^\/photos\//, ''));
@@ -659,10 +671,10 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
     const calRaw = await readDataJsonFromGH('calendar.json').catch(() => null);
     const mix = await _mediaIndex();
     const X = _ogHtmlEsc;
-    const mediaXml = (ids, titleBase) => {
+    const mediaXml = (ids, titleBase, pageLoc) => {
       let out = '', nv = 0, ni = 0; const seen = new Set();
       for (const id of ids.filter(Boolean)) {
-        for (const p of (mix.photos.get(id) || [])) if (ni++ < 30) out += `<image:image><image:loc>${CANONICAL}/photos/${encodeURIComponent(p.filename)}</image:loc>${p.caption ? `<image:caption>${X(p.caption).slice(0, 200)}</image:caption>` : ''}${p.photographer ? `<image:title>${X(titleBase + ' — foto di ' + p.photographer).slice(0, 110)}</image:title>` : ''}</image:image>`;
+        for (const p of (mix.photos.get(id) || [])) if (ni++ < 30) out += `<image:image><image:loc>${_photoUrl(pageLoc, p.filename)}</image:loc>${p.caption ? `<image:caption>${X(p.caption).slice(0, 200)}</image:caption>` : ''}${p.photographer ? `<image:title>${X(titleBase + ' — foto di ' + p.photographer).slice(0, 110)}</image:title>` : ''}</image:image>`;
         for (const v of (mix.videos[id] || [])) { const y = _ytId(v.url); if (!y || seen.has(y) || nv >= 10) continue; seen.add(y); nv++;
           out += `<video:video><video:thumbnail_loc>https://img.youtube.com/vi/${y}/hqdefault.jpg</video:thumbnail_loc><video:title>${X(String(v.title || titleBase).slice(0, 100))}</video:title><video:description>${X(String(v.description || `${v.title || titleBase} — ${titleBase}`).slice(0, 300))}</video:description><video:player_loc>https://www.youtube.com/embed/${y}</video:player_loc>${/^\d{4}-\d{2}-\d{2}/.test(v.published_at || '') ? `<video:publication_date>${String(v.published_at).slice(0, 10)}</video:publication_date>` : ''}</video:video>`; }
       }
@@ -670,14 +682,14 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
     };
     for (const [gid, d] of garaDate) {
       const cal = _findCalEntryForNativeGaraId(calRaw, gid);
-      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly', lastmod: d, extra: mediaXml([gid, cal && cal.id], gid.replace(/_/g, ' ')) });
+      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly', lastmod: d, extra: mediaXml([gid, cal && cal.id], gid.replace(/_/g, ' '), `${CANONICAL}/gara/${encodeURIComponent(gid)}`) });
     }
     // gare professionistiche in Italia (pagine PRO_...): prima non erano in sitemap
     try {
       const { data: pro } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, parent_slug, is_gc').not('winner_name', 'is', null).limit(2000);
       for (const r of (pro || [])) {
         const pid = `PRO_${r.pcs_race_slug}_${r.season}`;
-        urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(pid)}`, priority: '0.6', changefreq: 'monthly', lastmod: String(r.data_end || r.data_start).slice(0, 10), extra: mediaXml([pid, _proCalIdForServer(calRaw, r)], r.nome) });
+        urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(pid)}`, priority: '0.6', changefreq: 'monthly', lastmod: String(r.data_end || r.data_start).slice(0, 10), extra: mediaXml([pid, _proCalIdForServer(calRaw, r)], r.nome, `${CANONICAL}/gara/${encodeURIComponent(pid)}`) });
       }
     } catch (_) { /* senza gare pro: resta il resto */ }
     for (const [id, tm] of Object.entries(teams || {})) {
@@ -12900,6 +12912,7 @@ async function _mediaIndex() {
   _mediaIdx = { ts: Date.now(), videos, photos };
   return _mediaIdx;
 }
+const _photoUrl = (pageUrl, filename) => `${pageUrl}/foto/${encodeURIComponent(filename)}`;
 const _ytId = u => (String(u || '').match(/(?:v=|youtu\.be\/|\/embed\/|\/live\/|\/shorts\/)([\w-]{11})/) || [])[1] || null;
 // ids: id della pagina + id di calendario della stessa gara (i media sono salvati con l'uno o con l'altro)
 async function _mediaForIds(ids) {
@@ -12921,15 +12934,15 @@ function _mediaLd(media, titleBase, pageUrl) {
   }
   for (const p of media.photos.slice(0, 20)) {
     const who = p.photographer || p.display_name || '';
-    ld.push({ '@context': 'https://schema.org', '@type': 'ImageObject', contentUrl: `${SITE_URL}/photos/${encodeURIComponent(p.filename)}`, url: pageUrl,
+    ld.push({ '@context': 'https://schema.org', '@type': 'ImageObject', contentUrl: _photoUrl(pageUrl, p.filename), url: pageUrl,
       name: String(p.caption || `${titleBase} — foto`).slice(0, 110), caption: String(p.caption || titleBase).slice(0, 200),
       ...(who ? { creditText: who, creator: { '@type': 'Person', name: who }, copyrightNotice: `Foto: ${who}` } : {}) });
   }
   return ld;
 }
-function _mediaNoscript(media, titleBase) {
+function _mediaNoscript(media, titleBase, pageUrl) {
   const e = _ogHtmlEsc;
-  return media.photos.slice(0, 12).map(p => `<figure><img src="${SITE_URL}/photos/${encodeURIComponent(p.filename)}" alt="${e(p.caption || titleBase + ' — foto')}"/>${(p.photographer || p.display_name) ? `<figcaption>Foto: ${e(p.photographer || p.display_name)}</figcaption>` : ''}</figure>`).join('')
+  return media.photos.slice(0, 12).map(p => `<figure><img src="${_photoUrl(pageUrl, p.filename)}" alt="${e(p.caption || titleBase + ' — foto')}"/>${(p.photographer || p.display_name) ? `<figcaption>Foto: ${e(p.photographer || p.display_name)}</figcaption>` : ''}</figure>`).join('')
     + media.videos.slice(0, 6).map(v => `<p>Video: <a href="https://www.youtube.com/watch?v=${v.yt}">${e(v.title || titleBase)}</a></p>`).join('');
 }
 // id calendario di una gara pro (i media sono salvati con quello): stesso giorno e nome simile
@@ -12966,7 +12979,7 @@ async function _getHeadMetaFor(type, id) {
       const list = top.map(x => `<li>${x.posizione}° ${_ogHtmlEsc(x.nome_completo)}${x.team ? ' — ' + _ogHtmlEsc(x.team) : ''}</li>`).join('');
       return {
         title: `${nome} ${year} - Risultati | ICS`, desc, canonical, ogImage: DEFAULT_OG_IMG,
-        noscript: `<h1>${_ogHtmlEsc(nome)} ${year}</h1><p>${_ogHtmlEsc(desc)}</p>${list ? `<ol>${list}</ol>` : ''}${_mediaNoscript(media, `${nome} ${year}`)}`,
+        noscript: `<h1>${_ogHtmlEsc(nome)} ${year}</h1><p>${_ogHtmlEsc(desc)}</p>${list ? `<ol>${list}</ol>` : ''}${_mediaNoscript(media, `${nome} ${year}`, canonical)}`,
         jsonld: _mediaLd(media, `${nome} ${year}`, canonical),
       };
     }
@@ -13001,7 +13014,7 @@ async function _getHeadMetaFor(type, id) {
     return {
       title: `${title} | ICS`, desc, canonical,
       ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results, await _ogPhotoSig(id))}`,
-      noscript: (media.photos.length || media.videos.length) ? `<h1>${_ogHtmlEsc(title)}</h1>${_mediaNoscript(media, title)}` : undefined,
+      noscript: (media.photos.length || media.videos.length) ? `<h1>${_ogHtmlEsc(title)}</h1>${_mediaNoscript(media, title, canonical)}` : undefined,
       jsonld: _mediaLd(media, title, canonical),
     };
   }
