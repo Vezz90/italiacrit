@@ -13,6 +13,8 @@ const { createClient } = require('@supabase/supabase-js');
 const ws = require('ws');
 const APPLY = process.argv.includes('--apply');
 const sb = createClient('https://aqqsstsbgpapzoxllosh.supabase.co', process.env.SUPABASE_SECRET, { realtime: { transport: ws } });
+// le letture di tabelle grandi vanno ogni tanto in timeout: si riprova (fino a 8 volte)
+const retryQ = async build => { for (let k = 0; ; k++) { const q = await build(); if (!q.error || k >= 8) return q; await new Promise(r => setTimeout(r, 3000 + k * 2000)); } };
 const idPart = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/['’`´]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
 (async () => {
@@ -23,7 +25,7 @@ const idPart = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toU
   // slug PCS -> atleta
   const idOf = new Map();
   for (let from = 0; ; from += 1000) {
-    const q = await sb.from('entity_overrides').select('entity_id,new_value').eq('entity_type', 'atleta').eq('field', 'pcs_slug').order('id').range(from, from + 999);
+    const q = await retryQ(() => sb.from('entity_overrides').select('entity_id,new_value').eq('entity_type', 'atleta').eq('field', 'pcs_slug').order('id').range(from, from + 999));
     if (q.error) throw q.error; q.data.forEach(x => idOf.set(x.new_value, x.entity_id)); if (q.data.length < 1000) break;
   }
   // (atleta|stagione) -> nome squadra nei nostri dati (il piu frequente)
@@ -40,7 +42,7 @@ const idPart = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toU
 
   // storico gia presente
   const have = new Set();
-  for (let from = 0; ; from += 1000) { const q = await sb.from('pcs_team_history').select('atleta_id,season').order('atleta_id').order('season').range(from, from + 999); if (q.error) throw q.error; q.data.forEach(x => have.add(x.atleta_id + '|' + x.season)); if (q.data.length < 1000) break; }
+  for (let from = 0; ; from += 1000) { const q = await retryQ(() => sb.from('pcs_team_history').select('atleta_id,season').order('atleta_id').order('season').range(from, from + 999)); if (q.error) throw q.error; q.data.forEach(x => have.add(x.atleta_id + '|' + x.season)); if (q.data.length < 1000) break; }
 
   const histRows = [], lin = [];
   for (const [ourName, d] of teams) {
@@ -73,7 +75,7 @@ const idPart = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toU
 
   // gia presenti in team_lineage
   const existing = new Map();
-  for (let from = 0; ; from += 1000) { const q = await sb.from('team_lineage').select('id,team_id_from,season_from,team_id_to,season_to,status').order('id').range(from, from + 999); if (q.error) throw q.error; q.data.forEach(x => existing.set([x.team_id_from, x.season_from, x.team_id_to, x.season_to].join('|'), x)); if (q.data.length < 1000) break; }
+  for (let from = 0; ; from += 1000) { const q = await retryQ(() => sb.from('team_lineage').select('id,team_id_from,season_from,team_id_to,season_to,status').order('id').range(from, from + 999)); if (q.error) throw q.error; q.data.forEach(x => existing.set([x.team_id_from, x.season_from, x.team_id_to, x.season_to].join('|'), x)); if (q.data.length < 1000) break; }
   const isStrong = l => l.common_riders >= 2;   // un solo atleta in comune non basta per confermare da soli: resta in attesa di revisione
   const nuovi = cands.filter(l => !existing.has([l.team_id_from, l.season_from, l.team_id_to, l.season_to].join('|')));
   const daConfermare = cands.filter(l => { const e = existing.get([l.team_id_from, l.season_from, l.team_id_to, l.season_to].join('|')); return e && e.status === 'pending' && isStrong(l); });
