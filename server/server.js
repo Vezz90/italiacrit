@@ -368,6 +368,18 @@ app.options('*', cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/photos', express.static(UPLOADS_DIR));
+// Le foto caricate stanno nello storage Supabase: si servono anche dal nostro dominio (/photos/<file>), cosi Google Immagini le associa al sito
+app.get('/photos/*', async (req, res, next) => {
+  try {
+    const name = decodeURIComponent(req.path.replace(/^\/photos\//, ''));
+    if (!supabase || !name || name.includes('..')) return next();
+    const r = await fetch(`https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public/photos/${name.split('/').map(encodeURIComponent).join('/')}`);
+    if (!r.ok) return next();
+    res.set('Content-Type', r.headers.get('content-type') || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=604800');
+    res.send(Buffer.from(await r.arrayBuffer()));
+  } catch (_) { next(); }
+});
 
 // ── /og/*: pagine di servizio SOLO per le anteprime social ─────────────────
 // Google le scopriva e le segnalava come "pagina alternativa con canonical" (1.400+ URL).
@@ -643,15 +655,37 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
       const d = r.data || '';
       if (!garaDate.has(r.gara_id) || d > garaDate.get(r.gara_id)) garaDate.set(r.gara_id, d);
     }
+    // foto e video delle gare (sitemap immagini/video): Google non li vede nel codice della pagina, che li disegna con JavaScript
+    const calRaw = await readDataJsonFromGH('calendar.json').catch(() => null);
+    const mix = await _mediaIndex();
+    const X = _ogHtmlEsc;
+    const mediaXml = (ids, titleBase) => {
+      let out = '', nv = 0, ni = 0; const seen = new Set();
+      for (const id of ids.filter(Boolean)) {
+        for (const p of (mix.photos.get(id) || [])) if (ni++ < 30) out += `<image:image><image:loc>${CANONICAL}/photos/${encodeURIComponent(p.filename)}</image:loc>${p.caption ? `<image:caption>${X(p.caption).slice(0, 200)}</image:caption>` : ''}${p.photographer ? `<image:title>${X(titleBase + ' — foto di ' + p.photographer).slice(0, 110)}</image:title>` : ''}</image:image>`;
+        for (const v of (mix.videos[id] || [])) { const y = _ytId(v.url); if (!y || seen.has(y) || nv >= 10) continue; seen.add(y); nv++;
+          out += `<video:video><video:thumbnail_loc>https://img.youtube.com/vi/${y}/hqdefault.jpg</video:thumbnail_loc><video:title>${X(String(v.title || titleBase).slice(0, 100))}</video:title><video:description>${X(String(v.description || `${v.title || titleBase} — ${titleBase}`).slice(0, 300))}</video:description><video:player_loc>https://www.youtube.com/embed/${y}</video:player_loc>${/^\d{4}-\d{2}-\d{2}/.test(v.published_at || '') ? `<video:publication_date>${String(v.published_at).slice(0, 10)}</video:publication_date>` : ''}</video:video>`; }
+      }
+      return out;
+    };
     for (const [gid, d] of garaDate) {
-      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly', lastmod: d });
+      const cal = _findCalEntryForNativeGaraId(calRaw, gid);
+      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly', lastmod: d, extra: mediaXml([gid, cal && cal.id], gid.replace(/_/g, ' ')) });
     }
+    // gare professionistiche in Italia (pagine PRO_...): prima non erano in sitemap
+    try {
+      const { data: pro } = await supabase.from('pro_races').select('pcs_race_slug, season, nome, data_start, data_end, classe, parent_slug, is_gc').not('winner_name', 'is', null).limit(2000);
+      for (const r of (pro || [])) {
+        const pid = `PRO_${r.pcs_race_slug}_${r.season}`;
+        urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(pid)}`, priority: '0.6', changefreq: 'monthly', lastmod: String(r.data_end || r.data_start).slice(0, 10), extra: mediaXml([pid, _proCalIdForServer(calRaw, r)], r.nome) });
+      }
+    } catch (_) { /* senza gare pro: resta il resto */ }
     for (const [id, tm] of Object.entries(teams || {})) {
       if (!id || _isNotRealTeam(id) || !(tm && tm.risultati && tm.risultati.length)) continue;
       urls.push({ loc: `${CANONICAL}/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly', lastmod: lastOf(tm.risultati) });
     }
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
-      urls.map(u => `  <url><loc>${u.loc}</loc>${/^\d{4}-\d{2}-\d{2}$/.test(u.lastmod || '') ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${
+      urls.map(u => `  <url><loc>${u.loc}</loc>${/^\d{4}-\d{2}-\d{2}$/.test(u.lastmod || '') ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority>${u.extra || ''}</url>`).join('\n')
     }\n</urlset>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=3600');
@@ -12833,9 +12867,10 @@ function _readIndexHtmlTemplate() {
   _indexHtmlTemplateTs = Date.now();
   return _indexHtmlTemplate;
 }
-function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript }) {
+function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript, jsonld }) {
   const t = _ogHtmlEsc(title), d = _ogHtmlEsc(desc), c = _ogHtmlEsc(canonical), img = _ogHtmlEsc(ogImage);
   if (noscript) html = html.replace(/<body([^>]*)>/i, (m) => `${m}<noscript>${noscript}</noscript>`);
+  if (jsonld && jsonld.length) html = html.replace('</head>', () => jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n') + '\n</head>');
   return html
     .replace(/<title>[^<]*<\/title>/, `<title>${t}</title>`)
     .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${d}" />`)
@@ -12845,6 +12880,69 @@ function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript }) {
     .replace(/<meta property="og:url" content="[^"]*"\s*\/>/, `<meta property="og:url" content="${c}" />`)
     .replace(/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${img}" />`);
 }
+
+// ── Foto e video delle gare per i motori di ricerca ──────────────────────────────────────────────
+// Foto caricate (race_photos, approvate) e video (kv 'videos'): nella pagina gara arrivano solo dopo il JavaScript, quindi Google non li
+// vede. Qui diventano dati strutturati (VideoObject / ImageObject) nella prima risposta, e voci di sitemap immagini/video.
+let _mediaIdx = { ts: 0, videos: null, photos: null };
+async function _mediaIndex() {
+  if (_mediaIdx.videos && Date.now() - _mediaIdx.ts < 10 * 60 * 1000) return _mediaIdx;
+  const videos = await readVideos().catch(() => ({}));
+  const photos = new Map();
+  if (supabase) {
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await supabase.from('race_photos').select('gara_id, filename, caption, photographer, display_name').eq('status', 'approved').order('id').range(from, from + 999);
+      if (error || !data || !data.length) break;
+      for (const r of data) (photos.get(r.gara_id) || photos.set(r.gara_id, []).get(r.gara_id)).push(r);
+      if (data.length < 1000) break;
+    }
+  }
+  _mediaIdx = { ts: Date.now(), videos, photos };
+  return _mediaIdx;
+}
+const _ytId = u => (String(u || '').match(/(?:v=|youtu\.be\/|\/embed\/|\/live\/|\/shorts\/)([\w-]{11})/) || [])[1] || null;
+// ids: id della pagina + id di calendario della stessa gara (i media sono salvati con l'uno o con l'altro)
+async function _mediaForIds(ids) {
+  const ix = await _mediaIndex(), seenV = new Set(), videos = [], photos = [];
+  for (const id of ids.filter(Boolean)) {
+    for (const v of (ix.videos[id] || [])) { const y = _ytId(v.url); if (y && !seenV.has(y)) { seenV.add(y); videos.push({ ...v, yt: y }); } }
+    for (const p of (ix.photos.get(id) || [])) photos.push(p);
+  }
+  return { videos, photos };
+}
+function _mediaLd(media, titleBase, pageUrl) {
+  const ld = [];
+  for (const v of media.videos.slice(0, 8)) {
+    const name = String(v.title || titleBase).slice(0, 110);
+    ld.push({ '@context': 'https://schema.org', '@type': 'VideoObject', name, description: String(v.description || `${name} — ${titleBase}`).slice(0, 300),
+      thumbnailUrl: [`https://img.youtube.com/vi/${v.yt}/maxresdefault.jpg`, `https://img.youtube.com/vi/${v.yt}/hqdefault.jpg`],
+      uploadDate: String(v.published_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+      embedUrl: `https://www.youtube.com/embed/${v.yt}`, contentUrl: `https://www.youtube.com/watch?v=${v.yt}`, url: pageUrl });
+  }
+  for (const p of media.photos.slice(0, 20)) {
+    const who = p.photographer || p.display_name || '';
+    ld.push({ '@context': 'https://schema.org', '@type': 'ImageObject', contentUrl: `${SITE_URL}/photos/${encodeURIComponent(p.filename)}`, url: pageUrl,
+      name: String(p.caption || `${titleBase} — foto`).slice(0, 110), caption: String(p.caption || titleBase).slice(0, 200),
+      ...(who ? { creditText: who, creator: { '@type': 'Person', name: who }, copyrightNotice: `Foto: ${who}` } : {}) });
+  }
+  return ld;
+}
+function _mediaNoscript(media, titleBase) {
+  const e = _ogHtmlEsc;
+  return media.photos.slice(0, 12).map(p => `<figure><img src="${SITE_URL}/photos/${encodeURIComponent(p.filename)}" alt="${e(p.caption || titleBase + ' — foto')}"/>${(p.photographer || p.display_name) ? `<figcaption>Foto: ${e(p.photographer || p.display_name)}</figcaption>` : ''}</figure>`).join('')
+    + media.videos.slice(0, 6).map(v => `<p>Video: <a href="https://www.youtube.com/watch?v=${v.yt}">${e(v.title || titleBase)}</a></p>`).join('');
+}
+// id calendario di una gara pro (i media sono salvati con quello): stesso giorno e nome simile
+function _proCalIdForServer(cal, r) {
+  const w = s => new Set(String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ').filter(x => x.length > 2 && !/^(giro|gran|premio|trofeo|del|della|stage|tappa)$/.test(x)));
+  const mine = w(r.nome); let best = null, bs = 0;
+  for (const c of (cal || [])) {
+    if (c.tipo !== 'internazionale' || !c.data || c.data < String(r.data_start).slice(0, 10) || c.data > String(r.data_end || r.data_start).slice(0, 10)) continue;
+    const sc = [...w(c.nome)].filter(x => mine.has(x)).length;
+    if (sc > bs) { bs = sc; best = c.id; }
+  }
+  return bs >= 1 ? best : null;
+}
 // Calcola {title, desc, canonical, ogImage} per gara/atleta/team — stessa
 // identica logica (stessi dati, stesse etichette) delle rispettive route
 // /og/.../:id, qui riusata per iniettarli nella pagina VERA invece che in
@@ -12852,6 +12950,26 @@ function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript }) {
 // caso si serve la pagina normale, che mostrerà "non trovata" via JS).
 async function _getHeadMetaFor(type, id) {
   if (type === 'gara') {
+    const proM = id.match(/^PRO_(.+)_(\d{4})$/);
+    if (proM && supabase) {
+      const { data: r } = await supabase.from('pro_races').select('*').eq('pcs_race_slug', proM[1]).eq('season', parseInt(proM[2], 10)).maybeSingle();
+      if (!r) return null;
+      const q = await supabase.from('pcs_race_full_results').select('posizione, nome_completo, team').eq('pcs_race_slug', proM[1]).eq('season', parseInt(proM[2], 10)).lte('posizione', 10).limit(80);
+      const top = _proDedupe(q.data || []).filter(x => x.posizione).slice(0, 10);
+      const dLong = new Date(String(r.data_end || r.data_start).slice(0, 10) + 'T12:00:00Z').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      const nome = r.nome, year = proM[2];
+      const podio = top.slice(0, 3).map(x => `${x.posizione}° ${_titleWords(String(x.nome_completo || '').toLowerCase())}${x.team ? ' (' + x.team + ')' : ''}`).join(', ');
+      const desc = `${dLong}${r.stage_route ? ' — ' + r.stage_route : ''}. ${podio ? podio + '. ' : ''}Ordine d'arrivo di ${nome} ${year} (${r.classe || 'gara professionistica'}).`.slice(0, 300);
+      const calRaw = await readDataJsonFromGH('calendar.json').catch(() => null);
+      const media = await _mediaForIds([id, _proCalIdForServer(calRaw, r)]);
+      const canonical = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
+      const list = top.map(x => `<li>${x.posizione}° ${_ogHtmlEsc(x.nome_completo)}${x.team ? ' — ' + _ogHtmlEsc(x.team) : ''}</li>`).join('');
+      return {
+        title: `${nome} ${year} - Risultati | ICS`, desc, canonical, ogImage: DEFAULT_OG_IMG,
+        noscript: `<h1>${_ogHtmlEsc(nome)} ${year}</h1><p>${_ogHtmlEsc(desc)}</p>${list ? `<ol>${list}</ol>` : ''}${_mediaNoscript(media, `${nome} ${year}`)}`,
+        jsonld: _mediaLd(media, `${nome} ${year}`, canonical),
+      };
+    }
     const cicM = id.match(/^CIC_(\d+)$/) || (id === id.toLowerCase() ? id.match(_CIC_SLUG_RE) : null);
     if (cicM) {
       const race = await _cicRaceById(cicM[1]);
@@ -12878,17 +12996,25 @@ async function _getHeadMetaFor(type, id) {
     const cal = _findCalEntryForNativeGaraId(calRaw, id);
     const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
     if (!results.length && !cal) return null;
+    const canonical = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
+    const media = await _mediaForIds([id, cal && cal.id]).catch(() => ({ videos: [], photos: [] }));
     return {
-      title: `${title} | ICS`, desc,
-      canonical: `${SITE_URL}/gara/${encodeURIComponent(id)}`,
+      title: `${title} | ICS`, desc, canonical,
       ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results, await _ogPhotoSig(id))}`,
+      noscript: (media.photos.length || media.videos.length) ? `<h1>${_ogHtmlEsc(title)}</h1>${_mediaNoscript(media, title)}` : undefined,
+      jsonld: _mediaLd(media, title, canonical),
     };
   }
   if (type === 'atleta') {
     const [athletes, resultsRaw] = await Promise.all([
       readDataJsonFromGH('athletes.json'), readDataJsonFromGH('results_raw.json'),
     ]);
-    const ath = (athletes || {})[id];
+    let ath = (athletes || {})[id];
+    if (!ath && supabase) {
+      // profilo creato dagli import PCS (professionisti, stranieri, storici): ha comunque la sua pagina vera
+      const { data: pr } = await supabase.from('entity_overrides').select('new_value').eq('entity_type', 'pcs_atleta').eq('entity_id', id).eq('field', 'profile').maybeSingle();
+      if (pr && pr.new_value) { try { const j = JSON.parse(pr.new_value); ath = { cognome: j.cognome, nome: j.nome, team_attuale: j.team_nome, categoria: j.categoria }; } catch (_) {} }
+    }
     if (!ath) return null;
     const title = `${ath.cognome || ''} ${ath.nome || ''}`.trim() || id;
     const cat = _OG_CAT_MAP[ath.categoria] || ath.categoria || '';
