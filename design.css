@@ -13838,3 +13838,5 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .am-era { margin: 18px 0 8px; font-size: 1.05rem; display: flex; align-items: baseline; gap: 10px; }
 .am-era small { font-weight: 500; font-size: .75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .06em; }
 .am-none { color: var(--text-secondary); font-size: .85rem; padding: 10px 2px; }
+.am-yr { margin: 12px 0 2px; padding-top: 8px; border-top: 1px solid var(--border-subtle); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+.am-yr:first-of-type { margin-top: 2px; padding-top: 0; border-top: 0; }

@@ -120,8 +120,8 @@
 
   function records(d) {
     const list = (arr, fn) => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}</span><span class="up">${fn(r)}</span></a>`).join('');
-    const seasonRows = arr => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('');
-    const teamRows = arr => arr.map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('');
+    const seasonRows = arr => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('');
+    const teamRows = arr => arr.map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('');
     const sec = S(d), m = st.modern || { ath: [], teams: [] };
     // vittorie e podi: totale archivio + stagioni dal 2026 (sono conteggi di piazzamenti, si possono sommare)
     const tot = new Map();
@@ -137,20 +137,14 @@
     const mAth = m.ath.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
     const mTeam = m.teams.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
     const none = '<div class="am-none">Nessuna stagione ancora archiviata.</div>';
-    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2><small>Vittorie e podi sommano tutte le stagioni, dal ${d.from} a oggi. Per le stagioni e i team da record le ere restano separate: fino al ${d.to} classifiche e punti arrivano da ciclismo.info, dal ${d.to + 1} si usa il regolamento punti di ICS</small></div>
+    // una sola scheda per ogni record: dentro, i due gruppi di anni (senza nominare la fonte)
+    const grp = (label, html) => `<div class="am-yr">${label}</div>${html}`;
+    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2><small>Vittorie e podi sommano tutte le stagioni, dal ${d.from} a oggi</small></div>
       <div class="am-recs">
         <div class="hx-panel"><h3>Più vittorie</h3>${list(topW, r => `${r.w} vitt.`)}</div>
         <div class="hx-panel"><h3>Più podi</h3>${list(topP, r => `${r.p} podi`)}</div>
-      </div>
-      <h3 class="am-era">${d.from}–${d.to} <small>ciclismo.info</small></h3>
-      <div class="am-recs">
-        <div class="hx-panel"><h3>Stagioni da record</h3>${seasonRows(sec.bestSeasons.slice(0, 8))}</div>
-        <div class="hx-panel"><h3>Team da record</h3>${teamRows(sec.bestTeamSeasons.slice(0, 8))}</div>
-      </div>
-      <h3 class="am-era">Dal ${d.to + 1} <small>punti ICS</small></h3>
-      <div class="am-recs">
-        <div class="hx-panel"><h3>Stagioni da record</h3>${mAth.length ? seasonRows(mAth) : none}</div>
-        <div class="hx-panel"><h3>Team da record</h3>${mTeam.length ? teamRows(mTeam) : none}</div>
+        <div class="hx-panel"><h3>Stagioni da record</h3>${grp(`${d.from}–${d.to}`, seasonRows(sec.bestSeasons.slice(0, 8)))}${grp(`Dal ${d.to + 1}`, mAth.length ? seasonRows(mAth) : none)}</div>
+        <div class="hx-panel"><h3>Team da record</h3>${grp(`${d.from}–${d.to}`, teamRows(sec.bestTeamSeasons.slice(0, 8)))}${grp(`Dal ${d.to + 1}`, mTeam.length ? teamRows(mTeam) : none)}</div>
       </div></section>`;
   }
 
