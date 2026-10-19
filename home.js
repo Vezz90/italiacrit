@@ -43,6 +43,8 @@
   }
 
   /* ---------- copertina generata (gare senza foto) ---------- */
+  /* credit della foto (come nelle vecchie card): xpix.it / italiaciclismo.net dall'indirizzo dell'immagine */
+  function phCredit(u) { const x = String(u || ''); const t = /xpix/i.test(x) ? 'xpix.it' : /italiaciclismo/i.test(x) ? 'italiaciclismo.net' : ''; return t ? `<span class="ph-credit">📷 ${t}</span>` : ''; }
   function cover(code, km) {
     const band = String(code || 'ELI_M').replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES');
     const c = String(code).endsWith('_F') ? F_COLOR : (BAND_COLOR[band] || BAND_COLOR.ELI);
@@ -182,7 +184,7 @@
     const b = badgeFor(g.data, today);
     const km = parseFloat(g.km) > 0 ? Math.round(parseFloat(g.km)) : '';
     const media$ = has
-      ? `<div class="hx-rk-m">${cover(g.code, '')}${photos[0] ? `<img src="${esc(photos[0])}" alt="" loading="lazy" onerror="this.remove()">` : ''}${vids && !photos.length ? '<span class="hx-play">▶</span>' : ''}<div class="hx-chips">${photos.length ? `<span>📷 ${photos.length}</span>` : ''}${vids ? `<span>▶ ${vids}</span>` : ''}</div></div>`
+      ? `<div class="hx-rk-m">${cover(g.code, '')}${photos[0] ? `<img src="${esc(photos[0])}" alt="" loading="lazy" onerror="this.remove()">${phCredit(photos[0])}` : ''}${vids && !photos.length ? '<span class="hx-play">▶</span>' : ''}<div class="hx-chips">${photos.length ? `<span>📷 ${photos.length}</span>` : ''}${vids ? `<span>▶ ${vids}</span>` : ''}</div></div>`
       : `<div class="hx-spine" style="--sp:${col}"></div>`;
     const top = podium(g).map(t => `<li><i class="hx-med p${t.pos}">${t.pos}</i><span class="nm">${esc(t.nome)}</span><span class="g">${esc(t.gap)}</span></li>`).join('');
     return `<a class="hx-rk ${has ? '' : 'nomedia'}" href="#/gara/${encodeURIComponent(g.id)}">${media$}<div class="hx-rk-b"><div class="hx-rk-h"><span class="hx-bd ${b[1] ? 'hot' : ''}">${b[0]}</span><span>${esc(catLabel(g.code))}${g._pro ? ' · ' + esc(window.ProRaces.label(g._proClasse)) : ''}</span>${g.prov ? '<span class="hx-bd" style="background:#64748B" title="Ordine d’arrivo da PCS, in attesa dei risultati FCI">PROVV.</span>' : ''}${km ? `<span>·</span><span class="num">${km} km</span>` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><div class="hx-loc">${esc(g.luogo || g.regione || '')}</div><ol class="hx-top3">${top}</ol></div></a>`;
@@ -320,10 +322,10 @@
     const sel = (id, val, opts, label) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" aria-label="${label}"><option value="">${label}</option>${opts.map(o => `<option value="${esc(o[0])}" ${o[0] === val ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
     const href = ev => `/gara/CIC_${esc(ev.id)}`;
     const firstCat = ev => Object.keys(ev.categorie || {}).find(k => isF(k) === F) || Object.keys(ev.categorie || {})[0] || '';
-    const heroHtml = hero ? `<a class="hx-card hx-hero" href="${href(hero)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(hero)), '')}${hero.photo_url ? `<img src="${esc(mediaUrl(hero.photo_url))}" alt="" onerror="this.remove()">` : ''}</div>
+    const heroHtml = hero ? `<a class="hx-card hx-hero" href="${href(hero)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(hero)), '')}${hero.photo_url ? `<img src="${esc(mediaUrl(hero.photo_url))}" alt="" onerror="this.remove()">${phCredit(hero.photo_url)}` : ''}</div>
         <span class="hx-tag">STAGIONE ${y}</span><div class="hx-meta">${fmtLong(hero.data).toUpperCase()} · ${esc(lab(firstCat(hero))).toUpperCase()}</div>
         <h1>${esc(raceTitle(hero.nome))}</h1><p>I risultati della giornata</p></a>` : '<div class="hx-card hx-empty">Nessuna gara trovata con questi filtri.</div>';
-    const sideHtml = side.map(g => `<a class="hx-card hx-side" href="${href(g)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(g)), '')}${g.photo_url ? `<img src="${esc(mediaUrl(g.photo_url))}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(lab(firstCat(g)))}${g.luogo ? ' · ' + esc(tc(g.luogo)) : ''}</small><span class="hx-chev">›</span></a>`).join('');
+    const sideHtml = side.map(g => `<a class="hx-card hx-side" href="${href(g)}"><div class="hx-bg">${cover(codeOfRaw(firstCat(g)), '')}${g.photo_url ? `<img src="${esc(mediaUrl(g.photo_url))}" alt="" loading="lazy" onerror="this.remove()">${phCredit(g.photo_url)}` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(lab(firstCat(g)))}${g.luogo ? ' · ' + esc(tc(g.luogo)) : ''}</small><span class="hx-chev">›</span></a>`).join('');
     const card = ev => window.RisV2 ? window.RisV2.histCard(ev) : '';
     const topCats = hx.pcat ? [hx.pcat] : cats;
     const clsHtml = topCats.map(k => {
@@ -409,11 +411,11 @@
     const sel = (id, val, opts, label) => `<label class="hx-sel"><span class="sr">${label}</span><select id="${id}" aria-label="${label}"><option value="">${label}</option>${opts.map(o => `<option value="${esc(o[0])}" ${o[0] === val ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
     const heroHtml = hero ? (() => {
       const ph = racePhotos(media, hero.id)[0];
-      return `<a class="hx-card hx-hero" href="#/gara/${encodeURIComponent(hero.id)}"><div class="hx-bg">${cover(hero.code, '')}${ph ? `<img src="${esc(ph)}" alt="" onerror="this.remove()">` : ''}</div>
+      return `<a class="hx-card hx-hero" href="#/gara/${encodeURIComponent(hero.id)}"><div class="hx-bg">${cover(hero.code, '')}${ph ? `<img src="${esc(ph)}" alt="" onerror="this.remove()">${phCredit(ph)}` : ''}</div>
         <span class="hx-tag">IN EVIDENZA</span><div class="hx-meta">${fmtLong(hero.data).toUpperCase()} · ${esc(catLabel(hero.code)).toUpperCase()}</div>
         <h1>${esc(raceTitle(hero.nome))}</h1><p>I risultati della giornata</p></a>`;
     })() : '<div class="hx-card hx-empty">Nessuna gara trovata con questi filtri.</div>';
-    const sideHtml = side.map(g => { const ph = racePhotos(media, g.id)[0]; return `<a class="hx-card hx-side" href="#/gara/${encodeURIComponent(g.id)}"><div class="hx-bg">${cover(g.code, '')}${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(catLabel(g.code))}${g.luogo ? ' · ' + esc(g.luogo) : ''}</small><span class="hx-chev">›</span></a>`; }).join('');
+    const sideHtml = side.map(g => { const ph = racePhotos(media, g.id)[0]; return `<a class="hx-card hx-side" href="#/gara/${encodeURIComponent(g.id)}"><div class="hx-bg">${cover(g.code, '')}${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.remove()">${phCredit(ph)}` : ''}</div><h3>${esc(raceTitle(g.nome))}</h3><small>${esc(catLabel(g.code))}${g.luogo ? ' · ' + esc(g.luogo) : ''}</small><span class="hx-chev">›</span></a>`; }).join('');
     const siHtml = `<section class="hx-si"><h2>${ic('<path d="M12 3c1 3.5 4.5 5 4.5 9a4.5 4.5 0 0 1-9 0c0-1.7.7-2.9 1.6-3.9C9.6 10 11 9 12 3z"/>')}Sport Intelligence</h2><div class="hx-si-g">
       <div class="hx-si-c"><h3>Hot riders · 14 giorni</h3>${si.hot.map((h, i) => `<a class="hx-si-r" href="#/atleta/${encodeURIComponent(h.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(h.nome)}</span><span class="up">${h.pts} pt</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div>
       <div class="hx-si-c"><h3>Movers · posizioni guadagnate</h3>${si.movers.map((m, i) => `<a class="hx-si-r" href="#/atleta/${encodeURIComponent(m.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(m.nome)}</span><span class="up">↑${m.gain}</span></a>`).join('') || '<div class="hx-none">Nessun dato</div>'}</div>

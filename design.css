@@ -13816,3 +13816,7 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .race-gallery.rg-strip { display: flex; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; gap: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding-bottom: 6px; scrollbar-width: thin; }
 .race-gallery.rg-strip .race-gallery-item { flex: 0 0 220px; scroll-snap-align: start; }
 @media (max-width: 480px) { .race-gallery.rg-strip { grid-template-columns: none; } .race-gallery.rg-strip .race-gallery-item { flex-basis: 68%; } }
+
+/* credit della foto sulle card (Home e Risultati): in alto a destra sulle card grandi, in basso a destra sulle miniature */
+.ph-credit { position: absolute; right: 6px; top: 6px; z-index: 3; background: rgba(5,12,24,.7); color: #fff; font: 600 9.5px/1 inherit; padding: 3px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap; }
+.hx-rk-m .ph-credit, .rs-mm .ph-credit { top: auto; bottom: 6px; }

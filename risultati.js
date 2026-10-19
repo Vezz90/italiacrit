@@ -65,6 +65,16 @@
   }
 
   /* ---------- media di una gara (foto in cache, video da globalData) ---------- */
+  /* credit della foto (come nelle vecchie card): fotografo, oppure xpix.it / italiaciclismo.net */
+  function photoCredit(p, src) {
+    const x = String(src || (p && (p.url || p.filename)) || '');
+    if (p && p.photographer) return p.photographer;
+    if (p && p.display_name) return p.display_name;
+    if ((p && (p.album_slug || p.source === 'xpix')) || /xpix/i.test(x)) return 'xpix.it';
+    if ((p && p.source === 'italiaciclismo') || /italiaciclismo/i.test(x)) return 'italiaciclismo.net';
+    return '';
+  }
+  const creditChip = t => t ? `<span class="ph-credit">📷 ${esc(t)}</span>` : '';
   function mediaOf(race, ctx) {
     const cats = Object.values(race.byCategory || {});
     const gmap = globalData.garaToCalId || {};
@@ -74,15 +84,15 @@
     const src = photo ? (photo.url ? icProxy(photo.url) : (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '')) : '';
     const v0 = vids[0] || null, kind = v0 ? videoKind(v0.url) : null;
     const ytThumb = kind === 'yt' ? `https://img.youtube.com/vi/${ytId(v0.url)}/hqdefault.jpg` : '';
-    return { src: src || ytThumb, photo: src, vthumb: ytThumb, hasPhoto: !!src, vids: vids.length, live: !!(v0 && v0.is_live), has: !!(src || vids.length) };
+    return { src: src || ytThumb, photo: src, credit: photoCredit(photo, src), vthumb: ytThumb, hasPhoto: !!src, vids: vids.length, live: !!(v0 && v0.is_live), has: !!(src || vids.length) };
   }
 
   function mediaBlock(code, m) {
     // foto e video affiancati (in verticale) quando ci sono entrambi, cosi' c'e' spazio per vederli
-    const tile = (img, play, chips) => `<div class="t">${cover(code)}${img ? `<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">` : ''}${play ? '<span class="hx-play">▶</span>' : ''}${chips || ''}</div>`;
+    const tile = (img, play, chips, cr) => `<div class="t">${cover(code)}${img ? `<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">` : ''}${cr ? creditChip(cr) : ''}${play ? '<span class="hx-play">▶</span>' : ''}${chips || ''}</div>`;
     const vChip = `<div class="hx-chips">${m.vids ? `<span>▶ ${m.vids}</span>` : ''}${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div>`;
     const tiles = [];
-    if (m.photo) tiles.push(tile(m.photo, false, m.vids ? '' : `<div class="hx-chips"><span>📷</span>${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div>`));
+    if (m.photo) tiles.push(tile(m.photo, false, m.vids ? '' : `<div class="hx-chips"><span>📷</span>${m.live ? '<span style="background:#E3182D">DIRETTA</span>' : ''}</div>`, m.credit));
     if (m.vids) tiles.push(tile(m.vthumb, true, vChip));
     return `<div class="hx-rk-m rs-mm n${tiles.length}">${tiles.join('')}</div>`;
   }
@@ -161,7 +171,7 @@
     const body = cats.map(([c, t]) => `${multi ? `<div class="rs-catl">${esc(String(c).replace(/_/g, ' '))}</div>` : ''}${top3Html(t.slice(0, 3).map(r => ({ pos: r.posizione, nome: tc(r.nome_completo || ''), id: r.atleta_id, gap: '' })))}`).join('');
     const photo = ev.photo_url ? mediaUrl(ev.photo_url) : '';
     const code = /DONNE|DONNA/i.test(first) ? 'ELI_F' : 'ELI_M';
-    return `<div class="hx-rk ${photo ? '' : 'nomedia'}" data-href="${href}">${photo ? `<div class="hx-rk-m">${cover(code)}<img src="${esc(photo)}" alt="" loading="lazy" onerror="this.remove()"><div class="hx-chips"><span>📷</span></div></div>` : '<div class="hx-spine" style="--sp:#64748B"></div>'}<div class="hx-rk-b"><div class="hx-rk-h"><span>${esc(multi ? cats.map(c => String(c[0]).replace(/_/g, ' ')).join(' · ') : String(first).replace(/_/g, ' '))}</span></div><h3><a href="${href}">${esc(raceTitle(ev.nome))}</a></h3><div class="hx-loc">${esc(tc(ev.regione || ''))}</div>${body}</div></div>`;
+    return `<div class="hx-rk ${photo ? '' : 'nomedia'}" data-href="${href}">${photo ? `<div class="hx-rk-m">${cover(code)}<img src="${esc(photo)}" alt="" loading="lazy" onerror="this.remove()">${creditChip(photoCredit(null, photo))}<div class="hx-chips"><span>📷</span></div></div>` : '<div class="hx-spine" style="--sp:#64748B"></div>'}<div class="hx-rk-b"><div class="hx-rk-h"><span>${esc(multi ? cats.map(c => String(c[0]).replace(/_/g, ' ')).join(' · ') : String(first).replace(/_/g, ' '))}</span></div><h3><a href="${href}">${esc(raceTitle(ev.nome))}</a></h3><div class="hx-loc">${esc(tc(ev.regione || ''))}</div>${body}</div></div>`;
   }
   function histRows(ev) {
     const href = `/gara/CIC_${esc(ev.id)}`;
