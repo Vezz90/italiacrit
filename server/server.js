@@ -675,6 +675,9 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
       let out = '', nv = 0, ni = 0; const seen = new Set();
       for (const id of ids.filter(Boolean)) {
         for (const p of (mix.photos.get(id) || [])) if (ni++ < 30) out += `<image:image><image:loc>${_photoUrl(pageLoc, p.filename)}</image:loc>${p.caption ? `<image:caption>${X(p.caption).slice(0, 200)}</image:caption>` : ''}${p.photographer ? `<image:title>${X(titleBase + ' — foto di ' + p.photographer).slice(0, 110)}</image:title>` : ''}</image:image>`;
+        const xx = mix.xpix[id], cc = mix.ic[id];
+        if (xx) for (const u of ((xx.photos && xx.photos.length ? xx.photos : [xx.url]).slice(0, 8))) if (u && ni++ < 30) out += `<image:image><image:loc>${X(u)}</image:loc>${xx.album_name ? `<image:caption>${X(xx.album_name).slice(0, 200)}</image:caption>` : ''}<image:title>${X((titleBase + ' — foto xpix.it').slice(0, 110))}</image:title></image:image>`;
+        if (cc && cc.url && ni++ < 30) out += `<image:image><image:loc>${X(cc.url)}</image:loc>${cc.name ? `<image:caption>${X(cc.name).slice(0, 200)}</image:caption>` : ''}</image:image>`;
         for (const v of (mix.videos[id] || [])) { const y = _ytId(v.url); if (!y || seen.has(y) || nv >= 10) continue; seen.add(y); nv++;
           out += `<video:video><video:thumbnail_loc>https://img.youtube.com/vi/${y}/hqdefault.jpg</video:thumbnail_loc><video:title>${X(String(v.title || titleBase).slice(0, 100))}</video:title><video:description>${X(String(v.description || `${v.title || titleBase} — ${titleBase}`).slice(0, 300))}</video:description><video:player_loc>https://www.youtube.com/embed/${y}</video:player_loc>${/^\d{4}-\d{2}-\d{2}/.test(v.published_at || '') ? `<video:publication_date>${String(v.published_at).slice(0, 10)}</video:publication_date>` : ''}</video:video>`; }
       }
@@ -12909,19 +12912,27 @@ async function _mediaIndex() {
       if (data.length < 1000) break;
     }
   }
-  _mediaIdx = { ts: Date.now(), videos, photos };
+  const kv = async k => { try { const { data } = await supabase.from('kv_store').select('value').eq('key', k).maybeSingle(); let v = data && data.value; if (typeof v === 'string') v = JSON.parse(v); return v || {}; } catch (_) { return {}; } };
+  const xpix = supabase ? await kv('xpix_photos') : {}, ic = supabase ? await kv('ic_photos') : {};
+  _mediaIdx = { ts: Date.now(), videos, photos, xpix, ic };
   return _mediaIdx;
 }
 const _photoUrl = (pageUrl, filename) => `${pageUrl}/foto/${encodeURIComponent(filename)}`;
 const _ytId = u => (String(u || '').match(/(?:v=|youtu\.be\/|\/embed\/|\/live\/|\/shorts\/)([\w-]{11})/) || [])[1] || null;
 // ids: id della pagina + id di calendario della stessa gara (i media sono salvati con l'uno o con l'altro)
 async function _mediaForIds(ids) {
-  const ix = await _mediaIndex(), seenV = new Set(), videos = [], photos = [];
+  const ix = await _mediaIndex(), seenV = new Set(), videos = [], photos = [], ext = [], seenE = new Set();
+  const addExt = e => { if (e.url && !seenE.has(e.url) && ext.length < 8) { seenE.add(e.url); ext.push(e); } };
   for (const id of ids.filter(Boolean)) {
     for (const v of (ix.videos[id] || [])) { const y = _ytId(v.url); if (y && !seenV.has(y)) { seenV.add(y); videos.push({ ...v, yt: y }); } }
     for (const p of (ix.photos.get(id) || [])) photos.push(p);
+    // album di terzi (xpix.it, italiaciclismo.net): si dichiarano con il credit e il link all'album di origine, poche foto per gara
+    const x = ix.xpix[id];
+    if (x) for (const u of ((x.photos && x.photos.length ? x.photos : [x.url]).slice(0, 8))) addExt({ url: u, credit: 'xpix.it', page: x.album_page || 'https://www.xpix.it/', caption: x.album_name || '' });
+    const c = ix.ic[id];
+    if (c && c.url) addExt({ url: c.url, credit: 'italiaciclismo.net', page: c.gara_url || 'https://www.ciclismo.info/', caption: c.name || '' });
   }
-  return { videos, photos };
+  return { videos, photos, ext };
 }
 function _mediaLd(media, titleBase, pageUrl) {
   const ld = [];
@@ -12938,11 +12949,17 @@ function _mediaLd(media, titleBase, pageUrl) {
       name: String(p.caption || `${titleBase} — foto`).slice(0, 110), caption: String(p.caption || titleBase).slice(0, 200),
       ...(who ? { creditText: who, creator: { '@type': 'Person', name: who }, copyrightNotice: `Foto: ${who}` } : {}) });
   }
+  for (const e of (media.ext || []).slice(0, 8)) {
+    ld.push({ '@context': 'https://schema.org', '@type': 'ImageObject', contentUrl: e.url, url: pageUrl,
+      name: String(e.caption ? `${e.caption} — foto` : `${titleBase} — foto`).slice(0, 110), caption: String(e.caption || titleBase).slice(0, 200),
+      creditText: e.credit, creator: { '@type': 'Organization', name: e.credit }, copyrightNotice: `Foto: ${e.credit}`, acquireLicensePage: e.page });
+  }
   return ld;
 }
 function _mediaNoscript(media, titleBase, pageUrl) {
   const e = _ogHtmlEsc;
   return media.photos.slice(0, 12).map(p => `<figure><img src="${_photoUrl(pageUrl, p.filename)}" alt="${e(p.caption || titleBase + ' — foto')}"/>${(p.photographer || p.display_name) ? `<figcaption>Foto: ${e(p.photographer || p.display_name)}</figcaption>` : ''}</figure>`).join('')
+    + (media.ext || []).slice(0, 6).map(e => `<figure><img src="${_ogHtmlEsc(e.url)}" alt="${_ogHtmlEsc((e.caption || titleBase) + ' — foto ' + e.credit)}"/><figcaption>Foto: <a href="${_ogHtmlEsc(e.page)}">${_ogHtmlEsc(e.credit)}</a></figcaption></figure>`).join('')
     + media.videos.slice(0, 6).map(v => `<p>Video: <a href="https://www.youtube.com/watch?v=${v.yt}">${e(v.title || titleBase)}</a></p>`).join('');
 }
 // id calendario di una gara pro (i media sono salvati con quello): stesso giorno e nome simile
@@ -13010,11 +13027,11 @@ async function _getHeadMetaFor(type, id) {
     const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
     if (!results.length && !cal) return null;
     const canonical = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
-    const media = await _mediaForIds([id, cal && cal.id]).catch(() => ({ videos: [], photos: [] }));
+    const media = await _mediaForIds([id, cal && cal.id]).catch(() => ({ videos: [], photos: [], ext: [] }));
     return {
       title: `${title} | ICS`, desc, canonical,
       ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}&r=${_ogResultsTag(results, await _ogPhotoSig(id))}`,
-      noscript: (media.photos.length || media.videos.length) ? `<h1>${_ogHtmlEsc(title)}</h1>${_mediaNoscript(media, title, canonical)}` : undefined,
+      noscript: (media.photos.length || media.videos.length || (media.ext || []).length) ? `<h1>${_ogHtmlEsc(title)}</h1>${_mediaNoscript(media, title, canonical)}` : undefined,
       jsonld: _mediaLd(media, title, canonical),
     };
   }
