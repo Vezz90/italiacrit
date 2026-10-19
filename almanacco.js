@@ -7,12 +7,16 @@
 'use strict';
 
 (function () {
-  const SHORT = ['Esord. 1°', 'Esord. 2°', 'Allievi', 'Juniores', 'Elite U23', 'Donne Esord.', 'Donne Allieve', 'Donne Juniores'];
+  const SHORT = ['Esord. 1°', 'Esord. 2°', 'Allievi', 'Juniores', 'Elite U23', 'Donne Esord.', 'Donne Allieve', 'Donne Juniores', 'Donne Elite'];
   const MEN = [4, 3, 2, 1, 0];     // ELITE, JUN, AL, ES2, ES1
-  const WOMEN = [7, 6, 5];         // DONNE JUN, AL, ES
+  const WOMEN = [7, 6, 5];         // DONNE JUN, AL, ES (archivio)
+  const WOMEN_NOW = [8, 7, 6, 5];  // dal 2026 c'e anche Donne Elite
+  const catsOfSex = () => st.sex === 'M' ? MEN : (st.period === 'now' ? WOMEN_NOW : WOMEN);
+  // codice classifica della stagione -> indice categoria
+  const CODE_CI = { ES1_M: 0, ES2_M: 1, AL_M: 2, JUN_M: 3, ELI_M: 4, ES1_F: 5, ES2_F: 5, AL_F: 6, JUN_F: 7, ELI_F: 8 };
   // categoria archivio -> codice classifica nativa (stagione in corso)
-  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: ['ES1_F', 'ES2_F'], 6: 'AL_F', 7: 'JUN_F' };
-  const st = { data: null, sex: 'M', cat: null, period: 'arch', live: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
+  const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: ['ES1_F', 'ES2_F'], 6: 'AL_F', 7: 'JUN_F', 8: 'ELI_F' };
+  const st = { data: null, sex: 'M', cat: null, period: 'arch', live: null, modern: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
 
   const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
   const nm = n => tc(String(n || '').replace(/\s+/g, ' ').trim());
@@ -24,7 +28,23 @@
     if (st.cat != null && d.cat && d.cat[d.cats[st.cat]]) return d.cat[d.cats[st.cat]];
     return (d.sex && d.sex[st.sex]) || d;
   }
+  const inSel = c => st.cat != null ? c === st.cat : (st.sex === 'M' ? MEN : WOMEN_NOW).includes(c);
   const selLabel = () => `${st.sex === 'M' ? 'Uomini' : 'Donne'}${st.cat != null ? ' · ' + SHORT[st.cat] : ''}`;
+
+  // Stagioni dal 2026 in poi: classifiche del sito (punti del regolamento ICS), per atleti e squadre. Si aggiungono da sole a ogni stagione archiviata.
+  async function loadModern() {
+    if (st.modern) return st.modern;
+    const out = { ath: [], teams: [] };
+    let idx = null; try { idx = await loadJson('data/seasons/index.json'); } catch (_) {}
+    const seasons = (idx && idx.seasons ? idx.seasons : []).map(Number).filter(y => y >= 2026);
+    await Promise.all(seasons.flatMap(y => Object.entries(CODE_CI).map(async ([code, ci]) => {
+      const live = idx && +idx.current === y;
+      try { ((await loadJson(`data/seasons/${y}/rankings/${code}.json`)) || []).slice(0, 25).forEach(r => out.ath.push({ id: r.atleta_id, n: `${r.cognome || ''} ${r.nome || ''}`.trim(), y, c: ci, p: r.punti || 0, live })); } catch (_) {}
+      try { ((await loadJson(`data/seasons/${y}/team_rankings/${code}.json`)) || []).slice(0, 10).forEach(t => out.teams.push({ team: t.team_nome, y, c: ci, p: t.punti || 0, live })); } catch (_) {}
+    })));
+    st.modern = out;
+    return out;
+  }
 
   async function loadData() {
     if (st.data) return st.data;
@@ -100,12 +120,25 @@
 
   function records(d) {
     const list = (arr, fn) => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}</span><span class="up">${fn(r)}</span></a>`).join('');
-    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2></div><div class="am-recs">
-      <div class="hx-panel"><h3>Più vittorie</h3>${list(S(d).winsTop.slice(0, 8), r => `${r.w} vitt.`)}</div>
-      <div class="hx-panel"><h3>Più podi</h3>${list(S(d).podiTop.slice(0, 8), r => `${r.p} podi`)}</div>
-      <div class="hx-panel"><h3>Stagioni da record</h3>${S(d).bestSeasons.slice(0, 8).map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('')}</div>
-      <div class="hx-panel"><h3>Team da record</h3>${S(d).bestTeamSeasons.slice(0, 8).map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('')}</div>
-    </div></section>`;
+    const seasonRows = arr => arr.map((r, i) => `<a class="hx-si-r" href="/atleta/${encodeURIComponent(r.id)}"><span class="n">${i + 1}</span><span class="nm">${esc(nm(r.n))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></a>`).join('');
+    const teamRows = arr => arr.map((r, i) => `<div class="hx-si-r"><span class="n">${i + 1}</span><span class="nm">${esc(tc(r.team))}<small>${r.y}${r.live ? ' in corso' : ''} · ${SHORT[r.c]}</small></span><span class="up">${r.p} pt</span></div>`).join('');
+    const sec = S(d), m = st.modern || { ath: [], teams: [] };
+    const mAth = m.ath.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
+    const mTeam = m.teams.filter(r => inSel(r.c)).sort((a, b) => b.p - a.p).slice(0, 8);
+    const none = '<div class="am-none">Nessuna stagione ancora archiviata.</div>';
+    return `<section class="am-sec"><div class="hx-ph"><h2>Record di sempre</h2><small>Le stagioni vanno tenute separate: fino al ${d.to} classifiche e punti arrivano da ciclismo.info, dal ${d.to + 1} si usano gli ordini d'arrivo e il regolamento punti di ICS</small></div>
+      <h3 class="am-era">${d.from}–${d.to} <small>ciclismo.info</small></h3>
+      <div class="am-recs">
+        <div class="hx-panel"><h3>Più vittorie</h3>${list(sec.winsTop.slice(0, 8), r => `${r.w} vitt.`)}</div>
+        <div class="hx-panel"><h3>Più podi</h3>${list(sec.podiTop.slice(0, 8), r => `${r.p} podi`)}</div>
+        <div class="hx-panel"><h3>Stagioni da record</h3>${seasonRows(sec.bestSeasons.slice(0, 8))}</div>
+        <div class="hx-panel"><h3>Team da record</h3>${teamRows(sec.bestTeamSeasons.slice(0, 8))}</div>
+      </div>
+      <h3 class="am-era">Dal ${d.to + 1} <small>punti ICS</small></h3>
+      <div class="am-recs">
+        <div class="hx-panel"><h3>Stagioni da record</h3>${mAth.length ? seasonRows(mAth) : none}</div>
+        <div class="hx-panel"><h3>Team da record</h3>${mTeam.length ? teamRows(mTeam) : none}</div>
+      </div></section>`;
   }
 
   function racesChart(d) {
@@ -144,7 +177,7 @@
         return `<section class="am-sec">${head}<div class="am-season">${html}</div></section>`;
       } catch (_) { return `<section class="am-sec">${head}<div class="hx-none">Dati non disponibili per questa categoria.</div></section>`; }
     }
-    const cols = st.sex === 'M' ? MEN : WOMEN;
+    const cols = catsOfSex();
     const cards = cols.map(ci => {
       const res = seasonRes(ci);
       const races = new Set(res.map(r => r.gara_id)).size, ath = new Set(res.map(r => r.atleta_id)).size, wins = res.filter(r => r.posizione === 1).length;
@@ -160,7 +193,7 @@
     try { d = await loadData(); } catch (_) { d = null; }
     if (!d) return typeof window.renderHomeDashboard === 'function' ? window.renderHomeDashboard() : setPage('<div class="hx-wrap"><div class="hx-none">Dati non disponibili.</div></div>');
     d.counts = d.counts || { athletes: 0, teams: 0 };
-    await loadLive();
+    await Promise.all([loadLive(), loadModern()]);
     const cur = (typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : d.to + 1;
     setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
     const paint = () => {
@@ -168,12 +201,12 @@
         <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">${st.period === 'now' ? `stagione ${cur}` : `almanacco ${d.from}–${d.to}`}</span>
           <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div>
             <div class="hx-seg" role="group" aria-label="Periodo"><button type="button" data-per="arch" aria-pressed="${st.period === 'arch'}">${d.from}–${d.to}</button><button type="button" data-per="now" aria-pressed="${st.period === 'now'}">Dal ${cur}</button></div></div></div>
-        <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${(st.sex === 'M' ? MEN : WOMEN).map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
+        <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${catsOfSex().map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
         ${st.period === 'now' ? seasonView(d, cur) : `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}`}
         <p class="am-note">Fonte: classifiche e risultati pubblicati da ciclismo.info (2007–${d.to}) e dati FCI per la stagione in corso. Confrontare i punti fra anni diversi ha senso solo dentro la stessa fonte.</p>
       </div>`);
       document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
-      document.querySelectorAll('.am-wrap [data-per]').forEach(b => { b.onclick = () => { st.period = b.dataset.per; paint(); }; });
+      document.querySelectorAll('.am-wrap [data-per]').forEach(b => { b.onclick = () => { st.period = b.dataset.per; if (st.period === 'arch' && st.cat === 8) st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });
     };
     paint();
