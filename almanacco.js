@@ -28,7 +28,7 @@
 
   async function loadData() {
     if (st.data) return st.data;
-    st.data = await loadJson('data/almanacco.json');
+    st.data = await loadJson('data/almanacco.json?v=20261019');   // la versione cambia a ogni rigenerazione: evita copie vecchie in cache
     return st.data;
   }
 
