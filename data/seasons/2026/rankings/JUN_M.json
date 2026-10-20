@@ -1568,6 +1568,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "TOMASSINI_NICOLO",
+    "cognome": "TOMASSINI",
+    "nome": "NICOLO'",
+    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
+    "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
+    "punti": 64,
+    "vittorie": 1,
+    "gare": 9,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "pos": 99,
+    "trend": 7
+  },
+  {
     "atleta_id": "ROTA_MARCO",
     "cognome": "ROTA",
     "nome": "MARCO",
@@ -1580,8 +1596,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 9,
-    "pos": 99,
-    "trend": 0
+    "pos": 100,
+    "trend": -1
   },
   {
     "atleta_id": "LUCIA_ANTONINO",
@@ -1596,8 +1612,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 100,
-    "trend": 0
+    "pos": 101,
+    "trend": -1
   },
   {
     "atleta_id": "BREUCKERS_WINAND",
@@ -1612,8 +1628,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 1,
-    "pos": 101,
-    "trend": 0
+    "pos": 102,
+    "trend": -1
   },
   {
     "atleta_id": "MURA_ANDREA",
@@ -1628,8 +1644,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 5,
-    "pos": 102,
-    "trend": 0
+    "pos": 103,
+    "trend": -1
   },
   {
     "atleta_id": "MINOIA_ALESSANDRO",
@@ -1644,8 +1660,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 103,
-    "trend": 0
+    "pos": 104,
+    "trend": -1
   },
   {
     "atleta_id": "CECCATO_EDOARDO",
@@ -1660,8 +1676,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 12,
-    "pos": 104,
-    "trend": 0
+    "pos": 105,
+    "trend": -1
   },
   {
     "atleta_id": "MARROCU_GABRIELE",
@@ -1676,24 +1692,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 105,
-    "trend": 0
-  },
-  {
-    "atleta_id": "TOMASSINI_NICOLO",
-    "cognome": "TOMASSINI",
-    "nome": "NICOLO'",
-    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 58,
-    "vittorie": 1,
-    "gare": 8,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
     "pos": 106,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "AGLIALORO_PAOLO",
