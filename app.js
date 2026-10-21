@@ -30131,7 +30131,18 @@ window.mediaSetTab    = (t) => { mediaTab = t; mediaChannelFilter = ''; navTo('/
 window.mediaSetGenere = (v) => { mediaQueryGenere = v; renderMedia(); };
 window.mediaSetCat    = (v) => { mediaQueryCat = v; renderMedia(); };
 window.mediaSetMonth  = (v) => { mediaQueryMonth = v; renderMedia(); };
-window.mediaSetSearch = (v) => { mediaSearchQuery = v; renderMedia(); };
+// La ricerca ridisegna tutta la pagina (campo compreso): senza questi accorgimenti il cursore sparisce dopo ogni lettera.
+// Si aspetta un attimo che l'utente smetta di scrivere e, dopo il ridisegno, si rimette il cursore alla fine del testo.
+let _mediaSearchTimer = null;
+window.mediaSetSearch = (v) => {
+  mediaSearchQuery = v;
+  clearTimeout(_mediaSearchTimer);
+  _mediaSearchTimer = setTimeout(async () => {
+    try { await renderMedia(); } catch (_) { /* il resto della pagina gestisce i suoi errori */ }
+    const el = document.querySelector('input.rs-search[oninput*="mediaSetSearch"]');
+    if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (_) {} }
+  }, 220);
+};
 
 // ── Presentazioni/Programmi TV: elimina (admin) ─────────────────────────────
 window.mediaDeleteExtra = async (tipo, idx) => {
