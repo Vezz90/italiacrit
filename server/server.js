@@ -3722,9 +3722,8 @@ const PENDING_VIDEOS_PATH = path.join(__dirname, '../data/pending_videos.json');
 
 async function readVideos() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'videos').single();
-    if (error && error.code !== 'PGRST116') console.error('[videos] read error:', error.message);
-    return data?.value || {};
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'videos').maybeSingle();
+    return _kvRead('videos', data, error, {});
   }
   try { return JSON.parse(fs.readFileSync(VIDEOS_PATH, 'utf8')); } catch { return {}; }
 }
@@ -7553,11 +7552,24 @@ app.post('/api/admin/media/sync-channels', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Lettura di un valore kv_store che poi viene riscritto (coda video, video assegnati, album foto): un errore di rete/database NON deve mai
+// diventare "vuoto", altrimenti chi legge-poi-scrive (le sincronizzazioni automatiche) sovrascrive i dati veri. Il 19/10/2026, durante un
+// sovraccarico del database, la sync dei canali YouTube ha letto coda e video come vuoti, ha rimesso in coda 61 video gia assegnati e perso
+// gli stati approvato/scartato. Ora: errore -> ultima copia valida in memoria; se non c'e, si lancia e la sync si ferma senza scrivere.
+const _kvLastGood = new Map();
+function _kvRead(key, data, error, dflt) {
+  if (error && error.code !== 'PGRST116') {
+    if (_kvLastGood.has(key)) { console.warn(`[kv ${key}] errore di lettura, uso l'ultima copia valida:`, error.message); return _kvLastGood.get(key); }
+    throw new Error(`[kv ${key}] lettura fallita e nessuna copia valida: ${error.message}`);
+  }
+  const v = data && data.value != null ? data.value : dflt;
+  _kvLastGood.set(key, v);
+  return v;
+}
 async function readYTQueue() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_queue').single();
-    if (error && error.code !== 'PGRST116') console.error('[yt_queue] read error:', error.message);
-    return data?.value || [];
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_queue').maybeSingle();
+    return _kvRead('yt_queue', data, error, []);
   }
   try { return JSON.parse(fs.readFileSync(YT_QUEUE_PATH, 'utf8')); } catch { return []; }
 }
@@ -7996,9 +8008,8 @@ async function writeXpixQueue(arr) {
 
 async function readXpixPhotos() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_photos').single();
-    if (error && error.code !== 'PGRST116') console.error('[xpix_photos] read:', error.message);
-    return data?.value || {};
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_photos').maybeSingle();
+    return _kvRead('xpix_photos', data, error, {});
   }
   try { return JSON.parse(fs.readFileSync(XPIX_PHOTOS_PATH, 'utf8')); } catch { return {}; }
 }
@@ -8345,9 +8356,8 @@ const IC_PHOTOS_PATH = path.join(__dirname, '../data/ic_photos.json');
 
 async function readICQueue() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_queue').single();
-    if (error && error.code !== 'PGRST116') console.error('[ic_queue] read:', error.message);
-    return data?.value || [];
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_queue').maybeSingle();
+    return _kvRead('ic_queue', data, error, []);
   }
   try { return JSON.parse(fs.readFileSync(IC_QUEUE_PATH, 'utf8')); } catch { return []; }
 }
@@ -8362,9 +8372,8 @@ async function writeICQueue(arr) {
 }
 async function readICPhotos() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_photos').single();
-    if (error && error.code !== 'PGRST116') console.error('[ic_photos] read:', error.message);
-    return data?.value || {};
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_photos').maybeSingle();
+    return _kvRead('ic_photos', data, error, {});
   }
   try { return JSON.parse(fs.readFileSync(IC_PHOTOS_PATH, 'utf8')); } catch { return {}; }
 }
