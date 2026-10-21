@@ -26088,7 +26088,17 @@ async function renderCalendario(highlightId) {
     renderCalendario();
   };
   window.calSetTipo   = (v) => { calQTipo = v; calPastN = 40; render(); };
-  window.calSetSearch = (v) => { calQSearch = v; calPastN = 40; render(); };
+  // come per Media: la ricerca ridisegna tutta la pagina, quindi si aspetta che l'utente smetta di scrivere e poi si rimette il cursore nel campo
+  let _calSearchTimer = null;
+  window.calSetSearch = (v) => {
+    calQSearch = v; calPastN = 40;
+    clearTimeout(_calSearchTimer);
+    _calSearchTimer = setTimeout(() => {
+      render();
+      const el = document.getElementById('cal-search');
+      if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (_) {} }
+    }, 220);
+  };
   window.calSetRegione = (v) => { calQRegione = v; calPastN = 40; render(); };
 
   window.calSetView = (v) => {
@@ -29117,7 +29127,13 @@ window.risSetRegion = (v) => { risQueryRegion = v; _risHistoricalYear ? renderRi
 window.risSetTipo   = (v) => { risQueryTipo = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
 window.risSetSearch = (v) => {
   clearTimeout(_risSearchTimer);
-  _risSearchTimer = setTimeout(() => { risSearchQuery = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); }, 300);
+  _risSearchTimer = setTimeout(async () => {
+    risSearchQuery = v;
+    try { await (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati()); } catch (_) { /* gli errori li gestisce la pagina */ }
+    // la pagina e' stata ridisegnata, campo compreso: si rimette il cursore alla fine del testo
+    const el = document.getElementById('ris-search-input');
+    if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (_) {} }
+  }, 300);
 };
 window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
 window.risToggleMissing = () => {
