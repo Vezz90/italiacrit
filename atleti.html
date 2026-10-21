@@ -248,14 +248,31 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=1021" defer></script>
-<script src="home.js?v=26" defer></script>
-<script src="procorse.js?v=4" defer></script>
-<script src="forma.js?v=10" defer></script>
-<script src="risultati.js?v=8" defer></script>
-<script src="elenchi.js?v=4" defer></script>
-<script src="almanacco.js?v=10" defer></script>
-<script src="carriere.js?v=1" defer></script>
-<script src="titoli.js?v=11" defer></script>
+<script>
+/* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
+   Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
+(function () {
+  var L = ['app.js?v=1023', 'home.js?v=26', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=8', 'elenchi.js?v=4', 'almanacco.js?v=10', 'carriere.js?v=1', 'titoli.js?v=11'];
+  var R = 'https://italiacrit.onrender.com/';
+  function load(base) {
+    L.forEach(function (f) {
+      var s = document.createElement('script');
+      s.src = base + f; s.async = false;
+      if (base) s.onerror = function () { try { sessionStorage.setItem('noRender', '1'); } catch (e) {} location.reload(); };
+      if (f === L[L.length - 1]) s.onload = function () { window.__icsReady = true; window.dispatchEvent(new Event('icsReady')); };
+      document.body.appendChild(s);
+    });
+  }
+  var prod = /(^|\.)italiacyclingstats\.com$/.test(location.hostname), skip = false;
+  try { skip = sessionStorage.getItem('noRender') === '1'; } catch (e) {}
+  if (!prod || skip || !window.fetch || !window.AbortController) return load('');
+  var ac = new AbortController(), t = setTimeout(function () { ac.abort(); }, 2500);
+  fetch(R + 'index.html', { signal: ac.signal, cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (h) {
+    clearTimeout(t);
+    var ok = h && L.every(function (f) { return h.indexOf(f) > -1; });
+    load(ok ? R : '');
+  }).catch(function () { load(''); });
+})();
+</script>
 </body>
 </html>

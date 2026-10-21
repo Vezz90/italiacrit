@@ -4484,7 +4484,7 @@ window.addEventListener('popstate', _trackPageView);
 // fetch dei dati. Lo script ha già `defer`, quindi il DOM è comunque
 // pronto quando questo codice gira: aspettare DOMContentLoaded è corretto
 // e molto più veloce.
-document.addEventListener('DOMContentLoaded', async () => {
+const _appBoot = async () => {
   globalData = await loadAll();
   updateMetaUI();
   await loadSeasonsIndex();
@@ -4541,7 +4541,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.warn("Auto-polling fallito:", e);
     }
   }, 180000); // 3 minuti
-});
+};
+// con il caricatore di index.html lo script puo arrivare a pagina gia pronta: in quel caso DOMContentLoaded e gia passato
+// (index.html lancia 'icsReady' quando tutti gli script sono stati eseguiti)
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _appBoot);
+else if (window.__icsReady) _appBoot();
+else window.addEventListener('icsReady', _appBoot, { once: true });
 
 // Stato "è ancora davvero live" per ogni diretta di oggi (video_id → bool),
 // usato dalla pagina Media (tab Dirette) per spostare una diretta appena
