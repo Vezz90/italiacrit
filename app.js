@@ -31950,12 +31950,18 @@ function _clPhoto(ctx, img, x, y, w, h, r) {
   ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * 0.28, sw, sh, x, y, w, h);
   ctx.restore();
 }
+function _clShrink(ctx, txt, wt, size, maxW, minK = 0.62) {
+  const F = `'Inter Tight',sans-serif`; let k = 1; const t = String(txt || '');
+  ctx.font = `${wt} ${Math.round(size)}px ${F}`;
+  while (k > minK && ctx.measureText(t).width > maxW) { k -= 0.04; ctx.font = `${wt} ${Math.round(size * k)}px ${F}`; }
+  return _clFit(ctx, t, maxW);
+}
 function _clName(r) { return `${r.cognome || ''} ${r.nome || ''}`.toUpperCase().trim(); }
 // una riga dell'elenco: posizione, miniatura (se c'e), nome + team, [distacco], punti
 function _clRow(ctx, x, y, w, rH, pos, r, av, lead, gap, goldPts) {
   const mid = y + rH / 2, F = `'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(x, y + rH - 1, w, 1);
-  const fsPos = Math.round(rH * 0.32), fsN = Math.round(rH * 0.31), fsT = Math.round(rH * 0.22), fsP = Math.round(rH * 0.32);
+  const fsPos = Math.round(rH * 0.32), fsN = Math.round(rH * 0.34), fsT = Math.round(rH * 0.24), fsP = Math.round(rH * 0.34);
   ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
   ctx.font = `700 ${fsPos}px ${F}`; ctx.fillStyle = _CL_MED[pos - 1] || 'rgba(255,255,255,0.45)';
   ctx.fillText(String(pos), x + Math.round(rH * 0.10), mid);
@@ -31978,12 +31984,12 @@ function _clRow(ctx, x, y, w, rH, pos, r, av, lead, gap, goldPts) {
   const maxW = rightEdge - nameX;
   ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   const hasTeam = !!r.team && rH >= 52;
-  ctx.font = `600 ${fsN}px ${F}`; ctx.fillStyle = '#f0f0f0';
+  ctx.fillStyle = '#f0f0f0';
   const nameY = hasTeam ? mid - Math.round(fsT * 0.15) : mid + Math.round(fsN * 0.35);
-  ctx.fillText(_clFit(ctx, _clName(r), maxW), nameX, nameY);
+  ctx.fillText(_clShrink(ctx, _clName(r), 600, fsN, maxW), nameX, nameY);
   if (hasTeam) {
-    ctx.font = `400 ${fsT}px ${F}`; ctx.fillStyle = 'rgba(255,255,255,0.40)';
-    ctx.fillText(_clFit(ctx, r.team, maxW), nameX, nameY + Math.round(fsT * 1.5));
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText(_clShrink(ctx, r.team, 400, fsT, maxW, 0.8), nameX, nameY + Math.round(fsT * 1.5));
   }
 }
 function _clTail(ctx, x, w, y, rH, rows, startPos, avs, lead, gap, goldPts) {
@@ -32004,32 +32010,31 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
     ctx.font = `800 ${Math.round(h * 0.042)}px ${F}`; ctx.letterSpacing = '1px';
     ctx.fillText('1° IN CLASSIFICA', tx, ty + Math.round(h * 0.075)); ctx.letterSpacing = '0px';
-    ctx.font = `800 ${Math.min(Math.round(h * 0.085), Math.round(w * 0.12))}px ${F}`;
-    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), tw), tx, ty + Math.round(h * 0.16));
-    ctx.font = `600 ${Math.round(h * 0.05)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.72)';
-    ctx.fillText(_clFit(ctx, [r.nome, r.team].filter(Boolean).join(' · '), tw), tx, ty + Math.round(h * 0.222));
+    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, Math.min(h * 0.085, w * 0.12), tw), tx, ty + Math.round(h * 0.16));
+    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillText(_clShrink(ctx, [r.nome, r.team].filter(Boolean).join(' · '), 600, h * 0.05, tw), tx, ty + Math.round(h * 0.222));
     ctx.font = `800 ${Math.round(h * 0.105)}px ${F}`; ctx.fillStyle = ink;
     const pt = String(r.punti); ctx.fillText(pt, tx, y + h - Math.round(h * 0.045));
     const pw = ctx.measureText(pt).width;
     ctx.font = `700 ${Math.round(h * 0.04)}px ${F}`; ctx.fillText('PUNTI', tx + pw + Math.round(h * 0.02), y + h - Math.round(h * 0.047));
   } else {
-    const pw = h;
+    const u = Math.min(h, w * 0.27);
+    const pw = av ? Math.round(Math.min(h, w * 0.30)) : Math.round(Math.min(h * 0.62, w * 0.20));
     if (av) _clPhoto(ctx, av, x, y, pw, h, 0);
-    else { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x, y, pw, h); ctx.font = `800 ${Math.round(h * 0.6)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('1', x + pw / 2, y + h / 2); }
+    else { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x, y, pw, h); ctx.font = `800 ${Math.round(pw * 0.78)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('1', x + pw / 2, y + h / 2); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
-    ctx.font = `800 ${Math.round(h * 0.30)}px ${F}`;
+    ctx.font = `800 ${Math.round(u * 0.30)}px ${F}`;
     const pt = String(r.punti), right = x + w - pad;
     ctx.fillText(pt, right, y + h * 0.56);
     const ptW = ctx.measureText(pt).width;
-    ctx.font = `700 ${Math.round(h * 0.09)}px ${F}`; ctx.fillText('PUNTI', right, y + h * 0.56 + Math.round(h * 0.15));
-    tx = x + pw + pad; tw = right - ptW - Math.round(h * 0.06) - tx;
+    ctx.font = `700 ${Math.round(u * 0.09)}px ${F}`; ctx.fillText('PUNTI', right, y + h * 0.56 + Math.round(u * 0.15));
+    tx = x + pw + pad; tw = right - ptW - Math.round(u * 0.06) - tx;
     ctx.textAlign = 'left';
-    ctx.font = `800 ${Math.round(h * 0.095)}px ${F}`; ctx.letterSpacing = '1px';
+    ctx.font = `800 ${Math.round(u * 0.095)}px ${F}`; ctx.letterSpacing = '1px';
     ctx.fillText('1° IN CLASSIFICA', tx, y + h * 0.22); ctx.letterSpacing = '0px';
-    ctx.font = `800 ${Math.round(h * 0.20)}px ${F}`;
-    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), tw), tx, y + h * 0.50);
-    ctx.font = `600 ${Math.round(h * 0.115)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.72)';
-    ctx.fillText(_clFit(ctx, [r.nome, r.team].filter(Boolean).join(' · '), tw), tx, y + h * 0.72);
+    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, u * 0.20, tw), tx, y + h * 0.50);
+    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillText(_clShrink(ctx, [r.nome, r.team].filter(Boolean).join(' · '), 600, u * 0.115, tw), tx, y + h * 0.72);
   }
   ctx.restore();
 }
@@ -32051,8 +32056,7 @@ function _clPodium(ctx, x, y, w, h, rows, avs) {
     ctx.font = `800 ${Math.round(th * 0.40)}px ${F}`;
     const nTxt = String(k + 1); ctx.fillText(nTxt, px, ty + Math.round(th * 0.42));
     const nW = ctx.measureText(nTxt).width + Math.round(bw * 0.04);
-    ctx.font = `800 ${Math.round(th * 0.28)}px ${F}`;
-    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
+    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
     ctx.font = `700 ${Math.round(th * 0.28)}px ${F}`;
     ctx.fillText(`${r.punti} pt`, px, ty + Math.round(th * 0.82));
   });
@@ -32509,7 +32513,7 @@ async function _refreshPreview(){
     // per la stessa, fuorviante (segnalato dal vivo: "non deve essere come
     // quelle per instagram", con screenshot della grafica reale che deve
     // restare quella).
-    if (_sharePlatKey === 'facebook' && ['gara','atleta','team','class'].includes(_shareType) && _sharePayload?._id) {
+    if (_sharePlatKey === 'facebook' && ['gara','atleta','team'].includes(_shareType) && _sharePayload?._id) {
       let url = `${API_BASE}/og-image/${_shareType}/${encodeURIComponent(_sharePayload._id)}`;
       const _fa = _adjustFor('facebook');
       if (_shareType === 'gara' && (_fa.scale > 1.001 || Math.abs(_fa.offsetX) > 0.5 || Math.abs(_fa.offsetY) > 0.5)) {
