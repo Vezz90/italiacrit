@@ -249,7 +249,7 @@ let _staticSocialsPromise = null; // "single-flight": senza questo, N chiamate
 async function _loadStaticSocials() {
   if (_staticSocials) return _staticSocials;
   if (!_staticSocialsPromise) {
-    _staticSocialsPromise = fetch('data/entity_socials.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    _staticSocialsPromise = _dataFetch('data/entity_socials.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
     _staticSocialsPromise.then(v => { _staticSocials = v; });
   }
   return _staticSocialsPromise;
@@ -1292,6 +1292,32 @@ function _findDupAthlete(idx, p) {
 
 // ── DATA CACHE ────────────────────────────────────────────────
 const cache = {};
+
+// ── Sorgente dei file di dati (data/*.json) ───────────────────────────────────
+// Dal dominio i file passano da GitHub Pages, che a volte e lentissimo (6,6 MB di athletes.json in oltre 90 secondi: la schermata di
+// caricamento restava per minuti). Lo stesso file da Render arriva in meno di 1 secondo. Si usa Render solo se i suoi dati sono
+// aggiornati (al massimo 90 minuti indietro rispetto al dominio) e solo in produzione; se Render non risponde, si ripiega sul dominio.
+let _dataBaseP = null;
+function _dataBase() {
+  if (_dataBaseP) return _dataBaseP;
+  _dataBaseP = (async () => {
+    if (!/(^|\.)italiacyclingstats\.com$/.test(location.hostname)) return '';
+    const T = ms => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; };
+    const meta = url => fetch(url, { cache: 'no-store', signal: T(8000) }).then(r => (r.ok ? r.json() : null)).catch(() => null);
+    const [dom, ren] = await Promise.all([meta('data/meta.json'), meta(`${RENDER_BASE}/data/meta.json`)]);
+    if (!ren || !ren.last_update) return '';
+    if (dom && dom.last_update && Date.parse(dom.last_update) - Date.parse(ren.last_update) > 90 * 60e3) return '';   // Render e indietro: meglio il dominio
+    return `${RENDER_BASE}/`;
+  })();
+  return _dataBaseP;
+}
+// come fetch('data/...'), ma dalla sorgente piu veloce; se fallisce ripiega sul dominio
+async function _dataFetch(path, init) {
+  const base = await _dataBase();
+  if (base) { try { const r = await fetch(base + path, init); if (r.ok) return r; } catch (_) { /* ripiego sul dominio */ } }
+  return fetch(path, init);
+}
+
 async function loadJson(path) {
   if (cache[path]) return cache[path];
   try {
@@ -1304,7 +1330,7 @@ async function loadJson(path) {
     // risposta cache condivisa fra utenti, obbligando ogni caricamento a
     // riscaricare da zero fino a ~19MB di JSON (results_raw + athletes +
     // teams + race_details) — la causa principale della lentezza iniziale.
-    const r = await fetch(path);
+    const r = await (/^data\/.+\.json$/.test(path) ? _dataFetch(path) : fetch(path));
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     cache[path] = data;
@@ -12588,7 +12614,7 @@ window.adminNav = async function(section) {
           fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
           apiCall('/admin/social/queue').catch(()=>({queue:[]})),
           fetch(`${API_BASE}/admin/team-lineage?status=pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({items:[]})),
-          fetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
+          _dataFetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
           fetch(`${API_BASE}/data/albo-manual`).then(r => r.json()).catch(() => ({ merges: [], distinct: [] })),
         ]);
         const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; const c = document.getElementById('card-' + id); if (c) c.classList.toggle('adm-todo-on', Number(n) > 0); };
@@ -13282,7 +13308,7 @@ window.adminNav = async function(section) {
         <div id="admin-ar-body"><div class="admin-loading">Caricamento…</div></div>`;
       (async () => {
         const [review, man] = await Promise.all([
-          fetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
+          _dataFetch('data/albo/review.json').then(r => r.ok ? r.json() : []).catch(() => []),
           fetch(`${API_BASE}/data/albo-manual`).then(r => r.json()).catch(() => ({ merges: [], distinct: [] })),
         ]);
         window._arState = { review, man };
@@ -16999,7 +17025,7 @@ function _alboBase(nome) {
 }
 let _alboIdxP = null; const _alboShards = {};
 function _alboIndex() {
-  if (!_alboIdxP) _alboIdxP = fetch('data/albo/index.json').then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!_alboIdxP) _alboIdxP = _dataFetch('data/albo/index.json').then(r => r.ok ? r.json() : null).catch(() => null);
   return _alboIdxP;
 }
 const _ALBO_STOP = new Set(['DI','DEL','DELLA','DELLE','DEI','DEGLI','DELL','DALL','DA','DE','E','IN','AL','ALLA','ALLO','IL','LA','LO','I','LE','GLI','A','ED','PER','CON','NEL','NELLA','SUL','SULLA','GRAN','PREMIO','TROFEO','MEMORIAL','COPPA','CITTA','COMUNE','CIRCUITO','GARA','LINEA','ASD','GS','SC','UC','PROVA','VALIDA','XXI','XX','XIX','XVIII','XVII','XVI','XV','XIV','XIII','XII','XI','X']);
@@ -17019,7 +17045,7 @@ function _alboManual() {
 }
 function _alboShard(idx, sid) {
   const n = parseInt(sid, 16) % idx.n_shard;
-  if (!_alboShards[n]) _alboShards[n] = fetch(`data/albo/shard_${String(n).padStart(2, '0')}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  if (!_alboShards[n]) _alboShards[n] = _dataFetch(`data/albo/shard_${String(n).padStart(2, '0')}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   return _alboShards[n].then(sh => sh[sid] || null);
 }
 // unisce alla serie quelle che l'admin ha dichiarato "stessa gara" (Admin → Albo d'oro · fusioni)
@@ -26154,7 +26180,7 @@ function _loadScript(src) {
 async function _loadRaceDetails() {
   if (_raceDetailsCache) return _raceDetailsCache;
   try {
-    const res = await fetch('data/race_details.json');
+    const res = await _dataFetch('data/race_details.json');
     _raceDetailsCache = await res.json();
   } catch(e) {
     _raceDetailsCache = {};
