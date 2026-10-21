@@ -31100,11 +31100,12 @@ function _header(ctx, logo, W, H, classData, topRightCat) {
   const isRegio = classData && classData.scope === 'regionale' && classData.region;
   // ── Wordmark accanto al logo: solo per le card classifica (regione o ICS).
   //    Per atleta/team niente wordmark (il logo dice già ICS). ──
-  if (classData) {
+  // card classifica: il logo basta (niente scritta ICS); se e regionale accanto al logo c'e il nome della regione
+  if (classData && (isRegio || !classData.rows)) {
     const brand = isRegio ? classData.region.toUpperCase() : 'ICS';
     ctx.fillStyle = 'rgba(255,255,255,0.16)';
     ctx.fillRect(logoRight + 16, Math.round(bH * 0.28), 2, Math.round(bH * 0.44));
-    const wfs = Math.round(bH * 0.30);
+    const wfs = Math.round(bH * (classData.rows ? 0.42 : 0.30));
     ctx.font = `700 ${wfs}px 'Inter Tight',sans-serif`;
     ctx.letterSpacing = '1px';
     ctx.fillStyle = isRegio ? '#f5c400' : 'rgba(255,255,255,0.90)';
@@ -31840,69 +31841,7 @@ function _drawTeamMese(ctx, W, H, d) {
 
 // ── Disegna una colonna di classifica (header colonne + accento + righe) ──
 // medalCol: oro/argento/bronzo per le posizioni 1-3 (in base a r.pos)
-function _drawRankColumn(ctx, x, colW, topY, bottomY, slice, hdFs) {
-  const tickX = x + Math.round(colW * 0.012);
-  const posX  = x + Math.round(colW * 0.040);
-  const nameX = posX + Math.round(colW * 0.150);
-  const right = x + colW;
-  const posCol = ['#f5c400', '#dadada', '#cd7f32'];
-  let y = topY;
-  // intestazione colonne
-  ctx.font = `600 ${hdFs}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.34)';
-  ctx.letterSpacing = '1.5px'; ctx.textAlign = 'left';
-  ctx.fillText('POS', posX, y + hdFs);
-  ctx.fillText('ATLETA', nameX, y + hdFs);
-  ctx.textAlign = 'right'; ctx.fillText('PUNTI', right, y + hdFs);
-  ctx.letterSpacing = '0px'; ctx.textAlign = 'left';
-  y += hdFs + Math.round(hdFs * 0.35);
-  const accW = Math.round(colW * 0.22);
-  ctx.fillStyle = 'rgba(232,0,29,0.85)'; ctx.fillRect(x, y, accW, 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(x + accW, y, colW - accW, 1);
-  y += 12;
-  const rH = Math.round((bottomY - y - 4) / slice.length);
-  const ptsResW = Math.round(colW * 0.16); // larghezza riservata ai punti
-  const nameMaxW = right - nameX - ptsResW;
-  // ── Font con TETTO: indipendenti dall'altezza riga, così i nomi non
-  //    diventano enormi/tagliati su formati alti (Story) o larghi (Facebook). ──
-  const fsPos = Math.min(Math.round(rH * 0.44), Math.round(colW * 0.052));
-  const fsN   = Math.min(Math.round(rH * 0.34), Math.round(colW * 0.038));
-  const fsT   = Math.round(fsN * 0.66);
-  const fsPts = Math.min(Math.round(rH * 0.40), Math.round(colW * 0.048));
-  slice.forEach((r, i) => {
-    const ry = y + i * rH, mid = ry + rH / 2;
-    const medal = (r.pos >= 1 && r.pos <= 3) ? posCol[r.pos - 1] : null;
-    if (i % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.022)'; ctx.fillRect(x, ry, colW, rH); }
-    if (medal) { ctx.fillStyle = medal; ctx.fillRect(tickX, mid - Math.round(rH * 0.30), 3, Math.round(rH * 0.60)); }
-    // posizione (centrata verticalmente)
-    ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle = medal || 'rgba(255,255,255,0.45)';
-    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText(r.pos, posX, mid);
-    // nome + team come blocco centrato (clip per larghezza colonna)
-    const hasTeam = !!(r.team && String(r.team).trim());
-    ctx.textBaseline = 'alphabetic';
-    const nameBy = hasTeam ? mid - Math.round(fsT * 0.15) : mid + Math.round(fsN * 0.35);
-    ctx.font = `600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f0f0f0';
-    let nm = (`${r.cognome || ''} ${r.nome || ''}`).toUpperCase().trim();
-    while (nm.length > 3 && ctx.measureText(nm).width > nameMaxW) nm = nm.slice(0, -1);
-    ctx.fillText(nm, nameX, nameBy);
-    if (hasTeam) {
-      ctx.font = `400 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
-      let tm = String(r.team);
-      while (tm.length > 2 && ctx.measureText(tm).width > nameMaxW) tm = tm.slice(0, -1);
-      ctx.fillText(tm, nameX, nameBy + Math.round(fsT * 1.5));
-    }
-    // punti (centrati verticalmente)
-    ctx.font = `700 ${fsPts}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f5c400';
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    ctx.fillText(r.punti, right, mid);
-    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-  });
-}
-// ── RIEPILOGO MENSILE CARD ───────────────────────────────────
-// Breve testo descrittivo per ogni corridore/team in classifica del mese
-// (vittorie/podi), al posto del solo nome squadra — è quello che rende la
-// card "raccontata" e non una tabella nuda, pensata per essere salvata e
-// condivisa così com'è sui social.
+
 function _recapBlurb(entry) {
   const parts = [];
   if (entry.wins) parts.push(`${entry.wins} vittoria${entry.wins === 1 ? '' : 'e'}`);
@@ -31998,26 +31937,149 @@ function _drawRecap(ctx, W, H, d) {
 }
 
 // ── CLASSIFICA CARD ────────────────────────────────────────
-function _drawClass(ctx, W, H, d) {
-  const {rows} = d;
-  const hB=Math.round(H*0.092),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
-  // Titolo "CLASSIFICA <categoria>" + eventuale mese sono nell'header.
-  const topY=hB+Math.round(H*0.022);
-  const bottomY=H-fB-4;
-  const maxR=Math.min(rows.length,10);
-  const landscape = W > H*1.25; // Facebook (1.91:1), Twitter (16:9)
-  if(landscape && maxR>5){
-    // ── Due colonne: 1-5 a sinistra, 6-10 a destra ──
-    const gap=Math.round(W*0.045);
-    const colW=Math.round((W-pad*2-gap)/2);
-    const half=Math.ceil(maxR/2);
-    const hdFs=Math.round(H*0.030);
-    _drawRankColumn(ctx, pad, colW, topY, bottomY, rows.slice(0,half), hdFs);
-    _drawRankColumn(ctx, pad+colW+gap, colW, topY, bottomY, rows.slice(half,maxR), hdFs);
-  } else {
-    // ── Colonna singola (verticale / quadrato) ──
-    _drawRankColumn(ctx, pad, W-pad*2, topY, bottomY, rows.slice(0,maxR), Math.round(H*0.020));
+// Due stili: 'maglia' (leader in grande + distacchi) e 'podio' (primi 3 a blocchi). La foto compare solo
+// per chi ce l'ha (avs: Map atleta_id -> Image), nessun segnaposto per gli altri.
+let _shareClassStyle = 'maglia';
+const _CL_GOLD = '#f5c400', _CL_MED = ['#f5c400', '#dadada', '#cd7f32'];
+function _clFit(ctx, txt, maxW) { let t = String(txt || ''); while (t.length > 2 && ctx.measureText(t).width > maxW) t = t.slice(0, -1); return t; }
+function _clPhoto(ctx, img, x, y, w, h, r) {
+  ctx.save(); _rr(ctx, x, y, w, h, r); ctx.clip();
+  const ir = img.naturalWidth / img.naturalHeight, cr = w / h;
+  let sw, sh;
+  if (ir > cr) { sh = img.naturalHeight; sw = sh * cr; } else { sw = img.naturalWidth; sh = sw / cr; }
+  ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * 0.28, sw, sh, x, y, w, h);
+  ctx.restore();
+}
+function _clName(r) { return `${r.cognome || ''} ${r.nome || ''}`.toUpperCase().trim(); }
+// una riga dell'elenco: posizione, miniatura (se c'e), nome + team, [distacco], punti
+function _clRow(ctx, x, y, w, rH, pos, r, av, lead, gap, goldPts) {
+  const mid = y + rH / 2, F = `'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(x, y + rH - 1, w, 1);
+  const fsPos = Math.round(rH * 0.32), fsN = Math.round(rH * 0.31), fsT = Math.round(rH * 0.22), fsP = Math.round(rH * 0.32);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.font = `700 ${fsPos}px ${F}`; ctx.fillStyle = _CL_MED[pos - 1] || 'rgba(255,255,255,0.45)';
+  ctx.fillText(String(pos), x + Math.round(rH * 0.10), mid);
+  const dm = Math.round(rH * 0.72), cx = x + Math.round(rH * 0.55) + dm / 2;
+  if (av) {
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, mid, dm / 2, 0, Math.PI * 2); ctx.clip();
+    _clPhoto(ctx, av, cx - dm / 2, mid - dm / 2, dm, dm, 0); ctx.restore();
   }
+  const nameX = x + Math.round(rH * 0.55) + dm + Math.round(rH * 0.18);
+  const right = x + w - Math.round(rH * 0.08);
+  ctx.font = `700 ${fsP}px ${F}`;
+  const ptsTxt = String(r.punti); const ptsW = ctx.measureText(ptsTxt).width;
+  ctx.textAlign = 'right'; ctx.fillStyle = goldPts ? _CL_GOLD : '#ffffff'; ctx.fillText(ptsTxt, right, mid);
+  let rightEdge = right - ptsW - Math.round(rH * 0.12);
+  if (gap) {
+    ctx.font = `500 ${fsT}px ${F}`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
+    const g = `−${Math.max(0, Math.round((lead - r.punti) * 100) / 100)}`;
+    ctx.fillText(g, rightEdge, mid); rightEdge -= ctx.measureText(g).width + Math.round(rH * 0.2);
+  }
+  const maxW = rightEdge - nameX;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  const hasTeam = !!r.team && rH >= 52;
+  ctx.font = `600 ${fsN}px ${F}`; ctx.fillStyle = '#f0f0f0';
+  const nameY = hasTeam ? mid - Math.round(fsT * 0.15) : mid + Math.round(fsN * 0.35);
+  ctx.fillText(_clFit(ctx, _clName(r), maxW), nameX, nameY);
+  if (hasTeam) {
+    ctx.font = `400 ${fsT}px ${F}`; ctx.fillStyle = 'rgba(255,255,255,0.40)';
+    ctx.fillText(_clFit(ctx, r.team, maxW), nameX, nameY + Math.round(fsT * 1.5));
+  }
+}
+function _clTail(ctx, x, w, y, rH, rows, startPos, avs, lead, gap, goldPts) {
+  rows.forEach((r, i) => _clRow(ctx, x, y + i * rH, w, rH, startPos + i, r, avs.get(r.atleta_id) || null, lead, gap, goldPts));
+}
+// leader in giallo: orizzontale (foto a sinistra) oppure verticale (foto sopra, per i formati larghi)
+function _clHero(ctx, x, y, w, h, r, av, vertical) {
+  const F = `'Inter Tight',sans-serif`, rad = Math.round(Math.min(w, h) * 0.04), pad = Math.round(h * (vertical ? 0.05 : 0.09));
+  ctx.fillStyle = _CL_GOLD; _rr(ctx, x, y, w, h, rad); ctx.fill();
+  ctx.save(); _rr(ctx, x, y, w, h, rad); ctx.clip();
+  const ink = '#111111';
+  let tx, ty, tw;
+  if (vertical) {
+    const ph = Math.round(h * 0.50);
+    if (av) _clPhoto(ctx, av, x, y, w, ph, 0);
+    else { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x, y, w, ph); ctx.font = `800 ${Math.round(ph * 0.62)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('1', x + w / 2, y + ph / 2); }
+    tx = x + pad; ty = y + ph; tw = w - pad * 2;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
+    ctx.font = `800 ${Math.round(h * 0.042)}px ${F}`; ctx.letterSpacing = '1px';
+    ctx.fillText('1° IN CLASSIFICA', tx, ty + Math.round(h * 0.075)); ctx.letterSpacing = '0px';
+    ctx.font = `800 ${Math.min(Math.round(h * 0.085), Math.round(w * 0.12))}px ${F}`;
+    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), tw), tx, ty + Math.round(h * 0.16));
+    ctx.font = `600 ${Math.round(h * 0.05)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillText(_clFit(ctx, [r.nome, r.team].filter(Boolean).join(' · '), tw), tx, ty + Math.round(h * 0.222));
+    ctx.font = `800 ${Math.round(h * 0.105)}px ${F}`; ctx.fillStyle = ink;
+    const pt = String(r.punti); ctx.fillText(pt, tx, y + h - Math.round(h * 0.045));
+    const pw = ctx.measureText(pt).width;
+    ctx.font = `700 ${Math.round(h * 0.04)}px ${F}`; ctx.fillText('PUNTI', tx + pw + Math.round(h * 0.02), y + h - Math.round(h * 0.047));
+  } else {
+    const pw = h;
+    if (av) _clPhoto(ctx, av, x, y, pw, h, 0);
+    else { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x, y, pw, h); ctx.font = `800 ${Math.round(h * 0.6)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('1', x + pw / 2, y + h / 2); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
+    ctx.font = `800 ${Math.round(h * 0.30)}px ${F}`;
+    const pt = String(r.punti), right = x + w - pad;
+    ctx.fillText(pt, right, y + h * 0.56);
+    const ptW = ctx.measureText(pt).width;
+    ctx.font = `700 ${Math.round(h * 0.09)}px ${F}`; ctx.fillText('PUNTI', right, y + h * 0.56 + Math.round(h * 0.15));
+    tx = x + pw + pad; tw = right - ptW - Math.round(h * 0.06) - tx;
+    ctx.textAlign = 'left';
+    ctx.font = `800 ${Math.round(h * 0.095)}px ${F}`; ctx.letterSpacing = '1px';
+    ctx.fillText('1° IN CLASSIFICA', tx, y + h * 0.22); ctx.letterSpacing = '0px';
+    ctx.font = `800 ${Math.round(h * 0.20)}px ${F}`;
+    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), tw), tx, y + h * 0.50);
+    ctx.font = `600 ${Math.round(h * 0.115)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillText(_clFit(ctx, [r.nome, r.team].filter(Boolean).join(' · '), tw), tx, y + h * 0.72);
+  }
+  ctx.restore();
+}
+// podio: 2°, 1°, 3° a blocchi di altezza diversa, foto nella parte alta del blocco
+function _clPodium(ctx, x, y, w, h, rows, avs) {
+  const F = `'Inter Tight',sans-serif`, g = Math.round(w * 0.025), bw = Math.round((w - g * 2) / 3);
+  const hs = [0.84, 1, 0.72], order = [1, 0, 2];
+  order.forEach((k, j) => {
+    const r = rows[k]; if (!r) return;
+    const bh = Math.round(h * hs[j]), bx = x + j * (bw + g), by = y + h - bh, th = Math.round(bw * 0.40), rad = Math.round(bw * 0.05);
+    ctx.fillStyle = _CL_MED[k]; _rr(ctx, bx, by, bw, bh, rad); ctx.fill();
+    ctx.save(); _rr(ctx, bx, by, bw, bh, rad); ctx.clip();
+    const av = avs.get(r.atleta_id);
+    if (av) _clPhoto(ctx, av, bx, by, bw, bh - th, 0);
+    else { ctx.font = `800 ${Math.round((bh - th) * 0.55)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.30)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(k + 1), bx + bw / 2, by + (bh - th) / 2); }
+    ctx.restore();
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#111111';
+    const px = bx + Math.round(bw * 0.07), ty = by + bh - th;
+    ctx.font = `800 ${Math.round(th * 0.40)}px ${F}`;
+    const nTxt = String(k + 1); ctx.fillText(nTxt, px, ty + Math.round(th * 0.42));
+    const nW = ctx.measureText(nTxt).width + Math.round(bw * 0.04);
+    ctx.font = `800 ${Math.round(th * 0.28)}px ${F}`;
+    ctx.fillText(_clFit(ctx, String(r.cognome || '').toUpperCase(), bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
+    ctx.font = `700 ${Math.round(th * 0.28)}px ${F}`;
+    ctx.fillText(`${r.punti} pt`, px, ty + Math.round(th * 0.82));
+  });
+}
+function _drawClass(ctx, W, H, d, avs) {
+  const rows = (d.rows || []).slice(0, 10); if (!rows.length) return;
+  avs = avs || new Map();
+  const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.048);
+  const top = hB + Math.round(H * 0.022), bottom = H - fB - Math.round(H * 0.014), avail = bottom - top;
+  const landscape = W > H * 1.25, gapY = Math.round(H * 0.014), lead = rows[0].punti || 0;
+  const podio = _shareClassStyle === 'podio', nHead = podio ? Math.min(3, rows.length) : 1;
+  const tail = rows.slice(nHead), nT = tail.length;
+  if (landscape) {
+    const lw = Math.round(W * (podio ? 0.50 : 0.38)), gx = Math.round(W * 0.035), rx = pad + lw + gx, rw = W - pad - rx;
+    if (podio) _clPodium(ctx, pad, top, lw, avail, rows.slice(0, 3), avs);
+    else _clHero(ctx, pad, top, lw, avail, rows[0], avs.get(rows[0].atleta_id) || null, true);
+    if (nT) _clTail(ctx, rx, rw, top, Math.min(avail / nT, Math.round(H * 0.17)), tail, nHead + 1, avs, lead, !podio, podio);
+    return;
+  }
+  const w = W - pad * 2, rMax = Math.round(W * (podio ? 0.10 : 0.105));
+  const headMin = Math.round(W * (podio ? 0.40 : 0.26)), headMax = Math.round(W * (podio ? 0.52 : 0.36));
+  const rH = nT ? Math.min(rMax, (avail - headMin - gapY) / nT) : 0;
+  const headH = Math.min(headMax, avail - (nT ? gapY + rH * nT : 0));
+  const y0 = top + Math.max(0, Math.round((avail - (headH + (nT ? gapY + rH * nT : 0))) / 2));
+  if (podio) _clPodium(ctx, pad, y0, w, headH, rows.slice(0, 3), avs);
+  else _clHero(ctx, pad, y0, w, headH, rows[0], avs.get(rows[0].atleta_id) || null, false);
+  if (nT) _clTail(ctx, pad, w, y0 + headH + gapY, rH, tail, nHead + 1, avs, lead, !podio, podio);
 }
 
 // Foto profilo dei corridori in classifica (fino a 10), per la card gara:
@@ -32118,6 +32180,7 @@ async function generateShareCanvas(type, payload, platKey) {
     else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap,xpixLogo);
   } else {
     _bg(ctx,p.w,p.h);
+    const _classAvs = type==='class' ? await _fetchGaraAvatars(payload.rows) : null;
     const _headerClassData = type==='class' ? payload
       : type==='recap' ? { catLabel:'RIEPILOGO MENSILE', month:(payload.monthLabel||'').toUpperCase() }
       : (type==='atleta-mese'||type==='team-mese') ? { catLabel:(type==='atleta-mese'?'ATLETA DEL MESE':'TEAM DEL MESE'), month:(payload.monthLabel||'').toUpperCase() }
@@ -32133,7 +32196,7 @@ async function generateShareCanvas(type, payload, platKey) {
     }
     else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
     else if(type==='team-mese') _drawTeamMese(ctx,p.w,p.h,payload);
-    else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
+    else if(type==='class') _drawClass(ctx,p.w,p.h,payload,_classAvs);
     else if(type==='recap') _drawRecap(ctx,p.w,p.h,payload);
   }
   return canvas;
@@ -32154,6 +32217,7 @@ const _SVGS = {
 window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='instagram';
   _shareGaraStyle='winner'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0}; _shareAdjustPlat='instagram';
+  _shareClassStyle='maglia';
   // "Riscalda" subito la generazione della grafica OG lato server (appena si
   // apre la modale, prima ancora che l'utente scelga Facebook): la prima
   // generazione può richiedere alcuni secondi (foto + composizione avatar),
@@ -32194,6 +32258,11 @@ window.showShareModal = async function(type, payload) {
         <button class="share-modal-close" onclick="window.closeShareModal()">✕</button>
       </div>
       <div class="share-platforms">${platBtns}</div>
+      ${type==='class' ? `
+      <div class="share-style-toggle" style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="share-plat-btn active" id="scs-maglia" onclick="window.setClassStyle('maglia')" style="flex:1;padding:8px 6px">🟡 Maglia gialla</button>
+        <button class="share-plat-btn" id="scs-podio" onclick="window.setClassStyle('podio')" style="flex:1;padding:8px 6px">🏆 Podio</button>
+      </div>` : ''}
       ${type==='gara' ? `
       <div class="share-style-toggle" style="display:flex;gap:8px;margin-bottom:10px">
         <button class="share-plat-btn active" id="sgs-winner" onclick="window.setGaraStyle('winner')" style="flex:1;padding:8px 6px">🏆 Vincitore</button>
@@ -32358,6 +32427,13 @@ window.publishShareToInstagram = async function(){
     showToast(bad.length ? `✅ Pubblicato, ma non su: ${bad.map(x=>x.label+' ('+x.error+')').join('; ')}` : '✅ Pubblicato su Instagram', bad.length?'error':undefined);
     await _updateIgShareBtn();
   }catch(e){ btn.disabled=false; btn.textContent=old; showToast(e.message||'Errore', 'error'); await _updateIgShareBtn(); }
+};
+
+window.setClassStyle=async function(style){
+  _shareClassStyle=style;
+  document.querySelectorAll('.share-style-toggle .share-plat-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById(style==='podio'?'scs-podio':'scs-maglia'); if(btn)btn.classList.add('active');
+  await _refreshPreview();
 };
 
 window.setGaraStyle=async function(style){
@@ -32715,7 +32791,7 @@ window.shareClassifica=async function(){
     scope:rankRegion?'regionale':'nazionale',
     region:rankRegion||'',
     month:monthLabel,
-    rows:ranking.slice(0,10).map(r=>({pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}))
+    rows:ranking.slice(0,10).map(r=>({atleta_id:r.atleta_id,pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}))
   });
 };
 
