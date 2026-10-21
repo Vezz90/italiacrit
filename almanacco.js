@@ -16,7 +16,7 @@
   const CODE_CI = { ES1_M: 0, ES2_M: 1, AL_M: 2, JUN_M: 3, ELI_M: 4, ES1_F: 5, ES2_F: 5, AL_F: 6, JUN_F: 7, ELI_F: 8 };
   // categoria archivio -> codice classifica nativa (stagione in corso)
   const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: ['ES1_F', 'ES2_F'], 6: 'AL_F', 7: 'JUN_F', 8: 'ELI_F' };
-  const st = { data: null, sex: 'M', cat: null, period: 'arch', live: null, modern: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
+  const st = { data: null, sex: 'M', cat: null, period: 'arch', /* pagina unica: non si cambia piu */ live: null, modern: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
 
   const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
   const nm = n => tc(String(n || '').replace(/\s+/g, ' ').trim());
@@ -207,11 +207,10 @@
     setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
     const paint = () => {
       setPage(`<div class="hx-wrap am-wrap">
-        <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">${st.period === 'now' ? `stagione ${cur}` : `almanacco ${d.from}–${d.to}`}</span>
-          <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div>
-            <div class="hx-seg" role="group" aria-label="Periodo"><button type="button" data-per="arch" aria-pressed="${st.period === 'arch'}">${d.from}–${d.to}</button><button type="button" data-per="now" aria-pressed="${st.period === 'now'}">Dal ${cur}</button></div></div></div>
+        <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">almanacco ${d.from}–${cur}</span>
+          <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div></div></div>
         <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${catsOfSex().map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
-        ${st.period === 'now' ? seasonView(d, cur) : `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}`}
+        ${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}
         <p class="am-note">Fonte: classifiche e risultati pubblicati da ciclismo.info (2007–${d.to}) e dati FCI per la stagione in corso. Confrontare i punti fra anni diversi ha senso solo dentro la stessa fonte.</p>
       </div>`);
       document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
