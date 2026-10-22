@@ -32084,7 +32084,7 @@ function _clPodium(ctx, x, y, w, h, rows, avs, unit = 'pt') {
     ctx.font = `800 ${Math.round(th * 0.40)}px ${F}`;
     const nTxt = String(k + 1); ctx.fillText(nTxt, px, ty + Math.round(th * 0.42));
     const nW = ctx.measureText(nTxt).width + Math.round(bw * 0.04);
-    ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
+    ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05), _clTeamMode ? 0.4 : 0.62), px + nW, ty + Math.round(th * 0.40));
     ctx.font = `700 ${Math.round(th * 0.28)}px ${F}`;
     ctx.fillText(`${r.punti} ${unit}`, px, ty + Math.round(th * 0.82));
   });
