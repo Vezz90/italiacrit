@@ -1739,31 +1739,29 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
     && (!region || (r.regione || '').toUpperCase() === region.toUpperCase())
     && (!month || r.data.split('-')[1] === month));
   const played = new Set(inCat.map(r => r.gara_id));
-  const wins = inCat.filter(r => r.posizione === 1 && r.punti_effettivi > 0).map(r => r.punti_effettivi).sort((a, b) => a - b);
-  const maxWin = wins.length ? wins[wins.length - 1] : 0;
-  const medWin = wins.length ? wins[Math.floor(wins.length / 2)] : 0;
   const lastDate = inCat.reduce((m, r) => (r.data > m ? r.data : m), '');
   const future = (calendar || []).filter(g => g.data && g.data > today
     && (!region || (g.regione || '').toUpperCase() === region.toUpperCase())
     && (!month || g.data.split('-')[1] === month)
     && _calCatMatches(g.categoria, catCode)).sort((a, b) => a.data.localeCompare(b.data));
   const R = future.length;
+  // una vittoria vale sempre 15 punti x moltiplicatore della gara (verificato su tutte le gare 2026): e il massimo che una gara puo dare
+  const palio = future.reduce((t, g) => t + 15 * (Number(g.moltiplicatore) || 1), 0);
   const ago30 = new Date(Date.parse(today) - 30 * 86400000).toISOString().slice(0, 10);
   const lead = rows[0].punti;
   const atleti = rows.slice(0, 8).map((r, i) => {
     const mine = inCat.filter(x => x.atleta_id === r.atleta_id);
     const dist = Math.round((lead - r.punti) * 100) / 100;
+    const prev = i > 0 ? rows[i - 1].punti : null;
     return {
       posizione: i + 1, nome: `${r.nome} ${r.cognome}`.trim(), team: r.team || '', punti: r.punti,
       distacco_dal_primo: i === 0 ? 0 : dist,
+      distacco_dal_precedente: i === 0 ? null : Math.round((prev - r.punti) * 100) / 100,
       vittorie: mine.filter(x => x.posizione === 1).length,
       podi: mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length,
       gare_disputate: new Set(mine.map(x => x.gara_id)).size,
       punti_ultimi_30_giorni: Math.round(mine.filter(x => x.data >= ago30).reduce((a, x) => a + (x.punti_effettivi || 0), 0) * 100) / 100,
-      ...(i > 0 && R > 0 && medWin > 0 ? {
-        ribaltone_matematicamente_possibile: dist <= R * maxWin,
-        vittorie_tipiche_per_recuperare: Math.round(dist / medWin * 10) / 10,
-      } : {}),
+      ...(i > 0 && R > 0 ? { puo_ancora_superare_il_primo: dist < palio } : {}),
     };
   });
   const stato = R === 0 ? 'conclusa' : R <= 3 ? 'ultime_gare' : played.size < 4 ? 'inizio' : 'in_corso';
@@ -1774,7 +1772,8 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
     ultima_gara_disputata: lastDate || null,
     prossime_gare: future.slice(0, 3).map(g => ({ nome: g.nome, data: g.data, luogo: g.luogo || g.regione || '', tipo: g.tipo, moltiplicatore: g.moltiplicatore })),
     ultima_gara_in_calendario: future.length ? future[future.length - 1].data : null,
-    punti_vittoria_tipici: medWin, punti_vittoria_massimi: maxWin,
+    punti_massimi_ancora_in_palio: palio,
+    primo_posto_matematicamente_assegnato: R === 0 || !atleti.some(x => x.puo_ancora_superare_il_primo),
     atleti,
   };
 }
@@ -1799,18 +1798,23 @@ app.post('/api/admin/classifica-share-text/:id', requireAdmin, async (req, res) 
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
       max_tokens: 900,
-      messages: [{ role: 'user', content: `Sei il social media manager di un sito italiano di statistiche di ciclismo giovanile e dilettanti (italiacyclingstats.com). Scrivi in italiano un post per Facebook/Instagram sulla classifica descritta nei dati, con una breve analisi.
+      messages: [{ role: 'user', content: `Sei il redattore di italiacyclingstats.com, sito italiano di statistiche del ciclismo giovanile e dilettanti. Scrivi in italiano il testo di un post Facebook/Instagram che accompagna la grafica della classifica descritta nei dati.
 
-Struttura richiesta:
-1. Una riga di titolo con emoji, in maiuscolo, con la categoria (e regione/mese se presenti).
-2. Un paragrafo sullo stato della classifica: chi guida, con quanto vantaggio sul secondo, e chi sta salendo (usa "punti_ultimi_30_giorni" solo se mostra davvero una tendenza).
-3. Un paragrafo sul momento della stagione, in base a "stato_stagione":
-   - "conclusa": nessuna gara rimasta in calendario, la classifica è definitiva: celebra il vincitore, niente ribaltoni.
-   - "ultime_gare" / "in_corso" / "inizio": di' quante gare restano in calendario ("gare_rimanenti_in_calendario"), cita la prossima gara con data e luogo se presente e poi analizza i possibili ribaltoni: chi è ancora matematicamente in corsa ("ribaltone_matematicamente_possibile") e quanto è realistico, confrontando il distacco con "punti_vittoria_tipici" ("vittorie_tipiche_per_recuperare" dice quante vittorie tipiche servirebbero). Se nessuno può raggiungere il leader, di' che il vantaggio è ormai difficilmente colmabile. Usa un linguaggio da stima ("servirebbe", "potrebbe", "in base al calendario attuale"), mai certezze.
-4. Una riga vuota, poi "📊 La classifica" e un elenco (🥇🥈🥉 poi 4. 5. ...) con nome, team, punti.
-5. Una riga vuota e 6-8 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nomi dei primi, ecc.).
+Stile: sobrio, concreto, da cronaca sportiva pulita. Frasi brevi e dirette, pochi aggettivi. VIETATO usare: "saldamente", "eccellente", "da sottolineare", "si fa notare", "segno di", "impresa", "gran finale", "vittorie tipiche" e in generale frasi di riempimento. Niente esclamazioni. Niente gergo tecnico o termini inventati.
 
-Regole: usa SOLO i numeri forniti, non inventare gare, risultati o dettagli e non fare calcoli che non siano già nei dati. Ignora i campi null. Se i dati sono pochi (poche gare disputate o pochi atleti) resta breve e prudente. Tono sportivo, senza esagerare. Massimo circa 1300 caratteri. Rispondi SOLO con il post pronto, a partire dal titolo.
+Struttura:
+1. Titolo, una sola riga: "🏆 CLASSIFICA" + categoria in maiuscolo (+ regione e/o mese se presenti). Nessuno slogan.
+2. Primo paragrafo (2-3 frasi): chi comanda, con quanti punti, il vantaggio sul secondo. Se utile, accenna al terzo. Cita i "punti_ultimi_30_giorni" solo se sono un fatto davvero significativo (es. chi ha fatto punti di recente e chi no), senza commenti sulla "forma".
+3. Secondo paragrafo (2-3 frasi), in base a "stato_stagione":
+   - "conclusa": nessuna gara rimasta in calendario, la classifica è definitiva: di' chi ha vinto e basta.
+   - altrimenti: di' quante gare restano ("gare_rimanenti_in_calendario"), nomina la prossima con data e luogo, e spiega quanti punti al massimo restano da assegnare ("punti_massimi_ancora_in_palio"; una vittoria vale 15 punti moltiplicati per il moltiplicatore della gara). Poi:
+     * se "primo_posto_matematicamente_assegnato" è true: di' chiaramente che con quei punti in palio il vantaggio non può più essere colmato e il primo posto è già assegnato;
+     * se è false: nomina chi può ancora superare il primo ("puo_ancora_superare_il_primo": true) e cosa servirebbe (recuperare "distacco_dal_primo" punti in gare che ne assegnano al massimo quelli in palio).
+     Se c'è una lotta ancora aperta per il podio o per le altre posizioni (cioè un "distacco_dal_precedente" minore dei punti in palio), puoi citarla in una frase.
+4. Una riga vuota, poi "📊 La classifica" e l'elenco: 🥇🥈🥉 per i primi tre poi 4. 5. 6. ... con nome, team e punti nel formato "Nome Cognome – Team – 375 pt". Se il "team" è chiaramente una nazionale o un paese (es. Italia, Brasile, Ecuador) omettilo dalla riga.
+5. Una riga vuota e 5-6 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, il nome del vincitore, ecc.).
+
+Regole: usa SOLO i dati forniti, senza inventare gare, risultati o numeri e senza fare calcoli diversi da quelli già nei dati. Ignora i campi null. Se i dati sono pochi, scrivi meno. I due paragrafi insieme non superano circa 700 caratteri. Rispondi SOLO con il post, a partire dal titolo.
 
 Dati (JSON):
 ${JSON.stringify(facts, null, 2)}` }],
