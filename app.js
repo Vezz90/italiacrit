@@ -31942,12 +31942,17 @@ function _drawRecap(ctx, W, H, d) {
 let _shareClassStyle = 'maglia';
 const _CL_GOLD = '#f5c400', _CL_MED = ['#f5c400', '#dadada', '#cd7f32'];
 function _clFit(ctx, txt, maxW) { let t = String(txt || ''); while (t.length > 2 && ctx.measureText(t).width > maxW) t = t.slice(0, -1); return t; }
-function _clPhoto(ctx, img, x, y, w, h, r) {
+// Ritaglio ancorato al volto: nei ritratti alti (tipo 2:3) la testa sta nel 17% superiore, nei quadrati/larghi attorno al 36%.
+// Il volto viene portato a circa il 40% dell'altezza del riquadro; zoom>1 stringe sul volto (miniature).
+function _clPhoto(ctx, img, x, y, w, h, r, zoom = 1) {
   ctx.save(); _rr(ctx, x, y, w, h, r); ctx.clip();
-  const ir = img.naturalWidth / img.naturalHeight, cr = w / h;
+  const NW = img.naturalWidth, NH = img.naturalHeight, ir = NW / NH, cr = w / h;
   let sw, sh;
-  if (ir > cr) { sh = img.naturalHeight; sw = sh * cr; } else { sw = img.naturalWidth; sh = sw / cr; }
-  ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * 0.28, sw, sh, x, y, w, h);
+  if (ir > cr) { sh = NH; sw = sh * cr; } else { sw = NW; sh = sw / cr; }
+  sw /= zoom; sh /= zoom;
+  const faceY = (ir < 0.8 ? 0.17 : 0.36) * NH;
+  const sy = Math.max(0, Math.min(NH - sh, faceY - 0.40 * sh));
+  ctx.drawImage(img, (NW - sw) / 2, sy, sw, sh, x, y, w, h);
   ctx.restore();
 }
 function _clShrink(ctx, txt, wt, size, maxW, minK = 0.62) {
@@ -31975,7 +31980,7 @@ function _clRow(ctx, x, y, w, rH, pos, r, av, lead, gap, goldPts) {
   const dm = Math.round(rH * 0.72), cx = x + Math.round(rH * 0.55) + dm / 2;
   if (av) {
     ctx.save(); ctx.beginPath(); ctx.arc(cx, mid, dm / 2, 0, Math.PI * 2); ctx.clip();
-    _clPhoto(ctx, av, cx - dm / 2, mid - dm / 2, dm, dm, 0); ctx.restore();
+    _clPhoto(ctx, av, cx - dm / 2, mid - dm / 2, dm, dm, 0, 1.45); ctx.restore();
   }
   const nameX = x + Math.round(rH * 0.55) + dm + Math.round(rH * 0.18);
   const right = x + w - Math.round(rH * 0.08);
@@ -32010,7 +32015,7 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
   const ink = '#111111';
   let tx, ty, tw;
   if (vertical) {
-    const ph = Math.round(h * 0.50);
+    const ph = Math.round(h * 0.54);
     if (av) _clPhoto(ctx, av, x, y, w, ph, 0);
     else { ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(x, y, w, ph); ctx.font = `800 ${Math.round(ph * 0.62)}px ${F}`; ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('1', x + w / 2, y + ph / 2); }
     tx = x + pad; ty = y + ph; tw = w - pad * 2;
