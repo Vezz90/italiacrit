@@ -1711,6 +1711,121 @@ async function _regionalChampionLineFor(garaId) {
   } catch { return null; }
 }
 
+// ── Testo social della classifica: analisi dello stato della stagione e dei possibili ribaltoni ──
+// I numeri li calcola il server (deterministici); Claude li racconta soltanto, senza poter inventare o ricalcolare.
+// @@classfacts-begin
+// Categoria del calendario (testo libero: "Esordienti 1° anno", "Donne Allieve", "Elite e Under 23"...) -> codice classifica (ELI_M, AL_F...)
+function _calCatMatches(catText, catCode) {
+  const t = String(catText || '').toLowerCase();
+  const [cat, g] = String(catCode || '').split('_');
+  const mixed = /m\/f|promiscua|multicat/.test(t);
+  const donne = /donn|femmin|allieve/.test(t);
+  if (!mixed && (g === 'F') !== donne) return false;
+  const y1 = /1\D{0,3}\s*anno/.test(t), y2 = /2\D{0,3}\s*anno/.test(t);
+  switch (cat) {
+    case 'ELI': return /elite|under ?23|u23|classe 1|world ?tour|proseries/.test(t);
+    case 'JUN': return /junior/.test(t);
+    case 'AL':  return /allievi|allieve|\ball\b/.test(t);
+    case 'ES1': return /esordienti/.test(t) && (y1 || !y2);
+    case 'ES2': return /esordienti/.test(t) && (y2 || !y1);
+    default: return false;
+  }
+}
+function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
+  const [catCode, regionSlug, month] = decodeURIComponent(id).split('__');
+  const gender = catCode.endsWith('_F') ? 'F' : 'M';
+  const region = regionSlug ? regionSlug.replace(/_/g, ' ') : '';
+  const inCat = (resultsRaw || []).filter(r => r.data && r.data <= today && r.genere === gender && _rankingCodeFromRow(r) === catCode
+    && (!region || (r.regione || '').toUpperCase() === region.toUpperCase())
+    && (!month || r.data.split('-')[1] === month));
+  const played = new Set(inCat.map(r => r.gara_id));
+  const wins = inCat.filter(r => r.posizione === 1 && r.punti_effettivi > 0).map(r => r.punti_effettivi).sort((a, b) => a - b);
+  const maxWin = wins.length ? wins[wins.length - 1] : 0;
+  const medWin = wins.length ? wins[Math.floor(wins.length / 2)] : 0;
+  const lastDate = inCat.reduce((m, r) => (r.data > m ? r.data : m), '');
+  const future = (calendar || []).filter(g => g.data && g.data > today
+    && (!region || (g.regione || '').toUpperCase() === region.toUpperCase())
+    && (!month || g.data.split('-')[1] === month)
+    && _calCatMatches(g.categoria, catCode)).sort((a, b) => a.data.localeCompare(b.data));
+  const R = future.length;
+  const ago30 = new Date(Date.parse(today) - 30 * 86400000).toISOString().slice(0, 10);
+  const lead = rows[0].punti;
+  const atleti = rows.slice(0, 8).map((r, i) => {
+    const mine = inCat.filter(x => x.atleta_id === r.atleta_id);
+    const dist = Math.round((lead - r.punti) * 100) / 100;
+    return {
+      posizione: i + 1, nome: `${r.nome} ${r.cognome}`.trim(), team: r.team || '', punti: r.punti,
+      distacco_dal_primo: i === 0 ? 0 : dist,
+      vittorie: mine.filter(x => x.posizione === 1).length,
+      podi: mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length,
+      gare_disputate: new Set(mine.map(x => x.gara_id)).size,
+      punti_ultimi_30_giorni: Math.round(mine.filter(x => x.data >= ago30).reduce((a, x) => a + (x.punti_effettivi || 0), 0) * 100) / 100,
+      ...(i > 0 && R > 0 && medWin > 0 ? {
+        ribaltone_matematicamente_possibile: dist <= R * maxWin,
+        vittorie_tipiche_per_recuperare: Math.round(dist / medWin * 10) / 10,
+      } : {}),
+    };
+  });
+  const stato = R === 0 ? 'conclusa' : R <= 3 ? 'ultime_gare' : played.size < 4 ? 'inizio' : 'in_corso';
+  return {
+    categoria: _CLASS_CAT_LABELS[catCode] || catCode, regione: region || null, mese: month ? _CLASS_MONTHS[parseInt(month, 10)] : null,
+    oggi: today, stato_stagione: stato,
+    gare_disputate: played.size, gare_rimanenti_in_calendario: R,
+    ultima_gara_disputata: lastDate || null,
+    prossime_gare: future.slice(0, 3).map(g => ({ nome: g.nome, data: g.data, luogo: g.luogo || g.regione || '', tipo: g.tipo, moltiplicatore: g.moltiplicatore })),
+    ultima_gara_in_calendario: future.length ? future[future.length - 1].data : null,
+    punti_vittoria_tipici: medWin, punti_vittoria_massimi: maxWin,
+    atleti,
+  };
+}
+// @@classfacts-end
+const _classTextCache = new Map();
+app.post('/api/admin/classifica-share-text/:id', requireAdmin, async (req, res) => {
+  try {
+    const ai = getAnthropic();
+    if (!ai) return res.json({ text: null, reason: 'ai_non_configurata' });
+    const str = (v, n) => String(v == null ? '' : v).slice(0, n);
+    const rows = (Array.isArray(req.body?.rows) ? req.body.rows : []).slice(0, 10)
+      .map(r => ({ atleta_id: str(r.atleta_id, 120), cognome: str(r.cognome, 60), nome: str(r.nome, 60), team: str(r.team, 80), punti: Number(r.punti) || 0 }))
+      .filter(r => r.cognome);
+    if (!rows.length) return res.status(400).json({ error: 'nessuna riga' });
+    const id = req.params.id, regen = req.query.regen === '1';
+    const key = id + '|' + rows.map(r => `${r.atleta_id}:${r.punti}`).join(',');
+    const hit = _classTextCache.get(key);
+    if (hit && !regen && Date.now() - hit.at < 6 * 3600e3) return res.json({ text: hit.text, cached: true });
+    const [resultsRaw, calendar] = await Promise.all([readDataJsonFromGH('results_raw.json'), readDataJsonFromGH('calendar.json')]);
+    const facts = _classAnalysisFacts({ id, rows, resultsRaw, calendar, today: new Date().toISOString().slice(0, 10) });
+    const msg = await ai.messages.create({
+      model: 'claude-sonnet-5',
+      thinking: { type: 'disabled' },
+      max_tokens: 900,
+      messages: [{ role: 'user', content: `Sei il social media manager di un sito italiano di statistiche di ciclismo giovanile e dilettanti (italiacyclingstats.com). Scrivi in italiano un post per Facebook/Instagram sulla classifica descritta nei dati, con una breve analisi.
+
+Struttura richiesta:
+1. Una riga di titolo con emoji, in maiuscolo, con la categoria (e regione/mese se presenti).
+2. Un paragrafo sullo stato della classifica: chi guida, con quanto vantaggio sul secondo, e chi sta salendo (usa "punti_ultimi_30_giorni" solo se mostra davvero una tendenza).
+3. Un paragrafo sul momento della stagione, in base a "stato_stagione":
+   - "conclusa": nessuna gara rimasta in calendario, la classifica è definitiva: celebra il vincitore, niente ribaltoni.
+   - "ultime_gare" / "in_corso" / "inizio": di' quante gare restano in calendario ("gare_rimanenti_in_calendario"), cita la prossima gara con data e luogo se presente e poi analizza i possibili ribaltoni: chi è ancora matematicamente in corsa ("ribaltone_matematicamente_possibile") e quanto è realistico, confrontando il distacco con "punti_vittoria_tipici" ("vittorie_tipiche_per_recuperare" dice quante vittorie tipiche servirebbero). Se nessuno può raggiungere il leader, di' che il vantaggio è ormai difficilmente colmabile. Usa un linguaggio da stima ("servirebbe", "potrebbe", "in base al calendario attuale"), mai certezze.
+4. Una riga vuota, poi "📊 La classifica" e un elenco (🥇🥈🥉 poi 4. 5. ...) con nome, team, punti.
+5. Una riga vuota e 6-8 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nomi dei primi, ecc.).
+
+Regole: usa SOLO i numeri forniti, non inventare gare, risultati o dettagli e non fare calcoli che non siano già nei dati. Ignora i campi null. Se i dati sono pochi (poche gare disputate o pochi atleti) resta breve e prudente. Tono sportivo, senza esagerare. Massimo circa 1300 caratteri. Rispondi SOLO con il post pronto, a partire dal titolo.
+
+Dati (JSON):
+${JSON.stringify(facts, null, 2)}` }],
+    });
+    const block = msg.content.find(b => b.type === 'text');
+    if (!block) return res.json({ text: null, reason: 'nessun_testo' });
+    const lines = block.text.trim().split('\n');
+    lines.splice(1, 0, '', SITE_URL);
+    const text = lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    _classTextCache.set(key, { text, at: Date.now() });
+    if (_classTextCache.size > 200) _classTextCache.delete(_classTextCache.keys().next().value);
+    res.json({ text, ai: true });
+  } catch (e) { console.warn('[classifica-share-text]', e.message); res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
