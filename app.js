@@ -31949,9 +31949,16 @@ const _CL_GOLD = '#f5c400', _CL_MED = ['#f5c400', '#dadada', '#cd7f32'];
 function _clFit(ctx, txt, maxW) { let t = String(txt || ''); while (t.length > 2 && ctx.measureText(t).width > maxW) t = t.slice(0, -1); return t; }
 // Ritaglio ancorato al volto: nei ritratti alti (tipo 2:3) la testa sta nel 17% superiore, nei quadrati/larghi attorno al 36%.
 // Il volto viene portato a circa il 40% dell'altezza del riquadro; zoom>1 stringe sul volto (miniature).
+let _clTeamMode = false;   // vero quando la card e una classifica Team: i loghi si mostrano interi su fondo bianco, non ritagliati sul volto
 function _clPhoto(ctx, img, x, y, w, h, r, zoom = 1) {
   ctx.save(); _rr(ctx, x, y, w, h, r); ctx.clip();
   const NW = img.naturalWidth, NH = img.naturalHeight, ir = NW / NH, cr = w / h;
+  if (_clTeamMode) {
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(x, y, w, h);
+    const pad = Math.min(w, h) * 0.10, k = Math.min((w - 2 * pad) / NW, (h - 2 * pad) / NH), dw = NW * k, dh = NH * k;
+    ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+    ctx.restore(); return;
+  }
   let sw, sh;
   if (ir > cr) { sh = NH; sw = sh * cr; } else { sw = NW; sh = sw / cr; }
   sw /= zoom; sh /= zoom;
@@ -32085,6 +32092,7 @@ function _clPodium(ctx, x, y, w, h, rows, avs, unit = 'pt') {
 function _drawClass(ctx, W, H, d, avs) {
   const rows = (d.rows || []).slice(0, 10); if (!rows.length) return;
   avs = avs || new Map();
+  _clTeamMode = d.view === 'team';
   const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.048);
   const top = hB + Math.round(H * 0.022), bottom = H - fB - Math.round(H * 0.014), avail = bottom - top;
   const landscape = W > H * 1.25, gapY = Math.round(H * 0.014), lead = rows[0].punti || 0;
@@ -32122,12 +32130,12 @@ function _fetchTimeout(url, opts = {}, ms = 6000) {
   const t = setTimeout(() => ctrl.abort(), ms);
   return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
 }
-async function _fetchGaraAvatars(results) {
+async function _fetchGaraAvatars(results, type) {
   const map = new Map();
   const ids = [...new Set((results || []).map(r => r.atleta_id).filter(Boolean))].slice(0, 10);
   if (!ids.length) return map;
   try {
-    const resp = await _fetchTimeout(`${API_BASE}/athlete-photos?ids=${encodeURIComponent(ids.join(','))}`);
+    const resp = await _fetchTimeout(`${API_BASE}/athlete-photos?ids=${encodeURIComponent(ids.join(','))}${type === 'team' ? '&type=team' : ''}`);
     if (!resp.ok) return map;
     const urls = await resp.json();
     await Promise.all(Object.entries(urls).map(([id, url]) => new Promise(resolve => {
@@ -32206,7 +32214,7 @@ async function generateShareCanvas(type, payload, platKey) {
     else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap,xpixLogo);
   } else {
     _bg(ctx,p.w,p.h);
-    const _classAvs = type==='class' ? await _fetchGaraAvatars(payload.rows) : null;
+    const _classAvs = type==='class' ? await _fetchGaraAvatars(payload.rows, payload.view === 'team' ? 'team' : 'atleta') : null;
     const _headerClassData = type==='class' ? payload
       : type==='recap' ? { catLabel:'RIEPILOGO MENSILE', month:(payload.monthLabel||'').toUpperCase() }
       : (type==='atleta-mese'||type==='team-mese') ? { catLabel:(type==='atleta-mese'?'ATLETA DEL MESE':'TEAM DEL MESE'), month:(payload.monthLabel||'').toUpperCase() }
@@ -32841,7 +32849,7 @@ window.shareClassifica=async function(){
   const snap = window._rankShare;
   if (snap && snap.cat === rankCat && snap.view === rankView && snap.sort === rankSort && snap.list && snap.list.length) {
     rows = snap.list.slice(0,10).map((r,i) => isTeam
-      ? ({atleta_id:'',pos:i+1,cognome:r.team_nome||r.team||r.team_id||'',nome:'',team:r.n_atleti?`${r.n_atleti} ${r.n_atleti===1?'atleta':'atleti'}`:'',punti:wins?(r.p1||0):(r.punti||0)})
+      ? ({atleta_id:r.team_id||'',pos:i+1,cognome:r.team_nome||r.team||r.team_id||'',nome:'',team:r.n_atleti?`${r.n_atleti} ${r.n_atleti===1?'atleta':'atleti'}`:'',punti:wins?(r.p1||0):(r.punti||0)})
       : ({atleta_id:r.atleta_id,pos:i+1,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:wins?(r.p1||0):(r.punti||0)}));
   } else {
     const isFiltered = rankRegion || rankMonth;

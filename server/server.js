@@ -861,7 +861,8 @@ app.get('/api/athlete-photos', async (req, res) => {
   try {
     const ids = String(req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 10);
     if (!ids.length) return res.json({});
-    const entries = await Promise.all(ids.map(async id => [id, await getEntityPhoto('atleta', id)]));
+    const kind = req.query.type === 'team' ? 'team' : 'atleta';   // type=team: logo/foto profilo delle squadre
+    const entries = await Promise.all(ids.map(async id => [id, await getEntityPhoto(kind, id)]));
     const out = {};
     for (const [id, url] of entries) if (url) out[id] = url;
     res.json(out);
