@@ -11938,6 +11938,9 @@ async function updateRankTable() {
       });
     }
 
+    // la card di condivisione riproduce questa lista (vista, ordinamento e filtri compresi)
+    window._rankShare = { cat: rankCat, view: 'atleti', sort: rankSort, list: (rankSort === 'vittorie' || rankSort === 'punti') ? displayList : filtered };
+
     // ── Narrative headline banner ─────────────────────────────
     let storyHtml = '';
     // Determina se la ricerca corrisponde a un TEAM (più corridori della stessa squadra)
@@ -12281,6 +12284,8 @@ async function updateRankTable() {
         return (lastWinByTeam[b.team_id] || '').localeCompare(lastWinByTeam[a.team_id] || '');
       });
     }
+
+    window._rankShare = { cat: rankCat, view: 'team', sort: rankSort, list: teamDisplayList };
 
     // Stesso ragionamento della vista Atleti: ordinando per vittorie,
     // posizione e punteggio mostrati devono riflettere quell'ordine (t.pos/
@@ -31126,7 +31131,7 @@ function _header(ctx, logo, W, H, classData, topRightCat) {
     const catW = ctx.measureText(catTxt).width;
     ctx.font = `500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
     ctx.letterSpacing = '1px';
-    ctx.fillText('CLASSIFICA ', W - 18 - catW - 10, baseY);
+    ctx.fillText(classData.kindLabel ? `CLASSIFICA ${classData.kindLabel} ` : 'CLASSIFICA ', W - 18 - catW - 10, baseY);
     ctx.letterSpacing = '0px';
     if (classData.month) {
       ctx.font = `600 ${Math.round(lblFs * 0.78)}px 'Inter Tight',sans-serif`;
@@ -32008,7 +32013,7 @@ function _clTail(ctx, x, w, y, rH, rows, startPos, avs, lead, gap, goldPts) {
   rows.forEach((r, i) => _clRow(ctx, x, y + i * rH, w, rH, startPos + i, r, avs.get(r.atleta_id) || null, lead, gap, goldPts));
 }
 // leader in giallo: orizzontale (foto a sinistra) oppure verticale (foto sopra, per i formati larghi)
-function _clHero(ctx, x, y, w, h, r, av, vertical) {
+function _clHero(ctx, x, y, w, h, r, av, vertical, unit = 'PUNTI') {
   const F = `'Inter Tight',sans-serif`, rad = Math.round(Math.min(w, h) * 0.04), pad = Math.round(h * (vertical ? 0.05 : 0.09));
   ctx.fillStyle = _CL_GOLD; _rr(ctx, x, y, w, h, rad); ctx.fill();
   ctx.save(); _rr(ctx, x, y, w, h, rad); ctx.clip();
@@ -32024,12 +32029,13 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
     ctx.fillText('1° IN CLASSIFICA', tx, ty + Math.round(h * 0.075)); ctx.letterSpacing = '0px';
     ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, Math.min(h * 0.085, w * 0.12), tw), tx, ty + Math.round(h * 0.16));
     ctx.fillStyle = 'rgba(0,0,0,0.85)';
-    ctx.fillText(_clShrink(ctx, _clTitleCase(_clPerson(r).n), 700, h * 0.052, tw), tx, ty + Math.round(h * 0.222));
-    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, h * 0.040, tw, 0.7), tx, ty + Math.round(h * 0.278)); }
+    const nn = _clTitleCase(_clPerson(r).n);
+    if (nn) ctx.fillText(_clShrink(ctx, nn, 700, h * 0.052, tw), tx, ty + Math.round(h * 0.222));
+    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, h * 0.040, tw, 0.7), tx, ty + Math.round(h * (nn ? 0.278 : 0.222))); }
     ctx.font = `800 ${Math.round(h * 0.105)}px ${F}`; ctx.fillStyle = ink;
     const pt = String(r.punti); ctx.fillText(pt, tx, y + h - Math.round(h * 0.045));
     const pw = ctx.measureText(pt).width;
-    ctx.font = `700 ${Math.round(h * 0.04)}px ${F}`; ctx.fillText('PUNTI', tx + pw + Math.round(h * 0.02), y + h - Math.round(h * 0.047));
+    ctx.font = `700 ${Math.round(h * 0.04)}px ${F}`; ctx.fillText(unit, tx + pw + Math.round(h * 0.02), y + h - Math.round(h * 0.047));
   } else {
     const u = Math.min(h, w * 0.27);
     const pw = av ? Math.round(Math.min(h, w * 0.30)) : Math.round(Math.min(h * 0.62, w * 0.20));
@@ -32040,20 +32046,21 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
     const pt = String(r.punti), right = x + w - pad;
     ctx.fillText(pt, right, y + h * 0.56);
     const ptW = ctx.measureText(pt).width;
-    ctx.font = `700 ${Math.round(u * 0.09)}px ${F}`; ctx.fillText('PUNTI', right, y + h * 0.56 + Math.round(u * 0.15));
+    ctx.font = `700 ${Math.round(u * 0.09)}px ${F}`; ctx.fillText(unit, right, y + h * 0.56 + Math.round(u * 0.15));
     tx = x + pw + pad; tw = right - ptW - Math.round(u * 0.06) - tx;
     ctx.textAlign = 'left';
     ctx.font = `800 ${Math.round(u * 0.095)}px ${F}`; ctx.letterSpacing = '1px';
     ctx.fillText('1° IN CLASSIFICA', tx, y + h * 0.20); ctx.letterSpacing = '0px';
     ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, u * 0.20, tw), tx, y + h * 0.46);
     ctx.fillStyle = 'rgba(0,0,0,0.85)';
-    ctx.fillText(_clShrink(ctx, _clTitleCase(_clPerson(r).n), 700, u * 0.125, tw), tx, y + h * 0.65);
-    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, u * 0.092, tw, 0.7), tx, y + h * 0.84); }
+    const nn = _clTitleCase(_clPerson(r).n);
+    if (nn) ctx.fillText(_clShrink(ctx, nn, 700, u * 0.125, tw), tx, y + h * 0.65);
+    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, u * 0.092, tw, 0.7), tx, y + h * (nn ? 0.84 : 0.68)); }
   }
   ctx.restore();
 }
 // podio: 2°, 1°, 3° a blocchi di altezza diversa, foto nella parte alta del blocco
-function _clPodium(ctx, x, y, w, h, rows, avs) {
+function _clPodium(ctx, x, y, w, h, rows, avs, unit = 'pt') {
   const F = `'Inter Tight',sans-serif`, g = Math.round(w * 0.025), bw = Math.round((w - g * 2) / 3);
   const hs = [0.84, 1, 0.72], order = [1, 0, 2];
   order.forEach((k, j) => {
@@ -32072,7 +32079,7 @@ function _clPodium(ctx, x, y, w, h, rows, avs) {
     const nW = ctx.measureText(nTxt).width + Math.round(bw * 0.04);
     ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
     ctx.font = `700 ${Math.round(th * 0.28)}px ${F}`;
-    ctx.fillText(`${r.punti} pt`, px, ty + Math.round(th * 0.82));
+    ctx.fillText(`${r.punti} ${unit}`, px, ty + Math.round(th * 0.82));
   });
 }
 function _drawClass(ctx, W, H, d, avs) {
@@ -32082,11 +32089,12 @@ function _drawClass(ctx, W, H, d, avs) {
   const top = hB + Math.round(H * 0.022), bottom = H - fB - Math.round(H * 0.014), avail = bottom - top;
   const landscape = W > H * 1.25, gapY = Math.round(H * 0.014), lead = rows[0].punti || 0;
   const podio = _shareClassStyle === 'podio', nHead = podio ? Math.min(3, rows.length) : 1;
+  const unitL = d.metric === 'vittorie' ? 'VITTORIE' : 'PUNTI', unitS = d.metric === 'vittorie' ? 'vitt.' : 'pt';
   const tail = rows.slice(nHead), nT = tail.length;
   if (landscape) {
     const lw = Math.round(W * (podio ? 0.50 : 0.38)), gx = Math.round(W * 0.035), rx = pad + lw + gx, rw = W - pad - rx;
-    if (podio) _clPodium(ctx, pad, top, lw, avail, rows.slice(0, 3), avs);
-    else _clHero(ctx, pad, top, lw, avail, rows[0], avs.get(rows[0].atleta_id) || null, true);
+    if (podio) _clPodium(ctx, pad, top, lw, avail, rows.slice(0, 3), avs, unitS);
+    else _clHero(ctx, pad, top, lw, avail, rows[0], avs.get(rows[0].atleta_id) || null, true, unitL);
     if (nT) _clTail(ctx, rx, rw, top, Math.min(avail / nT, Math.round(H * 0.17)), tail, nHead + 1, avs, lead, !podio, podio);
     return;
   }
@@ -32095,8 +32103,8 @@ function _drawClass(ctx, W, H, d, avs) {
   const rH = nT ? Math.min(rMax, (avail - headMin - gapY) / nT) : 0;
   const headH = Math.min(headMax, avail - (nT ? gapY + rH * nT : 0));
   const y0 = top + Math.max(0, Math.round((avail - (headH + (nT ? gapY + rH * nT : 0))) / 2));
-  if (podio) _clPodium(ctx, pad, y0, w, headH, rows.slice(0, 3), avs);
-  else _clHero(ctx, pad, y0, w, headH, rows[0], avs.get(rows[0].atleta_id) || null, false);
+  if (podio) _clPodium(ctx, pad, y0, w, headH, rows.slice(0, 3), avs, unitS);
+  else _clHero(ctx, pad, y0, w, headH, rows[0], avs.get(rows[0].atleta_id) || null, false, unitL);
   if (nT) _clTail(ctx, pad, w, y0 + headH + gapY, rH, tail, nHead + 1, avs, lead, !podio, podio);
 }
 
@@ -32372,7 +32380,7 @@ window.setSharePlat=async function(k){
 const _igPostedCache = {};
 // Per le gare l'id e quello della gara; la classifica cambia nel tempo, quindi il controllo anti-doppioni vale per giorno.
 function _igKey() {
-  if (_shareType === 'class') return _sharePayload?._id ? `CLASS_${_sharePayload._id}_${new Date().toISOString().slice(0, 10)}` : '';
+  if (_shareType === 'class') return _sharePayload?._id ? `CLASS_${_sharePayload._id}${_sharePayload.view === 'team' ? '_team' : ''}${_sharePayload.sort === 'vittorie' ? '_vittorie' : ''}_${new Date().toISOString().slice(0, 10)}` : '';
   return _sharePayload?._id;
 }
 async function _updateIgShareBtn(){
@@ -32427,7 +32435,7 @@ window.publishShareToInstagram = async function(){
   if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
   const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
-  const name=isClass ? `Classifica ${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
+  const name=isClass ? `Classifica ${_sharePayload?.kindLabel ? _sharePayload.kindLabel + ' ' : ''}${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
   const who=btn.textContent.replace(/^.* su /,'');
   if(!confirm(isClass
     ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\nUn'immagine con la grafica della classifica (primi 10) e il testo qui sotto.`)
@@ -32659,6 +32667,7 @@ const OG_BASE = 'https://italiacyclingstats.com/og';
 function _ogUrl(type, payload) {
   const id = payload?._id;
   if (!id) return null;
+  if (type === 'class' && (payload._view === 'team' || payload._sort === 'vittorie')) return `${OG_BASE}/classifica/${encodeURIComponent(id)}/${payload._view || 'atleti'}${payload._sort === 'vittorie' ? '/vittorie' : ''}`;
   return `${OG_BASE}/${type}/${encodeURIComponent(id)}`;
 }
 // URL da condividere/incollare, con l'eventuale regolazione zoom/posizione
@@ -32712,14 +32721,15 @@ function _classShareText(d) {
   const rows = (d.rows || []).filter(r => r.cognome);
   if (!rows.length) return '';
   const nm = r => _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim());
-  const tm = r => r.team ? ` (${_clTitleCase(r.team)})` : '';
-  const P = v => { const n = Math.round((+v || 0) * 100) / 100; return `${n} ${n === 1 ? 'punto' : 'punti'}`; };
+  const isTeam = d.view === 'team', wins = d.metric === 'vittorie';
+  const tm = r => (r.team && !isTeam) ? ` (${_clTitleCase(r.team)})` : '';
+  const P = v => { const n = Math.round((+v || 0) * 100) / 100; return wins ? `${n} ${n === 1 ? 'vittoria' : 'vittorie'}` : `${n} ${n === 1 ? 'punto' : 'punti'}`; };
   const lead = +rows[0].punti || 0;
-  const gap = r => { const g = Math.round((lead - (+r.punti || 0)) * 100) / 100; return g <= 0 ? 'a pari punti' : `a ${P(g)}`; };
+  const gap = r => { const g = Math.round((lead - (+r.punti || 0)) * 100) / 100; return g <= 0 ? (wins ? 'a pari vittorie' : 'a pari punti') : `a ${P(g)}`; };
   const where = d.scope === 'regionale' && d.region ? ` — ${d.region.toUpperCase()}` : '';
   const when = d.month ? ` · ${d.month.toUpperCase()}` : '';
-  const title = `🏆 CLASSIFICA ${String(d.catLabel || '').toUpperCase()}${where}${when}`;
-  let story = `${nm(rows[0])}${tm(rows[0])} guida la classifica con ${P(lead)}.`;
+  const title = `🏆 CLASSIFICA ${d.kindLabel ? d.kindLabel + ' ' : ''}${String(d.catLabel || '').toUpperCase()}${where}${when}`;
+  let story = `${nm(rows[0])}${tm(rows[0])} guida la classifica${isTeam ? ' a squadre' : ''}${wins ? ' per numero di vittorie' : ''} con ${P(lead)}.`;
   if (rows[1]) {
     story += ` Alle sue spalle ${nm(rows[1])}${tm(rows[1])} ${gap(rows[1])}`;
     story += rows[2] ? ` e ${nm(rows[2])}${tm(rows[2])} ${gap(rows[2])}.` : '.';
@@ -32736,7 +32746,7 @@ async function _showFbShareText(regen) {
     // Testo base subito (gratis, dal client); l'admin riceve poi l'analisi scritta dall'AI (stagione + possibili ribaltoni)
     box.style.display = 'block';
     const ta = document.getElementById('share-fb-text'), local = _classShareText(_sharePayload || {});
-    const admin = authUser()?.role === 'admin' && _sharePayload?._id;
+    const admin = authUser()?.role === 'admin' && _sharePayload?._id && (_sharePayload.view || 'atleti') === 'atleti' && (_sharePayload.sort || 'punti') === 'punti';
     ta.value = local;
     if (regenB) regenB.style.display = admin ? '' : 'none';
     if (!admin) return;
@@ -32823,49 +32833,62 @@ window.quickShareGara=function(garaId){
 };
 
 window.shareClassifica=async function(){
-  const isFiltered = rankRegion || rankMonth;
-  let ranking;
-  if(!isFiltered){
-    ranking = await loadRanking(rankCat);
-  } else {
-    // Ricalcola dinamicamente in base ai filtri attivi (regione / mese / combinati),
-    // stessa logica di updateRankTable
-    const { resultsRaw } = globalData;
-    const calMap = {};
-    globalData.calendar.forEach(g => calMap[g.id] = g);
-    const agg = {};
-    resultsRaw.forEach(r => {
-      // Vedi commento in updateRankTable: getRankingFileCode incorpora già
-      // il genere, un filtro separato su r.genere escludeva in silenzio i
-      // risultati manuali con quel campo vuoto.
-      if (getRankingFileCode(r) !== rankCat) return;
-      const calEntry = calMap[r.gara_id];
-      const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
-      if (rankRegion && resolvedRegion !== rankRegion) return;
-      if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
-      if (!agg[r.atleta_id]) {
-        agg[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome,
-          team_id:r.team_id, team_nome:r.team, punti:0 };
-      }
-      agg[r.atleta_id].punti += (r.punti_effettivi || 0);
-    });
-    ranking = Object.values(agg).sort((a,b) => b.punti - a.punti);
-    ranking.forEach((r,i) => r.pos = i+1);
-  }
-  if(!ranking||!ranking.length){alert('Nessun dato per i filtri selezionati.');return;}
+  const isTeam = rankView === 'team', wins = rankSort === 'vittorie';
   const monthNames=['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   const monthLabel = rankMonth ? (monthNames[parseInt(rankMonth,10)]||'') : '';
+  let rows = null;
+  // La card riproduce esattamente la lista che si vede in pagina: atleti o team, per punti o per vittorie, con i filtri attivi.
+  const snap = window._rankShare;
+  if (snap && snap.cat === rankCat && snap.view === rankView && snap.sort === rankSort && snap.list && snap.list.length) {
+    rows = snap.list.slice(0,10).map((r,i) => isTeam
+      ? ({atleta_id:'',pos:i+1,cognome:r.team_nome||r.team||r.team_id||'',nome:'',team:r.n_atleti?`${r.n_atleti} ${r.n_atleti===1?'atleta':'atleti'}`:'',punti:wins?(r.p1||0):(r.punti||0)})
+      : ({atleta_id:r.atleta_id,pos:i+1,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:wins?(r.p1||0):(r.punti||0)}));
+  } else {
+    const isFiltered = rankRegion || rankMonth;
+    let ranking;
+    if(!isFiltered){
+      ranking = await loadRanking(rankCat);
+    } else {
+      // Ricalcola dinamicamente in base ai filtri attivi (regione / mese / combinati),
+      // stessa logica di updateRankTable
+      const { resultsRaw } = globalData;
+      const calMap = {};
+      globalData.calendar.forEach(g => calMap[g.id] = g);
+      const agg = {};
+      resultsRaw.forEach(r => {
+        // Vedi commento in updateRankTable: getRankingFileCode incorpora già
+        // il genere, un filtro separato su r.genere escludeva in silenzio i
+        // risultati manuali con quel campo vuoto.
+        if (getRankingFileCode(r) !== rankCat) return;
+        const calEntry = calMap[r.gara_id];
+        const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
+        if (rankRegion && resolvedRegion !== rankRegion) return;
+        if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
+        if (!agg[r.atleta_id]) {
+          agg[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome,
+            team_id:r.team_id, team_nome:r.team, punti:0 };
+        }
+        agg[r.atleta_id].punti += (r.punti_effettivi || 0);
+      });
+      ranking = Object.values(agg).sort((a,b) => b.punti - a.punti);
+      ranking.forEach((r,i) => r.pos = i+1);
+    }
+    rows = (ranking||[]).slice(0,10).map(r=>({atleta_id:r.atleta_id,pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}));
+  }
+  if(!rows||!rows.length){alert('Nessun dato per i filtri selezionati.');return;}
   // _id per la condivisione FB: il server ricostruisce la classifica dagli
   // stessi filtri (catCode/regione/mese) leggendo resultsRaw, quindi basta
   // codificarli nell'id — nessun dato serve essere salvato lato server.
   const _idParts = [rankCat, rankRegion ? rankRegion.toUpperCase().replace(/\s+/g,'_') : '', rankMonth || ''];
   window.showShareModal('class',{
     _id: _idParts.join('__'),
+    view: isTeam ? 'team' : 'atleti', sort: wins ? 'vittorie' : 'punti', metric: wins ? 'vittorie' : 'punti',
+    kindLabel: [isTeam ? 'TEAM' : '', wins ? 'VITTORIE' : ''].filter(Boolean).join(' · '),
     catLabel:catLabel(rankCat),
     scope:rankRegion?'regionale':'nazionale',
     region:rankRegion||'',
     month:monthLabel,
-    rows:ranking.slice(0,10).map(r=>({atleta_id:r.atleta_id,pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}))
+    rows
   });
 };
 
