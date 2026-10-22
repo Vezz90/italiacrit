@@ -12852,6 +12852,8 @@ app.get('/api/admin/social/instagram/posted', requireAdmin, async (req, res) => 
       const raw = (await readDataJsonFromGH('results_raw.json')) || [];
       tosc = /toscana/i.test(String(cal && cal.regione || '')) || raw.some(r => r.gara_id === id && /toscana/i.test(String(r.regione || '')));
     } catch {}
+    // classifica (id "CLASS_<categoria>__<regione>__<mese>_<data>"): Toscana Crit consigliato se la classifica e della Toscana
+    if (id.startsWith('CLASS_')) tosc = /toscana/i.test(String(req.query.region || ''));
     const accounts = [];
     for (const a of _igAccounts()) {
       const st = await instagramStatus(false, a.key).catch(() => null);

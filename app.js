@@ -32311,7 +32311,7 @@ window.showShareModal = async function(type, payload) {
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
       </div>
-      ${(type==='gara' && authUser()?.role==='admin') ? `<div class="share-actions" id="share-actions-ig" style="display:flex;flex-direction:column;align-items:stretch;gap:8px"><div id="share-ig-accs" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
+      ${((type==='gara' || type==='class') && authUser()?.role==='admin') ? `<div class="share-actions" id="share-actions-ig" style="display:flex;flex-direction:column;align-items:stretch;gap:8px"><div id="share-ig-accs" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
         <button class="share-action-btn" id="share-ig-btn" style="flex:1;background:linear-gradient(45deg,#f09433,#dc2743 55%,#bc1888);color:#fff;border:0" onclick="window.publishShareToInstagram()">📸 Pubblica su Instagram</button>
       </div>` : ''}
       <div class="share-actions" id="share-actions-whatsapp" style="display:none">
@@ -32370,6 +32370,11 @@ window.setSharePlat=async function(k){
 // Riga "Pubblica su Instagram" (admin): visibile solo per Instagram Feed e Story. Si sceglie su quale/i profilo/i
 // pubblicare (ICS, Toscana Crit se configurato); i profili dove la gara e' gia' uscita sono grigi.
 const _igPostedCache = {};
+// Per le gare l'id e quello della gara; la classifica cambia nel tempo, quindi il controllo anti-doppioni vale per giorno.
+function _igKey() {
+  if (_shareType === 'class') return _sharePayload?._id ? `CLASS_${_sharePayload._id}_${new Date().toISOString().slice(0, 10)}` : '';
+  return _sharePayload?._id;
+}
 async function _updateIgShareBtn(){
   const row=document.getElementById('share-actions-ig'), btn=document.getElementById('share-ig-btn');
   if(!row||!btn) return;
@@ -32377,13 +32382,13 @@ async function _updateIgShareBtn(){
   row.style.display = (k==='instagram'||k==='story') ? 'flex' : 'none';
   if(k!=='instagram' && k!=='story') return;
   const kind = k==='story' ? 'story' : 'feed';
-  const gid=_sharePayload?._id; if(!gid) return;
+  const gid=_igKey(); if(!gid) return;
   btn.disabled=true; btn.textContent='…';
   let info;
   try {
-    if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid));
+    if(!_igPostedCache[gid]) _igPostedCache[gid] = await apiCall('/admin/social/instagram/posted?gara='+encodeURIComponent(gid)+(_shareType==='class' ? '&region='+encodeURIComponent(_sharePayload?.region||'') : ''));
     info=_igPostedCache[gid];
-  } catch { btn.disabled=false; btn.textContent = kind==='story' ? '📸 Pubblica le 2 storie su Instagram' : '📸 Pubblica nel feed di Instagram'; return; }
+  } catch { btn.disabled=false; btn.textContent = kind==='story' ? (_shareType==='class' ? '📸 Pubblica la storia su Instagram' : '📸 Pubblica le 2 storie su Instagram') : '📸 Pubblica nel feed di Instagram'; return; }
   const accs = info.accounts && info.accounts.length ? info.accounts : [{key:'ics',label:'ICS',feed:info.feed,story:info.story,suggested:true}];
   const box=document.getElementById('share-ig-accs');
   const prevSel = {}; box.querySelectorAll('input').forEach(i=>{ prevSel[i.value]=i.checked; });
@@ -32396,7 +32401,7 @@ async function _updateIgShareBtn(){
   }).join('');
   box.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{ i.parentElement.classList.toggle('on',i.checked); _refreshIgBtn(); }));
   box.querySelectorAll('[data-unlock]').forEach(u=>{ u.onclick=async()=>{
-    if(!confirm('Sblocca questa gara per pubblicarla di nuovo su questo profilo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
+    if(!confirm('Sblocca per pubblicare di nuovo su questo profilo?\n\nFallo solo dopo aver ELIMINATO il post precedente da Instagram, altrimenti ne verrebbero due.')) return;
     try{ await apiCall('/admin/social/instagram/unlock',{method:'POST',body:{gara_id:gid,kind,acc:u.dataset.unlock}}); delete _igPostedCache[gid]; showToast('Sbloccato: ora puoi ripubblicare'); await _updateIgShareBtn(); }catch(e){ showToast(e.message||'Errore','error'); }
   }; });
   _refreshIgBtn();
@@ -32408,22 +32413,25 @@ function _refreshIgBtn(){
   const all=document.querySelectorAll('#share-ig-accs input').length;
   btn.disabled = !sel.length;
   btn.textContent = !sel.length ? (all ? '✓ Già pubblicato' : '📸 Pubblica su Instagram')
-    : `📸 Pubblica ${kind==='story'?'le 2 storie':'nel feed'} su ${sel.join(' + ')}`;
+    : `📸 Pubblica ${kind==='story'?(_shareType==='class'?'la storia':'le 2 storie'):'nel feed'} su ${sel.join(' + ')}`;
 }
 window.publishShareToInstagram = async function(){
   const k=_sharePlatKey;
   if(k!=='instagram' && k!=='story') return;
   const kind = k==='story' ? 'story' : 'feed';
-  const gid=_sharePayload?._id;
+  const gid=_igKey();
+  const isClass=_shareType==='class';
   const btn=document.getElementById('share-ig-btn');
   const ta=document.getElementById('share-fb-text');
   const accounts=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.value);
   if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
   const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
-  const name=_sharePayload?.name||gid;
+  const name=isClass ? `Classifica ${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
   const who=btn.textContent.replace(/^.* su /,'');
-  if(!confirm(kind==='story'
+  if(!confirm(isClass
+    ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\nUn'immagine con la grafica della classifica (primi 10) e il testo qui sotto.`)
+    : kind==='story'
     ? `Pubblicare ora le storie su ${who}?\n\n${name}\n2 storie di fila: Vincitore + Risultati (stessa foto e inquadratura del post).`
     : `Pubblicare ora il post su ${who}?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
   const old=btn.textContent; btn.disabled=true; btn.textContent='⏳ Pubblico su Instagram…';
@@ -32431,6 +32439,11 @@ window.publishShareToInstagram = async function(){
     let images=[];
     // Feed = carosello (Vincitore, poi Risultati); storia = due storie di fila con le stesse due grafiche.
     // L'inquadratura della foto e' quella regolata nella modale (vale per tutti i formati): niente da rifare per la storia.
+    if (isClass) {
+      // classifica: una sola immagine, con lo stile scelto nella finestra (Maglia gialla / Podio)
+      const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+      images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9));
+    } else {
     const prev=_shareGaraStyle;
     try{
       for(const st of ['winner','results']){
@@ -32439,6 +32452,7 @@ window.publishShareToInstagram = async function(){
         images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9));
       }
     } finally { _shareGaraStyle=prev; }
+    }
     const r=await apiCall('/admin/social/instagram/publish-image',{method:'POST',body:{gara_id:gid,kind,caption,images,accounts}});
     delete _igPostedCache[gid];
     const bad=(r.results||[]).filter(x=>!x.ok);
