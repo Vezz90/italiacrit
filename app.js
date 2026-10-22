@@ -32677,9 +32677,40 @@ window.shareOnFacebook = function() {
 // genera lui), quindi qui mostriamo lo stesso tipo di narrazione dinamica
 // usata per i meta tag e l'admin la copia a mano sopra alla grafica.
 // Solo per l'admin e solo per le gare (unico tipo con questa narrazione).
+// Testo pronto per il post della classifica (stesso schema dei post gara: titolo, link, racconto, elenco, hashtag).
+// Nessuna chiamata AI: si compone dai dati della card, quindi e immediato e gratuito.
+function _clTitleCase(t) { return String(t || '').toLowerCase().replace(/(^|[\s'’.\-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()); }
+function _classShareText(d) {
+  const rows = (d.rows || []).filter(r => r.cognome);
+  if (!rows.length) return '';
+  const nm = r => _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim());
+  const tm = r => r.team ? ` (${_clTitleCase(r.team)})` : '';
+  const P = v => { const n = Math.round((+v || 0) * 100) / 100; return `${n} ${n === 1 ? 'punto' : 'punti'}`; };
+  const lead = +rows[0].punti || 0;
+  const gap = r => { const g = Math.round((lead - (+r.punti || 0)) * 100) / 100; return g <= 0 ? 'a pari punti' : `a ${P(g)}`; };
+  const where = d.scope === 'regionale' && d.region ? ` — ${d.region.toUpperCase()}` : '';
+  const when = d.month ? ` · ${d.month.toUpperCase()}` : '';
+  const title = `🏆 CLASSIFICA ${String(d.catLabel || '').toUpperCase()}${where}${when}`;
+  let story = `${nm(rows[0])}${tm(rows[0])} guida la classifica con ${P(lead)}.`;
+  if (rows[1]) {
+    story += ` Alle sue spalle ${nm(rows[1])}${tm(rows[1])} ${gap(rows[1])}`;
+    story += rows[2] ? ` e ${nm(rows[2])}${tm(rows[2])} ${gap(rows[2])}.` : '.';
+  }
+  const medal = ['🥇', '🥈', '🥉'];
+  const list = rows.map((r, i) => `${medal[i] || `${i + 1}.`} ${nm(r)} — ${+(+r.punti || 0).toFixed(2)}`).join('\n');
+  return [title, '', `https://${SHARE_URL}`, '', story, '', list, '', SHARE_TAG].join('\n');
+}
 async function _showFbShareText(regen) {
   const box = document.getElementById('share-fb-text-box');
   if (!box) return;
+  const regenB = document.getElementById('share-fb-regen-btn');
+  if (_shareType === 'class') {
+    box.style.display = 'block';
+    document.getElementById('share-fb-text').value = _classShareText(_sharePayload || {});
+    if (regenB) regenB.style.display = 'none';
+    return;
+  }
+  if (regenB) regenB.style.display = '';
   if (authUser()?.role !== 'admin' || _shareType !== 'gara' || !_sharePayload?._id) { box.style.display = 'none'; return; }
   box.style.display = 'block';
   const ta = document.getElementById('share-fb-text');
