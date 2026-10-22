@@ -31956,7 +31956,14 @@ function _clShrink(ctx, txt, wt, size, maxW, minK = 0.62) {
   while (k > minK && ctx.measureText(t).width > maxW) { k -= 0.04; ctx.font = `${wt} ${Math.round(size * k)}px ${F}`; }
   return _clFit(ctx, t, maxW);
 }
-function _clName(r) { return `${r.cognome || ''} ${r.nome || ''}`.toUpperCase().trim(); }
+// nei dati la particella del cognome a volte e finita in coda al nome ("PARDO" + "BEATRICE DI"): la rimetto davanti al cognome
+function _clPerson(r) {
+  let c = String(r.cognome || '').trim(), n = String(r.nome || '').trim();
+  const m = n.match(/^(.*?)((?:\s+(?:DI|DE|DEL|DELLA|DELLO|DEI|DEGLI|DA|DAL|DALLA|LA|LO|LE|VAN|VON))+)$/i);
+  if (m && m[1].trim()) { c = `${m[2].trim()} ${c}`; n = m[1].trim(); }
+  return { c, n };
+}
+function _clName(r) { const p = _clPerson(r); return `${p.c} ${p.n}`.toUpperCase().trim(); }
 // una riga dell'elenco: posizione, miniatura (se c'e), nome + team, [distacco], punti
 function _clRow(ctx, x, y, w, rH, pos, r, av, lead, gap, goldPts) {
   const mid = y + rH / 2, F = `'Inter Tight',sans-serif`;
@@ -32010,9 +32017,10 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
     ctx.font = `800 ${Math.round(h * 0.042)}px ${F}`; ctx.letterSpacing = '1px';
     ctx.fillText('1° IN CLASSIFICA', tx, ty + Math.round(h * 0.075)); ctx.letterSpacing = '0px';
-    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, Math.min(h * 0.085, w * 0.12), tw), tx, ty + Math.round(h * 0.16));
-    ctx.fillStyle = 'rgba(0,0,0,0.72)';
-    ctx.fillText(_clShrink(ctx, [r.nome, r.team].filter(Boolean).join(' · '), 600, h * 0.05, tw), tx, ty + Math.round(h * 0.222));
+    ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, Math.min(h * 0.085, w * 0.12), tw), tx, ty + Math.round(h * 0.16));
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillText(_clShrink(ctx, _clTitleCase(_clPerson(r).n), 700, h * 0.052, tw), tx, ty + Math.round(h * 0.222));
+    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, h * 0.040, tw, 0.7), tx, ty + Math.round(h * 0.278)); }
     ctx.font = `800 ${Math.round(h * 0.105)}px ${F}`; ctx.fillStyle = ink;
     const pt = String(r.punti); ctx.fillText(pt, tx, y + h - Math.round(h * 0.045));
     const pw = ctx.measureText(pt).width;
@@ -32031,10 +32039,11 @@ function _clHero(ctx, x, y, w, h, r, av, vertical) {
     tx = x + pw + pad; tw = right - ptW - Math.round(u * 0.06) - tx;
     ctx.textAlign = 'left';
     ctx.font = `800 ${Math.round(u * 0.095)}px ${F}`; ctx.letterSpacing = '1px';
-    ctx.fillText('1° IN CLASSIFICA', tx, y + h * 0.22); ctx.letterSpacing = '0px';
-    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, u * 0.20, tw), tx, y + h * 0.50);
-    ctx.fillStyle = 'rgba(0,0,0,0.72)';
-    ctx.fillText(_clShrink(ctx, [r.nome, r.team].filter(Boolean).join(' · '), 600, u * 0.115, tw), tx, y + h * 0.72);
+    ctx.fillText('1° IN CLASSIFICA', tx, y + h * 0.20); ctx.letterSpacing = '0px';
+    ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, u * 0.20, tw), tx, y + h * 0.46);
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillText(_clShrink(ctx, _clTitleCase(_clPerson(r).n), 700, u * 0.125, tw), tx, y + h * 0.65);
+    if (r.team) { ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillText(_clShrink(ctx, r.team, 600, u * 0.092, tw, 0.7), tx, y + h * 0.84); }
   }
   ctx.restore();
 }
@@ -32056,7 +32065,7 @@ function _clPodium(ctx, x, y, w, h, rows, avs) {
     ctx.font = `800 ${Math.round(th * 0.40)}px ${F}`;
     const nTxt = String(k + 1); ctx.fillText(nTxt, px, ty + Math.round(th * 0.42));
     const nW = ctx.measureText(nTxt).width + Math.round(bw * 0.04);
-    ctx.fillText(_clShrink(ctx, String(r.cognome || '').toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
+    ctx.fillText(_clShrink(ctx, _clPerson(r).c.toUpperCase(), 800, th * 0.28, bw - px + bx - nW - Math.round(bw * 0.05)), px + nW, ty + Math.round(th * 0.40));
     ctx.font = `700 ${Math.round(th * 0.28)}px ${F}`;
     ctx.fillText(`${r.punti} pt`, px, ty + Math.round(th * 0.82));
   });
