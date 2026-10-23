@@ -4856,7 +4856,11 @@ document.addEventListener('click', (e) => {
   let pending = false;
   const fix = () => {
     pending = false;
-    document.querySelectorAll('a[href^="#/"]').forEach(a => { a.setAttribute('href', a.getAttribute('href').slice(1)); });
+    document.querySelectorAll('a[href^="#/"]').forEach(a => {
+      const h = a.getAttribute('href');
+      if (h.startsWith('#/gara-storia/')) return;   // pagina solo dell'app: come indirizzo vero darebbe 404 (nome con spazi) a Google
+      a.setAttribute('href', h.slice(1));
+    });
   };
   const schedule = () => { if (!pending) { pending = true; setTimeout(fix, 60); } };
   const start = () => { new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true }); schedule(); };

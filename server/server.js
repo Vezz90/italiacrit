@@ -13108,7 +13108,7 @@ function _mediaLd(media, titleBase, pageUrl) {
     const name = String(v.title || titleBase).slice(0, 110);
     ld.push({ '@context': 'https://schema.org', '@type': 'VideoObject', name, description: String(v.description || `${name} — ${titleBase}`).slice(0, 300),
       thumbnailUrl: [`https://img.youtube.com/vi/${v.yt}/maxresdefault.jpg`, `https://img.youtube.com/vi/${v.yt}/hqdefault.jpg`],
-      uploadDate: String(v.published_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+      uploadDate: (d => (isNaN(d) ? new Date() : d).toISOString())(new Date(v.published_at || '')),   // ISO 8601 con fuso (Z)
       embedUrl: `https://www.youtube.com/embed/${v.yt}`, contentUrl: `https://www.youtube.com/watch?v=${v.yt}`, url: pageUrl });
   }
   for (const p of media.photos.slice(0, 20)) {
