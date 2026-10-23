@@ -54,8 +54,44 @@ def main():
         if old != out:
             open(path, 'w', encoding='utf-8', newline='').write(out)
             changed += 1
-    print(f'sync_route_pages: {changed} file aggiornati su {len(PAGES)}')
-    return [s + '.html' for s in PAGES]
+    # statistiche per regione: /statistiche/regione/<regione> (una pagina per regione, stessa logica delle sezioni)
+    import json
+    n_reg = 0
+    idx_path = os.path.join(ROOT, 'data', 'almanacco_regioni', 'index.json')
+    reg_files = []
+    if os.path.exists(idx_path):
+        regs = json.load(open(idx_path, encoding='utf-8')).get('regions', [])
+        out_dir = os.path.join(ROOT, 'statistiche', 'regione')
+        os.makedirs(out_dir, exist_ok=True)
+        keep = set()
+        for r in regs:
+            slug = r['slug'].lower().replace('_', '-')
+            name = r['name'].title()          # "VALLE D'AOSTA" -> "Valle D'Aosta"
+            title = f"Statistiche del ciclismo giovanile in {name}: record, campioni e squadre | ICS"
+            desc = f"Chi ha vinto di più, le squadre più forti e l'albo anno per anno nelle gare disputate in {name}, dal 2007."
+            t, d, url = html.escape(title, quote=True), html.escape(desc, quote=True), f'{SITE}/statistiche/regione/{slug}'
+            out = base
+            out = sub(r'<title>.*?</title>', f'<title>{t}</title>', out, re.S)
+            out = sub(r'<meta name="description" content=".*?" />', f'<meta name="description" content="{d}" />', out, re.S)
+            out = sub(r'<link rel="canonical" href=".*?" />', f'<link rel="canonical" href="{url}" />', out)
+            out = sub(r'<meta property="og:url" content=".*?" />', f'<meta property="og:url" content="{url}" />', out)
+            out = sub(r'<meta property="og:title" content=".*?" />', f'<meta property="og:title" content="{t}" />', out)
+            out = sub(r'<meta property="og:description" content=".*?" />', f'<meta property="og:description" content="{d}" />', out)
+            out = sub(r'<meta name="twitter:title" content=".*?" />', f'<meta name="twitter:title" content="{t}" />', out)
+            out = sub(r'<meta name="twitter:description" content=".*?" />', f'<meta name="twitter:description" content="{d}" />', out)
+            out = out.replace('\n', nl)
+            path = os.path.join(out_dir, slug + '.html')
+            keep.add(slug + '.html')
+            old = open(path, encoding='utf-8', newline='').read() if os.path.exists(path) else None
+            if old != out:
+                open(path, 'w', encoding='utf-8', newline='').write(out)
+                n_reg += 1
+            reg_files.append(f'statistiche/regione/{slug}.html')
+        for fn in os.listdir(out_dir):
+            if fn.endswith('.html') and fn not in keep:
+                os.remove(os.path.join(out_dir, fn))
+    print(f'sync_route_pages: {changed} file aggiornati su {len(PAGES)}; regioni: {n_reg} su {len(reg_files)}')
+    return [s + '.html' for s in PAGES] + reg_files
 
 
 if __name__ == '__main__':

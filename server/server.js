@@ -652,6 +652,8 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
       { loc: `${CANONICAL}/albo`,          priority: '0.6', changefreq: 'monthly' },
       { loc: `${CANONICAL}/media`,         priority: '0.5', changefreq: 'weekly' },
       { loc: `${CANONICAL}/statistiche`,   priority: '0.5', changefreq: 'weekly' },
+      ...['abruzzo', 'basilicata', 'calabria', 'campania', 'emilia-romagna', 'friuli-venezia-giulia', 'lazio', 'liguria', 'lombardia', 'marche', 'molise', 'piemonte', 'puglia', 'sardegna', 'sicilia', 'toscana', 'trentino-alto-adige', 'umbria', 'valle-d-aosta', 'veneto']
+        .map(r => ({ loc: `${CANONICAL}/statistiche/regione/${r}`, priority: '0.5', changefreq: 'monthly' })),
       { loc: `${CANONICAL}/comparatore`,   priority: '0.4', changefreq: 'monthly' },
       { loc: `${CANONICAL}/regolamento`,   priority: '0.3', changefreq: 'monthly' },
       { loc: `${CANONICAL}/record`,        priority: '0.4', changefreq: 'weekly' },

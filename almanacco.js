@@ -48,6 +48,8 @@
 
   // ---- per regione: file separato per ogni regione, caricato solo quando la si sceglie ----
   const regKey = s => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const regSlug = slug => String(slug).toLowerCase().replace(/_/g, '-');          // EMILIA_ROMAGNA -> emilia-romagna
+  const regUrl = slug => `/statistiche/regione/${regSlug(slug)}`;
   async function loadRegIdx() {
     if (st.regIdx && st.regIdx.length) return st.regIdx;
     try { const r = await loadJson('data/almanacco_regioni/index.json'); st.regIdx = (r && r.regions) || []; } catch (_) { st.regIdx = []; }
@@ -125,6 +127,12 @@
         <div class="hx-panel"><h3>Più vittorie in una stagione</h3>${best.length ? best.map((r, i) => row(i, `/atleta/${encodeURIComponent(r.id)}`, esc(nm(r.n)), `${r.y} · ${SHORT[r.c]}`, `${r.w} vitt.`)).join('') : none}</div>
         <div class="hx-panel"><h3>Team più vincenti</h3>${topT.length ? topT.map((t, i) => row(i, '', esc(tc(t.team)), yrs(t.y), `${t.w} vitt. · ${t.p} podi`)).join('') : none}</div>
       </div></section>`;
+  }
+  function regLinks() {
+    const list = (st.regIdx || []).slice().sort((a, b) => a.name.localeCompare(b.name, 'it'));
+    if (!list.length) return '';
+    return `<section class="am-sec"><div class="hx-ph"><h2>Statistiche per regione</h2><small>Record, campioni e squadre delle gare disputate in ogni regione</small></div>
+      <div class="am-reglinks">${list.map(r => `<a href="${regUrl(r.slug)}"${st.reg === r.slug ? ' aria-current="page"' : ''}>${esc(tc(r.name))}<small>${fmt(r.races)} gare</small></a>`).join('')}</div></section>`;
   }
   function regSelect() {
     const list = (st.regIdx || []).slice().sort((a, b) => a.name.localeCompare(b.name, 'it'));
@@ -282,7 +290,7 @@
     return `<section class="am-sec">${head}<div class="am-scards">${cards}</div><p class="am-note">Scegli una categoria per vederne i numeri, i record e le classifiche della stagione.</p></section>`;
   }
 
-  async function render() {
+  async function render(opts) {
     if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
     setPage('<div class="hx-wrap"><div class="hd-skel-hero"></div></div>');
     let d;
@@ -290,6 +298,12 @@
     if (!d) return typeof window.renderHomeDashboard === 'function' ? window.renderHomeDashboard() : setPage('<div class="hx-wrap"><div class="hx-none">Dati non disponibili.</div></div>');
     d.counts = d.counts || { athletes: 0, teams: 0 };
     await Promise.all([loadLive(), loadModern(), loadRegIdx()]);
+    // regione scelta dall'indirizzo (/statistiche/regione/toscana); senza indirizzo valido si torna al nazionale
+    const want = opts && opts.reg ? String(opts.reg).toLowerCase() : null;
+    const hit = want ? (st.regIdx || []).find(r => regSlug(r.slug) === want) : null;
+    st.reg = hit ? hit.slug : null;
+    if (st.reg) await loadReg(st.reg);
+    if (want && !hit) history.replaceState(null, '', '/statistiche');
     const cur = (typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : d.to + 1;
     setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
     const paint = () => {
@@ -304,9 +318,9 @@
         const empty = !(sec.counts && sec.counts.races) && !regNow(rd.region).some(x => inSel(x.ci));
         const note = empty ? `<div class="hx-none">Nessuna gara archiviata per questa selezione in ${esc(regName)}.</div>`
           : `<p class="am-note">${few ? `Dati limitati: solo ${fmt(sec.counts.races)} gare archiviate per questa selezione in ${esc(regName)}. ` : ''}Si contano le gare disputate in ${esc(regName)}, non la regione di residenza di atleti e squadre. Dal ${rd.to + 1} i numeri sono quelli del sito.</p>`;
-        body = `${kpis(rd)}${note}${empty ? '' : regRecords(rd, cur) + albo(rd, { live: regLive(rd), unit: 'vitt.', title: 'Chi ha vinto di più, anno per anno', sub: `Atleta con più vittorie in ${esc(regName)} in ogni stagione`, note: `Per ogni stagione e categoria: l'atleta con più vittorie nelle gare disputate in ${esc(regName)} (a parità, più podi). La riga ${rd.to + 1} è la stagione in corso.` }) + dynasties(rd, { title: 'Squadre dominanti', sub: `Squadra con più vittorie in ${esc(regName)} in una stagione, più volte`, unit: 'anni in testa' }) + racesChart(rd)}`;
+        body = `${kpis(rd)}${note}${empty ? '' : regRecords(rd, cur) + albo(rd, { live: regLive(rd), unit: 'vitt.', title: 'Chi ha vinto di più, anno per anno', sub: `Atleta con più vittorie in ${esc(regName)} in ogni stagione`, note: `Per ogni stagione e categoria: l'atleta con più vittorie nelle gare disputate in ${esc(regName)} (a parità, più podi). La riga ${rd.to + 1} è la stagione in corso.` }) + dynasties(rd, { title: 'Squadre dominanti', sub: `Squadra con più vittorie in ${esc(regName)} in una stagione, più volte`, unit: 'anni in testa' }) + racesChart(rd)}${regLinks()}`;
       } else {
-        body = `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}`;
+        body = `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}${regLinks()}`;
       }
       setPage(`<div class="hx-wrap am-wrap">
         <div class="rs-head"><h1>Statistiche${rd ? ` · ${esc(regName)}` : ''}</h1><span class="rs-cnt">almanacco ${d.from}–${cur}</span>
@@ -317,7 +331,13 @@
         <p class="am-note">Fonte: classifiche e risultati pubblicati da ciclismo.info (2007–${d.to}) e dati FCI per la stagione in corso. Confrontare i punti fra anni diversi ha senso solo dentro la stessa fonte.</p>
       </div>`);
       const regSel = document.getElementById('am-reg');
-      if (regSel) regSel.onchange = async () => { st.reg = regSel.value || null; if (st.reg) await loadReg(st.reg); paint(); };
+      if (regSel) regSel.onchange = async () => {
+        st.reg = regSel.value || null;
+        if (st.reg) await loadReg(st.reg);
+        const path = st.reg ? regUrl(st.reg) : '/statistiche';
+        if (location.pathname !== path) history.pushState(null, '', path);   // il titolo e il canonical di paint() leggono il nuovo indirizzo
+        paint();
+      };
       document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap [data-per]').forEach(b => { b.onclick = () => { st.period = b.dataset.per; if (st.period === 'arch' && st.cat === 8) st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });

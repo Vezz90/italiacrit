@@ -5069,6 +5069,9 @@ function route() {
     return renderCalendario();
   }
   if (match('/statistiche/stagione')) return renderHomeDashboard();
+  // statistiche di una regione: /statistiche/regione/toscana (la pagina legge lo slug dall'indirizzo)
+  const m_statReg = match('/statistiche/regione/:slug');
+  if (m_statReg && typeof window.renderAlmanacco === 'function') return window.renderAlmanacco({ reg: decodeURIComponent(m_statReg[1]) });
   const m_stats = match('/statistiche/:cat');
   if (m_stats) return renderStatistiche(decodeURIComponent(m_stats[1]));
   // La vecchia home (dashboard per categoria) è ora la pagina Statistiche; i record e

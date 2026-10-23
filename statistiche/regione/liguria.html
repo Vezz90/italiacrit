@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Necessario per la Fase 2 SEO (URL puliti, es. /gara/xxx invece di
+       /#/gara/xxx): tutti gli asset sotto (app.js, style.css, data/*.json)
+       sono referenziati con path RELATIVI. Senza <base>, una navigazione
+       diretta a /gara/xxx risolverebbe questi path relativi a /gara/app.js
+       invece di /app.js, rompendo il caricamento dell'app. -->
+  <base href="/" />
+  <!-- GitHub Pages è un host statico senza rewrite lato server: un refresh
+       o un accesso diretto a un URL pulito (es. /admin, /gara/xxx) genera
+       una richiesta reale per quel path, che GitHub Pages non trova e
+       risponde con il proprio 404 statico invece di servire questa pagina.
+       404.html (vedi quel file) salva il path richiesto e rimanda qui;
+       questo script lo ripristina con history.replaceState PRIMA che
+       app.js (deferred) legga location.pathname per decidere la pagina —
+       deve stare il più in alto possibile nel <head>, prima di app.js. -->
+  <script>
+    (function () {
+      var r = sessionStorage.getItem('_spa_redirect');
+      if (r) {
+        sessionStorage.removeItem('_spa_redirect');
+        if (r !== location.pathname + location.search + location.hash) history.replaceState(null, '', r);
+      }
+    })();
+  </script>
+  <meta name="google-site-verification" content="8bzaM6fB1nV-c8HZ1qeO0L32Vll32XVKU1pXkDpa4Mc" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1329Z3BXWE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // send_page_view:false — il sito è una SPA con hash-routing (#/gara/...,
+    // #/atleta/... ecc.): il page_view automatico vedrebbe solo il primo
+    // caricamento. I page_view reali per ogni cambio pagina vengono inviati
+    // da app.js (vedi _trackPageView), uno per ogni vera navigazione.
+    gtag('config', 'G-1329Z3BXWE', { send_page_view: false });
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistiche del ciclismo giovanile in Liguria: record, campioni e squadre | ICS</title>
+  <meta name="description" content="Chi ha vinto di più, le squadre più forti e l&#x27;albo anno per anno nelle gare disputate in Liguria, dal 2007." />
+  <meta name="keywords" content="ICS, Italia Cycling Stats, italian cycling stats, ICS ciclismo, ciclismo italiano, classifiche ciclismo, risultati gare ciclismo, FCI, juniores, allievi, esordienti, elite under23" />
+  <meta property="og:title" content="Statistiche del ciclismo giovanile in Liguria: record, campioni e squadre | ICS" />
+  <meta property="og:description" content="Chi ha vinto di più, le squadre più forti e l&#x27;albo anno per anno nelle gare disputate in Liguria, dal 2007." />
+  <meta property="og:type" content="website" />
+  <!-- SEO / social (URL assolute: aggiornare al dominio quando sarà attivo) -->
+  <link rel="canonical" href="https://italiacyclingstats.com/statistiche/regione/liguria" />
+  <meta property="og:url" content="https://italiacyclingstats.com/statistiche/regione/liguria" />
+  <meta property="og:site_name" content="Italia Cycling Stats" />
+  <meta property="og:image" content="https://italiacyclingstats.com/assets/logo.png?v=3" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Statistiche del ciclismo giovanile in Liguria: record, campioni e squadre | ICS" />
+  <meta name="twitter:description" content="Chi ha vinto di più, le squadre più forti e l&#x27;albo anno per anno nelle gare disputate in Liguria, dal 2007." />
+  <meta name="twitter:image" content="https://italiacyclingstats.com/assets/logo.png?v=3" />
+  <!-- PWA / installazione su telefono (anche iOS) -->
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=4" />
+  <link rel="icon" type="image/png" href="assets/icon-192.png?v=4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ICS" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=22" />
+  <link rel="stylesheet" href="design.css?v=258" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#e8001d" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","description":"Risultati, classifiche, gare e statistiche del ciclismo agonistico italiano su strada.","publisher":{"@type":"Organization","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","logo":"https://italiacyclingstats.com/assets/logo.png"}}
+  </script>
+</head>
+<body>
+<script>
+  // Tema chiaro/scuro: il CSS di base (design.css) è scuro finché il body
+  // non ha la classe .light-mode (vedi "body:not(.light-mode)" vs
+  // "body.light-mode") — quella classe la aggiungeva SOLO app.js dentro
+  // initTheme(), che gira dopo DOMContentLoaded E dopo il primo
+  // caricamento dati completo (loadAll(), una fetch di rete che può
+  // volerci un attimo, specie a freddo su Render). Per tutto quel tempo la
+  // pagina si vedeva scura anche per chi ha/dovrebbe avere il tema chiaro
+  // (default) — segnalato dall'utente come "il sito parte di notte". Va
+  // messo qui, PRIMO figlio del body, PRIMA di qualunque altro contenuto
+  // visibile: nessun flash, nessuna dipendenza dal caricamento dati.
+  // initTheme() in app.js resta invariato (aggiunge/toglie la stessa
+  // classe al click, stessa regola di default) — questo script copre solo
+  // il primissimo istante prima che app.js (deferred) possa intervenire.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('ics_theme'); } catch (e) {}
+    if (saved !== 'dark') document.body.classList.add('light-mode');
+  })();
+</script>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  NAVBAR                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<nav id="navbar" role="navigation" aria-label="Navigazione principale">
+  <!-- RIGA 1 (desktop): logo — ricerca — tema — accedi/registrati.
+       Su mobile (≤640px) diventa invisibile come contenitore (display:contents,
+       vedi design.css) così i suoi figli restano item diretti del flex di
+       #navbar esattamente come prima — nessuna modifica al layout mobile
+       già ottimizzato. -->
+  <div id="navbar-row1">
+    <a href="#/" class="nav-logo" id="nav-logo-link" aria-label="ICS - Italia Cycling Stats - Home">
+      <img src="assets/logo.png?v=3" alt="ICS - Italia Cycling Stats" class="nav-logo-img" />
+    </a>
+    <div class="nav-sep" aria-hidden="true"></div>
+
+    <div class="nav-search-wrap">
+      <svg class="nav-search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        type="search"
+        id="nav-search"
+        placeholder="Cerca atleta, team o gara…"
+        autocomplete="off"
+        aria-label="Cerca atleta, team o gara"
+      />
+      <div id="search-results-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
+    </div>
+
+    <div class="badge-live" id="badge-live" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span> LIVE
+    </div>
+
+    <button class="notif-bell" id="msg-bell" aria-label="Messaggi" style="display:none" onclick="window.location.hash='#/messaggi'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="notif-badge" id="msg-badge" style="display:none">0</span>
+    </button>
+    <button class="notif-bell" id="notif-bell" aria-label="Notifiche" style="display:none" onclick="window.toggleNotifPanel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+    </button>
+    <select id="lang-select" class="lang-select" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)" title="Lingua / Language">
+      <option value="it">🇮🇹</option>
+      <option value="en">🇬🇧</option>
+      <option value="es">🇪🇸</option>
+      <option value="fr">🇫🇷</option>
+      <option value="de">🇩🇪</option>
+      <option value="pt">🇵🇹</option>
+      <option value="nl">🇳🇱</option>
+    </select>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
+      <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+    </button>
+    <a href="#/login" class="nav-top-btn nav-top-btn--ghost" id="nav-login">Accedi</a>
+    <a href="#/register" class="nav-top-btn nav-top-btn--primary" id="nav-register">Registrati</a>
+    <button id="nav-hamburger" aria-label="Apri menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- RIGA 2 (desktop): il menu di navigazione esistente, invariato — solo
+       spostato sotto la riga 1 invece di stare affiancato al logo. -->
+  <div id="navbar-row2">
+    <div class="nav-links" role="list">
+      <a href="#/" class="nav-link" id="nav-home" role="listitem" onclick="window.goHome(event)">Home</a>
+      <a href="#/risultati" class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
+      <a href="#/classifica" class="nav-link" id="nav-class"   role="listitem">Classifica</a>
+      <a href="#/albo"       class="nav-link" id="nav-albo"    role="listitem">Albo d'Oro</a>
+      <a href="#/atleti"     class="nav-link" id="nav-atleti"  role="listitem">Atleti</a>
+      <a href="#/team"       class="nav-link" id="nav-team"    role="listitem">Team</a>
+      <a href="#/gare"       class="nav-link" id="nav-gare"    role="listitem">Gare</a>
+      <a href="#/calendario" class="nav-link" id="nav-cal" role="listitem">Calendario</a>
+      <a href="#/statistiche"  class="nav-link" id="nav-stats" role="listitem">Statistiche</a>
+      <a href="#/comparatore"  class="nav-link" id="nav-comp"  role="listitem">Comparatore</a>
+      <a href="#/media" class="nav-link" id="nav-media" role="listitem">Media</a>
+      <a href="#/messaggi" class="nav-link" id="nav-msg" role="listitem" style="display:none">Messaggi</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Barra di ricerca mobile: sotto l'header, prima del contenuto (solo su mobile) -->
+<div id="mobile-search-bar" role="search">
+  <svg class="m-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <input type="search" id="m-search" placeholder="Cerca atleta, team o gara…" autocomplete="off" aria-label="Cerca atleta, team o gara" />
+  <div id="m-search-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
+</div>
+
+<!-- Mobile drawer (flat — no dropdowns su mobile) -->
+<div id="nav-drawer" role="dialog" aria-label="Menu mobile">
+  <a href="#/" class="nav-link" id="drawer-home" onclick="window.goHome(event)">Home</a>
+  <a href="#/risultati"   class="nav-link" id="drawer-risultati">Risultati</a>
+  <a href="#/classifica"  class="nav-link" id="drawer-class">Classifica</a>
+  <a href="#/albo"        class="nav-link" id="drawer-albo">Albo d'Oro</a>
+  <a href="#/atleti"      class="nav-link" id="drawer-atleti">Atleti</a>
+  <a href="#/team"        class="nav-link" id="drawer-team">Team</a>
+  <a href="#/gare"        class="nav-link" id="drawer-gare">Gare</a>
+  <a href="#/calendario"  class="nav-link" id="drawer-cal">Calendario</a>
+  <a href="#/media"       class="nav-link" id="drawer-media">Media</a>
+  <a href="#/statistiche" class="nav-link" id="drawer-stats">Statistiche</a>
+  <a href="#/comparatore" class="nav-link" id="drawer-comp">Comparatore</a>
+  <a href="#/messaggi"    class="nav-link" id="drawer-msg" style="display:none">Messaggi <span class="drawer-msg-badge" id="drawer-msg-badge" style="display:none">0</span></a>
+  <a href="#/login"       class="nav-link" id="drawer-login">Login / Profilo</a>
+  <button class="nav-link drawer-share-btn" id="drawer-share" onclick="window.shareApp()">📤 Condividi l'app</button>
+</div>
+
+<!-- Traduzione automatica (Google) — pilotata dal selettore lingua -->
+<div id="google_translate_element" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  APP ROOT                                                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="app">
+  <div id="initial-loader" class="initial-loader">
+    <img src="assets/logo.png?v=3" alt="" class="initial-loader-logo" />
+    <div class="initial-loader-bar"></div>
+  </div>
+</div>
+
+<!-- Tooltip sparkline -->
+<div class="sparkline-tooltip" id="sparkline-tooltip"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  FOOTER                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<footer role="contentinfo">
+  <strong>ICS — Italia Cycling Stats</strong> · Risultati Ciclismo Italiano
+  <span class="footer-sep">|</span>
+  Dati: Federazione Ciclistica Italiana
+  <span class="footer-sep">•</span>
+  Aggiornato: <span id="footer-update">—</span>
+  <span class="footer-sep">•</span>
+  <a href="#/regolamento" class="footer-link">Regolamento</a>
+  <span class="footer-sep">•</span>
+  <button class="footer-link" style="background:none;border:none;cursor:pointer;font:inherit" onclick="window.shareApp()">📤 Condividi</button>
+  <span class="footer-sep">•</span>
+  <button id="push-toggle-btn" style="display:none;background:transparent;border:1px solid var(--accent,#e8001d);color:var(--accent,#e8001d);padding:3px 12px;border-radius:14px;font-size:.78rem;cursor:pointer;font-weight:600">🔔 Attiva notifiche</button>
+  <br/>
+  <span style="font-size:0.75rem;margin-top:4px;display:block">
+    Non affiliato a FCI &nbsp;•&nbsp; Progetto indipendente
+  </span>
+</footer>
+
+<!-- Google Website Translator: traduce automaticamente tutta l'interfaccia -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'it',
+    includedLanguages: 'it,en,es,fr,de,pt,nl',
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<script>
+/* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
+   Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
+(function () {
+  var L = ['app.js?v=1033', 'home.js?v=26', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=8', 'elenchi.js?v=4', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11'];
+  var R = 'https://italiacrit.onrender.com/';
+  function load(base) {
+    L.forEach(function (f) {
+      var s = document.createElement('script');
+      s.src = base + f; s.async = false;
+      if (base) s.onerror = function () { try { sessionStorage.setItem('noRender', '1'); } catch (e) {} location.reload(); };
+      if (f === L[L.length - 1]) s.onload = function () { window.__icsReady = true; window.dispatchEvent(new Event('icsReady')); };
+      document.body.appendChild(s);
+    });
+  }
+  var prod = /(^|\.)italiacyclingstats\.com$/.test(location.hostname), skip = false;
+  try { skip = sessionStorage.getItem('noRender') === '1'; } catch (e) {}
+  if (!prod || skip || !window.fetch || !window.AbortController) return load('');
+  var ac = new AbortController(), t = setTimeout(function () { ac.abort(); }, 2500);
+  fetch(R + 'index.html', { signal: ac.signal, cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (h) {
+    clearTimeout(t);
+    var ok = h && L.every(function (f) { return h.indexOf(f) > -1; });
+    load(ok ? R : '');
+  }).catch(function () { load(''); });
+})();
+</script>
+</body>
+</html>

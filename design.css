@@ -13830,6 +13830,11 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .am-regsel { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-secondary); font-weight: 600; }
 .am-regsel select { height: 34px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); border-radius: 999px; padding: 0 30px 0 14px; font: 600 12.5px/1 inherit; cursor: pointer; max-width: 100%; }
 .am-regsel select:hover, .am-regsel select:focus-visible { border-color: var(--hx-navy); outline: none; }
+.am-reglinks { display: flex; flex-wrap: wrap; gap: 8px; }
+.am-reglinks a { display: inline-flex; flex-direction: column; gap: 1px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); border-radius: 12px; padding: 8px 14px; font: 600 13px/1.2 inherit; text-decoration: none; }
+.am-reglinks a small { color: var(--text-muted); font-size: .68rem; font-weight: 500; }
+.am-reglinks a:hover, .am-reglinks a[aria-current="page"] { border-color: var(--hx-navy); }
+.am-reglinks a[aria-current="page"] { background: var(--hx-navy); color: #fff; } .am-reglinks a[aria-current="page"] small { color: rgba(255,255,255,.7); }
 .am-scards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; margin-top: 12px; }
 .am-scard { position: relative; display: flex; flex-direction: column; gap: 3px; text-align: left; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); border-radius: 10px; padding: 14px 16px 30px; cursor: pointer; font: inherit; }
 .am-scard b { color: var(--text-primary); font-size: 1.05rem; }
