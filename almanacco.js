@@ -16,7 +16,7 @@
   const CODE_CI = { ES1_M: 0, ES2_M: 1, AL_M: 2, JUN_M: 3, ELI_M: 4, ES1_F: 5, ES2_F: 5, AL_F: 6, JUN_F: 7, ELI_F: 8 };
   // categoria archivio -> codice classifica nativa (stagione in corso)
   const NATIVE = { 0: 'ES1_M', 1: 'ES2_M', 2: 'AL_M', 3: 'JUN_M', 4: 'ELI_M', 5: ['ES1_F', 'ES2_F'], 6: 'AL_F', 7: 'JUN_F', 8: 'ELI_F' };
-  const st = { data: null, sex: 'M', cat: null, period: 'arch', /* pagina unica: non si cambia piu */ live: null, modern: null };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
+  const st = { data: null, sex: 'M', cat: null, period: 'arch', /* pagina unica: non si cambia piu */ live: null, modern: null, reg: null, regIdx: [], regCache: {}, regNow: {} };   // cat: indice categoria (null = tutte); period: 'arch' (2007-2025) | 'now' (dal 2026)
 
   const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
   const nm = n => tc(String(n || '').replace(/\s+/g, ' ').trim());
@@ -44,6 +44,92 @@
     })));
     st.modern = out;
     return out;
+  }
+
+  // ---- per regione: file separato per ogni regione, caricato solo quando la si sceglie ----
+  const regKey = s => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  async function loadRegIdx() {
+    if (st.regIdx && st.regIdx.length) return st.regIdx;
+    try { const r = await loadJson('data/almanacco_regioni/index.json'); st.regIdx = (r && r.regions) || []; } catch (_) { st.regIdx = []; }
+    return st.regIdx;
+  }
+  async function loadReg(slug) {
+    if (st.regCache[slug]) return st.regCache[slug];
+    let r = null;
+    try { r = await loadJson(`data/almanacco_regioni/${slug}.json`); } catch (_) { /* si riprova alla prossima scelta */ }
+    if (r) st.regCache[slug] = r;     // un errore momentaneo non va ricordato
+    return r;
+  }
+  // stagione in corso: solo le gare disputate nella regione (regione della gara, anche dal calendario se manca nel risultato)
+  function regNow(regName) {
+    const key = regKey(regName);
+    if (st.regNow[key]) return st.regNow[key];
+    const calMap = {}; (globalData.calendar || []).forEach(g => { calMap[g.id] = g; });
+    const rows = [];
+    for (const r of globalData.resultsRaw || []) {
+      if (r.tipo === 'pista') continue;
+      const ci = CODE_CI[getRankingFileCode(r)];
+      if (ci == null) continue;
+      const cal = calMap[r.gara_id];
+      if (regKey(normalizeRegion(r.regione || (cal && cal.regione) || '')) !== key) continue;
+      rows.push({ r, ci });
+    }
+    return (st.regNow[key] = rows);
+  }
+  // chi guida quest'anno in ogni categoria (piu vittorie, poi podi) fra le gare della regione
+  function regLive(rd) {
+    const by = {};
+    regNow(rd.region).forEach(({ r, ci }) => {
+      if (!(r.posizione >= 1 && r.posizione <= 3)) return;
+      const m = by[ci] || (by[ci] = {});
+      const a = m[r.atleta_id] || (m[r.atleta_id] = { id: r.atleta_id, n: `${r.cognome || ''} ${r.nome || ''}`.trim(), p: 0, pd: 0 });
+      if (r.posizione === 1) a.p++;
+      a.pd++;
+    });
+    const out = {};
+    Object.keys(by).forEach(ci => { const b = Object.values(by[ci]).sort((x, y) => y.p - x.p || y.pd - x.pd)[0]; if (b && b.p > 0) out[ci] = b; });
+    return out;
+  }
+  function regRecords(rd, cur) {
+    const yrs = y => (!y || !y.length) ? '' : (y[0] === y[1] ? `${y[0]}` : `${y[0]}–${y[1]}`);
+    const sec = S(rd), now = regNow(rd.region).filter(x => inSel(x.ci));
+    const tot = new Map(), seasons = new Map(), teams = new Map();
+    for (const r of sec.winsTop.concat(sec.podiTop)) if (!tot.has(r.id)) tot.set(r.id, { id: r.id, n: r.n, w: r.w || 0, p: r.p || 0, y: (r.y || []).slice() });
+    for (const t of sec.teamsTop || []) teams.set(regKey(t.team), { team: t.team, w: t.w, p: t.p, y: (t.y || []).slice() });
+    for (const { r, ci } of now) {
+      const w = r.posizione === 1 ? 1 : 0, pd = (r.posizione >= 1 && r.posizione <= 3) ? 1 : 0;
+      if (!w && !pd) continue;
+      const nmA = `${r.cognome || ''} ${r.nome || ''}`.trim();
+      const a = tot.get(r.atleta_id) || tot.set(r.atleta_id, { id: r.atleta_id, n: nmA, w: 0, p: 0, y: [] }).get(r.atleta_id);
+      a.w += w; a.p += pd; a.y = a.y.length ? [Math.min(a.y[0], cur), Math.max(a.y[1], cur)] : [cur, cur];
+      if (w) { const k = r.atleta_id + '|' + ci; (seasons.get(k) || seasons.set(k, { id: r.atleta_id, n: nmA, y: cur, c: ci, w: 0 }).get(k)).w++; }
+      const tk = regKey(r.team);
+      if (tk) {
+        const t = teams.get(tk) || teams.set(tk, { team: r.team, w: 0, p: 0, y: [] }).get(tk);
+        t.w += w; t.p += pd; t.y = t.y.length ? [Math.min(t.y[0], cur), Math.max(t.y[1], cur)] : [cur, cur];
+      }
+    }
+    const all = [...tot.values()];
+    const topW = all.filter(x => x.w > 0).sort((a, b) => b.w - a.w || b.p - a.p).slice(0, 8);
+    const topP = all.filter(x => x.p > 0).sort((a, b) => b.p - a.p || b.w - a.w).slice(0, 8);
+    const best = sec.bestSeasons.concat([...seasons.values()]).sort((a, b) => b.w - a.w || b.y - a.y).slice(0, 8);
+    const topT = [...teams.values()].filter(t => t.w > 0 || t.p > 0).sort((a, b) => b.w - a.w || b.p - a.p).slice(0, 8);
+    const none = '<div class="am-none">Nessun dato per questa selezione.</div>';
+    const row = (i, href, name, small, val) => `<${href ? `a class="hx-si-r" href="${href}"` : 'div class="hx-si-r"'}><span class="n">${i + 1}</span><span class="nm">${name}${small ? `<small>${small}</small>` : ''}</span><span class="up">${val}</span></${href ? 'a' : 'div'}>`;
+    const ath = (arr, fn) => arr.length ? arr.map((r, i) => row(i, `/atleta/${encodeURIComponent(r.id)}`, esc(nm(r.n)), yrs(r.y), fn(r))).join('') : none;
+    const reg = tc(rd.region);
+    return `<section class="am-sec"><div class="hx-ph"><h2>Record in ${esc(reg)}</h2><small>Vittorie e podi nelle gare disputate in regione, dal ${rd.from} a oggi</small></div>
+      <div class="am-recs">
+        <div class="hx-panel"><h3>Più vittorie</h3>${ath(topW, r => `${r.w} vitt.`)}</div>
+        <div class="hx-panel"><h3>Più podi</h3>${ath(topP, r => `${r.p} podi`)}</div>
+        <div class="hx-panel"><h3>Più vittorie in una stagione</h3>${best.length ? best.map((r, i) => row(i, `/atleta/${encodeURIComponent(r.id)}`, esc(nm(r.n)), `${r.y} · ${SHORT[r.c]}`, `${r.w} vitt.`)).join('') : none}</div>
+        <div class="hx-panel"><h3>Team più vincenti</h3>${topT.length ? topT.map((t, i) => row(i, '', esc(tc(t.team)), yrs(t.y), `${t.w} vitt. · ${t.p} podi`)).join('') : none}</div>
+      </div></section>`;
+  }
+  function regSelect() {
+    const list = (st.regIdx || []).slice().sort((a, b) => a.name.localeCompare(b.name, 'it'));
+    if (!list.length) return '';
+    return `<div class="am-regrow"><label class="am-regsel"><span>Regione</span><select id="am-reg" aria-label="Regione"><option value="">Tutta Italia</option>${list.map(r => `<option value="${esc(r.slug)}" ${st.reg === r.slug ? 'selected' : ''}>${esc(tc(r.name))} · ${fmt(r.races)} gare</option>`).join('')}</select></label></div>`;
   }
 
   async function loadData() {
@@ -95,27 +181,28 @@
       <div class="am-multi">${top.map(h => `<a class="am-mrow" href="/atleta/${encodeURIComponent(h.id)}"><b>${esc(nm(h.n))}</b><span class="am-path">${h.titles.map(t => `<i>${t[0]}<em>${SHORT[t[1]]}</em></i>`).join('<u>›</u>')}</span><small>${h.cats} categorie</small></a>`).join('')}</div></section>`;
   }
 
-  function albo(d) {
+  function albo(d, o = {}) {
     const cols = st.cat != null ? [st.cat] : (st.sex === 'M' ? MEN : WOMEN);
     const hallIds = new Set(S(d).hall.map(h => h.id));
     const years = Object.keys(d.perYear).map(Number).sort((a, b) => b - a);
     const head = `<tr><th>Anno</th>${cols.map(c => `<th>${SHORT[c]}</th>`).join('')}</tr>`;
-    const live = st.live || {};
-    const liveRow = Object.keys(live).length ? `<tr class="am-live"><th>${d.to + 1}<small>in corso</small></th>${cols.map(c => { const l = live[c]; return `<td>${l ? `${link(l.id, l.n)}<small>${l.p} pt</small>` : '<span class="am-none">—</span>'}</td>`; }).join('')}</tr>` : '';
+    const live = o.live || st.live || {};
+    const unit = o.unit || 'pt';
+    const liveRow = Object.keys(live).length ? `<tr class="am-live"><th>${d.to + 1}<small>in corso</small></th>${cols.map(c => { const l = live[c]; return `<td>${l ? `${link(l.id, l.n)}<small>${l.p} ${unit}</small>` : '<span class="am-none">—</span>'}</td>`; }).join('')}</tr>` : '';
     const body = years.map(y => {
       const ch = d.perYear[y].champs;
-      return `<tr><th>${y}</th>${cols.map(c => { const k = d.cats[c]; const x = ch[k]; return `<td>${x ? `${link(x.id, x.n)}${hallIds.has(x.id) ? ' <em class="am-star" title="Campione più volte">★</em>' : ''}<small>${x.p} pt</small>` : '<span class="am-none">—</span>'}</td>`; }).join('')}</tr>`;
+      return `<tr><th>${y}</th>${cols.map(c => { const k = d.cats[c]; const x = ch[k]; return `<td>${x ? `${link(x.id, x.n)}${hallIds.has(x.id) ? ' <em class="am-star" title="Campione più volte">★</em>' : ''}<small>${x.p} ${unit}</small>` : '<span class="am-none">—</span>'}</td>`; }).join('')}</tr>`;
     }).join('');
-    return `<section class="am-sec"><div class="hx-ph"><h2>Albo delle classifiche finali</h2></div>
+    return `<section class="am-sec"><div class="hx-ph"><h2>${o.title || 'Albo delle classifiche finali'}</h2>${o.sub ? `<small>${o.sub}</small>` : ''}</div>
       <div class="am-table"><table><thead>${head}</thead><tbody>${liveRow}${body}</tbody></table></div>
-      <p class="am-note">★ campione più volte. La riga della stagione in corso è provvisoria e usa i punti del regolamento ICS; gli anni passati usano i punti di ciclismo.info.</p></section>`;
+      <p class="am-note">${o.note || '★ campione più volte. La riga della stagione in corso è provvisoria e usa i punti del regolamento ICS; gli anni passati usano i punti di ciclismo.info.'}</p></section>`;
   }
 
-  function dynasties(d) {
+  function dynasties(d, o = {}) {
     const top = S(d).dynasties.filter(x => x.titles.length >= 2).slice(0, 10);
     if (!top.length) return '';
-    return `<section class="am-sec"><div class="hx-ph"><h2>Dinastie dei team</h2><small>Classifica a squadre vinta più volte</small></div>
-      <div class="am-dyn">${top.map((x, i) => `<div class="am-drow"><span class="am-rk">${i + 1}</span><div class="am-dn"><b>${esc(tc(x.team))}</b><div class="am-chips">${x.titles.map(t => `<i>${t[0]} · ${SHORT[t[1]]}</i>`).join('')}</div></div><div class="am-dc"><b>${x.titles.length}</b><small>titoli${x.streak > 1 ? ` · ${x.streak} anni di fila` : ''}</small></div></div>`).join('')}</div></section>`;
+    return `<section class="am-sec"><div class="hx-ph"><h2>${o.title || 'Dinastie dei team'}</h2><small>${o.sub || 'Classifica a squadre vinta più volte'}</small></div>
+      <div class="am-dyn">${top.map((x, i) => `<div class="am-drow"><span class="am-rk">${i + 1}</span><div class="am-dn"><b>${esc(tc(x.team))}</b><div class="am-chips">${x.titles.map(t => `<i>${t[0]} · ${SHORT[t[1]]}</i>`).join('')}</div></div><div class="am-dc"><b>${x.titles.length}</b><small>${o.unit || 'titoli'}${x.streak > 1 ? ` · ${x.streak} anni di fila` : ''}</small></div></div>`).join('')}</div></section>`;
   }
 
   function records(d) {
@@ -151,7 +238,7 @@
   }
 
   function racesChart(d) {
-    const rows = S(d).racesPerYear, W = 720, H = 190, pl = 8, pb = 24, pt = 20, max = Math.max(...rows.map(r => r.n));
+    const rows = S(d).racesPerYear, W = 720, H = 190, pl = 8, pb = 24, pt = 20, max = Math.max(1, ...rows.map(r => r.n));
     const bw = (W - pl * 2) / rows.length;
     const bars = rows.map((r, i) => {
       const h = Math.max(2, (H - pb - pt) * r.n / max), x = pl + i * bw + 3, y = H - pb - h, low = r.n < max * 0.45;
@@ -202,17 +289,35 @@
     try { d = await loadData(); } catch (_) { d = null; }
     if (!d) return typeof window.renderHomeDashboard === 'function' ? window.renderHomeDashboard() : setPage('<div class="hx-wrap"><div class="hx-none">Dati non disponibili.</div></div>');
     d.counts = d.counts || { athletes: 0, teams: 0 };
-    await Promise.all([loadLive(), loadModern()]);
+    await Promise.all([loadLive(), loadModern(), loadRegIdx()]);
     const cur = (typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : d.to + 1;
     setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
     const paint = () => {
+      const rd = st.reg ? st.regCache[st.reg] : null;
+      if (st.reg && !rd) { st.reg = null; showToast && showToast('Dati della regione non disponibili, riprova', 'error'); }
+      const dd = rd || d, regName = rd ? tc(rd.region) : '';
+      if (rd) setPageMeta(`Statistiche del ciclismo giovanile in ${regName}: record, campioni e squadre`, `Chi ha vinto di più, le squadre più forti e l'albo anno per anno nelle gare disputate in ${regName} dal ${rd.from}.`);
+      else setPageMeta('Statistiche e almanacco del ciclismo giovanile italiano', `Albo delle classifiche, campioni, dinastie dei team e record del ciclismo agonistico italiano dal ${d.from}.`);
+      let body;
+      if (rd) {
+        const sec = S(rd), few = (sec.counts && sec.counts.races || 0) < 100;
+        const empty = !(sec.counts && sec.counts.races) && !regNow(rd.region).some(x => inSel(x.ci));
+        const note = empty ? `<div class="hx-none">Nessuna gara archiviata per questa selezione in ${esc(regName)}.</div>`
+          : `<p class="am-note">${few ? `Dati limitati: solo ${fmt(sec.counts.races)} gare archiviate per questa selezione in ${esc(regName)}. ` : ''}Si contano le gare disputate in ${esc(regName)}, non la regione di residenza di atleti e squadre. Dal ${rd.to + 1} i numeri sono quelli del sito.</p>`;
+        body = `${kpis(rd)}${note}${empty ? '' : regRecords(rd, cur) + albo(rd, { live: regLive(rd), unit: 'vitt.', title: 'Chi ha vinto di più, anno per anno', sub: `Atleta con più vittorie in ${esc(regName)} in ogni stagione`, note: `Per ogni stagione e categoria: l'atleta con più vittorie nelle gare disputate in ${esc(regName)} (a parità, più podi). La riga ${rd.to + 1} è la stagione in corso.` }) + dynasties(rd, { title: 'Squadre dominanti', sub: `Squadra con più vittorie in ${esc(regName)} in una stagione, più volte`, unit: 'anni in testa' }) + racesChart(rd)}`;
+      } else {
+        body = `${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}`;
+      }
       setPage(`<div class="hx-wrap am-wrap">
-        <div class="rs-head"><h1>Statistiche</h1><span class="rs-cnt">almanacco ${d.from}–${cur}</span>
+        <div class="rs-head"><h1>Statistiche${rd ? ` · ${esc(regName)}` : ''}</h1><span class="rs-cnt">almanacco ${d.from}–${cur}</span>
           <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div></div></div>
         <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${catsOfSex().map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
-        ${kpis(d)}${hallHtml(d)}${multiHtml(d)}${albo(d)}${dynasties(d)}${records(d)}${racesChart(d)}${rises(d)}
+        ${regSelect()}
+        ${body}
         <p class="am-note">Fonte: classifiche e risultati pubblicati da ciclismo.info (2007–${d.to}) e dati FCI per la stagione in corso. Confrontare i punti fra anni diversi ha senso solo dentro la stessa fonte.</p>
       </div>`);
+      const regSel = document.getElementById('am-reg');
+      if (regSel) regSel.onchange = async () => { st.reg = regSel.value || null; if (st.reg) await loadReg(st.reg); paint(); };
       document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap [data-per]').forEach(b => { b.onclick = () => { st.period = b.dataset.per; if (st.period === 'arch' && st.cat === 8) st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });

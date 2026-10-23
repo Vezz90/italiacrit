@@ -13826,6 +13826,10 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .am-filter button { border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); border-radius: 999px; padding: 0 14px; height: 34px; font: 600 12.5px/1 inherit; cursor: pointer; }
 .am-filter button:hover { border-color: var(--hx-navy); color: var(--text-primary); }
 .am-filter button[aria-pressed="true"] { background: var(--hx-navy); border-color: var(--hx-navy); color: #fff; }
+.am-regrow { margin: 8px 0 4px; }
+.am-regsel { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-secondary); font-weight: 600; }
+.am-regsel select { height: 34px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); border-radius: 999px; padding: 0 30px 0 14px; font: 600 12.5px/1 inherit; cursor: pointer; max-width: 100%; }
+.am-regsel select:hover, .am-regsel select:focus-visible { border-color: var(--hx-navy); outline: none; }
 .am-scards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; margin-top: 12px; }
 .am-scard { position: relative; display: flex; flex-direction: column; gap: 3px; text-align: left; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-secondary); border-radius: 10px; padding: 14px 16px 30px; cursor: pointer; font: inherit; }
 .am-scard b { color: var(--text-primary); font-size: 1.05rem; }
