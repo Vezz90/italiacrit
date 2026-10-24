@@ -1367,7 +1367,7 @@
     "team_nome": "G.S. LUPI VALLE D'AOSTA",
     "punti": 14,
     "vittorie": 0,
-    "gare": 4,
+    "gare": 3,
     "p1": 0,
     "p2": 0,
     "p3": 0,
@@ -1447,7 +1447,7 @@
     "team_nome": "S.C. CESANO MADERNO",
     "punti": 13,
     "vittorie": 0,
-    "gare": 5,
+    "gare": 4,
     "p1": 0,
     "p2": 0,
     "p3": 0,
@@ -1751,7 +1751,7 @@
     "team_nome": "S.C. CESANO MADERNO",
     "punti": 7,
     "vittorie": 0,
-    "gare": 3,
+    "gare": 2,
     "p1": 0,
     "p2": 0,
     "p3": 0,
@@ -1808,22 +1808,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "VENDITTO_ANNA",
-    "cognome": "VENDITTO",
-    "nome": "ANNA",
-    "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "team_nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti": 6,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "pos": 114,
-    "trend": null
-  },
-  {
     "atleta_id": "MARTINELLO_CLARA",
     "cognome": "MARTINELLO",
     "nome": "CLARA",
@@ -1836,8 +1820,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 115,
-    "trend": -1
+    "pos": 114,
+    "trend": 1
   },
   {
     "atleta_id": "BOHAK_ZIVA",
@@ -1852,8 +1836,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 116,
-    "trend": -1
+    "pos": 115,
+    "trend": 1
   },
   {
     "atleta_id": "ISORNI_CAMILLA",
@@ -1868,8 +1852,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 117,
-    "trend": -1
+    "pos": 116,
+    "trend": 1
   },
   {
     "atleta_id": "DRESCO_LAYLA",
@@ -1884,8 +1868,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 118,
-    "trend": -1
+    "pos": 117,
+    "trend": 1
   },
   {
     "atleta_id": "PAGANO_SOFIA",
@@ -1900,8 +1884,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 119,
-    "trend": -1
+    "pos": 118,
+    "trend": 1
   },
   {
     "atleta_id": "TORRES_ANGELICA_ELIZABETH",
@@ -1916,8 +1900,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 120,
-    "trend": -1
+    "pos": 119,
+    "trend": 1
   },
   {
     "atleta_id": "DI_RUSCIO_LUDOVICA",
@@ -1932,8 +1916,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 121,
-    "trend": -1
+    "pos": 120,
+    "trend": 1
   },
   {
     "atleta_id": "PREVODNIK_BRINA",
@@ -1948,8 +1932,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 122,
-    "trend": -1
+    "pos": 121,
+    "trend": 1
   },
   {
     "atleta_id": "SALVATO_ANGELICA",
@@ -1964,8 +1948,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 123,
-    "trend": -1
+    "pos": 122,
+    "trend": 1
   },
   {
     "atleta_id": "WENDEL_JOSEFINE",
@@ -1980,8 +1964,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 124,
-    "trend": -1
+    "pos": 123,
+    "trend": 1
   },
   {
     "atleta_id": "PUGLIESE_MEGAN",
@@ -1996,8 +1980,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 125,
-    "trend": -1
+    "pos": 124,
+    "trend": 1
   },
   {
     "atleta_id": "COLZI_SARA",
@@ -2012,8 +1996,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 126,
-    "trend": -1
+    "pos": 125,
+    "trend": 1
   },
   {
     "atleta_id": "BOSSINI_VIOLA_EMMA",
@@ -2028,8 +2012,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 127,
-    "trend": -1
+    "pos": 126,
+    "trend": 1
   },
   {
     "atleta_id": "GORLANI_LARA",
@@ -2044,8 +2028,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 128,
-    "trend": -1
+    "pos": 127,
+    "trend": 1
   },
   {
     "atleta_id": "REBBA_MARTA",
@@ -2060,8 +2044,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 129,
-    "trend": -1
+    "pos": 128,
+    "trend": 1
   },
   {
     "atleta_id": "PIGNATO_MARTINA",
@@ -2076,8 +2060,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 130,
-    "trend": -1
+    "pos": 129,
+    "trend": 1
   },
   {
     "atleta_id": "BERTA_LUCIA",
@@ -2092,23 +2076,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 131,
-    "trend": -1
-  },
-  {
-    "atleta_id": "CACCIA_ANNA",
-    "cognome": "CACCIA",
-    "nome": "ANNA",
-    "team_id": "GS_CICLI_FIORIN_ASD",
-    "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 0,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "pos": 132,
-    "trend": null
+    "pos": 130,
+    "trend": 1
   }
 ]
