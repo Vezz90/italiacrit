@@ -9075,6 +9075,298 @@
       }
     ]
   },
+  "LONGO_BORGHINI_ELISA": {
+    "id": "LONGO_BORGHINI_ELISA",
+    "nome": "BORGHINI ELISA",
+    "cognome": "LONGO",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 105,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ELITE_UNDER_23_2026-06-28_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ELITE UNDER 23",
+        "data": "2026-06-28",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "116.200",
+        "media": "41.222"
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      }
+    ]
+  },
+  "VIGILIA_ALESSIA": {
+    "id": "VIGILIA_ALESSIA",
+    "nome": "ALESSIA",
+    "cognome": "VIGILIA",
+    "team_attuale": "UNO-X MOBILITY",
+    "team_id": "UNO_X_MOBILITY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "UNO-X MOBILITY",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      }
+    ]
+  },
+  "BORGHESI_LETIZIA": {
+    "id": "BORGHESI_LETIZIA",
+    "nome": "LETIZIA",
+    "cognome": "BORGHESI",
+    "team_attuale": "AG INSURANCE SOUDAL",
+    "team_id": "AG_INSURANCE_SOUDAL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "AG INSURANCE SOUDAL",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      }
+    ]
+  },
+  "SILO_GIADA": {
+    "id": "SILO_GIADA",
+    "nome": "GIADA",
+    "cognome": "SILO",
+    "team_attuale": "UAE DEVELOPMENT TEAM",
+    "team_id": "UAE_DEVELOPMENT_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 19,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "UAE DEVELOPMENT TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
+        "nome_gara": "GRAN PREMIO DELLA LIBERAZIONE DONNE",
+        "data": "2026-04-25",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "UAE DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "96.000",
+        "media": "38.736"
+      }
+    ]
+  },
+  "BUSSI_VITTORIA": {
+    "id": "BUSSI_VITTORIA",
+    "nome": "VITTORIA",
+    "cognome": "BUSSI",
+    "team_attuale": "TEAM ESSERE",
+    "team_id": "TEAM_ESSERE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 22,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM ESSERE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      },
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_F",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM ESSERE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "23.600",
+        "media": "44.320"
+      }
+    ]
+  },
+  "MOSER_CARMEN": {
+    "id": "MOSER_CARMEN",
+    "nome": "CARMEN",
+    "cognome": "MOSER",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 33,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      },
+      {
+        "gara_id": "CRONO_FESTA_DELL_UVA_2026-09-26_ELI_F",
+        "nome_gara": "CRONO FESTA DELL'UVA",
+        "data": "2026-09-26",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "5.100",
+        "media": "26.117"
+      },
+      {
+        "gara_id": "GIRO_MEDITERRANEO_ROSA_SECONDA_PROVA_2026-09-19_ELI_F",
+        "nome_gara": "GIRO MEDITERRANEO ROSA SECONDA PROVA",
+        "data": "2026-09-19",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "81.200",
+        "media": "33.546"
+      }
+    ]
+  },
+  "ONGARATO_LIVIELLE": {
+    "id": "ONGARATO_LIVIELLE",
+    "nome": "LIVIELLE",
+    "cognome": "ONGARATO",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 34,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_INDIVIDUALE_2026-10-24_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO INDIVIDUALE",
+        "data": "2026-10-24",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "19.700",
+        "media": "50.835"
+      },
+      {
+        "gara_id": "GIRO_MEDITERRANEO_ROSA_TERZA_PROVA_2026-09-20_ELI_F",
+        "nome_gara": "GIRO MEDITERRANEO ROSA TERZA PROVA",
+        "data": "2026-09-20",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "92.400",
+        "media": "42.000"
+      },
+      {
+        "gara_id": "MEMORIAL_FRANCO_TRAVERSA_CRONOMETRO_INDIVIDUALE_2026-09-12_ELI_F",
+        "nome_gara": "MEMORIAL FRANCO TRAVERSA CRONOMETRO INDIVIDUALE",
+        "data": "2026-09-12",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "2.850",
+        "media": "47.407"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
   "BIANCALANI_ANDREA": {
     "id": "BIANCALANI_ANDREA",
     "nome": "ANDREA",
@@ -93279,44 +93571,6 @@
       }
     ]
   },
-  "MOSER_CARMEN": {
-    "id": "MOSER_CARMEN",
-    "nome": "CARMEN",
-    "cognome": "MOSER",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 23,
-    "risultati": [
-      {
-        "gara_id": "CRONO_FESTA_DELL_UVA_2026-09-26_ELI_F",
-        "nome_gara": "CRONO FESTA DELL'UVA",
-        "data": "2026-09-26",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "5.100",
-        "media": "26.117"
-      },
-      {
-        "gara_id": "GIRO_MEDITERRANEO_ROSA_SECONDA_PROVA_2026-09-19_ELI_F",
-        "nome_gara": "GIRO MEDITERRANEO ROSA SECONDA PROVA",
-        "data": "2026-09-19",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "81.200",
-        "media": "33.546"
-      }
-    ]
-  },
   "CURNIS_VALERIA": {
     "id": "CURNIS_VALERIA",
     "nome": "VALERIA",
@@ -100005,57 +100259,6 @@
         "regione": "TOSCANA",
         "km": "83.920",
         "media": "38.422"
-      }
-    ]
-  },
-  "ONGARATO_LIVIELLE": {
-    "id": "ONGARATO_LIVIELLE",
-    "nome": "LIVIELLE",
-    "cognome": "ONGARATO",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 26,
-    "risultati": [
-      {
-        "gara_id": "GIRO_MEDITERRANEO_ROSA_TERZA_PROVA_2026-09-20_ELI_F",
-        "nome_gara": "GIRO MEDITERRANEO ROSA TERZA PROVA",
-        "data": "2026-09-20",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "92.400",
-        "media": "42.000"
-      },
-      {
-        "gara_id": "MEMORIAL_FRANCO_TRAVERSA_CRONOMETRO_INDIVIDUALE_2026-09-12_ELI_F",
-        "nome_gara": "MEMORIAL FRANCO TRAVERSA CRONOMETRO INDIVIDUALE",
-        "data": "2026-09-12",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "2.850",
-        "media": "47.407"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
-        "data": "2026-06-12",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "15.000",
-        "media": "45.000"
       }
     ]
   },
@@ -190310,44 +190513,6 @@
       }
     ]
   },
-  "LONGO_BORGHINI_ELISA": {
-    "id": "LONGO_BORGHINI_ELISA",
-    "nome": "BORGHINI ELISA",
-    "cognome": "LONGO",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 75,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ELITE_UNDER_23_2026-06-28_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ELITE UNDER 23",
-        "data": "2026-06-28",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "116.200",
-        "media": "41.222"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      }
-    ]
-  },
   "TRINCA_COLONEL_MONICA": {
     "id": "TRINCA_COLONEL_MONICA",
     "nome": "MONICA",
@@ -206031,31 +206196,6 @@
       }
     ]
   },
-  "BUSSI_VITTORIA": {
-    "id": "BUSSI_VITTORIA",
-    "nome": "VITTORIA",
-    "cognome": "BUSSI",
-    "team_attuale": "TEAM ESSERE",
-    "team_id": "TEAM_ESSERE",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_F",
-        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "TEAM ESSERE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "23.600",
-        "media": "44.320"
-      }
-    ]
-  },
   "NICHOLSON_KATELYN_MARIE_JANETTE": {
     "id": "NICHOLSON_KATELYN_MARIE_JANETTE",
     "nome": "KATELYN MARIE JANETTE",
@@ -210737,31 +210877,6 @@
         "posizione": 3,
         "punti_effettivi": 30,
         "team": "NEXETIS TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "96.000",
-        "media": "38.736"
-      }
-    ]
-  },
-  "SILO_GIADA": {
-    "id": "SILO_GIADA",
-    "nome": "GIADA",
-    "cognome": "SILO",
-    "team_attuale": "UAE DEVELOPMENT TEAM",
-    "team_id": "UAE_DEVELOPMENT_TEAM",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
-        "nome_gara": "GRAN PREMIO DELLA LIBERAZIONE DONNE",
-        "data": "2026-04-25",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "UAE DEVELOPMENT TEAM",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "LAZIO",
