@@ -1300,14 +1300,22 @@ function _findCalEntryForNativeGaraId(calendar, garaId) {
   }
   const base = _ogNormBase(bareId.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
   if (!base) return null;
-  let best = null, bestLen = 0;
+  let best = null, bestLen = 0, bestCat = -1;
+  // a parita' di nome (stesso campionato in piu' categorie) vince la voce del calendario con la categoria giusta
+  const catM = garaId.match(/_(ELI|JUN|AL|ES1|ES2)_([MF])$/);
+  const catOk = g => {
+    if (!catM) return 0;
+    const t = String(g.categoria || '') + ' ' + String(g.nome || ''), fem = /DONN|FEMM/i.test(t);
+    const band = { ELI: /ELITE|UNDER|U\.?23/i, JUN: /JUNIOR/i, AL: /ALLIEV/i, ES1: /ESORD/i, ES2: /ESORD/i }[catM[1]];
+    return (band.test(t) ? 1 : 0) + ((catM[2] === 'F') === fem ? 1 : 0);
+  };
   for (const g of (calendar || [])) {
     if (g.data !== date || !g.id) continue;
     const gBase = _ogNormBase(g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').replace(/^\d+(?:ED)?_/i, ''));
     if (!gBase) continue;
     if (gBase.startsWith(base) || base.startsWith(gBase)) {
-      const len = Math.min(gBase.length, base.length);
-      if (len > bestLen) { bestLen = len; best = g; }
+      const len = Math.min(gBase.length, base.length), c = catOk(g);
+      if (len > bestLen || (len === bestLen && c > bestCat)) { bestLen = len; best = g; bestCat = c; }
     }
   }
   if (best) return best;
@@ -12009,6 +12017,7 @@ function buildGaraResultsCardSvg({ title, catLabel, date, mult, km, media, winne
   const metaParts = [date, mult ? `×${mult}` : '', km ? `${km} km` : '', media ? `${media} km/h` : '', winnerTime ? `⏱ ${winnerTime}` : ''].filter(Boolean);
 
   const listTop0 = 150, listBot = 578;
+  results = results.slice().sort((a, b) => Number(a.posizione) - Number(b.posizione)).slice(0, 10);   // ora le gare possono avere l'ordine d'arrivo completo
   const n = results.length;
   const availH = listBot - listTop0;
   const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 6)) : 0;
