@@ -203,30 +203,49 @@ module.exports = function registerRedazione(app, deps) {
     const key = process.env.ANTHROPIC_API_KEY;
     if (!key) throw new Error('ANTHROPIC_API_KEY non configurata');
     let messages = [{ role: 'user', content: prompt }];
-    const body0 = { model: MODEL, max_tokens: web ? 7000 : 4000, thinking: { type: 'disabled' } };
+    const body0 = { model: MODEL, max_tokens: web ? 14000 : 6000, thinking: { type: 'disabled' } };
     if (web) body0.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
-    const fonti = new Map(); let texts = [], usage = null;
+    const fonti = new Map(); let texts = [], usage = null, stop = '';
     for (let giro = 0; giro < 4; giro++) {
       const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ ...body0, messages }), signal: AbortSignal.timeout(170000) });
       const j = await r.json();
       if (!r.ok) throw new Error(`Claude ${r.status}: ${(j.error && j.error.message) || ''}`);
-      usage = j.usage;
+      usage = j.usage; stop = j.stop_reason;
       for (const b of j.content || []) {
         if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) b.content.forEach(x => { if (x.url) fonti.set(x.url, { titolo: x.title || x.url, url: x.url, uso: 'consultata nella ricerca' }); });
         if (b.type === 'text') { texts.push(b.text); (b.citations || []).forEach(c => { if (c.url) fonti.set(c.url, { titolo: c.title || c.url, url: c.url, uso: 'citata nel testo' }); }); }
       }
-      if (j.stop_reason !== 'pause_turn') return { text: texts.join('\n'), lastText: texts[texts.length - 1] || '', fonti: [...fonti.values()], usage };
+      if (j.stop_reason !== 'pause_turn') return { text: texts.join('\n'), lastText: texts[texts.length - 1] || '', fonti: [...fonti.values()], usage, stop };
       messages = [...messages, { role: 'assistant', content: j.content }]; texts = [];
     }
     throw new Error('la ricerca web non si e conclusa: riprova');
   }
+  function sezioni(t) {
+    const out = {}; const re = /^={3}([A-Z_]+)={3}[ \t]*$/gm; let m, prev = null, start = 0;
+    while ((m = re.exec(t))) { if (prev) out[prev] = t.slice(start, m.index).trim(); prev = m[1]; start = re.lastIndex; }
+    if (prev) out[prev] = t.slice(start).trim();
+    return out;
+  }
   function parseJson(res) {
-    for (const t of [res.lastText, res.text]) {
-      const a = t.indexOf('{'), b = t.lastIndexOf('}');
-      if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { /* prova l'altro */ } }
+    const tutti = [res.lastText, res.text, (res.text || '') + '\n' + (res.lastText || '')];
+    for (const t of tutti) {
+      const x = sezioni(t || '');
+      if (x.CORPO && x.CORPO.length > 80) {
+        const righe = v => String(v || '').split('\n').map(r => r.replace(/^[-*•]\s*/, '').trim()).filter(Boolean);
+        return {
+          titolo: (x.TITOLO || '').split('\n')[0].trim(), sommario: x.SOMMARIO || '', corpo: x.CORPO,
+          fonti: righe(x.FONTI).map(r => { const [titolo, url, uso] = r.split('|').map(q => q.trim()); return /^https?:\/\//i.test(url || '') ? { titolo: titolo || url, url, uso: uso || '' } : null; }).filter(Boolean),
+          da_verificare: righe(x.DA_VERIFICARE), tag: String(x.TAG || '').split(',').map(q => q.trim()).filter(Boolean),
+        };
+      }
     }
-    throw new Error('risposta dell\'AI non leggibile: riprova');
+    for (const t of [res.lastText, res.text]) {                          // ripiego: se l'AI ha risposto comunque in JSON
+      const a = (t || '').indexOf('{'), b = (t || '').lastIndexOf('}');
+      if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { /* niente */ } }
+    }
+    const e = new Error('risposta dell\'AI non leggibile' + (res.stop === 'max_tokens' ? ' (testo troncato: troppo lungo)' : '') + ' — inizio: ' + String(res.text || '').replace(/\s+/g, ' ').slice(0, 300));
+    throw e;
   }
 
   const REGOLE = `Sei il cronista di italiacyclingstats.com, sito italiano di statistiche del ciclismo giovanile, dilettantistico e under 23/elite. Scrivi un articolo in italiano.
@@ -239,8 +258,19 @@ REGOLE DI METODO (obbligatorie):
 5. Per atleti minorenni usa solo nome, squadra e risultati sportivi: mai età, scuola, residenza o altro. Non usare il web per cercare informazioni sui minorenni.
 6. Tono: giornalismo sportivo vivo e umano, frasi brevi e più lunghe alternate, immagini efficaci senza cliché ("saldamente", "da sottolineare", "gran finale"). Non ripetere due volte la stessa informazione.
 
-FORMATO DELLA RISPOSTA: SOLO un oggetto JSON, senza altro testo, con queste chiavi:
-{"titolo": "...", "sommario": "1-2 frasi", "corpo": "paragrafi separati da una riga vuota; eventuali sottotitoli con '## '", "fonti": [{"titolo":"...","url":"...","uso":"cosa ne hai ricavato"}], "da_verificare": ["cose che un redattore deve controllare prima della pubblicazione"], "tag": ["..."]}`;
+FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta dalla sua riga di intestazione, senza altro testo prima o dopo:
+===TITOLO===
+(una riga)
+===SOMMARIO===
+(1-2 frasi)
+===CORPO===
+(paragrafi separati da una riga vuota; eventuali sottotitoli con '## ')
+===FONTI===
+(una per riga: titolo | indirizzo | cosa ne hai ricavato; lascia vuoto se non hai usato fonti esterne)
+===DA_VERIFICARE===
+(una per riga, cose che un redattore deve controllare prima della pubblicazione; vuoto se nulla)
+===TAG===
+(parole chiave separate da virgola)`;
 
   const ISTRUZIONI = {
     gara: f => f.stato === 'risultati'
