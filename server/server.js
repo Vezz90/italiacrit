@@ -12530,6 +12530,20 @@ async function _generateGaraOgBuffer(garaId, adjust) {
     _ogShortLived.add(`gara_${garaId}`);
   }
 
+  // 1b) Niente foto della gara: se il vincitore ha una foto profilo, va a sinistra
+  // con l'ordine d'arrivo a destra (stesso layout della foto gara).
+  try {
+    if (results.length && first && first.atleta_id) {
+      const wPhoto = await getEntityPhoto('atleta', first.atleta_id);
+      if (wPhoto) {
+        const SPLIT_PHOTO_W = 690, SPLIT_H = 630;
+        const panelSvg = buildGaraSplitPanelSvg({ catLabel, title, subtitle: photoSubtitle, results, credit: null, panelW: 1200 - SPLIT_PHOTO_W, H: SPLIT_H });
+        const wbuf = await _photoSplitOgPng(wPhoto, panelSvg, adjust, SPLIT_PHOTO_W, SPLIT_H);
+        if (wbuf) return wbuf;
+      }
+    }
+  } catch (e) { console.error(`[og-image] foto vincitore fallita per ${garaId}:`, e.message); }
+
   // 2) Niente foto né video (o il percorso foto ha impiegato troppo): la
   // stessa card "lista risultati" mostrata
   // nelle grafiche Instagram/Post generate lato client (posizioni, nomi,
