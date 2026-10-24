@@ -104,7 +104,7 @@
     "p2": 1,
     "p3": 2,
     "pout": 33,
-    "n_atleti": 6,
+    "n_atleti": 7,
     "pos": 9
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
+    "team_nome": "ASD PEDALE CASALESE ARMOFER",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 60
+  },
+  {
     "team_id": "PIKA_TEAM_BY_MASTERCARD",
     "team_nome": "PIKA TEAM BY MASTERCARD",
     "punti": 3,
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "GERMANIA",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "GAZZANIGHESE_ASD",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "LIGURIA",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "VALLE_D_AOSTA",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "MARCHE",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "FRIULI_VENEZIA_GIULIA",
@@ -789,6 +801,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 66
+    "pos": 67
   }
 ]

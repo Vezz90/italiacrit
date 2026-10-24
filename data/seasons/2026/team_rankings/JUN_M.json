@@ -20,7 +20,7 @@
     "p2": 10,
     "p3": 7,
     "pout": 59,
-    "n_atleti": 13,
+    "n_atleti": 14,
     "pos": 2
   },
   {
@@ -128,7 +128,7 @@
     "p2": 6,
     "p3": 5,
     "pout": 39,
-    "n_atleti": 9,
+    "n_atleti": 10,
     "pos": 11
   },
   {
@@ -1028,7 +1028,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "n_atleti": 5,
+    "n_atleti": 6,
     "pos": 86
   },
   {
@@ -1040,7 +1040,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "n_atleti": 4,
+    "n_atleti": 5,
     "pos": 87
   },
   {
@@ -1582,5 +1582,29 @@
     "pout": 0,
     "n_atleti": 2,
     "pos": 132
+  },
+  {
+    "team_id": "PED_CASALESE_ARMOFER_CASANO_CICLI_DRALI",
+    "team_nome": "PED.CASALESE ARMOFER CASANO CICLI DRALI",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 5,
+    "pos": 133
+  },
+  {
+    "team_id": "O_P_BIKE_A_S_D",
+    "team_nome": "O.P. BIKE A.S.D.",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 134
   }
 ]

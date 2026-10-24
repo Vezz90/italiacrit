@@ -404,7 +404,7 @@
     "p2": 3,
     "p3": 7,
     "pout": 22,
-    "n_atleti": 4,
+    "n_atleti": 5,
     "pos": 34
   },
   {
@@ -2448,8 +2448,8 @@
     "pos": 204
   },
   {
-    "team_id": "ASD_TEAM_ALTO_BRADANO",
-    "team_nome": "ASD TEAM ALTO BRADANO",
+    "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
+    "team_nome": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
     "punti": 0,
     "vittorie": 0,
     "p1": 0,
@@ -2458,5 +2458,17 @@
     "pout": 0,
     "n_atleti": 1,
     "pos": 205
+  },
+  {
+    "team_id": "SCONOSCIUTO",
+    "team_nome": "",
+    "punti": 0,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 206
   }
 ]
