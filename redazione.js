@@ -8,7 +8,7 @@
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta (solo maggiorenni)' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
-  const st = { bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
+  const st = { attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
   const api = (p, o) => apiCall('/admin/redazione' + p, o);
@@ -16,7 +16,7 @@
   async function carica() {
     try { st.bozze = (await api('/bozze')).bozze || []; st.err = ''; }
     catch (e) { st.err = e.message || 'Errore di lettura'; }
-    const inCorso = st.bozze.some(b => b.stato === 'in_generazione' && Date.now() - Date.parse(b.creato) < 12 * 60000);
+    const inCorso = st.bozze.some(b => b.stato === 'in_generazione' && Date.now() - Date.parse(b.creato) < 12 * 60000) || Date.now() < st.attesa;
     clearTimeout(st.timer);
     if (inCorso && document.querySelector('.rd-wrap')) st.timer = setTimeout(async () => { await carica(); paint(true); }, 6000);
   }
@@ -45,10 +45,11 @@
   }
 
   function lista() {
-    return `<div class="hx-panel"><h3>Bozze <small class="rd-muted">${st.bozze.length}</small></h3>${st.err ? `<div class="rd-err">${esc(st.err)}</div>` : ''}
-      ${st.bozze.map(b => `<button type="button" class="rd-item ${st.sel === b.id ? 'on' : ''}" data-open="${b.id}">
+    const vis = st.bozze.filter(b => b.stato !== 'scartata');
+    return `<div class="hx-panel"><h3>Articoli <small class="rd-muted">${vis.length}</small></h3>${st.err ? `<div class="rd-err">${esc(st.err)}</div>` : ''}
+      ${vis.map(b => `<button type="button" class="rd-item ${st.sel === b.id ? 'on' : ''}" data-open="${b.id}">
         <span class="rd-chip s-${b.stato}">${STATI[b.stato] || b.stato}</span><b>${esc(b.titolo || b.soggetto || '—')}</b>
-        <small>${esc(TIPI[b.tipo] || b.tipo)} · ${fmtData(b.aggiornato || b.creato)}</small></button>`).join('') || '<small class="rd-muted">Nessuna bozza ancora. Generane una a sinistra.</small>'}</div>`;
+        <small>${esc(TIPI[b.tipo] || b.tipo)} · ${fmtData(b.aggiornato || b.creato)}</small></button>`).join('') || '<small class="rd-muted">Nessun articolo ancora. Premi "Scrivi gli articoli": ci vogliono un paio di minuti per ciascuno.</small>'}</div>`;
   }
 
   function editor() {
@@ -86,8 +87,12 @@
       return;
     }
     setPage(`<div class="hx-wrap rd-wrap">
-      <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">bozze private · nessuna pubblicazione</span></div>
-      <div class="rd-grid"><div class="rd-side"><div class="rd-form">${form()}</div><div class="rd-list">${lista()}</div></div><div class="rd-ed">${editor()}</div></div></div>`);
+      <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
+      <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
+        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico ogni mezz'ora.</small>
+        <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
+      <div class="rd-form rd-more" ${st.altro ? '' : 'hidden'}>${form()}</div>
+      <div class="rd-grid"><div class="rd-side"><div class="rd-list">${lista()}</div></div><div class="rd-ed">${editor()}</div></div></div>`);
     lega();
   }
 
@@ -98,6 +103,8 @@
     const q = w.querySelector('#rd-q'); if (q) q.oninput = () => { clearTimeout(tm); tm = setTimeout(async () => { st.q = q.value; await cercaOra(); const pos = q.selectionStart; w.querySelector('.rd-form').innerHTML = form(); lega(); const n = w.querySelector('#rd-q'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (_) {} }, 350); };
     w.querySelectorAll('[data-pick]').forEach(b => { b.onclick = () => { const r = st.cerca.find(x => x.id === b.dataset.pick); st.pick = r || null; w.querySelector('.rd-form').innerHTML = form(); lega(); }; });
     const g = w.querySelector('#rd-genera'); if (g) g.onclick = genera;
+    const au = w.querySelector('#rd-auto'); if (au) au.onclick = async () => { try { await api('/auto', { method: 'POST', body: {} }); st.attesa = Date.now() + 6 * 60000; if (typeof showToast === 'function') showToast('Sto scrivendo: gli articoli compaiono a sinistra man mano'); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); } await carica(); paint(); };
+    const al = w.querySelector('#rd-altro'); if (al) al.onclick = () => { st.altro = !st.altro; w.querySelector('.rd-more').hidden = !st.altro; al.textContent = st.altro ? 'Chiudi' : 'Un altro articolo…'; };
     w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; paint(); }; });
     const ed = w.querySelector('.rd-editor');
     if (ed) {
@@ -143,7 +150,9 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
-    st.msg = ''; await Promise.all([carica(), cercaOra()]); paint();
+    st.msg = ''; await Promise.all([carica(), cercaOra()]);
+    if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
+    paint();
   }
   window.renderRedazione = render;
 })();

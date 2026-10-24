@@ -13875,3 +13875,8 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .rd-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; } .rd-btns .ok { background: #0f6b3a; color: #fff; }
 .rd-msg { margin-top: 10px; font-size: .82rem; color: var(--text-secondary); } .rd-err { color: #c0392b; font-size: .85rem; margin: 6px 0; }
 @media (max-width: 860px) { .rd-wrap .rd-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.rd-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 14px; }
+.rd-bar small { flex: 1 1 260px; }
+.rd-more { margin-bottom: 14px; }
+.rd-more[hidden] { display: none; }

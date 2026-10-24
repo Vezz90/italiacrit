@@ -89,7 +89,13 @@ module.exports = function registerRedazione(app, deps) {
   }
 
   // ---------- DATI per tipo ----------
-  async function factsGara(id) {
+  async function albi(c, cal, opts) {
+    const voci = opts.tutte ? (cal || []).filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).slice(0, 4) : [c];
+    const out = [], visti = new Set();
+    for (const v of (voci.length ? voci : [c])) for (const a of await alboFor(v.nome, v.categoria)) { if (!visti.has(a.serie)) { visti.add(a.serie); out.push(a); } }
+    return out;
+  }
+  async function factsGara(id, opts = {}) {
     const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
     const c = (cal || []).find(x => x.id === id);
     if (!c) throw new Error('gara non trovata nel calendario: ' + id);
@@ -97,7 +103,7 @@ module.exports = function registerRedazione(app, deps) {
     const cband = /allie/i.test(c.categoria || '') ? 'AL' : /junior/i.test(c.categoria || '') ? 'JUN' : /elite|under|u23/i.test(c.categoria || '') ? 'ELI' : /esord/i.test(c.categoria || '') ? 'ES' : '';
     const cg = /donn|femmin|allieve/i.test(c.categoria || '') ? 'F' : 'M', cbase = alboBase(c.nome);
     const same = r => r.gara_id === id || String(r.gara_id || '').startsWith(id + '_')
-      || (r.data === c.data && alboBase(r.nome_gara) === cbase && (() => { const k = catOf(r); return !k || !cband || (k.replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES') === cband && k.slice(-1) === cg); })());
+      || (r.data === c.data && alboBase(r.nome_gara) === cbase && (() => { const k = catOf(r); return opts.tutte || !k || !cband || (k.replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES') === cband && k.slice(-1) === cg); })());
     let rows = (raw || []).filter(same);
     try {                                                                    // righe inserite a mano (ordine d'arrivo completo): si aggiungono se mancano
       const { data: man } = await sb().from('manual_results').select('*').eq('data', c.data);
@@ -112,9 +118,10 @@ module.exports = function registerRedazione(app, deps) {
     }));
     return {
       oggi: today(), stato: rows.length ? 'risultati' : 'anteprima',
-      gara: { nome: c.nome, data: c.data, luogo: c.luogo, regione: c.regione, categoria_calendario: c.categoria, tipo: c.tipo, moltiplicatore_punti: c.moltiplicatore,
+      gara: { nome: (opts.tutte && rows.length) ? rows.map(r => r.nome_gara).filter(Boolean).sort((x, y) => x.length - y.length)[0] || c.nome : c.nome, data: c.data, luogo: c.luogo, regione: c.regione,
+        categoria_calendario: opts.tutte ? 'tutte le categorie dell evento (vedi risultati)' : c.categoria, tipo: c.tipo, moltiplicatore_punti: c.moltiplicatore,
         campionato_italiano: !!c.campionato_italiano, campionato_regionale: !!c.campionato_regionale },
-      risultati, albo_doro: await alboFor(c.nome, c.categoria),
+      risultati, albo_doro: await albi(c, cal, opts),
     };
   }
 
@@ -245,7 +252,7 @@ FORMATO DELLA RISPOSTA: SOLO un oggetto JSON, senza altro testo, con queste chia
 
   async function genera(tipo, p) {
     let facts, soggetto;
-    if (tipo === 'gara') { facts = await factsGara(p.id); soggetto = facts.gara.nome; }
+    if (tipo === 'gara') { facts = await factsGara(p.id, { tutte: !!p.tutte }); soggetto = facts.gara.nome; }
     else if (tipo === 'settimana') { facts = await factsSettimana(p.fine); soggetto = `Il punto della settimana (${facts.periodo.dal} – ${facts.periodo.al})`; }
     else if (tipo === 'atleta') { facts = await factsAtleta(p.id); soggetto = facts.atleta.nome; }
     else throw new Error('tipo non valido');
@@ -273,21 +280,76 @@ FORMATO DELLA RISPOSTA: SOLO un oggetto JSON, senza altro testo, con queste chia
     catch (e) { res.status(500).json({ error: e.message }); }
   });
 
+  // crea la bozza (in scrittura) e la completa in background: la generazione puo durare 1-2 minuti con la ricerca web
+  async function avvia(tipo, p, soggetto) {
+    const id = crypto.randomBytes(6).toString('hex'), now = new Date().toISOString();
+    await mutate(arr => { arr.push({ id, tipo, stato: 'in_generazione', soggetto: soggetto || p.id || 'settimana', parametri: p, creato: now, aggiornato: now }); });
+    const fine = genera(tipo, p).then(art => mutate(arr => { const x = arr.find(a => a.id === id); if (x) Object.assign(x, art, { stato: 'bozza', aggiornato: new Date().toISOString() }); }))
+      .catch(e => { console.warn('[redazione] generazione fallita:', e.message); return mutate(arr => { const x = arr.find(a => a.id === id); if (x) Object.assign(x, { stato: 'errore', errore: e.message, aggiornato: new Date().toISOString() }); }).catch(() => {}); });
+    return { id, fine };
+  }
+
   app.post('/api/admin/redazione/genera', requireAdmin, async (req, res) => {
     try {
       const b = req.body || {};
       const tipo = String(b.tipo || '');
       if (!['gara', 'settimana', 'atleta'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
-      if ((tipo === 'gara' || tipo === 'atleta') && !b.id) return res.status(400).json({ error: 'scegli la gara o l\'atleta' });
-      const p = { id: String(b.id || ''), fine: b.fine ? String(b.fine).slice(0, 10) : null, web: !!b.web, link: Array.isArray(b.link) ? b.link.map(String).slice(0, 5) : [], indicazioni: b.indicazioni || '' };
-      const id = crypto.randomBytes(6).toString('hex'), now = new Date().toISOString();
-      await mutate(arr => { arr.push({ id, tipo, stato: 'in_generazione', soggetto: p.id || 'settimana', parametri: p, creato: now, aggiornato: now }); });
+      if ((tipo === 'gara' || tipo === 'atleta') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
+      const p = { id: String(b.id || ''), fine: b.fine ? String(b.fine).slice(0, 10) : null, web: !!b.web, tutte: b.tutte !== false, link: Array.isArray(b.link) ? b.link.map(String).slice(0, 5) : [], indicazioni: b.indicazioni || '' };
+      const { id } = await avvia(tipo, p);
       res.json({ ok: true, id });
-      // la generazione puo durare 1-2 minuti (ricerca web): si risponde subito e la bozza si completa in background
-      genera(tipo, p).then(art => mutate(arr => { const x = arr.find(a => a.id === id); if (x) Object.assign(x, art, { stato: 'bozza', aggiornato: new Date().toISOString() }); }))
-        .catch(e => { console.warn('[redazione] generazione fallita:', e.message); return mutate(arr => { const x = arr.find(a => a.id === id); if (x) Object.assign(x, { stato: 'errore', errore: e.message, aggiornato: new Date().toISOString() }); }).catch(() => {}); });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
+
+  // ---------- articoli automatici: ogni evento importante recente (o imminente) ha gia la sua bozza ----------
+  const MAX_PER_GIRO = 4, MAX_AL_GIORNO = 12;
+  let inCorso = false;
+  async function autoGenera() {
+    if (inCorso) return { avviati: 0, nota: 'gia in corso' };
+    if (!process.env.ANTHROPIC_API_KEY) return { avviati: 0, nota: 'ANTHROPIC_API_KEY non configurata' };
+    inCorso = true;
+    try {
+      const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
+      const t = today(), arr = await readAll();
+      const chiavi = new Set(arr.map(b => b.parametri && b.parametri.chiave).filter(Boolean));
+      const oggiFatte = arr.filter(b => b.parametri && b.parametri.auto && String(b.creato).slice(0, 10) === t).length;
+      let manual = [];
+      try { const { data } = await sb().from('manual_results').select('gara_id,data,nome_gara,posizione').gte('data', shift(t, -2)); manual = data || []; } catch (_) { /* solo scraper */ }
+      const righe = (raw || []).filter(r => r.data >= shift(t, -2)).concat(manual);
+      const vistiEv = new Set(), cand = [];
+      for (const c of (cal || [])) {
+        if (!c.data || c.data < shift(t, -2) || c.data > shift(t, 2) || !c.nome || c.nome.trim() === '-') continue;
+        const ev = `${c.data}|${alboBase(c.nome)}`;
+        if (vistiEv.has(ev)) continue; vistiEv.add(ev);
+        const imp = (c.campionato_italiano ? 3 : 0) + (c.campionato_regionale ? 2 : 0) + ((c.moltiplicatore || 1) >= 2 ? 1 : 0) + (c.tipo === 'nazionale' ? 1 : 0);
+        const n = righe.filter(r => r.data === c.data && alboBase(r.nome_gara) === alboBase(c.nome)).length;
+        if (c.data <= t && n) cand.push({ c, imp, n, chiave: `gara|risultati|${ev}` });
+        else if (c.data > t && imp >= 1) cand.push({ c, imp, n: 0, chiave: `gara|anteprima|${ev}` });
+      }
+      cand.sort((a, b) => b.imp - a.imp || b.n - a.n);
+      const daFare = cand.filter(x => !chiavi.has(x.chiave) && x.imp >= 1).slice(0, Math.max(0, Math.min(MAX_PER_GIRO, MAX_AL_GIORNO - oggiFatte)));
+      let avviati = 0;
+      for (const x of daFare) {
+        const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= 3, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
+        avviati++; await fine;                                           // una alla volta: niente raffiche di richieste
+      }
+      // il punto della settimana: lunedi e martedi, per l'ultima settimana con gare
+      const gg = new Date().getUTCDay();
+      if ((gg === 1 || gg === 2) && oggiFatte + avviati < MAX_AL_GIORNO) {
+        const ultimo = (raw || []).reduce((m, r) => (r.data && r.data <= t && r.data > m ? r.data : m), '');
+        const chiave = `settimana|${ultimo}`;
+        if (ultimo && !chiavi.has(chiave)) { const { fine } = await avvia('settimana', { fine: ultimo, web: false, link: [], indicazioni: '', chiave, auto: true }, `Il punto della settimana (fino al ${ultimo})`); avviati++; await fine; }
+      }
+      return { avviati };
+    } catch (e) { console.warn('[redazione] auto:', e.message); return { avviati: 0, errore: e.message }; }
+    finally { inCorso = false; }
+  }
+  app.post('/api/admin/redazione/auto', requireAdmin, async (req, res) => {
+    if (inCorso) return res.json({ ok: true, nota: 'sto gia scrivendo' });
+    autoGenera().catch(() => {});                                        // in background: la pagina vede le bozze comparire
+    res.json({ ok: true });
+  });
+  if (process.env.ANTHROPIC_API_KEY) { setTimeout(() => autoGenera().catch(() => {}), 3 * 60 * 1000); setInterval(() => autoGenera().catch(() => {}), 30 * 60 * 1000); }
 
   app.put('/api/admin/redazione/bozze/:id', requireAdmin, async (req, res) => {
     try {
