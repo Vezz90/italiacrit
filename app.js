@@ -5089,6 +5089,7 @@ function route() {
   if (match('/register')) return renderRegister();
   if (match('/profilo')) return renderMyProfile();
   if (match('/admin')) return renderAdmin();
+  if (match('/redazione')) return (typeof window.renderRedazione === 'function' ? window.renderRedazione() : renderHomeDashboard());
   const m_atleta = match('/atleta/:id');
   if (m_atleta) return renderAtleta(m_atleta[1]);
   const m_team = match('/team/:id');
@@ -12456,6 +12457,11 @@ async function renderAdmin() {
         </div>
         <div class="admin-nav-item" data-section="sync" onclick="adminNav('sync')">
           <span class="admin-nav-icon">🔄</span> <span class="admin-nav-lbl">Sincronizza dati</span>
+        </div>
+
+        <div class="admin-nav-group">Redazione</div>
+        <div class="admin-nav-item" onclick="navTo('/redazione')">
+          <span class="admin-nav-icon">📰</span> <span class="admin-nav-lbl">Redazione AI (bozze)</span>
         </div>
 
         <div class="admin-nav-group">Da moderare</div>

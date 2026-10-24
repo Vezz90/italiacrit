@@ -13267,6 +13267,9 @@ async function _getHeadMetaFor(type, id) {
   return null;
 }
 
+// Redazione AI privata (solo admin): bozze di articoli. Vedi server/redazione.js
+require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL });
+
 // ── SPA fallback (Fase 2 SEO: URL puliti) ───────────────────────────────────
 // DEVE essere l'ultima route (registrata dopo tutte le API e dopo
 // express.static più sopra): se nessuna route/file statico precedente ha
