@@ -28800,14 +28800,26 @@ function _calResultsIndexByDate() {
     const m = r.gara_id.match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/);
     if (!m) continue;
     const day = (idx[r.data] = idx[r.data] || {});
-    if (!day[r.gara_id]) day[r.gara_id] = { code: m[1], t: _calNameTokens(r.nome_gara), n: _calEditionNums(r.nome_gara) };
+    if (!day[r.gara_id]) day[r.gara_id] = { code: m[1], t: _calNameTokens(r.nome_gara), n: _calEditionNums(r.nome_gara), nm: _calPlainName(r.nome_gara) };
   }
   globalData._resIdxByDate = idx; globalData._resIdxLen = rr.length;
   return idx;
 }
+// Nome senza le parole di categoria: per gare il cui nome e' fatto solo di parole
+// generiche (es. "Campionato Italiano Cronometro Individuale"), che _calNameTokens
+// scarta del tutto: li' il confronto va fatto sul nome intero, insieme a categoria e sesso.
+function _calPlainName(n) {
+  return String(n || '').toUpperCase().replace(/\bCAT\.?|\b(ALLIEVI|ALLIEVE|JUNIORES|ELITE|UNDER|UOMINI|DONNE|DONNA|MASCHILE|FEMMINILE)\b|\bU\.?\s?23\b|\b23\b|[^A-Z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
 function calendarHasResultsByNameDate(g) {
   const ct = _calNameTokens(g.nome);
-  if (!ct.size) return false;
+  if (!ct.size) {
+    const pn = _calPlainName(g.nome);
+    if (!pn) return false;
+    const cb0 = _calBandsOf(g.categoria), calF0 = /DONNE|DONNA|FEMMINILE/i.test(g.categoria || '');
+    return Object.values(_calResultsIndexByDate()[g.data] || {}).some(e => e.nm === pn && !e.t.size
+      && cb0.has(e.code.replace(/_[MF]$/, '').replace(/^ES[12]$/, 'ES')) && calF0 === e.code.endsWith('_F'));
+  }
   const cn = _calEditionNums(g.nome);
   const cb = _calBandsOf(g.categoria);
   const mixed = /PROMISCUA|OPEN|M\/F|PIU' CATEGORIE|MULTICATEGORIA/i.test(g.categoria || '');
