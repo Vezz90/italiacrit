@@ -78,13 +78,13 @@
 
   // anteprima: come apparirebbe l'articolo a un lettore (usa i campi correnti, anche non salvati)
   function articolo(b) {
+    const f = b.foto || [], usate = new Set();
+    const fig = x => `<figure><img src="${esc(imgSrc(x.url))}" alt="${esc(x.didascalia || '')}" loading="lazy" onerror="this.parentNode.remove()">${(x.didascalia || x.credito) ? `<figcaption>${esc(x.didascalia || '')}${x.didascalia && x.credito ? ' · ' : ''}${x.credito ? 'Foto: ' + esc(x.credito) : ''}</figcaption>` : ''}</figure>`;
     const corpo = String(b.corpo || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => {
       const m = x.match(/^\[\[foto:(\d+)\]\]$/);
       if (m) { const ft = f[+m[1] - 1]; if (ft) { usate.add(+m[1] - 1); return fig(ft); } return ''; }
       return /^##\s+/.test(x) ? `<h2>${esc(x.replace(/^##\s+/, ''))}</h2>` : `<p>${esc(x.replace(/\[\[foto:\d+\]\]/g, '')).replace(/\n/g, '<br>')}</p>`;
     });
-    const f = b.foto || [], usate = new Set();
-    const fig = x => `<figure><img src="${esc(imgSrc(x.url))}" alt="${esc(x.didascalia || '')}" loading="lazy" onerror="this.parentNode.remove()">${(x.didascalia || x.credito) ? `<figcaption>${esc(x.didascalia || '')}${x.didascalia && x.credito ? ' · ' : ''}${x.credito ? 'Foto: ' + esc(x.credito) : ''}</figcaption>` : ''}</figure>`;
     const meta = [fmtData(b.aggiornato || b.creato), (b.tag || []).slice(0, 4).map(t => '#' + t).join(' ')].filter(Boolean).join(' · ');
     return `<div class="hx-panel rd-prev"><div class="rd-top"><span class="rd-chip s-${b.stato}">Anteprima di lettura</span><button type="button" class="admin-edit-btn" data-act="back">← Torna alla modifica</button></div>
       <article class="rd-art"><small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
@@ -94,7 +94,7 @@
 
   function editor() {
     const b = sel();
-    if (b && st.prev && b.stato !== 'in_generazione' && b.stato !== 'errore') return articolo(b);
+    if (b && st.prev && b.stato !== 'in_generazione' && b.stato !== 'errore') { try { return articolo(b); } catch (e) { st.prev = false; if (typeof showToast === 'function') showToast('Anteprima non disponibile: ' + (e.message || e), 'error'); } }
     if (!b) return `<div class="hx-panel rd-empty"><h3>Anteprima</h3><p class="rd-muted">Scegli una bozza dall'elenco per leggerla, correggerla e approvarla. Nulla viene pubblicato sul sito.</p></div>`;
     if (b.stato === 'in_generazione') return `<div class="hx-panel"><h3>${esc(b.soggetto)}</h3><p>La bozza si sta scrivendo (può servire fino a 2 minuti con la ricerca web)…</p></div>`;
     if (b.stato === 'errore') return `<div class="hx-panel"><h3>${esc(b.soggetto)}</h3><div class="rd-err">${esc(b.errore || 'Errore sconosciuto')}</div><div class="rd-btns"><button type="button" class="admin-edit-btn" data-act="del">Elimina</button></div></div>`;

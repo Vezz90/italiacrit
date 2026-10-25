@@ -13304,6 +13304,19 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
     l.slice(0, 3).forEach(o => add(o.url, o.credito, o.didascalia, 'tag', o.gara_id, a));
     if (l[0] && w.has(l[0].gara_id) && out.length) out.filter(f => f.fonte === 'tag' && f.atleta_id === a).forEach(f => { f.vittoria = w.has(f.gara_id); });
   }
+  // foto delle gare vinte dall'atleta: possono ritrarre anche altri corridori, quindi sono solo candidate da scegliere a mano
+  for (const a of ath) {
+    let n = 0;
+    for (const gid of [...new Set(vittorie[a] || [])].slice(-6).reverse()) {
+      if (n >= 3) break;
+      const up = await queries.getApprovedRacePhotos(gid).catch(() => []);
+      for (const f of (up || []).slice(0, 1)) { add(`${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`, f.photographer || f.display_name || '', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; }
+      for (const al of [gid, gid.replace(/^\d+_/, ''), gid.replace(/_[A-Z0-9]+_[MF]$/, '')]) {
+        const x = xpix[al]; if (x && n < 3) { const u = (Array.isArray(x.photos) && x.photos[0]) || x.url; if (u) { add(u, 'xpix.it', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; break; } }
+        const c2 = ic[al]; if (c2 && n < 3 && (c2.url || c2.filename)) { add(c2.url || c2.filename, 'ciclismo.info', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; break; }
+      }
+    }
+  }
   return out;
 }
 
