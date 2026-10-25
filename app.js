@@ -25360,7 +25360,11 @@ async function renderGara(gara_id) {
       for (const g of _extKeyGroups) {
         // album salvato sotto l'id con suffisso categoria/tappa (es. "..._PRIMA_TAPPA_..._ELI_M") mentre la pagina ha l'id di calendario
         const _revIds = Object.entries(globalData?.garaToCalId || {}).filter(([, cid]) => cid === g.key).map(([rid]) => rid);
-        const entry = _pm[g.key] || [...g.alt, ..._revIds].map(k => _pm[k]).find(Boolean);
+        // un album salvato per un'ALTRA categoria della stessa gara (alias senza suffisso) non appartiene a questa pagina
+        const _catOf = id => ((String(id || '').match(/_([A-Z0-9]+_[MF])$/) || [])[1] || '').replace(/^ES[12]_/, 'ES_');
+        const _myCat = _catOf(primaryGaraId);
+        const _okCat = e => !e || !_myCat || !_catOf(e.gara_id) || _catOf(e.gara_id) === _myCat;
+        const entry = _pm[g.key] || [...g.alt, ..._revIds].map(k => _pm[k]).find(e => e && _okCat(e));
         if (entry?.url && !_seenExtUrls.has(entry.url)) {
           _seenExtUrls.add(entry.url);
           _extEntries.push({ entry, badge: g.badge });
