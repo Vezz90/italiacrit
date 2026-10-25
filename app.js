@@ -2387,6 +2387,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])(DELLA|DELLO|DEGLI|DELLE|DEI|DEL)(?![A-Z0-9])/g,'')
     .replace(/(?<![A-Z0-9])REGIONE(?![A-Z0-9])/g,'')
+    // "UNDER23" (risultati FCI) e "UNDER 23" (calendario) sono la stessa parola: senza questo "Campionato ... Under23" non trovava la sua riga di calendario
+    .replace(/(?<![A-Z0-9])UNDER_?23(?![A-Z0-9])/g,'UNDER_23')
     // Ordinali "anno" scritti a lettere lato risultato FCI ("SECONDO_ANNO")
     // vs a cifra lato calendario ("2_ANNO") — es. "19 Coppa di Sera Donne
     // Esordienti SECONDO ANNO" (risultato) non veniva mai collegato a
