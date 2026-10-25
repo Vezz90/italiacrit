@@ -45,12 +45,17 @@
 
   /* ---------- foto/logo caricati in differita ---------- */
   async function fillImages(root) {
-    const spans = [...root.querySelectorAll('[data-aid],[data-tid]')];
+    const spans = [...root.querySelectorAll('[data-aid],[data-tid]')], memo = {};
     for (let i = 0; i < spans.length; i += 8) {
       if (!document.contains(root)) return;
       await Promise.all(spans.slice(i, i + 8).map(async el => {
         const isA = el.hasAttribute('data-aid'), id = el.getAttribute(isA ? 'data-aid' : 'data-tid');
-        const ov = await getEntityOverrides(isA ? 'atleta' : 'team', id).catch(() => ({}));
+        const mk = (isA ? 'a:' : 't:') + id;
+        const ov = await (memo[mk] = memo[mk] || getEntityOverrides(isA ? 'atleta' : 'team', id).catch(() => ({})));
+        if (el.classList.contains('el-soc')) {                      // colonna Social: le stesse icone delle pagine atleta e team
+          if (document.contains(el)) el.innerHTML = entitySocialLinksHtml(ov, ['instagram', 'facebook', 'strava', 'website']).replace(/^<div[^>]*>|<\/div>$/g, '');
+          return;
+        }
         if (!ov.photo_url || !document.contains(el)) return;
         const img = document.createElement('img');
         img.src = mediaUrl(ov.photo_url); img.alt = ''; img.loading = 'lazy';
@@ -118,12 +123,13 @@
       if (u.sort === 'az' && l !== prev) { prev = l; rows += `<div class="el-letter" id="el-L-${esc(l)}">${esc(l)}</div>`; }
       rows += `<div class="el-tr" data-href="/atleta/${esc(a.id)}"><span class="el-rkb">#${a.rank}</span>
         <div class="el-who"><span class="el-av" data-aid="${esc(a.id)}" style="background:${colOf(a.id)}">${esc(ini(a.nome))}</span><div><b>${esc(a.nome)}</b><small>${a.last ? 'ultima gara ' + dm(a.last) : 'nessuna gara in stagione'}</small></div></div>
+        <span class="el-soc" data-aid="${esc(a.id)}"></span>
         <span class="el-tm">${a.team_id ? `<a href="/team/${esc(a.team_id)}">${esc(tc(a.team))}</a>` : esc(tc(a.team))}</span>
         <span class="el-pts">${a.pts}</span><span class="el-n">${a.g}</span><span class="el-n win">${a.w}</span><span class="el-n">${a.p}</span>
         <span class="el-fol" id="el-f-${esc(a.id)}" data-fid="${esc(a.id)}"><button class="follow-pill" type="button" onclick="event.stopPropagation();window.toggleFollow('atleta','${esc(a.id)}','el-f-${esc(a.id)}')">☆ Segui</button></span>
         <span class="el-st"><span>${a.g} gare</span><span>${a.w} vitt.</span><span>${a.p} podi</span></span></div>`;
     });
-    $('el-list').innerHTML = `<div class="el-thead"><span>Class.</span><span>Atleta</span><span>Team attuale</span><span class="n">Punti</span><span class="n">Gare</span><span class="n">Vitt.</span><span class="n">Podi</span><span></span></div>${rows || '<div class="hx-empty">Nessun atleta trovato in questa categoria</div>'}`;
+    $('el-list').innerHTML = `<div class="el-thead"><span>Class.</span><span>Atleta</span><span>Social</span><span>Team attuale</span><span class="n">Punti</span><span class="n">Gare</span><span class="n">Vitt.</span><span class="n">Podi</span><span></span></div>${rows || '<div class="hx-empty">Nessun atleta trovato in questa categoria</div>'}`;
     $('el-more').innerHTML = L.length > u.n ? `<button class="rs-more" type="button" onclick="window.ElV2.more('atl')">Mostra altri atleti (${L.length - u.n})</button>` : '';
     const hot = all.filter(a => a.hot > 0).sort((a, b) => b.hot - a.hot).slice(0, 5);
     const letters = [...new Set(all.map(a => (a.cognome[0] || '').toUpperCase()).filter(Boolean))].sort();
@@ -159,12 +165,13 @@
       if (u.sort === 'az' && l !== prev) { prev = l; rows += `<div class="el-letter" id="el-L-${esc(l)}">${esc(l)}</div>`; }
       rows += `<div class="el-tr t" data-href="/team/${esc(t.id)}"><span class="el-rkb">#${t.rank}</span>
         <div class="el-who"><span class="el-logo" data-tid="${esc(t.id)}" style="background:${colOf(t.id)}">${esc(ini(t.nome))}</span><div><b>${nationFlagPrefix(t.nome)}${esc(tc(t.nome))}</b><small>${t.g} gare a punti</small></div></div>
+        <span class="el-soc" data-tid="${esc(t.id)}"></span>
         <span class="el-tm">${t.best ? `<a href="/atleta/${esc(t.best.id)}">${esc(bestName(t.best.id))}</a> · ${t.best.pts} pt` : '—'}</span>
         <span class="el-pts">${t.pts}</span><span class="el-n">${t.ath}</span><span class="el-n win">${t.w}</span>
         <span class="el-fol" id="el-f-${esc(t.id)}" data-fid="${esc(t.id)}"><button class="follow-pill" type="button" onclick="event.stopPropagation();window.toggleFollow('team','${esc(t.id)}','el-f-${esc(t.id)}')">☆ Segui</button></span>
         <span class="el-st"><span>${t.ath} atleti</span><span>${t.w} vitt.</span></span></div>`;
     });
-    $('el-list').innerHTML = `<div class="el-thead t"><span>Class.</span><span>Team</span><span>Miglior atleta</span><span class="n">Punti</span><span class="n">Atleti</span><span class="n">Vitt.</span><span></span></div>${rows || '<div class="hx-empty">Nessun team in questa categoria</div>'}`;
+    $('el-list').innerHTML = `<div class="el-thead t"><span>Class.</span><span>Team</span><span>Social</span><span>Miglior atleta</span><span class="n">Punti</span><span class="n">Atleti</span><span class="n">Vitt.</span><span></span></div>${rows || '<div class="hx-empty">Nessun team in questa categoria</div>'}`;
     $('el-more').innerHTML = L.length > u.n ? `<button class="rs-more" type="button" onclick="window.ElV2.more('team')">Mostra altri team (${L.length - u.n})</button>` : '';
     const top = all.slice().sort((a, b) => b.w - a.w || b.pts - a.pts).slice(0, 5).filter(t => t.w > 0);
     const letters = [...new Set(all.map(t => (t.nome.replace(/^[^A-Za-z0-9]+/, '')[0] || '').toUpperCase()).filter(Boolean))].sort();

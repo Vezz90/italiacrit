@@ -13224,8 +13224,8 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 .el-pc small { opacity: .85; font-size: 12px; margin-top: 2px; }
 .el-pc .pt { margin-top: 8px; font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; } .el-pc .pt span { font-size: 12px; font-weight: 600; opacity: .8; }
 .el-tbl { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
-.el-thead, .el-tr { display: grid; grid-template-columns: 46px minmax(0, 2.4fr) minmax(0, 1.6fr) repeat(4, 62px) 100px; gap: 10px; align-items: center; padding: 0 14px; }
-.el-thead.t, .el-tr.t { grid-template-columns: 46px minmax(0, 2.6fr) minmax(0, 1.6fr) repeat(3, 62px) 100px; }
+.el-thead, .el-tr { display: grid; grid-template-columns: 46px minmax(0, 2.2fr) 124px minmax(0, 1.5fr) repeat(4, 62px) 100px; gap: 10px; align-items: center; padding: 0 14px; }
+.el-thead.t, .el-tr.t { grid-template-columns: 46px minmax(0, 2.4fr) 124px minmax(0, 1.5fr) repeat(3, 62px) 100px; }
 .el-thead { height: 38px; background: var(--bg-elevated, rgba(0,0,0,.04)); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
 .el-thead .n { text-align: right; }
 .el-tr { min-height: 58px; border-top: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-primary); cursor: pointer; }
@@ -13251,7 +13251,8 @@ body:has(#ris-live .rs-stage) #live-now-banner { display: none !important; }
 @media (max-width: 760px) {
   .el-pod { grid-template-columns: minmax(0, 1fr); }
   .el-thead { display: none; }
-  .el-tr, .el-tr.t { grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-areas: "r w pt" ". tm tm" ". st st"; padding: 10px 12px; row-gap: 4px; }
+  .el-tr, .el-tr.t { grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-areas: "r w pt" ". tm tm" ". soc soc" ". st st"; padding: 10px 12px; row-gap: 4px; }
+  .el-tr > .el-soc { grid-area: soc; }
   .el-tr > .el-rkb { grid-area: r; } .el-tr > .el-who { grid-area: w; } .el-tr > .el-pts { grid-area: pt; } .el-tr > .el-tm { grid-area: tm; }
   .el-tr > .el-st { grid-area: st; display: flex; gap: 14px; color: var(--text-secondary); font-size: 12px; }
   .el-tr > .el-n, .el-tr > .el-fol { display: none; }
@@ -13902,3 +13903,16 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .rd-art footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid var(--border-subtle); font-size: .8rem; color: var(--text-muted); }
 .rd-fn { position: absolute; left: 6px; top: 6px; background: rgba(0,0,0,.65); color: #fff; font-size: .68rem; padding: 2px 6px; border-radius: 4px; }
 .rd-prev .rd-top { justify-content: space-between; }
+
+/* Colonna Social negli elenchi: stesse icone e colori delle pagine atleta e team, in piccolo */
+.el-soc { display: flex; gap: 5px; align-items: center; }
+.el-soc:empty { display: none; }
+.el-soc .media-profile-link { font-size: 0; width: 28px; height: 28px; border-radius: 50%; justify-content: center; align-items: center; gap: 0; display: inline-flex; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); transition: transform .12s, background .12s; }
+.el-soc .media-profile-link:hover { text-decoration: none; transform: translateY(-1px); background: var(--bg-elevated, rgba(0,0,0,.05)); }
+.el-soc .media-profile-link .social-icon { width: 15px; height: 15px; }
+.el-soc .media-profile-link[aria-label="Instagram"] { border-color: rgba(225,48,108,.5); }
+.el-soc .media-profile-link[aria-label="Facebook"] { border-color: rgba(24,119,242,.55); }
+.el-soc .media-profile-link[aria-label="Strava"] { border-color: rgba(252,76,2,.55); }
+.el-soc .media-profile-link[aria-label="Sito"] { border-color: rgba(52,211,153,.5); }
+.el-soc .media-profile-link[aria-label="Sito"] .social-icon { stroke: #34d399; }
+@media (max-width: 760px) { .el-soc .media-profile-link { width: 30px; height: 30px; } }
