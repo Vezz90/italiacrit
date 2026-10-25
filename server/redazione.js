@@ -178,16 +178,66 @@ module.exports = function registerRedazione(app, deps) {
     };
   }
 
+  const CATS_ALL = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F', 'AL_M', 'AL_F', 'ES2_M', 'ES2_F', 'ES1_M', 'ES1_F'];
+  async function anno() { const raw = await getData('results_raw.json'); return raw.reduce((m, r) => (r.data && r.data.slice(0, 4) > m ? r.data.slice(0, 4) : m), '2000'); }
+
+  // riepilogo di una stagione per una categoria (risultati scraper + inseriti a mano), tutto calcolato qui: l'AI non fa conti
+  async function factsStagione(cat) {
+    if (!CATS_ALL.includes(cat)) throw new Error('categoria non valida: ' + cat);
+    const [raw, teams, car] = await Promise.all([getData('results_raw.json'), getData('teams.json').catch(() => ({})), getData('carriere.json').catch(() => null)]);
+    const y = await anno();
+    let rows = (raw || []).filter(r => catOf(r) === cat && String(r.data).startsWith(y));
+    try {
+      const have = new Set(rows.map(r => r.gara_id + '|' + r.posizione));
+      for (let from = 0; ; from += 1000) {
+        const { data } = await sb().from('manual_results').select('*').gte('data', y + '-01-01').order('id').range(from, from + 999);
+        (data || []).filter(r => catOf(r) === cat).forEach(r => { if (!have.has(r.gara_id + '|' + r.posizione)) { have.add(r.gara_id + '|' + r.posizione); rows.push(r); } });
+        if (!data || data.length < 1000) break;
+      }
+    } catch (_) { /* solo scraper */ }
+    if (!rows.length) throw new Error(`nessun risultato ${y} per ${CAT_NOME[cat] || cat}`);
+    const A = {};
+    const add = r => { const k = r.atleta_id || fullName(r); const a = A[k] || (A[k] = { id: r.atleta_id, cognome: r.cognome, atleta: fullName(r), team: r.team, punti: 0, vittorie: 0, podi: 0, gare: 0, ultima: '' }); a.punti += Number(r.punti_effettivi) || 0; a.gare++; if (r.posizione === 1) a.vittorie++; if (r.posizione >= 1 && r.posizione <= 3) a.podi++; if (r.data >= a.ultima) { a.ultima = r.data; a.team = r.team || a.team; } };
+    rows.forEach(add);
+    const lista = Object.values(A).sort((a, b) => b.punti - a.punti || b.vittorie - a.vittorie);
+    const gare = new Set(rows.map(r => r.gara_id));
+    const ev = rows.filter(r => r.posizione === 1 && ((r.moltiplicatore || 1) >= 2 || r.campionato_italiano || r.campionato_regionale))
+      .sort((a, b) => (b.campionato_italiano ? 1 : 0) - (a.campionato_italiano ? 1 : 0) || (b.moltiplicatore || 1) - (a.moltiplicatore || 1) || String(a.data).localeCompare(b.data))
+      .slice(0, 14).map(r => ({ gara: r.nome_gara, data: r.data, vincitore: fullName(r), team: r.team, regione: r.regione || null, moltiplicatore: r.moltiplicatore || 1, titolo: r.campionato_italiano ? 'campionato italiano' : r.campionato_regionale ? 'campionato regionale' : null }));
+    const campioni_italiani = rows.filter(r => r.posizione === 1 && r.campionato_italiano).map(r => ({ prova: r.nome_gara, data: r.data, campione: fullName(r), team: r.team }));
+    const campioni_regionali = rows.filter(r => r.posizione === 1 && r.campionato_regionale).slice(0, 25).map(r => ({ prova: r.nome_gara, regione: r.regione || null, data: r.data, campione: fullName(r), team: r.team }));
+    // chi comandava la classifica alla fine di ogni mese
+    const mesi = {}; rows.forEach(r => { const m = String(r.data).slice(0, 7); (mesi[m] = mesi[m] || []).push(r); });
+    const cum = {}; const leader = [];
+    Object.keys(mesi).sort().forEach(m => { mesi[m].forEach(r => { const k = r.atleta_id || fullName(r); cum[k] = (cum[k] || 0) + (Number(r.punti_effettivi) || 0); }); const top = Object.entries(cum).sort((a, b) => b[1] - a[1])[0]; if (top) leader.push({ fine_mese: m, leader: (A[top[0]] || {}).atleta, punti: Math.round(top[1] * 100) / 100 }); });
+    const cambi = leader.filter((l, i) => i === 0 || l.leader !== leader[i - 1].leader);
+    const t5 = Object.values(teams || {}).filter(t => t.punti_per_cat && t.punti_per_cat[cat]).sort((a, b) => b.punti_per_cat[cat] - a.punti_per_cat[cat]).slice(0, 5).map(t => ({ team: t.nome, punti: t.punti_per_cat[cat] }));
+    const prec = {};
+    if (car) lista.slice(0, 5).forEach(a => { const x = a.id && (car.a || {})[a.id]; const s0 = x && x.s.find(q => String(q[0]) === String(+y - 1)); if (s0) prec[a.atleta] = { categoria: car.cats[s0[1]], posizione_finale: s0[2], punti: s0[3], vittorie: s0[5], podi: s0[6] }; });
+    return {
+      stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, gare_disputate: gare.size, atleti_con_punti_o_gare: lista.length,
+      classifica_atleti: lista.slice(0, 10).map((a, i) => ({ pos: i + 1, id: a.id, cognome: a.cognome, atleta: a.atleta, team: a.team, punti: Math.round(a.punti * 100) / 100, vittorie: a.vittorie, podi: a.podi, gare: a.gare })),
+      piu_vittorie: lista.slice().sort((a, b) => b.vittorie - a.vittorie || b.podi - a.podi).slice(0, 4).filter(a => a.vittorie).map(a => ({ atleta: a.atleta, vittorie: a.vittorie, team: a.team })),
+      classifica_team: t5, vittorie_importanti: ev, campioni_italiani, campioni_regionali,
+      leader_a_fine_mese: cambi, stagione_precedente_dei_primi: prec,
+    };
+  }
+
   // ---------- foto ----------
   // foto candidate per l'articolo: della gara (caricate, album) e dei primi classificati.
   async function fotoCandidate(tipo, p, facts) {
     if (!fotoPer) return [];
     const garaIds = [], atletaIds = [];
-    if (tipo === 'gara') {
-      garaIds.push(p.id);
-      try { const cal = await getData('calendar.json'); const c = cal.find(x => x.id === p.id); if (c) cal.filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).forEach(x => garaIds.push(x.id)); } catch (_) { /* solo l'id indicato */ }
-      (facts.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); (r.top10 || []).slice(0, 3).forEach(t => t.id && atletaIds.push(t.id)); });
-    } else if (tipo === 'atleta') atletaIds.push(p.id);
+    const blocco = async (t, pp, f) => {
+      if (t === 'gara') {
+        garaIds.push(pp.id);
+        try { const cal = await getData('calendar.json'); const c = cal.find(x => x.id === pp.id); if (c) cal.filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).forEach(x => garaIds.push(x.id)); } catch (_) { /* solo l'id indicato */ }
+        (f.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); (r.top10 || []).slice(0, 3).forEach(t2 => t2.id && atletaIds.push(t2.id)); });
+      } else if (t === 'atleta') atletaIds.push(pp.id);
+      else if (t === 'stagione') (f.classifica_atleti || []).slice(0, 3).forEach(a => a.id && atletaIds.push(a.id));
+    };
+    if (tipo === 'libero') for (const b of (facts.blocchi || [])) await blocco(b.tipo, b.p || {}, b.dati || {});
+    else await blocco(tipo, p, facts);
     try { return await fotoPer({ garaIds, atletaIds }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
   }
   // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
@@ -196,7 +246,8 @@ module.exports = function registerRedazione(app, deps) {
   // le foto proposte all'AI: una della gara per categoria, qualche foto d'album, i primi classificati; con un'etichetta che dice cosa mostrano
   function proponiFoto(cand, facts) {
     const cat = {}, nome = {};
-    (facts.risultati || []).forEach(r => { cat[r.gara_id] = r.categoria; (r.top10 || []).forEach(t => { if (t.id) nome[t.id] = t.atleta; }); });
+    const leggi = f => { (f.risultati || []).forEach(r => { cat[r.gara_id] = r.categoria; (r.top10 || []).forEach(t => { if (t.id) nome[t.id] = t.atleta; }); }); (f.classifica_atleti || []).forEach(a => { if (a.id) nome[a.id] = a.atleta; }); if (f.atleta && f.atleta.nome) { /* profilo: nome gia noto all'AI */ } (f.blocchi || []).forEach(b => leggi(b.dati || {})); };
+    leggi(facts);
     const pulisci = n => String(n || '').toLowerCase().replace(/(^|[\s'-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
     const girate = n => { const t = String(n || '').trim().split(/\s+/); return pulisci(t.length > 1 ? t.slice(-1)[0] + ' ' + t.slice(0, -1).join(' ') : n); };   // "MILESI NICOLAS" -> "Nicolas Milesi"
     const out = [], perCat = {};
@@ -223,9 +274,10 @@ module.exports = function registerRedazione(app, deps) {
   // il titolo deve nominare i vincitori delle categorie piu alte: se manca qualcuno lo si riscrive (una chiamata breve, senza ricerca web)
   async function controllaTitolo(j, tipo, facts) {
     const titolo = String(j.titolo || '');
-    if (tipo !== 'gara') return titolo;
+    if (tipo !== 'gara' && tipo !== 'stagione') return titolo;
     const alte = (facts.risultati || []).filter(r => /^ELI_/.test(r.codice || ''));
-    const dovuti = (alte.length ? alte : (facts.risultati || []).slice(0, 1)).map(r => (r.top10 || [])[0]).filter(Boolean);
+    const dovuti = tipo === 'stagione' ? [(facts.classifica_atleti || [])[0], ((facts.campioni_italiani || [])[0] || {}).campione && { cognome: '', atleta: facts.campioni_italiani[0].campione }].filter(x => x && x.atleta)
+      : (alte.length ? alte : (facts.risultati || []).slice(0, 1)).map(r => (r.top10 || [])[0]).filter(Boolean);
     const norm = s => up(s).replace(/[^A-Z ]/g, ' ');
     const manca = dovuti.filter(t => t.cognome && !norm(titolo).includes(norm(t.cognome).trim()));
     if (!manca.length) return titolo;
@@ -342,18 +394,47 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
   };
 
+  ISTRUZIONI.stagione = f => `TIPO: ARTICOLO DI FINE STAGIONE PER CATEGORIA (600-900 parole). La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}". Il titolo deve nominare il numero uno della classifica finale e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ': apertura con il leader della classifica finale (punti, vittorie, podi, squadra); "La classifica finale" (primi 5-10); "Le vittorie che contano" (campionati e gare nazionali da vittorie_importanti); "I campioni" (campione italiano e campioni regionali, solo se nei DATI); "Le squadre" (classifica_team); "Il filo della stagione" (i cambi al comando da leader_a_fine_mese, solo se ce ne sono); "Rispetto alla scorsa stagione" (solo confronti dimostrati da stagione_precedente_dei_primi). Ometti una sezione se non ha dati. Punti e posizioni sono quelli del sito (classifica per punti), non inventare altri criteri.`;
+  ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI. Lunghezza e forma come richiesto; se non le indica, 400-700 parole con titolo e sottotitoli. Se la richiesta chiede cose che non hai nei DATI, non inventarle: scrivilo in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
+
+  // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
+  async function pianifica(richiesta) {
+    const r = await callClaude(`Sei l'assistente di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Oggi e ${today()}. Data la RICHIESTA, scegli quali DATI del sito servono. Rispondi SOLO con righe nel formato "BLOCCO: tipo | riferimento", massimo 3 righe. Tipi: gara (nome della gara come lo scriverebbe il redattore), atleta (nome e cognome), stagione (UN codice tra ${CATS_ALL.join(' ')}), settimana (data AAAA-MM-GG dell'ultimo giorno, oppure "ultima"). Per una richiesta su piu categorie usa piu righe stagione. Se la richiesta non richiede dati specifici rispondi "BLOCCO: settimana | ultima".\n\nRICHIESTA: ${richiesta.slice(0, 1500)}`, false);
+    const out = [];
+    for (const m of String(r.text || '').matchAll(/BLOCCO:\s*(gara|atleta|stagione|settimana)\s*\|\s*([^\n]+)/gi)) out.push({ tipo: m[1].toLowerCase(), rif: m[2].trim() });
+    return out.slice(0, 3).length ? out.slice(0, 3) : [{ tipo: 'settimana', rif: 'ultima' }];
+  }
+  const tokensDi = s => up(s).replace(/[^A-Z0-9 ]/g, ' ').split(' ').filter(w => w.length > 2);
+  async function risolvi(b) {
+    if (b.tipo === 'stagione') { const c = up(b.rif).replace(/[^A-Z0-9_]/g, ''); return { tipo: 'stagione', p: { id: c }, dati: await factsStagione(c) }; }
+    if (b.tipo === 'settimana') { const fine = /^\d{4}-\d{2}-\d{2}$/.test(b.rif) ? b.rif : null; return { tipo: 'settimana', p: { fine }, dati: await factsSettimana(fine) }; }
+    if (b.tipo === 'atleta') {
+      const t = tokensDi(b.rif), ath = Object.values(await getData('athletes.json'));
+      const hit = ath.filter(a => { const n = up(fullName(a)); return t.length && t.every(w => n.includes(w)); }).sort((x, y) => (y.punti_totali || 0) - (x.punti_totali || 0))[0];
+      if (!hit) throw new Error(`atleta non trovato: ${b.rif}`);
+      return { tipo: 'atleta', p: { id: hit.id }, dati: await factsAtleta(hit.id) };
+    }
+    const t = tokensDi(b.rif), cal = await getData('calendar.json'), oggi = today();
+    const punt = g => { const n = new Set(tokensDi(g.nome)); return t.filter(w => n.has(w)).length; };
+    const best = cal.filter(g => punt(g) >= Math.min(2, t.length)).sort((x, y) => punt(y) - punt(x) || Math.abs(Date.parse(x.data) - Date.parse(oggi)) - Math.abs(Date.parse(y.data) - Date.parse(oggi)))[0];
+    if (!best) throw new Error(`gara non trovata: ${b.rif}`);
+    return { tipo: 'gara', p: { id: best.id, tutte: true }, dati: await factsGara(best.id, { tutte: true }) };
+  }
+
   async function genera(tipo, p) {
     let facts, soggetto;
     if (tipo === 'gara') { facts = await factsGara(p.id, { tutte: !!p.tutte }); soggetto = facts.gara.nome; }
     else if (tipo === 'settimana') { facts = await factsSettimana(p.fine); soggetto = `Il punto della settimana (${facts.periodo.dal} – ${facts.periodo.al})`; }
     else if (tipo === 'atleta') { facts = await factsAtleta(p.id); soggetto = facts.atleta.nome; }
+    else if (tipo === 'stagione') { facts = await factsStagione(p.id); soggetto = `Stagione ${facts.stagione}: ${facts.categoria}`; }
+    else if (tipo === 'libero') { const bl = []; for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b)); facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
     else throw new Error('tipo non valido');
     const link = await leggiLink((p.link || []).filter(Boolean));
     // per i profili di atleti la ricerca web e consentita solo per gli adulti (gia garantito da factsAtleta); per le gare/settimana senza restrizioni
     const web = !!p.web;
     const prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
-      (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, 600)}\n` : '');
+      (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, tipo === 'libero' ? 2500 : 600)}\n` : '');
     const cand = await fotoCandidate(tipo, p, facts);
     const pron = proponiFoto(cand, facts);
     const prompt2 = prompt + (pron.length ? `\nFOTO DISPONIBILI. Se utile, inserisci il segnaposto [[foto:N]] da solo su una riga, SUBITO DOPO il paragrafo che parla di quella categoria o di quel corridore (mai in una sezione diversa, al massimo una foto per categoria, solo se la foto corrisponde a cio di cui stai parlando; non descrivere cosa mostrano le foto):\n${pron.map((f, i) => `[[foto:${i + 1}]] ${f.etichetta}`).join('\n')}\n` : '');
@@ -370,7 +451,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       soggetto, foto: piazzata.foto.length ? piazzata.foto : sceglie(cand), dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
-  app.locals.redazione = { factsGara, factsSettimana, factsAtleta, leggiLink, alboFor };   // per le prove
+  app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, leggiLink, alboFor };   // per le prove
 
   // ---------- API ----------
   app.get('/api/admin/redazione/bozze', requireAdmin, async (req, res) => {
@@ -391,11 +472,34 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     try {
       const b = req.body || {};
       const tipo = String(b.tipo || '');
-      if (!['gara', 'settimana', 'atleta'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
-      if ((tipo === 'gara' || tipo === 'atleta') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
+      if (!['gara', 'settimana', 'atleta', 'stagione'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
+      if ((tipo === 'gara' || tipo === 'atleta' || tipo === 'stagione') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
       const p = { id: String(b.id || ''), fine: b.fine ? String(b.fine).slice(0, 10) : null, web: !!b.web, tutte: b.tutte !== false, link: Array.isArray(b.link) ? b.link.map(String).slice(0, 5) : [], indicazioni: b.indicazioni || '' };
       const { id } = await avvia(tipo, p);
       res.json({ ok: true, id });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
+  // richiesta scritta a parole dal redattore: l'AI capisce cosa serve, il sito calcola i dati
+  app.post('/api/admin/redazione/richiesta', requireAdmin, async (req, res) => {
+    try {
+      const testo = String((req.body || {}).testo || '').trim();
+      if (testo.length < 8) return res.status(400).json({ error: 'scrivi cosa vuoi realizzare (almeno una frase)' });
+      const p = { richiesta: testo.slice(0, 2000), indicazioni: testo.slice(0, 2000), web: !!(req.body || {}).web, link: Array.isArray((req.body || {}).link) ? req.body.link.map(String).slice(0, 5) : [] };
+      const { id } = await avvia('libero', p, testo.replace(/\s+/g, ' ').slice(0, 70));
+      res.json({ ok: true, id });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
+  // gli articoli di fine stagione: uno per categoria, scritti uno alla volta in background
+  app.post('/api/admin/redazione/stagione', requireAdmin, async (req, res) => {
+    try {
+      if (!process.env.ANTHROPIC_API_KEY) return res.status(400).json({ error: 'ANTHROPIC_API_KEY non configurata' });
+      const y = await anno(), esist = new Set((await readAll()).map(b => b.parametri && b.parametri.chiave).filter(Boolean));
+      const web = !!(req.body || {}).web;
+      const daFare = CATS_ALL.filter(c => !esist.has(`stagione|${y}|${c}`));
+      res.json({ ok: true, avviati: daFare.length, gia_presenti: CATS_ALL.length - daFare.length });
+      (async () => { for (const c of daFare) { try { const { fine } = await avvia('stagione', { id: c, web, link: [], indicazioni: '', chiave: `stagione|${y}|${c}`, auto: false }, `Stagione ${y}: ${CAT_NOME[c]}`); await fine; } catch (e) { console.warn('[redazione] stagione', c, e.message); } } })();
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 
@@ -483,6 +587,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   app.get('/api/admin/redazione/cerca', requireAdmin, async (req, res) => {
     try {
       const q = up(req.query.q || '').trim();
+      if (req.query.tipo === 'stagione') return res.json({ risultati: CATS_ALL.map(c => ({ id: c, titolo: CAT_NOME[c] || c, dettaglio: 'riepilogo di fine stagione' })) });
       if (req.query.tipo === 'atleta') {
         const ath = await getData('athletes.json');
         const list = Object.values(ath).filter(a => (!q || up(fullName(a)).includes(q)))

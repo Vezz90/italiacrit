@@ -13916,3 +13916,7 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .el-soc .media-profile-link[aria-label="Sito"] { border-color: rgba(52,211,153,.5); }
 .el-soc .media-profile-link[aria-label="Sito"] .social-icon { stroke: #34d399; }
 @media (max-width: 760px) { .el-soc .media-profile-link { width: 30px; height: 30px; } .el-soc:empty { display: none; } }
+
+.rd-ask { margin: 0 0 14px; }
+.rd-ask textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); border-radius: 8px; padding: 10px 12px; font: inherit; font-size: .92rem; line-height: 1.5; resize: vertical; }
+.rd-ask .rd-btns { align-items: center; margin-top: 10px; }

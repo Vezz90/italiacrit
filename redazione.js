@@ -6,7 +6,7 @@
 'use strict';
 
 (function () {
-  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta' };
+  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', libero: 'Richiesta libera' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
   const st = { prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
@@ -133,7 +133,13 @@
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
         <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico ogni mezz'ora.</small>
+        <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
+      <div class="hx-panel rd-ask"><h3>Scrivi all'AI cosa vuoi realizzare</h3>
+        <textarea id="rd-richiesta" rows="3" maxlength="2000" placeholder="Es. Un articolo sulla stagione di Nicolas Milesi, dai primi anni a oggi · Il confronto tra le squadre Juniores di quest'anno · Un'anteprima della prossima stagione per gli Allievi">${esc(st.richiesta || '')}</textarea>
+        <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" id="rd-invia">Invia alla redazione</button>
+          <label class="rd-c"><input id="rd-richiesta-web" type="checkbox"> Cerca anche sul web</label>
+          <small class="rd-muted">L'AI decide da sola quali dati del sito usare (gare, atleti, stagione) e scrive la bozza qui sotto.</small></div></div>
       <div class="rd-form rd-more" ${st.altro ? '' : 'hidden'}>${form()}</div>
       <div class="rd-grid"><div class="rd-side"><div class="rd-list">${lista()}</div></div><div class="rd-ed">${editor()}</div></div></div>`);
     lega();
@@ -147,6 +153,8 @@
     w.querySelectorAll('[data-pick]').forEach(b => { b.onclick = () => { const r = st.cerca.find(x => x.id === b.dataset.pick); st.pick = r || null; w.querySelector('.rd-form').innerHTML = form(); lega(); }; });
     const g = w.querySelector('#rd-genera'); if (g) g.onclick = genera;
     const au = w.querySelector('#rd-auto'); if (au) au.onclick = async () => { try { await api('/auto', { method: 'POST', body: {} }); st.attesa = Date.now() + 6 * 60000; if (typeof showToast === 'function') showToast('Sto scrivendo: gli articoli compaiono a sinistra man mano'); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); } await carica(); paint(); };
+    const sg = w.querySelector('#rd-stagione'); if (sg) sg.onclick = async () => { if (!confirm('Scrivere un articolo di fine stagione per ogni categoria (10 articoli, circa 15-20 minuti)?')) return; try { const r = await api('/stagione', { method: 'POST', body: { web: false } }); st.attesa = Date.now() + 25 * 60000; if (typeof showToast === 'function') showToast(r.avviati ? `Sto scrivendo ${r.avviati} articoli: compaiono a sinistra man mano` : 'Sono già tutti presenti'); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); } await carica(); paint(); };
+    const iv = w.querySelector('#rd-invia'); if (iv) iv.onclick = async () => { const ta = w.querySelector('#rd-richiesta'); st.richiesta = ta.value; try { const r = await api('/richiesta', { method: 'POST', body: { testo: ta.value, web: w.querySelector('#rd-richiesta-web').checked } }); st.sel = r.id; st.richiesta = ''; st.attesa = Date.now() + 6 * 60000; } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); return; } await carica(); paint(); };
     const al = w.querySelector('#rd-altro'); if (al) al.onclick = () => { st.altro = !st.altro; w.querySelector('.rd-more').hidden = !st.altro; al.textContent = st.altro ? 'Chiudi' : 'Un altro articolo…'; };
     w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; st.prev = false; paint(); }; });
     const bk = w.querySelector('.rd-prev [data-act="back"]'); if (bk) bk.onclick = () => azione('back');
@@ -181,7 +189,8 @@
       if (a === 'del') { if (!confirm('Eliminare questa bozza?')) return; await api('/bozze/' + b.id, { method: 'DELETE' }); st.sel = null; }
       else if (a === 'again') {
         const p = b.parametri || {};
-        await api('/genera', { method: 'POST', body: { tipo: b.tipo, id: p.id, fine: p.fine, web: p.web, link: p.link, indicazioni: p.indicazioni } });
+        if (b.tipo === 'libero') await api('/richiesta', { method: 'POST', body: { testo: p.richiesta, web: p.web, link: p.link } });
+        else await api('/genera', { method: 'POST', body: { tipo: b.tipo, id: p.id, fine: p.fine, web: p.web, link: p.link, indicazioni: p.indicazioni } });
       } else {
         const body = ed ? { titolo: ed.querySelector('#ed-titolo').value, sommario: ed.querySelector('#ed-sommario').value, corpo: ed.querySelector('#ed-corpo').value } : {};
         if (a === 'approve') body.stato = 'approvata'; if (a === 'discard') body.stato = 'scartata'; if (a === 'save' && b.stato === 'approvata') body.stato = 'bozza';
