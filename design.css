@@ -13898,7 +13898,7 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .rd-art h2 { font-size: 1.2rem; margin: 22px 0 8px; }
 .rd-art figure { margin: 14px 0; }
 .rd-art figure.cover { margin: 0 0 14px; }
-.rd-art img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 10px; display: block; background: var(--border-subtle); }
+.rd-art img { max-width: 100%; max-height: 620px; width: auto; height: auto; margin: 0 auto; border-radius: 10px; display: block; background: var(--border-subtle); }
 .rd-art figcaption { font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
 .rd-art footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border-subtle); font-size: .8rem; color: var(--text-muted); }
 .rd-prev .rd-top { justify-content: space-between; }

@@ -85,7 +85,7 @@
     return `<div class="hx-panel rd-prev"><div class="rd-top"><span class="rd-chip s-${b.stato}">Anteprima di lettura</span><button type="button" class="admin-edit-btn" data-act="back">← Torna alla modifica</button></div>
       <article class="rd-art">${f[0] ? fig(f[0], 'cover') : ''}<small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
       ${corpo.slice(0, mezzo).join('')}${f[1] ? fig(f[1], 'inline') : ''}${corpo.slice(mezzo).join('')}${f.slice(2).map(x => fig(x, 'inline')).join('')}
-      ${(b.fonti || []).length ? `<footer><b>Fonti</b>: ${(b.fonti || []).map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.titolo || x.url)}</a>`).join(' · ')}</footer>` : ''}</article></div>`;
+      <footer>© Produzione riservata</footer></article></div>`;
   }
 
   function editor() {
