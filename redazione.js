@@ -80,11 +80,16 @@
   function articolo(b) {
     const f = b.foto || [], usate = new Set();
     const fig = x => `<figure><img src="${esc(imgSrc(x.url))}" alt="${esc(x.didascalia || '')}" loading="lazy" onerror="this.parentNode.remove()">${(x.didascalia || x.credito) ? `<figcaption>${esc(x.didascalia || '')}${x.didascalia && x.credito ? ' · ' : ''}${x.credito ? 'Foto: ' + esc(x.credito) : ''}</figcaption>` : ''}</figure>`;
-    const corpo = String(b.corpo || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => {
-      const m = x.match(/^\[\[foto:(\d+)\]\]$/);
-      if (m) { const ft = f[+m[1] - 1]; if (ft) { usate.add(+m[1] - 1); return fig(ft); } return ''; }
-      return /^##\s+/.test(x) ? `<h2>${esc(x.replace(/^##\s+/, ''))}</h2>` : `<p>${esc(x.replace(/\[\[foto:\d+\]\]/g, '')).replace(/\n/g, '<br>')}</p>`;
-    });
+    const corpo = []; let par = [];
+    const flush = () => { if (par.length) { corpo.push(`<p>${esc(par.join(' '))}</p>`); par = []; } };
+    for (const r0 of String(b.corpo || '').replace(/\r/g, '').split('\n')) {
+      const r = r0.trim(), m = r.match(/^\[\[foto:(\d+)\]\]$/);
+      if (!r) { flush(); continue; }
+      if (m) { flush(); const ft = f[+m[1] - 1]; if (ft) { usate.add(+m[1] - 1); corpo.push(fig(ft)); } continue; }
+      if (/^##\s+/.test(r)) { flush(); corpo.push(`<h2>${esc(r.replace(/^##\s+/, ''))}</h2>`); continue; }
+      par.push(r.replace(/\[\[foto:\d+\]\]/g, ''));
+    }
+    flush();
     const meta = [fmtData(b.aggiornato || b.creato), (b.tag || []).slice(0, 4).map(t => '#' + t).join(' ')].filter(Boolean).join(' · ');
     return `<div class="hx-panel rd-prev"><div class="rd-top"><span class="rd-chip s-${b.stato}">Anteprima di lettura</span><button type="button" class="admin-edit-btn" data-act="back">← Torna alla modifica</button></div>
       <article class="rd-art"><small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
