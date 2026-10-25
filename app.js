@@ -2437,6 +2437,17 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // tolti i numeri, le parole restanti devono coincidere.
   const _calCatMatch = (calCatLbl, rLbl) => {
     if (!calCatLbl || !rLbl) return false;
+    // Sesso e fascia espliciti nell'etichetta del calendario ("Allievi maschile" / "Allievi femminile", "Under 23",
+    // "Donne Elite"): prima si escludono le categorie dell'altro sesso (il confronto per prefisso qui sotto dava
+    // "Allievi femminile" valida anche per gli Allievi maschi), poi si accettano fasce equivalenti con nomi diversi
+    // (calendario "Under 23" = risultato "Elite - U23"). Le etichette che accorpano piu categorie restano al vecchio confronto.
+    if (!/[\/]|promiscua|open/i.test(calCatLbl)) {
+      const _hasM = /maschil|uomin/i.test(calCatLbl), _hasF = /donn|femmin|allieve/i.test(calCatLbl);
+      const _cg = _hasF && !_hasM ? 'F' : (_hasM && !_hasF ? 'M' : null), _rg = /donn/i.test(rLbl) ? 'F' : 'M';
+      if (_cg && _cg !== _rg) return false;
+      const _bd = x => /allie/i.test(x) ? 'AL' : /junior/i.test(x) ? 'JUN' : /elite|under|u23/i.test(x) ? 'ELI' : null;
+      if (_bd(calCatLbl) && _bd(calCatLbl) === _bd(rLbl) && (_cg === _rg || (!_cg && _rg === 'M'))) return true;
+    }
     if (rLbl === calCatLbl || rLbl.startsWith(calCatLbl + ' ') || calCatLbl.startsWith(rLbl + ' ')) return true;
     if (/promiscua/i.test(calCatLbl)) {
       if (/\ball\b/i.test(calCatLbl) && /^allievi/i.test(rLbl)) return true;
@@ -14853,8 +14864,11 @@ function _raceSearchNorm(s) {
 function _raceSearchMatch(query, race) {
   const qWords = _raceSearchNorm(query).split(' ').filter(w => w.length >= 2);
   if (!qWords.length) return false;
-  const haystack = _raceSearchNorm(`${race.nome_gara || ''} ${race.gara_id || ''} ${race.categoria || ''} ${race.genere || ''}`);
-  return qWords.every(w => haystack.includes(w));
+  // 'genere' dei risultati e' solo M/F: si aggiungono le parole che un utente scrive davvero ("donne", "uomini")
+  const haystack = _raceSearchNorm(`${race.nome_gara || ''} ${race.gara_id || ''} ${race.categoria || ''} ${race.genere || ''} ${race.genere === 'F' ? 'donne femminile' : race.genere === 'M' ? 'uomini maschile' : ''}`);
+  // singolare/plurale: "campionati italiani" deve trovare "Campionato Italiano" (si confronta la radice, senza la vocale finale)
+  const stem = w => (w.length >= 5 ? w.replace(/[aeio]$/, '') : w);
+  return qWords.every(w => haystack.includes(w) || haystack.includes(stem(w)));
 }
 window.ytSearchGara = (id, q) => {
   const resultsEl = document.getElementById('ytq-sr-' + id);
