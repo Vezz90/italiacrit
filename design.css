@@ -13906,7 +13906,7 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 
 /* Colonna Social negli elenchi: stesse icone e colori delle pagine atleta e team, in piccolo */
 .el-soc { display: flex; gap: 5px; align-items: center; }
-.el-soc:empty { display: none; }
+.el-soc:empty { min-height: 1px; }   /* resta nella griglia: se sparisce, le colonne a destra scivolano di un posto */
 .el-soc .media-profile-link { font-size: 0; width: 28px; height: 28px; border-radius: 50%; justify-content: center; align-items: center; gap: 0; display: inline-flex; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); transition: transform .12s, background .12s; }
 .el-soc .media-profile-link:hover { text-decoration: none; transform: translateY(-1px); background: var(--bg-elevated, rgba(0,0,0,.05)); }
 .el-soc .media-profile-link .social-icon { width: 15px; height: 15px; }
@@ -13915,4 +13915,4 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .el-soc .media-profile-link[aria-label="Strava"] { border-color: rgba(252,76,2,.55); }
 .el-soc .media-profile-link[aria-label="Sito"] { border-color: rgba(52,211,153,.5); }
 .el-soc .media-profile-link[aria-label="Sito"] .social-icon { stroke: #34d399; }
-@media (max-width: 760px) { .el-soc .media-profile-link { width: 30px; height: 30px; } }
+@media (max-width: 760px) { .el-soc .media-profile-link { width: 30px; height: 30px; } .el-soc:empty { display: none; } }
