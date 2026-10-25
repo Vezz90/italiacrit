@@ -206,20 +206,20 @@ module.exports = function registerRedazione(app, deps) {
       .slice(0, 14).map(r => ({ gara: r.nome_gara, data: r.data, vincitore: fullName(r), team: r.team, regione: r.regione || null, moltiplicatore: r.moltiplicatore || 1, titolo: r.campionato_italiano ? 'campionato italiano' : r.campionato_regionale ? 'campionato regionale' : null }));
     const campioni_italiani = rows.filter(r => r.posizione === 1 && r.campionato_italiano).map(r => ({ prova: r.nome_gara, data: r.data, campione: fullName(r), team: r.team }));
     const campioni_regionali = rows.filter(r => r.posizione === 1 && r.campionato_regionale).slice(0, 25).map(r => ({ prova: r.nome_gara, regione: r.regione || null, data: r.data, campione: fullName(r), team: r.team }));
-    // chi comandava la classifica alla fine di ogni mese
-    const mesi = {}; rows.forEach(r => { const m = String(r.data).slice(0, 7); (mesi[m] = mesi[m] || []).push(r); });
-    const cum = {}; const leader = [];
-    Object.keys(mesi).sort().forEach(m => { mesi[m].forEach(r => { const k = r.atleta_id || fullName(r); cum[k] = (cum[k] || 0) + (Number(r.punti_effettivi) || 0); }); const top = Object.entries(cum).sort((a, b) => b[1] - a[1])[0]; if (top) leader.push({ fine_mese: m, leader: (A[top[0]] || {}).atleta, punti: Math.round(top[1] * 100) / 100 }); });
-    const cambi = leader.filter((l, i) => i === 0 || l.leader !== leader[i - 1].leader);
-    const t5 = Object.values(teams || {}).filter(t => t.punti_per_cat && t.punti_per_cat[cat]).sort((a, b) => b.punti_per_cat[cat] - a.punti_per_cat[cat]).slice(0, 5).map(t => ({ team: t.nome, punti: t.punti_per_cat[cat] }));
-    const prec = {};
-    if (car) lista.slice(0, 5).forEach(a => { const x = a.id && (car.a || {})[a.id]; const s0 = x && x.s.find(q => String(q[0]) === String(+y - 1)); if (s0) prec[a.atleta] = { categoria: car.cats[s0[1]], posizione_finale: s0[2], punti: s0[3], vittorie: s0[5], podi: s0[6] }; });
+    // classifica ufficiale del sito (stessa della pagina Classifica): atleti e squadre, con i punti che si vedono li'
+    let rk = [], rkT = [];
+    try { rk = await getData('rankings/' + cat + '.json'); } catch (_) { /* ripiego sul calcolo locale */ }
+    try { rkT = await getData('team_rankings/' + cat + '.json'); } catch (_) { /* senza squadre */ }
+    if (!Array.isArray(rk) || !rk.length) throw new Error('classifica ufficiale non disponibile per ' + cat);
+    const ordinata = rk.slice().sort((x, y) => (x.pos || 999) - (y.pos || 999));
+    const classifica = ordinata.slice(0, 10).map(a => ({ pos: a.pos, id: a.atleta_id, cognome: a.cognome, atleta: `${a.cognome} ${a.nome}`.trim(), team: a.team_nome, punti: a.punti, vittorie: a.p1, secondi_posti: a.p2, terzi_posti: a.p3, arrivi_nei_primi_10: a.pout, gare: a.gare }));
+    const t5 = (Array.isArray(rkT) ? rkT : []).slice().sort((x, y) => (x.pos || 999) - (y.pos || 999)).slice(0, 5).map(t => ({ pos: t.pos, team: t.team_nome, punti: t.punti, vittorie: t.p1, atleti_a_punti: t.n_atleti }));
+    const piuVitt = ordinata.slice().sort((x, y) => (y.p1 || 0) - (x.p1 || 0) || (x.pos || 999) - (y.pos || 999)).slice(0, 4).filter(a => a.p1).map(a => ({ atleta: `${a.cognome} ${a.nome}`.trim(), vittorie: a.p1, team: a.team_nome, posizione_in_classifica: a.pos }));
     return {
-      stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, gare_disputate: gare.size, atleti_con_punti_o_gare: lista.length,
-      classifica_atleti: lista.slice(0, 10).map((a, i) => ({ pos: i + 1, id: a.id, cognome: a.cognome, atleta: a.atleta, team: a.team, punti: Math.round(a.punti * 100) / 100, vittorie: a.vittorie, podi: a.podi, gare: a.gare })),
-      piu_vittorie: lista.slice().sort((a, b) => b.vittorie - a.vittorie || b.podi - a.podi).slice(0, 4).filter(a => a.vittorie).map(a => ({ atleta: a.atleta, vittorie: a.vittorie, team: a.team })),
+      nota: 'classifica e squadre sono quelle UFFICIALI del sito (pagina Classifica): nomi, punti e posizioni vanno usati cosi come sono',
+      stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, gare_disputate: gare.size, atleti_in_classifica: rk.length,
+      classifica_atleti: classifica, piu_vittorie: piuVitt,
       classifica_team: t5, vittorie_importanti: ev, campioni_italiani, campioni_regionali,
-      leader_a_fine_mese: cambi, stagione_precedente_dei_primi: prec,
     };
   }
 
@@ -483,7 +483,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
   };
 
-  ISTRUZIONI.stagione = f => `TIPO: ARTICOLO DI FINE STAGIONE PER CATEGORIA (600-900 parole). La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}". Il titolo deve nominare il numero uno della classifica finale e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ': apertura con il leader della classifica finale (punti, vittorie, podi, squadra); "La classifica finale" (primi 5-10); "Le vittorie che contano" (campionati e gare nazionali da vittorie_importanti); "I campioni" (campione italiano e campioni regionali, solo se nei DATI); "Le squadre" (classifica_team); "Il filo della stagione" (i cambi al comando da leader_a_fine_mese, solo se ce ne sono); "Rispetto alla scorsa stagione" (solo confronti dimostrati da stagione_precedente_dei_primi). Ometti una sezione se non ha dati. Punti e posizioni sono quelli del sito (classifica per punti), non inventare altri criteri.`;
+  ISTRUZIONI.stagione = f => `TIPO: ARTICOLO DI FINE STAGIONE PER CATEGORIA (600-900 parole). La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}". REGOLA FERREA: la classifica finale e le squadre sono QUELLE UFFICIALI DEL SITO, riportate in classifica_atleti e classifica_team: nomi, posizioni e punti vanno copiati cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno della classifica finale e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura con il leader (punti, vittorie, squadra); "La classifica finale" (primi 5-10 con punti, nell'ordine ufficiale); "Le vittorie che contano" (da vittorie_importanti); "I campioni" (campione italiano e regionali, solo se nei DATI); "Le squadre" (classifica_team). Una sezione senza dati si omette. NON scrivere confronti con la stagione precedente, ne storia dei cambi di leader, ne altri numeri che non siano nei DATI.`;
   ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI. Lunghezza e forma come richiesto; se non le indica, 400-700 parole con titolo e sottotitoli. Se la richiesta chiede cose che non hai nei DATI, non inventarle: scrivilo in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
 
   // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
