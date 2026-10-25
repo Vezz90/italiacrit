@@ -13268,7 +13268,7 @@ async function _getHeadMetaFor(type, id) {
 }
 
 // Foto candidate per un articolo della redazione: foto caricate e approvate, album xpix.it / ciclismo.info, foto profilo (solo atleti indicati)
-async function _redazioneFoto({ garaIds = [], atletaIds = [] }) {
+async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
   const out = [], visti = new Set();
   const add = (url, credito, didascalia, fonte, gara_id, atleta_id) => { if (url && !visti.has(url) && out.length < 40) { visti.add(url); out.push({ url, credito: credito || '', didascalia: didascalia || '', fonte, gara_id: gara_id || '', atleta_id: atleta_id || '' }); } };
   const ids = [...new Set(garaIds.filter(Boolean))];
@@ -13282,7 +13282,28 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [] }) {
     const x = xpix[a]; if (x) for (const u of (Array.isArray(x.photos) && x.photos.length ? x.photos : [x.url]).filter(Boolean).slice(0, 12)) add(u, 'xpix.it', x.album_name || '', 'xpix');
     const c = ic[a]; if (c && (c.url || c.filename)) add(c.url || c.filename, 'ciclismo.info', c.name || '', 'ic');
   }
-  for (const a of [...new Set(atletaIds.filter(Boolean))].slice(0, 6)) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo', '', a);
+  const ath = [...new Set(atletaIds.filter(Boolean))].slice(0, 8);
+  for (const a of ath) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo', '', a);
+  // foto in cui l'atleta e' taggato (le stesse del suo profilo): prima quelle di gare che ha vinto
+  const tagged = {};
+  const push = (a, o) => { (tagged[a] = tagged[a] || []).push(o); };
+  const ha = (csv, a) => String(csv || '').split(',').map(x => x.trim()).includes(a);
+  try {
+    for (let from = 0; ; from += 1000) {
+      const { data } = await supabase.from('race_photos').select('gara_id, filename, caption, photographer, display_name, atleta_ids, created_at').eq('status', 'approved').neq('atleta_ids', '').order('id').range(from, from + 999);
+      for (const f of (data || [])) for (const a of ath) if (ha(f.atleta_ids, a)) push(a, { url: `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`, credito: f.photographer || f.display_name || '', didascalia: f.caption || '', gara_id: f.gara_id });
+      if (!data || data.length < 1000) break;
+    }
+  } catch (_) { /* nessuna foto taggata */ }
+  for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
+    for (const [gid, e] of Object.entries(src || {})) for (const [u, csv] of Object.entries((e && e.tags) || {})) for (const a of ath) if (ha(csv, a)) push(a, { url: u, credito: nome, didascalia: e.album_name || e.name || '', gara_id: gid });
+  }
+  for (const a of ath) {
+    const w = new Set(vittorie[a] || []);
+    const l = (tagged[a] || []).sort((x, y) => (w.has(y.gara_id) ? 1 : 0) - (w.has(x.gara_id) ? 1 : 0));
+    l.slice(0, 3).forEach(o => add(o.url, o.credito, o.didascalia, 'tag', o.gara_id, a));
+    if (l[0] && w.has(l[0].gara_id) && out.length) out.filter(f => f.fonte === 'tag' && f.atleta_id === a).forEach(f => { f.vittoria = w.has(f.gara_id); });
+  }
   return out;
 }
 

@@ -238,7 +238,9 @@ module.exports = function registerRedazione(app, deps) {
     };
     if (tipo === 'libero') for (const b of (facts.blocchi || [])) await blocco(b.tipo, b.p || {}, b.dati || {});
     else await blocco(tipo, p, facts);
-    try { return await fotoPer({ garaIds, atletaIds }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
+    const vittorie = {};
+    try { const raw = await getData('results_raw.json'); const set = new Set(atletaIds); raw.forEach(r => { if (r.posizione === 1 && set.has(r.atleta_id)) (vittorie[r.atleta_id] = vittorie[r.atleta_id] || []).push(r.gara_id); }); } catch (_) { /* senza preferenza */ }
+    try { return await fotoPer({ garaIds, atletaIds, vittorie }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
   }
   // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
   const sceglie = c => { const g = c.filter(f => f.fonte !== 'profilo').slice(0, 2); return (g.length ? g : c.filter(f => f.fonte === 'profilo').slice(0, 1)).map(f => ({ url: f.url, credito: f.credito, didascalia: f.didascalia })); };
@@ -257,9 +259,14 @@ module.exports = function registerRedazione(app, deps) {
       const chi = String(f.didascalia || '').split('|')[0].split(' - ')[0].trim();            // le didascalie caricate sul sito dicono chi e ritratto: "COGNOME NOME - SQUADRA | GARA"
       out.push({ ...f, etichetta: chi ? `foto di ${girate(chi)} (${c})` : `foto della gara, categoria "${c}"`, didascalia: chi ? girate(chi) : c });
     }
-    for (const f of cand.filter(x => x.fonte === 'profilo').slice(0, 3)) if (nome[f.atleta_id]) out.push({ ...f, etichetta: `foto di ${girate(nome[f.atleta_id])} (vincitore o podio)`, didascalia: girate(nome[f.atleta_id]) });
+    const visti = new Set();
+    for (const f of cand.filter(x => x.fonte === 'tag')) {                    // una foto per atleta, tra quelle taggate sul suo profilo (meglio se di una gara vinta)
+      if (!nome[f.atleta_id] || visti.has(f.atleta_id) || out.length >= 10) continue; visti.add(f.atleta_id);
+      out.push({ ...f, etichetta: `foto di ${girate(nome[f.atleta_id])}${f.vittoria ? ' (scattata in una gara che ha vinto)' : ''}, dal suo profilo`, didascalia: girate(nome[f.atleta_id]) });
+    }
+    for (const f of cand.filter(x => x.fonte === 'profilo').slice(0, 4)) if (nome[f.atleta_id]) out.push({ ...f, etichetta: `foto di ${girate(nome[f.atleta_id])} (vincitore o podio)`, didascalia: girate(nome[f.atleta_id]) });
     for (const f of cand.filter(x => x.fonte === 'xpix' || x.fonte === 'ic').slice(0, 2)) out.push({ ...f, etichetta: 'foto d\'album della gara (generica, non attribuibile a un corridore)', didascalia: f.didascalia || '' });
-    return out.slice(0, 8);
+    return out.slice(0, 12);
   }
   // rinumera i segnaposto nell'ordine in cui compaiono e tiene solo le foto davvero usate
   function piazzaFoto(corpo, pron) {
@@ -399,10 +406,10 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
 
   // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
   async function pianifica(richiesta) {
-    const r = await callClaude(`Sei l'assistente di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Oggi e ${today()}. Data la RICHIESTA, scegli quali DATI del sito servono. Rispondi SOLO con righe nel formato "BLOCCO: tipo | riferimento", massimo 3 righe. Tipi: gara (nome della gara come lo scriverebbe il redattore), atleta (nome e cognome), stagione (UN codice tra ${CATS_ALL.join(' ')}), settimana (data AAAA-MM-GG dell'ultimo giorno, oppure "ultima"). Per una richiesta su piu categorie usa piu righe stagione. Se la richiesta non richiede dati specifici rispondi "BLOCCO: settimana | ultima".\n\nRICHIESTA: ${richiesta.slice(0, 1500)}`, false);
+    const r = await callClaude(`Sei l'assistente di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Oggi e ${today()}. Data la RICHIESTA, scegli quali DATI del sito servono. Rispondi SOLO con righe nel formato "BLOCCO: tipo | riferimento", massimo 6 righe. Includi TUTTE le categorie che la richiesta nomina o implica: "Esordienti" sono quattro righe (ES1_M ES1_F ES2_M ES2_F), "Allievi" due (AL_M AL_F), "Juniores" due (JUN_M JUN_F), "Elite/Under 23" due (ELI_M ELI_F), a meno che la richiesta indichi solo uomini o solo donne. Tipi: gara (nome della gara come lo scriverebbe il redattore), atleta (nome e cognome), stagione (UN codice tra ${CATS_ALL.join(' ')}), settimana (data AAAA-MM-GG dell'ultimo giorno, oppure "ultima"). Se la richiesta non richiede dati specifici rispondi "BLOCCO: settimana | ultima".\n\nRICHIESTA: ${richiesta.slice(0, 1500)}`, false);
     const out = [];
     for (const m of String(r.text || '').matchAll(/BLOCCO:\s*(gara|atleta|stagione|settimana)\s*\|\s*([^\n]+)/gi)) out.push({ tipo: m[1].toLowerCase(), rif: m[2].trim() });
-    return out.slice(0, 3).length ? out.slice(0, 3) : [{ tipo: 'settimana', rif: 'ultima' }];
+    return out.slice(0, 6).length ? out.slice(0, 6) : [{ tipo: 'settimana', rif: 'ultima' }];
   }
   const tokensDi = s => up(s).replace(/[^A-Z0-9 ]/g, ' ').split(' ').filter(w => w.length > 2);
   async function risolvi(b) {
