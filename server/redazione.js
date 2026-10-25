@@ -201,8 +201,13 @@ module.exports = function registerRedazione(app, deps) {
     (facts.risultati || []).forEach(r => { cat[r.gara_id] = r.categoria; (r.top10 || []).forEach(t => { if (t.id) nome[t.id] = t.atleta; }); });
     const pulisci = n => String(n || '').toLowerCase().replace(/(^|[\s'-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
     const girate = n => { const t = String(n || '').trim().split(/\s+/); return pulisci(t.length > 1 ? t.slice(-1)[0] + ' ' + t.slice(0, -1).join(' ') : n); };   // "MILESI NICOLAS" -> "Nicolas Milesi"
-    const out = [], perCat = new Set();
-    for (const f of cand.filter(x => x.fonte === 'caricata')) { const c = cat[f.gara_id]; if (c && !perCat.has(c) && out.length < 5) { perCat.add(c); out.push({ ...f, etichetta: `foto della gara, categoria "${c}"`, didascalia: f.didascalia || c }); } }
+    const out = [], perCat = {};
+    for (const f of cand.filter(x => x.fonte === 'caricata')) {
+      const c = cat[f.gara_id]; if (!c || (perCat[c] || 0) >= 2 || out.length >= 6) continue;
+      perCat[c] = (perCat[c] || 0) + 1;
+      const chi = String(f.didascalia || '').split('|')[0].split(' - ')[0].trim();            // le didascalie caricate sul sito dicono chi e ritratto: "COGNOME NOME - SQUADRA | GARA"
+      out.push({ ...f, etichetta: chi ? `foto di ${girate(chi)} (${c})` : `foto della gara, categoria "${c}"`, didascalia: chi ? girate(chi) : c });
+    }
     for (const f of cand.filter(x => x.fonte === 'profilo').slice(0, 3)) if (nome[f.atleta_id]) out.push({ ...f, etichetta: `foto di ${girate(nome[f.atleta_id])} (vincitore o podio)`, didascalia: girate(nome[f.atleta_id]) });
     for (const f of cand.filter(x => x.fonte === 'xpix' || x.fonte === 'ic').slice(0, 2)) out.push({ ...f, etichetta: 'foto d\'album della gara (generica, non attribuibile a un corridore)', didascalia: f.didascalia || '' });
     return out.slice(0, 8);
