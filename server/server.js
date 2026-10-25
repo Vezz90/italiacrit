@@ -8364,6 +8364,11 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
 
     const item   = queue[i];
     const photos = await readXpixPhotos();
+    // un solo album per gara: se la gara ne ha gia' uno diverso, si chiede conferma invece di sostituirlo in silenzio
+    const _prev = photos[gara_id];
+    if (_prev && _prev.album_slug && _prev.album_slug !== item.album_slug && !req.body.force) {
+      return res.status(409).json({ error: `OCCUPATA|${_prev.album_name || ''}|${(_prev.photos || []).length}` });
+    }
 
     // Ricarica SEMPRE tutte le foto fresche dal sito (l'item in coda potrebbe
     // averne solo alcune o nessuna se aggiunto col sync veloce).

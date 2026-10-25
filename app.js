@@ -15501,10 +15501,27 @@ window.xpixApprove = async (id) => {
   const tagCsv = (_xpixItemAtletaMap[id] || []).map(t => t.id).join(',');
   try {
     for (const gid of targets) {
-      await apiCall(`/admin/xpix/queue/${id}/approve`, {
+      // controlli prima di collegare l'album: mese diverso da quello della gara, oppure gara che ha gia' un altro album
+      const _gd = (_ytAllRaceCandidates().find(r => r.gara_id === gid) || {}).data || '';
+      const _am = (String(selectedPhotoUrl).match(/\/pixy\/(\d{4})\/(\d{2})\//) || []).slice(1).join('-');
+      if (_gd && _am && _gd.slice(0, 7) !== _am && !confirm(`Attenzione: le foto dell'album sono di ${_am} ma la gara scelta e' del ${_gd}.
+
+Gara: ${gid}
+
+Collegarle comunque?`)) return;
+      const _send = (force) => apiCall(`/admin/xpix/queue/${id}/approve`, {
         method: 'POST',
-        body: { gara_id: gid, selected_photo_url: selectedPhotoUrl, atleta_ids: tagCsv },
+        body: { gara_id: gid, selected_photo_url: selectedPhotoUrl, atleta_ids: tagCsv, force },
       });
+      try { await _send(false); }
+      catch (e) {
+        const m = String(e && e.message || '').match(/^OCCUPATA\|(.*)\|(\d+)$/);
+        if (!m) throw e;
+        if (!confirm(`La gara ${gid} ha gia' un album: "${m[1]}" (${m[2]} foto).
+
+Sostituirlo con questo? Le foto del vecchio album e i tag sui corridori andrebbero persi.`)) return;
+        await _send(true);
+      }
     }
     if (item) {
       if (!item._approvedFor) item._approvedFor = [];
