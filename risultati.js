@@ -74,7 +74,8 @@
     if ((p && p.source === 'italiaciclismo') || /italiaciclismo/i.test(x)) return 'italiaciclismo.net';
     return '';
   }
-  const creditChip = t => t ? `<span class="ph-credit">📷 ${esc(t)}</span>` : '';
+  // il credito della foto si vede solo aprendo la gara, non nelle card dei Risultati
+  const creditChip = () => '';
   function mediaOf(race, ctx) {
     const cats = Object.values(race.byCategory || {});
     const gmap = globalData.garaToCalId || {};

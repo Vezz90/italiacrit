@@ -44,7 +44,8 @@
 
   /* ---------- copertina generata (gare senza foto) ---------- */
   /* credit della foto (come nelle vecchie card): xpix.it / italiaciclismo.net dall'indirizzo dell'immagine */
-  function phCredit(u) { const x = String(u || ''); const t = /xpix/i.test(x) ? 'xpix.it' : /italiaciclismo/i.test(x) ? 'italiaciclismo.net' : ''; return t ? `<span class="ph-credit">📷 ${t}</span>` : ''; }
+  // il credito della foto (xpix.it ecc.) si vede solo aprendo la gara, non nelle card della Home
+  function phCredit() { return ''; }
   function cover(code, km) {
     const band = String(code || 'ELI_M').replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES');
     const c = String(code).endsWith('_F') ? F_COLOR : (BAND_COLOR[band] || BAND_COLOR.ELI);
