@@ -20108,7 +20108,10 @@ async function renderGaraStorica(ciclismoGaraId) {
   // dal vivo: "ho caricato il video ma non si vede"). Chiave sempre unica
   // (garaKey), niente lookup multi-chiave per categoria/annata esordienti
   // (quello serve solo alle gare native con più categorie sullo stesso id).
-  const garaVideos = (globalData?.videos && (globalData.videos[_mKey] || globalData.videos[garaKey])) || [];
+  // un video collegato dalla pagina risultati FCI e' salvato con l'id della categoria (es. "VENETO_WOMEN_2026-10-14_ELI_F"): si cerca anche li'
+  const _vAll = globalData?.videos || {};
+  const _vKeys = [_mKey, garaKey, ...(_calId ? Object.keys(_vAll).filter(k => k.startsWith(_calId + '_')) : [])];
+  const garaVideos = [...new Map(_vKeys.flatMap(k => _vAll[k] || []).map(v => [v.url, v])).values()];
   const _vClickStorico = (v) => {
     const k = videoKind(v.url);
     const t = esc((v.title || '').replace(/'/g, "\\'"));
