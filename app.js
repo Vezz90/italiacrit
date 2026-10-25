@@ -10969,7 +10969,8 @@ window.setRankPanel = (p) => { rankPanel = p; renderClassifica(); };
 // /ciclismo-results/classifica), non una stima nostra.
 let _classHistoricalYear = null;
 window.classSetYear = (y) => {
-  document.querySelectorAll('#class-year-row button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.year) === Number(y))));
+  y = Number(y);
+  _syncSeasonSelect('class-year-sel', y);
   if (Number(y) === Number(_loadedSeasonYear())) {
     _classHistoricalYear = null;
     renderClassifica();
@@ -11180,8 +11181,7 @@ async function renderClassifica() {
   setPage(`
     <div class="hx-wrap cls-wrap">
       <div class="rs-head"><h1>${_rkIsPista ? 'Pista' : 'Classifica'}</h1><span class="rs-cnt" id="rank-count-label">Caricamento...</span>
-        <div class="rs-right">${_clsOnClass ? _clsShare : ''}</div></div>
-      ${_rkIsPista ? '' : _classYearRowHtml(_classCurYear)}
+        <div class="rs-right">${_rkIsPista ? '' : seasonSelectHtml('class-year-sel', _classCurYear, 'classSetYear')}${_clsOnClass ? _clsShare : ''}</div></div>
       ${_rkIsPista ? '<p class="rk-intel-line">Classifica indipendente — non conta per la strada.</p>' : ''}
       <div class="rs-bar" role="search">
         <div class="hx-seg" role="group" aria-label="Seleziona genere"><button type="button" id="tab-gender-M" onclick="setRankGender('M')" aria-pressed="${rankGender === 'M'}">Uomini</button><button type="button" id="tab-gender-F" onclick="setRankGender('F')" aria-pressed="${rankGender === 'F'}">Donne</button></div>
@@ -11283,16 +11283,14 @@ async function renderClassificaStorica(anno) {
   if (!bodyEl) {
     setPageMeta(`Classifica ${anno}`, `Classifica storica ${anno} del ciclismo agonistico italiano.`);
     setPage(`
-      <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span></div>
-      ${_classYearRowHtml(anno)}
+      <div class="hx-wrap cls-wrap"><div class="rs-head"><h1>Classifica</h1><span class="rs-cnt">stagione ${anno}</span><div class="rs-right">${seasonSelectHtml('class-year-sel', anno, 'classSetYear')}</div></div>
       <div class="rs-bar" id="class-storico-controls" role="search"></div>
       <section id="class-storico-pod"></section>
       <div class="ranking-table-wrap" id="class-storico-body"></div></div>
     `);
     bodyEl = document.getElementById('class-storico-body');
   } else {
-    const yearRow = document.getElementById('class-year-row');
-    if (yearRow) yearRow.outerHTML = _classYearRowHtml(anno);
+    _syncSeasonSelect('class-year-sel', anno);
   }
 
   let payload = _classStoricoCache[anno];
@@ -11680,7 +11678,7 @@ function _alboCampioniHtml(code) {
   const _alTc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
   const filters = `<div class="al-sp" role="group" aria-label="Specialità e anno">
       ${['', ...ALBO_PROVE].map(pv => `<button type="button" onclick="setAlboProva('${pv}')" aria-pressed="${alboProva === pv}">${pv ? _titleCase(pv) : 'Tutte'}</button>`).join('')}
-      <label class="hx-sel" style="margin-left:auto"><span class="sr">Anno</span><select aria-label="Anno" onchange="setAlboYear(this.value)">${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>${y}</option>`).join('')}</select></label>
+      <label class="hx-sel hx-yr"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="setAlboYear(this.value)">${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>Stagione ${y}${y === thisYear ? ' (in corso)' : ''}</option>`).join('')}</select></label>
     </div>`;
 
   const chipCard = (c, label) => {
@@ -16802,6 +16800,15 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
 const _seasonAthCache = {};
 const _seasonTeamCache = {};
 // Anno della stagione attualmente caricata in globalData (live o globale).
+// Selettore di stagione unico per tutte le pagine (stessa grafica e posizione della Home: in alto a destra)
+function seasonSelectHtml(id, selected, handler) {
+  const cur = Number(_loadedSeasonYear()), sel = Number(selected) || cur, o = [];
+  for (let y = cur; y >= 2007; y--) o.push(`<option value="${y}"${y === sel ? ' selected' : ''}>Stagione ${y}${y === cur ? ' (in corso)' : ''}</option>`);
+  return `<label class="hx-sel hx-yr"><span class="sr">Stagione</span><select id="${id}" aria-label="Stagione" onchange="window.${handler}(this.value)">${o.join('')}</select></label>`;
+}
+window.seasonSelectHtml = seasonSelectHtml;
+function _syncSeasonSelect(id, y) { const el = document.getElementById(id); if (el) el.value = String(Number(y)); }
+
 function _loadedSeasonYear() {
   return String(activeSeason || currentSeason || (_seasonsIndex && _seasonsIndex.current) || new Date().getFullYear());
 }
@@ -29249,7 +29256,8 @@ window.risToggleMissing = () => {
 // coprono quegli anni). I filtri restano visibili e funzionanti su
 // entrambi (richiesta esplicita), applicati lato client per gli anni storici.
 window.risSetYear = (y) => {
-  document.querySelectorAll('#ris-year-row button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.year) === Number(y))));
+  y = Number(y);
+  _syncSeasonSelect('ris-year-sel', y);
   if (Number(y) === Number(_loadedSeasonYear())) {
     _risHistoricalYear = null;
     renderRisultati();
