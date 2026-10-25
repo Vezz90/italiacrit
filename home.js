@@ -83,10 +83,14 @@
     const out = [];
     for (const p of (media.up.get(gid) || [])) out.push(p.url);
     const ns = noSuffix(gid);
+    const _catDi = id => ((String(id || '').match(/_([A-Z0-9]+_[MF])$/) || [])[1] || '').replace(/^ES[12]_/, 'ES_');
+    // due id sono della stessa categoria se il suffisso coincide (o se uno dei due non ne ha: album di tutta la gara)
+    const _stessaCat = (a, b) => { const x = _catDi(a), y = _catDi(b); return !x || !y || x === y; };
     const gd = (String(gid).match(/\d{4}-\d{2}-\d{2}/) || [])[0], gn = String(gid).replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
     // stessa data e nome che inizia uguale: l'album xpix puo' avere il nome lungo della gara (es. "79_GIRO_DEL_PIAVE_MEMORIAL_...") mentre il risultato ha quello corto
     const near = x => { const xd = (String(x).match(/\d{4}-\d{2}-\d{2}/) || [])[0]; if (!gd || xd !== gd) return false; const xn = String(x).replace(/_\d{4}-\d{2}-\d{2}.*$/, ''); return xn.length > 8 && gn.length > 8 && (xn.startsWith(gn) || gn.startsWith(xn)); };
-    for (const e of media.ext) if (e.gara_id === gid || noSuffix(e.gara_id) === ns || near(e.gara_id)) out.push(...e.urls);
+    // album di un'altra categoria della stessa gara (stesso nome e data) non e' di questa gara
+    for (const e of media.ext) if (e.gara_id === gid || ((noSuffix(e.gara_id) === ns || near(e.gara_id)) && _stessaCat(e.gara_id, gid))) out.push(...e.urls);
     return out;
   }
   function raceVideos(gid) {

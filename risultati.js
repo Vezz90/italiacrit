@@ -80,7 +80,10 @@
     const gmap = globalData.garaToCalId || {};
     const calId = gmap[race.id] || toCalId(race.id);
     const vids = (globalData.videos || {})[calId] || (globalData.videos || {})[race.id] || [];
-    const photo = cats.map(c => ctx.photosMap[c.gara_id] || ctx.photosMap[gmap[c.gara_id]] || ctx.photosMap[toCalId(c.gara_id)]).find(Boolean) || ctx.photosMap[race.id] || null;
+    const _catDi = id => ((String(id || '').match(/_([A-Z0-9]+_[MF])$/) || [])[1] || '').replace(/^ES[12]_/, 'ES_');
+    // la foto trovata tramite l'id senza categoria puo' essere di un'altra categoria della stessa gara: si scarta
+    const _ok = (x, gid) => x && (!_catDi(x.gara_id) || !_catDi(gid) || _catDi(x.gara_id) === _catDi(gid)) ? x : null;
+    const photo = cats.map(c => ctx.photosMap[c.gara_id] || _ok(ctx.photosMap[gmap[c.gara_id]], c.gara_id) || _ok(ctx.photosMap[toCalId(c.gara_id)], c.gara_id)).find(Boolean) || ctx.photosMap[race.id] || null;
     const src = photo ? (photo.url ? icProxy(photo.url) : (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '')) : '';
     const v0 = vids[0] || null, kind = v0 ? videoKind(v0.url) : null;
     const ytThumb = kind === 'yt' ? `https://img.youtube.com/vi/${ytId(v0.url)}/hqdefault.jpg` : '';
