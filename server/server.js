@@ -13309,17 +13309,26 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
     l.slice(0, 3).forEach(o => add(o.url, o.credito, o.didascalia, 'tag', o.gara_id, a));
     if (l[0] && w.has(l[0].gara_id) && out.length) out.filter(f => f.fonte === 'tag' && f.atleta_id === a).forEach(f => { f.vittoria = w.has(f.gara_id); });
   }
-  // foto delle gare vinte dall'atleta: possono ritrarre anche altri corridori, quindi sono solo candidate da scegliere a mano
+  // la foto della vittoria piu recente di ogni atleta: tra le sue vittorie (dalla piu recente) la prima gara che ha una foto
   for (const a of ath) {
-    let n = 0;
-    for (const gid of [...new Set(vittorie[a] || [])].slice(-6).reverse()) {
-      if (n >= 3) break;
-      const up = await queries.getApprovedRacePhotos(gid).catch(() => []);
-      for (const f of (up || []).slice(0, 1)) { add(`${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`, f.photographer || f.display_name || '', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; }
-      for (const al of [gid, gid.replace(/^\d+_/, ''), gid.replace(/_[A-Z0-9]+_[MF]$/, '')]) {
-        const x = xpix[al]; if (x && n < 3) { const u = (Array.isArray(x.photos) && x.photos[0]) || x.url; if (u) { add(u, 'xpix.it', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; break; } }
-        const c2 = ic[al]; if (c2 && n < 3 && (c2.url || c2.filename)) { add(c2.url || c2.filename, 'ciclismo.info', 'Gara vinta da ' + a.replace(/_/g, ' '), 'garavinta', gid, a); n++; break; }
+    const cognome = a.split('_')[0];
+    for (const gid of [...new Set(vittorie[a] || [])].slice(0, 10)) {
+      const nomi = [gid, gid.replace(/^\d+_/, '')];
+      let trovata = null;
+      for (const g2 of nomi) {
+        const up = await queries.getApprovedRacePhotos(g2).catch(() => []);
+        const l = (up || []).filter(f => f.filename);
+        const f = l.find(x => ha(x.atleta_ids, a)) || l.find(x => String(x.caption || '').toUpperCase().includes(cognome)) || l[0];
+        if (f) { trovata = { url: `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`, credito: f.photographer || f.display_name || '', caption: f.caption || '' }; break; }
+        for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
+          const e = src[g2]; if (!e) continue;
+          const tags = e.tags || {};
+          const u = Object.keys(tags).find(k => ha(tags[k], a)) || (Array.isArray(e.photos) && e.photos[0]) || e.url || e.filename;
+          if (u) { trovata = { url: u, credito: nome, caption: e.album_name || e.name || '' }; break; }
+        }
+        if (trovata) break;
       }
+      if (trovata) { add(trovata.url, trovata.credito, trovata.caption, 'garavinta', gid, a); break; }
     }
   }
   return out;

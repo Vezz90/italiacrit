@@ -239,7 +239,12 @@ module.exports = function registerRedazione(app, deps) {
     if (tipo === 'libero') for (const b of (facts.blocchi || [])) await blocco(b.tipo, b.p || {}, b.dati || {});
     else await blocco(tipo, p, facts);
     const vittorie = {};
-    try { const raw = await getData('results_raw.json'); const set = new Set(atletaIds); raw.forEach(r => { if (r.posizione === 1 && set.has(r.atleta_id)) (vittorie[r.atleta_id] = vittorie[r.atleta_id] || []).push(r.gara_id); }); } catch (_) { /* senza preferenza */ }
+    try {
+      const set = new Set(atletaIds), righe = [];
+      (await getData('results_raw.json')).forEach(r => { if (r.posizione === 1 && set.has(r.atleta_id)) righe.push({ id: r.atleta_id, g: r.gara_id, d: r.data }); });
+      try { const { data } = await sb().from('manual_results').select('atleta_id,gara_id,data').eq('posizione', 1).in('atleta_id', [...set].slice(0, 80)); (data || []).forEach(r => righe.push({ id: r.atleta_id, g: r.gara_id, d: String(r.data).slice(0, 10) })); } catch (_) { /* solo scraper */ }
+      righe.sort((x, y) => String(y.d).localeCompare(String(x.d))).forEach(r => (vittorie[r.id] = vittorie[r.id] || []).push(r.g));
+    } catch (_) { /* senza vittorie */ }
     try { return await fotoPer({ garaIds, atletaIds, vittorie }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
   }
   // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
@@ -287,17 +292,18 @@ module.exports = function registerRedazione(app, deps) {
         id = hit && hit.id;
       }
       if (!id || !atleti.has(id)) continue;
-      const pr = f.fonte === 'caricata' ? 0 : f.fonte === 'tag' ? 1 : f.fonte === 'profilo' ? 2 : 9;
-      if (pr > 2) continue;
+      const pr = f.fonte === 'caricata' ? 0 : f.fonte === 'tag' ? 1 : f.fonte === 'garavinta' ? 2 : f.fonte === 'profilo' ? 3 : 9;
+      if (pr > 3) continue;
       if (!migliore[id] || pr < migliore[id].pr) migliore[id] = { pr, f };
     }
     const haTitoli = bl.some(b => b.t === 'h');
     const sezione = []; let sez = 0;
     bl.forEach(b => { if (b.t === 'h') sez++; sezione.push(sez); });
     const usate = new Set(), inserimenti = {}; let n = 0;
-    const ordine = Object.keys(migliore).map(id => atleti.get(id)).filter(a => a.rango <= 3).sort((a, b) => a.rango - b.rango);
+    const tutti = Object.keys(migliore).map(id => atleti.get(id)).sort((a, b) => a.rango - b.rango || migliore[a.id].pr - migliore[b.id].pr);
+    const ordine = tutti.filter(a => a.rango <= 3).concat(tutti.filter(a => a.rango > 3)).slice(0, 12);
     for (const a of ordine) {
-      if (n >= 6) break;
+      if (n >= 6 || (a.rango > 3 && n > 0)) break;
       const cogn = ' ' + normN(a.cognome || (a.nome || '').split(' ')[0]) + ' ';
       if (cogn.trim() === '') continue;
       const i = bl.findIndex((b, k) => b.t === 'p' && (haTitoli ? sezione[k] > 0 : true) && !usate.has(sezione[k]) && (' ' + up(b.s).replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ') + ' ').includes(cogn));

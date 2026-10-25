@@ -54,10 +54,10 @@
 
   const imgSrc = u => (/ciclismo\.info|italiaciclismo/i.test(u) && typeof icProxy === 'function') ? icProxy(u) : u;
   function fotoHtml(b) {
-    const sc = b.foto || [], cand = (st.cand[b.id] || []).filter(c => !sc.some(s => s.url === c.url));
-    return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">${sc.length ? 'compaiono nel testo dove c\'è la riga [[foto:N]]: spostala sotto il paragrafo giusto' : 'nessuna foto scelta'}</small></div>
-      <div class="rd-fsel">${sc.map((f, i) => `<figure><img src="${esc(imgSrc(f.url))}" alt="" loading="lazy" onerror="this.style.opacity=.25"><b class="rd-fn">Foto ${i + 1}</b><input type="text" data-cr="${i}" value="${esc(f.credito)}" placeholder="Credito (fotografo)"><button type="button" data-fdel="${i}" title="Togli">✕</button></figure>`).join('')}</div>
-      ${cand.length ? `<details class="rd-box" ${sc.length ? '' : 'open'}><summary>Foto disponibili (${cand.length})</summary><div class="rd-fcand">${cand.map((c, i) => `<button type="button" data-fadd="${i}" title="${esc((c.credito || c.fonte) + ' ' + (c.didascalia || ''))}"><img src="${esc(imgSrc(c.url))}" alt="" loading="lazy" onerror="this.parentNode.remove()"><small>${esc(c.credito || c.fonte)}</small></button>`).join('')}</div></details>` : '<small class="rd-muted">Non ci sono altre foto di questa gara sul sito.</small>'}`;
+    const sc = b.foto || [];
+    if (!sc.length) return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">nessuna foto: tra gli atleti citati non ne risulta una con una vittoria fotografata</small></div>`;
+    return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">messe dal sistema sotto il corridore di cui si parla: sposta la riga [[foto:N]] nel testo o toglile con la ✕</small></div>
+      <div class="rd-fsel">${sc.map((f, i) => `<figure><img src="${esc(imgSrc(f.url))}" alt="" loading="lazy" onerror="this.style.opacity=.25"><b class="rd-fn">Foto ${i + 1}</b><input type="text" data-cr="${i}" value="${esc(f.credito)}" placeholder="Credito (fotografo)"><button type="button" data-fdel="${i}" title="Togli">✕</button></figure>`).join('')}</div>`;
   }
   async function fotoSalva(b) {
     const ta = document.querySelector('#ed-corpo');
@@ -65,13 +65,10 @@
   }
   async function fotoLega() {
     const box = document.querySelector('.rd-foto'); const b = sel(); if (!box || !b) return;
-    if (!st.cand[b.id]) { try { st.cand[b.id] = (await api('/foto/' + b.id)).foto || []; } catch (_) { st.cand[b.id] = []; } }
     const ridisegna = () => { box.innerHTML = fotoHtml(b); fotoLega2(box, b, ridisegna); };
     ridisegna();
   }
   function fotoLega2(box, b, ridisegna) {
-    const cand = (st.cand[b.id] || []).filter(c => !(b.foto || []).some(s => s.url === c.url));
-    box.querySelectorAll('[data-fadd]').forEach(x => { x.onclick = () => { const c = cand[+x.dataset.fadd]; b.foto = (b.foto || []).concat([{ url: c.url, credito: c.credito, didascalia: c.didascalia }]).slice(0, 6); const ta = document.querySelector('#ed-corpo'); if (ta) ta.value = ta.value.replace(/\s+$/, '') + `\n\n[[foto:${b.foto.length}]]`; fotoSalva(b); ridisegna(); }; });
     box.querySelectorAll('[data-fdel]').forEach(x => { x.onclick = () => { const k = +x.dataset.fdel + 1; b.foto.splice(k - 1, 1); const ta = document.querySelector('#ed-corpo'); if (ta) ta.value = ta.value.replace(new RegExp(`\\n*\\[\\[foto:${k}\\]\\]\\n*`, 'g'), '\n\n').replace(/\[\[foto:(\d+)\]\]/g, (m, n) => +n > k ? `[[foto:${+n - 1}]]` : m); fotoSalva(b); ridisegna(); }; });
     box.querySelectorAll('[data-cr]').forEach(x => { x.onchange = () => { b.foto[+x.dataset.cr].credito = x.value; fotoSalva(b); }; });
   }
