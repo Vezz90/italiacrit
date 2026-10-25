@@ -2,7 +2,7 @@
 // Redazione AI (PRIVATA, solo amministratori): prepara BOZZE di articoli dai dati del sito, dalla ricerca web e da pagine ufficiali indicate a mano.
 // Non pubblica niente: le bozze restano in kv_store ('redazione_articoli') finche un admin le rilegge, le corregge e le approva.
 //
-// Tre tipi: 'gara' (resoconto o anteprima di una gara), 'settimana' (il punto della settimana), 'atleta' (profilo, SOLO atleti maggiorenni).
+// Tre tipi: 'gara' (resoconto o anteprima di una gara), 'settimana' (il punto della settimana), 'atleta' (profilo).
 // Regole di metodo (vedi REGOLE): nomi/numeri solo dai DATI calcolati qui; il web serve per il contesto e viene riscritto con parole proprie,
 // con le fonti elencate; cio che non e sicuro finisce in "da_verificare".
 const crypto = require('crypto');
@@ -11,7 +11,6 @@ const path = require('path');
 
 const MODEL = 'claude-sonnet-5';
 const KEY = 'redazione_articoli';
-const MINORI = /^(ES1|ES2|AL|JUN)_/;                // Esordienti, Allievi, Juniores: minorenni (per loro niente profili e niente ricerca web)
 const CAT_NOME = { ELI_M: 'Elite/Under 23 uomini', ELI_F: 'Donne Elite', JUN_M: 'Juniores uomini', JUN_F: 'Juniores donne', AL_M: 'Allievi', AL_F: 'Allieve',
   ES1_M: 'Esordienti 1° anno', ES1_F: 'Esordienti 1° anno donne', ES2_M: 'Esordienti 2° anno', ES2_F: 'Esordienti 2° anno donne' };
 
@@ -156,7 +155,6 @@ module.exports = function registerRedazione(app, deps) {
   async function factsAtleta(id) {
     const ath = (await getData('athletes.json'))[id];
     if (!ath) throw new Error('atleta non trovato: ' + id);
-    if (MINORI.test(ath.categoria || '')) throw new Error('Per tutelare i minorenni non si generano profili per Esordienti, Allievi e Juniores.');
     const ris = ath.risultati || [];
     const best = [...ris].sort((a, b) => a.posizione - b.posizione || (b.moltiplicatore || 1) - (a.moltiplicatore || 1)).slice(0, 8)
       .map(r => ({ gara: r.nome_gara, data: r.data, posizione: r.posizione, livello: r.tipo, punti: r.punti_effettivi }));
@@ -181,21 +179,21 @@ module.exports = function registerRedazione(app, deps) {
   }
 
   // ---------- foto ----------
-  // foto candidate per l'articolo: della gara (caricate, album) e dei vincitori adulti. Mai foto profilo di minorenni.
+  // foto candidate per l'articolo: della gara (caricate, album) e dei primi classificati.
   async function fotoCandidate(tipo, p, facts) {
     if (!fotoPer) return [];
     const garaIds = [], atletaIds = [];
     if (tipo === 'gara') {
       garaIds.push(p.id);
       try { const cal = await getData('calendar.json'); const c = cal.find(x => x.id === p.id); if (c) cal.filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).forEach(x => garaIds.push(x.id)); } catch (_) { /* solo l'id indicato */ }
-      (facts.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); if (!MINORI.test(r.codice || '')) (r.top10 || []).slice(0, 3).forEach(t => t.id && atletaIds.push(t.id)); });
+      (facts.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); (r.top10 || []).slice(0, 3).forEach(t => t.id && atletaIds.push(t.id)); });
     } else if (tipo === 'atleta') atletaIds.push(p.id);
     try { return await fotoPer({ garaIds, atletaIds }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
   }
   // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
   const sceglie = c => { const g = c.filter(f => f.fonte !== 'profilo').slice(0, 2); return (g.length ? g : c.filter(f => f.fonte === 'profilo').slice(0, 1)).map(f => ({ url: f.url, credito: f.credito, didascalia: f.didascalia })); };
 
-  // le foto proposte all'AI: una della gara per categoria, qualche foto d'album, i vincitori adulti; con un'etichetta che dice cosa mostrano
+  // le foto proposte all'AI: una della gara per categoria, qualche foto d'album, i primi classificati; con un'etichetta che dice cosa mostrano
   function proponiFoto(cand, facts) {
     const cat = {}, nome = {};
     (facts.risultati || []).forEach(r => { cat[r.gara_id] = r.categoria; (r.top10 || []).forEach(t => { if (t.id) nome[t.id] = t.atleta; }); });
@@ -314,7 +312,7 @@ REGOLE DI METODO (obbligatorie):
 2. La ricerca web (se attiva) serve per il CONTESTO: programma e orari, percorso, notizie, storia della corsa. Riscrivi sempre con parole tue: è vietato copiare frasi, anche brevi, dalle fonti. Elenca ogni fonte usata in "fonti".
 3. Usa un'informazione presa dal web solo se la fonte è affidabile (federazione, organizzatore, testata nota) e non contraddice i DATI. Se il web contraddice i DATI vincono i DATI: scrivilo in "da_verificare". Se non sei sicuro di un fatto, non usarlo e mettilo in "da_verificare".
 4. Niente citazioni di persone, emozioni o aneddoti che non siano nei dati o nelle fonti. Niente esagerazioni. Se mancano dati scrivi un testo più breve invece di riempire.
-5. Per atleti minorenni usa solo nome, squadra e risultati sportivi: mai età, scuola, residenza o altro. Non usare il web per cercare informazioni sui minorenni.
+5. DATI PERSONALI: per tutti gli atleti, minorenni compresi, si raccontano i fatti sportivi pubblici (nome, squadra, risultati, titoli, carriera, selezioni): sono la ragione d'essere del sito. Non scrivere mai dati personali che non siano sportivi (eta o data di nascita, scuola, residenza, famiglia, salute, social privati) e usa il web solo per contesto sportivo (risultati, squadre, selezioni, programma), mai per notizie sulla persona.
 6. NOMI: scrivi sempre "Nome Cognome" in maiuscolo/minuscolo normale (nei DATI il cognome viene prima e spesso e tutto maiuscolo: "MILESI NICOLAS" diventa "Nicolas Milesi"). Usa i nomi delle squadre come sono nei DATI, scritti in modo leggibile.
 7. TITOLO: deve contenere i nomi dei vincitori principali. Se l'evento ha piu categorie, nel titolo devono comparire SEMPRE i vincitori delle categorie piu alte presenti (prima Elite/Under 23 uomini e Donne Elite, poi Juniores, poi Allievi), senza dimenticarne nessuno tra Elite/Under 23: se non ci stanno tutti nel titolo, mettili nel sommario e nelle prime righe. Le sezioni dell'articolo vanno dalla categoria piu alta alla piu bassa.
 8. CONFRONTI CON GLI ANNI PASSATI: sono benvenuti se sono PERTINENTI e DIMOSTRATI dai DATI (albo d'oro, risultati di oggi). Esempi buoni, sempre nella STESSA categoria e per lo STESSO titolo: un bis o un tris dello stesso atleta o della stessa squadra; un atleta che oggi ritrova il titolo dopo averlo vinto in passato; il vincitore di un'edizione precedente che oggi e presente nei risultati (dove ha chiuso); la media o il distacco confrontati con quelli dei vincitori precedenti; una squadra che torna a vincere. Sono invece VIETATI i confronti non dimostrati o fuori luogo: non dire che qualcuno "ha interrotto il dominio" o "ha preso il posto" di un altro, se quell'atleta non e piu in quella categoria o non ha gareggiato oggi; niente paragoni tra categorie diverse, niente curiosita di contorno, niente deduzioni ("per forza", "segno di un ricambio"). Se un confronto non e chiaro, pertinente e verificabile nei DATI, omettilo.
@@ -341,7 +339,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       ? `TIPO: RESOCONTO DI GARA (350-600 parole). Racconta chi ha vinto e come (distacchi, tempi, media se presenti), il podio per categoria, e il contesto: edizione, importanza della gara (campionato, moltiplicatore punti) e, quando sono pertinenti e nel rispetto della regola 8, i confronti con le edizioni precedenti dello stesso titolo nella stessa categoria. Se ci sono più categorie, una sezione ciascuna, dalla più alta alla più bassa, e il titolo con i nomi dei vincitori principali (regola 7).`
       : `TIPO: ANTEPRIMA DI GARA (300-500 parole). I risultati non ci sono ancora. Presenta la gara: data, luogo, categorie, programma/orari e percorso (dalle fonti web o ufficiali, se ci sono), albo d'oro delle ultime edizioni dai DATI, cosa c'è in palio (titolo, punti). Non fare pronostici su nomi se i DATI non li supportano.`,
     settimana: () => `TIPO: IL PUNTO DELLA SETTIMANA (450-700 parole). Riepilogo delle gare del periodo: i protagonisti per categoria (punti, vittorie, podi), eventuali cambi al comando delle classifiche e margini sul secondo, le gare più importanti. Struttura: apertura con la notizia principale, poi una sezione per le categorie con più movimento (non tutte se sono molte).`,
-    atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole, atleta maggiorenne). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
+    atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
   };
 
   async function genera(tipo, p) {
@@ -481,13 +479,13 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     catch (e) { res.status(500).json({ error: e.message }); }
   });
 
-  // ricerca per il selettore: gare recenti/prossime del calendario, atleti maggiorenni
+  // ricerca per il selettore: gare recenti/prossime del calendario, atleti
   app.get('/api/admin/redazione/cerca', requireAdmin, async (req, res) => {
     try {
       const q = up(req.query.q || '').trim();
       if (req.query.tipo === 'atleta') {
         const ath = await getData('athletes.json');
-        const list = Object.values(ath).filter(a => !MINORI.test(a.categoria || '') && (!q || up(fullName(a)).includes(q)))
+        const list = Object.values(ath).filter(a => (!q || up(fullName(a)).includes(q)))
           .sort((a, b) => (b.punti_totali || 0) - (a.punti_totali || 0)).slice(0, 20)
           .map(a => ({ id: a.id, titolo: fullName(a), dettaglio: `${CAT_NOME[a.categoria] || a.categoria} · ${a.team_attuale || ''} · ${a.punti_totali || 0} pt` }));
         return res.json({ risultati: list });

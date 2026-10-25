@@ -6,7 +6,7 @@
 'use strict';
 
 (function () {
-  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta (solo maggiorenni)' };
+  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
   const st = { prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
@@ -31,7 +31,7 @@
     const need = st.tipo !== 'settimana';
     return `<div class="hx-panel rd-new"><h3>Nuova bozza</h3>
       <label class="rd-l">Tipo di articolo<select id="rd-tipo">${Object.entries(TIPI).map(([k, v]) => `<option value="${k}" ${st.tipo === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
-      ${need ? `<label class="rd-l">${st.tipo === 'gara' ? 'Gara (ultimi 60 giorni e prossimi 5)' : 'Atleta (maggiorenne)'}
+      ${need ? `<label class="rd-l">${st.tipo === 'gara' ? 'Gara (ultimi 60 giorni e prossimi 5)' : 'Atleta'}
         <input id="rd-q" type="search" value="${esc(st.q)}" placeholder="Cerca per nome…" autocomplete="off"></label>
         <div class="rd-res">${st.cerca.map(r => `<button type="button" data-pick="${esc(r.id)}" class="${st.pick && st.pick.id === r.id ? 'on' : ''}"><b>${esc(r.titolo)}</b><small>${esc(r.dettaglio)}</small></button>`).join('') || '<small class="rd-muted">Nessun risultato.</small>'}</div>
         ${st.pick ? `<div class="rd-pick">Scelto: <b>${esc(st.pick.titolo)}</b></div>` : ''}`
