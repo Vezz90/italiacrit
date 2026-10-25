@@ -8,7 +8,7 @@
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta (solo maggiorenni)' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
-  const st = { cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
+  const st = { prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
   const api = (p, o) => apiCall('/admin/redazione' + p, o);
@@ -75,8 +75,22 @@
     box.querySelectorAll('[data-cr]').forEach(x => { x.onchange = () => { b.foto[+x.dataset.cr].credito = x.value; fotoSalva(b); }; });
   }
 
+  // anteprima: come apparirebbe l'articolo a un lettore (usa i campi correnti, anche non salvati)
+  function articolo(b) {
+    const corpo = String(b.corpo || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => /^##\s+/.test(x) ? `<h2>${esc(x.replace(/^##\s+/, ''))}</h2>` : `<p>${esc(x).replace(/\n/g, '<br>')}</p>`);
+    const f = b.foto || [];
+    const fig = (x, cls) => `<figure class="${cls}"><img src="${esc(imgSrc(x.url))}" alt="" loading="lazy" onerror="this.parentNode.remove()">${x.credito ? `<figcaption>Foto: ${esc(x.credito)}</figcaption>` : ''}</figure>`;
+    const meta = [fmtData(b.aggiornato || b.creato), (b.tag || []).slice(0, 4).map(t => '#' + t).join(' ')].filter(Boolean).join(' · ');
+    const mezzo = Math.ceil(corpo.length / 2);
+    return `<div class="hx-panel rd-prev"><div class="rd-top"><span class="rd-chip s-${b.stato}">Anteprima di lettura</span><button type="button" class="admin-edit-btn" data-act="back">← Torna alla modifica</button></div>
+      <article class="rd-art">${f[0] ? fig(f[0], 'cover') : ''}<small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
+      ${corpo.slice(0, mezzo).join('')}${f[1] ? fig(f[1], 'inline') : ''}${corpo.slice(mezzo).join('')}${f.slice(2).map(x => fig(x, 'inline')).join('')}
+      ${(b.fonti || []).length ? `<footer><b>Fonti</b>: ${(b.fonti || []).map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.titolo || x.url)}</a>`).join(' · ')}</footer>` : ''}</article></div>`;
+  }
+
   function editor() {
     const b = sel();
+    if (b && st.prev && b.stato !== 'in_generazione' && b.stato !== 'errore') return articolo(b);
     if (!b) return `<div class="hx-panel rd-empty"><h3>Anteprima</h3><p class="rd-muted">Scegli una bozza dall'elenco per leggerla, correggerla e approvarla. Nulla viene pubblicato sul sito.</p></div>`;
     if (b.stato === 'in_generazione') return `<div class="hx-panel"><h3>${esc(b.soggetto)}</h3><p>La bozza si sta scrivendo (può servire fino a 2 minuti con la ricerca web)…</p></div>`;
     if (b.stato === 'errore') return `<div class="hx-panel"><h3>${esc(b.soggetto)}</h3><div class="rd-err">${esc(b.errore || 'Errore sconosciuto')}</div><div class="rd-btns"><button type="button" class="admin-edit-btn" data-act="del">Elimina</button></div></div>`;
@@ -92,6 +106,7 @@
       <div class="rd-box"><b>Fonti</b><ul>${fonti || '<li class="rd-muted">Nessuna fonte esterna: solo i dati del sito.</li>'}</ul></div>
       <details class="rd-box"><summary>Dati usati dall'AI</summary><pre>${esc(JSON.stringify(b.dati, null, 1)).slice(0, 12000)}</pre></details>
       <div class="rd-btns">
+        <button type="button" class="admin-edit-btn" data-act="prev">Anteprima</button>
         <button type="button" class="admin-edit-btn" data-act="save">Salva modifiche</button>
         <button type="button" class="admin-edit-btn ok" data-act="approve">${b.stato === 'approvata' ? 'Approvata ✓' : 'Approva'}</button>
         <button type="button" class="admin-edit-btn" data-act="discard">Scarta</button>
@@ -129,7 +144,8 @@
     const g = w.querySelector('#rd-genera'); if (g) g.onclick = genera;
     const au = w.querySelector('#rd-auto'); if (au) au.onclick = async () => { try { await api('/auto', { method: 'POST', body: {} }); st.attesa = Date.now() + 6 * 60000; if (typeof showToast === 'function') showToast('Sto scrivendo: gli articoli compaiono a sinistra man mano'); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); } await carica(); paint(); };
     const al = w.querySelector('#rd-altro'); if (al) al.onclick = () => { st.altro = !st.altro; w.querySelector('.rd-more').hidden = !st.altro; al.textContent = st.altro ? 'Chiudi' : 'Un altro articolo…'; };
-    w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; paint(); }; });
+    w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; st.prev = false; paint(); }; });
+    const bk = w.querySelector('.rd-prev [data-act="back"]'); if (bk) bk.onclick = () => azione('back');
     const ed = w.querySelector('.rd-editor');
     if (ed) fotoLega();
     if (ed) {
@@ -155,6 +171,8 @@
   async function azione(a) {
     const b = sel(); if (!b) return;
     const ed = document.querySelector('.rd-editor');
+    if (a === 'back') { st.prev = false; paint(); return; }
+    if (a === 'prev') { if (ed) { b.titolo = ed.querySelector('#ed-titolo').value; b.sommario = ed.querySelector('#ed-sommario').value; b.corpo = ed.querySelector('#ed-corpo').value; } st.prev = true; paint(); return; }
     try {
       if (a === 'del') { if (!confirm('Eliminare questa bozza?')) return; await api('/bozze/' + b.id, { method: 'DELETE' }); st.sel = null; }
       else if (a === 'again') {
