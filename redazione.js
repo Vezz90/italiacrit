@@ -8,7 +8,7 @@
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta (solo maggiorenni)' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
-  const st = { attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
+  const st = { cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
   const api = (p, o) => apiCall('/admin/redazione' + p, o);
@@ -52,6 +52,29 @@
         <small>${esc(TIPI[b.tipo] || b.tipo)} · ${fmtData(b.aggiornato || b.creato)}</small></button>`).join('') || '<small class="rd-muted">Nessun articolo ancora. Premi "Scrivi gli articoli": ci vogliono un paio di minuti per ciascuno.</small>'}</div>`;
   }
 
+  const imgSrc = u => (/ciclismo\.info|italiaciclismo/i.test(u) && typeof icProxy === 'function') ? icProxy(u) : u;
+  function fotoHtml(b) {
+    const sc = b.foto || [], cand = (st.cand[b.id] || []).filter(c => !sc.some(s => s.url === c.url));
+    return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">${sc.length ? 'la prima è la copertina' : 'nessuna foto scelta'}</small></div>
+      <div class="rd-fsel">${sc.map((f, i) => `<figure><img src="${esc(imgSrc(f.url))}" alt="" loading="lazy" onerror="this.style.opacity=.25"><input type="text" data-cr="${i}" value="${esc(f.credito)}" placeholder="Credito (fotografo)"><button type="button" data-fdel="${i}" title="Togli">✕</button></figure>`).join('')}</div>
+      ${cand.length ? `<details class="rd-box" ${sc.length ? '' : 'open'}><summary>Foto disponibili (${cand.length})</summary><div class="rd-fcand">${cand.map((c, i) => `<button type="button" data-fadd="${i}" title="${esc((c.credito || c.fonte) + ' ' + (c.didascalia || ''))}"><img src="${esc(imgSrc(c.url))}" alt="" loading="lazy" onerror="this.parentNode.remove()"><small>${esc(c.credito || c.fonte)}</small></button>`).join('')}</div></details>` : '<small class="rd-muted">Non ci sono altre foto di questa gara sul sito.</small>'}`;
+  }
+  async function fotoSalva(b) {
+    try { await api('/bozze/' + b.id, { method: 'PUT', body: { foto: b.foto } }); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
+  }
+  async function fotoLega() {
+    const box = document.querySelector('.rd-foto'); const b = sel(); if (!box || !b) return;
+    if (!st.cand[b.id]) { try { st.cand[b.id] = (await api('/foto/' + b.id)).foto || []; } catch (_) { st.cand[b.id] = []; } }
+    const ridisegna = () => { box.innerHTML = fotoHtml(b); fotoLega2(box, b, ridisegna); };
+    ridisegna();
+  }
+  function fotoLega2(box, b, ridisegna) {
+    const cand = (st.cand[b.id] || []).filter(c => !(b.foto || []).some(s => s.url === c.url));
+    box.querySelectorAll('[data-fadd]').forEach(x => { x.onclick = () => { const c = cand[+x.dataset.fadd]; b.foto = (b.foto || []).concat([{ url: c.url, credito: c.credito, didascalia: c.didascalia }]).slice(0, 6); fotoSalva(b); ridisegna(); }; });
+    box.querySelectorAll('[data-fdel]').forEach(x => { x.onclick = () => { b.foto.splice(+x.dataset.fdel, 1); fotoSalva(b); ridisegna(); }; });
+    box.querySelectorAll('[data-cr]').forEach(x => { x.onchange = () => { b.foto[+x.dataset.cr].credito = x.value; fotoSalva(b); }; });
+  }
+
   function editor() {
     const b = sel();
     if (!b) return `<div class="hx-panel rd-empty"><h3>Anteprima</h3><p class="rd-muted">Scegli una bozza dall'elenco per leggerla, correggerla e approvarla. Nulla viene pubblicato sul sito.</p></div>`;
@@ -63,6 +86,7 @@
       <div class="rd-top"><span class="rd-chip s-${b.stato}">${STATI[b.stato]}</span><small class="rd-muted">${esc(TIPI[b.tipo])} · ${esc(b.soggetto)}</small></div>
       <label class="rd-l">Titolo<input id="ed-titolo" type="text" value="${esc(b.titolo)}"></label>
       <label class="rd-l">Sommario<textarea id="ed-sommario" rows="2">${esc(b.sommario)}</textarea></label>
+      <div class="rd-foto" data-foto="${b.id}">${fotoHtml(b)}</div>
       <label class="rd-l">Testo <small id="ed-parole">${parole(b.corpo)} parole</small><textarea id="ed-corpo" rows="18">${esc(b.corpo)}</textarea></label>
       ${dv ? `<div class="rd-box warn"><b>Da verificare prima di pubblicare</b><ul>${dv}</ul></div>` : ''}
       <div class="rd-box"><b>Fonti</b><ul>${fonti || '<li class="rd-muted">Nessuna fonte esterna: solo i dati del sito.</li>'}</ul></div>
@@ -107,6 +131,7 @@
     const al = w.querySelector('#rd-altro'); if (al) al.onclick = () => { st.altro = !st.altro; w.querySelector('.rd-more').hidden = !st.altro; al.textContent = st.altro ? 'Chiudi' : 'Un altro articolo…'; };
     w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; paint(); }; });
     const ed = w.querySelector('.rd-editor');
+    if (ed) fotoLega();
     if (ed) {
       const corpo = ed.querySelector('#ed-corpo'); if (corpo) corpo.oninput = () => { ed.querySelector('#ed-parole').textContent = parole(corpo.value) + ' parole'; };
       ed.querySelectorAll('[data-act]').forEach(b => { b.onclick = () => azione(b.dataset.act); });

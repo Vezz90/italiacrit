@@ -16,7 +16,7 @@ const CAT_NOME = { ELI_M: 'Elite/Under 23 uomini', ELI_F: 'Donne Elite', JUN_M: 
   ES1_M: 'Esordienti 1° anno', ES1_F: 'Esordienti 1° anno donne', ES2_M: 'Esordienti 2° anno', ES2_F: 'Esordienti 2° anno donne' };
 
 module.exports = function registerRedazione(app, deps) {
-  const { requireAdmin, getSupabase, SITE_URL } = deps;
+  const { requireAdmin, getSupabase, SITE_URL, fotoPer } = deps;
   const sb = () => { const s = getSupabase(); if (!s) throw new Error('database non disponibile'); return s; };
 
   // ---------- dati del sito (GitHub Pages, con ripiego sui file del repository) ----------
@@ -113,8 +113,8 @@ module.exports = function registerRedazione(app, deps) {
     const byCat = {};
     rows.forEach(r => { const k = catOf(r) || r.categoria || '?'; (byCat[k] = byCat[k] || []).push(r); });
     const risultati = Object.entries(byCat).map(([k, list]) => ({
-      categoria: CAT_NOME[k] || k, partecipanti: list.length,
-      top10: list.sort((a, b) => a.posizione - b.posizione).slice(0, 10).map(r => ({ pos: r.posizione, atleta: fullName(r), team: r.team, tempo: r.tempo || null, km: r.km || null, media: r.media || null, punti: r.punti_effettivi })),
+      categoria: CAT_NOME[k] || k, codice: k, gara_id: (list[0] || {}).gara_id, partecipanti: list.length,
+      top10: list.sort((a, b) => a.posizione - b.posizione).slice(0, 10).map(r => ({ pos: r.posizione, id: r.atleta_id, atleta: fullName(r), team: r.team, tempo: r.tempo || null, km: r.km || null, media: r.media || null, punti: r.punti_effettivi })),
     }));
     return {
       oggi: today(), stato: rows.length ? 'risultati' : 'anteprima',
@@ -179,6 +179,21 @@ module.exports = function registerRedazione(app, deps) {
       carriera_archivio_2007_2025: carriera, titoli, risultati_pcs_per_stagione: pcs,
     };
   }
+
+  // ---------- foto ----------
+  // foto candidate per l'articolo: della gara (caricate, album) e dei vincitori adulti. Mai foto profilo di minorenni.
+  async function fotoCandidate(tipo, p, facts) {
+    if (!fotoPer) return [];
+    const garaIds = [], atletaIds = [];
+    if (tipo === 'gara') {
+      garaIds.push(p.id);
+      try { const cal = await getData('calendar.json'); const c = cal.find(x => x.id === p.id); if (c) cal.filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).forEach(x => garaIds.push(x.id)); } catch (_) { /* solo l'id indicato */ }
+      (facts.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); if (!MINORI.test(r.codice || '')) (r.top10 || []).slice(0, 3).forEach(t => t.id && atletaIds.push(t.id)); });
+    } else if (tipo === 'atleta') atletaIds.push(p.id);
+    try { return await fotoPer({ garaIds, atletaIds }); } catch (e) { console.warn('[redazione] foto:', e.message); return []; }
+  }
+  // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
+  const sceglie = c => { const g = c.filter(f => f.fonte !== 'profilo').slice(0, 2); return (g.length ? g : c.filter(f => f.fonte === 'profilo').slice(0, 1)).map(f => ({ url: f.url, credito: f.credito, didascalia: f.didascalia })); };
 
   // ---------- pagine ufficiali indicate a mano ----------
   async function leggiLink(urls) {
@@ -299,7 +314,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     const dv = Array.isArray(j.da_verificare) ? j.da_verificare : [];
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, foto: sceglie(await fotoCandidate(tipo, p, facts)), dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, leggiLink, alboFor };   // per le prove
@@ -388,11 +403,21 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
         const x = arr.find(a => a.id === req.params.id); if (!x) return null;
         ['titolo', 'sommario', 'corpo'].forEach(k => { if (typeof b[k] === 'string') x[k] = b[k]; });
         if (['bozza', 'approvata', 'scartata'].includes(b.stato)) x.stato = b.stato;
+        if (Array.isArray(b.foto)) x.foto = b.foto.filter(f => f && /^https?:\/\//i.test(f.url || '')).slice(0, 6).map(f => ({ url: String(f.url), credito: String(f.credito || '').slice(0, 120), didascalia: String(f.didascalia || '').slice(0, 200) }));
         x.aggiornato = new Date().toISOString();
         return x;
       });
       if (!out) return res.status(404).json({ error: 'bozza non trovata' });
       res.json({ ok: true, bozza: out });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
+  // elenco delle foto disponibili per una bozza (per sceglierle nell'editor)
+  app.get('/api/admin/redazione/foto/:id', requireAdmin, async (req, res) => {
+    try {
+      const b = (await readAll()).find(a => a.id === req.params.id);
+      if (!b) return res.status(404).json({ error: 'bozza non trovata' });
+      res.json({ foto: await fotoCandidate(b.tipo, b.parametri || {}, b.dati || {}) });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 

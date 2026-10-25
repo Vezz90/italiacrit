@@ -13267,8 +13267,27 @@ async function _getHeadMetaFor(type, id) {
   return null;
 }
 
+// Foto candidate per un articolo della redazione: foto caricate e approvate, album xpix.it / ciclismo.info, foto profilo (solo atleti indicati)
+async function _redazioneFoto({ garaIds = [], atletaIds = [] }) {
+  const out = [], visti = new Set();
+  const add = (url, credito, didascalia, fonte) => { if (url && !visti.has(url) && out.length < 40) { visti.add(url); out.push({ url, credito: credito || '', didascalia: didascalia || '', fonte }); } };
+  const ids = [...new Set(garaIds.filter(Boolean))];
+  for (const id of ids) {
+    const up = await queries.getApprovedRacePhotos(id).catch(() => []);
+    for (const f of (up || [])) add(f.photo_url && /^https?:/i.test(f.photo_url) ? f.photo_url : (f.filename ? `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}` : ''), f.photographer || f.display_name || '', f.caption || '', 'caricata');
+  }
+  const [xpix, ic] = await Promise.all([readXpixPhotos().catch(() => ({})), readICPhotos().catch(() => ({}))]);
+  const alias = [...new Set(ids.flatMap(id => [id, id.replace(/^\d+_/, ''), id.replace(/_[A-Z0-9]+_[MF]$/, '')]))];
+  for (const a of alias) {
+    const x = xpix[a]; if (x) for (const u of (Array.isArray(x.photos) && x.photos.length ? x.photos : [x.url]).filter(Boolean).slice(0, 12)) add(u, 'xpix.it', x.album_name || '', 'xpix');
+    const c = ic[a]; if (c && (c.url || c.filename)) add(c.url || c.filename, 'ciclismo.info', c.name || '', 'ic');
+  }
+  for (const a of [...new Set(atletaIds.filter(Boolean))].slice(0, 6)) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo');
+  return out;
+}
+
 // Redazione AI privata (solo admin): bozze di articoli. Vedi server/redazione.js
-require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL });
+require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL, fotoPer: _redazioneFoto });
 
 // ── SPA fallback (Fase 2 SEO: URL puliti) ───────────────────────────────────
 // DEVE essere l'ultima route (registrata dopo tutte le API e dopo

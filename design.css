@@ -13880,3 +13880,13 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .rd-bar small { flex: 1 1 260px; }
 .rd-more { margin-bottom: 14px; }
 .rd-more[hidden] { display: none; }
+
+.rd-fsel { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 10px; }
+.rd-fsel figure { margin: 0; width: 170px; position: relative; display: flex; flex-direction: column; gap: 4px; }
+.rd-fsel img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; background: var(--border-subtle); }
+.rd-fsel input { width: 100%; box-sizing: border-box; font-size: .72rem; padding: 4px 6px; }
+.rd-fsel button { position: absolute; top: 4px; right: 4px; border: 0; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; background: rgba(0,0,0,.65); color: #fff; line-height: 1; }
+.rd-fcand { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; max-height: 260px; overflow: auto; }
+.rd-fcand button { width: 120px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-card); padding: 4px; cursor: pointer; display: flex; flex-direction: column; gap: 3px; }
+.rd-fcand img { width: 100%; height: 76px; object-fit: cover; border-radius: 5px; }
+.rd-fcand small { font-size: .66rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
