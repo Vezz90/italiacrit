@@ -55,12 +55,13 @@
   const imgSrc = u => (/ciclismo\.info|italiaciclismo/i.test(u) && typeof icProxy === 'function') ? icProxy(u) : u;
   function fotoHtml(b) {
     const sc = b.foto || [], cand = (st.cand[b.id] || []).filter(c => !sc.some(s => s.url === c.url));
-    return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">${sc.length ? 'la prima è la copertina' : 'nessuna foto scelta'}</small></div>
-      <div class="rd-fsel">${sc.map((f, i) => `<figure><img src="${esc(imgSrc(f.url))}" alt="" loading="lazy" onerror="this.style.opacity=.25"><input type="text" data-cr="${i}" value="${esc(f.credito)}" placeholder="Credito (fotografo)"><button type="button" data-fdel="${i}" title="Togli">✕</button></figure>`).join('')}</div>
+    return `<div class="rd-l"><b>Foto dell'articolo</b> <small class="rd-muted">${sc.length ? 'compaiono nel testo dove c\'è la riga [[foto:N]]: spostala sotto il paragrafo giusto' : 'nessuna foto scelta'}</small></div>
+      <div class="rd-fsel">${sc.map((f, i) => `<figure><img src="${esc(imgSrc(f.url))}" alt="" loading="lazy" onerror="this.style.opacity=.25"><b class="rd-fn">Foto ${i + 1}</b><input type="text" data-cr="${i}" value="${esc(f.credito)}" placeholder="Credito (fotografo)"><button type="button" data-fdel="${i}" title="Togli">✕</button></figure>`).join('')}</div>
       ${cand.length ? `<details class="rd-box" ${sc.length ? '' : 'open'}><summary>Foto disponibili (${cand.length})</summary><div class="rd-fcand">${cand.map((c, i) => `<button type="button" data-fadd="${i}" title="${esc((c.credito || c.fonte) + ' ' + (c.didascalia || ''))}"><img src="${esc(imgSrc(c.url))}" alt="" loading="lazy" onerror="this.parentNode.remove()"><small>${esc(c.credito || c.fonte)}</small></button>`).join('')}</div></details>` : '<small class="rd-muted">Non ci sono altre foto di questa gara sul sito.</small>'}`;
   }
   async function fotoSalva(b) {
-    try { await api('/bozze/' + b.id, { method: 'PUT', body: { foto: b.foto } }); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
+    const ta = document.querySelector('#ed-corpo');
+    try { await api('/bozze/' + b.id, { method: 'PUT', body: ta ? { foto: b.foto, corpo: (b.corpo = ta.value) } : { foto: b.foto } }); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
   }
   async function fotoLega() {
     const box = document.querySelector('.rd-foto'); const b = sel(); if (!box || !b) return;
@@ -70,21 +71,24 @@
   }
   function fotoLega2(box, b, ridisegna) {
     const cand = (st.cand[b.id] || []).filter(c => !(b.foto || []).some(s => s.url === c.url));
-    box.querySelectorAll('[data-fadd]').forEach(x => { x.onclick = () => { const c = cand[+x.dataset.fadd]; b.foto = (b.foto || []).concat([{ url: c.url, credito: c.credito, didascalia: c.didascalia }]).slice(0, 6); fotoSalva(b); ridisegna(); }; });
-    box.querySelectorAll('[data-fdel]').forEach(x => { x.onclick = () => { b.foto.splice(+x.dataset.fdel, 1); fotoSalva(b); ridisegna(); }; });
+    box.querySelectorAll('[data-fadd]').forEach(x => { x.onclick = () => { const c = cand[+x.dataset.fadd]; b.foto = (b.foto || []).concat([{ url: c.url, credito: c.credito, didascalia: c.didascalia }]).slice(0, 6); const ta = document.querySelector('#ed-corpo'); if (ta) ta.value = ta.value.replace(/\s+$/, '') + `\n\n[[foto:${b.foto.length}]]`; fotoSalva(b); ridisegna(); }; });
+    box.querySelectorAll('[data-fdel]').forEach(x => { x.onclick = () => { const k = +x.dataset.fdel + 1; b.foto.splice(k - 1, 1); const ta = document.querySelector('#ed-corpo'); if (ta) ta.value = ta.value.replace(new RegExp(`\\n*\\[\\[foto:${k}\\]\\]\\n*`, 'g'), '\n\n').replace(/\[\[foto:(\d+)\]\]/g, (m, n) => +n > k ? `[[foto:${+n - 1}]]` : m); fotoSalva(b); ridisegna(); }; });
     box.querySelectorAll('[data-cr]').forEach(x => { x.onchange = () => { b.foto[+x.dataset.cr].credito = x.value; fotoSalva(b); }; });
   }
 
   // anteprima: come apparirebbe l'articolo a un lettore (usa i campi correnti, anche non salvati)
   function articolo(b) {
-    const corpo = String(b.corpo || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => /^##\s+/.test(x) ? `<h2>${esc(x.replace(/^##\s+/, ''))}</h2>` : `<p>${esc(x).replace(/\n/g, '<br>')}</p>`);
-    const f = b.foto || [];
-    const fig = (x, cls) => `<figure class="${cls}"><img src="${esc(imgSrc(x.url))}" alt="" loading="lazy" onerror="this.parentNode.remove()">${x.credito ? `<figcaption>Foto: ${esc(x.credito)}</figcaption>` : ''}</figure>`;
+    const corpo = String(b.corpo || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => {
+      const m = x.match(/^\[\[foto:(\d+)\]\]$/);
+      if (m) { const ft = f[+m[1] - 1]; if (ft) { usate.add(+m[1] - 1); return fig(ft); } return ''; }
+      return /^##\s+/.test(x) ? `<h2>${esc(x.replace(/^##\s+/, ''))}</h2>` : `<p>${esc(x.replace(/\[\[foto:\d+\]\]/g, '')).replace(/\n/g, '<br>')}</p>`;
+    });
+    const f = b.foto || [], usate = new Set();
+    const fig = x => `<figure><img src="${esc(imgSrc(x.url))}" alt="${esc(x.didascalia || '')}" loading="lazy" onerror="this.parentNode.remove()">${(x.didascalia || x.credito) ? `<figcaption>${esc(x.didascalia || '')}${x.didascalia && x.credito ? ' · ' : ''}${x.credito ? 'Foto: ' + esc(x.credito) : ''}</figcaption>` : ''}</figure>`;
     const meta = [fmtData(b.aggiornato || b.creato), (b.tag || []).slice(0, 4).map(t => '#' + t).join(' ')].filter(Boolean).join(' · ');
-    const mezzo = Math.ceil(corpo.length / 2);
     return `<div class="hx-panel rd-prev"><div class="rd-top"><span class="rd-chip s-${b.stato}">Anteprima di lettura</span><button type="button" class="admin-edit-btn" data-act="back">← Torna alla modifica</button></div>
-      <article class="rd-art">${f[0] ? fig(f[0], 'cover') : ''}<small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
-      ${corpo.slice(0, mezzo).join('')}${f[1] ? fig(f[1], 'inline') : ''}${corpo.slice(mezzo).join('')}${f.slice(2).map(x => fig(x, 'inline')).join('')}
+      <article class="rd-art"><small class="rd-muted">${esc(meta)}</small><h1>${esc(b.titolo)}</h1><p class="lead">${esc(b.sommario)}</p>
+      ${corpo.join('')}${f.map((x, i) => usate.has(i) ? '' : fig(x)).join('')}
       <footer>© Produzione riservata</footer></article></div>`;
   }
 

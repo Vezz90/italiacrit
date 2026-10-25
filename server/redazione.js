@@ -114,7 +114,7 @@ module.exports = function registerRedazione(app, deps) {
     rows.forEach(r => { const k = catOf(r) || r.categoria || '?'; (byCat[k] = byCat[k] || []).push(r); });
     const risultati = Object.entries(byCat).map(([k, list]) => ({
       categoria: CAT_NOME[k] || k, codice: k, gara_id: (list[0] || {}).gara_id, partecipanti: list.length,
-      top10: list.sort((a, b) => a.posizione - b.posizione).slice(0, 10).map(r => ({ pos: r.posizione, id: r.atleta_id, atleta: fullName(r), team: r.team, tempo: r.tempo || null, km: r.km || null, media: r.media || null, punti: r.punti_effettivi })),
+      top10: list.sort((a, b) => a.posizione - b.posizione).slice(0, 10).map(r => ({ pos: r.posizione, id: r.atleta_id, cognome: r.cognome, atleta: fullName(r), team: r.team, tempo: r.tempo || null, km: r.km || null, media: r.media || null, punti: r.punti_effettivi })),
     }));
     return {
       oggi: today(), stato: rows.length ? 'risultati' : 'anteprima',
@@ -194,6 +194,45 @@ module.exports = function registerRedazione(app, deps) {
   }
   // scelta iniziale: foto della gara (con credito) e, se non ce ne sono, la foto del vincitore
   const sceglie = c => { const g = c.filter(f => f.fonte !== 'profilo').slice(0, 2); return (g.length ? g : c.filter(f => f.fonte === 'profilo').slice(0, 1)).map(f => ({ url: f.url, credito: f.credito, didascalia: f.didascalia })); };
+
+  // le foto proposte all'AI: una della gara per categoria, qualche foto d'album, i vincitori adulti; con un'etichetta che dice cosa mostrano
+  function proponiFoto(cand, facts) {
+    const cat = {}, nome = {};
+    (facts.risultati || []).forEach(r => { cat[r.gara_id] = r.categoria; (r.top10 || []).forEach(t => { if (t.id) nome[t.id] = t.atleta; }); });
+    const pulisci = n => String(n || '').toLowerCase().replace(/(^|[\s'-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
+    const girate = n => { const t = String(n || '').trim().split(/\s+/); return pulisci(t.length > 1 ? t.slice(-1)[0] + ' ' + t.slice(0, -1).join(' ') : n); };   // "MILESI NICOLAS" -> "Nicolas Milesi"
+    const out = [], perCat = new Set();
+    for (const f of cand.filter(x => x.fonte === 'caricata')) { const c = cat[f.gara_id]; if (c && !perCat.has(c) && out.length < 5) { perCat.add(c); out.push({ ...f, etichetta: `foto della gara, categoria "${c}"`, didascalia: f.didascalia || c }); } }
+    for (const f of cand.filter(x => x.fonte === 'profilo').slice(0, 3)) if (nome[f.atleta_id]) out.push({ ...f, etichetta: `foto di ${girate(nome[f.atleta_id])} (vincitore o podio)`, didascalia: girate(nome[f.atleta_id]) });
+    for (const f of cand.filter(x => x.fonte === 'xpix' || x.fonte === 'ic').slice(0, 2)) out.push({ ...f, etichetta: 'foto d\'album della gara (generica, non attribuibile a un corridore)', didascalia: f.didascalia || '' });
+    return out.slice(0, 8);
+  }
+  // rinumera i segnaposto nell'ordine in cui compaiono e tiene solo le foto davvero usate
+  function piazzaFoto(corpo, pron) {
+    const mappa = new Map(), foto = [];
+    const nuovo = corpo.replace(/\[\[foto:(\d+)\]\]/g, (m, n) => {
+      const f = pron[+n - 1]; if (!f) return '';
+      if (!mappa.has(+n)) { mappa.set(+n, foto.length + 1); foto.push({ url: f.url, credito: f.credito, didascalia: f.didascalia }); }
+      return `[[foto:${mappa.get(+n)}]]`;
+    });
+    return { corpo: nuovo.replace(/\n{3,}/g, '\n\n').trim(), foto: foto.slice(0, 6) };
+  }
+  // il titolo deve nominare i vincitori delle categorie piu alte: se manca qualcuno lo si riscrive (una chiamata breve, senza ricerca web)
+  async function controllaTitolo(j, tipo, facts) {
+    const titolo = String(j.titolo || '');
+    if (tipo !== 'gara') return titolo;
+    const alte = (facts.risultati || []).filter(r => /^ELI_/.test(r.codice || ''));
+    const dovuti = (alte.length ? alte : (facts.risultati || []).slice(0, 1)).map(r => (r.top10 || [])[0]).filter(Boolean);
+    const norm = s => up(s).replace(/[^A-Z ]/g, ' ');
+    const manca = dovuti.filter(t => t.cognome && !norm(titolo).includes(norm(t.cognome).trim()));
+    if (!manca.length) return titolo;
+    try {
+      const nomi = dovuti.map(t => t.atleta).join(', ');
+      const r = await callClaude(`Riscrivi il TITOLO di questo articolo sportivo perche contenga i cognomi di TUTTI questi vincitori: ${nomi} (nei dati il cognome e prima; scrivili come "Nome Cognome" o solo cognome, normali). Titolo attuale: "${titolo}". Sommario: "${j.sommario || ''}". Massimo 120 caratteri, tono giornalistico, niente cliche. Rispondi SOLO cosi:\n===TITOLO===\n(una riga)`, false);
+      const t = (sezioni(r.text || '').TITOLO || '').split('\n')[0].trim();
+      return t && t.length < 200 ? t : titolo;
+    } catch (_) { return titolo; }
+  }
 
   // ---------- pagine ufficiali indicate a mano ----------
   async function leggiLink(urls) {
@@ -275,7 +314,8 @@ REGOLE DI METODO (obbligatorie):
 7. TITOLO: deve contenere i nomi dei vincitori principali. Se l'evento ha piu categorie, nel titolo devono comparire SEMPRE i vincitori delle categorie piu alte presenti (prima Elite/Under 23 uomini e Donne Elite, poi Juniores, poi Allievi), senza dimenticarne nessuno tra Elite/Under 23: se non ci stanno tutti nel titolo, mettili nel sommario e nelle prime righe. Le sezioni dell'articolo vanno dalla categoria piu alta alla piu bassa.
 8. CONFRONTI CON GLI ANNI PASSATI: sono benvenuti se sono PERTINENTI e DIMOSTRATI dai DATI (albo d'oro, risultati di oggi). Esempi buoni, sempre nella STESSA categoria e per lo STESSO titolo: un bis o un tris dello stesso atleta o della stessa squadra; un atleta che oggi ritrova il titolo dopo averlo vinto in passato; il vincitore di un'edizione precedente che oggi e presente nei risultati (dove ha chiuso); la media o il distacco confrontati con quelli dei vincitori precedenti; una squadra che torna a vincere. Sono invece VIETATI i confronti non dimostrati o fuori luogo: non dire che qualcuno "ha interrotto il dominio" o "ha preso il posto" di un altro, se quell'atleta non e piu in quella categoria o non ha gareggiato oggi; niente paragoni tra categorie diverse, niente curiosita di contorno, niente deduzioni ("per forza", "segno di un ricambio"). Se un confronto non e chiaro, pertinente e verificabile nei DATI, omettilo.
 9. Non inventare ruoli, meriti o giudizi: niente "zona podio ideale", niente "ha confermato la propria autorevolezza" se non e nei DATI. Due atleti sono compagni di squadra solo se hanno la stessa squadra nei DATI.
-10. Tono: giornalismo sportivo vivo e umano, frasi brevi e più lunghe alternate, immagini efficaci senza cliché ("saldamente", "da sottolineare", "gran finale"). Non ripetere due volte la stessa informazione.
+10. IMPAGINAZIONE: un articolo ordinato e facile da leggere. Apri con un paragrafo che dice subito chi ha vinto (nomi dei vincitori principali), poi una sezione per categoria con sottotitolo '## ' (dalla piu alta alla piu bassa), paragrafi brevi (3-5 righe). Non scrivere "Foto:" ne didascalie nel testo.
+11. Tono: giornalismo sportivo vivo e umano, frasi brevi e più lunghe alternate, immagini efficaci senza cliché ("saldamente", "da sottolineare", "gran finale"). Non ripetere due volte la stessa informazione.
 
 FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta dalla sua riga di intestazione, senza altro testo prima o dopo:
 ===TITOLO===
@@ -311,14 +351,20 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     const prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
       (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, 600)}\n` : '');
-    const res = await callClaude(prompt, web);
+    const cand = await fotoCandidate(tipo, p, facts);
+    const pron = proponiFoto(cand, facts);
+    const prompt2 = prompt + (pron.length ? `\nFOTO DISPONIBILI. Se utile, inserisci il segnaposto [[foto:N]] da solo su una riga, SUBITO DOPO il paragrafo che parla di quella categoria o di quel corridore (mai in una sezione diversa, al massimo una foto per categoria, solo se la foto corrisponde a cio di cui stai parlando; non descrivere cosa mostrano le foto):\n${pron.map((f, i) => `[[foto:${i + 1}]] ${f.etichetta}`).join('\n')}\n` : '');
+    const res = await callClaude(prompt2, web);
     const j = parseJson(res);
+    const piazzata = piazzaFoto(String(j.corpo || ''), pron);
+    j.corpo = piazzata.corpo;
+    j.titolo = await controllaTitolo(j, tipo, facts);
     const fonti = [...(Array.isArray(j.fonti) ? j.fonti : [])];
     link.filter(l => !l.errore).forEach(l => { if (!fonti.some(f => f.url === l.url)) fonti.push({ titolo: l.titolo || l.url, url: l.url, uso: 'pagina ufficiale indicata' }); });
     const dv = Array.isArray(j.da_verificare) ? j.da_verificare : [];
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, foto: sceglie(await fotoCandidate(tipo, p, facts)), dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, foto: piazzata.foto.length ? piazzata.foto : sceglie(cand), dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, leggiLink, alboFor };   // per le prove

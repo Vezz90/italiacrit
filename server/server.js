@@ -13270,11 +13270,11 @@ async function _getHeadMetaFor(type, id) {
 // Foto candidate per un articolo della redazione: foto caricate e approvate, album xpix.it / ciclismo.info, foto profilo (solo atleti indicati)
 async function _redazioneFoto({ garaIds = [], atletaIds = [] }) {
   const out = [], visti = new Set();
-  const add = (url, credito, didascalia, fonte) => { if (url && !visti.has(url) && out.length < 40) { visti.add(url); out.push({ url, credito: credito || '', didascalia: didascalia || '', fonte }); } };
+  const add = (url, credito, didascalia, fonte, gara_id, atleta_id) => { if (url && !visti.has(url) && out.length < 40) { visti.add(url); out.push({ url, credito: credito || '', didascalia: didascalia || '', fonte, gara_id: gara_id || '', atleta_id: atleta_id || '' }); } };
   const ids = [...new Set(garaIds.filter(Boolean))];
   for (const id of ids) {
     const up = await queries.getApprovedRacePhotos(id).catch(() => []);
-    for (const f of (up || [])) add(f.photo_url && /^https?:/i.test(f.photo_url) ? f.photo_url : (f.filename ? `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}` : ''), f.photographer || f.display_name || '', f.caption || '', 'caricata');
+    for (const f of (up || [])) add(f.photo_url && /^https?:/i.test(f.photo_url) ? f.photo_url : (f.filename ? `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}` : ''), f.photographer || f.display_name || '', f.caption || '', 'caricata', id);
   }
   const [xpix, ic] = await Promise.all([readXpixPhotos().catch(() => ({})), readICPhotos().catch(() => ({}))]);
   const alias = [...new Set(ids.flatMap(id => [id, id.replace(/^\d+_/, ''), id.replace(/_[A-Z0-9]+_[MF]$/, '')]))];
@@ -13282,7 +13282,7 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [] }) {
     const x = xpix[a]; if (x) for (const u of (Array.isArray(x.photos) && x.photos.length ? x.photos : [x.url]).filter(Boolean).slice(0, 12)) add(u, 'xpix.it', x.album_name || '', 'xpix');
     const c = ic[a]; if (c && (c.url || c.filename)) add(c.url || c.filename, 'ciclismo.info', c.name || '', 'ic');
   }
-  for (const a of [...new Set(atletaIds.filter(Boolean))].slice(0, 6)) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo');
+  for (const a of [...new Set(atletaIds.filter(Boolean))].slice(0, 6)) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo', '', a);
   return out;
 }
 
