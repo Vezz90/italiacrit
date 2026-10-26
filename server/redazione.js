@@ -215,12 +215,57 @@ module.exports = function registerRedazione(app, deps) {
     const classifica = ordinata.slice(0, 10).map(a => ({ pos: a.pos, id: a.atleta_id, cognome: a.cognome, atleta: `${a.cognome} ${a.nome}`.trim(), team: a.team_nome, punti: a.punti, vittorie: a.p1, secondi_posti: a.p2, terzi_posti: a.p3, arrivi_nei_primi_10: a.pout, gare: a.gare }));
     const t5 = (Array.isArray(rkT) ? rkT : []).slice().sort((x, y) => (x.pos || 999) - (y.pos || 999)).slice(0, 5).map(t => ({ pos: t.pos, team: t.team_nome, punti: t.punti, vittorie: t.p1, atleti_a_punti: t.n_atleti }));
     const piuVitt = ordinata.slice().sort((x, y) => (y.p1 || 0) - (x.p1 || 0) || (x.pos || 999) - (y.pos || 999)).slice(0, 4).filter(a => a.p1).map(a => ({ atleta: `${a.cognome} ${a.nome}`.trim(), vittorie: a.p1, team: a.team_nome, posizione_in_classifica: a.pos }));
+    // materiale per RACCONTARE: per i primi tre le tappe della stagione, e il duello tra primo e secondo
+    const gapSec = t => { const m = String(t || '').match(/^a\s*(?:(\d+)')?(\d+)"/); return m ? (+m[1] || 0) * 60 + +m[2] : null; };
+    const perGara = {}; rows.forEach(r => { (perGara[r.gara_id] = perGara[r.gara_id] || []).push(r); });
+    const top3 = classifica.slice(0, 3);
+    const storie = top3.map(c => {
+      const mie = rows.filter(r => r.atleta_id === c.id).sort((a, b) => String(a.data).localeCompare(String(b.data)));
+      const vitt = mie.filter(r => r.posizione === 1);
+      let striscia = 0, cur = 0; mie.forEach(r => { if (r.posizione === 1) { cur++; striscia = Math.max(striscia, cur); } else cur = 0; });
+      const mesi = {}; vitt.forEach(r => { const m = String(r.data).slice(0, 7); mesi[m] = (mesi[m] || 0) + 1; });
+      const margini = vitt.map(r => { const s2 = (perGara[r.gara_id] || []).find(x => x.posizione === 2); return { gara: r.nome_gara, data: r.data, secondi: s2 ? gapSec(s2.tempo) : null, secondo: s2 ? fullName(s2) : null }; }).filter(m => m.secondi != null);
+      const largo = margini.slice().sort((a, b) => b.secondi - a.secondi)[0] || null;
+      const pesante = vitt.slice().sort((a, b) => (b.campionato_italiano ? 1 : 0) - (a.campionato_italiano ? 1 : 0) || (b.moltiplicatore || 1) - (a.moltiplicatore || 1))[0];
+      const ult = mie[mie.length - 1];
+      return {
+        atleta: c.atleta, posizione_finale: c.pos,
+        prima_vittoria: vitt[0] ? { gara: vitt[0].nome_gara, data: vitt[0].data } : null,
+        ultima_vittoria: vitt.length ? { gara: vitt[vitt.length - 1].nome_gara, data: vitt[vitt.length - 1].data } : null,
+        vittorie_per_mese: mesi, vittorie_di_fila_tra_le_gare_corse: striscia,
+        vittoria_piu_importante: pesante ? { gara: pesante.nome_gara, data: pesante.data, titolo: pesante.campionato_italiano ? 'campionato italiano' : (pesante.moltiplicatore || 1) >= 2 ? 'gara di peso x' + pesante.moltiplicatore : null } : null,
+        vittoria_con_il_distacco_piu_largo: largo ? { gara: largo.gara, data: largo.data, secondi_sul_secondo: largo.secondi, secondo: largo.secondo } : null,
+        vittorie_con_meno_di_4_secondi_di_margine: margini.filter(m => m.secondi <= 3).length,
+        ultimo_risultato_della_stagione: ult ? { data: ult.data, gara: ult.nome_gara, posizione: ult.posizione } : null,
+      };
+    });
+    let duello = null;
+    if (top3[1]) { let inc = 0, v1 = 0, v2 = 0; Object.values(perGara).forEach(g => { const a = g.find(r => r.atleta_id === top3[0].id), b = g.find(r => r.atleta_id === top3[1].id); if (a && b) { inc++; if (a.posizione < b.posizione) v1++; else if (b.posizione < a.posizione) v2++; } }); duello = { nota: 'contano solo le gare in cui entrambi sono arrivati nei primi 10 (degli altri arrivi non abbiamo i risultati completi): non dire che si sono incontrati solo queste volte', tra: [top3[0].atleta, top3[1].atleta], gare_nei_primi_10_di_entrambi: inc, arrivato_davanti_il_primo: v1, arrivato_davanti_il_secondo: v2 }; }
     return {
-      nota: 'classifica e squadre sono quelle UFFICIALI del sito (pagina Classifica): nomi, punti e posizioni vanno usati cosi come sono',
+      nota: 'la classifica e quella UFFICIALE del sito (pagina Classifica): nomi, punti e posizioni vanno usati cosi come sono',
       stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, gare_disputate: gare.size, atleti_in_classifica: rk.length,
       classifica_atleti: classifica, piu_vittorie: piuVitt,
-      classifica_team: t5, vittorie_importanti: ev, campioni_italiani, campioni_regionali,
+      storie_dei_primi_tre: storie, duello_primo_secondo: duello, vittorie_importanti: ev, campioni_italiani, campioni_regionali,
     };
+  }
+
+  // articolo a parte sulle squadre di una categoria: classifica ufficiale delle squadre e gli atleti che le hanno portate in alto
+  async function factsSquadre(cat) {
+    if (!CATS_ALL.includes(cat)) throw new Error('categoria non valida: ' + cat);
+    const [rkT, rk] = await Promise.all([getData('team_rankings/' + cat + '.json'), getData('rankings/' + cat + '.json')]);
+    if (!Array.isArray(rkT) || !rkT.length) throw new Error('classifica squadre non disponibile per ' + cat);
+    const y = await anno();
+    const squadre = rkT.slice().sort((x, z) => (x.pos || 999) - (z.pos || 999)).slice(0, 6).map(t => {
+      const atl = (rk || []).filter(a => a.team_id === t.team_id).sort((x, z) => (x.pos || 999) - (z.pos || 999));
+      const top = atl.slice(0, 3).map(a => ({ atleta: `${a.cognome} ${a.nome}`.trim(), id: a.atleta_id, posizione_in_classifica_atleti: a.pos, punti: a.punti, vittorie: a.p1 }));
+      const punta = atl[0];
+      return {
+        pos: t.pos, team: t.team_nome, punti: t.punti, vittorie: t.p1, secondi_posti: t.p2, terzi_posti: t.p3, atleti_a_punti: t.n_atleti,
+        quota_dei_punti_portata_dal_migliore: punta && t.punti ? Math.round(punta.punti / t.punti * 100) + '%' : null,
+        atleti_di_punta: top, punta_id: punta && punta.atleta_id, punta: punta && `${punta.cognome} ${punta.nome}`.trim(), punta_cognome: punta && punta.cognome,
+      };
+    });
+    return { nota: 'classifica delle squadre UFFICIALE del sito: nomi, posizioni e punti vanno usati cosi come sono', stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, squadre_in_classifica: rkT.length, classifica_team: squadre };
   }
 
   // ---------- foto ----------
@@ -235,6 +280,7 @@ module.exports = function registerRedazione(app, deps) {
         (f.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); (r.top10 || []).slice(0, 3).forEach(t2 => t2.id && atletaIds.push(t2.id)); });
       } else if (t === 'atleta') atletaIds.push(pp.id);
       else if (t === 'stagione') (f.classifica_atleti || []).slice(0, 3).forEach(a => a.id && atletaIds.push(a.id));
+      else if (t === 'squadre') (f.classifica_team || []).slice(0, 3).forEach(a => a.punta_id && atletaIds.push(a.punta_id));
     };
     if (tipo === 'libero') for (const b of (facts.blocchi || [])) await blocco(b.tipo, b.p || {}, b.dati || {});
     else await blocco(tipo, p, facts);
@@ -273,6 +319,7 @@ module.exports = function registerRedazione(app, deps) {
     const put = (id, nome, cognome, rango) => { if (!id) return; const x = out.get(id); out.set(id, { id, nome, cognome, rango: Math.min(rango, x ? x.rango : 99) }); };
     (facts.risultati || []).forEach(r => (r.top10 || []).forEach(t => put(t.id, t.atleta, t.cognome, t.pos)));
     (facts.classifica_atleti || []).forEach(a => put(a.id, a.atleta, a.cognome, a.pos));
+    (facts.classifica_team || []).forEach(t => put(t.punta_id, t.punta, t.punta_cognome, t.pos));
     if (extra && extra.id && facts.atleta) put(extra.id, facts.atleta.nome, String(facts.atleta.nome || '').split(' ')[0], 1);
     (facts.blocchi || []).forEach(b => atletiDi(b.dati || {}, out, b.p));
     return out;
@@ -450,7 +497,7 @@ REGOLE DI METODO (obbligatorie):
 1. NOMI, NUMERI, POSIZIONI, TEMPI, DATE E PUNTI vengono SOLO dal blocco DATI (o dalle PAGINE UFFICIALI indicate). Non ricalcolarli e non inventarli.
 2. La ricerca web (se attiva) serve per il CONTESTO: programma e orari, percorso, notizie, storia della corsa. Riscrivi sempre con parole tue: è vietato copiare frasi, anche brevi, dalle fonti. Elenca ogni fonte usata in "fonti".
 3. Usa un'informazione presa dal web solo se la fonte è affidabile (federazione, organizzatore, testata nota) e non contraddice i DATI. Se il web contraddice i DATI vincono i DATI: scrivilo in "da_verificare". Se non sei sicuro di un fatto, non usarlo e mettilo in "da_verificare".
-4. Niente citazioni di persone, emozioni o aneddoti che non siano nei dati o nelle fonti. Niente esagerazioni. Se mancano dati scrivi un testo più breve invece di riempire.
+4. Niente citazioni o dichiarazioni di persone, niente aneddoti privati, niente stati d'animo attribuiti a una persona precisa che non siano nei DATI o nelle fonti. Il RACCONTO pero deve avere ritmo ed emozione: costruiscila con i fatti che i DATI dimostrano (un duello, una striscia di vittorie, una rimonta, un margine di pochi secondi, il giorno del tricolore) e con immagini efficaci. Se mancano dati scrivi un testo piu breve invece di riempire.
 5. DATI PERSONALI: per tutti gli atleti, minorenni compresi, si raccontano i fatti sportivi pubblici (nome, squadra, risultati, titoli, carriera, selezioni): sono la ragione d'essere del sito. Non scrivere mai dati personali che non siano sportivi (eta o data di nascita, scuola, residenza, famiglia, salute, social privati) e usa il web solo per contesto sportivo (risultati, squadre, selezioni, programma), mai per notizie sulla persona.
 6. NOMI: scrivi sempre "Nome Cognome" in maiuscolo/minuscolo normale (nei DATI il cognome viene prima e spesso e tutto maiuscolo: "MILESI NICOLAS" diventa "Nicolas Milesi"). Usa i nomi delle squadre come sono nei DATI, scritti in modo leggibile.
 7. TITOLO: deve contenere i nomi dei vincitori principali. Se l'evento ha piu categorie, nel titolo devono comparire SEMPRE i vincitori delle categorie piu alte presenti (prima Elite/Under 23 uomini e Donne Elite, poi Juniores, poi Allievi), senza dimenticarne nessuno tra Elite/Under 23: se non ci stanno tutti nel titolo, mettili nel sommario e nelle prime righe. Le sezioni dell'articolo vanno dalla categoria piu alta alla piu bassa.
@@ -459,7 +506,7 @@ REGOLE DI METODO (obbligatorie):
 10. IMPAGINAZIONE: un articolo ordinato e facile da leggere. Apri con un paragrafo che dice subito chi ha vinto (nomi dei vincitori principali), poi una sezione per categoria con sottotitolo '## ' (dalla piu alta alla piu bassa), paragrafi brevi (3-5 righe). Non scrivere "Foto:", segnaposto ne didascalie nel testo: le foto le mette il sistema.
 11. STILE: l'articolo deve leggersi come un pezzo di giornale, non come un elenco di risultati. Apri con la storia vera (il fatto piu notevole: un bis, un record, una rimonta, il tricolore dopo una grande delusione), poi organizza per sezioni. Ogni sottotitolo '## ' deve dire qualcosa ("Donne Elite: Longo Borghini, otto tricolori"), non solo il nome della categoria. Per ogni categoria 3-5 frasi: chi ha vinto e come (distacco dal secondo), il podio, un solo dettaglio che conta. La media oraria si cita solo per le categorie principali e mai in ogni paragrafo. Niente elenchi lunghi di nomi: podio e al massimo i primi cinque. Non ripetere la stessa impalcatura di frase in ogni sezione.
 12. Mai citazioni tra virgolette prese dal web e mai frasi copiate: riformula con parole tue. Niente a-capo dentro un paragrafo: i paragrafi sono separati da una riga vuota.
-13. Tono: giornalismo sportivo vivo e umano, frasi brevi e più lunghe alternate, immagini efficaci senza cliché ("saldamente", "da sottolineare", "gran finale"). Non ripetere due volte la stessa informazione.
+13. TONO: la voce di un cronista che ama questo sport e racconta una storia, non quella di un redattore di statistiche. Ritmo, verbi forti, suspense: apri con una scena o con un dato che colpisce, dai a ogni protagonista un'immagine (una frase che lo fa vedere), chiudi con una frase che resta. Alterna frasi brevi e lunghe, usa il presente quando racconta il momento decisivo. Per capire il registro (esempio inventato, NON da copiare): "Tre secondi. Tanto basta per separare un'estate di fatica da una maglia." Vietati i cliche ("saldamente", "da sottolineare", "gran finale", "protagonista assoluto") e l'elenco di numeri senza una storia dentro. Non ripetere due volte la stessa informazione.
 
 FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta dalla sua riga di intestazione, senza altro testo prima o dopo:
 ===TITOLO===
@@ -483,7 +530,8 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
   };
 
-  ISTRUZIONI.stagione = f => `TIPO: ARTICOLO DI FINE STAGIONE PER CATEGORIA (600-900 parole). La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}". REGOLA FERREA: la classifica finale e le squadre sono QUELLE UFFICIALI DEL SITO, riportate in classifica_atleti e classifica_team: nomi, posizioni e punti vanno copiati cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno della classifica finale e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura con il leader (punti, vittorie, squadra); "La classifica finale" (primi 5-10 con punti, nell'ordine ufficiale); "Le vittorie che contano" (da vittorie_importanti); "I campioni" (campione italiano e regionali, solo se nei DATI); "Le squadre" (classifica_team). Una sezione senza dati si omette. NON scrivere confronti con la stagione precedente, ne storia dei cambi di leader, ne altri numeri che non siano nei DATI.`;
+  ISTRUZIONI.stagione = f => `TIPO: RACCONTO DI FINE STAGIONE PER CATEGORIA (600-900 parole), scritto come un racconto, non come un riepilogo. La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}" come una storia: chi l'ha dominata, chi l'ha inseguita, quali giorni l'hanno decisa. Materiale: "storie_dei_primi_tre" (prima e ultima vittoria, vittorie mese per mese, la striscia di successi, la vittoria piu importante, il distacco piu largo, i successi di misura), "duello_primo_secondo" (quante volte si sono incontrati e chi e arrivato davanti), "vittorie_importanti" e i campioni. REGOLA FERREA sui numeri: la classifica finale e quella UFFICIALE del sito (classifica_atleti): nomi, posizioni e punti si copiano cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura narrativa sul protagonista (una scena presa dai dati, poi il quadro: punti, vittorie); il duello o l'inseguimento tra primo e secondo; "I giorni che hanno deciso la stagione" (vittorie importanti, campioni italiani e regionali, solo se nei DATI); chiusura "Come e finita" con i primi della classifica ufficiale in una frase scorrevole con i punti. NON trattare le squadre (hanno un articolo a parte) e non fare confronti con altre stagioni.`;
+  ISTRUZIONI.squadre = f => `TIPO: RACCONTO DI FINE STAGIONE SULLE SQUADRE (500-800 parole) della categoria "${f.categoria}", stagione ${f.stagione}. Racconta le squadre che hanno fatto la stagione: chi ha comandato la classifica, come (una squadra costruita su un solo campione oppure su tanti atleti che portano punti: guarda quota_dei_punti_portata_dal_migliore e atleti_a_punti), chi l'ha inseguita, quali atleti hanno portato in alto ciascuna. La classifica delle squadre e UFFICIALE (classifica_team): nomi, posizioni e punti si copiano cosi come sono, nell'ordine ufficiale. Apri con la squadra prima in classifica e con l'immagine di come ha vinto; sottotitoli '## ' che dicano qualcosa; chiudi con una frase che resta. Non confondere questo articolo con la classifica degli atleti e non fare confronti con altre stagioni.`;
   ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI. Lunghezza e forma come richiesto; se non le indica, 400-700 parole con titolo e sottotitoli. Se la richiesta chiede cose che non hai nei DATI, non inventarle: scrivilo in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
 
   // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
@@ -515,6 +563,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     if (tipo === 'gara') { facts = await factsGara(p.id, { tutte: !!p.tutte }); soggetto = facts.gara.nome; }
     else if (tipo === 'settimana') { facts = await factsSettimana(p.fine); soggetto = `Il punto della settimana (${facts.periodo.dal} – ${facts.periodo.al})`; }
     else if (tipo === 'atleta') { facts = await factsAtleta(p.id); soggetto = facts.atleta.nome; }
+    else if (tipo === 'squadre') { facts = await factsSquadre(p.id); soggetto = `Squadre ${facts.stagione}: ${facts.categoria}`; }
     else if (tipo === 'stagione') { facts = await factsStagione(p.id); soggetto = `Stagione ${facts.stagione}: ${facts.categoria}`; }
     else if (tipo === 'libero') { const bl = []; for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b)); facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
     else throw new Error('tipo non valido');
@@ -538,7 +587,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       soggetto, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
-  app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, leggiLink, alboFor };   // per le prove
+  app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor };   // per le prove
 
   // ---------- API ----------
   app.get('/api/admin/redazione/bozze', requireAdmin, async (req, res) => {
@@ -559,8 +608,8 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     try {
       const b = req.body || {};
       const tipo = String(b.tipo || '');
-      if (!['gara', 'settimana', 'atleta', 'stagione'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
-      if ((tipo === 'gara' || tipo === 'atleta' || tipo === 'stagione') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
+      if (!['gara', 'settimana', 'atleta', 'stagione', 'squadre'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
+      if ((tipo === 'gara' || tipo === 'atleta' || tipo === 'stagione' || tipo === 'squadre') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
       const p = { id: String(b.id || ''), fine: b.fine ? String(b.fine).slice(0, 10) : null, web: !!b.web, tutte: b.tutte !== false, link: Array.isArray(b.link) ? b.link.map(String).slice(0, 5) : [], indicazioni: b.indicazioni || '' };
       const { id } = await avvia(tipo, p);
       res.json({ ok: true, id });
@@ -582,11 +631,12 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   app.post('/api/admin/redazione/stagione', requireAdmin, async (req, res) => {
     try {
       if (!process.env.ANTHROPIC_API_KEY) return res.status(400).json({ error: 'ANTHROPIC_API_KEY non configurata' });
+      const kind = (req.body || {}).tipo === 'squadre' ? 'squadre' : 'stagione';
       const y = await anno(), esist = new Set((await readAll()).map(b => b.parametri && b.parametri.chiave).filter(Boolean));
       const web = !!(req.body || {}).web;
-      const daFare = CATS_ALL.filter(c => !esist.has(`stagione|${y}|${c}`));
+      const daFare = CATS_ALL.filter(c => !esist.has(`${kind}|${y}|${c}`));
       res.json({ ok: true, avviati: daFare.length, gia_presenti: CATS_ALL.length - daFare.length });
-      (async () => { for (const c of daFare) { try { const { fine } = await avvia('stagione', { id: c, web, link: [], indicazioni: '', chiave: `stagione|${y}|${c}`, auto: false }, `Stagione ${y}: ${CAT_NOME[c]}`); await fine; } catch (e) { console.warn('[redazione] stagione', c, e.message); } } })();
+      (async () => { for (const c of daFare) { try { const { fine } = await avvia(kind, { id: c, web, link: [], indicazioni: '', chiave: `${kind}|${y}|${c}`, auto: false }, `${kind === 'squadre' ? 'Squadre' : 'Stagione'} ${y}: ${CAT_NOME[c]}`); await fine; } catch (e) { console.warn('[redazione]', kind, c, e.message); } } })();
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 
@@ -674,7 +724,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   app.get('/api/admin/redazione/cerca', requireAdmin, async (req, res) => {
     try {
       const q = up(req.query.q || '').trim();
-      if (req.query.tipo === 'stagione') return res.json({ risultati: CATS_ALL.map(c => ({ id: c, titolo: CAT_NOME[c] || c, dettaglio: 'riepilogo di fine stagione' })) });
+      if (req.query.tipo === 'stagione' || req.query.tipo === 'squadre') return res.json({ risultati: CATS_ALL.map(c => ({ id: c, titolo: CAT_NOME[c] || c, dettaglio: 'riepilogo di fine stagione' })) });
       if (req.query.tipo === 'atleta') {
         const ath = await getData('athletes.json');
         const list = Object.values(ath).filter(a => (!q || up(fullName(a)).includes(q)))
