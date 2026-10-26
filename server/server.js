@@ -13441,16 +13441,16 @@ async function _fotoClassifica(ids, uno = false) {
   const ha = (csv, a) => String(csv || '').split(',').map(x => x.trim()).includes(a);
   const upUrl = f => `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`;
   const calIdOf = g => { try { const c = _findCalEntryForNativeGaraId(calendar, g); return c && c.id; } catch (_) { return null; } };
-  const dellaGara = (g, aid) => {                                       // la foto di quella gara: prima quella col suo nome, poi la prima
+  const dellaGara = (g, aid, stretto = false) => {                      // la foto di quella gara: prima quella col suo nome, poi (solo se ha vinto) la principale: in una gara persa e' quasi sempre il vincitore
     const cogn = aid.split('_')[0];
     for (const k of [...new Set([g, g.replace(/^\d+_/, ''), calIdOf(g)].filter(Boolean))]) {
       const l = up.get(k) || [];
-      const f = l.find(x => ha(x.atleta_ids, aid)) || l.find(x => String(x.caption || '').toUpperCase().includes(cogn)) || l[0];
+      const f = l.find(x => ha(x.atleta_ids, aid)) || l.find(x => String(x.caption || '').toUpperCase().includes(cogn)) || (stretto ? null : l[0]);
       if (f) return { url: upUrl(f), credito: f.photographer || f.display_name || '' };
       for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
         const e = (src || {})[k]; if (!e) continue;
         const tags = e.tags || {};
-        const u = Object.keys(tags).find(t => ha(tags[t], aid)) || (Array.isArray(e.photos) && e.photos[0]) || e.url || e.filename;
+        const u = Object.keys(tags).find(t => ha(tags[t], aid)) || (stretto ? null : ((Array.isArray(e.photos) && e.photos[0]) || e.url || e.filename));
         if (u) return { url: u, credito: nome };
       }
     }
@@ -13468,7 +13468,7 @@ async function _fotoClassifica(ids, uno = false) {
     let it = null;
     for (const r of l.filter(x => x.pos === 1).slice(0, 12)) { const f = dellaGara(r.g, aid); if (f) { it = mk('vittoria', f, r.g); break; } }
     if (!it) { const t = taggata(aid); if (t) it = mk('taggata', t, t.g); }
-    if (!it) for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { const f = dellaGara(r.g, aid); if (f) { it = mk('gara', f, r.g); break; } }
+    if (!it) for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { const f = dellaGara(r.g, aid, true); if (f) { it = mk('gara', f, r.g); break; } }
     if (!it) { const pf = await getEntityPhoto('atleta', aid).catch(() => null); if (pf) it = mk('profilo', { url: pf }, ''); }
     if (it) items.push(it);
   }
