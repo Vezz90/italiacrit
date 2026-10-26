@@ -32631,10 +32631,10 @@ function _clCardCanvas(i, photo, logo) {
     if (x.posizione <= 3) { ctx.fillStyle = _CL_MED[x.posizione - 1]; ctx.fill(); ctx.fillStyle = '#1a1200'; } else { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 3; ctx.stroke(); ctx.fillStyle = '#fff'; }
     ctx.font = `800 ${x.posizione >= 10 ? 20 : 24}px ${F}`; ctx.textAlign = 'center'; ctx.fillText(x.posizione <= 3 ? String(x.posizione) : x.posizione + '°', cxm, cym + 8); ctx.textAlign = 'left';
     const titolo = x.campionato_italiano ? 'Campionato italiano' : x.campionato_regionale ? 'Campionato regionale' : '';
-    const nome = _clTitleCase(String(x.nome_gara || '').replace(/^\d+\s*[°^ª]?\s*/, ''));
-    ctx.fillStyle = '#fff'; ctx.font = `700 28px ${F}`; ctx.fillText(_clShrink(ctx, nome, 700, 28, 800, 0.7), 112, y0 + 29);
+    const nome = _clTitleCase(String(x.nome_gara || '').replace(/^\d+\s*[°^ª]?\s*/, '').replace(/\s*[-_]?\s*PROVA VALIDA.*$/i, '').replace(/\s+CAMPIONATO (REGIONALE|PROVINCIALE)\s*\d*$/i, ''));
+    ctx.fillStyle = '#fff'; ctx.font = `700 28px ${F}`; ctx.fillText(_clShrink(ctx, nome, 700, 28, 820, 0.7), 150, y0 + 29);
     const sub = [_clDataIt(x.data), x.regione ? _clTitleCase(x.regione) : '', titolo, `${+(x.punti_effettivi || 0).toFixed(2)} pt`].filter(Boolean).join(' · ');
-    ctx.fillStyle = 'rgba(255,255,255,.62)'; ctx.font = `500 21px ${F}`; ctx.fillText(_clFit(ctx, sub, 830), 112, y0 + 54);
+    ctx.fillStyle = 'rgba(255,255,255,.62)'; ctx.font = `500 21px ${F}`; ctx.fillText(_clFit(ctx, sub, 830), 150, y0 + 54);
   });
   if (!items.length) { ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `500 26px ${F}`; ctx.fillText('Nessun risultato registrato in questo periodo.', 60, 1040); }
   ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = `600 20px ${F}`; ctx.fillText('italiacyclingstats.com', 60, 1330);
