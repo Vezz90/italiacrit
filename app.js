@@ -32518,12 +32518,12 @@ window.publishShareToInstagram = async function(){
   const accounts=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.value);
   if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
   let caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
-  if (_shareType==='class' && kind==='feed' && _clSlides.length) { const cr=[...new Set(_clSlides.map(s=>(_clCands[s.idx]||{}).credito).filter(Boolean))]; if (cr.length) caption += `\n\n📷 Foto: ${cr.join(', ')}`; }
+  if (_shareType==='class' && kind==='feed' && _clN > 0) { const cr=[...new Set(Object.values(_clCands).slice(0,_clN).map(c=>c.credito).filter(Boolean))]; if (cr.length) caption += `\n\n📷 Foto: ${cr.join(', ')}`; }
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
   const name=isClass ? `Classifica ${_sharePayload?.kindLabel ? _sharePayload.kindLabel + ' ' : ''}${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
   const who=btn.textContent.replace(/^.* su /,'');
   if(!confirm(isClass
-    ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\n${_clSlides.length ? `Carosello di ${1+_clSlides.length} immagini: la grafica della classifica (primi 10) + ${_clSlides.length} foto.` : 'Un\'immagine con la grafica della classifica (primi 10) e il testo qui sotto.'}`)
+    ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\n${_clN > 0 ? `Carosello di ${_clN>=10?10:1+_clN} immagini: ${_clN>=10?'le schede dei primi 10':'la grafica della classifica + le schede dei primi '+_clN}.` : 'Un\'immagine con la grafica della classifica (primi 10) e il testo qui sotto.'}`)
     : kind==='story'
     ? `Pubblicare ora le storie su ${who}?\n\n${name}\n2 storie di fila: Vincitore + Risultati (stessa foto e inquadratura del post).`
     : `Pubblicare ora il post su ${who}?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
@@ -32534,10 +32534,10 @@ window.publishShareToInstagram = async function(){
     // L'inquadratura della foto e' quella regolata nella modale (vale per tutti i formati): niente da rifare per la storia.
     if (isClass) {
       // classifica: una sola immagine, con lo stile scelto nella finestra (Maglia gialla / Podio)
-      const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
-      images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9));
-      // feed: dopo la grafica, le foto scelte (e riposizionate) dall'admin
-      if (kind==='feed') _clSlides.forEach(sl => { const c=_clCands[sl.idx]; if (c) { images.push(_clSlideJpeg(sl,c)); } });
+      const nSchede = (kind==='feed' && (_sharePayload?.view||'atleti')==='atleti') ? Math.min(_clN, (_sharePayload.rows||[]).length) : 0;
+      // con 10 schede non c'e posto per la grafica (Instagram: massimo 10 immagini)
+      if (!(nSchede >= 10)) { const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey); images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9)); }
+      for (let i=0;i<nSchede;i++) images.push(await _clCardJpeg(i));
     } else {
     const prev=_shareGaraStyle;
     try{
@@ -32557,77 +32557,126 @@ window.publishShareToInstagram = async function(){
 };
 
 
-// ── Classifica: foto per il carosello Instagram ───────────────────────────
-// I primi tre (o, se mancano foto, fino a tre del primo) con la loro foto: l'admin sceglie quali mettere nel carosello,
-// dopo la grafica, e le riposiziona (trascina + zoom). Per Facebook la foto dell'ultima vittoria del primo e' gia' nell'immagine del server.
-let _clCands = [], _clSlides = [];
-function _clDrawCover(ctx, img, W, H, adj) {
-  const sc = Math.max(W / img.width, H / img.height) * ((adj && adj.scale) || 1);
-  const dw = img.width * sc, dh = img.height * sc;
-  let x = (W - dw) / 2 + ((adj && adj.ox) || 0) * W, y = (H - dh) / 2 + ((adj && adj.oy) || 0) * H;
-  x = Math.min(0, Math.max(W - dw, x)); y = Math.min(0, Math.max(H - dh, y));
-  ctx.drawImage(img, x, y, dw, dh);
-}
-function _clNomeDi(aid) {
-  const r = (_sharePayload?.rows || []).find(x => x.atleta_id === aid);
-  return r ? _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim()) : '';
-}
-function _clSlideJpeg(sl, c) {
-  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-  const ctx = cv.getContext('2d');
-  _clDrawCover(ctx, sl.img, W, H, sl.adj);
-  const g = ctx.createLinearGradient(0, H - 260, 0, H); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.72)');
-  ctx.fillStyle = g; ctx.fillRect(0, H - 260, W, 260);
-  ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic';
-  const nome = _clNomeDi(c.atleta_id);
-  if (nome) { ctx.font = '800 54px "Inter Tight", Arial, sans-serif'; ctx.fillText(nome, 54, H - 96); }
-  ctx.font = '600 28px "Inter Tight", Arial, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.8)';
-  const sub = [String(_sharePayload?.catLabel || ''), c.tipo === 'vittoria' && c.data ? 'ultima vittoria ' + c.data.split('-').reverse().join('/') : ''].filter(Boolean).join(' · ');
-  ctx.fillText(sub, 54, H - 54);
-  if (c.credito) { ctx.textAlign = 'right'; ctx.font = '600 24px "Inter Tight", Arial, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillText('📷 ' + c.credito, W - 54, H - 54); ctx.textAlign = 'left'; }
-  return cv.toDataURL('image/jpeg', 0.9);
-}
-function _clRenderPhotos() {
-  const box = document.getElementById('share-cl-photos'); if (!box) return;
-  const show = _sharePlatKey === 'instagram' && authUser()?.role === 'admin' && _shareType === 'class' && (_sharePayload?.view || 'atleti') === 'atleti';
-  box.style.display = show ? 'block' : 'none';
-  if (!show) return;
-  if (!_clCands.length) { box.innerHTML = '<div style="font-size:.75rem;color:var(--text-muted)">📷 Carosello: non ci sono foto dei primi classificati, il post avrà solo la grafica.</div>'; return; }
-  const sel = new Set(_clSlides.map(s => s.idx));
-  box.innerHTML = `<div style="font-size:.78rem;font-weight:700;margin-bottom:6px">📷 Carosello Instagram — scegli le foto da aggiungere dopo la grafica (max 3)</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${_clCands.map((c, i) => `<label style="width:108px;cursor:pointer;display:flex;flex-direction:column;gap:3px;border:2px solid ${sel.has(i) ? '#e8001d' : 'var(--border-subtle)'};border-radius:8px;padding:4px;background:var(--bg-card)">
-      <img src="${esc(icProxy(c.url))}" alt="" loading="lazy" style="width:100%;height:84px;object-fit:cover;border-radius:5px" onerror="this.style.opacity=.25">
-      <span style="font-size:.66rem;line-height:1.2"><input type="checkbox" ${sel.has(i) ? 'checked' : ''} onchange="window._clToggle(${i})"> <b>${esc(_clNomeDi(c.atleta_id) || '')}</b><br><span style="color:var(--text-muted)">${c.tipo === 'vittoria' ? 'ultima vittoria' + (c.data ? ' · ' + esc(c.data.split('-').reverse().join('/')) : '') : c.tipo === 'taggata' ? 'foto taggata' : 'foto profilo'}</span></span></label>`).join('')}</div>
-    <div id="share-cl-slides" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">${_clSlides.map((s, k) => `<div style="width:200px"><div style="font-size:.68rem;color:var(--text-muted);margin-bottom:3px">Foto ${k + 1} · trascina per spostare</div>
-      <canvas id="cl-sl-${k}" width="200" height="250" style="width:200px;height:250px;border-radius:8px;cursor:grab;touch-action:none;background:#111"></canvas>
-      <input type="range" min="100" max="300" value="${Math.round((s.adj.scale || 1) * 100)}" style="width:100%" oninput="window._clZoom(${k},this.value)"></div>`).join('')}</div>`;
-  _clSlides.forEach((s, k) => {
-    const cv = document.getElementById('cl-sl-' + k); if (!cv) return;
-    const draw = () => { const cx = cv.getContext('2d'); cx.clearRect(0, 0, 200, 250); _clDrawCover(cx, s.img, 200, 250, s.adj); };
-    draw(); s.draw = draw;
-    let st = null;
-    cv.onpointerdown = e => { e.preventDefault(); st = { x: e.clientX, y: e.clientY, ox: s.adj.ox || 0, oy: s.adj.oy || 0 }; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; };
-    cv.onpointermove = e => { if (!st) return; s.adj.ox = st.ox + (e.clientX - st.x) / 200; s.adj.oy = st.oy + (e.clientY - st.y) / 250; draw(); };
-    cv.onpointerup = cv.onpointercancel = () => { st = null; cv.style.cursor = 'grab'; };
+// ── Classifica: schede atleta per il carosello Instagram ──────────────────────
+// Una scheda per ciascuno dei primi (fino a 10): posizione, foto, nome, squadra, punti e "il meglio" di quel corridore
+// nel periodo e nel territorio scelti (mese/stagione, regione/Italia). Dopo la grafica della classifica, nel carosello.
+let _clCands = {}, _clN = 9, _clPrevIdx = 0;
+function _clFiltri() { const [cat, reg, mese] = String(_sharePayload?._id || '').split('__'); return { cat, reg: (reg || '').replace(/_/g, ' '), mese: mese || '' }; }
+function _clRisultati(aid) {
+  const f = _clFiltri(), calMap = {};
+  (globalData?.calendar || []).forEach(g => { calMap[g.id] = g; });
+  return (globalData?.resultsRaw || []).filter(r => {
+    if (r.atleta_id !== aid || getRankingFileCode(r) !== f.cat) return false;
+    if (f.reg) { const cal = calMap[r.gara_id]; if (normalizeRegion(r.regione || (cal ? cal.regione : '')) !== normalizeRegion(f.reg)) return false; }
+    if (f.mese && r.data && r.data.split('-')[1] !== f.mese) return false;
+    return true;
   });
 }
-window._clToggle = async function (i) {
-  const pos = _clSlides.findIndex(s => s.idx === i);
-  if (pos >= 0) { _clSlides.splice(pos, 1); _clRenderPhotos(); return; }
-  if (_clSlides.length >= 3) { showToast('Al massimo 3 foto nel carosello', 'error'); _clRenderPhotos(); return; }
-  const c = _clCands[i]; if (!c) return;
-  const img = await _fetchImgBlob(icProxy(c.url));
-  if (!img) { showToast('Foto non caricabile', 'error'); _clRenderPhotos(); return; }
-  _clSlides.push({ idx: i, img, adj: { scale: 1, ox: 0, oy: 0 } });
-  _clRenderPhotos();
-};
-window._clZoom = function (k, v) { const s = _clSlides[k]; if (!s) return; s.adj.scale = Math.max(1, +v / 100); if (s.draw) s.draw(); };
-async function _clLoadPhotos() {
-  _clCands = []; _clSlides = [];
+function _clMeglio(list) {
+  const peso = r => (r.campionato_italiano ? 1000 : 0) + (r.campionato_regionale ? 600 : 0) + (r.posizione === 1 ? 300 : r.posizione <= 3 ? 150 - r.posizione * 10 : 20 - Math.min(r.posizione, 10)) + (r.punti_effettivi || 0);
+  return [...list].sort((a, b) => peso(b) - peso(a) || (b.data || '').localeCompare(a.data || '')).slice(0, 4);
+}
+function _clDataIt(iso) { const p = String(iso || '').split('-'); return p.length > 2 ? `${p[2]}/${p[1]}` : ''; }
+function _clCardCanvas(i, photo, logo) {
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d'), F = `'Inter Tight',Arial,sans-serif`;
+  const r = _sharePayload.rows[i], pos = i + 1, p = _clPerson(r), f = _clFiltri();
+  const mine = _clRisultati(r.atleta_id);
+  const vitt = mine.filter(x => x.posizione === 1).length, podi = mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length;
+  // sfondo
+  ctx.fillStyle = '#0b0e14'; ctx.fillRect(0, 0, W, H);
+  const gl = ctx.createRadialGradient(240, 120, 40, 240, 120, 1000); gl.addColorStop(0, 'rgba(232,0,29,.50)'); gl.addColorStop(1, 'rgba(232,0,29,0)');
+  ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
+  // intestazione
+  const per = f.mese ? `${_sharePayload.month || ''}` : String(Number(_loadedSeasonYear()));
+  const lbl = [_sharePayload.catLabel, f.reg ? f.reg : 'Italia', per].filter(Boolean).join(' · ').toUpperCase();
+  ctx.fillStyle = 'rgba(255,255,255,.72)'; ctx.font = `700 24px ${F}`; ctx.textBaseline = 'alphabetic'; ctx.fillText(_clFit(ctx, lbl, 700), 60, 80);
+  if (logo) { const lh = 52, lw = logo.width * lh / logo.height; ctx.drawImage(logo, W - 60 - lw, 36, lw, lh); }
+  // numero
+  const ng = ctx.createLinearGradient(0, 150, 0, 470); ng.addColorStop(0, '#ffffff'); ng.addColorStop(1, '#ff7a8f');
+  ctx.fillStyle = ng; ctx.font = `italic 900 ${pos >= 10 ? 300 : 340}px ${F}`; ctx.fillText(String(pos).padStart(2, '0'), 50, 450);
+  // foto
+  const px = 500, py = 130, pw = 520, ph = 520;
+  if (photo && photo.img) {
+    _clTeamMode = false; _clPhoto(ctx, photo.img, px, py, pw, ph, 30, 1);
+    if (photo.credito) { ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `600 20px ${F}`; ctx.textAlign = 'right'; ctx.fillText('📷 ' + photo.credito, px + pw, py + ph + 30); ctx.textAlign = 'left'; }
+  } else {
+    const pg = ctx.createLinearGradient(px, py, px + pw, py + ph); pg.addColorStop(0, '#2a1017'); pg.addColorStop(1, '#161b25');
+    ctx.fillStyle = pg; _rr(ctx, px, py, pw, ph, 30); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.font = `800 220px ${F}`; ctx.textAlign = 'center';
+    ctx.fillText(((p.n[0] || '') + (p.c[0] || '')).toUpperCase(), px + pw / 2, py + ph / 2 + 80); ctx.textAlign = 'left';
+  }
+  ctx.strokeStyle = '#ff4d6a'; ctx.lineWidth = 5; _rr(ctx, px, py, pw, ph, 30); ctx.stroke();
+  // punti sotto il numero
+  ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `700 22px ${F}`; ctx.fillText(_sharePayload.metric === 'vittorie' ? 'VITTORIE' : 'PUNTI', 60, 520);
+  ctx.fillStyle = _CL_GOLD; ctx.font = `800 76px ${F}`; ctx.fillText(String(+(+r.punti || 0).toFixed(2)), 60, 596);
+  // nome
+  ctx.fillStyle = '#ffd0d8'; ctx.font = `italic 500 54px ${F}`; ctx.fillText(_clFit(ctx, _clTitleCase(p.n), 960), 60, 716);
+  ctx.fillStyle = '#fff'; const sn = _clShrink(ctx, p.c.toUpperCase(), 900, 112, 960, 0.5); ctx.fillText(sn, 60, 820);
+  // squadra e numeri
+  let cx = 60;
+  const chip = (txt, fill, color, maxW) => { ctx.font = `700 26px ${F}`; const t = _clFit(ctx, txt, maxW), w = Math.min(maxW, ctx.measureText(t).width) + 40; ctx.fillStyle = fill; _rr(ctx, cx, 852, w, 50, 25); ctx.fill(); ctx.fillStyle = color; ctx.fillText(t, cx + 20, 886); cx += w + 14; };
+  if (r.team) chip(String(r.team).toUpperCase(), 'rgba(255,255,255,.1)', '#fff', 520);
+  chip(`${vitt} ${vitt === 1 ? 'VITTORIA' : 'VITTORIE'}`, '#e8001d', '#fff', 300);
+  chip(`${podi} ${podi === 1 ? 'PODIO' : 'PODI'}`, 'rgba(245,196,0,.9)', '#1a1200', 260);
+  // il meglio
+  ctx.fillStyle = '#ff4d6a'; ctx.font = `italic 600 42px ${F}`;
+  ctx.fillText(`Il meglio ${f.mese ? 'di ' + String(_sharePayload.month || '').toLowerCase() : 'del ' + per}${f.reg ? ' · ' + _clTitleCase(f.reg) : ' in Italia'}`, 60, 975);
+  const items = _clMeglio(mine);
+  items.forEach((x, k) => {
+    const y0 = 1000 + k * 76, h = 66;
+    ctx.fillStyle = 'rgba(255,255,255,.07)'; _rr(ctx, 60, y0, 960, h, 14); ctx.fill();
+    const cxm = 60 + 40, cym = y0 + h / 2;
+    ctx.beginPath(); ctx.arc(cxm, cym, 24, 0, Math.PI * 2);
+    if (x.posizione <= 3) { ctx.fillStyle = _CL_MED[x.posizione - 1]; ctx.fill(); ctx.fillStyle = '#1a1200'; } else { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 3; ctx.stroke(); ctx.fillStyle = '#fff'; }
+    ctx.font = `800 ${x.posizione >= 10 ? 20 : 24}px ${F}`; ctx.textAlign = 'center'; ctx.fillText(x.posizione <= 3 ? String(x.posizione) : x.posizione + '°', cxm, cym + 8); ctx.textAlign = 'left';
+    const titolo = x.campionato_italiano ? 'Campionato italiano' : x.campionato_regionale ? 'Campionato regionale' : '';
+    const nome = _clTitleCase(String(x.nome_gara || '').replace(/^\d+\s*[°^ª]?\s*/, ''));
+    ctx.fillStyle = '#fff'; ctx.font = `700 28px ${F}`; ctx.fillText(_clShrink(ctx, nome, 700, 28, 800, 0.7), 112, y0 + 29);
+    const sub = [_clDataIt(x.data), x.regione ? _clTitleCase(x.regione) : '', titolo, `${+(x.punti_effettivi || 0).toFixed(2)} pt`].filter(Boolean).join(' · ');
+    ctx.fillStyle = 'rgba(255,255,255,.62)'; ctx.font = `500 21px ${F}`; ctx.fillText(_clFit(ctx, sub, 830), 112, y0 + 54);
+  });
+  if (!items.length) { ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `500 26px ${F}`; ctx.fillText('Nessun risultato registrato in questo periodo.', 60, 1040); }
+  ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = `600 20px ${F}`; ctx.fillText('italiacyclingstats.com', 60, 1330);
+  return cv;
+}
+async function _clPhotoOf(aid) {
+  const c = _clCands[aid]; if (!c) return null;
+  if (!c.img) c.img = await _fetchImgBlob(icProxy(c.url));
+  return c.img ? { img: c.img, credito: c.credito } : null;
+}
+async function _clCardJpeg(i) { const [logo, ph] = await Promise.all([_getLogo(), _clPhotoOf(_sharePayload.rows[i].atleta_id)]); return _clCardCanvas(i, ph, logo).toDataURL('image/jpeg', 0.9); }
+async function _clPaintPrev() {
+  const im = document.getElementById('cl-card-prev'); if (!im) return;
+  im.style.opacity = .4;
+  try { const [logo, ph] = await Promise.all([_getLogo(), _clPhotoOf(_sharePayload.rows[_clPrevIdx].atleta_id)]); im.src = _clCardCanvas(_clPrevIdx, ph, logo).toDataURL('image/jpeg', 0.85); } catch (e) { console.warn(e); }
+  im.style.opacity = 1;
+}
+window._clSetN = v => { _clN = +v; };
+window._clSetPrev = v => { _clPrevIdx = +v; _clPaintPrev(); };
+function _clRenderPhotos() {
   const box = document.getElementById('share-cl-photos'); if (!box) return;
-  const ids = (_sharePayload?.rows || []).slice(0, 3).map(r => r.atleta_id).filter(Boolean);
+  const show = _sharePlatKey === 'instagram' && authUser()?.role === 'admin' && _shareType === 'class' && (_sharePayload?.view || 'atleti') === 'atleti' && (_sharePayload?.rows || []).length;
+  box.style.display = show ? 'block' : 'none';
+  if (!show) return;
+  const rows = _sharePayload.rows, nMax = rows.length;
+  _clN = Math.min(_clN, nMax >= 10 ? 10 : nMax);
+  const opt = (v, l) => `<option value="${v}" ${_clN === v ? 'selected' : ''}>${l}</option>`;
+  box.innerHTML = `<div style="font-size:.78rem;font-weight:700;margin-bottom:6px">🎴 Schede atleta nel carosello Instagram</div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:8px">Una scheda per ogni corridore: foto, squadra, punti e "il meglio" nel periodo e nel territorio di questa classifica. Vanno dopo la grafica (Instagram accetta 10 immagini in tutto).</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+      <label style="font-size:.74rem">Quante schede <select onchange="window._clSetN(this.value)" style="margin-left:4px">${opt(0, 'nessuna (solo la grafica)')}${opt(3, 'primi 3')}${opt(5, 'primi 5')}${opt(Math.min(9, nMax), 'primi ' + Math.min(9, nMax) + ' + grafica')}${nMax >= 10 ? opt(10, 'primi 10 (senza la grafica)') : ''}</select></label>
+      <label style="font-size:.74rem">Anteprima <select onchange="window._clSetPrev(this.value)" style="margin-left:4px">${rows.map((r, i) => `<option value="${i}" ${i === _clPrevIdx ? 'selected' : ''}>${i + 1}. ${esc(_clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim()))}</option>`).join('')}</select></label>
+    </div>
+    <img id="cl-card-prev" alt="Anteprima scheda" style="width:240px;border-radius:10px;border:1px solid var(--border-subtle);display:block">`;
+  _clPaintPrev();
+}
+async function _clLoadPhotos() {
+  _clCands = {};
+  const box = document.getElementById('share-cl-photos'); if (!box) return;
+  const ids = (_sharePayload?.rows || []).slice(0, 10).map(r => r.atleta_id).filter(Boolean);
   if (!ids.length || (_sharePayload?.view || 'atleti') !== 'atleti') { box.style.display = 'none'; return; }
-  try { _clCands = (await apiCall('/admin/social/class-photos?ids=' + encodeURIComponent(ids.join(',')))).items || []; } catch (_) { _clCands = []; }
+  try { ((await apiCall('/admin/social/class-photos?uno=1&ids=' + encodeURIComponent(ids.join(',')))).items || []).forEach(it => { if (!_clCands[it.atleta_id]) _clCands[it.atleta_id] = it; }); } catch (_) { /* senza foto */ }
   _clRenderPhotos();
 }
 

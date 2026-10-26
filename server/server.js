@@ -13424,8 +13424,8 @@ async function _vittoriePerAtleta(ids) {
   righe.forEach(r => { (vittorie[r.id] = vittorie[r.id] || []).push(r.g); meta[r.g] = { data: r.d, nome: r.n }; });
   return { vittorie, meta };
 }
-async function _fotoClassifica(ids) {
-  ids = ids.filter(Boolean).slice(0, 3);
+async function _fotoClassifica(ids, uno = false) {
+  ids = ids.filter(Boolean).slice(0, uno ? 10 : 3);
   if (!ids.length) return [];
   const { vittorie, meta } = await _vittoriePerAtleta(ids);
   const ok = f => ['garavinta', 'tag', 'profilo'].includes(f.fonte);
@@ -13438,7 +13438,7 @@ async function _fotoClassifica(ids) {
     const best = c.find(f => f.fonte === 'garavinta') || c.find(f => f.fonte === 'tag') || c.find(f => f.fonte === 'profilo');
     if (best && !visti.has(best.url)) { visti.add(best.url); items.push(mk(best)); }
   }
-  if (items.length < 3) {                                          // poche foto: si completa con altre del primo (max 3 in tutto)
+  if (!uno && items.length < 3) {                                  // poche foto: si completa con altre del primo (max 3 in tutto)
     const altre = await _redazioneFoto({ atletaIds: [ids[0]], vittorie, perAtleta: 3 });
     for (const f of altre.filter(x => x.atleta_id === ids[0] && ok(x))) { if (items.length >= 3) break; if (!visti.has(f.url)) { visti.add(f.url); items.push(mk(f)); } }
   }
@@ -13447,7 +13447,7 @@ async function _fotoClassifica(ids) {
 app.get('/api/admin/social/class-photos', requireAdmin, async (req, res) => {
   try {
     const ids = String(req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean);
-    res.json({ items: await _fotoClassifica(ids) });
+    res.json({ items: await _fotoClassifica(ids, req.query.uno === '1') });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
