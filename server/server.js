@@ -13413,36 +13413,66 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {}, per
   return out;
 }
 
-// Foto per i post di classifica: per ogni atleta indicato la foto dell'ultima vittoria (se c'e), altrimenti una taggata, altrimenti quella del profilo
-async function _vittoriePerAtleta(ids) {
-  const set = new Set(ids), righe = [];
-  const raw = (await readDataJsonFromGH('results_raw.json').catch(() => null)) || [];
-  raw.forEach(r => { if (Number(r.posizione) === 1 && set.has(r.atleta_id)) righe.push({ id: r.atleta_id, g: r.gara_id, d: String(r.data || '').slice(0, 10), n: r.nome_gara }); });
-  try { ((await queries.getAllManualResults()) || []).forEach(r => { if (Number(r.posizione) === 1 && set.has(r.atleta_id)) righe.push({ id: r.atleta_id, g: r.gara_id, d: String(r.data || '').slice(0, 10), n: r.nome_gara }); }); } catch (_) { /* solo scraper */ }
-  righe.sort((a, b) => b.d.localeCompare(a.d));
-  const vittorie = {}, meta = {};
-  righe.forEach(r => { (vittorie[r.id] = vittorie[r.id] || []).push(r.g); meta[r.g] = { data: r.d, nome: r.n }; });
-  return { vittorie, meta };
-}
+// Foto per i post di classifica: per ciascun atleta (fino a 10) la migliore foto disponibile, in quest'ordine:
+// 1) la foto della sua ultima vittoria, 2) una in cui e' taggato, 3) una di una gara dove e' arrivato sul podio o nei primi 10, 4) la foto profilo.
 async function _fotoClassifica(ids, uno = false) {
   ids = ids.filter(Boolean).slice(0, uno ? 10 : 3);
   if (!ids.length) return [];
-  const { vittorie, meta } = await _vittoriePerAtleta(ids);
-  const ok = f => ['garavinta', 'tag', 'profilo'].includes(f.fonte);
-  const tipoDi = f => f.fonte === 'garavinta' ? 'vittoria' : f.fonte === 'tag' ? 'taggata' : 'profilo';
-  const mk = f => ({ atleta_id: f.atleta_id, tipo: tipoDi(f), url: f.url, credito: f.credito || '', gara_id: f.gara_id || '', gara: String((meta[f.gara_id] || {}).nome || '').slice(0, 80), data: (meta[f.gara_id] || {}).data || '' });
-  const items = [], visti = new Set();
-  const base = await _redazioneFoto({ atletaIds: ids, vittorie, perAtleta: 1 });
-  for (const id of ids) {                                          // una foto per ciascuno dei primi tre
-    const c = base.filter(f => f.atleta_id === id && ok(f));
-    const best = c.find(f => f.fonte === 'garavinta') || c.find(f => f.fonte === 'tag') || c.find(f => f.fonte === 'profilo');
-    if (best && !visti.has(best.url)) { visti.add(best.url); items.push(mk(best)); }
+  const set = new Set(ids);
+  const [raw, calendar, xpix, ic] = await Promise.all([
+    readDataJsonFromGH('results_raw.json').catch(() => []), readDataJsonFromGH('calendar.json').catch(() => []),
+    readXpixPhotos().catch(() => ({})), readICPhotos().catch(() => ({})),
+  ]);
+  // piazzamenti nei primi 10 (scraper + inseriti a mano), dal piu recente
+  const res = {};
+  const addR = r => { if (!set.has(r.atleta_id)) return; const pos = Number(r.posizione); if (!(pos >= 1 && pos <= 10)) return; (res[r.atleta_id] = res[r.atleta_id] || []).push({ g: r.gara_id, d: String(r.data || '').slice(0, 10), n: r.nome_gara, pos }); };
+  (raw || []).forEach(addR);
+  try { ((await queries.getAllManualResults()) || []).forEach(addR); } catch (_) { /* solo scraper */ }
+  Object.values(res).forEach(l => l.sort((x, y) => y.d.localeCompare(x.d)));
+  // foto caricate e approvate: una sola lettura
+  const up = new Map();
+  try {
+    for (let from = 0; ; from += 1000) {
+      const { data } = await supabase.from('race_photos').select('gara_id, filename, caption, photographer, display_name, atleta_ids').eq('status', 'approved').order('id').range(from, from + 999);
+      (data || []).forEach(f => { if (f.filename) (up.get(f.gara_id) || up.set(f.gara_id, []).get(f.gara_id)).push(f); });
+      if (!data || data.length < 1000) break;
+    }
+  } catch (_) { /* solo album esterni */ }
+  const ha = (csv, a) => String(csv || '').split(',').map(x => x.trim()).includes(a);
+  const upUrl = f => `${SUPABASE_PUB}/photos/${encodeURIComponent(f.filename)}`;
+  const calIdOf = g => { try { const c = _findCalEntryForNativeGaraId(calendar, g); return c && c.id; } catch (_) { return null; } };
+  const dellaGara = (g, aid) => {                                       // la foto di quella gara: prima quella col suo nome, poi la prima
+    const cogn = aid.split('_')[0];
+    for (const k of [...new Set([g, g.replace(/^\d+_/, ''), calIdOf(g)].filter(Boolean))]) {
+      const l = up.get(k) || [];
+      const f = l.find(x => ha(x.atleta_ids, aid)) || l.find(x => String(x.caption || '').toUpperCase().includes(cogn)) || l[0];
+      if (f) return { url: upUrl(f), credito: f.photographer || f.display_name || '' };
+      for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
+        const e = (src || {})[k]; if (!e) continue;
+        const tags = e.tags || {};
+        const u = Object.keys(tags).find(t => ha(tags[t], aid)) || (Array.isArray(e.photos) && e.photos[0]) || e.url || e.filename;
+        if (u) return { url: u, credito: nome };
+      }
+    }
+    return null;
+  };
+  const taggata = aid => {
+    for (const [gid, l] of up) { const f = l.find(x => ha(x.atleta_ids, aid)); if (f) return { url: upUrl(f), credito: f.photographer || f.display_name || '', g: gid }; }
+    for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) for (const [gid, e] of Object.entries(src || {})) { const u = Object.keys((e && e.tags) || {}).find(t => ha(e.tags[t], aid)); if (u) return { url: u, credito: nome, g: gid }; }
+    return null;
+  };
+  const items = [];
+  for (const aid of ids) {
+    const l = res[aid] || [];
+    const mk = (tipo, f, g) => ({ atleta_id: aid, tipo, url: f.url, credito: f.credito || '', gara_id: g || '', gara: String((l.find(x => x.g === g) || {}).n || '').slice(0, 80), data: (l.find(x => x.g === g) || {}).d || '' });
+    let it = null;
+    for (const r of l.filter(x => x.pos === 1).slice(0, 12)) { const f = dellaGara(r.g, aid); if (f) { it = mk('vittoria', f, r.g); break; } }
+    if (!it) { const t = taggata(aid); if (t) it = mk('taggata', t, t.g); }
+    if (!it) for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { const f = dellaGara(r.g, aid); if (f) { it = mk('gara', f, r.g); break; } }
+    if (!it) { const pf = await getEntityPhoto('atleta', aid).catch(() => null); if (pf) it = mk('profilo', { url: pf }, ''); }
+    if (it) items.push(it);
   }
-  if (!uno && items.length < 3) {                                  // poche foto: si completa con altre del primo (max 3 in tutto)
-    const altre = await _redazioneFoto({ atletaIds: [ids[0]], vittorie, perAtleta: 3 });
-    for (const f of altre.filter(x => x.atleta_id === ids[0] && ok(x))) { if (items.length >= 3) break; if (!visti.has(f.url)) { visti.add(f.url); items.push(mk(f)); } }
-  }
-  return items.slice(0, 3);
+  return items;
 }
 app.get('/api/admin/social/class-photos', requireAdmin, async (req, res) => {
   try {

@@ -32579,65 +32579,63 @@ function _clMeglio(list) {
 function _clDataIt(iso) { const p = String(iso || '').split('-'); return p.length > 2 ? `${p[2]}/${p[1]}` : ''; }
 function _clCardCanvas(i, photo, logo) {
   const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-  const ctx = cv.getContext('2d'), F = `'Inter Tight',Arial,sans-serif`;
+  const ctx = cv.getContext('2d'), F = `'Inter Tight',Arial,sans-serif`, NAVY = '#0b1b3a', GOLD = '#f5c400';
   const r = _sharePayload.rows[i], pos = i + 1, p = _clPerson(r), f = _clFiltri();
   const mine = _clRisultati(r.atleta_id);
   const vitt = mine.filter(x => x.posizione === 1).length, podi = mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length;
+  const PH = 780, M = 56;
   // sfondo
-  ctx.fillStyle = '#0b0e14'; ctx.fillRect(0, 0, W, H);
-  const gl = ctx.createRadialGradient(240, 120, 40, 240, 120, 1000); gl.addColorStop(0, 'rgba(232,0,29,.50)'); gl.addColorStop(1, 'rgba(232,0,29,0)');
-  ctx.fillStyle = gl; ctx.fillRect(0, 0, W, H);
-  // intestazione
-  const per = f.mese ? `${_sharePayload.month || ''}` : String(Number(_loadedSeasonYear()));
-  const lbl = [_sharePayload.catLabel, f.reg ? f.reg : 'Italia', per].filter(Boolean).join(' · ').toUpperCase();
-  ctx.fillStyle = 'rgba(255,255,255,.72)'; ctx.font = `700 24px ${F}`; ctx.textBaseline = 'alphabetic'; ctx.fillText(_clFit(ctx, lbl, 700), 60, 80);
-  if (logo) { const lh = 52, lw = logo.width * lh / logo.height; ctx.drawImage(logo, W - 60 - lw, 36, lw, lh); }
-  // numero
-  const ng = ctx.createLinearGradient(0, 150, 0, 470); ng.addColorStop(0, '#ffffff'); ng.addColorStop(1, '#ff7a8f');
-  ctx.fillStyle = ng; ctx.font = `italic 900 ${pos >= 10 ? 300 : 340}px ${F}`; ctx.fillText(String(pos).padStart(2, '0'), 50, 450);
-  // foto
-  const px = 500, py = 130, pw = 520, ph = 520;
-  if (photo && photo.img) {
-    _clTeamMode = false; _clPhoto(ctx, photo.img, px, py, pw, ph, 30, 1);
-    if (photo.credito) { ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `600 20px ${F}`; ctx.textAlign = 'right'; ctx.fillText('📷 ' + photo.credito, px + pw, py + ph + 30); ctx.textAlign = 'left'; }
-  } else {
-    const pg = ctx.createLinearGradient(px, py, px + pw, py + ph); pg.addColorStop(0, '#2a1017'); pg.addColorStop(1, '#161b25');
-    ctx.fillStyle = pg; _rr(ctx, px, py, pw, ph, 30); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.font = `800 220px ${F}`; ctx.textAlign = 'center';
-    ctx.fillText(((p.n[0] || '') + (p.c[0] || '')).toUpperCase(), px + pw / 2, py + ph / 2 + 80); ctx.textAlign = 'left';
+  ctx.fillStyle = NAVY; ctx.fillRect(0, 0, W, H);
+  if (photo && photo.img) { _clTeamMode = false; _clPhoto(ctx, photo.img, 0, 0, W, PH, 0, 1); }
+  else {
+    const pg = ctx.createLinearGradient(0, 0, W, PH); pg.addColorStop(0, '#1c3f8f'); pg.addColorStop(1, '#0b1b3a'); ctx.fillStyle = pg; ctx.fillRect(0, 0, W, PH);
+    ctx.save(); ctx.globalAlpha = .08; ctx.fillStyle = '#fff'; for (let k = -2; k < 9; k++) { ctx.beginPath(); ctx.moveTo(k * 160, 0); ctx.lineTo(k * 160 + 70, 0); ctx.lineTo(k * 160 - 330, PH); ctx.lineTo(k * 160 - 400, PH); ctx.fill(); } ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.font = `900 340px ${F}`; ctx.textAlign = 'center'; ctx.fillText(((p.n[0] || '') + (p.c[0] || '')).toUpperCase(), W / 2, 470); ctx.textAlign = 'left';
   }
-  ctx.strokeStyle = '#ff4d6a'; ctx.lineWidth = 5; _rr(ctx, px, py, pw, ph, 30); ctx.stroke();
-  // punti sotto il numero
-  ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `700 22px ${F}`; ctx.fillText(_sharePayload.metric === 'vittorie' ? 'VITTORIE' : 'PUNTI', 60, 520);
-  ctx.fillStyle = _CL_GOLD; ctx.font = `800 76px ${F}`; ctx.fillText(String(+(+r.punti || 0).toFixed(2)), 60, 596);
+  const fadeB = ctx.createLinearGradient(0, 380, 0, PH); fadeB.addColorStop(0, 'rgba(11,27,58,0)'); fadeB.addColorStop(1, NAVY); ctx.fillStyle = fadeB; ctx.fillRect(0, 380, W, PH - 380);
+  const fadeT = ctx.createLinearGradient(0, 0, 0, 240); fadeT.addColorStop(0, 'rgba(0,0,0,.6)'); fadeT.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = fadeT; ctx.fillRect(0, 0, W, 240);
+  // intestazione
+  if (logo) { const lh = 50, lw = logo.width * lh / logo.height; ctx.drawImage(logo, M, 38, lw, lh); }
+  const per = f.mese ? String(_sharePayload.month || '') : String(Number(_loadedSeasonYear()));
+  const lbl = [_sharePayload.catLabel, f.reg ? f.reg : 'Italia', per].filter(Boolean).join(' · ').toUpperCase();
+  ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = `700 22px ${F}`; ctx.textAlign = 'right'; ctx.fillText(_clFit(ctx, lbl, 640), W - M, 72); ctx.textAlign = 'left';
+  // posizione: blocco giallo inclinato
+  ctx.fillStyle = GOLD; ctx.beginPath(); ctx.moveTo(M + 26, 128); ctx.lineTo(M + 236, 128); ctx.lineTo(M + 210, 268); ctx.lineTo(M, 268); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = NAVY; ctx.font = `900 ${pos >= 10 ? 104 : 124}px ${F}`; ctx.textAlign = 'center'; ctx.fillText(String(pos), M + 112, 236); ctx.font = `800 40px ${F}`; ctx.fillText('°', M + (pos >= 10 ? 212 : 184), 176); ctx.textAlign = 'left';
   // nome
-  ctx.fillStyle = '#ffd0d8'; ctx.font = `italic 500 54px ${F}`; ctx.fillText(_clFit(ctx, _clTitleCase(p.n), 960), 60, 716);
-  ctx.fillStyle = '#fff'; const sn = _clShrink(ctx, p.c.toUpperCase(), 900, 112, 960, 0.5); ctx.fillText(sn, 60, 820);
-  // squadra e numeri
-  let cx = 60;
-  const chip = (txt, fill, color, maxW) => { ctx.font = `700 26px ${F}`; const t = _clFit(ctx, txt, maxW), w = Math.min(maxW, ctx.measureText(t).width) + 40; ctx.fillStyle = fill; _rr(ctx, cx, 852, w, 50, 25); ctx.fill(); ctx.fillStyle = color; ctx.fillText(t, cx + 20, 886); cx += w + 14; };
-  if (r.team) chip(String(r.team).toUpperCase(), 'rgba(255,255,255,.1)', '#fff', 520);
-  chip(`${vitt} ${vitt === 1 ? 'VITTORIA' : 'VITTORIE'}`, '#e8001d', '#fff', 300);
-  chip(`${podi} ${podi === 1 ? 'PODIO' : 'PODI'}`, 'rgba(245,196,0,.9)', '#1a1200', 260);
-  // il meglio
-  ctx.fillStyle = '#ff4d6a'; ctx.font = `italic 600 42px ${F}`;
-  ctx.fillText(`Il meglio ${f.mese ? 'di ' + String(_sharePayload.month || '').toLowerCase() : 'del ' + per}${f.reg ? ' · ' + _clTitleCase(f.reg) : ' in Italia'}`, 60, 975);
-  const items = _clMeglio(mine);
+  ctx.fillStyle = GOLD; ctx.font = `700 36px ${F}`; ctx.fillText(_clFit(ctx, _clTitleCase(p.n).toUpperCase().split('').join('\u200A'), 968), M, 676);
+  ctx.fillStyle = '#fff'; ctx.fillText(_clShrink(ctx, p.c.toUpperCase(), 900, 128, 968, 0.42), M, 782);
+  // squadra
+  if (r.team) { ctx.fillStyle = GOLD; ctx.fillRect(M, 818, 12, 12); ctx.fillStyle = 'rgba(255,255,255,.88)'; ctx.font = `600 27px ${F}`; ctx.fillText(_clFit(ctx, String(r.team).toUpperCase(), 930), M + 28, 831); }
+  // numeri
+  const tw = (W - 2 * M - 40) / 3, ty = 866, th = 112;
+  [[String(+(+r.punti || 0).toFixed(2)), _sharePayload.metric === 'vittorie' ? 'VITTORIE' : 'PUNTI', GOLD], [String(vitt), vitt === 1 ? 'VITTORIA' : 'VITTORIE', '#fff'], [String(podi), podi === 1 ? 'PODIO' : 'PODI', '#fff']].forEach((t, k) => {
+    const x = M + k * (tw + 20);
+    ctx.fillStyle = 'rgba(255,255,255,.07)'; _rr(ctx, x, ty, tw, th, 18); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 2; _rr(ctx, x, ty, tw, th, 18); ctx.stroke();
+    ctx.fillStyle = t[2]; ctx.font = `900 62px ${F}`; ctx.fillText(t[0], x + 24, ty + 66);
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `700 19px ${F}`; ctx.fillText(t[1], x + 24, ty + 96);
+  });
+  // il meglio: linea del tempo
+  const tit = `IL MEGLIO ${f.mese ? 'DI ' + String(_sharePayload.month || '').toUpperCase() : 'DEL ' + per}${f.reg ? ' · ' + f.reg.toUpperCase() : ' · ITALIA'}`;
+  ctx.fillStyle = GOLD; ctx.font = `800 23px ${F}`; const tt = _clFit(ctx, tit, 700); ctx.fillText(tt, M, 1038);
+  ctx.fillStyle = 'rgba(255,255,255,.2)'; ctx.fillRect(M + ctx.measureText(tt).width + 18, 1031, W - M - (M + ctx.measureText(tt).width + 18), 2);
+  const items = _clMeglio(mine), y0 = 1070, step = 62;
+  if (items.length > 1) { ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(M + 12, y0 + 16, 3, (items.length - 1) * step); }
   items.forEach((x, k) => {
-    const y0 = 1000 + k * 76, h = 66;
-    ctx.fillStyle = 'rgba(255,255,255,.07)'; _rr(ctx, 60, y0, 960, h, 14); ctx.fill();
-    const cxm = 60 + 40, cym = y0 + h / 2;
-    ctx.beginPath(); ctx.arc(cxm, cym, 24, 0, Math.PI * 2);
-    if (x.posizione <= 3) { ctx.fillStyle = _CL_MED[x.posizione - 1]; ctx.fill(); ctx.fillStyle = '#1a1200'; } else { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 3; ctx.stroke(); ctx.fillStyle = '#fff'; }
-    ctx.font = `800 ${x.posizione >= 10 ? 20 : 24}px ${F}`; ctx.textAlign = 'center'; ctx.fillText(x.posizione <= 3 ? String(x.posizione) : x.posizione + '°', cxm, cym + 8); ctx.textAlign = 'left';
+    const y = y0 + k * step, col = x.posizione === 1 ? GOLD : x.posizione === 2 ? '#dadada' : x.posizione === 3 ? '#cd7f32' : '#8fa3c8';
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(M + 13, y + 18, 11, 0, Math.PI * 2); ctx.fill();
     const titolo = x.campionato_italiano ? 'Campionato italiano' : x.campionato_regionale ? 'Campionato regionale' : '';
     const nome = _clTitleCase(String(x.nome_gara || '').replace(/^\d+\s*[°^ª]?\s*/, '').replace(/\s*[-_]?\s*PROVA VALIDA.*$/i, '').replace(/\s+CAMPIONATO (REGIONALE|PROVINCIALE)\s*\d*$/i, ''));
-    ctx.fillStyle = '#fff'; ctx.font = `700 28px ${F}`; ctx.fillText(_clShrink(ctx, nome, 700, 28, 820, 0.7), 150, y0 + 29);
+    ctx.fillStyle = '#fff'; ctx.fillText(_clShrink(ctx, nome, 700, 27, 780, 0.7), M + 46, y + 26);
     const sub = [_clDataIt(x.data), x.regione ? _clTitleCase(x.regione) : '', titolo, `${+(x.punti_effettivi || 0).toFixed(2)} pt`].filter(Boolean).join(' · ');
-    ctx.fillStyle = 'rgba(255,255,255,.62)'; ctx.font = `500 21px ${F}`; ctx.fillText(_clFit(ctx, sub, 830), 150, y0 + 54);
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `500 20px ${F}`; ctx.fillText(_clFit(ctx, sub, 800), M + 46, y + 52);
+    ctx.fillStyle = col; ctx.font = `900 30px ${F}`; ctx.textAlign = 'right'; ctx.fillText(x.posizione + '°', W - M, y + 30); ctx.textAlign = 'left';
   });
-  if (!items.length) { ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `500 26px ${F}`; ctx.fillText('Nessun risultato registrato in questo periodo.', 60, 1040); }
-  ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = `600 20px ${F}`; ctx.fillText('italiacyclingstats.com', 60, 1330);
+  if (!items.length) { ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `500 26px ${F}`; ctx.fillText('Nessun risultato registrato in questo periodo.', M, 1100); }
+  // piede
+  ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(M, 1306, W - 2 * M, 1);
+  ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.font = `600 19px ${F}`; ctx.fillText('italiacyclingstats.com', M, 1336);
+  if (photo && photo.credito) { ctx.textAlign = 'right'; ctx.fillText('📷 ' + photo.credito, W - M, 1336); ctx.textAlign = 'left'; }
   return cv;
 }
 async function _clPhotoOf(aid) {
