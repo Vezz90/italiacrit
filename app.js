@@ -32396,6 +32396,7 @@ window.showShareModal = async function(type, payload) {
         <div class="share-generating" id="share-loading"><div class="share-spinner"></div> Generazione...</div>
         <img id="share-canvas-preview" draggable="false" style="display:none;${type==='gara'?'cursor:grab;touch-action:none;-webkit-user-drag:none;user-select:none':''}" alt="Anteprima"/>
       </div>
+      ${(type==='class' && authUser()?.role==='admin') ? '<div id="share-cl-photos" style="display:none;margin:10px 0"></div>' : ''}
       <div class="share-actions" id="share-actions-default">
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
@@ -32421,6 +32422,7 @@ window.showShareModal = async function(type, payload) {
   // identico testo utile per qualsiasi condivisione manuale.
   _showFbShareText();
   _updateIgShareBtn();
+  if (type === 'class') _clLoadPhotos();
   await _refreshPreview();
 };
 
@@ -32451,6 +32453,7 @@ window.setSharePlat=async function(k){
   if(waRow) waRow.style.display = k==='whatsapp' ? '' : 'none';
   if(fbRow) fbRow.style.display = isFbSharer ? '' : 'none';
   _updateIgShareBtn();
+  _clRenderPhotos();
   await _refreshPreview();
 };
 
@@ -32514,12 +32517,13 @@ window.publishShareToInstagram = async function(){
   const ta=document.getElementById('share-fb-text');
   const accounts=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.value);
   if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
-  const caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
+  let caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
+  if (_shareType==='class' && kind==='feed' && _clSlides.length) { const cr=[...new Set(_clSlides.map(s=>(_clCands[s.idx]||{}).credito).filter(Boolean))]; if (cr.length) caption += `\n\n📷 Foto: ${cr.join(', ')}`; }
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
   const name=isClass ? `Classifica ${_sharePayload?.kindLabel ? _sharePayload.kindLabel + ' ' : ''}${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
   const who=btn.textContent.replace(/^.* su /,'');
   if(!confirm(isClass
-    ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\nUn'immagine con la grafica della classifica (primi 10) e il testo qui sotto.`)
+    ? (kind==='story' ? `Pubblicare ora la storia su ${who}?\n\n${name}\nUna storia con la grafica della classifica (primi 10).` : `Pubblicare ora il post su ${who}?\n\n${name}\n${_clSlides.length ? `Carosello di ${1+_clSlides.length} immagini: la grafica della classifica (primi 10) + ${_clSlides.length} foto.` : 'Un\'immagine con la grafica della classifica (primi 10) e il testo qui sotto.'}`)
     : kind==='story'
     ? `Pubblicare ora le storie su ${who}?\n\n${name}\n2 storie di fila: Vincitore + Risultati (stessa foto e inquadratura del post).`
     : `Pubblicare ora il post su ${who}?\n\n${name}\nCarosello di 2 immagini: Vincitore + Risultati (primi 10).`)) return;
@@ -32532,6 +32536,8 @@ window.publishShareToInstagram = async function(){
       // classifica: una sola immagine, con lo stile scelto nella finestra (Maglia gialla / Podio)
       const cv=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
       images.push(cv.toDataURL('image/jpeg',kind==='story'?0.92:0.9));
+      // feed: dopo la grafica, le foto scelte (e riposizionate) dall'admin
+      if (kind==='feed') _clSlides.forEach(sl => { const c=_clCands[sl.idx]; if (c) { images.push(_clSlideJpeg(sl,c)); } });
     } else {
     const prev=_shareGaraStyle;
     try{
@@ -32549,6 +32555,81 @@ window.publishShareToInstagram = async function(){
     await _updateIgShareBtn();
   }catch(e){ btn.disabled=false; btn.textContent=old; showToast(e.message||'Errore', 'error'); await _updateIgShareBtn(); }
 };
+
+
+// ── Classifica: foto per il carosello Instagram ───────────────────────────
+// I primi tre (o, se mancano foto, fino a tre del primo) con la loro foto: l'admin sceglie quali mettere nel carosello,
+// dopo la grafica, e le riposiziona (trascina + zoom). Per Facebook la foto dell'ultima vittoria del primo e' gia' nell'immagine del server.
+let _clCands = [], _clSlides = [];
+function _clDrawCover(ctx, img, W, H, adj) {
+  const sc = Math.max(W / img.width, H / img.height) * ((adj && adj.scale) || 1);
+  const dw = img.width * sc, dh = img.height * sc;
+  let x = (W - dw) / 2 + ((adj && adj.ox) || 0) * W, y = (H - dh) / 2 + ((adj && adj.oy) || 0) * H;
+  x = Math.min(0, Math.max(W - dw, x)); y = Math.min(0, Math.max(H - dh, y));
+  ctx.drawImage(img, x, y, dw, dh);
+}
+function _clNomeDi(aid) {
+  const r = (_sharePayload?.rows || []).find(x => x.atleta_id === aid);
+  return r ? _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim()) : '';
+}
+function _clSlideJpeg(sl, c) {
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  _clDrawCover(ctx, sl.img, W, H, sl.adj);
+  const g = ctx.createLinearGradient(0, H - 260, 0, H); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.72)');
+  ctx.fillStyle = g; ctx.fillRect(0, H - 260, W, 260);
+  ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic';
+  const nome = _clNomeDi(c.atleta_id);
+  if (nome) { ctx.font = '800 54px "Inter Tight", Arial, sans-serif'; ctx.fillText(nome, 54, H - 96); }
+  ctx.font = '600 28px "Inter Tight", Arial, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.8)';
+  const sub = [String(_sharePayload?.catLabel || ''), c.tipo === 'vittoria' && c.data ? 'ultima vittoria ' + c.data.split('-').reverse().join('/') : ''].filter(Boolean).join(' · ');
+  ctx.fillText(sub, 54, H - 54);
+  if (c.credito) { ctx.textAlign = 'right'; ctx.font = '600 24px "Inter Tight", Arial, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillText('📷 ' + c.credito, W - 54, H - 54); ctx.textAlign = 'left'; }
+  return cv.toDataURL('image/jpeg', 0.9);
+}
+function _clRenderPhotos() {
+  const box = document.getElementById('share-cl-photos'); if (!box) return;
+  const show = _sharePlatKey === 'instagram' && authUser()?.role === 'admin' && _shareType === 'class' && (_sharePayload?.view || 'atleti') === 'atleti';
+  box.style.display = show ? 'block' : 'none';
+  if (!show) return;
+  if (!_clCands.length) { box.innerHTML = '<div style="font-size:.75rem;color:var(--text-muted)">📷 Carosello: non ci sono foto dei primi classificati, il post avrà solo la grafica.</div>'; return; }
+  const sel = new Set(_clSlides.map(s => s.idx));
+  box.innerHTML = `<div style="font-size:.78rem;font-weight:700;margin-bottom:6px">📷 Carosello Instagram — scegli le foto da aggiungere dopo la grafica (max 3)</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${_clCands.map((c, i) => `<label style="width:108px;cursor:pointer;display:flex;flex-direction:column;gap:3px;border:2px solid ${sel.has(i) ? '#e8001d' : 'var(--border-subtle)'};border-radius:8px;padding:4px;background:var(--bg-card)">
+      <img src="${esc(icProxy(c.url))}" alt="" loading="lazy" style="width:100%;height:84px;object-fit:cover;border-radius:5px" onerror="this.style.opacity=.25">
+      <span style="font-size:.66rem;line-height:1.2"><input type="checkbox" ${sel.has(i) ? 'checked' : ''} onchange="window._clToggle(${i})"> <b>${esc(_clNomeDi(c.atleta_id) || '')}</b><br><span style="color:var(--text-muted)">${c.tipo === 'vittoria' ? 'ultima vittoria' + (c.data ? ' · ' + esc(c.data.split('-').reverse().join('/')) : '') : c.tipo === 'taggata' ? 'foto taggata' : 'foto profilo'}</span></span></label>`).join('')}</div>
+    <div id="share-cl-slides" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">${_clSlides.map((s, k) => `<div style="width:200px"><div style="font-size:.68rem;color:var(--text-muted);margin-bottom:3px">Foto ${k + 1} · trascina per spostare</div>
+      <canvas id="cl-sl-${k}" width="200" height="250" style="width:200px;height:250px;border-radius:8px;cursor:grab;touch-action:none;background:#111"></canvas>
+      <input type="range" min="100" max="300" value="${Math.round((s.adj.scale || 1) * 100)}" style="width:100%" oninput="window._clZoom(${k},this.value)"></div>`).join('')}</div>`;
+  _clSlides.forEach((s, k) => {
+    const cv = document.getElementById('cl-sl-' + k); if (!cv) return;
+    const draw = () => { const cx = cv.getContext('2d'); cx.clearRect(0, 0, 200, 250); _clDrawCover(cx, s.img, 200, 250, s.adj); };
+    draw(); s.draw = draw;
+    let st = null;
+    cv.onpointerdown = e => { e.preventDefault(); st = { x: e.clientX, y: e.clientY, ox: s.adj.ox || 0, oy: s.adj.oy || 0 }; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; };
+    cv.onpointermove = e => { if (!st) return; s.adj.ox = st.ox + (e.clientX - st.x) / 200; s.adj.oy = st.oy + (e.clientY - st.y) / 250; draw(); };
+    cv.onpointerup = cv.onpointercancel = () => { st = null; cv.style.cursor = 'grab'; };
+  });
+}
+window._clToggle = async function (i) {
+  const pos = _clSlides.findIndex(s => s.idx === i);
+  if (pos >= 0) { _clSlides.splice(pos, 1); _clRenderPhotos(); return; }
+  if (_clSlides.length >= 3) { showToast('Al massimo 3 foto nel carosello', 'error'); _clRenderPhotos(); return; }
+  const c = _clCands[i]; if (!c) return;
+  const img = await _fetchImgBlob(icProxy(c.url));
+  if (!img) { showToast('Foto non caricabile', 'error'); _clRenderPhotos(); return; }
+  _clSlides.push({ idx: i, img, adj: { scale: 1, ox: 0, oy: 0 } });
+  _clRenderPhotos();
+};
+window._clZoom = function (k, v) { const s = _clSlides[k]; if (!s) return; s.adj.scale = Math.max(1, +v / 100); if (s.draw) s.draw(); };
+async function _clLoadPhotos() {
+  _clCands = []; _clSlides = [];
+  const box = document.getElementById('share-cl-photos'); if (!box) return;
+  const ids = (_sharePayload?.rows || []).slice(0, 3).map(r => r.atleta_id).filter(Boolean);
+  if (!ids.length || (_sharePayload?.view || 'atleti') !== 'atleti') { box.style.display = 'none'; return; }
+  try { _clCands = (await apiCall('/admin/social/class-photos?ids=' + encodeURIComponent(ids.join(',')))).items || []; } catch (_) { _clCands = []; }
+  _clRenderPhotos();
+}
 
 window.setClassStyle=async function(style){
   _shareClassStyle=style;
@@ -32630,7 +32711,7 @@ async function _refreshPreview(){
     // per la stessa, fuorviante (segnalato dal vivo: "non deve essere come
     // quelle per instagram", con screenshot della grafica reale che deve
     // restare quella).
-    if (_sharePlatKey === 'facebook' && ['gara','atleta','team'].includes(_shareType) && _sharePayload?._id) {
+    if (_sharePlatKey === 'facebook' && (['gara','atleta','team'].includes(_shareType) || (_shareType === 'class' && (_sharePayload?.view || 'atleti') === 'atleti' && (_sharePayload?.sort || 'punti') === 'punti')) && _sharePayload?._id) {
       let url = `${API_BASE}/og-image/${_shareType}/${encodeURIComponent(_sharePayload._id)}`;
       const _fa = _adjustFor('facebook');
       if (_shareType === 'gara' && (_fa.scale > 1.001 || Math.abs(_fa.offsetX) > 0.5 || Math.abs(_fa.offsetY) > 0.5)) {

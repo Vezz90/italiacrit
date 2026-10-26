@@ -1742,7 +1742,7 @@ function _calCatMatches(catText, catCode) {
     default: return false;
   }
 }
-function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
+function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx, ufficiali }) {
   const [catCode, regionSlug, month] = decodeURIComponent(id).split('__');
   const gender = catCode.endsWith('_F') ? 'F' : 'M';
   const region = regionSlug ? regionSlug.replace(/_/g, ' ') : '';
@@ -1768,15 +1768,6 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
     [...list].sort((p, q) => (p.data || '').localeCompare(q.data || '')).forEach(x => { cur = x.posizione === 1 ? cur + 1 : 0; if (cur > best) best = cur; });
     return best;
   };
-  // sfide dirette: nelle gare disputate da entrambi, chi ha chiuso davanti
-  const duel = (A, B) => {
-    const pa = new Map(rowsOf(A.atleta_id).map(x => [x.gara_id, x.posizione])), pb = new Map(rowsOf(B.atleta_id).map(x => [x.gara_id, x.posizione]));
-    let n = 0, a = 0, b = 0;
-    for (const [g, pos] of pa) { if (!pb.has(g)) continue; n++; if (pos < pb.get(g)) a++; else if (pos > pb.get(g)) b++; }
-    return { tra: `${A.nome} ${A.cognome}`.trim(), e: `${B.nome} ${B.cognome}`.trim(), volte_in_cui_sono_arrivati_entrambi_nei_primi_10: n, davanti_il_primo_dei_due: a, davanti_il_secondo: b };
-  };
-  const sfide = [];
-  for (let i = 0; i < Math.min(4, rows.length) - 1; i++) { const d = duel(rows[i], rows[i + 1]); if (d.volte_in_cui_sono_arrivati_entrambi_nei_primi_10 >= 3) sfide.push(d); }
   // andamento della stagione: chi era primo dopo ogni giornata di gare
   const byDate = new Map();
   inCat.forEach(x => { (byDate.get(x.data) || byDate.set(x.data, []).get(x.data)).push(x); });
@@ -1792,7 +1783,15 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
     const dist = Math.round((lead - r.punti) * 100) / 100;
     const prev = i > 0 ? rows[i - 1].punti : null;
     const wins = mine.filter(x => x.posizione === 1).sort((p, q) => (q.punti_effettivi || 0) - (p.punti_effettivi || 0) || (q.data || '').localeCompare(p.data || ''));
+    const vitt = mine.filter(x => x.posizione === 1).sort((p, q) => (p.data || '').localeCompare(q.data || ''));
+    const perMese = {}; vitt.forEach(x => { const m = String(x.data || '').slice(0, 7); perMese[m] = (perMese[m] || 0) + 1; });
+    const ult = [...mine].sort((p, q) => (q.data || '').localeCompare(p.data || ''))[0];
     const big = i < 5 ? {
+      prima_vittoria_della_stagione: vitt[0] ? { gara: garaName(vitt[0]), data: vitt[0].data } : null,
+      ultima_vittoria_della_stagione: vitt.length ? { gara: garaName(vitt[vitt.length - 1]), data: vitt[vitt.length - 1].data } : null,
+      vittorie_mese_per_mese: perMese,
+      secondi_posti: ufficiali && ufficiali[r.atleta_id] ? ufficiali[r.atleta_id].p2 : mine.filter(x => x.posizione === 2).length, terzi_posti: ufficiali && ufficiali[r.atleta_id] ? ufficiali[r.atleta_id].p3 : mine.filter(x => x.posizione === 3).length,
+      ultimo_risultato_registrato: ult ? { gara: garaName(ult), data: ult.data, posizione: ult.posizione } : null,
       vittorie_piu_importanti: wins.slice(0, 3).map(x => ({ gara: garaName(x), data: x.data, punti: x.punti_effettivi, livello: x.tipo, titolo: titolo(x) })),
       titoli_vinti: wins.filter(titolo).map(x => `${titolo(x)}: ${garaName(x)}`),
       podi_in_campionati: mine.filter(x => x.posizione >= 2 && x.posizione <= 3 && titolo(x)).map(x => `${x.posizione}° al ${titolo(x)}: ${garaName(x)}`),
@@ -1802,8 +1801,9 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
       posizione: i + 1, nome: `${r.nome} ${r.cognome}`.trim(), team: r.team || '', punti: r.punti,
       punti_di_ritardo_dal_primo: i === 0 ? 0 : dist,
       punti_di_ritardo_dal_precedente: i === 0 ? null : Math.round((prev - r.punti) * 100) / 100,
-      vittorie: mine.filter(x => x.posizione === 1).length,
-      podi: mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length,
+      // classifica generale: vittorie e podi sono quelli UFFICIALI del sito (stessa pagina Classifica); con filtri di mese/regione si contano dai risultati
+      vittorie: ufficiali && ufficiali[r.atleta_id] ? ufficiali[r.atleta_id].p1 : mine.filter(x => x.posizione === 1).length,
+      podi: ufficiali && ufficiali[r.atleta_id] ? ufficiali[r.atleta_id].p1 + ufficiali[r.atleta_id].p2 + ufficiali[r.atleta_id].p3 : mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length,
       piazzamenti_a_punti_registrati: new Set(mine.map(x => x.gara_id)).size,
       ...big,
       punti_ultimi_30_giorni: Math.round(mine.filter(x => x.data >= ago30).reduce((a, x) => a + (x.punti_effettivi || 0), 0) * 100) / 100,
@@ -1828,7 +1828,6 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
     ultima_gara_in_calendario: future.length ? future[future.length - 1].data : null,
     punti_massimi_ancora_in_palio: palio,
     andamento_stagione: leaderId && leaderId === rows[0].atleta_id ? { cambi_di_leader_in_stagione: changes, primo_ininterrottamente_dal: leaderSince } : { cambi_di_leader_in_stagione: changes },
-    sfide_dirette: sfide,
     primo_posto_matematicamente_assegnato: R === 0 || !atleti.some(x => x.puo_ancora_superare_il_primo),
     atleti,
   };
@@ -1866,7 +1865,14 @@ app.post('/api/admin/classifica-share-text/:id', requireAdmin, async (req, res) 
         squadre: rows.map((r, i) => ({ posizione: i + 1, squadra: `${r.nome} ${r.cognome}`.trim(), valore: r.punti, dettaglio: r.team || '' })),
         nota: 'del sito registriamo solo i primi 10 di ogni gara; non scrivere gare disputate dalle squadre',
       };
-    } else facts = _classAnalysisFacts({ id, rows, resultsRaw, calendar, today: today0, ctx });
+    } else {
+      let ufficiali = null;                                         // classifica generale: i conteggi sono quelli del file ufficiale del sito
+      try {
+        const [cc, rg, mm] = decodeURIComponent(id).split('__');
+        if (!rg && !mm) { const rk = await (await fetch(`${SITE_URL}/data/rankings/${cc}.json`, { signal: AbortSignal.timeout(12000) })).json(); ufficiali = Object.fromEntries((rk || []).map(a => [a.atleta_id, a])); }
+      } catch (_) { /* si contano dai risultati */ }
+      facts = _classAnalysisFacts({ id, rows, resultsRaw, calendar, today: today0, ctx, ufficiali });
+    }
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
@@ -1880,17 +1886,18 @@ CONTESTO DEL POST (campo "contesto_del_post", leggilo prima di scrivere): la gra
 Struttura:
 1. Titolo (una riga, con emoji): "🏆" + una frase breve e concreta che dica la cosa più importante, con la categoria (e regione/mese se presenti). Esempio di taglio: "🏆 ESORDIENTI DONNE: KUCHYNSKAYA CHIUDE DAVANTI". Niente slogan generici.
 2. Paragrafo 1 – la protagonista/il protagonista: chi comanda, con quanti punti e quale vantaggio. Racconta COME ci è arrivato usando i dati: vittorie e podi (mai "su N gare"), la serie di vittorie consecutive se almeno 3, e soprattutto le vittorie più importanti ("vittorie_piu_importanti": nomina gara, data e punti della più pesante; se in "titoli_vinti" c'è un campionato, mettilo in primo piano). Se "andamento_stagione" dice da quando è primo ininterrottamente o quanti cambi di leader ci sono stati, usalo per dare il senso della stagione.
-3. Paragrafo 2 – le sfide: usa "sfide_dirette" per raccontare i duelli (es. "nelle N volte in cui sono arrivate entrambe nei primi 10, X è arrivata davanti Y volte") e i margini stretti ("punti_di_ritardo_dal_precedente" molto piccolo = lotta per il podio o per una posizione). Cita secondo e terzo con un dato che li renda riconoscibili (una vittoria importante, i podi). Solo ciò che è nei dati.
-4. Paragrafo 3 – la stagione (massimo 2 frasi), in base a "stato_stagione":
+3. Paragrafo 2 – la seconda/il secondo: chi e, come e arrivata/o fin li (vittorie, podi, il successo piu importante con gara e data, la serie, un titolo se c'e), quanti punti di ritardo dal primo ("punti_di_ritardo_dal_primo": e una differenza, non un punteggio) e che stagione ha fatto (dove e quando ha vinto: "vittorie_mese_per_mese", "prima_vittoria_della_stagione"). Racconta una persona, non solo numeri.
+4. Paragrafo 3 – la terza/il terzo: stessa cosa, con il tratto che lo distingue (per esempio tanti podi senza vittorie, una serie, la vittoria piu pesante, quanto e vicino al secondo). NIENTE confronti testa a testa tra gli atleti: ogni protagonista si racconta per quello che ha fatto lui.
+5. Paragrafo 4 – la stagione (massimo 2 frasi), in base a "stato_stagione":
    - "conclusa": nessuna gara rimasta in calendario, classifica definitiva: una frase di chiusura, senza ripetere il vincitore già detto.
    - "mese_concluso": il mese e finito: una frase di chiusura sul mese (mai sulla stagione). "mese_in_corso": il mese non e finito, di' quante gare restano nel mese.
    - altrimenti: quante gare restano ("gare_rimanenti_in_calendario"), la prossima con data e luogo, quanti punti al massimo restano in palio ("punti_massimi_ancora_in_palio"; una vittoria vale 15 punti per il moltiplicatore della gara). Se "primo_posto_matematicamente_assegnato" è true di' che il primo posto non può più cambiare; altrimenti nomina chi può ancora superare il primo ("puo_ancora_superare_il_primo": true) e cosa gli servirebbe.
-5. Una riga vuota, poi "📊 La classifica" e l'elenco: 🥇🥈🥉 per i primi tre poi 4. 5. 6. ... nel formato "Nome Cognome – Team – 375 pt". Se il "team" è chiaramente una nazionale o un paese (es. Italia, Brasile) omettilo dalla riga.
-6. Una riga vuota e 5-6 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nome del vincitore, ecc.).
+6. Una riga vuota, poi "📊 La classifica" e l'elenco: 🥇🥈🥉 per i primi tre poi 4. 5. 6. ... nel formato "Nome Cognome – Team – 375 pt". Se il "team" è chiaramente una nazionale o un paese (es. Italia, Brasile) omettilo dalla riga.
+7. Una riga vuota e 5-6 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nome del vincitore, ecc.).
 
-LIMITI DEI DATI (leggili bene): del sito registriamo SOLO i primi 10 di ogni gara. Quindi i numeri che contano i risultati di un atleta ('risultati_registrati', 'piazzamenti_a_punti_registrati') NON sono le gare che ha corso: potrebbe averne corse molte di piu, e magari senza entrare nei primi 10. Non scrivere MAI 'N gare disputate', 'in N gare', 'su N gare' e non fare rapporti tra vittorie e gare; di' invece 'N vittorie e M podi'. Le sfide dirette sono solo le volte in cui entrambi sono arrivati nei primi 10: non presentarle come tutti i confronti della stagione (di' 'nelle N volte in cui sono arrivati entrambi nei primi 10'). Il punteggio di un atleta e ESCLUSIVAMENTE il campo 'punti' (lo stesso della classifica che chiude il post): i campi 'punti_di_ritardo_*' sono differenze tra due atleti, non punteggi, e non vanno mai presentati come punti di qualcuno.
+LIMITI DEI DATI (leggili bene): del sito registriamo SOLO i primi 10 di ogni gara. Quindi i numeri che contano i risultati di un atleta ('risultati_registrati', 'piazzamenti_a_punti_registrati') NON sono le gare che ha corso: potrebbe averne corse molte di piu, e magari senza entrare nei primi 10. Non scrivere MAI 'N gare disputate', 'in N gare', 'su N gare' e non fare rapporti tra vittorie e gare; di' invece 'N vittorie e M podi'. Il punteggio di un atleta e ESCLUSIVAMENTE il campo 'punti' (lo stesso della classifica che chiude il post): i campi 'punti_di_ritardo_*' sono differenze tra due atleti, non punteggi, e non vanno mai presentati come punti di qualcuno.
 
-Regole ferree: usa SOLO i dati forniti; non inventare gare, nomi di avversari, risultati, emozioni attribuite alle persone ("era commossa", "ha stretto i denti") né numeri; non fare calcoli diversi da quelli già nei dati; ignora i campi null o vuoti; se un dato è poco significativo (es. serie di 1-2 vittorie) non citarlo. Scrivi i nomi in forma normale (Nome Cognome, non tutto maiuscolo). I tre paragrafi insieme tra 700 e 1100 caratteri. Rispondi SOLO con il post, a partire dal titolo.
+Regole ferree: usa SOLO i dati forniti; non inventare gare, nomi di avversari, risultati, emozioni attribuite alle persone ("era commossa", "ha stretto i denti") né numeri; non fare calcoli diversi da quelli già nei dati; ignora i campi null o vuoti; se un dato è poco significativo (es. serie di 1-2 vittorie) non citarlo. Scrivi i nomi in forma normale (Nome Cognome, non tutto maiuscolo). I paragrafi insieme tra 1000 e 1500 caratteri. Rispondi SOLO con il post, a partire dal titolo.
 
 Dati (JSON):
 ${JSON.stringify(facts, null, 2)}` }],
@@ -2254,7 +2261,7 @@ async function _computeClassRanking(rawId, opts = {}) {
     if (!key) continue;
     if (!agg[key]) agg[key] = view === 'team'
       ? { team: r.team, punti: 0, wins: 0 }
-      : { cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, wins: 0 };
+      : { atleta_id: key, cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, wins: 0 };
     agg[key].punti += (r.punti_effettivi || 0);
     if (r.posizione === 1) agg[key].wins++;
   }
@@ -11933,6 +11940,34 @@ function buildTeamCardSvg(data) {
 
 // Card classifica: intestazione "CLASSIFICA <categoria>" (+ regione/mese se
 // filtrata) a destra, righe numerate con colore oro/argento/bronzo pei primi 3.
+// Pannello classifica per l'immagine Facebook con foto: la foto della vittoria piu recente del primo a sinistra, la classifica a destra
+function buildClassSplitPanelSvg({ catLabel, region, month, rows = [], panelW, H, scoreSuffix = 'pt' }) {
+  const pad = 34, ink = '#f4f5f7', muted = 'rgba(244,245,247,.55)';
+  const medal = ['#f5c400', '#dadada', '#cd7f32'];
+  const sub = [region ? String(region).toUpperCase() : 'ITALIA', month ? String(month).toUpperCase() : ''].filter(Boolean).join(' · ');
+  const top = 118, bottom = H - 46, n = Math.min(rows.length, 10) || 1, rH = Math.floor((bottom - top) / n);
+  const fit = (t, base, avail) => { const est = String(t || '').length * base * 0.58; return est > avail ? Math.max(11, Math.floor(base * avail / est)) : base; };
+  const rowsHtml = rows.slice(0, 10).map((r, i) => {
+    const mid = top + i * rH + rH / 2, name = `${r.cognome || ''} ${r.nome || ''}`.trim(), nm = r.team || '';
+    const fs = fit(name, i === 0 ? 20 : 17, panelW - pad * 2 - 150);
+    return `${i % 2 === 0 ? `<rect x="${pad - 10}" y="${top + i * rH}" width="${panelW - pad * 2 + 20}" height="${rH}" fill="rgba(255,255,255,.035)"/>` : ''}
+    <rect x="${pad}" y="${mid - 13}" width="30" height="26" rx="6" fill="${i < 3 ? medal[i] : 'rgba(255,255,255,.1)'}"/>
+    <text x="${pad + 15}" y="${mid + 6}" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="800" fill="${i < 3 ? '#1a1200' : 'rgba(255,255,255,.6)'}" text-anchor="middle">${i + 1}</text>
+    <text x="${pad + 44}" y="${mid - (nm ? 1 : -6)}" font-family="Arial,Helvetica,sans-serif" font-size="${fs}" font-weight="700" fill="${ink}">${_ogEsc(name.slice(0, 30))}</text>
+    ${nm ? `<text x="${pad + 44}" y="${mid + 15}" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="${muted}">${_ogEsc(String(nm).slice(0, 34))}</text>` : ''}
+    <text x="${panelW - pad}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="${i === 0 ? 22 : 18}" font-weight="800" fill="#f5c400" text-anchor="end">${_ogEsc(String(Math.round((r.score != null ? r.score : r.punti) * 100) / 100))} <tspan font-size="12" font-weight="600" fill="${muted}">${scoreSuffix}</tspan></text>`;
+  }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${panelW}" height="${H}" viewBox="0 0 ${panelW} ${H}">
+    <rect width="${panelW}" height="${H}" fill="#10141c"/>
+    <rect width="5" height="${H}" fill="#e8001d"/>
+    <text x="${pad}" y="46" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="800" fill="#e8001d" letter-spacing="2">CLASSIFICA</text>
+    <text x="${pad}" y="84" font-family="Arial,Helvetica,sans-serif" font-size="${fit(String(catLabel || '').toUpperCase(), 32, panelW - pad * 2)}" font-weight="800" fill="${ink}">${_ogEsc(String(catLabel || '').toUpperCase())}</text>
+    <text x="${pad}" y="106" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="${muted}" letter-spacing="1">${_ogEsc(sub)}</text>
+    ${rowsHtml}
+    <text x="${pad}" y="${H - 16}" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="rgba(255,255,255,.4)">italiacyclingstats.com</text>
+  </svg>`;
+}
+
 function buildClassCardSvg({ catLabel, region, month, rows = [], view = 'atleti', scoreLabel = 'PUNTI', scoreSuffix = 'pt' }) {
   const pad = 60, top = 88, bottom = 578;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
@@ -13074,6 +13109,19 @@ app.get('/api/og-image/class/:id', async (req, res) => {
     const buf = await _ogGenerateDeduped(cacheKey, async () => {
       const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id);
       if (!ranking.length) return null;
+      // con la foto dell'ultima vittoria del primo (se esiste): foto a sinistra, classifica a destra
+      try {
+        const lead = ranking[0];
+        if (lead && lead.atleta_id) {
+          const items = await _fotoClassifica([lead.atleta_id]);
+          const it = items.find(x => x.tipo === 'vittoria') || items[0];
+          if (it) {
+            const photoW = 440, panel = buildClassSplitPanelSvg({ catLabel: catLabelText, region, month: monthLabel, rows: ranking, panelW: 1200 - photoW, H: 630 });
+            const b = await _photoSplitOgPng(it.url, panel, null, photoW, 630);
+            if (b) return b;
+          }
+        }
+      } catch (e) { console.warn('[og-image] classifica con foto:', e.message); }
       const svg = buildClassCardSvg({ catLabel: catLabelText, region, month: monthLabel, rows: ranking });
       return await renderOgPng(svg);
     });
@@ -13303,7 +13351,7 @@ async function _getHeadMetaFor(type, id) {
 }
 
 // Foto candidate per un articolo della redazione: foto caricate e approvate, album xpix.it / ciclismo.info, foto profilo (solo atleti indicati)
-async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
+async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {}, perAtleta = 1 }) {
   const out = [], visti = new Set();
   const add = (url, credito, didascalia, fonte, gara_id, atleta_id) => { if (url && !visti.has(url) && out.length < 40) { visti.add(url); out.push({ url, credito: credito || '', didascalia: didascalia || '', fonte, gara_id: gara_id || '', atleta_id: atleta_id || '' }); } };
   const ids = [...new Set(garaIds.filter(Boolean))];
@@ -13342,6 +13390,7 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
   // la foto della vittoria piu recente di ogni atleta: tra le sue vittorie (dalla piu recente) la prima gara che ha una foto
   for (const a of ath) {
     const cognome = a.split('_')[0];
+    let nTrovate = 0;
     for (const gid of [...new Set(vittorie[a] || [])].slice(0, 10)) {
       const nomi = [gid, gid.replace(/^\d+_/, '')];
       let trovata = null;
@@ -13358,11 +13407,49 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {} }) {
         }
         if (trovata) break;
       }
-      if (trovata) { add(trovata.url, trovata.credito, trovata.caption, 'garavinta', gid, a); break; }
+      if (trovata) { add(trovata.url, trovata.credito, trovata.caption, 'garavinta', gid, a); if (++nTrovate >= perAtleta) break; }
     }
   }
   return out;
 }
+
+// Foto per i post di classifica: per ogni atleta indicato la foto dell'ultima vittoria (se c'e), altrimenti una taggata, altrimenti quella del profilo
+async function _vittoriePerAtleta(ids) {
+  const set = new Set(ids), righe = [];
+  const raw = (await readDataJsonFromGH('results_raw.json').catch(() => null)) || [];
+  raw.forEach(r => { if (Number(r.posizione) === 1 && set.has(r.atleta_id)) righe.push({ id: r.atleta_id, g: r.gara_id, d: String(r.data || '').slice(0, 10), n: r.nome_gara }); });
+  try { ((await queries.getAllManualResults()) || []).forEach(r => { if (Number(r.posizione) === 1 && set.has(r.atleta_id)) righe.push({ id: r.atleta_id, g: r.gara_id, d: String(r.data || '').slice(0, 10), n: r.nome_gara }); }); } catch (_) { /* solo scraper */ }
+  righe.sort((a, b) => b.d.localeCompare(a.d));
+  const vittorie = {}, meta = {};
+  righe.forEach(r => { (vittorie[r.id] = vittorie[r.id] || []).push(r.g); meta[r.g] = { data: r.d, nome: r.n }; });
+  return { vittorie, meta };
+}
+async function _fotoClassifica(ids) {
+  ids = ids.filter(Boolean).slice(0, 3);
+  if (!ids.length) return [];
+  const { vittorie, meta } = await _vittoriePerAtleta(ids);
+  const ok = f => ['garavinta', 'tag', 'profilo'].includes(f.fonte);
+  const tipoDi = f => f.fonte === 'garavinta' ? 'vittoria' : f.fonte === 'tag' ? 'taggata' : 'profilo';
+  const mk = f => ({ atleta_id: f.atleta_id, tipo: tipoDi(f), url: f.url, credito: f.credito || '', gara_id: f.gara_id || '', gara: String((meta[f.gara_id] || {}).nome || '').slice(0, 80), data: (meta[f.gara_id] || {}).data || '' });
+  const items = [], visti = new Set();
+  const base = await _redazioneFoto({ atletaIds: ids, vittorie, perAtleta: 1 });
+  for (const id of ids) {                                          // una foto per ciascuno dei primi tre
+    const c = base.filter(f => f.atleta_id === id && ok(f));
+    const best = c.find(f => f.fonte === 'garavinta') || c.find(f => f.fonte === 'tag') || c.find(f => f.fonte === 'profilo');
+    if (best && !visti.has(best.url)) { visti.add(best.url); items.push(mk(best)); }
+  }
+  if (items.length < 3) {                                          // poche foto: si completa con altre del primo (max 3 in tutto)
+    const altre = await _redazioneFoto({ atletaIds: [ids[0]], vittorie, perAtleta: 3 });
+    for (const f of altre.filter(x => x.atleta_id === ids[0] && ok(x))) { if (items.length >= 3) break; if (!visti.has(f.url)) { visti.add(f.url); items.push(mk(f)); } }
+  }
+  return items.slice(0, 3);
+}
+app.get('/api/admin/social/class-photos', requireAdmin, async (req, res) => {
+  try {
+    const ids = String(req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean);
+    res.json({ items: await _fotoClassifica(ids) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
 // Redazione AI privata (solo admin): bozze di articoli. Vedi server/redazione.js
 require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL, fotoPer: _redazioneFoto });
