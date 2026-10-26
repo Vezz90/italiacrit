@@ -13481,7 +13481,7 @@ async function _fotoClassifica(ids, uno = false) {
     if (it && uno) {                                    // alternative tra cui scegliere nella scheda: altre vittorie, foto dove e' taggato, gare sul podio, e sempre la foto profilo
       const opz = [], visti = new Set();
       const push = o => { if (o && o.url && !visti.has(o.url)) { visti.add(o.url); opz.push(o); } };
-      push(it);
+      push({ ...it });
       for (const r of l.filter(x => x.pos === 1).slice(0, 12)) { if (opz.length >= 4) break; const f = dellaGara(r.g, aid); if (f) push(mk('vittoria', f, r.g)); }
       for (const t of taggateTutte(aid, 8)) { if (opz.length >= 6) break; push(mk('taggata', t, t.g)); }
       for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { if (opz.length >= 7) break; const f = dellaGara(r.g, aid, true); if (f) push(mk('gara', f, r.g)); }
