@@ -32560,7 +32560,7 @@ window.publishShareToInstagram = async function(){
 // ── Classifica: schede atleta per il carosello Instagram ──────────────────────
 // Una scheda per ciascuno dei primi (fino a 10): posizione, foto, nome, squadra, punti e "il meglio" di quel corridore
 // nel periodo e nel territorio scelti (mese/stagione, regione/Italia). Dopo la grafica della classifica, nel carosello.
-let _clCands = {}, _clN = 9, _clPrevIdx = 0;
+let _clCands = {}, _clN = 9, _clPrevIdx = 0, _clAdj = {}, _clMode = 'mix', _clK = 9;
 function _clFiltri() { const [cat, reg, mese] = String(_sharePayload?._id || '').split('__'); return { cat, reg: (reg || '').replace(/_/g, ' '), mese: mese || '' }; }
 function _clRisultati(aid) {
   const f = _clFiltri(), calMap = {};
@@ -32586,7 +32586,7 @@ function _clCardCanvas(i, photo, logo) {
   const PH = 780, M = 56;
   // sfondo
   ctx.fillStyle = NAVY; ctx.fillRect(0, 0, W, H);
-  if (photo && photo.img) { _clTeamMode = false; _clPhoto(ctx, photo.img, 0, 0, W, PH, 0, 1); }
+  if (photo && photo.img) { _clCardPhoto(ctx, photo.img, 0, 0, W, PH, photo.adj); }
   else {
     const pg = ctx.createLinearGradient(0, 0, W, PH); pg.addColorStop(0, '#1c3f8f'); pg.addColorStop(1, '#0b1b3a'); ctx.fillStyle = pg; ctx.fillRect(0, 0, W, PH);
     ctx.save(); ctx.globalAlpha = .08; ctx.fillStyle = '#fff'; for (let k = -2; k < 9; k++) { ctx.beginPath(); ctx.moveTo(k * 160, 0); ctx.lineTo(k * 160 + 70, 0); ctx.lineTo(k * 160 - 330, PH); ctx.lineTo(k * 160 - 400, PH); ctx.fill(); } ctx.restore();
@@ -32638,39 +32638,75 @@ function _clCardCanvas(i, photo, logo) {
   if (photo && photo.credito) { ctx.textAlign = 'right'; ctx.fillText('📷 ' + photo.credito, W - M, 1336); ctx.textAlign = 'left'; }
   return cv;
 }
+// foto della scheda: ritaglio ancorato al volto, poi spostato/ingrandito come ha deciso l'admin (adj.ox/oy in frazioni del riquadro visibile)
+function _clCardPhoto(ctx, img, x, y, w, h, adj) {
+  const NW = img.naturalWidth, NH = img.naturalHeight, ir = NW / NH, cr = w / h;
+  let sw, sh; if (ir > cr) { sh = NH; sw = sh * cr; } else { sw = NW; sh = sw / cr; }
+  const z = Math.max(1, (adj && adj.scale) || 1); sw /= z; sh /= z;
+  const faceY = (ir < 0.8 ? 0.17 : 0.36) * NH;
+  let sx = (NW - sw) / 2 - ((adj && adj.ox) || 0) * sw, sy = faceY - 0.40 * sh - ((adj && adj.oy) || 0) * sh;
+  sx = Math.max(0, Math.min(NW - sw, sx)); sy = Math.max(0, Math.min(NH - sh, sy));
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
 async function _clPhotoOf(aid) {
   const c = _clCands[aid]; if (!c) return null;
   if (!c.img) c.img = await _fetchImgBlob(icProxy(c.url));
-  return c.img ? { img: c.img, credito: c.credito } : null;
+  return c.img ? { img: c.img, credito: c.credito, adj: _clAdj[aid] || { scale: 1, ox: 0, oy: 0 } } : null;
 }
 async function _clCardJpeg(i) { const [logo, ph] = await Promise.all([_getLogo(), _clPhotoOf(_sharePayload.rows[i].atleta_id)]); return _clCardCanvas(i, ph, logo).toDataURL('image/jpeg', 0.9); }
+let _clPaintTimer = null;
 async function _clPaintPrev() {
   const im = document.getElementById('cl-card-prev'); if (!im) return;
-  im.style.opacity = .4;
   try { const [logo, ph] = await Promise.all([_getLogo(), _clPhotoOf(_sharePayload.rows[_clPrevIdx].atleta_id)]); im.src = _clCardCanvas(_clPrevIdx, ph, logo).toDataURL('image/jpeg', 0.85); } catch (e) { console.warn(e); }
-  im.style.opacity = 1;
 }
-window._clSetN = v => { _clN = +v; };
-window._clSetPrev = v => { _clPrevIdx = +v; _clPaintPrev(); };
+function _clPaintSoon() { clearTimeout(_clPaintTimer); _clPaintTimer = setTimeout(_clPaintPrev, 50); }
+// quante schede finiscono nel carosello: 'mix' = grafica + le prime K schede, 'schede' = solo le prime 10 schede, 'grafica' = solo la grafica
+function _clCalcN() { const n = (_sharePayload?.rows || []).length; _clN = _clMode === 'grafica' ? 0 : _clMode === 'schede' ? Math.min(10, n) : Math.min(_clK, n, 9); }
+window._clSetMode = v => { _clMode = v; _clCalcN(); _clRenderPhotos(); };
+window._clSetK = v => { _clK = +v; _clCalcN(); _clRenderPhotos(); };
+window._clSetPrev = v => { _clPrevIdx = +v; _clRenderPhotos(); };
+window._clZoom = v => { const id = _sharePayload.rows[_clPrevIdx].atleta_id; _clAdj[id] = { ...(_clAdj[id] || { scale: 1, ox: 0, oy: 0 }), scale: Math.max(1, +v / 100) }; _clPaintSoon(); };
+window._clReset = () => { delete _clAdj[_sharePayload.rows[_clPrevIdx].atleta_id]; _clRenderPhotos(); };
 function _clRenderPhotos() {
   const box = document.getElementById('share-cl-photos'); if (!box) return;
   const show = _sharePlatKey === 'instagram' && authUser()?.role === 'admin' && _shareType === 'class' && (_sharePayload?.view || 'atleti') === 'atleti' && (_sharePayload?.rows || []).length;
   box.style.display = show ? 'block' : 'none';
   if (!show) return;
-  const rows = _sharePayload.rows, nMax = rows.length;
-  _clN = Math.min(_clN, nMax >= 10 ? 10 : nMax);
-  const opt = (v, l) => `<option value="${v}" ${_clN === v ? 'selected' : ''}>${l}</option>`;
-  box.innerHTML = `<div style="font-size:.78rem;font-weight:700;margin-bottom:6px">🎴 Schede atleta nel carosello Instagram</div>
-    <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:8px">Una scheda per ogni corridore: foto, squadra, punti e "il meglio" nel periodo e nel territorio di questa classifica. Vanno dopo la grafica (Instagram accetta 10 immagini in tutto).</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-      <label style="font-size:.74rem">Quante schede <select onchange="window._clSetN(this.value)" style="margin-left:4px">${opt(0, 'nessuna (solo la grafica)')}${opt(3, 'primi 3')}${opt(5, 'primi 5')}${opt(Math.min(9, nMax), 'primi ' + Math.min(9, nMax) + ' + grafica')}${nMax >= 10 ? opt(10, 'primi 10 (senza la grafica)') : ''}</select></label>
-      <label style="font-size:.74rem">Anteprima <select onchange="window._clSetPrev(this.value)" style="margin-left:4px">${rows.map((r, i) => `<option value="${i}" ${i === _clPrevIdx ? 'selected' : ''}>${i + 1}. ${esc(_clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim()))}</option>`).join('')}</select></label>
-    </div>
-    <img id="cl-card-prev" alt="Anteprima scheda" style="width:240px;border-radius:10px;border:1px solid var(--border-subtle);display:block">`;
-  _clPaintPrev();
+  const rows = _sharePayload.rows, n = rows.length;
+  _clCalcN(); _clPrevIdx = Math.min(_clPrevIdx, Math.max(_clN, 1) - 1);
+  const nm = r => _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim());
+  const ordine = [...(_clN < 10 ? ['<b>1</b> Grafica classifica'] : []), ...rows.slice(0, _clN).map((r, i) => `<b>${(_clN < 10 ? 2 : 1) + i}</b> ${esc(nm(r))}`)];
+  const id = rows[_clPrevIdx].atleta_id, adj = _clAdj[id] || { scale: 1 }, ho = !!_clCands[id];
+  const rd = (v, l) => `<label style="display:block;font-size:.78rem;margin:2px 0"><input type="radio" name="cl-mode" ${_clMode === v ? 'checked' : ''} onchange="window._clSetMode('${v}')"> ${l}</label>`;
+  box.innerHTML = `<div style="font-size:.8rem;font-weight:700;margin-bottom:4px">🎴 Carosello Instagram: come lo vuoi</div>
+    ${rd('mix', `La grafica della classifica come prima immagine, poi le schede dei primi <select onchange="window._clSetK(this.value)" style="margin:0 3px">${[3, 5, 9].filter(k => k <= Math.max(3, n)).map(k => `<option value="${k}" ${_clK === k ? 'selected' : ''}>${Math.min(k, n)}</option>`).join('')}</select>`)}
+    ${n >= 10 ? rd('schede', 'Solo le schede dei primi 10, senza la grafica (Instagram accetta al massimo 10 immagini)') : ''}
+    ${rd('grafica', 'Solo la grafica della classifica, senza schede')}
+    <div style="font-size:.72rem;color:var(--text-muted);margin:6px 0 10px">Il carosello sarà, in ordine: ${ordine.join(' · ') || '<b>1</b> Grafica classifica'}</div>
+    ${_clN > 0 ? `<div style="border-top:1px solid var(--border-subtle);padding-top:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><span style="font-size:.74rem;font-weight:700">Sistema la foto della scheda di</span>
+        <select onchange="window._clSetPrev(this.value)">${rows.slice(0, Math.max(_clN, 1)).map((r, i) => `<option value="${i}" ${i === _clPrevIdx ? 'selected' : ''}>${i + 1}. ${esc(nm(r))}</option>`).join('')}</select></div>
+      <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:5px">${ho ? '🖼 Trascina la foto nell\'anteprima per spostarla · usa lo zoom per avvicinarla' : 'Per questo corridore non c\'è nessuna foto: la scheda ha le iniziali.'}</div>
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+        <img id="cl-card-prev" alt="Anteprima scheda" draggable="false" style="width:300px;border-radius:10px;border:1px solid var(--border-subtle);display:block;${ho ? 'cursor:grab;touch-action:none' : ''}">
+        ${ho ? `<div style="min-width:180px"><div style="font-size:.72rem;color:var(--text-muted)">Zoom</div>
+          <input type="range" min="100" max="250" value="${Math.round((adj.scale || 1) * 100)}" style="width:180px" oninput="window._clZoom(this.value)">
+          <div style="margin-top:8px"><button class="share-action-btn" style="padding:4px 10px;font-size:.72rem" onclick="window._clReset()">↺ Reimposta foto</button></div></div>` : ''}
+      </div></div>` : ''}`;
+  const im = document.getElementById('cl-card-prev');
+  if (im) {
+    _clPaintPrev();
+    if (ho) {
+      let st = null;
+      im.addEventListener('dragstart', e => e.preventDefault());
+      im.onpointerdown = e => { const rc = im.getBoundingClientRect(); if (e.clientY - rc.top > rc.height * 780 / 1350) return; e.preventDefault(); const cur = _clAdj[id] || { scale: 1, ox: 0, oy: 0 }; st = { x: e.clientX, y: e.clientY, ox: cur.ox || 0, oy: cur.oy || 0, w: rc.width, h: rc.height * 780 / 1350 }; im.setPointerCapture(e.pointerId); im.style.cursor = 'grabbing'; };
+      im.onpointermove = e => { if (!st) return; const cur = _clAdj[id] || { scale: 1, ox: 0, oy: 0 }; _clAdj[id] = { ...cur, ox: st.ox + (e.clientX - st.x) / st.w, oy: st.oy + (e.clientY - st.y) / st.h }; _clPaintSoon(); };
+      im.onpointerup = im.onpointercancel = () => { st = null; im.style.cursor = 'grab'; };
+    }
+  }
 }
 async function _clLoadPhotos() {
-  _clCands = {};
+  _clCands = {}; _clAdj = {};
   const box = document.getElementById('share-cl-photos'); if (!box) return;
   const ids = (_sharePayload?.rows || []).slice(0, 10).map(r => r.atleta_id).filter(Boolean);
   if (!ids.length || (_sharePayload?.view || 'atleti') !== 'atleti') { box.style.display = 'none'; return; }
