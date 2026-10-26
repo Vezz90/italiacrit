@@ -7,7 +7,7 @@
 
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', squadre: 'Fine stagione: le squadre', libero: 'Richiesta libera' };
-  const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', scartata: 'Scartata', errore: 'Errore' };
+  const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', pubblicata: 'Pubblicata', scartata: 'Scartata', errore: 'Errore' };
   const st = { prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
@@ -94,7 +94,17 @@
       <footer>© Produzione riservata</footer></article></div>`;
   }
 
-  function editor() {
+  // scelta dei corridori sulle cui pagine pubblicare
+  function pubPanel() {
+    const b = sel(); if (!b || st.pub !== b.id || st.prev) return '';
+    const l = st.pubList;
+    return `<div class="hx-panel rd-pub"><h3>Pubblica sulle pagine dei corridori</h3>${!l ? '<p class="rd-muted">Cerco i corridori di cui parla l\'articolo…</p>' : `
+      <p class="rd-muted">L'articolo avrà una pagina pubblica e comparirà nella sezione «Articoli» della pagina di ogni corridore che lasci spuntato. Le modifiche che fai dopo diventano subito pubbliche.</p>
+      <div class="rd-publ">${l.map(a => `<label><input type="checkbox" data-pa="${esc(a.id)}" ${a.on ? 'checked' : ''}> ${esc(a.nome)} <small class="rd-muted">${a.nel_testo ? 'citato nel testo' : 'in classifica/risultati'}${a.rango ? ' · ' + a.rango + '°' : ''}</small></label>`).join('') || '<small class="rd-muted">Nessun corridore riconosciuto: l\'articolo avrà solo la sua pagina.</small>'}</div>
+      <div class="rd-btns"><button type="button" class="admin-edit-btn ok" data-act="pubOk">Pubblica ora</button><button type="button" class="admin-edit-btn" data-act="pubNo">Annulla</button></div>`}</div>`;
+  }
+  function editor() { return editorBase() + pubPanel(); }
+  function editorBase() {
     const b = sel();
     if (b && st.prev && b.stato !== 'in_generazione' && b.stato !== 'errore') { try { return articolo(b); } catch (e) { st.prev = false; if (typeof showToast === 'function') showToast('Anteprima non disponibile: ' + (e.message || e), 'error'); } }
     if (!b) return `<div class="hx-panel rd-empty"><h3>Anteprima</h3><p class="rd-muted">Scegli una bozza dall'elenco per leggerla, correggerla e approvarla. Nulla viene pubblicato sul sito.</p></div>`;
@@ -118,7 +128,9 @@
         <button type="button" class="admin-edit-btn" data-act="discard">Scarta</button>
         <button type="button" class="admin-edit-btn" data-act="again">Rigenera</button>
         <button type="button" class="admin-edit-btn" data-act="del">Elimina</button>
-        <button type="button" class="admin-edit-btn" disabled title="La pubblicazione si attiva dopo la prova">Pubblica (non ancora attiva)</button>
+        ${b.stato === 'pubblicata'
+          ? `<a class="admin-edit-btn ok" href="/articolo/${esc(b.slug)}" target="_blank" rel="noopener">Pubblicato ✓ · apri la pagina</a><button type="button" class="admin-edit-btn" data-act="pubblica">Cambia i corridori</button><button type="button" class="admin-edit-btn" data-act="ritira">Ritira dal sito</button>`
+          : `<button type="button" class="admin-edit-btn ok" data-act="pubblica">Pubblica sulle pagine dei corridori</button>`}
       </div></div>`;
   }
 
@@ -162,6 +174,7 @@
     const al = w.querySelector('#rd-altro'); if (al) al.onclick = () => { st.altro = !st.altro; w.querySelector('.rd-more').hidden = !st.altro; al.textContent = st.altro ? 'Chiudi' : 'Un altro articolo…'; };
     w.querySelectorAll('[data-open]').forEach(b => { b.onclick = () => { st.sel = b.dataset.open; st.prev = false; paint(); }; });
     const bk = w.querySelector('.rd-prev [data-act="back"]'); if (bk) bk.onclick = () => azione('back');
+    w.querySelectorAll('.rd-pub [data-act]').forEach(x => { x.onclick = () => azione(x.dataset.act); });
     const ed = w.querySelector('.rd-editor');
     if (ed) fotoLega();
     if (ed) {
@@ -188,6 +201,30 @@
     const b = sel(); if (!b) return;
     const ed = document.querySelector('.rd-editor');
     if (a === 'back') { st.prev = false; paint(); return; }
+    if (a === 'pubNo') { st.pub = null; paint(); return; }
+    if (a === 'pubblica') {
+      st.pub = b.id; st.pubList = null; paint();
+      try {
+        const r = await api('/atleti/' + b.id); const gia = new Set(r.scelti || []);
+        st.pubList = (r.atleti || []).map(x => ({ ...x, on: r.scelti ? gia.has(x.id) : x.nel_testo }));
+      } catch (e) { st.pubList = []; }
+      paint(); return;
+    }
+    if (a === 'pubOk') {
+      const ids = [...document.querySelectorAll('.rd-pub [data-pa]')].filter(x => x.checked).map(x => x.dataset.pa);
+      try {
+        const bodyT = ed ? { titolo: ed.querySelector('#ed-titolo').value, sommario: ed.querySelector('#ed-sommario').value, corpo: ed.querySelector('#ed-corpo').value } : null;
+        if (bodyT) await api('/bozze/' + b.id, { method: 'PUT', body: bodyT });
+        const r = await api('/pubblica/' + b.id, { method: 'POST', body: { atleti: ids } });
+        st.pub = null; if (typeof showToast === 'function') showToast('Pubblicato: ' + (r.url || ''));
+      } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
+      await carica(); paint(); return;
+    }
+    if (a === 'ritira') {
+      if (!confirm('Ritirare l\'articolo dal sito? Sparisce dalla sua pagina e dalle pagine dei corridori.')) return;
+      try { await api('/ritira/' + b.id, { method: 'POST', body: {} }); if (typeof showToast === 'function') showToast('Articolo ritirato'); } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
+      await carica(); paint(); return;
+    }
     if (a === 'prev') { if (ed) { b.titolo = ed.querySelector('#ed-titolo').value; b.sommario = ed.querySelector('#ed-sommario').value; b.corpo = ed.querySelector('#ed-corpo').value; } st.prev = true; paint(); return; }
     try {
       if (a === 'del') { if (!confirm('Eliminare questa bozza?')) return; await api('/bozze/' + b.id, { method: 'DELETE' }); st.sel = null; }

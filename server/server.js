@@ -697,6 +697,7 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
         urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(pid)}`, priority: '0.6', changefreq: 'monthly', lastmod: String(r.data_end || r.data_start).slice(0, 10), extra: mediaXml([pid, _proCalIdForServer(calRaw, r)], r.nome, `${CANONICAL}/gara/${encodeURIComponent(pid)}`) });
       }
     } catch (_) { /* senza gare pro: resta il resto */ }
+    try { for (const a of ((app.locals.redazionePub && await app.locals.redazionePub.pubblicati()) || [])) urls.push({ loc: `${CANONICAL}/articolo/${a.slug}`, priority: '0.7', changefreq: 'monthly', lastmod: String(a.pubblicata_il).slice(0, 10) }); } catch (_) { /* senza articoli */ }
     for (const [id, tm] of Object.entries(teams || {})) {
       if (!id || _isNotRealTeam(id) || !(tm && tm.risultati && tm.risultati.length)) continue;
       urls.push({ loc: `${CANONICAL}/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly', lastmod: lastOf(tm.risultati) });
@@ -13530,6 +13531,11 @@ app.get('*', async (req, res, next) => {
   if (mv) {
     try { const meta = await _videoHeadMeta(mv[1], mv[2]); if (meta) return res.send(_injectHeadTags(_readIndexHtmlTemplate(), meta)); }
     catch (e) { console.warn('[video-meta] fallito per', p, ':', e.message); }
+  }
+  const ma = p.match(/^\/articolo\/([\w-]+)\/?$/);
+  if (ma && app.locals.redazionePub) {
+    try { const meta = await app.locals.redazionePub.articoloMeta(ma[1]); if (meta) return res.send(_injectHeadTags(_readIndexHtmlTemplate(), meta)); }
+    catch (e) { console.warn('[articolo-meta] fallito per', p, ':', e.message); }
   }
   const m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
   if (m && m[1] === 'atleta') {

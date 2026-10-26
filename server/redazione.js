@@ -697,7 +697,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
         ['titolo', 'sommario', 'corpo'].forEach(k => { if (typeof b[k] === 'string') x[k] = b[k]; });
         if (['bozza', 'approvata', 'scartata'].includes(b.stato)) x.stato = b.stato;
         if (Array.isArray(b.foto)) x.foto = b.foto.filter(f => f && /^https?:\/\//i.test(f.url || '')).slice(0, 6).map(f => ({ url: String(f.url), credito: String(f.credito || '').slice(0, 120), didascalia: String(f.didascalia || '').slice(0, 200) }));
-        x.aggiornato = new Date().toISOString();
+        x.aggiornato = new Date().toISOString(); _pubMemo.t = 0;
         return x;
       });
       if (!out) return res.status(404).json({ error: 'bozza non trovata' });
@@ -711,6 +711,86 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       const b = (await readAll()).find(a => a.id === req.params.id);
       if (!b) return res.status(404).json({ error: 'bozza non trovata' });
       res.json({ foto: await fotoCandidate(b.tipo, b.parametri || {}, b.dati || {}) });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // ---------- pubblicazione sulle pagine dei corridori ----------
+  const slugify = t => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70);
+  const escH = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  let _pubMemo = { t: 0, v: [] };
+  async function pubblicati() {
+    if (Date.now() - _pubMemo.t < 20000) return _pubMemo.v;
+    const v = (await readAll()).filter(b => b.stato === 'pubblicata' && b.slug).sort((a, b) => String(b.pubblicata_il).localeCompare(String(a.pubblicata_il)));
+    _pubMemo = { t: Date.now(), v }; return v;
+  }
+  const nomeDi = async id => { try { const a = (await getData('athletes.json'))[id]; return a ? nomeBello(fullName(a)) : nomeBello(String(id).split('_').reverse().join(' ')); } catch (_) { return nomeBello(String(id).split('_').reverse().join(' ')); } };
+  async function pubblico(b, completo) {
+    const atleti = await Promise.all((b.atleti_ids || []).slice(0, 60).map(async id => ({ id, nome: await nomeDi(id) })));
+    const o = { slug: b.slug, titolo: b.titolo, sommario: b.sommario, foto: (b.foto || []).slice(0, 6), pubblicata_il: b.pubblicata_il, tipo: b.tipo, atleti };
+    if (completo) { o.corpo = b.corpo; o.tag = b.tag || []; o.aggiornata_il = b.aggiornato; }
+    return o;
+  }
+  // meta per Google/Facebook sull'indirizzo /articolo/<slug>
+  async function articoloMeta(slug) {
+    const b = (await pubblicati()).find(x => x.slug === slug); if (!b) return null;
+    const canonical = `${SITE_URL}/articolo/${b.slug}`, img = ((b.foto || [])[0] || {}).url || '';
+    const ogImage = /^https:\/\/[^/]*supabase\.co\//.test(img) ? img : `${SITE_URL}/assets/og-default.png`;
+    const blocchi = bloccoDi(b.corpo).filter(x => x.t !== 'f');
+    return {
+      title: `${b.titolo} | ICS`, desc: String(b.sommario || '').slice(0, 300), canonical, ogImage,
+      noscript: `<article><h1>${escH(b.titolo)}</h1><p>${escH(b.sommario)}</p>${blocchi.map(x => x.t === 'h' ? `<h2>${escH(x.s)}</h2>` : `<p>${escH(x.s)}</p>`).join('')}</article>`,
+      jsonld: [{ '@context': 'https://schema.org', '@type': 'NewsArticle', headline: b.titolo, description: b.sommario, datePublished: b.pubblicata_il, dateModified: b.aggiornato || b.pubblicata_il, mainEntityOfPage: canonical,
+        image: [ogImage], author: { '@type': 'Organization', name: 'Italia Cycling Stats' }, publisher: { '@type': 'Organization', name: 'Italia Cycling Stats', url: SITE_URL } }],
+    };
+  }
+  app.locals.redazionePub = { pubblicati, articoloMeta };
+
+  app.get('/api/articoli', async (req, res) => {
+    try { const l = (await pubblicati()).slice(0, 60); res.json({ articoli: await Promise.all(l.map(b => pubblico(b, false))) }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.get('/api/articoli/atleta/:id', async (req, res) => {
+    try { const l = (await pubblicati()).filter(b => (b.atleti_ids || []).includes(req.params.id)).slice(0, 12); res.json({ articoli: await Promise.all(l.map(b => pubblico(b, false))) }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.get('/api/articoli/:slug', async (req, res) => {
+    try { const b = (await pubblicati()).find(x => x.slug === req.params.slug); if (!b) return res.status(404).json({ error: 'articolo non trovato' }); res.json(await pubblico(b, true)); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
+  // i corridori di cui parla la bozza, per scegliere sulle cui pagine pubblicarla
+  app.get('/api/admin/redazione/atleti/:id', requireAdmin, async (req, res) => {
+    try {
+      const b = (await readAll()).find(a => a.id === req.params.id); if (!b) return res.status(404).json({ error: 'bozza non trovata' });
+      const m = atletiDi(b.dati || {}, new Map(), b.parametri || {});
+      const testo = ' ' + up((b.titolo || '') + ' ' + (b.sommario || '') + ' ' + (b.corpo || '')).replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ') + ' ';
+      const out = [...m.values()].map(a => {
+        const cogn = up(a.cognome || '').replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ').trim();
+        return { id: a.id, nome: nomeBello(a.nome || String(a.id).split('_').reverse().join(' ')), rango: a.rango, nel_testo: !!cogn && testo.includes(' ' + cogn + ' ') };
+      }).sort((x, y) => (y.nel_testo ? 1 : 0) - (x.nel_testo ? 1 : 0) || x.rango - y.rango).slice(0, 60);
+      res.json({ atleti: out, scelti: b.atleti_ids || null });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/pubblica/:id', requireAdmin, async (req, res) => {
+    try {
+      const ids = (Array.isArray((req.body || {}).atleti) ? req.body.atleti : []).map(String).filter(x => /^[A-Za-z0-9_]{3,120}$/.test(x)).slice(0, 60);
+      const out = await mutate(arr => {
+        const x = arr.find(a => a.id === req.params.id); if (!x) return { err: 'bozza non trovata' };
+        if (x.stato === 'in_generazione' || x.stato === 'errore') return { err: 'la bozza non e pronta' };
+        if (!String(x.titolo || '').trim() || String(x.corpo || '').trim().length < 80) return { err: 'titolo o testo mancanti' };
+        x.stato = 'pubblicata'; x.slug = x.slug || (slugify(x.titolo) + '-' + String(x.id).slice(0, 4)); x.atleti_ids = ids;
+        x.pubblicata_il = x.pubblicata_il || new Date().toISOString(); x.aggiornato = new Date().toISOString();
+        return { slug: x.slug };
+      });
+      if (out.err) return res.status(400).json({ error: out.err });
+      _pubMemo.t = 0; res.json({ ok: true, slug: out.slug, url: `${SITE_URL}/articolo/${out.slug}` });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/ritira/:id', requireAdmin, async (req, res) => {
+    try {
+      const ok = await mutate(arr => { const x = arr.find(a => a.id === req.params.id); if (!x) return false; x.stato = 'bozza'; x.aggiornato = new Date().toISOString(); return true; });
+      _pubMemo.t = 0; res.json({ ok });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 

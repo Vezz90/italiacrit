@@ -5103,6 +5103,9 @@ function route() {
   if (match('/profilo')) return renderMyProfile();
   if (match('/admin')) return renderAdmin();
   if (match('/redazione')) return (typeof window.renderRedazione === 'function' ? window.renderRedazione() : renderHomeDashboard());
+  const m_articolo = match('/articolo/:slug');
+  if (m_articolo && typeof window.renderArticolo === 'function') return window.renderArticolo(decodeURIComponent(m_articolo[1]));
+  if (match('/articoli') && typeof window.renderArticoli === 'function') return window.renderArticoli();
   const m_atleta = match('/atleta/:id');
   if (m_atleta) return renderAtleta(m_atleta[1]);
   const m_team = match('/team/:id');
@@ -18380,6 +18383,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${_rankChartHtml}
     <div id="atleta-cumul-chart-wrap"${_rankChartHtml ? ' style="display:none"' : ''}>${cumulHtml}</div>
     ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
+    <div id="atleta-articoli"></div>${(() => { setTimeout(() => { if (typeof window._caricaArticoliAtleta === 'function') window._caricaArticoliAtleta(atleta_id); }, 0); return ''; })()}
     <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
     ${(() => {
       // globalData.videos al primo caricamento può venire dal fallback statico
