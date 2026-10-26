@@ -1773,10 +1773,10 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
     const pa = new Map(rowsOf(A.atleta_id).map(x => [x.gara_id, x.posizione])), pb = new Map(rowsOf(B.atleta_id).map(x => [x.gara_id, x.posizione]));
     let n = 0, a = 0, b = 0;
     for (const [g, pos] of pa) { if (!pb.has(g)) continue; n++; if (pos < pb.get(g)) a++; else if (pos > pb.get(g)) b++; }
-    return { tra: `${A.nome} ${A.cognome}`.trim(), e: `${B.nome} ${B.cognome}`.trim(), gare_in_comune: n, davanti_il_primo_dei_due: a, davanti_il_secondo: b };
+    return { tra: `${A.nome} ${A.cognome}`.trim(), e: `${B.nome} ${B.cognome}`.trim(), volte_in_cui_sono_arrivati_entrambi_nei_primi_10: n, davanti_il_primo_dei_due: a, davanti_il_secondo: b };
   };
   const sfide = [];
-  for (let i = 0; i < Math.min(4, rows.length) - 1; i++) { const d = duel(rows[i], rows[i + 1]); if (d.gare_in_comune >= 3) sfide.push(d); }
+  for (let i = 0; i < Math.min(4, rows.length) - 1; i++) { const d = duel(rows[i], rows[i + 1]); if (d.volte_in_cui_sono_arrivati_entrambi_nei_primi_10 >= 3) sfide.push(d); }
   // andamento della stagione: chi era primo dopo ogni giornata di gare
   const byDate = new Map();
   inCat.forEach(x => { (byDate.get(x.data) || byDate.set(x.data, []).get(x.data)).push(x); });
@@ -1800,11 +1800,11 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
     } : {};
     return {
       posizione: i + 1, nome: `${r.nome} ${r.cognome}`.trim(), team: r.team || '', punti: r.punti,
-      distacco_dal_primo: i === 0 ? 0 : dist,
-      distacco_dal_precedente: i === 0 ? null : Math.round((prev - r.punti) * 100) / 100,
+      punti_di_ritardo_dal_primo: i === 0 ? 0 : dist,
+      punti_di_ritardo_dal_precedente: i === 0 ? null : Math.round((prev - r.punti) * 100) / 100,
       vittorie: mine.filter(x => x.posizione === 1).length,
       podi: mine.filter(x => x.posizione >= 1 && x.posizione <= 3).length,
-      gare_disputate: new Set(mine.map(x => x.gara_id)).size,
+      piazzamenti_a_punti_registrati: new Set(mine.map(x => x.gara_id)).size,
       ...big,
       punti_ultimi_30_giorni: Math.round(mine.filter(x => x.data >= ago30).reduce((a, x) => a + (x.punti_effettivi || 0), 0) * 100) / 100,
       ...(i > 0 && R > 0 ? { puo_ancora_superare_il_primo: dist < palio } : {}),
@@ -1814,7 +1814,7 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
   return {
     categoria: _CLASS_CAT_LABELS[catCode] || catCode, regione: region || null, mese: month ? _CLASS_MONTHS[parseInt(month, 10)] : null,
     oggi: today, stato_stagione: stato,
-    gare_disputate: played.size, gare_rimanenti_in_calendario: R,
+    gare_con_risultati_registrati_nel_sito: played.size, gare_rimanenti_in_calendario: R,
     ultima_gara_disputata: lastDate || null,
     prossime_gare: future.slice(0, 3).map(g => ({ nome: g.nome, data: g.data, luogo: g.luogo || g.regione || '', tipo: g.tipo, moltiplicatore: g.moltiplicatore })),
     ultima_gara_in_calendario: future.length ? future[future.length - 1].data : null,
@@ -1852,13 +1852,15 @@ Stile: giornalismo sportivo vivo e umano, frasi brevi e frasi più lunghe altern
 
 Struttura:
 1. Titolo (una riga, con emoji): "🏆" + una frase breve e concreta che dica la cosa più importante, con la categoria (e regione/mese se presenti). Esempio di taglio: "🏆 ESORDIENTI DONNE: KUCHYNSKAYA CHIUDE DAVANTI". Niente slogan generici.
-2. Paragrafo 1 – la protagonista/il protagonista: chi comanda, con quanti punti e quale vantaggio. Racconta COME ci è arrivato usando i dati: vittorie su gare disputate, podi, la serie di vittorie consecutive se almeno 3, e soprattutto le vittorie più importanti ("vittorie_piu_importanti": nomina gara, data e punti della più pesante; se in "titoli_vinti" c'è un campionato, mettilo in primo piano). Se "andamento_stagione" dice da quando è primo ininterrottamente o quanti cambi di leader ci sono stati, usalo per dare il senso della stagione.
-3. Paragrafo 2 – le sfide: usa "sfide_dirette" per raccontare i duelli (es. "nelle N gare in cui si sono incontrate, X è arrivata davanti Y volte") e i margini stretti ("distacco_dal_precedente" molto piccolo = lotta per il podio o per una posizione). Cita secondo e terzo con un dato che li renda riconoscibili (una vittoria importante, i podi). Solo ciò che è nei dati.
+2. Paragrafo 1 – la protagonista/il protagonista: chi comanda, con quanti punti e quale vantaggio. Racconta COME ci è arrivato usando i dati: vittorie e podi (mai "su N gare"), la serie di vittorie consecutive se almeno 3, e soprattutto le vittorie più importanti ("vittorie_piu_importanti": nomina gara, data e punti della più pesante; se in "titoli_vinti" c'è un campionato, mettilo in primo piano). Se "andamento_stagione" dice da quando è primo ininterrottamente o quanti cambi di leader ci sono stati, usalo per dare il senso della stagione.
+3. Paragrafo 2 – le sfide: usa "sfide_dirette" per raccontare i duelli (es. "nelle N volte in cui sono arrivate entrambe nei primi 10, X è arrivata davanti Y volte") e i margini stretti ("punti_di_ritardo_dal_precedente" molto piccolo = lotta per il podio o per una posizione). Cita secondo e terzo con un dato che li renda riconoscibili (una vittoria importante, i podi). Solo ciò che è nei dati.
 4. Paragrafo 3 – la stagione (massimo 2 frasi), in base a "stato_stagione":
    - "conclusa": nessuna gara rimasta in calendario, classifica definitiva: una frase di chiusura, senza ripetere il vincitore già detto.
    - altrimenti: quante gare restano ("gare_rimanenti_in_calendario"), la prossima con data e luogo, quanti punti al massimo restano in palio ("punti_massimi_ancora_in_palio"; una vittoria vale 15 punti per il moltiplicatore della gara). Se "primo_posto_matematicamente_assegnato" è true di' che il primo posto non può più cambiare; altrimenti nomina chi può ancora superare il primo ("puo_ancora_superare_il_primo": true) e cosa gli servirebbe.
 5. Una riga vuota, poi "📊 La classifica" e l'elenco: 🥇🥈🥉 per i primi tre poi 4. 5. 6. ... nel formato "Nome Cognome – Team – 375 pt". Se il "team" è chiaramente una nazionale o un paese (es. Italia, Brasile) omettilo dalla riga.
 6. Una riga vuota e 5-6 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nome del vincitore, ecc.).
+
+LIMITI DEI DATI (leggili bene): del sito registriamo SOLO i primi 10 di ogni gara. Quindi i numeri che contano i risultati di un atleta ('risultati_registrati', 'piazzamenti_a_punti_registrati') NON sono le gare che ha corso: potrebbe averne corse molte di piu, e magari senza entrare nei primi 10. Non scrivere MAI 'N gare disputate', 'in N gare', 'su N gare' e non fare rapporti tra vittorie e gare; di' invece 'N vittorie e M podi'. Le sfide dirette sono solo le volte in cui entrambi sono arrivati nei primi 10: non presentarle come tutti i confronti della stagione (di' 'nelle N volte in cui sono arrivati entrambi nei primi 10'). Il punteggio di un atleta e ESCLUSIVAMENTE il campo 'punti' (lo stesso della classifica che chiude il post): i campi 'punti_di_ritardo_*' sono differenze tra due atleti, non punteggi, e non vanno mai presentati come punti di qualcuno.
 
 Regole ferree: usa SOLO i dati forniti; non inventare gare, nomi di avversari, risultati, emozioni attribuite alle persone ("era commossa", "ha stretto i denti") né numeri; non fare calcoli diversi da quelli già nei dati; ignora i campi null o vuoti; se un dato è poco significativo (es. serie di 1-2 vittorie) non citarlo. Scrivi i nomi in forma normale (Nome Cognome, non tutto maiuscolo). I tre paragrafi insieme tra 700 e 1100 caratteri. Rispondi SOLO con il post, a partire dal titolo.
 
