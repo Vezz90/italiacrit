@@ -1742,7 +1742,7 @@ function _calCatMatches(catText, catCode) {
     default: return false;
   }
 }
-function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
+function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today, ctx }) {
   const [catCode, regionSlug, month] = decodeURIComponent(id).split('__');
   const gender = catCode.endsWith('_F') ? 'F' : 'M';
   const region = regionSlug ? regionSlug.replace(/_/g, ' ') : '';
@@ -1810,10 +1810,18 @@ function _classAnalysisFacts({ id, rows, resultsRaw, calendar, today }) {
       ...(i > 0 && R > 0 ? { puo_ancora_superare_il_primo: dist < palio } : {}),
     };
   });
-  const stato = R === 0 ? 'conclusa' : R <= 3 ? 'ultime_gare' : played.size < 4 ? 'inizio' : 'in_corso';
+  const yr = Number(ctx && ctx.anno) || Number(today.slice(0, 4));
+  const fineMese = month ? new Date(Date.UTC(yr, parseInt(month, 10), 0)).toISOString().slice(0, 10) : null;
+  const stato = month ? (today > fineMese ? 'mese_concluso' : 'mese_in_corso') : R === 0 ? 'conclusa' : R <= 3 ? 'ultime_gare' : played.size < 4 ? 'inizio' : 'in_corso';
   return {
     categoria: _CLASS_CAT_LABELS[catCode] || catCode, regione: region || null, mese: month ? _CLASS_MONTHS[parseInt(month, 10)] : null,
     oggi: today, stato_stagione: stato,
+    contesto_del_post: {
+      cosa_mostra_la_grafica: `${ctx && ctx.vista === 'team' ? 'classifica a squadre' : 'classifica atleti'} ${ctx && ctx.ordinamento === 'vittorie' ? 'ordinata per NUMERO DI VITTORIE (nelle righe, "punti" e il numero di vittorie)' : 'ordinata per punti'}`,
+      periodo: month ? `SOLO il mese di ${_CLASS_MONTHS[parseInt(month, 10)]} ${yr}: contano soltanto i risultati di quel mese, non e la classifica generale della stagione` : `intera stagione ${yr} (classifica generale)`,
+      territorio: region ? `solo le gare in ${region}` : 'tutta Italia',
+      righe_nella_grafica: rows.length,
+    },
     gare_con_risultati_registrati_nel_sito: played.size, gare_rimanenti_in_calendario: R,
     ultima_gara_disputata: lastDate || null,
     prossime_gare: future.slice(0, 3).map(g => ({ nome: g.nome, data: g.data, luogo: g.luogo || g.regione || '', tipo: g.tipo, moltiplicatore: g.moltiplicatore })),
@@ -1837,11 +1845,28 @@ app.post('/api/admin/classifica-share-text/:id', requireAdmin, async (req, res) 
       .filter(r => r.cognome);
     if (!rows.length) return res.status(400).json({ error: 'nessuna riga' });
     const id = req.params.id, regen = req.query.regen === '1';
-    const key = id + '|' + rows.map(r => `${r.atleta_id}:${r.punti}`).join(',');
+    const c0 = req.body?.contesto || {};
+    const ctx = { vista: c0.vista === 'team' ? 'team' : 'atleti', ordinamento: c0.ordinamento === 'vittorie' ? 'vittorie' : 'punti', anno: Number(c0.anno) || null };
+    const key = id + '|' + ctx.vista + '|' + ctx.ordinamento + '|' + rows.map(r => `${r.atleta_id}:${r.punti}`).join(',');
     const hit = _classTextCache.get(key);
     if (hit && !regen && Date.now() - hit.at < 6 * 3600e3) return res.json({ text: hit.text, cached: true });
     const [resultsRaw, calendar] = await Promise.all([readDataJsonFromGH('results_raw.json'), readDataJsonFromGH('calendar.json')]);
-    const facts = _classAnalysisFacts({ id, rows, resultsRaw, calendar, today: new Date().toISOString().slice(0, 10) });
+    const today0 = new Date().toISOString().slice(0, 10);
+    let facts;
+    if (ctx.vista === 'team') {
+      // classifica a squadre: le righe sono squadre, non atleti (niente duelli tra atleti)
+      const [catCode, regionSlug, month] = decodeURIComponent(id).split('__');
+      facts = {
+        categoria: _CLASS_CAT_LABELS[catCode] || catCode, oggi: today0,
+        contesto_del_post: {
+          cosa_mostra_la_grafica: `classifica a squadre ${ctx.ordinamento === 'vittorie' ? 'ordinata per NUMERO DI VITTORIE (accanto ai nomi c\'e il numero di vittorie)' : 'ordinata per punti'}`,
+          periodo: month ? `SOLO il mese di ${_CLASS_MONTHS[parseInt(month, 10)]}: contano soltanto i risultati di quel mese` : `intera stagione ${Number(today0.slice(0, 4))} (classifica generale)`,
+          territorio: regionSlug ? `solo le gare in ${regionSlug.replace(/_/g, ' ')}` : 'tutta Italia', righe_nella_grafica: rows.length,
+        },
+        squadre: rows.map((r, i) => ({ posizione: i + 1, squadra: `${r.nome} ${r.cognome}`.trim(), valore: r.punti, dettaglio: r.team || '' })),
+        nota: 'del sito registriamo solo i primi 10 di ogni gara; non scrivere gare disputate dalle squadre',
+      };
+    } else facts = _classAnalysisFacts({ id, rows, resultsRaw, calendar, today: today0, ctx });
     const msg = await ai.messages.create({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
@@ -1850,12 +1875,15 @@ app.post('/api/admin/classifica-share-text/:id', requireAdmin, async (req, res) 
 
 Stile: giornalismo sportivo vivo e umano, frasi brevi e frasi più lunghe alternate, qualche immagine efficace (mai ridondante), rispetto per ragazzi e ragazze che gareggiano. Si può usare qualche emoji sportiva nel testo (non troppe). Niente cliché vuoti ("saldamente", "momento di forma eccellente", "da sottolineare", "si fa notare", "segno di"), niente esclamazioni a raffica, niente gergo tecnico. Non ripetere due volte la stessa informazione.
 
+CONTESTO DEL POST (campo "contesto_del_post", leggilo prima di scrivere): la grafica puo mostrare periodi e filtri diversi, e il testo deve raccontare QUELLO e non altro. Se il periodo e un MESE: la classifica conta solo i punti presi in quel mese, quindi racconta il mese (chi ha vinto di piu, chi ha guadagnato di piu, le gare del mese), non la stagione: non dire che "chiude la stagione" e non confrontare con la classifica generale se non e nei dati; se lo stato e "mese_in_corso" di' che mancano ancora gare, se e "mese_concluso" chiudi sul mese. Se c'e un territorio (regione), e una classifica regionale: nominala nel titolo e nel racconto. Se la grafica e ordinata per vittorie, il valore accanto ai nomi e il numero di vittorie e non i punti. Se e a squadre, le righe sono squadre. Se il periodo e l'intera stagione ed lo stato e "conclusa", e il racconto di fine stagione.
+
 Struttura:
 1. Titolo (una riga, con emoji): "🏆" + una frase breve e concreta che dica la cosa più importante, con la categoria (e regione/mese se presenti). Esempio di taglio: "🏆 ESORDIENTI DONNE: KUCHYNSKAYA CHIUDE DAVANTI". Niente slogan generici.
 2. Paragrafo 1 – la protagonista/il protagonista: chi comanda, con quanti punti e quale vantaggio. Racconta COME ci è arrivato usando i dati: vittorie e podi (mai "su N gare"), la serie di vittorie consecutive se almeno 3, e soprattutto le vittorie più importanti ("vittorie_piu_importanti": nomina gara, data e punti della più pesante; se in "titoli_vinti" c'è un campionato, mettilo in primo piano). Se "andamento_stagione" dice da quando è primo ininterrottamente o quanti cambi di leader ci sono stati, usalo per dare il senso della stagione.
 3. Paragrafo 2 – le sfide: usa "sfide_dirette" per raccontare i duelli (es. "nelle N volte in cui sono arrivate entrambe nei primi 10, X è arrivata davanti Y volte") e i margini stretti ("punti_di_ritardo_dal_precedente" molto piccolo = lotta per il podio o per una posizione). Cita secondo e terzo con un dato che li renda riconoscibili (una vittoria importante, i podi). Solo ciò che è nei dati.
 4. Paragrafo 3 – la stagione (massimo 2 frasi), in base a "stato_stagione":
    - "conclusa": nessuna gara rimasta in calendario, classifica definitiva: una frase di chiusura, senza ripetere il vincitore già detto.
+   - "mese_concluso": il mese e finito: una frase di chiusura sul mese (mai sulla stagione). "mese_in_corso": il mese non e finito, di' quante gare restano nel mese.
    - altrimenti: quante gare restano ("gare_rimanenti_in_calendario"), la prossima con data e luogo, quanti punti al massimo restano in palio ("punti_massimi_ancora_in_palio"; una vittoria vale 15 punti per il moltiplicatore della gara). Se "primo_posto_matematicamente_assegnato" è true di' che il primo posto non può più cambiare; altrimenti nomina chi può ancora superare il primo ("puo_ancora_superare_il_primo": true) e cosa gli servirebbe.
 5. Una riga vuota, poi "📊 La classifica" e l'elenco: 🥇🥈🥉 per i primi tre poi 4. 5. 6. ... nel formato "Nome Cognome – Team – 375 pt". Se il "team" è chiaramente una nazionale o un paese (es. Italia, Brasile) omettilo dalla riga.
 6. Una riga vuota e 5-6 hashtag pertinenti (#ItaliaCyclingStats, #CiclismoGiovanile, nome del vincitore, ecc.).

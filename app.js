@@ -32827,14 +32827,14 @@ async function _showFbShareText(regen) {
     // Testo base subito (gratis, dal client); l'admin riceve poi l'analisi scritta dall'AI (stagione + possibili ribaltoni)
     box.style.display = 'block';
     const ta = document.getElementById('share-fb-text'), local = _classShareText(_sharePayload || {});
-    const admin = authUser()?.role === 'admin' && _sharePayload?._id && (_sharePayload.view || 'atleti') === 'atleti' && (_sharePayload.sort || 'punti') === 'punti';
+    const admin = authUser()?.role === 'admin' && _sharePayload?._id;
     ta.value = local;
     if (regenB) regenB.style.display = admin ? '' : 'none';
     if (!admin) return;
     ta.value = regen ? 'Rigenerazione analisi…' : 'Generazione analisi…';
     if (regenB) regenB.disabled = true;
     try {
-      const r = await apiCall(`/admin/classifica-share-text/${encodeURIComponent(_sharePayload._id)}${regen ? '?regen=1' : ''}`, { method: 'POST', body: { rows: _sharePayload.rows } });
+      const r = await apiCall(`/admin/classifica-share-text/${encodeURIComponent(_sharePayload._id)}${regen ? '?regen=1' : ''}`, { method: 'POST', body: { rows: _sharePayload.rows, contesto: { vista: _sharePayload.view, ordinamento: _sharePayload.sort, regione: _sharePayload.region, mese: _sharePayload.month, anno: Number(_loadedSeasonYear()) } } });
       ta.value = r?.text || local;
     } catch (e) { ta.value = local; }
     finally { if (regenB) regenB.disabled = false; }
