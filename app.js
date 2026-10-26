@@ -32522,7 +32522,7 @@ window.publishShareToInstagram = async function(){
   const accounts=[...document.querySelectorAll('#share-ig-accs input:checked')].map(i=>i.value);
   if(!accounts.length){ showToast('Scegli almeno un profilo', 'error'); return; }
   let caption=(ta && ta.value && !/^(Generazione|Rigenerazione)/.test(ta.value)) ? ta.value : '';
-  if (_shareType==='class' && kind==='feed' && _clN > 0) { const cr=[...new Set(Object.values(_clCands).slice(0,_clN).map(c=>c.credito).filter(Boolean))]; if (cr.length) caption += `\n\n📷 Foto: ${cr.join(', ')}`; }
+  if (_shareType==='class' && kind==='feed' && _clN > 0) { const cr=[...new Set(Object.values(_clCands).slice(0,_clN).map(c=>_clSel(c).credito).filter(Boolean))]; if (cr.length) caption += `\n\n📷 Foto: ${cr.join(', ')}`; }
   if(kind==='feed' && !caption){ showToast('Aspetta che il testo sia pronto', 'error'); return; }
   const name=isClass ? `Classifica ${_sharePayload?.kindLabel ? _sharePayload.kindLabel + ' ' : ''}${_sharePayload?.catLabel||''}${_sharePayload?.region?' · '+_sharePayload.region:''}${_sharePayload?.month?' · '+_sharePayload.month:''}` : (_sharePayload?.name||gid);
   const who=btn.textContent.replace(/^.* su /,'');
@@ -32654,9 +32654,12 @@ function _clCardPhoto(ctx, img, x, y, w, h, adj) {
 }
 async function _clPhotoOf(aid) {
   const c = _clCands[aid]; if (!c) return null;
-  if (!c.img) c.img = await _fetchImgBlob(icProxy(c.url));
-  return c.img ? { img: c.img, credito: c.credito, adj: _clAdj[aid] || { scale: 1, ox: 0, oy: 0 } } : null;
+  const o = _clSel(c);
+  if (!o.img) o.img = await _fetchImgBlob(icProxy(o.url));
+  return o.img ? { img: o.img, credito: o.credito, adj: _clAdj[aid] || { scale: 1, ox: 0, oy: 0 } } : null;
 }
+function _clSel(c) { return (c.opzioni && c.opzioni[c.sel || 0]) || c; }
+window._clPick = i => { const id = _sharePayload.rows[_clPrevIdx].atleta_id, c = _clCands[id]; if (!c) return; c.sel = +i; delete _clAdj[id]; _clRenderPhotos(); };
 async function _clCardJpeg(i) { const [logo, ph] = await Promise.all([_getLogo(), _clPhotoOf(_sharePayload.rows[i].atleta_id)]); return _clCardCanvas(i, ph, logo).toDataURL('image/jpeg', 0.9); }
 let _clPaintTimer = null;
 async function _clPaintPrev() {
@@ -32691,6 +32694,8 @@ function _clRenderPhotos() {
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><span style="font-size:.74rem;font-weight:700">Sistema la foto della scheda di</span>
         <select onchange="window._clSetPrev(this.value)">${rows.slice(0, Math.max(_clN, 1)).map((r, i) => `<option value="${i}" ${i === _clPrevIdx ? 'selected' : ''}>${i + 1}. ${esc(nm(r))}</option>`).join('')}</select></div>
       <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:5px">${ho ? '🖼 Trascina la foto nell\'anteprima per spostarla · usa lo zoom per avvicinarla' : 'Per questo corridore non c\'è nessuna foto: la scheda ha le iniziali.'}</div>
+      ${(_clCands[id]?.opzioni || []).length > 1 ? `<div style="font-size:.7rem;color:var(--text-muted);margin-bottom:4px">Scegli la foto (${_clCands[id].opzioni.length} disponibili)</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${_clCands[id].opzioni.map((o, i) => `<button type="button" onclick="window._clPick(${i})" title="${esc(({ vittoria: 'Vittoria', taggata: 'Foto taggata', gara: 'Gara', profilo: 'Foto profilo' })[o.tipo] || '')}${o.gara ? ' · ' + esc(o.gara) : ''}" style="position:relative;padding:0;border:2px solid ${(_clCands[id].sel || 0) === i ? 'var(--accent,#e0b400)' : 'var(--border-subtle)'};border-radius:8px;overflow:hidden;width:64px;height:64px;background:none;cursor:pointer"><img src="${esc(icProxy(o.url))}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block"><span style="position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:.55rem;text-align:center;padding:1px 0">${({ vittoria: 'Vittoria', taggata: 'Taggata', gara: 'Gara', profilo: 'Profilo' })[o.tipo] || ''}</span></button>`).join('')}</div>` : ''}
       <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
         <img id="cl-card-prev" alt="Anteprima scheda" draggable="false" style="width:300px;border-radius:10px;border:1px solid var(--border-subtle);display:block;${ho ? 'cursor:grab;touch-action:none' : ''}">
         ${ho ? `<div style="min-width:180px"><div style="font-size:.72rem;color:var(--text-muted)">Zoom</div>

@@ -13462,6 +13462,12 @@ async function _fotoClassifica(ids, uno = false) {
     for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) for (const [gid, e] of Object.entries(src || {})) { const u = Object.keys((e && e.tags) || {}).find(t => ha(e.tags[t], aid)); if (u) return { url: u, credito: nome, g: gid }; }
     return null;
   };
+  const taggateTutte = (aid, max) => {
+    const o = [];
+    for (const [gid, l] of up) for (const f of l) if (ha(f.atleta_ids, aid)) o.push({ url: upUrl(f), credito: f.photographer || f.display_name || '', g: gid });
+    for (const [src, nome] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) for (const [gid, e] of Object.entries(src || {})) for (const t of Object.keys((e && e.tags) || {})) if (ha(e.tags[t], aid)) o.push({ url: t, credito: nome, g: gid });
+    return o.slice(0, max);
+  };
   const items = [];
   for (const aid of ids) {
     const l = res[aid] || [];
@@ -13470,7 +13476,18 @@ async function _fotoClassifica(ids, uno = false) {
     for (const r of l.filter(x => x.pos === 1).slice(0, 12)) { const f = dellaGara(r.g, aid); if (f) { it = mk('vittoria', f, r.g); break; } }
     if (!it) { const t = taggata(aid); if (t) it = mk('taggata', t, t.g); }
     if (!it) for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { const f = dellaGara(r.g, aid, true); if (f) { it = mk('gara', f, r.g); break; } }
-    if (!it) { const pf = await getEntityPhoto('atleta', aid).catch(() => null); if (pf) it = mk('profilo', { url: pf }, ''); }
+    const pf = (!it || uno) ? await getEntityPhoto('atleta', aid).catch(() => null) : null;
+    if (!it && pf) it = mk('profilo', { url: pf }, '');
+    if (it && uno) {                                    // alternative tra cui scegliere nella scheda: altre vittorie, foto dove e' taggato, gare sul podio, e sempre la foto profilo
+      const opz = [], visti = new Set();
+      const push = o => { if (o && o.url && !visti.has(o.url)) { visti.add(o.url); opz.push(o); } };
+      push(it);
+      for (const r of l.filter(x => x.pos === 1).slice(0, 12)) { if (opz.length >= 4) break; const f = dellaGara(r.g, aid); if (f) push(mk('vittoria', f, r.g)); }
+      for (const t of taggateTutte(aid, 8)) { if (opz.length >= 6) break; push(mk('taggata', t, t.g)); }
+      for (const r of l.filter(x => x.pos > 1).sort((x, y) => x.pos - y.pos || y.d.localeCompare(x.d)).slice(0, 15)) { if (opz.length >= 7) break; const f = dellaGara(r.g, aid, true); if (f) push(mk('gara', f, r.g)); }
+      if (pf) push(mk('profilo', { url: pf }, ''));
+      it.opzioni = opz;
+    }
     if (it) items.push(it);
   }
   return items;
