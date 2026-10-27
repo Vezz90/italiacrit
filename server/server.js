@@ -13499,6 +13499,41 @@ app.get('/api/admin/social/class-photos', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Proposte di tag dalle descrizioni Xpix ("Nella foto: Nome Cognome (Societa)") con societa non coincidente: l'admin conferma o scarta dalla dashboard.
+async function _leggiProposteTag() {
+  const { data } = await supabase.from('kv_store').select('value').eq('key', 'foto_tag_proposte').maybeSingle();
+  let v = data && data.value; if (typeof v === 'string') v = JSON.parse(v);
+  return Array.isArray(v) ? v : [];
+}
+app.get('/api/admin/foto-tag-proposte', requireAdmin, async (req, res) => {
+  try {
+    const st = String(req.query.status || 'pending');
+    res.json({ items: (await _leggiProposteTag()).filter(p => p.stato === st) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/foto-tag-proposte/:id/:azione', requireAdmin, async (req, res) => {
+  try {
+    const { id, azione } = req.params;
+    if (!['confirm', 'reject', 'reset'].includes(azione)) return res.status(400).json({ error: 'Azione non valida' });
+    const list = await _leggiProposteTag();
+    const p = list.find(x => String(x.id) === String(id));
+    if (!p) return res.status(404).json({ error: 'Proposta non trovata' });
+    if (azione === 'confirm') {
+      const photos = await readXpixPhotos();
+      const entry = photos[p.gara];
+      if (!entry) return res.status(404).json({ error: 'Album non trovato' });
+      entry.tags = entry.tags || {};
+      const cur = new Set(String(entry.tags[p.url] || '').split(',').map(s => s.trim()).filter(Boolean));
+      cur.add(p.atleta_id);
+      entry.tags[p.url] = [...cur].join(',');
+      await writeXpixPhotos(photos);
+    }
+    p.stato = azione === 'confirm' ? 'confirmed' : azione === 'reject' ? 'rejected' : 'pending';
+    await supabase.from('kv_store').upsert({ key: 'foto_tag_proposte', value: list });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Redazione AI privata (solo admin): bozze di articoli. Vedi server/redazione.js
 require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL, fotoPer: _redazioneFoto });
 

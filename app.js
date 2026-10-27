@@ -12495,6 +12495,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🔗</span> <span class="admin-nav-lbl">Storico Team</span>
           <span class="admin-nav-badge" id="badge-team-lineage"></span>
         </div>
+        <div class="admin-nav-item" data-section="foto-tag" onclick="adminNav('foto-tag')">
+          <span class="admin-nav-icon">🏷</span> <span class="admin-nav-lbl">Tag foto da confermare</span>
+          <span class="admin-nav-badge" id="badge-foto-tag"></span>
+        </div>
         <div class="admin-nav-item" data-section="albo-review" onclick="adminNav('albo-review')">
           <span class="admin-nav-icon">🏆</span> <span class="admin-nav-lbl">Albo d'oro · fusioni</span>
           <span class="admin-nav-badge" id="badge-albo-review"></span>
@@ -12570,7 +12574,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -13326,6 +13330,60 @@ window.adminNav = async function(section) {
           }
         };
         await window._tlLoad('pending');
+      })();
+      break;
+    }
+
+    case 'foto-tag': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🏷 Tag foto da confermare</h1>
+          <p class="admin-page-sub">Dalle descrizioni delle foto Xpix ("Nella foto: Nome Cognome (Società)") il sito ha riconosciuto questi corridori, ma la società scritta nella foto non coincide con quella in classifica (nazionale, rappresentativa, nome cambiato…). Guarda la foto e la descrizione: «Conferma» tagga il corridore, «Scarta» lo esclude.</p>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px" id="ft-tabs">
+          <button class="tab-btn active-cat" data-ft="pending" onclick="window._ftLoad('pending')">IN ATTESA</button>
+          <button class="tab-btn" data-ft="confirmed" onclick="window._ftLoad('confirmed')">CONFERMATE</button>
+          <button class="tab-btn" data-ft="rejected" onclick="window._ftLoad('rejected')">SCARTATE</button>
+        </div>
+        <div id="admin-ft-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const H = { Authorization: `Bearer ${authToken()}` };
+        window._ftLoad = async (status) => {
+          document.querySelectorAll('#ft-tabs .tab-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.ft === status));
+          const body = document.getElementById('admin-ft-body'); if (!body) return;
+          body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
+          try {
+            const d = await fetch(`${API_BASE}/admin/foto-tag-proposte?status=${status}`, { headers: H }).then(r => r.json());
+            const items = d.items || [];
+            if (status === 'pending') { const b = document.getElementById('badge-foto-tag'); if (b) b.textContent = items.length || ''; }
+            if (!items.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun tag in attesa.' : 'Nessun elemento.'}</div>`; return; }
+            body.innerHTML = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} foto</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+              ${items.map(p => `<div id="ft-card-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
+                <a href="${esc(icProxy(p.url))}" target="_blank" rel="noopener"><img src="${esc(icProxy(p.url))}" alt="" loading="lazy" style="width:100%;height:220px;object-fit:cover;object-position:center 25%;display:block"></a>
+                <div style="padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1">
+                  <div style="font-weight:700;font-size:.9rem">${esc(p.nome)} <span style="color:var(--text-muted);font-weight:400;font-size:.76rem">· ${esc(p.cat)}</span></div>
+                  <div style="font-size:.76rem;color:var(--text-muted)">In classifica: ${esc(p.team)}</div>
+                  <div style="font-size:.78rem">Descrizione Xpix: <i>"${esc(p.nella)}"</i></div>
+                  <div style="font-size:.72rem;color:var(--text-muted)">${esc(p.album)}</div>
+                  <div style="display:flex;gap:8px;margin-top:auto;padding-top:6px">
+                    ${status === 'pending'
+                      ? `<button class="btn-approve" onclick="window._ftAct(${p.id},'confirm')" style="padding:7px 16px;font-size:.82rem">✓ Conferma</button><button class="btn-reject" onclick="window._ftAct(${p.id},'reject')" style="padding:7px 14px;font-size:.82rem">✗ Scarta</button>`
+                      : `<button class="btn-reject" onclick="window._ftAct(${p.id},'reset')" style="padding:6px 12px;font-size:.76rem">↺ Rimetti in attesa</button>`}
+                  </div></div></div>`).join('')}
+              </div>`;
+          } catch (e) { body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
+        };
+        window._ftAct = async (id, azione) => {
+          const card = document.getElementById(`ft-card-${id}`);
+          if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+          try {
+            const res = await fetch(`${API_BASE}/admin/foto-tag-proposte/${id}/${azione}`, { method: 'POST', headers: H });
+            if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+            await window._ftLoad(document.querySelector('#ft-tabs .active-cat')?.dataset.ft || 'pending');
+          } catch (e) { if (card) { card.style.opacity = ''; card.style.pointerEvents = ''; } alert('Errore: ' + e.message); }
+        };
+        await window._ftLoad('pending');
       })();
       break;
     }
