@@ -13518,7 +13518,13 @@ app.post('/api/admin/foto-tag-proposte/:id/:azione', requireAdmin, async (req, r
     const list = await _leggiProposteTag();
     const p = list.find(x => String(x.id) === String(id));
     if (!p) return res.status(404).json({ error: 'Proposta non trovata' });
-    if (azione === 'confirm') {
+    if (azione === 'confirm' && p.src === 'race') {
+      const { data: ph } = await supabase.from('race_photos').select('atleta_ids').eq('id', p.photo_id).maybeSingle();
+      if (!ph) return res.status(404).json({ error: 'Foto non trovata' });
+      const cur = new Set(String(ph.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+      cur.add(p.atleta_id);
+      await queries.setRacePhotoTags(p.photo_id, [...cur].join(','));
+    } else if (azione === 'confirm') {
       const photos = await readXpixPhotos();
       const entry = photos[p.gara];
       if (!entry) return res.status(404).json({ error: 'Album non trovato' });
