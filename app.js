@@ -16843,9 +16843,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       if (!byGara.has(k)) byGara.set(k, { gid: k, r: w.r, items: [] });
       byGara.get(k).items.push({ w, s });
     }
-    const groups = [...byGara.values()].sort((a, b) => (b.r.data || '').localeCompare(a.r.data || ''));
-    const wins = groups.filter(g => Number(g.r.posizione) === 1);
-    const others = groups.filter(g => Number(g.r.posizione) !== 1);
+    const groups = [...byGara.values()];
     const thumb = (s, nome) => `<button type="button" class="pm-thumb" onclick="openPhotoLightbox('${esc(s)}')"><img src="${esc(s)}" alt="${esc(nome)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></button>`;
     const raceRow = g => {
       const n = g.items.length, show = 6;
@@ -16860,17 +16858,43 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         <div class="pm-strip">${thumbs}${more}</div>
       </div>`;
     };
-    let h = '';
-    if (wins.length) {
-      const cards = wins.flatMap(g => g.items.map(it => photoCard({ r: g.r, photo: it.w.photo })));
-      h += `<div class="profile-media-sub-title">🥇 VITTORIE</div><div class="profile-media-grid">${cards.join('')}</div>`;
+    return pmTiers(groups, raceRow);
+  };
+  // Gallerie per piazzamento: vittorie, poi podi, poi tutte le altre gare
+  // (ogni fascia dal miglior piazzamento in giù, a parità la più recente).
+  // Le prime 4 gare "altre" sono aperte, il resto sta dietro un bottone.
+  function pmTiers(groups, rowFn) {
+    const posKey = g => { const p = Number(g.r.posizione); return p > 0 ? p : 999; };
+    groups = groups.slice().sort((a, b) => posKey(a) - posKey(b) || (b.r.data || '').localeCompare(a.r.data || ''));
+    const tiers = [
+      { t: '🥇 VITTORIE', list: groups.filter(g => posKey(g) === 1) },
+      { t: '🏆 PODI', list: groups.filter(g => posKey(g) === 2 || posKey(g) === 3) },
+      { t: 'ALTRE GARE', list: groups.filter(g => posKey(g) > 3), collapse: true },
+    ];
+    return tiers.filter(x => x.list.length).map((x, i) => {
+      const first = x.collapse ? x.list.slice(0, 4) : x.list, rest = x.collapse ? x.list.slice(4) : [];
+      return `<div class="profile-media-sub-title" style="margin-top:${i ? 18 : 0}px">${x.t} · ${x.list.length}</div>
+        <div class="pm-races">${first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
+    }).join('');
+  }
+  const groupedVideosHtml = () => {
+    const byGara = new Map();
+    for (const v of vids) {
+      const k = v.r.gara_id || (v.video && v.video.url);
+      if (!byGara.has(k)) byGara.set(k, { gid: k, r: v.r, items: [] });
+      byGara.get(k).items.push(v);
     }
-    if (others.length) {
-      const open = 4, first = others.slice(0, open), rest = others.slice(open);
-      h += `<div class="profile-media-sub-title" style="margin-top:${wins.length ? 18 : 0}px">📸 FOTO DI GARA · ${others.length} gar${others.length === 1 ? 'a' : 'e'}</div>
-        <div class="pm-races">${first.map(raceRow).join('')}${rest.length ? `<div class="pm-rest" hidden>${rest.map(raceRow).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
-    }
-    return h;
+    const row = g => {
+      const pos = Number(g.r.posizione);
+      return `<div class="pm-race">
+        <div class="pm-race-head">
+          <a class="pm-race-name" href="#/gara/${esc(g.gid)}">${esc(g.r.nome_gara)}</a>
+          <span class="pm-race-meta">${fmtDateShort(g.r.data)}${pos ? ` · ${posLabel(pos)}` : ''} · ${g.items.length} video</span>
+        </div>
+        <div class="profile-media-grid">${g.items.map(videoCard).join('')}</div>
+      </div>`;
+    };
+    return pmTiers([...byGara.values()], row);
   };
   const photosBlock = opts.grouped
     ? groupedPhotosHtml()
@@ -16886,9 +16910,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         <button type="button" class="pm-seg-btn" role="tab" aria-selected="false" data-k="video" onclick="window._pmSel(this,'video')">🎬 Video <span>${vids.length}</span></button>
       </div>
       <div data-pm="foto">${photosBlock}</div>
-      <div data-pm="video" hidden>
-        <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>
-      </div>`;
+      <div data-pm="video" hidden>${groupedVideosHtml()}</div>`;
   } else if (photos.length && vids.length) {
     inner = `
       <div style="margin-bottom:18px">${photosBlock}</div>
@@ -16898,6 +16920,8 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       </div>`;
   } else if (photos.length) {
     inner = photosBlock;
+  } else if (opts.grouped) {
+    inner = groupedVideosHtml();
   } else {
     inner = `<div class="profile-media-sub-title">🎬 VIDEO</div>
       <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>`;
