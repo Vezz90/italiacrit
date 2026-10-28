@@ -16774,7 +16774,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     top10Vids.sort((a, b) => (b.r.data || '').localeCompare(a.r.data || ''));
   }
 
-  const photos = winPhotos.slice(0, maxItems);
+  const photos = opts.grouped ? winPhotos : winPhotos.slice(0, maxItems);
   const vids   = top10Vids.slice(0, maxItems);
   if (!photos.length && !vids.length) return '';
 
@@ -16830,20 +16830,62 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     </div>`;
   };
 
+  // Pagina atleta: vittorie in evidenza, poi le altre foto raggruppate per gara
+  // (un atleta può avere decine di foto taggate: una griglia piatta diventa enorme).
+  const groupedPhotosHtml = () => {
+    const srcOf = ph => ph.url ? icProxy(ph.url) : (ph.filename ? `${PHOTOS_BASE}/photos/${ph.filename}` : '');
+    const seenSrc = new Set(), byGara = new Map();
+    for (const w of photos) {
+      const s = srcOf(w.photo);
+      if (!s || seenSrc.has(s)) continue;
+      seenSrc.add(s);
+      const k = w.r.gara_id || w.photo.gara_id || s;
+      if (!byGara.has(k)) byGara.set(k, { gid: k, r: w.r, items: [] });
+      byGara.get(k).items.push({ w, s });
+    }
+    const groups = [...byGara.values()].sort((a, b) => (b.r.data || '').localeCompare(a.r.data || ''));
+    const wins = groups.filter(g => Number(g.r.posizione) === 1);
+    const others = groups.filter(g => Number(g.r.posizione) !== 1);
+    const thumb = (s, nome) => `<button type="button" class="pm-thumb" onclick="openPhotoLightbox('${esc(s)}')"><img src="${esc(s)}" alt="${esc(nome)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></button>`;
+    const raceRow = g => {
+      const n = g.items.length, show = 6;
+      const thumbs = g.items.map((it, i) => i < show ? thumb(it.s, g.r.nome_gara) : thumb(it.s, g.r.nome_gara).replace('class="pm-thumb"', 'class="pm-thumb pm-extra"')).join('');
+      const more = n > show ? `<button type="button" class="pm-more" onclick="this.parentNode.classList.add('open')">+${n - show}</button>` : '';
+      const pos = Number(g.r.posizione);
+      return `<div class="pm-race">
+        <div class="pm-race-head">
+          <a class="pm-race-name" href="#/gara/${esc(g.gid)}">${esc(g.r.nome_gara)}</a>
+          <span class="pm-race-meta">${fmtDateShort(g.r.data)}${pos ? ` · ${posLabel(pos)}` : ''} · ${n} foto</span>
+        </div>
+        <div class="pm-strip">${thumbs}${more}</div>
+      </div>`;
+    };
+    let h = '';
+    if (wins.length) {
+      const cards = wins.flatMap(g => g.items.map(it => photoCard({ r: g.r, photo: it.w.photo })));
+      h += `<div class="profile-media-sub-title">🥇 VITTORIE</div><div class="profile-media-grid">${cards.join('')}</div>`;
+    }
+    if (others.length) {
+      const open = 4, first = others.slice(0, open), rest = others.slice(open);
+      h += `<div class="profile-media-sub-title" style="margin-top:${wins.length ? 18 : 0}px">📸 FOTO DI GARA · ${others.length} gar${others.length === 1 ? 'a' : 'e'}</div>
+        <div class="pm-races">${first.map(raceRow).join('')}${rest.length ? `<div class="pm-rest" hidden>${rest.map(raceRow).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
+    }
+    return h;
+  };
+  const photosBlock = opts.grouped
+    ? groupedPhotosHtml()
+    : `<div class="profile-media-sub-title">📸 FOTO</div><div class="profile-media-grid">${photos.map(photoCard).join('')}</div>`;
+
   let inner = '';
   if (photos.length && vids.length) {
     inner = `
-      <div style="margin-bottom:18px">
-        <div class="profile-media-sub-title">📸 FOTO</div>
-        <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>
-      </div>
+      <div style="margin-bottom:18px">${photosBlock}</div>
       <div>
         <div class="profile-media-sub-title">🎬 VIDEO</div>
         <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>
       </div>`;
   } else if (photos.length) {
-    inner = `<div class="profile-media-sub-title">📸 FOTO</div>
-      <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>`;
+    inner = photosBlock;
   } else {
     inner = `<div class="profile-media-sub-title">🎬 VIDEO</div>
       <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>`;
@@ -17775,8 +17817,8 @@ window._tmTab = function(k) {
   if (on === 'c' && !window._tmClubLoaded && window._tmClubId) { window._tmClubLoaded = true; _injectTeamClubHistory(window._tmClubId); }
 };
 window._athTab = function(k) {
-  const on = (k === 'c' || k === 'f') ? k : 's';
-  ['s', 'c', 'f'].forEach(x => {
+  const on = (k === 'c' || k === 'f' || k === 'm') ? k : 's';
+  ['s', 'c', 'f', 'm'].forEach(x => {
     const t = document.getElementById('ath-tab-' + x), p = document.getElementById('ath-panel-' + x);
     if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
     if (p) p.hidden = x !== on;
@@ -17991,7 +18033,7 @@ function _athShowHistoricBlocks(rows) {
     const tmp = document.createElement('div'); tmp.innerHTML = html.trim();
     const node = tmp.firstElementChild;
     if (old) { old.replaceWith(node); return; }
-    const anchor = document.getElementById('atleta-media-nativo') || document.getElementById('atleta-ciclismo-media');
+    const anchor = document.getElementById('atleta-media-anchor') || document.getElementById('atleta-media-nativo') || document.getElementById('atleta-ciclismo-media');
     if (anchor) anchor.before(node);
   };
   put('ath-moment', athleteMomentHtml(list, null, false));
@@ -18429,6 +18471,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
       <button class="ath-tab" role="tab" id="ath-tab-c" aria-selected="false" aria-controls="ath-panel-c" onclick="window._athTab('c')">Carriera</button>
       <button class="ath-tab" role="tab" id="ath-tab-f" aria-selected="false" aria-controls="ath-panel-f" onclick="window._athTab('f')" hidden>Forma</button>
+      <button class="ath-tab" role="tab" id="ath-tab-m" aria-selected="false" aria-controls="ath-panel-m" onclick="window._athTab('m')" hidden>Media</button>
     </div>
     <div id="ath-panel-s" role="tabpanel" aria-labelledby="ath-tab-s">
     ${profileYearRow('atleta', atleta_id, selYear)}
@@ -18442,7 +18485,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div id="atleta-cumul-chart-wrap"${_rankChartHtml ? ' style="display:none"' : ''}>${cumulHtml}</div>
     ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
     <div id="atleta-articoli"></div>${(() => { setTimeout(() => { if (typeof window._caricaArticoliAtleta === 'function') window._caricaArticoliAtleta(atleta_id); }, 0); return ''; })()}
-    <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
+    <div id="atleta-media-anchor"></div>
     ${(() => {
       // globalData.videos al primo caricamento può venire dal fallback statico
       // data/videos.json (vuoto, vedi loadAll()) durante un cold-start di
@@ -18456,12 +18499,11 @@ async function renderAtleta(atleta_id, opts = {}) {
       refreshVideos().then(() => {
         const el = document.getElementById('atleta-media-nativo');
         if (el && window._currentAtletaId === atleta_id) {
-          el.innerHTML = buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear });
+          el.innerHTML = buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear, grouped: true });
         }
       });
       return '';
     })()}
-    <div id="atleta-ciclismo-media"></div>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
       <span class="section-line"></span>
@@ -18484,8 +18526,27 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div id="ath-panel-f" role="tabpanel" aria-labelledby="ath-tab-f" hidden>
       <div id="ath-forma"></div>
     </div>
+    <div id="ath-panel-m" role="tabpanel" aria-labelledby="ath-tab-m" hidden>
+      <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear, grouped: true })}</div>
+      <div id="atleta-ciclismo-media"></div>
+    </div>
     </div>
   `);
+
+  {
+    // La scheda Media compare solo se c'è qualcosa da mostrare (i blocchi si
+    // riempiono anche in async: video, foto storiche, anno selezionato).
+    const _mp = document.getElementById('ath-panel-m'), _mt = document.getElementById('ath-tab-m');
+    if (_mp && _mt) {
+      const _sync = () => {
+        const has = [..._mp.children].some(c => c.style.display !== 'none' && (c.textContent.trim() !== '' || c.querySelector('img,video')));
+        _mt.hidden = !has;
+        if (!has && !_mp.hidden) window._athTab('s');
+      };
+      new MutationObserver(_sync).observe(_mp, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+      _sync();
+    }
+  }
 
   {
     const _pillHost = document.getElementById('ath-hero-pills');
@@ -21355,7 +21416,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
         if (!document.contains(mediaEl) || window._currentAtletaId !== atletaId) return;
         mediaEl.innerHTML = buildProfileMedia(
           [...(icsRisultati || []), ...garaExtra], photosMap, globalData?.videos,
-          { atletaIds: [atletaId], year: season }
+          { atletaIds: [atletaId], year: season, grouped: true }
         );
       }).catch(() => {});
     }

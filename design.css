@@ -9599,6 +9599,23 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   scrollbar-width: thin;
   scrollbar-color: var(--border-subtle) transparent;
 }
+/* Scheda Media atleta: foto di gara raggruppate per gara */
+.pm-races { display: flex; flex-direction: column; gap: 14px; }
+.pm-rest { display: flex; flex-direction: column; gap: 14px; }
+.pm-rest[hidden] { display: none; }
+.pm-race-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 6px; }
+.pm-race-name { font-weight: 700; font-size: .88rem; color: var(--text-primary); text-decoration: none; }
+.pm-race-name:hover { color: var(--accent, #ff6b00); }
+.pm-race-meta { font-size: .72rem; color: var(--text-muted); }
+.pm-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+.pm-strip:not(.open) .pm-extra { display: none; }
+.pm-strip.open { flex-wrap: wrap; overflow-x: visible; }
+.pm-strip.open .pm-more { display: none; }
+.pm-thumb { flex: 0 0 auto; width: 132px; height: 92px; padding: 0; border: 1px solid var(--border-subtle); border-radius: 6px; overflow: hidden; background: var(--bg-secondary); cursor: zoom-in; }
+.pm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pm-more { flex: 0 0 auto; width: 92px; height: 92px; border: 1px dashed var(--border-subtle); border-radius: 6px; background: transparent; color: var(--text-secondary); font: 800 1rem var(--font-heading, inherit); cursor: pointer; }
+.pm-showall { margin-top: 12px; padding: 10px 16px; border: 1px solid var(--border-subtle); border-radius: 6px; background: transparent; color: var(--text-secondary); font: 700 .78rem var(--font-heading, inherit); letter-spacing: .06em; cursor: pointer; align-self: flex-start; }
+.pm-thumb:focus-visible, .pm-more:focus-visible, .pm-showall:focus-visible { outline: 2px solid var(--accent, #ff6b00); outline-offset: 2px; }
 .profile-media-grid::-webkit-scrollbar { height: 4px; }
 .profile-media-grid::-webkit-scrollbar-track { background: transparent; }
 .profile-media-grid::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
