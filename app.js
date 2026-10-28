@@ -16872,13 +16872,15 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const posKey = g => { const p = Number(g.r.posizione); return p > 0 ? p : 999; };
     groups = groups.slice().sort((a, b) => posKey(a) - posKey(b) || (b.r.data || '').localeCompare(a.r.data || ''));
     const tiers = [
-      { t: '🥇 VITTORIE', list: groups.filter(g => posKey(g) === 1) },
-      { t: '🏆 PODI', list: groups.filter(g => posKey(g) === 2 || posKey(g) === 3) },
+      { t: 'VITTORIE', list: groups.filter(g => posKey(g) === 1) },
+      { t: 'PODI', list: groups.filter(g => posKey(g) === 2 || posKey(g) === 3) },
       { t: 'ALTRE GARE', list: groups.filter(g => posKey(g) > 3), collapse: true },
     ];
     return tiers.filter(x => x.list.length).map((x, i) => {
       const first = x.collapse ? x.list.slice(0, 4) : x.list, rest = x.collapse ? x.list.slice(4) : [];
-      return `<div class="profile-media-sub-title" style="margin-top:${i ? 18 : 0}px">${x.t} · ${x.list.length}</div>
+      // stessa intestazione delle sezioni (es. "RISULTATI"); lo span nascosto evita
+      // la regola .section-header:first-child (banda scura da titolo di pagina)
+      return `<div class="pm-tier"><span style="display:none"></span><div class="section-header" style="margin:${i ? 26 : 6}px 0 14px"><span class="section-title">${x.t} · ${x.list.length}</span><span class="section-line"></span></div></div>
         <div class="pm-races">${asGrid ? `<div class="pm-vgrid">${first.map(rowFn).join('')}</div>` : first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest${asGrid ? ' pm-vgrid' : ''}" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
     }).join('');
   }
