@@ -16846,7 +16846,8 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const groups = [...byGara.values()];
     const thumb = (s, nome) => `<button type="button" class="pm-thumb" onclick="openPhotoLightbox('${esc(s)}')"><img src="${esc(s)}" alt="${esc(nome)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></button>`;
     const raceRow = g => {
-      const n = g.items.length, show = 6;
+      // griglia a 3 colonne: al massimo 2 righe piene, l'ultima cella è il "+N"
+      const n = g.items.length, show = n > 6 ? 5 : n;
       const thumbs = g.items.map((it, i) => i < show ? thumb(it.s, g.r.nome_gara) : thumb(it.s, g.r.nome_gara).replace('class="pm-thumb"', 'class="pm-thumb pm-extra"')).join('');
       const more = n > show ? `<button type="button" class="pm-more" onclick="this.parentNode.classList.add('open')">+${n - show}</button>` : '';
       const pos = Number(g.r.posizione);
