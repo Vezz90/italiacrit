@@ -9610,6 +9610,10 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 .pm-races { display: flex; flex-direction: column; gap: 14px; }
 .pm-rest { display: flex; flex-direction: column; gap: 14px; }
 .pm-rest[hidden] { display: none; }
+.pm-vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.pm-vgrid .profile-media-card { width: auto; min-width: 0; max-width: none; flex: none; }
+@media (max-width: 720px) { .pm-vgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .pm-vgrid { grid-template-columns: 1fr; } }
 .pm-race-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 6px; }
 .pm-race-name { font-weight: 700; font-size: .88rem; color: var(--text-primary); text-decoration: none; }
 .pm-race-name:hover { color: var(--accent, #ff6b00); }

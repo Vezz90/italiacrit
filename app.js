@@ -16863,7 +16863,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   // Gallerie per piazzamento: vittorie, poi podi, poi tutte le altre gare
   // (ogni fascia dal miglior piazzamento in giù, a parità la più recente).
   // Le prime 4 gare "altre" sono aperte, il resto sta dietro un bottone.
-  function pmTiers(groups, rowFn) {
+  function pmTiers(groups, rowFn, asGrid) {
     const posKey = g => { const p = Number(g.r.posizione); return p > 0 ? p : 999; };
     groups = groups.slice().sort((a, b) => posKey(a) - posKey(b) || (b.r.data || '').localeCompare(a.r.data || ''));
     const tiers = [
@@ -16874,7 +16874,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     return tiers.filter(x => x.list.length).map((x, i) => {
       const first = x.collapse ? x.list.slice(0, 4) : x.list, rest = x.collapse ? x.list.slice(4) : [];
       return `<div class="profile-media-sub-title" style="margin-top:${i ? 18 : 0}px">${x.t} · ${x.list.length}</div>
-        <div class="pm-races">${first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
+        <div class="pm-races">${asGrid ? `<div class="pm-vgrid">${first.map(rowFn).join('')}</div>` : first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest${asGrid ? ' pm-vgrid' : ''}" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
     }).join('');
   }
   const groupedVideosHtml = () => {
@@ -16884,17 +16884,8 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       if (!byGara.has(k)) byGara.set(k, { gid: k, r: v.r, items: [] });
       byGara.get(k).items.push(v);
     }
-    const row = g => {
-      const pos = Number(g.r.posizione);
-      return `<div class="pm-race">
-        <div class="pm-race-head">
-          <a class="pm-race-name" href="#/gara/${esc(g.gid)}">${esc(g.r.nome_gara)}</a>
-          <span class="pm-race-meta">${fmtDateShort(g.r.data)}${pos ? ` · ${posLabel(pos)}` : ''} · ${g.items.length} video</span>
-        </div>
-        <div class="profile-media-grid">${g.items.map(videoCard).join('')}</div>
-      </div>`;
-    };
-    return pmTiers([...byGara.values()], row);
+    // un video per gara è la norma: carte in griglia a 3 colonne (il nome gara è già nella carta)
+    return pmTiers([...byGara.values()], g => g.items.map(videoCard).join(''), true);
   };
   const photosBlock = opts.grouped
     ? groupedPhotosHtml()
