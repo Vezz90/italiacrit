@@ -16877,7 +16877,19 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     : `<div class="profile-media-sub-title">📸 FOTO</div><div class="profile-media-grid">${photos.map(photoCard).join('')}</div>`;
 
   let inner = '';
-  if (photos.length && vids.length) {
+  if (photos.length && vids.length && opts.grouped) {
+    // Pagina atleta: selettore Foto / Video, così i due tipi non si mischiano.
+    const nPh = new Set(photos.map(w => w.photo.url || w.photo.filename)).size;
+    inner = `
+      <div class="pm-seg" role="tablist" aria-label="Tipo di media">
+        <button type="button" class="pm-seg-btn" role="tab" aria-selected="true" data-k="foto" onclick="window._pmSel(this,'foto')">📸 Foto <span>${nPh}</span></button>
+        <button type="button" class="pm-seg-btn" role="tab" aria-selected="false" data-k="video" onclick="window._pmSel(this,'video')">🎬 Video <span>${vids.length}</span></button>
+      </div>
+      <div data-pm="foto">${photosBlock}</div>
+      <div data-pm="video" hidden>
+        <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>
+      </div>`;
+  } else if (photos.length && vids.length) {
     inner = `
       <div style="margin-bottom:18px">${photosBlock}</div>
       <div>
@@ -17815,6 +17827,14 @@ window._tmTab = function(k) {
     if (p) p.hidden = x !== on;
   });
   if (on === 'c' && !window._tmClubLoaded && window._tmClubId) { window._tmClubLoaded = true; _injectTeamClubHistory(window._tmClubId); }
+};
+window._pmSel = function(btn, k) {
+  const sec = btn.closest('.profile-media-section'); if (!sec) return;
+  sec.querySelectorAll('.pm-seg-btn').forEach(b => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
+  sec.querySelectorAll('[data-pm]').forEach(d => { d.hidden = d.dataset.pm !== k; });
+  // le foto storiche ciclismo.info stanno in un blocco a parte: seguono "Foto"
+  const hist = document.getElementById('atleta-ciclismo-media');
+  if (hist) hist.style.display = k === 'foto' ? '' : 'none';
 };
 window._athTab = function(k) {
   const on = (k === 'c' || k === 'f' || k === 'm') ? k : 's';

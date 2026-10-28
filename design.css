@@ -9599,6 +9599,13 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   scrollbar-width: thin;
   scrollbar-color: var(--border-subtle) transparent;
 }
+/* Scheda Media atleta: selettore Foto / Video */
+.pm-seg { display: inline-flex; gap: 4px; padding: 3px; margin-bottom: 14px; border: 1px solid var(--border-subtle); border-radius: 8px; }
+.pm-seg-btn { padding: 8px 14px; border: 0; border-radius: 6px; background: transparent; color: var(--text-secondary); font: 800 .76rem var(--font-heading, inherit); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.pm-seg-btn span { opacity: .7; margin-left: 4px; font-weight: 700; }
+.pm-seg-btn[aria-selected="true"] { background: var(--accent, #ff6b00); color: #111; }
+.pm-seg-btn:focus-visible { outline: 2px solid var(--accent, #ff6b00); outline-offset: 2px; }
+[data-pm][hidden] { display: none; }
 /* Scheda Media atleta: foto di gara raggruppate per gara */
 .pm-races { display: flex; flex-direction: column; gap: 14px; }
 .pm-rest { display: flex; flex-direction: column; gap: 14px; }
