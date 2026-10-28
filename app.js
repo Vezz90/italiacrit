@@ -16774,6 +16774,10 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     top10Vids.sort((a, b) => (b.r.data || '').localeCompare(a.r.data || ''));
   }
 
+  // Media storici ciclismo.info (pagina atleta, anni passati): stessa vista.
+  for (const x of (opts.extraPhotos || [])) winPhotos.push(x);
+  for (const x of (opts.extraVideos || [])) top10Vids.push(x);
+
   const photos = opts.grouped ? winPhotos : winPhotos.slice(0, maxItems);
   const vids   = top10Vids.slice(0, maxItems);
   if (!photos.length && !vids.length) return '';
@@ -16853,7 +16857,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       const pos = Number(g.r.posizione);
       return `<div class="pm-race">
         <div class="pm-race-head">
-          <a class="pm-race-name" href="#/gara/${esc(g.gid)}">${esc(g.r.nome_gara)}</a>
+          <a class="pm-race-name" href="${esc(g.r._href || '#/gara/' + g.gid)}">${esc(g.r.nome_gara)}</a>
           <span class="pm-race-meta">${fmtDateShort(g.r.data)}${pos ? ` · ${posLabel(pos)}` : ''} · ${n} foto</span>
         </div>
         <div class="pm-strip">${thumbs}${more}</div>
@@ -20611,14 +20615,37 @@ function _athEmptyYearView(atletaId, anno) {
 }
 // Cambiando stagione su un anno "storico" i media taggati (foto Xpix / caricate,
 // video taggati) di QUELL'anno vanno comunque mostrati nella scheda Media.
-function _athNativoMediaForYear(atletaId, anno) {
+function _athNativoMediaForYear(atletaId, anno, extras) {
   const el = document.getElementById('atleta-media-nativo'); if (!el) return;
   el.innerHTML = '';
   el.style.display = '';
   loadRisPhotos().then(pm => {
     if (!document.contains(el) || window._currentAtletaId !== atletaId) return;
-    el.innerHTML = buildProfileMedia([], pm, globalData?.videos, { atletaIds: [atletaId], year: anno, grouped: true });
+    el.innerHTML = buildProfileMedia([], pm, globalData?.videos, { atletaIds: [atletaId], year: anno, grouped: true,
+      extraPhotos: extras?.photos, extraVideos: extras?.videos });
   }).catch(() => {});
+}
+// Foto e video storici di ciclismo.info nello stesso formato di buildProfileMedia.
+function _ciclismoMediaExtras(mediaList, rows) {
+  const rowOf = m => (rows || []).find(r => r.nome_gara === m.nome_gara && r.data === m.data);
+  const hrefOf = r => (r && _ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione)) || null;
+  const photos = (mediaList || []).map(m => {
+    const row = rowOf(m), gid = row && _ciclismoGaraId(row.gara_ciclismo_url);
+    return { photo: { url: mediaUrl(m.photo_url) }, r: {
+      gara_id: gid ? 'CIC_' + gid : m.nome_gara + '|' + m.data,
+      nome_gara: m.nome_gara, data: m.data, posizione: m.posizione || (row && row.posizione) || null, _href: hrefOf(row),
+    } };
+  });
+  const videos = [], seen = new Set();
+  for (const r of (rows || [])) {
+    const gid = _ciclismoGaraId(r.gara_ciclismo_url);
+    if (!gid || seen.has(gid)) continue;
+    const vids = (globalData?.videos && globalData.videos['CIC_' + gid]) || [];
+    if (!vids.length) continue;
+    seen.add(gid);
+    videos.push({ video: vids[0], r: { gara_id: 'CIC_' + gid, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione, _href: hrefOf(r) } });
+  }
+  return { photos, videos };
 }
 window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
@@ -20811,7 +20838,6 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // Nasconde i pannelli legati alla stagione NATIVA (sempre 2026, non
   // all'anno storico selezionato) — altrimenti restavano visibili insieme,
   // mostrando media/risultati PCS di un anno diverso da quello scelto.
-  _athNativoMediaForYear(atletaId, anno);
   // atleta-stats-estero ("ALTRI RISULTATI") NON va più nascosto qui
   // incondizionatamente: è già stato mostrato/nascosto sopra in base a
   // addedRows (le gare extra da PCS per quest'anno) — nasconderlo sempre
@@ -20822,7 +20848,9 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const seasonCompare = document.getElementById('season-compare-inject');
   if (seasonCompare) seasonCompare.style.display = 'none';
 
-  _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || [], rows);
+  // un'unica vista Media (foto taggate + storiche ciclismo.info) nello stesso formato
+  _renderCiclismoMedia('atleta-ciclismo-media', [], []);
+  _athNativoMediaForYear(atletaId, anno, _ciclismoMediaExtras((window._ciclismoMediaCache[atletaId] || {})[anno] || [], rows));
 
   // Andamento piazzamenti — stessa forma dei campi ICS (data/nome_gara/
   // posizione), quindi buildCumulChart funziona invariata anche qui.
