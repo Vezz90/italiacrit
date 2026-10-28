@@ -17578,7 +17578,7 @@ function profileYearRow(kind, id, selYear) {
     }).join('')}
   </div>`;
 }
-window.setAtletaYear = (id, year) => renderAtleta(id, { year });
+window.setAtletaYear = (id, year) => { window._athKeepTab = window._athActiveTab || 's'; return renderAtleta(id, { year }); };
 window.setTeamYear   = (id, year) => renderTeam(id, { year });
 
 // Carica al volo i profili atleti PCS e li inietta in globalData. Serve quando
@@ -17858,6 +17858,9 @@ window._athTab = function(k) {
     if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
     if (p) p.hidden = x !== on;
   });
+  // le pillole stagione valgono per Stagione e Media, non per Carriera/Forma
+  const yw = document.getElementById('ath-year-wrap'); if (yw) yw.hidden = !(on === 's' || on === 'm');
+  window._athActiveTab = on;
 };
 // ── Pagina atleta: blocchi "Il momento", "Ultimi / Migliori", "Rivalità" ──
 // Solo fatti calcolabili dai dati: niente etichette soggettive ("in
@@ -18508,8 +18511,8 @@ async function renderAtleta(atleta_id, opts = {}) {
       <button class="ath-tab" role="tab" id="ath-tab-f" aria-selected="false" aria-controls="ath-panel-f" onclick="window._athTab('f')" hidden>Forma</button>
       <button class="ath-tab" role="tab" id="ath-tab-m" aria-selected="false" aria-controls="ath-panel-m" onclick="window._athTab('m')" hidden>Media</button>
     </div>
+    <div id="ath-year-wrap">${profileYearRow('atleta', atleta_id, selYear)}</div>
     <div id="ath-panel-s" role="tabpanel" aria-labelledby="ath-tab-s">
-    ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
@@ -18567,6 +18570,11 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
     </div>
   `);
+
+  window._athActiveTab = 's';
+  // cambio stagione dalla scheda Media: si resta su Media
+  if (window._athKeepTab === 'm') window._athTab('m');
+  window._athKeepTab = null;
 
   {
     // La scheda Media compare solo se c'è qualcosa da mostrare (i blocchi si
@@ -20594,11 +20602,22 @@ function _athEmptyYearView(atletaId, anno) {
   const sort = $('atleta-sort-btns'); if (sort) sort.style.display = 'none';
   const th = $('atleta-results-thead'); if (th) th.innerHTML = '';
   const tb = $('atleta-results-tbody'); if (tb) tb.innerHTML = `<tr><td colspan="9" class="empty-state">Nessun risultato registrato nel ${esc(anno)}</td></tr>`;
-  const nat = $('atleta-media-nativo'); if (nat) nat.style.display = 'none';
+  _athNativoMediaForYear(atletaId, anno);
   const cmp = $('season-compare-inject'); if (cmp) cmp.style.display = 'none';
   try { _renderCiclismoMedia('atleta-ciclismo-media', [], []); } catch (_) {}
   const cc = $('atleta-ciclismo-media'); if (cc) cc.innerHTML = '';
   const ch = $('atleta-cumul-chart-wrap'); if (ch) ch.innerHTML = '';
+}
+// Cambiando stagione su un anno "storico" i media taggati (foto Xpix / caricate,
+// video taggati) di QUELL'anno vanno comunque mostrati nella scheda Media.
+function _athNativoMediaForYear(atletaId, anno) {
+  const el = document.getElementById('atleta-media-nativo'); if (!el) return;
+  el.innerHTML = '';
+  el.style.display = '';
+  loadRisPhotos().then(pm => {
+    if (!document.contains(el) || window._currentAtletaId !== atletaId) return;
+    el.innerHTML = buildProfileMedia([], pm, globalData?.videos, { atletaIds: [atletaId], year: anno, grouped: true });
+  }).catch(() => {});
 }
 window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
@@ -20791,8 +20810,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // Nasconde i pannelli legati alla stagione NATIVA (sempre 2026, non
   // all'anno storico selezionato) — altrimenti restavano visibili insieme,
   // mostrando media/risultati PCS di un anno diverso da quello scelto.
-  const nativoMedia = document.getElementById('atleta-media-nativo');
-  if (nativoMedia) nativoMedia.style.display = 'none';
+  _athNativoMediaForYear(atletaId, anno);
   // atleta-stats-estero ("ALTRI RISULTATI") NON va più nascosto qui
   // incondizionatamente: è già stato mostrato/nascosto sopra in base a
   // addedRows (le gare extra da PCS per quest'anno) — nasconderlo sempre
@@ -20896,8 +20914,7 @@ window.setAtletaPcsYear = (atletaId, anno) => {
     </tr>`;
   }).join('');
 
-  const nativoMedia = document.getElementById('atleta-media-nativo');
-  if (nativoMedia) nativoMedia.style.display = 'none';
+  _athNativoMediaForYear(atletaId, anno);
   const esteroGroup = document.getElementById('atleta-stats-estero');
   if (esteroGroup) esteroGroup.style.display = 'none';
   const seasonCompare = document.getElementById('season-compare-inject');
