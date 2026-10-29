@@ -13364,7 +13364,7 @@ window.adminNav = async function(section) {
                 <div style="padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1">
                   <div style="font-weight:700;font-size:.9rem">${esc(p.nome)} <span style="color:var(--text-muted);font-weight:400;font-size:.76rem">· ${esc(p.cat)}</span></div>
                   <div style="font-size:.76rem;color:var(--text-muted)">In classifica: ${esc(p.team)}</div>
-                  <div style="font-size:.78rem">Descrizione Xpix: <i>"${esc(p.nella)}"</i></div>
+                  <div style="font-size:.78rem">${p.src === 'race' ? '📷 Foto caricata da te · didascalia' : 'Descrizione Xpix'}: <i>"${esc(p.nella)}"</i></div>
                   <div style="font-size:.72rem;color:var(--text-muted)">${esc(p.album)}</div>
                   <div style="display:flex;gap:8px;margin-top:auto;padding-top:6px">
                     ${status === 'pending'
