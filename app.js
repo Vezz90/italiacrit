@@ -13277,7 +13277,9 @@ window.adminNav = async function(section) {
           body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
           try {
             const d = await fetch(`${API_BASE}/admin/team-lineage?status=${status}`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
-            const items = d.items || [];
+            const allItems = d.items || [];
+            const nOmo = allItems.filter(p => p.omonimo).length;
+            const items = status === 'pending' && window._ftFilt === 'omo' ? allItems.filter(p => p.omonimo) : status === 'pending' && window._ftFilt === 'safe' ? allItems.filter(p => !p.omonimo) : allItems;
             if (status === 'pending') {
               const badge = document.getElementById('badge-team-lineage');
               if (badge) badge.textContent = items.length || '';
@@ -13348,6 +13350,8 @@ window.adminNav = async function(section) {
         <div id="admin-ft-body"><div class="admin-loading">Caricamento…</div></div>`;
       (async () => {
         const H = { Authorization: `Bearer ${authToken()}` };
+        window._ftFilt = window._ftFilt || 'all';
+        window._ftSetFilt = (v) => { window._ftFilt = v; window._ftLoad(document.querySelector('#ft-tabs .active-cat')?.dataset.ft || 'pending'); };
         window._ftLoad = async (status) => {
           document.querySelectorAll('#ft-tabs .tab-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.ft === status));
           const body = document.getElementById('admin-ft-body'); if (!body) return;
@@ -13355,15 +13359,16 @@ window.adminNav = async function(section) {
           try {
             const d = await fetch(`${API_BASE}/admin/foto-tag-proposte?status=${status}`, { headers: H }).then(r => r.json());
             const items = d.items || [];
-            if (status === 'pending') { const b = document.getElementById('badge-foto-tag'); if (b) b.textContent = items.length || ''; }
+            if (status === 'pending') { const b = document.getElementById('badge-foto-tag'); if (b) b.textContent = allItems.length || ''; }
             if (!items.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun tag in attesa.' : 'Nessun elemento.'}</div>`; return; }
-            body.innerHTML = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} foto</div>
+            const fb = (k, t) => `<button class="tab-btn${window._ftFilt === k ? ' active-cat' : ''}" onclick="window._ftSetFilt('${k}')" style="font-size:.76rem;padding:5px 12px">${t}</button>`;
+            body.innerHTML = `${status === 'pending' ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${fb('all', 'Tutte ' + allItems.length)}${fb('safe', 'Nome unico ' + (allItems.length - nOmo))}${fb('omo', '⚠ Possibili omonimi ' + nOmo)}</div>` : ''}<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} foto</div>
               <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
               ${items.map(p => `<div id="ft-card-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
                 <a href="${esc(icProxy(p.url))}" target="_blank" rel="noopener"><img src="${esc(icProxy(p.url))}" alt="" loading="lazy" style="width:100%;height:220px;object-fit:cover;object-position:center 25%;display:block"></a>
                 <div style="padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1">
-                  <div style="font-weight:700;font-size:.9rem">${esc(p.nome)} <span style="color:var(--text-muted);font-weight:400;font-size:.76rem">· ${esc(p.cat)}</span></div>
-                  <div style="font-size:.76rem;color:var(--text-muted)">In classifica: ${esc(p.team)}</div>
+                  <div style="font-weight:700;font-size:.9rem">${esc(p.nome)} <span style="color:var(--text-muted);font-weight:400;font-size:.76rem">· ${esc(p.cat)}</span>${p.omonimo ? ' <span title="Nel database esistono altri atleti con questo nome (o più schede ciclismo.info): controlla anno di nascita e squadra" style="color:var(--orange,#e67e22);font-size:.72rem;font-weight:600">⚠ possibile omonimo</span>' : ''}</div>
+                  <div style="font-size:.76rem;color:var(--text-muted)">Squadra attuale: ${esc(p.team_eff || p.team)}${p.team_eff && p.team_eff !== p.team ? ' <span style="opacity:.7">(in classifica FCI: ' + esc(p.team) + ')</span>' : ''}</div>
                   <div style="font-size:.78rem">${p.src === 'race' ? '📷 Foto caricata da te · didascalia' : 'Descrizione Xpix'}: <i>"${esc(p.nella)}"</i></div>
                   <div style="font-size:.72rem;color:var(--text-muted)">${esc(p.album)}</div>
                   <div style="display:flex;gap:8px;margin-top:auto;padding-top:6px">

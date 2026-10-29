@@ -13508,7 +13508,34 @@ async function _leggiProposteTag() {
 app.get('/api/admin/foto-tag-proposte', requireAdmin, async (req, res) => {
   try {
     const st = String(req.query.status || 'pending');
-    res.json({ items: (await _leggiProposteTag()).filter(p => p.stato === st) });
+    const items = (await _leggiProposteTag()).filter(p => p.stato === st);
+    if (st === 'pending' && items.length) {
+      // Squadra effettiva (override impostato sul profilo) e segnale "possibile omonimo", per non confermare a occhi chiusi.
+      const ids = [...new Set(items.map(p => p.atleta_id).filter(Boolean))];
+      const base = id => String(id).replace(/_(19|20)d{2}(_d+)?$/, '');
+      const teamOv = {};
+      for (let i = 0; i < ids.length; i += 100) {
+        const { data } = await supabase.from('entity_overrides').select('entity_id, new_value, created_at').eq('entity_type', 'atleta').eq('field', 'team').in('entity_id', ids.slice(i, i + 100)).order('created_at');
+        (data || []).forEach(r => { teamOv[r.entity_id] = r.new_value; });
+      }
+      const bases = [...new Set(ids.map(base))];
+      const grp = {};
+      for (let i = 0; i < bases.length; i += 40) {
+        const part = bases.slice(i, i + 40);
+        const { data } = await supabase.from('ciclismo_athletes').select('atleta_id, ciclismo_id').or(part.map(b => 'atleta_id.eq.' + b + ',atleta_id.like.' + b + '_%').join(','));
+        (data || []).forEach(r => {
+          const b = base(r.atleta_id); if (!part.includes(b) || !(r.atleta_id === b || r.atleta_id.startsWith(b + '_'))) return;
+          const g = (grp[b] = grp[b] || { ids: new Set(), sch: {} });
+          g.ids.add(r.atleta_id); g.sch[r.atleta_id] = (g.sch[r.atleta_id] || 0) + 1;
+        });
+      }
+      for (const p of items) {
+        p.team_eff = teamOv[p.atleta_id] || p.team;
+        const g = grp[base(p.atleta_id)];
+        p.omonimo = !!(g && (g.ids.size > 1 || Object.values(g.sch).some(n => n > 1)));
+      }
+    }
+    res.json({ items });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 app.post('/api/admin/foto-tag-proposte/:id/:azione', requireAdmin, async (req, res) => {
