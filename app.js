@@ -13277,9 +13277,7 @@ window.adminNav = async function(section) {
           body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
           try {
             const d = await fetch(`${API_BASE}/admin/team-lineage?status=${status}`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
-            const allItems = d.items || [];
-            const nOmo = allItems.filter(p => p.omonimo).length;
-            const items = status === 'pending' && window._ftFilt === 'omo' ? allItems.filter(p => p.omonimo) : status === 'pending' && window._ftFilt === 'safe' ? allItems.filter(p => !p.omonimo) : allItems;
+            const items = d.items || [];
             if (status === 'pending') {
               const badge = document.getElementById('badge-team-lineage');
               if (badge) badge.textContent = items.length || '';
@@ -13358,7 +13356,9 @@ window.adminNav = async function(section) {
           body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
           try {
             const d = await fetch(`${API_BASE}/admin/foto-tag-proposte?status=${status}`, { headers: H }).then(r => r.json());
-            const items = d.items || [];
+            const allItems = d.items || [];
+            const nOmo = allItems.filter(p => p.omonimo).length;
+            const items = status === 'pending' && window._ftFilt === 'omo' ? allItems.filter(p => p.omonimo) : status === 'pending' && window._ftFilt === 'safe' ? allItems.filter(p => !p.omonimo) : allItems;
             if (status === 'pending') { const b = document.getElementById('badge-foto-tag'); if (b) b.textContent = allItems.length || ''; }
             if (!items.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun tag in attesa.' : 'Nessun elemento.'}</div>`; return; }
             const fb = (k, t) => `<button class="tab-btn${window._ftFilt === k ? ' active-cat' : ''}" onclick="window._ftSetFilt('${k}')" style="font-size:.76rem;padding:5px 12px">${t}</button>`;
