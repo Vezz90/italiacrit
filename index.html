@@ -69,6 +69,8 @@
   <link rel="stylesheet" href="design.css?v=273" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
+  <!-- Il sito ha il suo tema chiaro/scuro: dichiararlo impedisce a Chrome/Samsung/Xiaomi di "scurire" la pagina da soli invertendo i colori (titoli gialli su nero). Lo aggiorna lo script del tema. -->
+  <meta name="color-scheme" content="only light" id="meta-color-scheme" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","description":"Risultati, classifiche, gare e statistiche del ciclismo agonistico italiano su strada.","publisher":{"@type":"Organization","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","logo":"https://italiacyclingstats.com/assets/logo.png"}}
@@ -93,6 +95,7 @@
     var saved = null;
     try { saved = localStorage.getItem('ics_theme'); } catch (e) {}
     if (saved !== 'dark') document.body.classList.add('light-mode');
+    else { var m = document.getElementById('meta-color-scheme'); if (m) m.setAttribute('content', 'dark'); }
   })();
 </script>
 
@@ -252,7 +255,7 @@ function googleTranslateElementInit() {
 /* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
    Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
 (function () {
-  var L = ['app.js?v=1068', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
+  var L = ['app.js?v=1069', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
   var R = 'https://italiacrit.onrender.com/';
   function load(base) {
     L.forEach(function (f) {

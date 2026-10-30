@@ -4249,11 +4249,14 @@ function initTheme() {
   try { saved = localStorage.getItem('ics_theme'); } catch {}
   if (saved === 'dark') document.body.classList.remove('light-mode');
   else document.body.classList.add('light-mode');
+  const setCS = light => { const m = document.getElementById('meta-color-scheme'); if (m) m.setAttribute('content', light ? 'only light' : 'dark'); };
+  setCS(saved !== 'dark');
   const btn = document.getElementById('theme-toggle');
   if (btn) {
     btn.addEventListener('click', () => {
       const isLight = document.body.classList.toggle('light-mode');
       try { localStorage.setItem('ics_theme', isLight ? 'light' : 'dark'); } catch {}
+      setCS(isLight);
     });
   }
 }
