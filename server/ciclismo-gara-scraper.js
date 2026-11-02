@@ -93,6 +93,41 @@ function normalizeToAtletaId(nomeCompleto) {
     .replace(/^_+|_+$/g, '');
 }
 
+// OMONIMI: il nome da solo non identifica una persona. Per un ciclismo_id non
+// ancora collegato, se l'id derivato dal nome appartiene già a un'ALTRA scheda
+// ciclismo.info, si confronta l'anno di nascita (stessa regola degli split:
+// differenza <= 1 anno = stessa persona). Anno diverso -> id con suffisso
+// _AAAA (convenzione degli omonimi già divisi). Anno non verificabile -> null
+// (nessun collegamento: meglio una riga da rivedere che due persone fuse).
+const _rpcCache = new Map();
+async function anniDaCiclismoInfo(nome) {
+  if (_rpcCache.has(nome)) return _rpcCache.get(nome);
+  const mappa = {};
+  try {
+    const res = await fetch('https://www.ciclismo.info/cgi-bin/rpc.cgi?q=' + encodeURIComponent(nome), { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(20000) });
+    for (const l of (await res.text()).split(/\r?\n|<br>/)) {
+      const m = l.match(/^(\d+)\|(.+?) \((\d{4})\)\s*$/);
+      if (m) mappa[m[1]] = +m[3];
+    }
+  } catch (e) { /* mappa vuota = anno non verificabile */ }
+  _rpcCache.set(nome, mappa);
+  return mappa;
+}
+let omonimiDaVerificare = 0, omonimiSeparati = 0;
+async function risolviOmonimo(sb, ciclismoId, nome, baseId) {
+  const { data: altri } = await sb.from('ciclismo_athletes').select('ciclismo_id, nome_completo, data_nascita')
+    .eq('atleta_id', baseId).neq('ciclismo_id', ciclismoId);
+  if (!altri || !altri.length) return baseId;
+  const anni = await anniDaCiclismoInfo(nome);
+  const anno = anni[ciclismoId];
+  if (!anno) { omonimiDaVerificare++; console.log(`(omonimo da verificare: ${nome} ciclismo_id=${ciclismoId}, anno di nascita non trovato)`); return null; }
+  const annoAltri = altri.map(a => (String(a.data_nascita || '').match(/(\d{4})/) || [])[1] ? +String(a.data_nascita).match(/(\d{4})/)[1] : anni[a.ciclismo_id]);
+  if (annoAltri.some(y => !y)) { omonimiDaVerificare++; console.log(`(omonimo da verificare: ${nome} ciclismo_id=${ciclismoId}, anno dell'altra scheda ignoto)`); return null; }
+  if (annoAltri.some(y => Math.abs(y - anno) <= 1)) return baseId;
+  omonimiSeparati++;
+  return `${baseId}_${anno}`;
+}
+
 // Stessa mappa di ciclismo-create-profiles.js / ciclismo-backfill.js.
 const CAT_MAP = {
   ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M',
@@ -211,8 +246,15 @@ async function main() {
         // un upsert incondizionato rischia di azzerare un link già fatto in
         // un secondo momento da ciclismo-create-profiles.js).
         const athPayload = { ciclismo_id: row.ciclismoId, nome_completo: nomeCompleto, updated_at: new Date().toISOString() };
-        if (matched) athPayload.atleta_id = atletaIdDerivato;
         const { data: existingAth } = await sb.from('ciclismo_athletes').select('atleta_id').eq('ciclismo_id', row.ciclismoId).maybeSingle();
+        // Se la scheda e' gia' collegata (anche da uno split manuale degli omonimi)
+        // quel collegamento e' l'autorita': il nome da solo non deve ricollegarla
+        // all'id "semplice" di un'altra persona.
+        let idUsato = atletaIdDerivato;
+        if (existingAth && existingAth.atleta_id) idUsato = existingAth.atleta_id;
+        else idUsato = await risolviOmonimo(sb, row.ciclismoId, nomeCompleto, atletaIdDerivato);
+        const matchedEff = !!idUsato && (italiacritIds.has(idUsato) || manualIds.has(idUsato) || !!(existingAth && existingAth.atleta_id));
+        if (matchedEff) athPayload.atleta_id = idUsato;
         if (!existingAth) atletiNuovi++;
         await sb.from('ciclismo_athletes').upsert(athPayload, { onConflict: 'ciclismo_id' });
 
@@ -223,7 +265,7 @@ async function main() {
         // collegato su ciclismo_athletes: si usa quel valore già letto sopra
         // come fallback, stessa correzione fatta su ciclismo-backfill.js
         // dopo il bug reale trovato dal vivo (22.184 righe orfane).
-        let finalAtletaId = matched ? atletaIdDerivato : ((existingAth && existingAth.atleta_id) || null);
+        let finalAtletaId = matchedEff ? idUsato : ((existingAth && existingAth.atleta_id) || null);
 
         // Profilo mancante: crealo subito (stessa correzione fatta su
         // ciclismo-backfill.js) — altrimenti il corridore resta orfano, non
@@ -232,10 +274,10 @@ async function main() {
         // un atleta PCS noto (pro/nazionale/continentale) — vedi pcsIds
         // sopra: creare qui un profilo manual_athletes sovrascriverebbe la
         // sua identità reale con dati amatoriali vecchi.
-        if (!finalAtletaId && !pcsIds.has(atletaIdDerivato)) {
-          const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', atletaIdDerivato).maybeSingle();
+        if (!finalAtletaId && idUsato && !pcsIds.has(idUsato)) {
+          const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', idUsato).maybeSingle();
           if (existingManual) {
-            finalAtletaId = atletaIdDerivato;
+            finalAtletaId = idUsato;
           } else {
             const nomeParts = String(nomeCompleto || '').trim().split(/\s+/);
             const cognome = nomeParts[0] || nomeCompleto;
@@ -249,10 +291,10 @@ async function main() {
                 || team.trim().toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, ''))
               : null;
             const { error: profErr } = await sb.from('manual_athletes').upsert({
-              atleta_id: atletaIdDerivato, cognome, nome: nomeP, team_id, team, categoria, genere,
+              atleta_id: idUsato, cognome, nome: nomeP, team_id, team, categoria, genere,
               created_by: null, source: 'ciclismo_info',
             }, { onConflict: 'atleta_id', ignoreDuplicates: true });
-            if (!profErr) finalAtletaId = atletaIdDerivato;
+            if (!profErr) finalAtletaId = idUsato;
           }
           if (finalAtletaId) await sb.from('ciclismo_athletes').update({ atleta_id: finalAtletaId }).eq('ciclismo_id', row.ciclismoId);
         }
