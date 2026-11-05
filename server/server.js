@@ -3056,6 +3056,145 @@ app.post('/api/admin/team-lineage/:id/reject', requireAdmin, async (req, res) =>
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Omonimi: schede ciclismo.info ancora unite sotto lo stesso atleta_id ────
+// L'admin vede per ogni profilo con più schede se è la stessa persona (la
+// federazione ha due schede) o persone diverse, con le prove ricavate dai
+// piazzamenti (server/omonimi-analisi.js). Le decisioni stanno in kv_store
+// ('omonimi_decisioni'); gli anni di nascita di ciclismo.info in 'omonimi_anni'.
+const OMO = require('./omonimi-analisi');
+let _omoCache = null;
+async function kvRead(key, def) {
+  const { data } = await supabase.from('kv_store').select('value').eq('key', key).maybeSingle();
+  return data?.value ?? def;
+}
+async function kvWrite(key, value) {
+  const { error } = await supabase.from('kv_store').upsert({ key, value, updated_at: new Date().toISOString() });
+  if (error) throw error;
+}
+async function omoFetchAll(table, select, order, extra) {
+  const out = [];
+  for (let from = 0; ; from += 1000) {
+    let q = supabase.from(table).select(select).order(order).range(from, from + 999);
+    if (extra) q = extra(q);
+    const { data, error } = await q;
+    if (error) throw error;
+    out.push(...data);
+    if (data.length < 1000) break;
+  }
+  return out;
+}
+async function omoBuild() {
+  if (_omoCache && Date.now() - _omoCache.at < 10 * 60 * 1000) return _omoCache.items;
+  const ath = await omoFetchAll('ciclismo_athletes', 'ciclismo_id, atleta_id, nome_completo', 'ciclismo_id');
+  const gruppi = new Map();
+  for (const a of ath) {
+    if (!a.atleta_id || /_(19|20)\d\d$/.test(a.atleta_id)) continue;
+    if (!gruppi.has(a.atleta_id)) gruppi.set(a.atleta_id, []);
+    gruppi.get(a.atleta_id).push(a);
+  }
+  const multi = [...gruppi.entries()].filter(([, v]) => v.length > 1);
+  const byCid = new Map();
+  for (let i = 0; i < multi.length; i += 30) {
+    const chunk = multi.slice(i, i + 30).map(([id]) => id);
+    const rows = await omoFetchAll('ciclismo_results', 'id, ciclismo_id, stagione, categoria, team, data, nome_gara, posizione', 'id', q => q.in('atleta_id', chunk));
+    for (const r of rows) { if (!byCid.has(r.ciclismo_id)) byCid.set(r.ciclismo_id, []); byCid.get(r.ciclismo_id).push(r); }
+  }
+  const anni = await kvRead('omonimi_anni', {});
+  const items = multi.map(([id, schede]) => {
+    const sum = schede.map(a => OMO.riassumiScheda(a.ciclismo_id, byCid.get(a.ciclismo_id) || [], anni[a.ciclismo_id]));
+    const v = OMO.valutaGruppo(sum);
+    return {
+      id, nome: schede[0].nome_completo, verdetto: v.verdetto, gruppi: v.gruppi,
+      schede: sum.map(s => ({ cid: s.cid, anno: s.anno, stima: s.stimaNascita, gare: s.gare, da: s.da, a: s.a, cats: s.cats, teams: s.teams })),
+      coppie: v.coppie.filter(c => c.motivi.length).map(c => ({ a: c.a, b: c.b, score: c.score, motivi: c.motivi.map(m => m.t) })),
+    };
+  });
+  _omoCache = { at: Date.now(), items };
+  return items;
+}
+const omoKey = it => it.schede.map(s => s.cid).sort().join(',');
+
+app.get('/api/admin/omonimi', requireAdmin, async (req, res) => {
+  try {
+    const [items, dec] = await Promise.all([omoBuild(), kvRead('omonimi_decisioni', {})]);
+    const out = items.map(it => ({ ...it, decisione: dec[it.id] && dec[it.id].key === omoKey(it) ? dec[it.id] : null }));
+    res.json({ items: out });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// "Stessa persona": toglie il profilo dalla coda (si ripresenta solo se
+// compare una scheda nuova). Con id = "*" lo fa per tutti i profili che
+// l'analisi dà per certi e non ancora decisi.
+app.post('/api/admin/omonimi/:id/stessa', requireAdmin, async (req, res) => {
+  try {
+    const items = await omoBuild();
+    const dec = await kvRead('omonimi_decisioni', {});
+    const adesso = new Date().toISOString();
+    const tutti = req.params.id === '*';
+    let n = 0;
+    for (const it of items) {
+      if (tutti ? (it.verdetto !== 'stessa' || (dec[it.id] && dec[it.id].key === omoKey(it))) : it.id !== req.params.id) continue;
+      dec[it.id] = { key: omoKey(it), esito: 'stessa', by: req.user.id, at: adesso, auto: tutti };
+      n++;
+    }
+    if (!n && !tutti) return res.status(404).json({ error: 'Profilo non trovato' });
+    if (n) await kvWrite('omonimi_decisioni', dec);
+    res.json({ ok: true, n });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/omonimi/:id/riapri', requireAdmin, async (req, res) => {
+  try {
+    const dec = await kvRead('omonimi_decisioni', {});
+    delete dec[req.params.id];
+    await kvWrite('omonimi_decisioni', dec);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// "Persona diversa": le schede indicate diventano un nuovo atleta_id
+// <ID>_<anno di nascita> (stessa convenzione delle divisioni fatte finora).
+// Righe PCS, override e profili utente restano sull'id originale: vengono
+// solo contati e segnalati, si sistemano a mano.
+const OMO_CAT = { ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M', DONNE_ESORDIENTI: 'AL_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F' };
+app.post('/api/admin/omonimi/:id/dividi', requireAdmin, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const cids = [...new Set((req.body.cids || []).map(String))];
+    const anno = parseInt(req.body.anno, 10);
+    if (!cids.length || !(anno >= 1940 && anno <= new Date().getFullYear())) return res.status(400).json({ error: 'Servono le schede e un anno di nascita valido' });
+    const { data: ath, error } = await supabase.from('ciclismo_athletes').select('ciclismo_id, atleta_id, nome_completo').eq('atleta_id', id);
+    if (error) throw error;
+    const ids = new Set((ath || []).map(a => String(a.ciclismo_id)));
+    if (!cids.every(c => ids.has(c))) return res.status(400).json({ error: 'Una scheda non appartiene a questo profilo' });
+    if (cids.length >= ids.size) return res.status(400).json({ error: 'Almeno una scheda deve restare sul profilo originale' });
+    const nuovo = `${id}_${anno}`;
+    const { data: esiste } = await supabase.from('ciclismo_athletes').select('ciclismo_id').eq('atleta_id', nuovo).limit(1);
+    if (esiste && esiste.length) return res.status(409).json({ error: `L'id ${nuovo} esiste già` });
+    for (const t of ['ciclismo_athletes', 'ciclismo_results', 'ciclismo_gara_media']) {
+      const { error: e } = await supabase.from(t).update({ atleta_id: nuovo }).in('ciclismo_id', cids);
+      if (e && t !== 'ciclismo_gara_media') throw e;
+    }
+    // profilo base, come fa backfill-split-manual-athletes.js
+    const { data: last } = await supabase.from('ciclismo_results').select('team, categoria, stagione').eq('atleta_id', nuovo).order('stagione', { ascending: false }).limit(1).maybeSingle();
+    const nome = (ath.find(a => cids.includes(String(a.ciclismo_id))) || ath[0]).nome_completo || id.replace(/_/g, ' ');
+    const parts = String(nome).trim().split(/\s+/);
+    const genere = /DONNE/i.test(last?.categoria || '') ? 'F' : 'M';
+    const team = last?.team || null;
+    await supabase.from('manual_athletes').upsert({
+      atleta_id: nuovo, cognome: parts[0] || nome, nome: parts.slice(1).join(' ') || '-',
+      team_id: team ? team.trim().toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') : null,
+      team, categoria: OMO_CAT[last?.categoria] || (genere === 'F' ? 'AL_F' : 'AL_M'), genere, created_by: null, source: 'ciclismo_info',
+    }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+    const rimaste = {};
+    for (const [t, col] of [['pcs_results', 'atleta_id'], ['pcs_team_history', 'atleta_id'], ['pcs_gara_results', 'atleta_id'], ['entity_overrides', 'entity_id']]) {
+      const { count } = await supabase.from(t).select('*', { count: 'exact', head: true }).eq(col, id);
+      if (count) rimaste[t] = count;
+    }
+    _omoCache = null;
+    res.json({ ok: true, nuovo, rimaste });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Albo d'oro: decisioni dell'admin sulle gare dal nome simile ─────────────
 // scripts/build_race_series.py unisce da solo i casi sicuri; le coppie dubbie
 // (data/albo/review.json) le decide un admin: "stessa gara" le unisce, "gare

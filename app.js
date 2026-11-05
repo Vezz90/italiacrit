@@ -12498,6 +12498,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🔗</span> <span class="admin-nav-lbl">Storico Team</span>
           <span class="admin-nav-badge" id="badge-team-lineage"></span>
         </div>
+        <div class="admin-nav-item" data-section="omonimi" onclick="adminNav('omonimi')">
+          <span class="admin-nav-icon">🧬</span> <span class="admin-nav-lbl">Omonimi</span>
+          <span class="admin-nav-badge" id="badge-omonimi"></span>
+        </div>
         <div class="admin-nav-item" data-section="foto-tag" onclick="adminNav('foto-tag')">
           <span class="admin-nav-icon">🏷</span> <span class="admin-nav-lbl">Tag foto da confermare</span>
           <span class="admin-nav-badge" id="badge-foto-tag"></span>
@@ -12577,7 +12581,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','foto-tag','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -12626,6 +12630,7 @@ window.adminNav = async function(section) {
           ${card('video-pending', '🎬', 'Video in attesa', 'ov-video-pending', 'Video proposti dagli utenti')}
           ${card('utenti-pending', '📥', 'Profili in attesa', 'ov-profili-pending', 'Atleti, team e media da verificare')}
           ${card('team-lineage', '🔗', 'Collegamenti storico team', 'ov-tl', 'Squadre rinominate da confermare')}
+          ${card('omonimi', '🧬', 'Omonimi da verificare', 'ov-omo', 'Schede doppie o persone diverse')}
           ${card('albo-review', '🏆', "Fusioni albo d'oro", 'ov-albo', 'Gare dal nome simile da unire o separare')}
           ${card('social-queue', '📣', 'Social in coda', 'ov-social', 'Post pronti da pubblicare')}
         </div>
@@ -12697,6 +12702,10 @@ window.adminNav = async function(section) {
         setBadge('badge-social', socialPend);
         setBadge('badge-team-lineage', tlPendCount);
         setBadge('badge-albo-review', alboPend);
+        fetch(`${API_BASE}/admin/omonimi`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json()).then(d => {
+          const n = (d.items || []).filter(i => !i.decisione && i.verdetto !== 'stessa').length;
+          setPending('ov-omo', n); setBadge('badge-omonimi', n);
+        }).catch(() => {});
       } catch(e) { /* ignora */ }
       break;
     }
@@ -13333,6 +13342,109 @@ window.adminNav = async function(section) {
           }
         };
         await window._tlLoad('pending');
+      })();
+      break;
+    }
+
+    case 'omonimi': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🧬 Omonimi da verificare</h1>
+          <p class="admin-page-sub">Profili con più schede ciclismo.info sotto lo stesso nome. Per ognuno il sito confronta i piazzamenti: se la stessa gara compare in entrambe le schede con lo stesso piazzamento è la stessa persona con due schede; se compare con piazzamenti diversi sono due persone. «Stessa persona» toglie il profilo dalla coda; «Separa» sposta le schede spuntate su una persona nuova (id con l'anno di nascita).</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px" id="omo-tabs"></div>
+        <div id="admin-omo-body"><div class="admin-loading">Caricamento… (la prima volta richiede qualche secondo)</div></div>`;
+      (async () => {
+        const H = () => ({ Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' });
+        const S = window._omo = { items: [], tab: 'guarda', q: '', n: 60 };
+        const VERD = { stessa: ['Stessa persona', '#22c55e'], dubbio: ['Dubbio', '#e67e22'], diverse: ['Persone diverse', '#ef4444'] };
+        const grp = it => (it.decisione ? 'decisi' : it.verdetto === 'stessa' ? 'stessa' : 'guarda');
+        const tabs = () => {
+          const c = { guarda: 0, stessa: 0, decisi: 0 };
+          S.items.forEach(i => c[grp(i)]++);
+          document.getElementById('omo-tabs').innerHTML =
+            [['guarda', 'Da guardare'], ['stessa', 'Probabilmente stessa persona'], ['decisi', 'Già decisi']].map(([k, t]) =>
+              `<button class="tab-btn ${S.tab === k ? 'active-cat' : ''}" onclick="window._omo.tab='${k}';window._omo.n=60;window._omoRender()">${t} ${c[k]}</button>`).join('') +
+            `<input id="omo-q" type="search" placeholder="Cerca nome…" value="${esc(S.q)}" oninput="window._omo.q=this.value;window._omo.n=60;window._omoRender(true)" style="margin-left:auto;padding:7px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;min-width:180px">`;
+          const b = document.getElementById('badge-omonimi');
+          if (b) { b.textContent = c.guarda || ''; b.style.display = c.guarda ? '' : 'none'; }
+        };
+        const scheda = (it, s, pre) => `
+          <label style="display:grid;grid-template-columns:22px 70px 90px 1fr;gap:4px 10px;align-items:baseline;padding:6px 0;border-top:1px dashed var(--border-subtle);font-size:.82rem;cursor:pointer">
+            <input type="checkbox" class="omo-ck" data-id="${esc(it.id)}" value="${esc(s.cid)}" ${pre ? 'checked' : ''}>
+            <span style="color:var(--text-muted)">id ${esc(s.cid)}</span>
+            <span>${s.anno ? 'nato ' + s.anno : `<span style="color:var(--orange,#e67e22)">anno ignoto${s.stima ? ' (~' + s.stima + ')' : ''}</span>`}</span>
+            <span style="color:var(--text-muted)">${s.gare ? `${s.da}${s.a !== s.da ? '–' + s.a : ''} · ${s.gare} gare · ${esc((s.cats || []).join(', '))} · ${esc((s.teams || []).join(' / '))}` : 'nessuna gara'}</span>
+          </label>`;
+        const card = it => {
+          const [vt, vc] = VERD[it.verdetto];
+          const sep = new Set((it.gruppi || []).slice(1).flat());
+          const prove = [...new Set(it.coppie.flatMap(c => c.motivi))].slice(0, 5);
+          const anni = it.schede.map(s => s.anno).filter(Boolean);
+          return `<div id="omo-${esc(it.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;justify-content:space-between">
+              <a href="#/atleta/${encodeURIComponent(it.id)}" target="_blank" style="font-weight:700;color:inherit;text-decoration:none">${esc(it.nome || it.id)}</a>
+              <span style="font-size:.74rem;font-weight:700;color:${vc}">${vt}${it.decisione ? ' · deciso' : ''} · ${it.schede.length} schede</span>
+            </div>
+            ${it.schede.map(s => scheda(it, s, sep.has(s.cid))).join('')}
+            ${prove.length ? `<ul style="margin:8px 0 0 18px;padding:0;font-size:.78rem;color:var(--text-muted)">${prove.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
+              ${it.decisione
+                ? `<button class="btn-reject" onclick="window._omoAct('${esc(it.id)}','riapri')" style="padding:6px 14px;font-size:.8rem">Riapri</button>`
+                : `<button class="btn-approve" onclick="window._omoAct('${esc(it.id)}','stessa')" style="padding:6px 14px;font-size:.8rem">✓ Stessa persona</button>
+                   <span style="margin-left:auto;font-size:.78rem;color:var(--text-muted)">Separa le schede spuntate come persona nata nel</span>
+                   <input id="omo-y-${esc(it.id)}" type="number" min="1940" max="2030" value="${(it.gruppi && anni.length ? it.schede.find(s => sep.has(s.cid) && s.anno)?.anno : '') || ''}" placeholder="anno" style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit">
+                   <button class="btn-reject" onclick="window._omoDividi('${esc(it.id)}')" style="padding:6px 14px;font-size:.8rem">Separa</button>`}
+            </div></div>`;
+        };
+        window._omoRender = (keepFocus) => {
+          tabs();
+          if (keepFocus) { const q = document.getElementById('omo-q'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+          const body = document.getElementById('admin-omo-body');
+          const q = S.q.trim().toLowerCase();
+          const L = S.items.filter(i => grp(i) === S.tab && (!q || (i.nome || '').toLowerCase().includes(q) || i.id.toLowerCase().includes(q)));
+          const bulk = S.tab === 'stessa' && L.length && !q
+            ? `<div style="margin-bottom:12px"><button class="btn-approve" onclick="window._omoAct('*','stessa')" style="padding:8px 18px;font-size:.84rem">✓ Conferma tutti i ${L.length} come stessa persona</button><span style="margin-left:10px;font-size:.78rem;color:var(--text-muted)">In tutti compaiono gare in comune con lo stesso piazzamento oppure stagioni che si susseguono senza contraddizioni.</span></div>` : '';
+          body.innerHTML = !L.length
+            ? `<div style="color:var(--text-muted);padding:24px 0">${S.tab === 'guarda' ? '✅ Niente da guardare.' : 'Nessun profilo.'}</div>`
+            : `${bulk}<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">${L.length} profil${L.length === 1 ? 'o' : 'i'}</div>
+               <div style="display:flex;flex-direction:column;gap:12px">${L.slice(0, S.n).map(card).join('')}</div>
+               ${L.length > S.n ? `<button class="tab-btn" style="margin-top:14px" onclick="window._omo.n+=60;window._omoRender()">Mostra altri</button>` : ''}`;
+        };
+        window._omoLoad = async () => {
+          try {
+            const r = await fetch(`${API_BASE}/admin/omonimi`, { headers: H() });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            S.items = d.items || [];
+            window._omoRender();
+          } catch (e) { document.getElementById('admin-omo-body').innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
+        };
+        window._omoAct = async (id, act) => {
+          if (id === '*' && !confirm('Confermare tutti questi profili come stessa persona?')) return;
+          try {
+            const r = await fetch(`${API_BASE}/admin/omonimi/${encodeURIComponent(id)}/${act}`, { method: 'POST', headers: H() });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            await window._omoLoad();
+          } catch (e) { alert('Errore: ' + e.message); }
+        };
+        window._omoDividi = async (id) => {
+          const cids = [...document.querySelectorAll('.omo-ck')].filter(c => c.dataset.id === id && c.checked).map(c => c.value);
+          const anno = parseInt(document.getElementById('omo-y-' + id).value, 10);
+          if (!cids.length) return alert('Spunta le schede da separare.');
+          if (!anno) return alert('Scrivi l\'anno di nascita della persona separata.');
+          if (!confirm(`Separare ${cids.length} ${cids.length === 1 ? 'scheda' : 'schede'} di ${id} come nuova persona (${id}_${anno})?`)) return;
+          try {
+            const r = await fetch(`${API_BASE}/admin/omonimi/${encodeURIComponent(id)}/dividi`, { method: 'POST', headers: H(), body: JSON.stringify({ cids, anno }) });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            const rim = Object.entries(d.rimaste || {}).map(([t, n]) => `${t}: ${n}`).join(', ');
+            alert(`Creata ${d.nuovo}.` + (rim ? `\nSul profilo originale restano righe da controllare a mano (${rim}).` : ''));
+            await window._omoLoad();
+          } catch (e) { alert('Errore: ' + e.message); }
+        };
+        await window._omoLoad();
       })();
       break;
     }
