@@ -573,12 +573,12 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
   if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
   const fd = new FormData();
   // I campi testo devono venire PRIMA del file per essere disponibili in multer
-  fd.append('entity_type', entityType);
-  fd.append('entity_id', entityId);
-  fd.append('photo', blob, filename || 'photo.jpg');
+  const isMedia = entityType === 'media';   // per i media la foto profilo è la cover del loro spazio
+  if (!isMedia) { fd.append('entity_type', entityType); fd.append('entity_id', entityId); }
+  fd.append(isMedia ? 'cover' : 'photo', blob, filename || 'photo.jpg');
   try {
     const token = authToken();
-    const res  = await fetch(`${API_BASE}/upload/photo`, {
+    const res  = await fetch(`${API_BASE}${isMedia ? '/profile/media/cover' : '/upload/photo'}`, {
       method: 'POST',
       headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: fd,
@@ -589,7 +589,8 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
     // Update cache and DOM without full re-render
     const key = `${entityType}:${entityId}`;
     // Salva URL con timestamp nel cache così anche le miniature ranking useranno la versione nuova
-    const bustedUrl = data.photo_url + (data.photo_url.includes('?') ? '&' : '?') + '_v=' + Date.now();
+    const nuovaUrl = isMedia ? data.cover_url : data.photo_url;
+    const bustedUrl = nuovaUrl + (nuovaUrl.includes('?') ? '&' : '?') + '_v=' + Date.now();
     if (_ovCache[key]) _ovCache[key].photo_url = bustedUrl;
     else _ovCache[key] = { photo_url: bustedUrl };
     const target = document.querySelector(`[data-photo-id="${entityId}"]`);
@@ -5112,6 +5113,7 @@ function route() {
   if (match('/login')) return renderLogin();
   if (match('/reset-password')) return renderResetPassword();
   if (match('/register')) return renderRegister();
+  if (match('/completa-profilo')) return renderCompletaProfilo();
   if (match('/profilo')) return renderMyProfile();
   if (match('/admin')) return renderAdmin();
   if (match('/redazione')) return (typeof window.renderRedazione === 'function' ? window.renderRedazione() : renderHomeDashboard());
@@ -34259,10 +34261,155 @@ window.submitRegister = async function(e) {
     if (Object.values(details).some(x => x)) {
       await apiCall('/profile/details', { method: 'PATCH', body: details }).catch(() => {});
     }
-    window.location.hash = '/profilo';
+    window.location.hash = '/completa-profilo';
   } catch (err) {
     errEl.textContent = err.message; errEl.style.display = 'block';
     btn.disabled = false; btn.textContent = 'CREA ACCOUNT';
+  }
+};
+
+// ── PASSO 2 DELL'ISCRIZIONE: foto e qualche dato in più ──────────────────────
+// Si apre subito dopo la registrazione (email o Google). Tutto facoltativo:
+// «Lo faccio dopo» porta direttamente al profilo.
+const _CP_CAMPI = {
+  atleta:       [['bio', 'Bio breve', 'ta', 'Due righe su di te'], ['instagram', 'Instagram', 'in', '@tuonome']],
+  team:         [['bio', 'Chi siete', 'ta', 'Anno di fondazione, categorie seguite'], ['website', 'Sito web', 'in', 'https://'], ['instagram', 'Instagram', 'in', '@squadra']],
+  media:        [],
+  genitore:     [['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
+  parente:      [['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
+  appassionato: [['favorite_team', 'La tua squadra del cuore', 'in', 'es. Bardiani-CSF'], ['favorite_rider', 'Il tuo corridore del cuore', 'in', 'es. Tadej Pogačar']],
+};
+const _CP_TUTTI = ['bio', 'location', 'instagram', 'facebook', 'strava', 'website', 'specialty', 'birth_year', 'favorite_team', 'staff_role', 'public_contact', 'favorite_rider'];
+
+async function renderCompletaProfilo() {
+  const user = authUser();
+  if (!user) { window.location.hash = '/login'; return; }
+  if (user.role === 'admin') { window.location.hash = '/admin'; return; }
+  setPage(`<div class="auth-wrap"><div style="width:100%;max-width:460px;text-align:center;padding:60px 0;color:var(--text-muted)">Caricamento…</div></div>`);
+  let comp = null, det = {}, famiglia = null;
+  try {
+    comp = await apiCall('/profile/completion');
+    det = (await apiCall('/profile/details')).details || {};
+    if (user.role === 'genitore' || user.role === 'parente') famiglia = (await apiCall('/profile')).profile;
+  } catch (e) { window.location.hash = '/profilo'; return; }
+  _cpDisegna(user, comp, det, famiglia);
+}
+
+function _cpDisegna(user, comp, det, famiglia) {
+  const role = user.role;
+  const ent = comp && comp.entity;
+  window._cpDet = det;
+  window._cpRole = role;
+  const campi = _CP_CAMPI[role] || [];
+  const inp = 'width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:8px;background:var(--bg-card);color:var(--text-primary);font-size:.9rem;font-family:inherit';
+
+  // Foto profilo (atleta, team, media): mostra quella che c'è già
+  let fotoHtml = '';
+  if (ent) {
+    const ini = ((ent.name || user.display_name || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2)).toUpperCase();
+    const has = !!ent.photo_url;
+    const raggio = ent.type === 'media' ? '50%' : '10px';
+    const cosa = ent.type === 'team' ? 'il logo' : 'la foto';
+    fotoHtml = `
+      <div style="display:flex;gap:14px;align-items:center;padding:12px;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px">
+        <div style="width:84px;height:84px;flex:none;border-radius:${raggio};overflow:hidden;background:var(--bg-card)">
+          ${has
+            ? `<img data-photo-id="${esc(ent.id)}" src="${esc(mediaUrl(ent.photo_url))}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block">`
+            : `<div data-photo-id="${esc(ent.id)}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--text-muted)">${esc(ini)}</div>`}
+        </div>
+        <div style="font-size:.86rem;line-height:1.4">
+          <b style="display:block;font-size:.95rem;margin-bottom:2px">${has ? 'Questa è ' + cosa + ' che abbiamo già' : 'Aggiungi ' + cosa}</b>
+          <span style="color:var(--text-muted)">${has ? 'Se ti va bene, vai avanti: resta così. Altrimenti puoi cambiarla.' : 'Si vede nei risultati e sulla tua pagina.'}</span>
+        </div>
+      </div>
+      <input type="file" id="cp-file" accept="image/*" style="display:none" onchange="handlePhotoUpload(event,'${esc(ent.type)}','${esc(ent.id)}')">
+      <button type="button" class="auth-btn auth-btn-secondary" style="margin-bottom:16px" onclick="document.getElementById('cp-file').click()">${has ? 'Cambia ' + cosa : 'Scegli ' + cosa}</button>`;
+  } else if (role === 'media') {
+    // Lo spazio media non esiste ancora: si crea qui, poi si può mettere la foto
+    fotoHtml = `
+      <div style="font-size:.88rem;margin-bottom:10px;color:var(--text-muted)">Crea il tuo spazio foto e video: poi potrai mettere il logo o la tua foto.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
+        <input id="cp-m-nome" style="${inp}" placeholder="Nome pubblico" value="${esc(user.display_name || '')}">
+        <select id="cp-m-tipo" style="${inp}"><option value="">Cosa pubblichi?</option><option value="foto">Foto</option><option value="video">Video</option><option value="entrambi">Foto e video</option></select>
+        <textarea id="cp-m-bio" rows="2" style="${inp};resize:none" placeholder="Bio breve: che gare segui, da quanto"></textarea>
+        <input id="cp-m-web" style="${inp}" placeholder="Sito web (https://)">
+        <input id="cp-m-ig" style="${inp}" placeholder="Instagram (@tuonome)">
+      </div>
+      <button type="button" class="auth-btn" id="cp-m-crea" style="margin-bottom:16px" onclick="window._cpCreaMedia()">Crea il mio spazio</button>`;
+  } else if (role === 'atleta' || role === 'team') {
+    fotoHtml = `<div style="font-size:.86rem;color:var(--text-muted);margin-bottom:14px">Il tuo profilo non è ancora collegato a ${role === 'team' ? 'una squadra' : 'una scheda atleta'}: lo trovi nella pagina del profilo, poi potrai aggiungere la foto.</div>`;
+  }
+
+  // Genitore / parente: gli atleti collegati
+  let famHtml = '';
+  if (famiglia && Array.isArray(famiglia)) {
+    const ath = (typeof globalData !== 'undefined' && globalData && globalData.athletes) || {};
+    famHtml = famiglia.length
+      ? `<div style="margin-bottom:14px"><div style="font-size:.8rem;color:var(--text-muted);margin-bottom:6px">Hai collegato</div>${famiglia.map(f => {
+          const a = ath[f.linked_atleta_id];
+          const nome = a ? `${a.cognome || ''} ${a.nome || ''}`.trim() : String(f.linked_atleta_id).replace(/_/g, ' ');
+          return `<div style="padding:10px 12px;background:var(--bg-elevated);border-radius:10px;margin-bottom:6px;font-size:.9rem"><b>${esc(nome)}</b>${a && a.team_attuale ? `<span style="color:var(--text-muted)"> · ${esc(a.team_attuale)}</span>` : ''}</div>`;
+        }).join('')}<div style="font-size:.78rem;color:var(--text-muted)">Altri atleti li aggiungi dal tuo profilo.</div></div>`
+      : `<div style="font-size:.86rem;color:var(--text-muted);margin-bottom:14px">Non hai ancora collegato nessun atleta: puoi farlo dal tuo profilo.</div>`;
+  }
+
+  const campiHtml = campi.map(([k, label, tipo, ph]) =>
+    `<div style="margin-bottom:10px"><label style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:3px">${esc(label)}</label>${
+      tipo === 'ta' ? `<textarea id="cp-${k}" rows="2" style="${inp};resize:none" placeholder="${esc(ph)}">${esc(det[k] || '')}</textarea>`
+                    : `<input id="cp-${k}" style="${inp}" placeholder="${esc(ph)}" value="${esc(det[k] || '')}">`}</div>`).join('');
+
+  setPage(`
+    <div class="auth-wrap">
+      <div style="width:100%;max-width:460px">
+        <div class="auth-brand">
+          <img src="assets/logo-nav.png?v=1" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
+        </div>
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <div style="font-size:.74rem;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px">PASSO 2 · PUOI SALTARLO</div>
+            <h1 class="auth-title">Completa il tuo profilo</h1>
+            <p class="auth-sub">Qualche minuto e il tuo profilo è pronto. Tutto si può cambiare quando vuoi.</p>
+          </div>
+          <div id="cp-err" class="auth-error" style="display:none"></div>
+          ${fotoHtml}${famHtml}${campiHtml}
+          <button type="button" class="${(!ent && role === 'media') ? 'auth-btn auth-btn-secondary' : 'auth-btn'}" id="cp-salva" data-lbl="${campi.length ? 'Salva e vai al mio profilo' : 'Vai al mio profilo'}" style="margin-top:6px" onclick="window._cpSalva()">${campi.length ? 'Salva e vai al mio profilo' : 'Vai al mio profilo'}</button>
+          <div style="text-align:center;margin-top:12px"><a href="#/profilo" style="font-size:.86rem;color:var(--text-muted);text-decoration:underline">Lo faccio dopo</a></div>
+        </div>
+      </div>
+    </div>`);
+}
+
+window._cpSalva = async function() {
+  const btn = document.getElementById('cp-salva');
+  const err = document.getElementById('cp-err');
+  const campi = _CP_CAMPI[window._cpRole] || [];
+  const nuovo = {};
+  for (const k of _CP_TUTTI) nuovo[k] = (window._cpDet && window._cpDet[k]) || '';
+  for (const [k] of campi) { const el = document.getElementById('cp-' + k); if (el) nuovo[k] = el.value.trim(); }
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvo…'; }
+  try {
+    if (campi.length) await apiCall('/profile/details', { method: 'PATCH', body: nuovo });
+    window.location.hash = '/profilo';
+  } catch (e) {
+    if (err) { err.textContent = e.message; err.style.display = 'block'; }
+    if (btn) { btn.disabled = false; btn.textContent = btn.dataset.lbl || 'Salva e vai al mio profilo'; }
+  }
+};
+
+window._cpCreaMedia = async function() {
+  const g = id => (document.getElementById(id)?.value || '').trim();
+  const err = document.getElementById('cp-err');
+  const btn = document.getElementById('cp-m-crea');
+  if (!g('cp-m-nome')) { err.textContent = 'Scrivi il nome con cui vuoi comparire'; err.style.display = 'block'; return; }
+  if (!g('cp-m-tipo')) { err.textContent = 'Indica se pubblichi foto, video o entrambi'; err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Creo…';
+  try {
+    await apiCall('/profile/media', { method: 'POST', body: { display_name: g('cp-m-nome'), media_type: g('cp-m-tipo'), bio: g('cp-m-bio'), website: g('cp-m-web'), instagram: g('cp-m-ig') } });
+    await renderCompletaProfilo();   // ora lo spazio c'è: compare la scelta della foto
+  } catch (e) {
+    err.textContent = e.message; err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Crea il mio spazio';
   }
 };
 
