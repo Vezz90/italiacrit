@@ -13476,6 +13476,8 @@ window.adminNav = async function(section) {
           ['popup_visto', 'Popup visto'],
           ['popup_clic', 'Clic su «Entra nel gruppo»'],
           ['registra_aperta', 'Pagina di iscrizione aperta'],
+          ['iscr_ruolo', 'Ruolo scelto'],
+          ['iscr_dati', 'Dati inseriti'],
           ['account_creato', 'Account creato'],
           ['collegato', 'Profilo collegato'],
           ['passo2_aperto', 'Passo 2 aperto'],
@@ -13492,7 +13494,7 @@ window.adminNav = async function(section) {
             const cfg = f.popup || { on: false, pct: 0 };
             const max = Math.max(1, ...PASSI.map(([k]) => f.eventi[k] || 0));
             // percentuale solo dove il confronto ha senso (la pagina di iscrizione si raggiunge anche senza popup)
-            const DA = { popup_clic: 'popup_visto', account_creato: 'registra_aperta', collegato: 'account_creato', passo2_aperto: 'account_creato', foto_aggiunta: 'passo2_aperto', passo2_salvato: 'passo2_aperto' };
+            const DA = { popup_clic: 'popup_visto', iscr_ruolo: 'registra_aperta', iscr_dati: 'iscr_ruolo', account_creato: 'iscr_dati', collegato: 'account_creato', passo2_aperto: 'account_creato', foto_aggiunta: 'passo2_aperto', passo2_salvato: 'passo2_aperto' };
             const righe = PASSI.map(([k, t]) => {
               const n = f.eventi[k] || 0;
               const base = DA[k] ? (f.eventi[DA[k]] || 0) : 0;
@@ -34058,9 +34060,236 @@ function _regRoleFieldsHtml(role) {
   </div>`;
 }
 
+// ── ISCRIZIONE A SCHERMATE: ruolo → dati → accesso ──────────────────────────
+// Prima si chiede chi sei e i dati utili (senza chiedere ancora l'email), poi,
+// in una schermata a parte, come si vuole entrare (Google o email). I dati
+// restano nel browser (sessionStorage) fino alla creazione dell'account. Il vecchio
+// modulo unico resta raggiungibile su /register?vecchio=1.
+const _REG_KEY = 'ics-reg-bozza';
+function _regBozza() { try { return JSON.parse(sessionStorage.getItem(_REG_KEY) || '{}') || {}; } catch { return {}; } }
+function _regBozzaSalva(patch) {
+  const b = Object.assign(_regBozza(), patch);
+  try { sessionStorage.setItem(_REG_KEY, JSON.stringify(b)); } catch {}
+  return b;
+}
+const _REG_RUOLI = [
+  ['atleta', '🚴', 'Sono un atleta', 'Collega la tua scheda e i tuoi risultati'],
+  ['genitore', '👨‍👧', 'Sono un genitore', 'Segui tuo figlio o tua figlia'],
+  ['team', '👥', 'Gestisco una squadra', 'Pagina squadra, logo e organico'],
+  ['media', '📷', 'Faccio foto o video', 'Album e video collegati alle gare'],
+  ['parente', '❤️', 'Seguo un atleta', 'Parente, amico o tifoso'],
+  ['appassionato', '🏁', 'Seguo le gare', 'Atleti e squadre preferiti, avvisi'],
+];
+
+function _regCornice(passo, titolo, sotto, corpo) {
+  const pallini = [1, 2, 3].map(n => `<span style="width:8px;height:8px;border-radius:50%;background:${n <= passo ? 'var(--accent,#e8001d)' : 'var(--border-subtle)'}"></span>`).join('');
+  setPage(`
+    <div class="auth-wrap">
+      <div style="width:100%;max-width:440px">
+        <div class="auth-brand"><img src="assets/logo-nav.png?v=1" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" /></div>
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">${pallini}<span style="font-size:.74rem;letter-spacing:.06em;color:var(--text-muted);margin-left:6px">PASSO ${passo} DI 3</span></div>
+            <h1 class="auth-title">${titolo}</h1>
+            <p class="auth-sub">${sotto}</p>
+          </div>
+          <div id="auth-error" class="auth-error" style="display:none"></div>
+          ${corpo}
+        </div>
+      </div>
+    </div>`);
+}
+window._regErrore = function(msg) { const e = document.getElementById('auth-error'); if (e) { e.textContent = msg; e.style.display = 'block'; e.scrollIntoView({ block: 'nearest' }); } };
+
 function renderRegister() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
+  if (/[?&]vecchio=1/.test(location.search)) return renderRegisterVecchio();
   _track('registra_aperta');
+  const b = _regBozza();
+  if (!b.ruolo) return _regPasso1();
+  if (b.passo === 3) return _regPasso3();
+  return _regPasso2();
+}
+
+// Passo 1: chi sei
+function _regPasso1() {
+  const cards = _REG_RUOLI.map(([k, ico, t, d]) => `
+    <button type="button" onclick="window._regScegliRuolo('${k}')" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-family:inherit">
+      <span style="font-size:1.6rem;flex:none">${ico}</span>
+      <span><b style="display:block;font-size:.97rem">${t}</b><span style="font-size:.8rem;color:var(--text-muted)">${d}</span></span>
+    </button>`).join('');
+  _regCornice(1, 'Chi sei?', 'Scegli come vuoi usare Italia Cycling Stats.', `
+    ${cards}
+    <div class="auth-divider"><span>Hai già un account?</span></div>
+    <a href="#/login" class="auth-btn auth-btn-secondary">Accedi</a>`);
+}
+window._regScegliRuolo = function(r) {
+  _regBozzaSalva({ ruolo: r, passo: 2 });
+  _track('iscr_ruolo');
+  _regPasso2();
+};
+
+// Passo 2: i dati utili per quel ruolo
+function _regPasso2() {
+  const b = _regBozza();
+  const r = b.ruolo;
+  if (!r) return _regPasso1();
+  const nomeCampo = (label, ph) => `<div class="auth-field"><label class="auth-label" for="reg-name">${label}</label><div class="auth-input-wrap"><input type="text" id="reg-name" class="auth-input" placeholder="${ph}" autocomplete="name" /></div></div>`;
+  let titolo = '', sotto = '', corpo = '';
+  if (r === 'atleta') {
+    titolo = 'Trova il tuo profilo'; sotto = 'I tuoi risultati sono già sul sito: cerca il tuo cognome e collegali.';
+    corpo = `<div id="reg-role-extra">
+      <div class="auth-field">
+        <label class="auth-label">Il tuo profilo atleta <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="reg-atleta-search" class="auth-input" placeholder="Cerca per cognome…" autocomplete="off" oninput="window._regAtletaSearch(this.value)" />
+        </div>
+        <div id="reg-atleta-results" style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;background:var(--bg-card);display:none;max-height:180px;overflow-y:auto;font-size:.85rem"></div>
+        <input type="hidden" id="reg-atleta-id" />
+      </div>
+      <div id="reg-manual-name-wrap" style="display:none">
+        <div style="font-size:.78rem;color:var(--text-muted);padding:4px 0 8px">Non ti trovi? Scrivi i tuoi dati e creiamo la tua scheda.</div>
+        <div class="auth-field"><label class="auth-label">Nome <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="text" id="reg-fname" class="auth-input" placeholder="es. Marco" /></div></div>
+        <div class="auth-field"><label class="auth-label">Cognome <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="text" id="reg-lname" class="auth-input" placeholder="es. Rossi" /></div></div>
+        <div class="auth-field"><label class="auth-label">Sesso <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><select id="reg-genere" class="auth-input" style="appearance:auto;cursor:pointer"><option value="M">Uomo</option><option value="F">Donna</option></select></div></div>
+        <div class="auth-field"><label class="auth-label">Anno di nascita <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="text" id="reg-birth" class="auth-input" placeholder="es. 2008" inputmode="numeric" /></div></div>
+        ${_regTeamSearchHtml().replace(' <span style="color:var(--red-hot)">*</span>', '')}
+      </div>
+    </div>`;
+  } else if (r === 'genitore' || r === 'parente') {
+    titolo = r === 'genitore' ? 'Chi è tuo figlio o tua figlia?' : 'Quale atleta segui?';
+    sotto = 'Cerca il cognome: collegheremo il suo profilo al tuo. Puoi anche farlo dopo.';
+    corpo = `<div id="reg-role-extra">${_regFollowAthleteHtml(r === 'genitore' ? 'Tuo/a figlio/a (atleta)' : "L'atleta che segui")}</div>${nomeCampo('Il tuo nome', 'es. Anna Bianchi')}`;
+  } else if (r === 'team') {
+    titolo = 'Qual è la tua squadra?'; sotto = 'Cerca il nome: la tua pagina squadra è probabilmente già sul sito.';
+    corpo = `<div id="reg-role-extra">${_regTeamSearchHtml()}</div>${nomeCampo('Il tuo nome (referente)', 'es. Mario Verdi')}`;
+  } else if (r === 'media') {
+    titolo = 'Come ti chiami?'; sotto = 'Il nome con cui compari sotto le tue foto e i tuoi video.';
+    corpo = nomeCampo('Nome pubblico', 'es. Lucia Bianchi Foto');
+  } else {
+    titolo = 'Come ti chiami?'; sotto = 'Ti bastano pochi secondi: poi scegli come entrare.';
+    corpo = nomeCampo('Il tuo nome', 'es. Anna Bianchi');
+  }
+  corpo += `
+    <button type="button" class="auth-btn" onclick="window._regAvantiDati()" style="margin-top:6px">Avanti</button>
+    <div style="text-align:center;margin-top:12px"><a href="#" onclick="window._regIndietro();return false" style="font-size:.86rem;color:var(--text-muted);text-decoration:underline">Cambia ruolo</a></div>`;
+  _regCornice(2, titolo, sotto, corpo);
+  // ripristina quello che era stato inserito
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  set('reg-name', b.nome);
+  if (r === 'atleta') {
+    if (b.atleta_id) { set('reg-atleta-search', b.atleta_label); set('reg-atleta-id', b.atleta_id); }
+    else if (b.fname || b.lname) { const w = document.getElementById('reg-manual-name-wrap'); if (w) w.style.display = ''; set('reg-fname', b.fname); set('reg-lname', b.lname); set('reg-genere', b.genere); set('reg-birth', b.birth); }
+    set('reg-team-search', b.team_name); set('reg-team-id', b.team_id);
+  } else if (r === 'team') { set('reg-team-search', b.team_name); set('reg-team-id', b.team_id); }
+  else if (r === 'genitore' || r === 'parente') { set('reg-follow-search', b.follow_label); set('reg-follow-id', b.follow_id); }
+}
+window._regIndietro = function() { _regBozzaSalva({ ruolo: '', passo: 1 }); _regPasso1(); };
+window._regAvantiDati = function() {
+  const b = _regBozza(); const r = b.ruolo;
+  const v = id => (document.getElementById(id)?.value || '').trim();
+  const p = { nome: v('reg-name') };
+  if (r === 'atleta') {
+    Object.assign(p, { atleta_id: v('reg-atleta-id'), atleta_label: v('reg-atleta-search'), fname: v('reg-fname'), lname: v('reg-lname'), genere: v('reg-genere') || 'M', birth: v('reg-birth'), team_id: v('reg-team-id'), team_name: v('reg-team-search') });
+    if (!p.atleta_id && !(p.fname && p.lname)) return window._regErrore('Cerca il tuo profilo: se non ti trovi, scegli «Non mi trovo» e scrivi nome e cognome.');
+    if (!p.atleta_id && !/^(19|20)\d\d$/.test(p.birth)) return window._regErrore('Scrivi il tuo anno di nascita, per esempio 2008.');
+    if (p.atleta_id) { p.fname = ''; p.lname = ''; p.birth = ''; }
+  } else if (r === 'team') {
+    Object.assign(p, { team_id: v('reg-team-id'), team_name: v('reg-team-search') });
+    if (!p.team_name) return window._regErrore('Cerca la tua squadra, o scrivi il nome e scegli «Usa il nome scritto sopra».');
+    if (!p.nome) p.nome = p.team_name;
+  } else if (r === 'genitore' || r === 'parente') {
+    Object.assign(p, { follow_id: v('reg-follow-id'), follow_label: v('reg-follow-search') });
+    if (!p.nome) return window._regErrore('Scrivi il tuo nome.');
+  } else if (!p.nome) return window._regErrore('Scrivi il tuo nome.');
+  _regBozzaSalva(Object.assign(p, { passo: 3 }));
+  _track('iscr_dati');
+  _regPasso3();
+};
+
+// Passo 3: come vuoi entrare (qui compare per la prima volta l'email)
+function _regPasso3() {
+  const b = _regBozza();
+  if (!b.ruolo) return _regPasso1();
+  let gp = null; try { gp = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
+  const inApp = _isInAppBrowser();
+  const corpo = gp
+    ? `<div style="padding:12px 14px;background:var(--bg-elevated);border-radius:10px;font-size:.9rem;margin-bottom:12px">Accesso con Google: <b>${esc(gp.email || '')}</b></div>
+       <button type="button" class="auth-btn" id="reg-fine" onclick="window._regCompleta()">Crea il mio account</button>`
+    : `${inApp ? '' : `<div id="google-signin-register" style="display:flex;justify-content:center;margin-bottom:14px"></div><div class="auth-divider"><span>oppure con email</span></div>`}
+       <form onsubmit="event.preventDefault();window._regCompleta()" style="display:flex;flex-direction:column;gap:0">
+         <div class="auth-field"><label class="auth-label" for="reg-email">Email <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" autocomplete="email" required /></div></div>
+         <div class="auth-field"><label class="auth-label" for="reg-pwd">Password <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" autocomplete="new-password" minlength="6" required /></div></div>
+         <button type="submit" class="auth-btn" id="reg-fine">Crea il mio account</button>
+       </form>`;
+  _regCornice(3, 'Come vuoi entrare?', 'Ultimo passo: crea il tuo accesso. I dati che hai inserito sono già pronti.', `
+    ${corpo}
+    <div style="text-align:center;margin-top:12px"><a href="#" onclick="window._regTornaDati();return false" style="font-size:.86rem;color:var(--text-muted);text-decoration:underline">Indietro</a></div>`);
+  if (!gp && !inApp) _renderGoogleButton('google-signin-register', '_regGoogleCb');
+}
+window._regTornaDati = function() { _regBozzaSalva({ passo: 2 }); _regPasso2(); };
+
+// Google dal passo 3: se l'account esiste già entra, altrimenti lo crea con i dati inseriti
+window._regGoogleCb = async function(response) {
+  try {
+    const r = await apiCall('/auth/google', { method: 'POST', body: { credential: response.credential } });
+    if (r.needsRegistration) {
+      sessionStorage.setItem('google_pending', JSON.stringify({ credential: response.credential, email: r.email, name: r.name }));
+      return window._regCompleta();
+    }
+    authSave(r.token, r.user); updateNavLoginState(); _loadFollows();
+    try { sessionStorage.removeItem(_REG_KEY); } catch {}
+    window.location.hash = r.user.role === 'admin' ? '/admin' : '/profilo';
+  } catch (e) { window._regErrore(e.message); }
+};
+
+// Crea l'account (email o Google) con i dati della bozza, collega il profilo e va al passo "completa il profilo"
+window._regCompleta = async function() {
+  const b = _regBozza(); const role = b.ruolo;
+  const btn = document.getElementById('reg-fine');
+  let gp = null; try { gp = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
+  const email = (document.getElementById('reg-email')?.value || '').trim();
+  const pwd = document.getElementById('reg-pwd')?.value || '';
+  if (!gp) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) return window._regErrore('Scrivi un indirizzo email valido.');
+    if (pwd.length < 6) return window._regErrore('La password deve avere almeno 6 caratteri.');
+  }
+  const prefisso = (gp ? gp.email : email).split('@')[0];
+  const nomeFinale = role === 'atleta'
+    ? (b.atleta_label || `${b.lname || ''} ${b.fname || ''}`.trim() || (gp && gp.name) || prefisso)
+    : (b.nome || b.team_name || (gp && gp.name) || prefisso);
+  if (btn) { btn.disabled = true; btn.textContent = 'Creo l\'account…'; }
+  try {
+    const { token, user } = gp
+      ? await apiCall('/auth/google/register', { method: 'POST', body: { credential: gp.credential, role, display_name: nomeFinale } })
+      : await apiCall('/auth/register', { method: 'POST', body: { email, password: pwd, role, display_name: nomeFinale } });
+    try { sessionStorage.removeItem('google_pending'); sessionStorage.removeItem(_REG_KEY); } catch {}
+    authSave(token, user); updateNavLoginState(); _loadFollows();
+    _track('account_creato');
+    // collegamento del profilo (stessi passaggi del vecchio modulo)
+    if (role === 'atleta') {
+      await apiCall('/profile/link-athlete', { method: 'POST', body: {
+        atleta_id: b.atleta_id || null,
+        first_name: b.fname || (b.atleta_id ? '' : nomeFinale.split(' ').slice(1).join(' ')),
+        last_name: b.lname || (b.atleta_id ? '' : nomeFinale.split(' ')[0]),
+        team: b.team_name || '', team_id: b.team_id || null,
+        birth_year: b.birth || '', genere: b.atleta_id ? null : (b.genere || null),
+      } }).catch(() => {});
+    } else if (role === 'team') {
+      await apiCall('/profile/link-team', { method: 'POST', body: { team_id: b.team_id || null, team_name: b.team_name || nomeFinale } }).catch(() => {});
+    } else if ((role === 'genitore' || role === 'parente') && b.follow_id) {
+      await apiCall('/profile/link-family', { method: 'POST', body: { linked_atleta_id: b.follow_id } }).catch(() => {});
+    }
+    window.location.hash = '/completa-profilo';
+  } catch (e) {
+    window._regErrore(e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Crea il mio account'; }
+  }
+};
+
+function renderRegisterVecchio() {
+  if (authUser()) { window.location.hash = '/profilo'; return; }
   let googlePending = null;
   try { googlePending = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
   setPage(`
@@ -34141,7 +34370,7 @@ window.handleGoogleRegisterStart = async function(response) {
     const r = await apiCall('/auth/google', { method: 'POST', body: { credential: response.credential } });
     if (r.needsRegistration) {
       sessionStorage.setItem('google_pending', JSON.stringify({ credential: response.credential, email: r.email, name: r.name }));
-      renderRegister();
+      renderRegisterVecchio();
       return;
     }
     authSave(r.token, r.user);
@@ -34382,12 +34611,12 @@ window.submitRegister = async function(e) {
 // Si apre subito dopo la registrazione (email o Google). Tutto facoltativo:
 // «Lo faccio dopo» porta direttamente al profilo.
 const _CP_CAMPI = {
-  atleta:       [['bio', 'Bio breve', 'ta', 'Due righe su di te'], ['instagram', 'Instagram', 'in', '@tuonome']],
-  team:         [['bio', 'Chi siete', 'ta', 'Anno di fondazione, categorie seguite'], ['website', 'Sito web', 'in', 'https://'], ['instagram', 'Instagram', 'in', '@squadra']],
+  atleta:       [['location', 'Città / Regione', 'in', 'es. Firenze (Toscana)'], ['specialty', 'Specialità', 'sel', ''], ['birth_year', 'Anno di nascita', 'in', 'es. 2008'], ['bio', 'Bio breve', 'ta', 'Due righe su di te'], ['instagram', 'Instagram', 'in', '@tuonome']],
+  team:         [['location', 'Città / Regione', 'in', 'es. Milano (Lombardia)'], ['staff_role', 'Il tuo ruolo nello staff', 'in', 'es. Direttore sportivo'], ['public_contact', 'Contatto pubblico', 'in', 'email o telefono'], ['bio', 'Chi siete', 'ta', 'Anno di fondazione, categorie seguite'], ['website', 'Sito web', 'in', 'https://'], ['instagram', 'Instagram', 'in', '@squadra']],
   media:        [],
-  genitore:     [['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
-  parente:      [['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
-  appassionato: [['favorite_team', 'La tua squadra del cuore', 'in', 'es. Bardiani-CSF'], ['favorite_rider', 'Il tuo corridore del cuore', 'in', 'es. Tadej Pogačar']],
+  genitore:     [['location', 'Città / Regione', 'in', 'es. Roma (Lazio)'], ['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
+  parente:      [['location', 'Città / Regione', 'in', 'es. Torino (Piemonte)'], ['bio', 'Due righe su di te', 'ta', 'Facoltativo']],
+  appassionato: [['location', 'Città / Regione', 'in', 'es. Venezia (Veneto)'], ['favorite_team', 'La tua squadra del cuore', 'in', 'es. Bardiani-CSF'], ['favorite_rider', 'Il tuo corridore del cuore', 'in', 'es. Tadej Pogačar']],
 };
 const _CP_TUTTI = ['bio', 'location', 'instagram', 'facebook', 'strava', 'website', 'specialty', 'birth_year', 'favorite_team', 'staff_role', 'public_contact', 'favorite_rider'];
 
@@ -34468,6 +34697,7 @@ function _cpDisegna(user, comp, det, famiglia) {
   const campiHtml = campi.map(([k, label, tipo, ph]) =>
     `<div style="margin-bottom:10px"><label style="display:block;font-size:.78rem;color:var(--text-muted);margin-bottom:3px">${esc(label)}</label>${
       tipo === 'ta' ? `<textarea id="cp-${k}" rows="2" style="${inp};resize:none" placeholder="${esc(ph)}">${esc(det[k] || '')}</textarea>`
+      : tipo === 'sel' ? `<select id="cp-${k}" style="${inp}">${SPECIALITA_OPTS.map(o => `<option value="${esc(o)}" ${o === (det[k] || '') ? 'selected' : ''}>${esc(o || '— seleziona —')}</option>`).join('')}</select>`
                     : `<input id="cp-${k}" style="${inp}" placeholder="${esc(ph)}" value="${esc(det[k] || '')}">`}</div>`).join('');
 
   setPage(`
@@ -34478,7 +34708,7 @@ function _cpDisegna(user, comp, det, famiglia) {
         </div>
         <div class="auth-card">
           <div class="auth-card-header">
-            <div style="font-size:.74rem;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px">PASSO 2 · PUOI SALTARLO</div>
+            <div style="font-size:.74rem;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px">FACOLTATIVO · PUOI SALTARLO</div>
             <h1 class="auth-title">Completa il tuo profilo</h1>
             <p class="auth-sub">Qualche minuto e il tuo profilo è pronto. Tutto si può cambiare quando vuoi.</p>
           </div>

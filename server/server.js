@@ -3134,7 +3134,7 @@ app.post('/api/admin/profile-changes/:id/annulla', requireAdmin, async (req, res
 // Il popup "Entra nel gruppo" si accende e si spegne da qui (kv_store 'join_popup')
 // senza rilasciare nulla; 'pct' è la quota di visitatori che lo vede (rilascio
 // graduale). L'imbuto conta solo eventi anonimi per giorno: nessun dato personale.
-const _FUNNEL_EVENTI = ['popup_visto', 'popup_clic', 'registra_aperta', 'account_creato', 'collegato', 'passo2_aperto', 'foto_aggiunta', 'passo2_salvato'];
+const _FUNNEL_EVENTI = ['popup_visto', 'popup_clic', 'registra_aperta', 'iscr_ruolo', 'iscr_dati', 'account_creato', 'collegato', 'passo2_aperto', 'foto_aggiunta', 'passo2_salvato'];
 app.post('/api/track', async (req, res) => {
   const ev = String((req.body && req.body.e) || '');
   if (!_FUNNEL_EVENTI.includes(ev)) return res.status(400).json({ ok: false });
