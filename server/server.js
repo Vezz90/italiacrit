@@ -2608,6 +2608,7 @@ app.patch('/api/profile/details', requireAuth, async (req, res) => {
   try {
     const b = req.body || {};
     const clip = (v, n) => String(v ?? '').trim().slice(0, n);
+    const prima = (await queries.getUserDetails(req.user.id)) || {};
     const details = await queries.upsertUserDetails({
       user_id:        req.user.id,
       bio:            clip(b.bio, 500),
@@ -2623,6 +2624,12 @@ app.patch('/api/profile/details', requireAuth, async (req, res) => {
       public_contact: clip(b.public_contact, 160),
       favorite_rider: clip(b.favorite_rider, 120),
     });
+    const CAMPI = ['bio', 'location', 'instagram', 'facebook', 'strava', 'website', 'specialty', 'birth_year', 'favorite_team', 'staff_role', 'public_contact', 'favorite_rider'];
+    const cambiati = CAMPI.filter(f => String(prima[f] ?? '') !== String(details[f] ?? ''));
+    if (cambiati.length) {
+      const pick = (o) => JSON.stringify(Object.fromEntries(cambiati.map(f => [f, o[f] ?? ''])));
+      _logProfileChange(req, { kind: 'dati', entity_type: 'utente', entity_id: String(req.user.id), label: cambiati.join(', '), old_value: pick(prima), new_value: pick(details) });
+    }
     res.json({ ok: true, details });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3041,6 +3048,85 @@ app.get('/api/team-overrides/corrections', async (req, res) => {
     _teamNomeCorrectionsCache = corrections;
     _teamNomeCorrectionsCacheTs = Date.now();
     res.json({ corrections });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Registro delle modifiche ai profili (foto, dati, cover) ─────────────────
+// Gli utenti pubblicano subito; l'admin le rivede dopo, da "Novità profili",
+// e può approvarle o annullarle (si torna al valore precedente).
+function _logProfileChange(req, c) {
+  queries.logProfileChange({ user_id: req.user.id, role: req.user.role, ...c })
+    .catch(e => console.warn('[profile_changes]', e.message));
+}
+
+// Di che profilo ha bisogno la persona collegata e se ha già la foto: serve al
+// passo 2 dell'iscrizione e all'invito rivolto a chi è già iscritto.
+app.get('/api/profile/completion', requireAuth, async (req, res) => {
+  try {
+    const { id, role } = req.user;
+    let entity = null;
+    if (role === 'atleta') {
+      const p = await queries.getAthleteProfile(id);
+      if (p?.atleta_id) entity = { type: 'atleta', id: p.atleta_id, name: `${p.first_name || ''} ${p.last_name || ''}`.trim() || p.atleta_id.replace(/_/g, ' ') };
+    } else if (role === 'team') {
+      const p = await queries.getTeamProfile(id);
+      if (p?.team_id) entity = { type: 'team', id: p.team_id, name: p.team_name || p.team_id };
+    } else if (role === 'media') {
+      const p = await queries.getMediaProfileByUser(id);
+      if (p) entity = { type: 'media', id: String(p.id), name: p.display_name, photo_url: p.cover_url || null };
+    }
+    if (!entity) return res.json({ role, entity: null, needs_photo: false });
+    if (entity.type !== 'media') entity.photo_url = await getEntityPhoto(entity.type, entity.id);
+    res.json({ role, entity, needs_photo: !entity.photo_url });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/admin/profile-changes', requireAdmin, async (req, res) => {
+  try {
+    const stato = ['nuovo', 'ok', 'annullato'].includes(req.query.stato) ? req.query.stato : null;
+    const limit = Math.min(parseInt(req.query.limit, 10) || 100, 300);
+    const [items, nuovi] = await Promise.all([queries.getProfileChanges(stato, limit), queries.countProfileChanges('nuovo')]);
+    res.json({ items, nuovi: nuovi?.n || 0 });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/profile-changes/ok-tutti', requireAdmin, async (req, res) => {
+  try {
+    const items = await queries.getProfileChanges('nuovo', 500);
+    for (const c of items) await queries.setProfileChangeStatus(c.id, 'ok', req.user.id);
+    res.json({ ok: true, n: items.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/profile-changes/:id/ok', requireAdmin, async (req, res) => {
+  try {
+    const c = await queries.getProfileChange(parseInt(req.params.id, 10));
+    if (!c) return res.status(404).json({ error: 'Modifica non trovata' });
+    await queries.setProfileChangeStatus(c.id, 'ok', req.user.id);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+// Annulla: rimette il valore che c'era prima (o toglie la foto se non ce n'era una).
+app.post('/api/admin/profile-changes/:id/annulla', requireAdmin, async (req, res) => {
+  try {
+    const c = await queries.getProfileChange(parseInt(req.params.id, 10));
+    if (!c) return res.status(404).json({ error: 'Modifica non trovata' });
+    if (c.status === 'annullato') return res.json({ ok: true });
+    if (c.kind === 'foto') {
+      if (c.old_value) await queries.setEntityOverride({ entity_type: c.entity_type, entity_id: c.entity_id, field: 'photo_url', new_value: c.old_value, edited_by: req.user.id });
+      else await queries.deleteEntityOverrideField(c.entity_type, c.entity_id, 'photo_url');
+    } else if (c.kind === 'cover') {
+      await queries.updateMediaProfileCover(parseInt(c.entity_id, 10), c.old_value || '');
+    } else if (c.kind === 'dati') {
+      const vecchi = JSON.parse(c.old_value || '{}');
+      const att = (await queries.getUserDetails(c.user_id)) || {};
+      const CAMPI = ['bio', 'location', 'instagram', 'facebook', 'strava', 'website', 'specialty', 'birth_year', 'favorite_team', 'staff_role', 'public_contact', 'favorite_rider'];
+      const nuovo = { user_id: c.user_id };
+      for (const f of CAMPI) nuovo[f] = f in vecchi ? vecchi[f] : (att[f] ?? '');
+      await queries.upsertUserDetails(nuovo);
+    } else {
+      return res.status(400).json({ error: 'Questo tipo di modifica non si può annullare da qui' });
+    }
+    await queries.setProfileChangeStatus(c.id, 'annullato', req.user.id);
+    res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -3566,9 +3652,14 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
 
     const filename  = await savePhoto(req, req.file);
     const photo_url = `/photos/${filename}`;
+    const fotoPrima = (await queries.getEntityOverrides(entity_type, entity_id).catch(() => []))
+      .find(r => r.field === 'photo_url')?.new_value || null;
     await queries.setEntityOverride({
       entity_type, entity_id, field: 'photo_url', new_value: photo_url, edited_by: user.id,
     });
+    if (user.role !== 'admin') {
+      _logProfileChange(req, { kind: 'foto', entity_type, entity_id, label: String(entity_id).replace(/_/g, ' '), field: 'photo_url', old_value: fotoPrima, new_value: photo_url });
+    }
     res.json({ ok: true, photo_url });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -10463,6 +10554,9 @@ app.post('/api/profile/media/cover', requireMediaOrAdmin, uploadMedia.single('co
     }
     const cover_url = `/photos/${filename}`;
     await queries.updateMediaProfileCover(profile.id, cover_url);
+    if (req.user.role !== 'admin') {
+      _logProfileChange(req, { kind: 'cover', entity_type: 'media', entity_id: String(profile.id), label: profile.display_name, field: 'cover_url', old_value: profile.cover_url || null, new_value: cover_url });
+    }
     res.json({ ok: true, cover_url });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

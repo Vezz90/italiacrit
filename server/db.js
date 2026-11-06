@@ -442,6 +442,26 @@ async function migrate() {
       created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE(team_id_from, team_id_to, season_from, season_to)
     )`,
+    // Registro delle modifiche fatte dagli utenti al proprio profilo (foto, dati,
+    // collegamenti): l'admin le vede nella sezione "Novità profili" e può
+    // approvarle o annullarle dopo.
+    `CREATE TABLE IF NOT EXISTS profile_changes (
+      id           SERIAL PRIMARY KEY,
+      user_id      INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      role         TEXT,
+      kind         TEXT NOT NULL,
+      entity_type  TEXT,
+      entity_id    TEXT,
+      label        TEXT,
+      field        TEXT,
+      old_value    TEXT,
+      new_value    TEXT,
+      status       TEXT NOT NULL DEFAULT 'nuovo',
+      reviewed_by  INTEGER REFERENCES users(id),
+      reviewed_at  TIMESTAMPTZ,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS profile_changes_status_idx ON profile_changes (status, created_at DESC)`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -700,6 +720,32 @@ const queries = {
 
   getAllEntityOverrides: () =>
     all(`SELECT * FROM entity_overrides ORDER BY created_at DESC`),
+
+  deleteEntityOverrideField: (entity_type, entity_id, field) =>
+    run(`DELETE FROM entity_overrides WHERE entity_type = $1 AND entity_id = $2 AND field = $3`,
+        [entity_type, entity_id, field]),
+
+  // Registro modifiche profilo (vedi migrazione profile_changes)
+  logProfileChange: ({ user_id, role, kind, entity_type, entity_id, label, field, old_value, new_value }) =>
+    run(
+      `INSERT INTO profile_changes (user_id, role, kind, entity_type, entity_id, label, field, old_value, new_value)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [user_id || null, role || null, kind, entity_type || null, entity_id || null, label || null, field || null,
+       old_value == null ? null : String(old_value), new_value == null ? null : String(new_value)]
+    ),
+  getProfileChanges: (status, limit) =>
+    all(
+      `SELECT c.*, u.email, u.display_name FROM profile_changes c
+         LEFT JOIN users u ON u.id = c.user_id
+        ${status ? 'WHERE c.status = $1' : ''}
+        ORDER BY c.created_at DESC LIMIT ${status ? '$2' : '$1'}`,
+      status ? [status, limit] : [limit]
+    ),
+  getProfileChange: (id) => one(`SELECT * FROM profile_changes WHERE id = $1`, [id]),
+  countProfileChanges: (status) =>
+    one(`SELECT COUNT(*)::int AS n FROM profile_changes WHERE status = $1`, [status]),
+  setProfileChangeStatus: (id, status, by) =>
+    run(`UPDATE profile_changes SET status = $2, reviewed_by = $3, reviewed_at = NOW() WHERE id = $1`, [id, status, by]),
 
   // Storico squadre — collegamenti team_id anno-per-anno proposti dallo
   // script offline, in attesa di conferma admin (vedi migrazione team_lineage).
