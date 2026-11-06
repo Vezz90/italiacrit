@@ -602,6 +602,7 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
       newImg.style.cssText = `width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:${radius};display:block`;
       target.replaceWith(newImg);
     }
+    if (authUser()?.role !== 'admin') _track('foto_aggiunta');
     const toast = document.createElement('div');
     toast.className = 'upload-toast';
     toast.textContent = 'Foto aggiornata ✓';
@@ -4528,6 +4529,7 @@ const _appBoot = async () => {
   setTimeout(_renderPushButton, 800);
   _loadFollows();
   setTimeout(_invitaFoto, 12000);   // a chi è già iscritto e non ha la foto: invito gentile (vedi _invitaFoto)
+  setTimeout(_maybeJoinPopup, 20000);   // ai non iscritti: popup «Entra nel gruppo» (se acceso dalla dashboard)
   _initAiWidget();
   checkLiveNowBanner();
   setInterval(checkLiveNowBanner, 60000); // ricontrolla ogni minuto (anche per aggiornare/chiudere la vista doppia appena una diretta finisce)
@@ -4911,7 +4913,10 @@ document.addEventListener('dragstart', (e) => { if (_isProtectedPhotoImg(e.targe
 // hashchange, serve un listener dedicato).
 window.addEventListener('popstate', () => { route(); });
 
+let _routeCount = 0;
 function route() {
+  // Alla seconda pagina visitata (oltre a quella d'ingresso) può comparire il popup d'iscrizione
+  if (++_routeCount === 2) setTimeout(_maybeJoinPopup, 1500);
   // Se il player della diretta è aperto a schermo intero e l'utente sta
   // davvero cambiando pagina (route(), non un semplice re-render della
   // stessa pagina come i tab di Media che chiamano setPage senza passare
@@ -12518,6 +12523,9 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🆕</span> <span class="admin-nav-lbl">Novità profili</span>
           <span class="admin-nav-badge" id="badge-novita-profili"></span>
         </div>
+        <div class="admin-nav-item" data-section="iscrizioni" onclick="adminNav('iscrizioni')">
+          <span class="admin-nav-icon">🚪</span> <span class="admin-nav-lbl">Iscrizioni e popup</span>
+        </div>
         <div class="admin-nav-item" data-section="foto-tag" onclick="adminNav('foto-tag')">
           <span class="admin-nav-icon">🏷</span> <span class="admin-nav-lbl">Tag foto da confermare</span>
           <span class="admin-nav-badge" id="badge-foto-tag"></span>
@@ -12597,7 +12605,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','foto-tag','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','iscrizioni','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -12648,6 +12656,7 @@ window.adminNav = async function(section) {
           ${card('team-lineage', '🔗', 'Collegamenti storico team', 'ov-tl', 'Squadre rinominate da confermare')}
           ${card('omonimi', '🧬', 'Omonimi da verificare', 'ov-omo', 'Schede doppie o persone diverse')}
           ${card('novita-profili', '🆕', 'Novità profili', 'ov-np', 'Foto e dati inseriti dagli iscritti')}
+          ${card('iscrizioni', '🚪', 'Iscrizioni e popup', 'ov-isc', 'Popup «Entra nel gruppo» e dove si fermano')}
           ${card('albo-review', '🏆', "Fusioni albo d'oro", 'ov-albo', 'Gare dal nome simile da unire o separare')}
           ${card('social-queue', '📣', 'Social in coda', 'ov-social', 'Post pronti da pubblicare')}
         </div>
@@ -12719,6 +12728,9 @@ window.adminNav = async function(section) {
         setBadge('badge-social', socialPend);
         setBadge('badge-team-lineage', tlPendCount);
         setBadge('badge-albo-review', alboPend);
+        fetch(`${API_BASE}/admin/join-popup`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json()).then(c => {
+          const el = document.getElementById('ov-isc'); if (el) el.textContent = c.on ? (c.pct + '%') : 'Spento';
+        }).catch(() => {});
         fetch(`${API_BASE}/admin/profile-changes?stato=nuovo&limit=1`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json()).then(d => {
           const n = d.nuovi || 0;
           setPending('ov-np', n); setBadge('badge-novita-profili', n);
@@ -13036,6 +13048,8 @@ window.adminNav = async function(section) {
             style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
             <option value="">Tutti i ruoli</option>
             ${ROLES_ALL.map(r=>`<option value="${r}">${r}</option>`).join('')}
+            <option value="_non_collegati">— Non collegati</option>
+            <option value="_senza_foto">— Senza foto</option>
           </select>
         </div>
         <div id="admin-utenti-msg" style="display:none;padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:.85rem"></div>
@@ -13052,7 +13066,9 @@ window.adminNav = async function(section) {
             const rf = (document.getElementById('utenti-role-filter')?.value)||'';
             let list = users;
             if (q) list = list.filter(u => (u.email||'').toLowerCase().includes(q.toLowerCase()) || (u.display_name||'').toLowerCase().includes(q.toLowerCase()));
-            if (rf) list = list.filter(u => (u.role||'') === rf);
+            if (rf === '_non_collegati') list = list.filter(u => u.completamento && u.completamento.collegato === false);
+            else if (rf === '_senza_foto') list = list.filter(u => u.completamento && u.completamento.foto === false);
+            else if (rf) list = list.filter(u => (u.role||'') === rf);
             window._adminRenderUtenti(list);
           };
 
@@ -13183,6 +13199,7 @@ window.adminNav = async function(section) {
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Email</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Nome</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ruolo</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Profilo</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Registrato</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Azioni</th>
                   </tr>
@@ -13198,6 +13215,11 @@ window.adminNav = async function(section) {
                           ${ROLES_ALL.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
                         </select>
                       </td>
+                      <td style="padding:9px 10px;white-space:nowrap">${(() => {
+                        const c = u.completamento || {};
+                        const chip = (ok, t) => ok === null || ok === undefined ? '' : `<span style="display:inline-block;margin-right:4px;padding:2px 7px;border-radius:999px;font-size:.72rem;font-weight:700;background:${ok ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)'};color:${ok ? '#22c55e' : '#ef4444'}">${ok ? '✓' : '✗'} ${t}</span>`;
+                        return chip(c.collegato, 'collegato') + chip(c.foto, 'foto') + chip(c.dati, 'dati');
+                      })()}</td>
                       <td style="padding:9px 10px;color:var(--text-muted)">${(u.created_at||'').slice(0,10)}</td>
                       <td style="padding:9px 10px">
                         <div style="display:flex;gap:6px">
@@ -13437,6 +13459,84 @@ window.adminNav = async function(section) {
           catch (e) { alert('Errore: ' + e.message); }
         };
         await window._npLoad('nuovo');
+      })();
+      break;
+    }
+
+    case 'iscrizioni': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🚪 Iscrizioni e popup</h1>
+          <p class="admin-page-sub">Accendi o spegni il popup «Entra nel gruppo» che vedono i visitatori non iscritti, e guarda dove si fermano le persone lungo il percorso. I conteggi sono anonimi: niente dati personali.</p>
+        </div>
+        <div id="isc-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const H = () => ({ Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' });
+        const PASSI = [
+          ['popup_visto', 'Popup visto'],
+          ['popup_clic', 'Clic su «Entra nel gruppo»'],
+          ['registra_aperta', 'Pagina di iscrizione aperta'],
+          ['account_creato', 'Account creato'],
+          ['collegato', 'Profilo collegato'],
+          ['passo2_aperto', 'Passo 2 aperto'],
+          ['foto_aggiunta', 'Foto aggiunta'],
+          ['passo2_salvato', 'Passo 2 completato'],
+        ];
+        const body = document.getElementById('isc-body');
+        let giorni = 30;
+        const disegna = async () => {
+          try {
+            const r = await fetch(`${API_BASE}/admin/funnel?days=${giorni}`, { headers: H() });
+            const f = await r.json();
+            if (!r.ok) throw new Error(f.error || 'Errore');
+            const cfg = f.popup || { on: false, pct: 0 };
+            const max = Math.max(1, ...PASSI.map(([k]) => f.eventi[k] || 0));
+            // percentuale solo dove il confronto ha senso (la pagina di iscrizione si raggiunge anche senza popup)
+            const DA = { popup_clic: 'popup_visto', account_creato: 'registra_aperta', collegato: 'account_creato', passo2_aperto: 'account_creato', foto_aggiunta: 'passo2_aperto', passo2_salvato: 'passo2_aperto' };
+            const righe = PASSI.map(([k, t]) => {
+              const n = f.eventi[k] || 0;
+              const base = DA[k] ? (f.eventi[DA[k]] || 0) : 0;
+              const nomeBase = DA[k] ? (PASSI.find(p => p[0] === DA[k]) || [])[1] : '';
+              const pc = base > 0 ? Math.round(n / base * 100) + '% di «' + nomeBase + '»' : '';
+              return `<div style="display:grid;grid-template-columns:minmax(150px,220px) 1fr 46px minmax(120px,210px);gap:10px;align-items:center;padding:6px 0;font-size:.86rem">
+                <span>${t}</span>
+                <div style="background:var(--bg-elevated);border-radius:6px;height:16px;overflow:hidden"><div style="height:100%;width:${Math.round(n / max * 100)}%;background:var(--accent,#e8001d)"></div></div>
+                <b style="text-align:right">${n}</b><span style="font-size:.72rem;color:var(--text-muted);line-height:1.2">${pc}</span></div>`;
+            }).join('');
+            body.innerHTML = `
+              <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;margin-bottom:18px">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+                  <b style="font-size:1rem">Popup «Entra nel gruppo»</b>
+                  <span style="font-size:.76rem;font-weight:700;padding:2px 10px;border-radius:999px;background:${cfg.on && cfg.pct > 0 ? 'rgba(34,197,94,.15)' : 'rgba(148,163,184,.18)'};color:${cfg.on && cfg.pct > 0 ? '#22c55e' : 'var(--text-muted)'}">${cfg.on && cfg.pct > 0 ? 'Acceso al ' + cfg.pct + '%' : 'Spento'}</span>
+                </div>
+                <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+                  <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:.9rem"><input type="checkbox" id="isc-on" ${cfg.on ? 'checked' : ''}> Acceso</label>
+                  <label style="display:flex;gap:8px;align-items:center;font-size:.9rem">a una quota di visitatori del
+                    <select id="isc-pct" style="padding:6px 8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary)">${[10, 20, 50, 100].map(p => `<option value="${p}" ${(cfg.pct || 20) === p ? 'selected' : ''}>${p}%</option>`).join('')}</select></label>
+                  <button class="btn-approve" id="isc-salva" style="padding:7px 16px;font-size:.84rem">Salva</button>
+                  <span id="isc-msg" style="font-size:.8rem;color:var(--text-muted)"></span>
+                </div>
+                <p style="margin:10px 0 0;font-size:.78rem;color:var(--text-muted);line-height:1.5">Con il 20% lo vede circa un visitatore su cinque, scelto a caso e sempre lo stesso. Parti basso e alza la quota solo se l'imbuto qui sotto va bene. Spegnerlo ha effetto entro un minuto, senza rilasciare nulla.</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+                <b style="font-size:1rem;margin-right:8px">Dove si fermano</b>
+                ${[7, 30, 90].map(d => `<button class="tab-btn ${giorni === d ? 'active-cat' : ''}" onclick="window._iscGiorni(${d})">${d} giorni</button>`).join('')}
+              </div>
+              <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:12px 18px">${righe}</div>
+              <p style="margin:10px 0 0;font-size:.78rem;color:var(--text-muted);line-height:1.5">Nuovi iscritti negli ultimi ${f.days} giorni: <b>${f.nuovi_utenti}</b>. Ogni passaggio si conta una volta per sessione del browser. «Foto aggiunta» comprende anche chi era già iscritto e la mette tornando sul sito. Se il calo grande è tra «pagina aperta» e «account creato», il problema è il modulo di iscrizione.</p>`;
+            document.getElementById('isc-salva').onclick = async () => {
+              const m = document.getElementById('isc-msg');
+              try {
+                const rr = await fetch(`${API_BASE}/admin/join-popup`, { method: 'POST', headers: H(), body: JSON.stringify({ on: document.getElementById('isc-on').checked, pct: parseInt(document.getElementById('isc-pct').value, 10) }) });
+                const d = await rr.json();
+                if (!rr.ok) throw new Error(d.error || 'Errore');
+                m.textContent = 'Salvato.'; await disegna();
+              } catch (e) { m.textContent = 'Errore: ' + e.message; m.style.color = 'var(--red-hot)'; }
+            };
+          } catch (e) { body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
+        };
+        window._iscGiorni = (d) => { giorni = d; disegna(); };
+        await disegna();
       })();
       break;
     }
@@ -33603,6 +33703,13 @@ function _loadGsi() {
 
 async function _renderGoogleButton(containerId, callbackName) {
   if (!GOOGLE_CLIENT_ID) return;
+  // Nei browser interni di Facebook/Instagram Google rifiuta l'accesso: meglio
+  // non mostrare un pulsante che non parte (resta l'iscrizione con email).
+  if (_isInAppBrowser()) {
+    const c = document.getElementById(containerId);
+    if (c) { c.style.display = 'none'; const d = c.nextElementSibling; if (d && d.classList && d.classList.contains('auth-divider')) d.style.display = 'none'; }
+    return;
+  }
   if (!(await _loadGsi()) || typeof google === 'undefined' || !google.accounts) return;
   if (!document.getElementById(containerId)) return;
   try {
@@ -33953,6 +34060,7 @@ function _regRoleFieldsHtml(role) {
 
 function renderRegister() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
+  _track('registra_aperta');
   let googlePending = null;
   try { googlePending = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
   setPage(`
@@ -34207,6 +34315,7 @@ window.submitRegister = async function(e) {
     authSave(token, user);
     updateNavLoginState();
     _loadFollows();
+    _track('account_creato');
 
     // Per l'atleta: collega subito il profilo
     if (role === 'atleta') {
@@ -34299,6 +34408,8 @@ async function renderCompletaProfilo() {
 function _cpDisegna(user, comp, det, famiglia) {
   const role = user.role;
   const ent = comp && comp.entity;
+  _track('passo2_aperto');
+  if (ent || (famiglia && famiglia.length)) _track('collegato');
   window._cpDet = det;
   window._cpRole = role;
   const campi = _CP_CAMPI[role] || [];
@@ -34390,6 +34501,7 @@ window._cpSalva = async function() {
   if (btn) { btn.disabled = true; btn.textContent = 'Salvo…'; }
   try {
     if (campi.length) await apiCall('/profile/details', { method: 'PATCH', body: nuovo });
+    _track('passo2_salvato');
     window.location.hash = '/profilo';
   } catch (e) {
     if (err) { err.textContent = e.message; err.style.display = 'block'; }
@@ -34414,6 +34526,77 @@ window._cpCreaMedia = async function() {
   }
 };
 
+// ── Imbuto dell'iscrizione: contatori anonimi ───────────────────────────────
+// Ogni passaggio si conta una volta per sessione del browser; nessun dato personale.
+function _track(ev) {
+  try {
+    const k = 'ics-ev-' + ev;
+    if (sessionStorage.getItem(k)) return;
+    sessionStorage.setItem(k, '1');
+    fetch(API_BASE + '/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ e: ev }), keepalive: true }).catch(() => {});
+  } catch { /* niente di grave: il conteggio è facoltativo */ }
+}
+
+// Browser interni di Facebook, Instagram ecc.: Google blocca l'accesso da lì
+function _isInAppBrowser() {
+  return /FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|LinkedInApp|Snapchat|TikTok|MicroMessenger|GSA\//i.test(navigator.userAgent || '');
+}
+
+// ── Popup d'iscrizione "Entra nel gruppo" ───────────────────────────────────
+// Per chi non è iscritto. Si accende e si spegne dalla dashboard (Iscrizioni) con
+// una quota di visitatori (rilascio graduale). Non compare subito (circa 20 s o
+// alla seconda pagina), mai sulle pagine di accesso/admin né sopra la schermata
+// d'ingresso, e dopo «Più tardi» o la chiusura non si rivede per 30 giorni.
+let _joinPopupMostrato = false;
+async function _maybeJoinPopup() {
+  try {
+    if (_joinPopupMostrato || authUser()) return;
+    if (/#\/(login|register|completa-profilo|admin|reset|forgot)/.test(_resolveVirtualHash())) return;
+    if (document.querySelector('.itc-gate-split') || document.getElementById('ics-join-popup')) return;
+    let ultimo = 0;
+    try { ultimo = +localStorage.getItem('ics-join-popup') || 0; } catch {}
+    if (Date.now() - ultimo < 30 * 864e5) return;
+    const cfg = await fetch(API_BASE + '/public/join-popup').then(r => r.json()).catch(() => null);
+    if (!cfg || !cfg.on || !(cfg.pct > 0)) return;
+    let b = null;
+    try { b = localStorage.getItem('ics-bucket'); } catch {}
+    if (b === null || b === '') { b = String(Math.floor(Math.random() * 100)); try { localStorage.setItem('ics-bucket', b); } catch {} }
+    if (+b >= cfg.pct) return;
+    _joinPopupMostrato = true;
+    const ricorda = () => { try { localStorage.setItem('ics-join-popup', String(Date.now())); } catch {} };
+    const ov = document.createElement('div');
+    ov.id = 'ics-join-popup';
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-label', 'Entra nel gruppo');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9400;background:rgba(6,9,16,.7);display:flex;align-items:center;justify-content:center;padding:16px';
+    ov.innerHTML = `<div style="position:relative;width:100%;max-width:440px;background:#141b2b;color:#f2f5fb;border:1px solid #2a3550;border-radius:16px;overflow:hidden;font-family:'Inter Tight',system-ui,sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.55)">
+      <div style="display:flex;height:5px"><i style="flex:1;background:#1a9a4a"></i><i style="flex:1;background:#f2f5fb"></i><i style="flex:1;background:#e8001d"></i></div>
+      <button type="button" id="jp-x" aria-label="Chiudi" style="position:absolute;top:14px;right:14px;background:none;border:none;color:#8c98b0;font-size:24px;line-height:1;cursor:pointer;padding:4px 8px">&times;</button>
+      <div style="padding:28px 30px 22px;text-align:center">
+        <img src="assets/logo-nav.png?v=1" alt="Italia Cycling Stats" style="display:block;height:62px;width:auto;margin:0 auto 18px">
+        <h3 style="font-family:'Bebas Neue',Impact,sans-serif;font-weight:400;font-size:clamp(40px,11vw,52px);line-height:.92;margin:0 0 12px;color:#fff">Entra nel gruppo.</h3>
+        <p style="font-size:16px;line-height:1.5;color:#c3cde0;margin:0 0 10px">Segui chi ami, ritrova le tue gare, racconta la tua storia. Il ciclismo italiano ti aspetta.</p>
+        <p style="font-size:13px;line-height:1.5;color:#8c98b0;margin:0 0 20px">Per atleti, genitori, squadre, fotografi e tifosi.</p>
+        <button type="button" id="jp-si" style="display:block;width:100%;background:#e8001d;border:none;color:#fff;font-size:16px;font-weight:600;padding:13px;border-radius:11px;cursor:pointer;font-family:inherit">Entra nel gruppo</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:13px;color:#8c98b0">
+          <span>Sei già dentro? <a href="#/login" id="jp-login" style="color:#d5dcec;text-decoration:underline">Accedi</a></span>
+          <button type="button" id="jp-no" style="background:none;border:none;color:#8c98b0;font-size:13px;cursor:pointer;font-family:inherit;padding:0">Più tardi</button>
+        </div>
+      </div>
+    </div>`;
+    const chiudi = () => { ricorda(); ov.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = ev => { if (ev.key === 'Escape') chiudi(); };
+    document.addEventListener('keydown', onKey);
+    ov.addEventListener('click', ev => { if (ev.target === ov) chiudi(); });
+    document.body.appendChild(ov);
+    _track('popup_visto');
+    document.getElementById('jp-x').onclick = chiudi;
+    document.getElementById('jp-no').onclick = chiudi;
+    document.getElementById('jp-login').onclick = () => { chiudi(); };
+    document.getElementById('jp-si').onclick = () => { _track('popup_clic'); chiudi(); window.location.hash = '/register'; };
+  } catch { /* il popup è facoltativo */ }
+}
+
 // ── Invito alla foto per chi è già iscritto ──────────────────────────────────
 // Atleta, team e media loggati che non hanno ancora la foto (o il logo) ricevono
 // un invito quando tornano sul sito: al massimo una volta ogni 7 giorni, mai sulle
@@ -34422,7 +34605,7 @@ async function _invitaFoto() {
   try {
     const u = authUser();
     if (!u || !['atleta', 'team', 'media'].includes(u.role)) return;
-    if (/#\/(completa-profilo|login|register|admin)/.test(location.hash)) return;
+    if (/#\/(completa-profilo|login|register|admin)/.test(_resolveVirtualHash())) return;
     if (document.querySelector('.itc-gate-split') || document.getElementById('ics-invito-foto')) return;
     const chiave = 'ics-invito-foto-' + u.id;
     let ultimo = 0;
