@@ -71,7 +71,6 @@
   <meta name="theme-color" content="#e8001d" />
   <!-- Il sito ha il suo tema chiaro/scuro: dichiararlo impedisce a Chrome/Samsung/Xiaomi di "scurire" la pagina da soli invertendo i colori (titoli gialli su nero). Lo aggiorna lo script del tema. -->
   <meta name="color-scheme" content="only light" id="meta-color-scheme" />
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","description":"Risultati, classifiche, gare e statistiche del ciclismo agonistico italiano su strada.","publisher":{"@type":"Organization","name":"Italia Cycling Stats","alternateName":"ICS","url":"https://italiacyclingstats.com/","logo":"https://italiacyclingstats.com/assets/logo.png"}}
   </script>
@@ -110,7 +109,7 @@
        già ottimizzato. -->
   <div id="navbar-row1">
     <a href="#/" class="nav-logo" id="nav-logo-link" aria-label="ICS - Italia Cycling Stats - Home">
-      <img src="assets/logo.png?v=3" alt="ICS - Italia Cycling Stats" class="nav-logo-img" />
+      <img src="assets/logo-nav.png?v=1" alt="ICS - Italia Cycling Stats" class="nav-logo-img" />
     </a>
     <div class="nav-sep" aria-hidden="true"></div>
 
@@ -211,7 +210,7 @@
 <!-- ══════════════════════════════════════════════════════════ -->
 <div id="app">
   <div id="initial-loader" class="initial-loader">
-    <img src="assets/logo.png?v=3" alt="" class="initial-loader-logo" />
+    <img src="assets/logo-nav.png?v=1" alt="" class="initial-loader-logo" />
     <div class="initial-loader-bar"></div>
   </div>
 </div>
@@ -240,22 +239,12 @@
   </span>
 </footer>
 
-<!-- Google Website Translator: traduce automaticamente tutta l'interfaccia -->
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'it',
-    includedLanguages: 'it,en,es,fr,de,pt,nl',
-    autoDisplay: false
-  }, 'google_translate_element');
-}
-</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<!-- Google Traduci: caricato su richiesta da app.js (_loadGoogleTranslate) -->
 <script>
 /* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
    Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
 (function () {
-  var L = ['app.js?v=1070', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
+  var L = ['app.js?v=1071', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
   var R = 'https://italiacrit.onrender.com/';
   function load(base) {
     L.forEach(function (f) {

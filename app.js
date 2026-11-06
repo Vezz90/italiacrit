@@ -6144,7 +6144,7 @@ function _itcBuildGate() {
   return '<div class="itc-gate-grain"></div>' +
 
     '<header class="itc-gate-hdr">' +
-      '<img src="assets/logo.png?v=3" class="itc-gate-logo" alt="Italia Cycling Stats"/>' +
+      '<img src="assets/logo-nav.png?v=1" class="itc-gate-logo" alt="Italia Cycling Stats"/>' +
       '<p class="itc-gate-tagline">The Home of Italian Cycling</p>' +
     '</header>' +
 
@@ -29086,6 +29086,20 @@ window.goTo = (hash) => { window.location.hash = hash; };
 // ── SELETTORE LINGUA (traduzione automatica Google) ──────────────
 // Pilota il widget Google Translate tramite il cookie `googtrans`, così la
 // scelta resta persistente tra le pagine. 'it' = lingua originale.
+// Il widget di Google Traduci (circa 2,5 s di rete) si carica solo se qualcuno
+// sceglie una lingua diversa dall'italiano.
+let _gtLoaded = false;
+function _loadGoogleTranslate() {
+  if (_gtLoaded) return;
+  _gtLoaded = true;
+  window.googleTranslateElementInit = function () {
+    new google.translate.TranslateElement({ pageLanguage: 'it', includedLanguages: 'it,en,es,fr,de,pt,nl', autoDisplay: false }, 'google_translate_element');
+  };
+  const s = document.createElement('script');
+  s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; s.async = true;
+  document.head.appendChild(s);
+}
+
 window.setLang = (lang) => {
   lang = lang || 'it';
   try { localStorage.setItem('ics-lang', lang); } catch {}
@@ -29105,6 +29119,7 @@ window.setLang = (lang) => {
   if (lang === 'it') { location.reload(); return; }
   // Altrimenti traduci in-page via il combo nascosto del widget Google:
   // niente reload, niente banner (nascosto via CSS).
+  _loadGoogleTranslate();
   _applyGoogleLang(lang, 0);
 };
 
@@ -29132,7 +29147,7 @@ function initLang() {
     const el = document.getElementById(id);
     if (el) el.value = lang;
   });
-  if (lang && lang !== 'it') _applyGoogleLang(lang, 0);
+  if (lang && lang !== 'it') { _loadGoogleTranslate(); _applyGoogleLang(lang, 0); }
 }
 
 // Rimuove il suffisso categoria (_AL_M, _ES1_F…) per ottenere il calendario ID
@@ -33475,8 +33490,26 @@ window.shareClassifica=async function(){
 // server-side del token, non nel nasconderlo).
 const GOOGLE_CLIENT_ID = '952992177319-0i3q2tnacb6agc262i7datp07cc36tr8.apps.googleusercontent.com';
 
-function _renderGoogleButton(containerId, callbackName) {
-  if (!GOOGLE_CLIENT_ID || typeof google === 'undefined' || !google.accounts) return;
+// Lo script di Google Sign-In (circa 2,5 s di rete) non si carica piu' a ogni pagina:
+// si scarica la prima volta che serve il pulsante "Accedi con Google".
+let _gsiPromise = null;
+function _loadGsi() {
+  if (typeof google !== 'undefined' && google.accounts) return Promise.resolve(true);
+  if (_gsiPromise) return _gsiPromise;
+  _gsiPromise = new Promise(res => {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.defer = true;
+    s.onload = () => res(true);
+    s.onerror = () => { _gsiPromise = null; res(false); };
+    document.head.appendChild(s);
+  });
+  return _gsiPromise;
+}
+
+async function _renderGoogleButton(containerId, callbackName) {
+  if (!GOOGLE_CLIENT_ID) return;
+  if (!(await _loadGsi()) || typeof google === 'undefined' || !google.accounts) return;
+  if (!document.getElementById(containerId)) return;
   try {
     google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: window[callbackName] });
     google.accounts.id.renderButton(document.getElementById(containerId), {
@@ -33509,7 +33542,7 @@ function renderLogin() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
+          <img src="assets/logo-nav.png?v=1" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -33592,7 +33625,7 @@ function renderResetPassword() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
+          <img src="assets/logo-nav.png?v=1" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -33831,7 +33864,7 @@ function renderRegister() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
+          <img src="assets/logo-nav.png?v=1" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
