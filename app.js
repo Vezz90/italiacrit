@@ -4529,7 +4529,7 @@ const _appBoot = async () => {
   setTimeout(_renderPushButton, 800);
   _loadFollows();
   setTimeout(_invitaFoto, 12000);   // a chi è già iscritto e non ha la foto: invito gentile (vedi _invitaFoto)
-  setTimeout(_maybeJoinPopup, 20000);   // ai non iscritti: popup «Entra nel gruppo» (se acceso dalla dashboard)
+  setTimeout(_maybeJoinPopup, 1200);   // ai non iscritti: popup «Entra nel gruppo» appena entrati (se acceso dalla dashboard)
   _initAiWidget();
   checkLiveNowBanner();
   setInterval(checkLiveNowBanner, 60000); // ricontrolla ogni minuto (anche per aggiornare/chiudere la vista doppia appena una diretta finisce)
@@ -34544,15 +34544,20 @@ function _isInAppBrowser() {
 
 // ── Popup d'iscrizione "Entra nel gruppo" ───────────────────────────────────
 // Per chi non è iscritto. Si accende e si spegne dalla dashboard (Iscrizioni) con
-// una quota di visitatori (rilascio graduale). Non compare subito (circa 20 s o
-// alla seconda pagina), mai sulle pagine di accesso/admin né sopra la schermata
-// d'ingresso, e dopo «Più tardi» o la chiusura non si rivede per 30 giorni.
-let _joinPopupMostrato = false;
+// una quota di visitatori (rilascio graduale). Compare appena si entra nel sito
+// (se c'è la schermata d'ingresso Men/Women aspetta che sia stata superata),
+// mai sulle pagine di accesso/admin, e dopo «Più tardi» o la chiusura non si
+// rivede per 30 giorni.
+let _joinPopupMostrato = false, _joinTentativi = 0;
 async function _maybeJoinPopup() {
   try {
     if (_joinPopupMostrato || authUser()) return;
     if (/#\/(login|register|completa-profilo|admin|reset|forgot)/.test(_resolveVirtualHash())) return;
-    if (document.querySelector('.itc-gate-split') || document.getElementById('ics-join-popup')) return;
+    if (document.getElementById('ics-join-popup')) return;
+    if (document.querySelector('.itc-gate-split')) {   // schermata d'ingresso aperta: riprova tra poco
+      if (++_joinTentativi < 120) setTimeout(_maybeJoinPopup, 1000);
+      return;
+    }
     let ultimo = 0;
     try { ultimo = +localStorage.getItem('ics-join-popup') || 0; } catch {}
     if (Date.now() - ultimo < 30 * 864e5) return;
