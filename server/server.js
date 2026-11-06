@@ -3130,8 +3130,74 @@ app.post('/api/admin/profile-changes/:id/annulla', requireAdmin, async (req, res
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Popup d'iscrizione e imbuto ──────────────────────────────────────────────
+// Il popup "Entra nel gruppo" si accende e si spegne da qui (kv_store 'join_popup')
+// senza rilasciare nulla; 'pct' è la quota di visitatori che lo vede (rilascio
+// graduale). L'imbuto conta solo eventi anonimi per giorno: nessun dato personale.
+const _FUNNEL_EVENTI = ['popup_visto', 'popup_clic', 'registra_aperta', 'account_creato', 'collegato', 'passo2_aperto', 'foto_aggiunta', 'passo2_salvato'];
+app.post('/api/track', async (req, res) => {
+  const ev = String((req.body && req.body.e) || '');
+  if (!_FUNNEL_EVENTI.includes(ev)) return res.status(400).json({ ok: false });
+  if (!_authHitOk(`track|${_clientIp(req)}`, 200, _ORA)) return res.status(429).json({ ok: false });
+  queries.trackFunnelEvent(ev).catch(() => {});
+  res.json({ ok: true });
+});
+let _joinCfgCache = null, _joinCfgTs = 0;
+async function _joinPopupCfg(fresco) {
+  if (!fresco && _joinCfgCache && Date.now() - _joinCfgTs < 60000) return _joinCfgCache;
+  const v = await kvRead('join_popup', null);
+  _joinCfgCache = { on: !!(v && v.on), pct: Math.max(0, Math.min(100, parseInt(v && v.pct, 10) || 0)) };
+  _joinCfgTs = Date.now();
+  return _joinCfgCache;
+}
+app.get('/api/public/join-popup', async (req, res) => {
+  try { res.set('Cache-Control', 'public, max-age=60'); res.json(await _joinPopupCfg()); }
+  catch { res.json({ on: false, pct: 0 }); }
+});
+app.get('/api/admin/join-popup', requireAdmin, async (req, res) => {
+  try { res.json(await _joinPopupCfg(true)); } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.post('/api/admin/join-popup', requireAdmin, async (req, res) => {
+  try {
+    const on = !!(req.body && req.body.on);
+    const pct = Math.max(0, Math.min(100, parseInt(req.body && req.body.pct, 10) || 0));
+    await kvWrite('join_popup', { on, pct, by: req.user.id, at: new Date().toISOString() });
+    _joinCfgCache = null;
+    res.json({ ok: true, on, pct });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.get('/api/admin/funnel', requireAdmin, async (req, res) => {
+  try {
+    const days = Math.max(1, Math.min(180, parseInt(req.query.days, 10) || 30));
+    const [rows, nuovi, cfg] = await Promise.all([queries.getFunnel(days), queries.countUsersSince(days), _joinPopupCfg(true)]);
+    const eventi = Object.fromEntries(_FUNNEL_EVENTI.map(e => [e, 0]));
+    for (const r of rows) if (r.event in eventi) eventi[r.event] = r.n;
+    res.json({ days, eventi, nuovi_utenti: nuovi?.n || 0, popup: cfg });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
-  try { res.json({ users: await queries.getAllUsers() }); }
+  try {
+    const [users, fotoKeys, covers, dettagli] = await Promise.all([
+      queries.getAllUsers(),
+      queries.getPhotoOverrideKeys().catch(() => []),
+      queries.getMediaCoverByUser().catch(() => []),
+      queries.getUserDetailsFilledIds().catch(() => []),
+    ]);
+    const foto = new Set(fotoKeys.map(r => `${r.entity_type}:${r.entity_id}`));
+    const coverBy = new Map(covers.map(r => [r.user_id, r.cover_url]));
+    const dett = new Set(dettagli.map(r => r.user_id));
+    // completamento: collegato (profilo/atleti legati), foto, dati. null = non applicabile al ruolo
+    for (const u of users) {
+      let collegato = null, fotoOk = null;
+      if (u.role === 'atleta') { const l = (u.athlete_links || [])[0]; collegato = !!(l && l.atleta_id); fotoOk = collegato ? foto.has(`atleta:${l.atleta_id}`) : false; }
+      else if (u.role === 'team') { const l = (u.team_links || [])[0]; collegato = !!(l && l.team_id); fotoOk = collegato ? foto.has(`team:${l.team_id}`) : false; }
+      else if (u.role === 'media') { collegato = coverBy.has(u.id); fotoOk = !!coverBy.get(u.id); }
+      else if (u.role === 'genitore' || u.role === 'parente') { collegato = (u.family_links || []).length > 0; }
+      u.completamento = { collegato, foto: fotoOk, dati: dett.has(u.id) };
+    }
+    res.json({ users });
+  }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 

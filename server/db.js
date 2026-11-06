@@ -462,6 +462,13 @@ async function migrate() {
       created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS profile_changes_status_idx ON profile_changes (status, created_at DESC)`,
+    // Imbuto dell'iscrizione: solo contatori anonimi per giorno ed evento (nessun dato personale)
+    `CREATE TABLE IF NOT EXISTS funnel_events (
+      day    DATE    NOT NULL,
+      event  TEXT    NOT NULL,
+      n      INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (day, event)
+    )`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -742,6 +749,21 @@ const queries = {
       status ? [status, limit] : [limit]
     ),
   getProfileChange: (id) => one(`SELECT * FROM profile_changes WHERE id = $1`, [id]),
+  // Imbuto iscrizione
+  trackFunnelEvent: (event) =>
+    run(`INSERT INTO funnel_events (day, event, n) VALUES (CURRENT_DATE, $1, 1)
+         ON CONFLICT (day, event) DO UPDATE SET n = funnel_events.n + 1`, [event]),
+  getFunnel: (days) =>
+    all(`SELECT event, SUM(n)::int AS n FROM funnel_events WHERE day > CURRENT_DATE - $1::int GROUP BY event`, [days]),
+  countUsersSince: (days) =>
+    one(`SELECT COUNT(*)::int AS n FROM users WHERE role <> 'admin' AND created_at > NOW() - ($1::int * INTERVAL '1 day')`, [days]),
+  // Per la barra di completamento nella lista utenti
+  getPhotoOverrideKeys: () =>
+    all(`SELECT entity_type, entity_id FROM entity_overrides WHERE field = 'photo_url' AND COALESCE(new_value, '') <> ''`),
+  getMediaCoverByUser: () =>
+    all(`SELECT user_id, cover_url FROM media_profiles`),
+  getUserDetailsFilledIds: () =>
+    all(`SELECT user_id FROM user_details WHERE COALESCE(bio,'') <> '' OR COALESCE(location,'') <> '' OR COALESCE(instagram,'') <> '' OR COALESCE(website,'') <> '' OR COALESCE(specialty,'') <> '' OR COALESCE(favorite_team,'') <> '' OR COALESCE(favorite_rider,'') <> ''`),
   countProfileChanges: (status) =>
     one(`SELECT COUNT(*)::int AS n FROM profile_changes WHERE status = $1`, [status]),
   setProfileChangeStatus: (id, status, by) =>
