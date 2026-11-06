@@ -2745,17 +2745,34 @@ app.post('/api/admin/team/:teamId/add-athlete', requireAdmin, async (req, res) =
 
 // Roster manuale (team + auto-registrazioni), stessa forma di /api/data/pcs-extra-roster
 // così il frontend può unirli con la stessa identica logica di merge già esistente.
+// Cache in memoria 30 s con stale-while-revalidate: la query costava 1,3-1,9 s a
+// OGNI caricamento del sito (336 KB). Un atleta aggiunto compare entro ~30 s.
+let _manualAthletesCache = null, _manualAthletesTs = 0, _manualAthletesInflight = null;
+async function _manualAthletesMapNow() {
+  const rows = await queries.getAllManualAthletes();
+  const result = {};
+  for (const r of rows) {
+    const tid = r.team_id || '_SENZA_TEAM_';
+    if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [], senzaTeam: !r.team_id };
+    result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M', fonte: r.source || '' });
+  }
+  _manualAthletesCache = result; _manualAthletesTs = Date.now();
+  return result;
+}
+function _manualAthletesMap() {
+  if (_manualAthletesCache && (Date.now() - _manualAthletesTs) < 30000) return Promise.resolve(_manualAthletesCache);
+  if (!_manualAthletesInflight) {
+    const p = _manualAthletesMapNow();
+    _manualAthletesInflight = p;
+    const libera = () => { if (_manualAthletesInflight === p) _manualAthletesInflight = null; };
+    p.then(libera, libera);
+  }
+  if (_manualAthletesCache) { _manualAthletesInflight.catch(() => {}); return Promise.resolve(_manualAthletesCache); }
+  return _manualAthletesInflight;
+}
 app.get('/api/data/manual-athletes', async (req, res) => {
-  try {
-    const rows = await queries.getAllManualAthletes();
-    const result = {};
-    for (const r of rows) {
-      const tid = r.team_id || '_SENZA_TEAM_';
-      if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [], senzaTeam: !r.team_id };
-      result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M', fonte: r.source || '' });
-    }
-    res.json(result);
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  try { res.json(await _manualAthletesMap()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // Storico squadre confermato (vedi team_lineage / pannello admin "Storico
@@ -3949,6 +3966,10 @@ app.post('/api/admin/scraper/trigger', requireAdmin, async (req, res) => {
 app.get('/api/cron/tick', (req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
   const now = Date.now();
+  // Tiene calde le cache più lente del caricamento iniziale (se sono ancora
+  // fresche non fa nulla; se scadute le ricostruisce in background).
+  _buildPcsRosterMap().catch(() => {});
+  _manualAthletesMap().catch(() => {});
   // Sync foto/video: max una volta ogni 25 min
   if (now - _lastCronSync >= 25 * 60 * 1000) {
     _lastCronSync = now;
@@ -5405,9 +5426,26 @@ function _isLikelyFciDuplicate(fuzzyIndex, cognome, nome, teamId) {
 // quasi tutto il costo per il caso comune senza rischiare dati stantii a lungo.
 let _pcsRosterMapCache = null, _pcsRosterMapTs = 0;
 const _PCS_ROSTER_CACHE_TTL = 90000;
-function _invalidatePcsRosterCache() { _pcsRosterMapCache = null; }
-async function _buildPcsRosterMap() {
-  if (_pcsRosterMapCache && (Date.now() - _pcsRosterMapTs) < _PCS_ROSTER_CACHE_TTL) return _pcsRosterMapCache;
+function _invalidatePcsRosterCache() { _pcsRosterMapCache = null; _pcsRosterInflight = null; }
+// Stale-while-revalidate: oltre il TTL si serve subito l'ultima mappa e la si
+// ricostruisce in background (una ricostruzione alla volta). Prima, allo scadere
+// dei 90 s, il primo visitatore aspettava 4-8 s (e il frontend dopo 4 s rinuncia
+// e mostra il sito senza gli atleti PCS). Dopo un'invalidazione esplicita (azione
+// admin) non c'è nulla da servire: si aspetta la mappa nuova, come prima.
+let _pcsRosterInflight = null;
+function _buildPcsRosterMap() {
+  const fresca = _pcsRosterMapCache && (Date.now() - _pcsRosterMapTs) < _PCS_ROSTER_CACHE_TTL;
+  if (fresca) return Promise.resolve(_pcsRosterMapCache);
+  if (!_pcsRosterInflight) {
+    const p = _buildPcsRosterMapNow();
+    _pcsRosterInflight = p;
+    const libera = () => { if (_pcsRosterInflight === p) _pcsRosterInflight = null; };
+    p.then(libera, libera);
+  }
+  if (_pcsRosterMapCache) { _pcsRosterInflight.catch(() => {}); return Promise.resolve(_pcsRosterMapCache); }
+  return _pcsRosterInflight;
+}
+async function _buildPcsRosterMapNow() {
   const [riders, profRows, ovMap] = await Promise.all([
     _fetchAllPcsResultRiders(),
     _fetchAllPcsProfiles(),
@@ -13825,6 +13863,12 @@ init()
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT} (pool DB fresco)`);
+      // Pre-riscalda le due cache più lente del caricamento iniziale, così il
+      // primo visitatore dopo un riavvio non aspetta 4-8 s.
+      setTimeout(() => {
+        _buildPcsRosterMap().catch(e => console.warn('[warm] pcs-roster:', e.message));
+        _manualAthletesMap().catch(e => console.warn('[warm] manual-athletes:', e.message));
+      }, 3000);
     });
   })
   .catch(err => {
