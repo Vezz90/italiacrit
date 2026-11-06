@@ -12511,6 +12511,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🧬</span> <span class="admin-nav-lbl">Omonimi</span>
           <span class="admin-nav-badge" id="badge-omonimi"></span>
         </div>
+        <div class="admin-nav-item" data-section="novita-profili" onclick="adminNav('novita-profili')">
+          <span class="admin-nav-icon">🆕</span> <span class="admin-nav-lbl">Novità profili</span>
+          <span class="admin-nav-badge" id="badge-novita-profili"></span>
+        </div>
         <div class="admin-nav-item" data-section="foto-tag" onclick="adminNav('foto-tag')">
           <span class="admin-nav-icon">🏷</span> <span class="admin-nav-lbl">Tag foto da confermare</span>
           <span class="admin-nav-badge" id="badge-foto-tag"></span>
@@ -12590,7 +12594,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','foto-tag','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -12640,6 +12644,7 @@ window.adminNav = async function(section) {
           ${card('utenti-pending', '📥', 'Profili in attesa', 'ov-profili-pending', 'Atleti, team e media da verificare')}
           ${card('team-lineage', '🔗', 'Collegamenti storico team', 'ov-tl', 'Squadre rinominate da confermare')}
           ${card('omonimi', '🧬', 'Omonimi da verificare', 'ov-omo', 'Schede doppie o persone diverse')}
+          ${card('novita-profili', '🆕', 'Novità profili', 'ov-np', 'Foto e dati inseriti dagli iscritti')}
           ${card('albo-review', '🏆', "Fusioni albo d'oro", 'ov-albo', 'Gare dal nome simile da unire o separare')}
           ${card('social-queue', '📣', 'Social in coda', 'ov-social', 'Post pronti da pubblicare')}
         </div>
@@ -12711,6 +12716,10 @@ window.adminNav = async function(section) {
         setBadge('badge-social', socialPend);
         setBadge('badge-team-lineage', tlPendCount);
         setBadge('badge-albo-review', alboPend);
+        fetch(`${API_BASE}/admin/profile-changes?stato=nuovo&limit=1`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json()).then(d => {
+          const n = d.nuovi || 0;
+          setPending('ov-np', n); setBadge('badge-novita-profili', n);
+        }).catch(() => {});
         fetch(`${API_BASE}/admin/omonimi`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json()).then(d => {
           const n = (d.items || []).filter(i => !i.decisione && i.verdetto !== 'stessa').length;
           setPending('ov-omo', n); setBadge('badge-omonimi', n);
@@ -13351,6 +13360,80 @@ window.adminNav = async function(section) {
           }
         };
         await window._tlLoad('pending');
+      })();
+      break;
+    }
+
+    case 'novita-profili': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🆕 Novità profili</h1>
+          <p class="admin-page-sub">Foto e dati che gli iscritti hanno inserito. Sono già visibili sul sito: qui li controlli dopo. «OK» li segna come visti, «Annulla» rimette com'era prima (la foto precedente, o nessuna).</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px" id="np-tabs"></div>
+        <div id="np-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const H = () => ({ Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' });
+        const S = window._np = { stato: 'nuovo', items: [], nuovi: 0 };
+        const CAMPI = { bio: 'Bio', location: 'Località', instagram: 'Instagram', facebook: 'Facebook', strava: 'Strava', website: 'Sito web', specialty: 'Specialità', birth_year: 'Anno di nascita', favorite_team: 'Squadra del cuore', staff_role: 'Ruolo in squadra', public_contact: 'Contatto pubblico', favorite_rider: 'Atleta del cuore' };
+        const RUOLO = { atleta: 'Atleta', team: 'Team', media: 'Media', genitore: 'Genitore', parente: 'Parente', appassionato: 'Appassionato' };
+        const quando = d => { try { return new Date(d).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return ''; } };
+        const foto = (u, tag) => `<div style="text-align:center"><div style="width:84px;height:84px;border-radius:10px;overflow:hidden;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.74rem">${u ? `<img src="${esc(mediaUrl(u))}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top center">` : 'nessuna'}</div><div style="font-size:.72rem;color:var(--text-muted);margin-top:4px">${tag}</div></div>`;
+        const link = c => c.entity_type === 'atleta' ? `<a href="#/atleta/${encodeURIComponent(c.entity_id)}" target="_blank" style="color:var(--accent)">${esc(c.label || c.entity_id)}</a>` : c.entity_type === 'team' ? `<a href="#/team/${encodeURIComponent(c.entity_id)}" target="_blank" style="color:var(--accent)">${esc(c.label || c.entity_id)}</a>` : esc(c.label || '');
+        const parse = j => { try { return JSON.parse(j || '{}'); } catch { return {}; } };
+        const corpo = c => {
+          if (c.kind === 'foto' || c.kind === 'cover') {
+            return `<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">${foto(c.old_value, 'prima')}<span style="align-self:center;color:var(--text-muted)">→</span>${foto(c.new_value, 'ora')}</div>`;
+          }
+          const vo = parse(c.old_value), vn = parse(c.new_value);
+          return `<table style="font-size:.82rem;border-collapse:collapse;width:100%">${Object.keys(vn).map(k => `<tr><td style="padding:3px 10px 3px 0;color:var(--text-muted);white-space:nowrap;vertical-align:top">${esc(CAMPI[k] || k)}</td><td style="padding:3px 0"><span style="color:var(--text-muted);text-decoration:line-through">${esc(vo[k] || '—')}</span> → <b>${esc(vn[k] || '—')}</b></td></tr>`).join('')}</table>`;
+        };
+        const tipo = k => ({ foto: 'Nuova foto profilo', cover: 'Nuova foto/cover media', dati: 'Dati del profilo' }[k] || k);
+        const card = c => `<div id="np-${c.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+            <div><b>${esc(c.display_name || c.email || 'Utente')}</b> <span style="font-size:.74rem;color:var(--text-muted)">· ${esc(RUOLO[c.role] || c.role || '')} · ${esc(c.email || '')}</span></div>
+            <span style="font-size:.76rem;color:var(--text-muted)">${quando(c.created_at)}</span>
+          </div>
+          <div style="font-size:.8rem;margin-bottom:8px"><span style="font-weight:700">${tipo(c.kind)}</span>${c.kind !== 'dati' ? ' · ' + link(c) : ''}</div>
+          ${corpo(c)}
+          <div style="display:flex;gap:8px;margin-top:12px">${c.status === 'nuovo' ? `<button class="btn-approve" onclick="window._npAct(${c.id},'ok')" style="padding:6px 14px;font-size:.8rem">✓ OK</button>` : `<span style="font-size:.76rem;color:var(--text-muted)">${c.status === 'ok' ? 'Approvata' : 'Annullata'}</span>`}
+            ${c.status !== 'annullato' ? `<button class="btn-reject" onclick="window._npAct(${c.id},'annulla')" style="padding:6px 14px;font-size:.8rem">↩ Annulla modifica</button>` : ''}</div>
+        </div>`;
+        const tabs = () => {
+          document.getElementById('np-tabs').innerHTML = [['nuovo', 'Da vedere'], ['ok', 'Approvate'], ['annullato', 'Annullate']].map(([k, t]) =>
+            `<button class="tab-btn ${S.stato === k ? 'active-cat' : ''}" onclick="window._npLoad('${k}')">${t}${k === 'nuovo' ? ' ' + S.nuovi : ''}</button>`).join('') +
+            (S.stato === 'nuovo' && S.items.length ? `<button class="btn-approve" style="margin-left:auto;padding:7px 14px;font-size:.8rem" onclick="window._npTutte()">✓ Segna tutte come viste</button>` : '');
+          const b = document.getElementById('badge-novita-profili');
+          if (b) { b.textContent = S.nuovi || ''; b.style.display = S.nuovi ? '' : 'none'; }
+        };
+        window._npLoad = async (stato) => {
+          S.stato = stato || S.stato;
+          try {
+            const r = await fetch(`${API_BASE}/admin/profile-changes?stato=${S.stato}&limit=150`, { headers: H() });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            S.items = d.items || []; S.nuovi = d.nuovi || 0;
+            tabs();
+            document.getElementById('np-body').innerHTML = S.items.length
+              ? `<div style="display:flex;flex-direction:column;gap:12px">${S.items.map(card).join('')}</div>`
+              : `<div style="color:var(--text-muted);padding:24px 0">${S.stato === 'nuovo' ? '✅ Niente di nuovo da controllare.' : 'Nessuna voce.'}</div>`;
+          } catch (e) { document.getElementById('np-body').innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
+        };
+        window._npAct = async (id, act) => {
+          if (act === 'annulla' && !confirm('Annullare questa modifica? Si torna a com\'era prima.')) return;
+          try {
+            const r = await fetch(`${API_BASE}/admin/profile-changes/${id}/${act}`, { method: 'POST', headers: H() });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            await window._npLoad();
+          } catch (e) { alert('Errore: ' + e.message); }
+        };
+        window._npTutte = async () => {
+          if (!confirm('Segnare tutte le novità come viste?')) return;
+          try { await fetch(`${API_BASE}/admin/profile-changes/ok-tutti`, { method: 'POST', headers: H() }); await window._npLoad(); }
+          catch (e) { alert('Errore: ' + e.message); }
+        };
+        await window._npLoad('nuovo');
       })();
       break;
     }
