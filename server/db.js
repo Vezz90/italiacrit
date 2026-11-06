@@ -193,6 +193,12 @@ async function createSchema() {
 async function seedAdmin() {
   const existing = await one(`SELECT id FROM users WHERE role = 'admin' LIMIT 1`);
   if (!existing) {
+    // In produzione non si crea mai un amministratore con password nota
+    // (stava nel repository pubblico): l'account si crea a mano.
+    if (process.env.RENDER || process.env.NODE_ENV === 'production') {
+      console.warn('[db] Nessun amministratore presente: in produzione non creo un account predefinito, va creato a mano.');
+      return;
+    }
     const hash = bcrypt.hashSync('admin2026', 10);
     await run(
       `INSERT INTO users (email, password, role, display_name) VALUES ($1, $2, 'admin', 'Amministratore')`,

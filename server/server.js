@@ -141,7 +141,17 @@ async function sendNotification({ user_id, type = 'info', title, body = '', data
   }
 }
 const PORT = 8002;
-const JWT_SECRET  = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
+// In produzione la chiave è OBBLIGATORIA: il valore di riserva sta nel repository
+// pubblico e chiunque potrebbe fabbricare un token da amministratore. In locale
+// (senza JWT_SECRET) si usa la chiave di sviluppo, con un avviso.
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  if (process.env.RENDER || process.env.NODE_ENV === 'production') {
+    console.error('[fatal] JWT_SECRET mancante: in produzione il server non parte senza una chiave segreta.');
+    process.exit(1);
+  }
+  console.warn('[auth] JWT_SECRET mancante: uso la chiave di sviluppo (solo in locale).');
+  return 'italiacrit-dev-secret-2026';
+})();
 const JWT_EXPIRES = '30d';
 
 // ── Google Sign-In ───────────────────────────────────────────────────────────
@@ -2360,7 +2370,48 @@ app.get('/api/og-image/classifica/:id/:view/:sort', async (req, res) => {
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
-app.post('/api/auth/register', async (req, res) => {
+// ── Limiti anti-abuso su login / registrazione / recupero password ───────────
+// In memoria (si azzerano al riavvio). Il limite per email protegge dai
+// tentativi sulla stessa password anche se l'IP cambia o viene falsificato
+// (l'IP si legge da X-Forwarded-For, che un client può manipolare).
+const _authHits = new Map(); // chiave → { n, scade }
+function _authHitOk(chiave, max, finestraMs) {
+  const ora = Date.now();
+  const e = _authHits.get(chiave);
+  if (!e || e.scade <= ora) { _authHits.set(chiave, { n: 1, scade: ora + finestraMs }); return true; }
+  e.n++;
+  return e.n <= max;
+}
+setInterval(() => { const ora = Date.now(); for (const [k, e] of _authHits) if (e.scade <= ora) _authHits.delete(k); }, 10 * 60 * 1000).unref();
+function _clientIp(req) {
+  const x = req.headers['x-forwarded-for'];
+  return (x ? String(x).split(',')[0].trim() : (req.ip || '')) || 'sconosciuto';
+}
+const _MIN = 60 * 1000, _ORA = 60 * _MIN;
+// regole: [per, max, finestra]
+const _AUTH_LIMITI = {
+  login:    [['ip', 60, 15 * _MIN], ['email', 10, 15 * _MIN]],
+  register: [['ip', 10, _ORA]],
+  forgot:   [['ip', 20, _ORA], ['email', 5, _ORA]],
+  reset:    [['ip', 20, _ORA]],
+  google:   [['ip', 60, 15 * _MIN]],
+};
+function authLimit(nome) {
+  return (req, res, next) => {
+    const ip = _clientIp(req);
+    const email = String((req.body && req.body.email) || '').trim().toLowerCase().slice(0, 200);
+    for (const [per, max, win] of _AUTH_LIMITI[nome]) {
+      const valore = per === 'ip' ? ip : email;
+      if (!valore) continue;
+      if (!_authHitOk(`${nome}|${per}|${valore}`, max, win)) {
+        return res.status(429).json({ error: 'Troppi tentativi: riprova più tardi.' });
+      }
+    }
+    next();
+  };
+}
+
+app.post('/api/auth/register', authLimit('register'), async (req, res) => {
   try {
     const { email, password, role, display_name } = req.body;
     const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media'];
@@ -2384,7 +2435,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimit('login'), async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
@@ -2411,7 +2462,7 @@ app.post('/api/auth/login', async (req, res) => {
 // non esiste alcun account, rispondiamo needsRegistration così il frontend
 // porta l'utente sul form di registrazione (serve comunque scegliere un ruolo
 // e compilare i campi specifici, es. squadra/atleta collegato).
-app.post('/api/auth/google', async (req, res) => {
+app.post('/api/auth/google', authLimit('google'), async (req, res) => {
   try {
     const { credential } = req.body || {};
     if (!credential) return res.status(400).json({ error: 'Credenziale Google mancante' });
@@ -2438,7 +2489,7 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-app.post('/api/auth/google/register', async (req, res) => {
+app.post('/api/auth/google/register', authLimit('google'), async (req, res) => {
   try {
     const { credential, role, display_name } = req.body || {};
     const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media'];
@@ -2471,7 +2522,7 @@ app.post('/api/auth/google/register', async (req, res) => {
 // password" è reimpostarla, non recuperare quella vecchia. Token monouso a
 // scadenza salvato in kv_store (stesso pattern già usato per videos/
 // monthly-recap), niente tabella dedicata.
-app.post('/api/auth/forgot-password', async (req, res) => {
+app.post('/api/auth/forgot-password', authLimit('forgot'), async (req, res) => {
   try {
     const { email } = req.body || {};
     if (!email) return res.status(400).json({ error: 'Email obbligatoria' });
@@ -2502,7 +2553,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/api/auth/reset-password', async (req, res) => {
+app.post('/api/auth/reset-password', authLimit('reset'), async (req, res) => {
   try {
     const { token, password } = req.body || {};
     if (!token || !password) return res.status(400).json({ error: 'Dati mancanti' });
