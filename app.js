@@ -625,7 +625,16 @@ async function apiCall(path, opts = {}) {
     body: opts.body ? JSON.stringify(opts.body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  if (!res.ok) {
+    // Token scaduto o firmato con una chiave ormai cambiata: la sessione non vale
+    // più. Senza questo l'utente restava "dentro" a vista e ogni azione falliva.
+    if (res.status === 401 && token && data.error === 'Token non valido o scaduto') {
+      authClear();
+      try { updateNavLoginState(); } catch {}
+      throw new Error('Sessione scaduta: accedi di nuovo.');
+    }
+    throw new Error(data.error || `HTTP ${res.status}`);
+  }
   return data;
 }
 
