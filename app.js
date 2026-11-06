@@ -4527,6 +4527,7 @@ const _appBoot = async () => {
   registerServiceWorker();
   setTimeout(_renderPushButton, 800);
   _loadFollows();
+  setTimeout(_invitaFoto, 12000);   // a chi è già iscritto e non ha la foto: invito gentile (vedi _invitaFoto)
   _initAiWidget();
   checkLiveNowBanner();
   setInterval(checkLiveNowBanner, 60000); // ricontrolla ogni minuto (anche per aggiornare/chiudere la vista doppia appena una diretta finisce)
@@ -34412,6 +34413,52 @@ window._cpCreaMedia = async function() {
     btn.disabled = false; btn.textContent = 'Crea il mio spazio';
   }
 };
+
+// ── Invito alla foto per chi è già iscritto ──────────────────────────────────
+// Atleta, team e media loggati che non hanno ancora la foto (o il logo) ricevono
+// un invito quando tornano sul sito: al massimo una volta ogni 7 giorni, mai sulle
+// pagine di accesso/admin o sopra la schermata d'ingresso.
+async function _invitaFoto() {
+  try {
+    const u = authUser();
+    if (!u || !['atleta', 'team', 'media'].includes(u.role)) return;
+    if (/#\/(completa-profilo|login|register|admin)/.test(location.hash)) return;
+    if (document.querySelector('.itc-gate-split') || document.getElementById('ics-invito-foto')) return;
+    const chiave = 'ics-invito-foto-' + u.id;
+    let ultimo = 0;
+    try { ultimo = +localStorage.getItem(chiave) || 0; } catch {}
+    if (Date.now() - ultimo < 7 * 864e5) return;
+    const c = await apiCall('/profile/completion');
+    if (!c || !c.entity || !c.needs_photo) return;
+    const ent = c.entity;
+    const cosa = ent.type === 'team' ? 'il logo' : 'la foto';
+    const testo = ent.type === 'team'
+      ? 'Il logo della squadra compare sulla vostra pagina e accanto ai vostri atleti. Ci vuole un minuto.'
+      : ent.type === 'media'
+        ? 'Metti il logo o la tua foto: così ti riconoscono sotto ogni album e video.'
+        : 'Per ora chi cerca il tuo nome vede solo le tue iniziali. Aggiungi la tua foto: ci vuole un minuto.';
+    const ini = ((ent.name || u.display_name || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2)).toUpperCase();
+    const ricorda = () => { try { localStorage.setItem(chiave, String(Date.now())); } catch {} };
+    const ov = document.createElement('div');
+    ov.id = 'ics-invito-foto';
+    ov.setAttribute('role', 'dialog');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(6,9,16,.62);display:flex;align-items:center;justify-content:center;padding:16px';
+    ov.innerHTML = `<div style="max-width:380px;width:100%;background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:16px;padding:26px 24px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.45)">
+      <div style="width:84px;height:84px;margin:0 auto 14px;border-radius:${ent.type === 'media' ? '50%' : '12px'};background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:var(--text-muted)">${esc(ini)}</div>
+      <h3 style="margin:0 0 6px;font-size:1.2rem">Manca ${cosa}</h3>
+      <p style="margin:0 0 18px;font-size:.92rem;color:var(--text-muted);line-height:1.45">${testo}</p>
+      <button type="button" class="auth-btn" id="inv-si">Aggiungi ${cosa}</button>
+      <button type="button" class="auth-btn auth-btn-secondary" id="inv-no" style="margin-top:8px">Più tardi</button>
+    </div>`;
+    const chiudi = () => { ricorda(); ov.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = ev => { if (ev.key === 'Escape') chiudi(); };
+    document.addEventListener('keydown', onKey);
+    ov.addEventListener('click', ev => { if (ev.target === ov) chiudi(); });
+    document.body.appendChild(ov);
+    document.getElementById('inv-no').onclick = chiudi;
+    document.getElementById('inv-si').onclick = () => { chiudi(); window.location.hash = '/completa-profilo'; };
+  } catch { /* l'invito è facoltativo: se qualcosa non va, niente */ }
+}
 
 // ── MY PROFILE / DASHBOARD ────────────────────────────────────
 async function renderMyProfile() {
