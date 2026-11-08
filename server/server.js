@@ -3136,6 +3136,47 @@ app.post('/api/admin/profile-changes/:id/annulla', requireAdmin, async (req, res
 // senza rilasciare nulla; 'pct' è la quota di visitatori che lo vede (rilascio
 // graduale). L'imbuto conta solo eventi anonimi per giorno: nessun dato personale.
 const _FUNNEL_EVENTI = ['popup_visto', 'popup_clic', 'registra_aperta', 'iscr_ruolo', 'iscr_dati', 'account_creato', 'collegato', 'passo2_aperto', 'foto_aggiunta', 'passo2_salvato'];
+// Statistiche interne: ogni pagina aperta da un visitatore, senza cookie e senza dati personali.
+// Il «visitatore unico» è un codice che cambia ogni giorno (IP + browser + sale segreto) e si butta dopo 2 giorni.
+const _BOT_RE = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|facebookexternalhit|whatsapp|telegram|curl|python|node-fetch|axios|monitor|uptime|ahrefs|semrush|pingdom|gtmetrix/i;
+function _fonteDa(refHost) {
+  const h = String(refHost || '').toLowerCase();
+  if (!h) return 'Diretto';
+  if (/google\./.test(h)) return 'Google';
+  if (/bing\.|duckduckgo|yahoo|ecosia|brave\.|yandex|qwant/.test(h)) return 'Altri motori';
+  if (/facebook|fb\.com|fb\.me|l\.facebook/.test(h)) return 'Facebook';
+  if (/instagram/.test(h)) return 'Instagram';
+  if (/whatsapp|wa\.me/.test(h)) return 'WhatsApp';
+  if (/(^|\.)t\.co$|twitter|(^|\.)x\.com$/.test(h)) return 'X';
+  if (/youtube|youtu\.be/.test(h)) return 'YouTube';
+  if (/telegram|t\.me/.test(h)) return 'Telegram';
+  return 'Altri siti';
+}
+app.post('/api/hit', async (req, res) => {
+  try {
+    const ua = String(req.headers['user-agent'] || '');
+    if (!ua || _BOT_RE.test(ua)) return res.json({ ok: true });
+    const ip = _clientIp(req);
+    if (!_authHitOk(`hit|${ip}`, 600, _ORA)) return res.status(429).json({ ok: false });
+    let page = String((req.body && req.body.page) || '').split('?')[0].slice(0, 120);
+    if (page.startsWith('#')) page = page.slice(1);
+    if (!page.startsWith('/')) page = '/' + page;
+    if (/^\/(admin|reset|login|register|completa)/i.test(page)) page = '/' + page.split('/')[1].toLowerCase();
+    if (page.length > 1) page = page.replace(/\/+$/, '');
+    const nuova = !!(req.body && req.body.nuova);
+    const fonte = nuova ? _fonteDa(String((req.body && req.body.ref) || '').slice(0, 120)) : null;
+    const device = /iPad|Tablet/i.test(ua) ? 'Tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'Telefono' : 'Computer';
+    const day = new Date().toISOString().slice(0, 10);
+    const hash = require('crypto').createHash('sha256').update(`${ip}|${ua}|${day}|${JWT_SECRET}`).digest('hex').slice(0, 24);
+    await queries.recordHit({ hash, page, fonte, device, nuovaSessione: nuova });
+    res.json({ ok: true });
+  } catch (e) { res.json({ ok: false }); }
+});
+app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
+  try { res.json(await queries.getAnalytics(req.query.days)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/track', async (req, res) => {
   const ev = String((req.body && req.body.e) || '');
   if (!_FUNNEL_EVENTI.includes(ev)) return res.status(400).json({ ok: false });

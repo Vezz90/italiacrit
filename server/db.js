@@ -479,6 +479,14 @@ async function migrate() {
       seen_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS user_pages_user_idx ON user_pages (user_id, seen_at DESC)`,
+    // Statistiche interne del sito: solo contatori aggregati per giorno, nessun cookie e nessun dato personale.
+    // visit_hashes tiene un codice casuale per visitatore (cambia ogni giorno) solo per contare gli unici: si cancella dopo 2 giorni.
+    `CREATE TABLE IF NOT EXISTS site_daily (
+      day DATE PRIMARY KEY, pageviews INTEGER NOT NULL DEFAULT 0, visitatori INTEGER NOT NULL DEFAULT 0, sessioni INTEGER NOT NULL DEFAULT 0
+    )`,
+    `CREATE TABLE IF NOT EXISTS visit_hashes (day DATE NOT NULL, h TEXT NOT NULL, PRIMARY KEY (day, h))`,
+    `CREATE TABLE IF NOT EXISTS page_daily (day DATE NOT NULL, page TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, page))`,
+    `CREATE TABLE IF NOT EXISTS dim_daily (day DATE NOT NULL, dim TEXT NOT NULL, val TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, dim, val))`,
     `CREATE TABLE IF NOT EXISTS funnel_events (
       day    DATE    NOT NULL,
       event  TEXT    NOT NULL,
@@ -785,6 +793,37 @@ const queries = {
   getLastUserPage: (userId) => one(`SELECT page FROM user_pages WHERE user_id = $1 ORDER BY seen_at DESC LIMIT 1`, [userId]),
   getPresenceAll: () => all(`SELECT user_id, last_seen, visits, total_seconds, last_page FROM user_presence`),
   getUserPages: (userId) => all(`SELECT page, title, seen_at FROM user_pages WHERE user_id = $1 ORDER BY seen_at DESC LIMIT 40`, [userId]),
+  // Statistiche interne del sito
+  recordHit: async ({ hash, page, fonte, device, nuovaSessione }) => {
+    const ins = await one(`INSERT INTO visit_hashes (day, h) VALUES ((NOW() AT TIME ZONE 'Europe/Rome')::date, $1) ON CONFLICT DO NOTHING RETURNING h`, [hash]);
+    const nv = ins ? 1 : 0, ns = nuovaSessione ? 1 : 0;
+    await run(`INSERT INTO site_daily (day, pageviews, visitatori, sessioni) VALUES ((NOW() AT TIME ZONE 'Europe/Rome')::date, 1, $1::int, $2::int)
+               ON CONFLICT (day) DO UPDATE SET pageviews = site_daily.pageviews + 1,
+                 visitatori = site_daily.visitatori + $1::int, sessioni = site_daily.sessioni + $2::int`, [nv, ns]);
+    await run(`INSERT INTO page_daily (day, page, n) VALUES ((NOW() AT TIME ZONE 'Europe/Rome')::date, $1, 1)
+               ON CONFLICT (day, page) DO UPDATE SET n = page_daily.n + 1`, [page]);
+    if (ns) {
+      await run(`INSERT INTO dim_daily (day, dim, val, n) VALUES ((NOW() AT TIME ZONE 'Europe/Rome')::date, 'fonte', $1, 1)
+                 ON CONFLICT (day, dim, val) DO UPDATE SET n = dim_daily.n + 1`, [fonte]);
+      await run(`INSERT INTO dim_daily (day, dim, val, n) VALUES ((NOW() AT TIME ZONE 'Europe/Rome')::date, 'dispositivo', $1, 1)
+                 ON CONFLICT (day, dim, val) DO UPDATE SET n = dim_daily.n + 1`, [device]);
+    }
+    if (Math.random() < 0.01) await run(`DELETE FROM visit_hashes WHERE day < (NOW() AT TIME ZONE 'Europe/Rome')::date - 1`).catch(() => {});
+  },
+  getAnalytics: async (days) => {
+    const d = Math.max(1, Math.min(730, parseInt(days, 10) || 30));
+    const [giorni, pagine, dims, iscritti, ruoli, primo, totUtenti] = await Promise.all([
+      all(`SELECT to_char(day, 'YYYY-MM-DD') AS day, pageviews, visitatori, sessioni FROM site_daily WHERE day > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int ORDER BY day`, [d]),
+      all(`SELECT page, SUM(n)::int AS n FROM page_daily WHERE day > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int GROUP BY page ORDER BY n DESC LIMIT 30`, [d]),
+      all(`SELECT dim, val, SUM(n)::int AS n FROM dim_daily WHERE day > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int GROUP BY dim, val ORDER BY n DESC`, [d]),
+      all(`SELECT to_char((created_at AT TIME ZONE 'Europe/Rome')::date, 'YYYY-MM-DD') AS day, COUNT(*)::int AS n FROM users
+           WHERE (created_at AT TIME ZONE 'Europe/Rome')::date > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int GROUP BY 1 ORDER BY 1`, [d]),
+      all(`SELECT role, COUNT(*)::int AS n FROM users WHERE (created_at AT TIME ZONE 'Europe/Rome')::date > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int GROUP BY role ORDER BY n DESC`, [d]),
+      one(`SELECT to_char(MIN(day), 'YYYY-MM-DD') AS da FROM site_daily`),
+      one(`SELECT COUNT(*)::int AS n FROM users`),
+    ]);
+    return { giorni, pagine, dims, iscritti, ruoli, da: primo && primo.da, iscritti_totali: totUtenti ? totUtenti.n : 0 };
+  },
   // Imbuto iscrizione
   trackFunnelEvent: (event) =>
     run(`INSERT INTO funnel_events (day, event, n) VALUES (CURRENT_DATE, $1, 1)

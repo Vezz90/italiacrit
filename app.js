@@ -4913,8 +4913,28 @@ document.addEventListener('dragstart', (e) => { if (_isProtectedPhotoImg(e.targe
 // hashchange, serve un listener dedicato).
 window.addEventListener('popstate', () => { route(); });
 
+// Statistiche interne del sito: una chiamata anonima per pagina aperta (nessun cookie, nessun dato personale).
+let _hitUltimo = '';
+function _hit() {
+  try {
+    if (/^(localhost|127\.|\[::1\])/.test(location.hostname)) return;
+    const u = authUser();
+    if (u && u.role === 'admin') return;
+    const page = location.hash ? location.hash.replace(/^#/, '') : (location.pathname || '/');
+    if (page === _hitUltimo) return;
+    _hitUltimo = page;
+    let nuova = false;
+    try { if (!sessionStorage.getItem('ics-hit-sess')) { sessionStorage.setItem('ics-hit-sess', '1'); nuova = true; } } catch (e) {}
+    let ref = '';
+    try { if (nuova && document.referrer) { const h = new URL(document.referrer).hostname; if (h && h !== location.hostname) ref = h; } } catch (e) {}
+    fetch(API_BASE + '/hit', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page, nuova, ref }) }).catch(() => {});
+  } catch (e) {}
+}
+
 let _routeCount = 0;
 function route() {
+  setTimeout(_hit, 60);
   // Alla seconda pagina visitata (oltre a quella d'ingresso) può comparire il popup d'iscrizione
   if (++_routeCount === 2) setTimeout(_maybeJoinPopup, 1500);
   // Se il player della diretta è aperto a schermo intero e l'utente sta
@@ -12524,6 +12544,9 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🆕</span> <span class="admin-nav-lbl">Novità profili</span>
           <span class="admin-nav-badge" id="badge-novita-profili"></span>
         </div>
+        <div class="admin-nav-item" data-section="analytics" onclick="adminNav('analytics')">
+          <span class="admin-nav-icon">📈</span> <span class="admin-nav-lbl">Statistiche sito</span>
+        </div>
         <div class="admin-nav-item" data-section="iscrizioni" onclick="adminNav('iscrizioni')">
           <span class="admin-nav-icon">🚪</span> <span class="admin-nav-lbl">Iscrizioni e popup</span>
         </div>
@@ -12606,7 +12629,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','iscrizioni','foto-tag','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','iscrizioni','analytics','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -13573,6 +13596,98 @@ window.adminNav = async function(section) {
           } catch (e) { body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
         };
         window._iscGiorni = (d) => { giorni = d; disegna(); };
+        await disegna();
+      })();
+      break;
+    }
+
+    case 'analytics': {
+      main.innerHTML = `
+        <div id="stat-sito">
+        <style media="print">body *{visibility:hidden} #stat-sito,#stat-sito *{visibility:visible} #stat-sito{position:absolute;left:0;top:0;width:100%} .stat-noprint{display:none!important}</style>
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📈 Statistiche sito</h1>
+          <p class="admin-page-sub">Numeri interni di Italia Cycling Stats: contano tutti i visitatori, accettino o no i cookie, e non usano né cookie né dati personali. Le tue visite da amministratore e i robot dei motori di ricerca non sono contati.</p>
+        </div>
+        <div id="stat-body"><div class="admin-loading">Caricamento…</div></div>
+        </div>`;
+      (async () => {
+        const body = document.getElementById('stat-body');
+        let giorni = 30;
+        const fmt = (n) => Number(n || 0).toLocaleString('it-IT');
+        const dl = (d) => { const [y, m, g] = d.split('-'); return `${g}/${m}`; };
+        const serie = (arr, key, n) => { // riempie i giorni mancanti con 0
+          const mp = new Map(arr.map(r => [r.day, r[key]]));
+          const out = []; const oggi = new Date();
+          for (let i = n - 1; i >= 0; i--) { const dt = new Date(oggi.getTime() - i * 86400000); const k = dt.toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' }); out.push({ day: k, v: mp.get(k) || 0 }); }
+          return out;
+        };
+        const barre = (s, colore) => {
+          const max = Math.max(1, ...s.map(x => x.v));
+          return `<div style="display:flex;align-items:flex-end;gap:${s.length > 60 ? 1 : 3}px;height:120px;padding-top:6px">${s.map(x =>
+            `<div title="${dl(x.day)}: ${fmt(x.v)}" style="flex:1;min-width:1px;height:${Math.max(x.v ? 3 : 1, Math.round(x.v / max * 100))}%;background:${colore};opacity:${x.v ? 1 : .25};border-radius:2px 2px 0 0"></div>`).join('')}</div>
+            <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:4px"><span>${dl(s[0].day)}</span><span>${dl(s[s.length - 1].day)}</span></div>`;
+        };
+        const lista = (rows, tot) => rows.length ? rows.map(r => {
+          const pc = tot ? Math.round(r.n / tot * 100) : 0;
+          return `<div style="display:grid;grid-template-columns:minmax(90px,1fr) 2fr 44px;gap:10px;align-items:center;padding:4px 0;font-size:.84rem">
+            <span style="overflow-wrap:anywhere">${esc(r.val)}</span>
+            <div style="background:var(--bg-elevated);border-radius:5px;height:12px;overflow:hidden"><div style="height:100%;width:${pc}%;background:var(--accent,#e8001d)"></div></div>
+            <b style="text-align:right">${pc}%</b></div>`;
+        }).join('') : '<span style="color:var(--text-muted);font-size:.84rem">Ancora nessun dato.</span>';
+        const disegna = async () => {
+          try {
+            const r = await fetch(`${API_BASE}/admin/analytics?days=${giorni}`, { headers: { Authorization: `Bearer ${authToken()}` } });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Errore');
+            const g = d.giorni || [];
+            const tot = g.reduce((a, x) => ({ v: a.v + x.visitatori, p: a.p + x.pageviews, s: a.s + x.sessioni }), { v: 0, p: 0, s: 0 });
+            const iscr = (d.iscritti || []).reduce((a, x) => a + x.n, 0);
+            const ppv = tot.s ? (tot.p / tot.s).toFixed(1).replace('.', ',') : '—';
+            const conv = tot.v ? (iscr / tot.v * 100).toFixed(1).replace('.', ',') + '%' : '—';
+            const tile = (n, t, sub) => `<div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:14px 16px">
+              <div style="font-size:1.7rem;font-weight:800;line-height:1.1">${n}</div><div style="font-size:.82rem;color:var(--text-secondary);margin-top:2px">${t}</div>${sub ? `<div style="font-size:.7rem;color:var(--text-muted);margin-top:2px">${sub}</div>` : ''}</div>`;
+            const box = (t, inner) => `<div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:14px 18px"><b style="font-size:.92rem">${t}</b><div style="margin-top:8px">${inner}</div></div>`;
+            const fonti = (d.dims || []).filter(x => x.dim === 'fonte'), devs = (d.dims || []).filter(x => x.dim === 'dispositivo');
+            const totF = fonti.reduce((a, x) => a + x.n, 0), totD = devs.reduce((a, x) => a + x.n, 0);
+            const dalTxt = d.da ? `Il conteggio delle visite è attivo dal ${d.da.split('-').reverse().join('/')}: prima di quella data non esistono dati interni sulle visite.` : 'Il conteggio delle visite è appena partito: i primi numeri compaiono qui nelle prossime ore.';
+            const pagine = (d.pagine || []).map(p => `<div style="display:grid;grid-template-columns:1fr 54px;gap:10px;padding:4px 0;border-bottom:1px solid var(--border-subtle);font-size:.84rem"><span style="overflow-wrap:anywhere">${esc(p.page)}</span><b style="text-align:right">${fmt(p.n)}</b></div>`).join('');
+            body.innerHTML = `
+              <div class="stat-noprint" style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+                ${[[7, '7 giorni'], [30, '30 giorni'], [90, '90 giorni'], [365, '1 anno']].map(([n, t]) => `<button class="tab-btn ${giorni === n ? 'active-cat' : ''}" onclick="window._statGiorni(${n})">${t}</button>`).join('')}
+                <span style="flex:1"></span>
+                <button class="tab-btn" onclick="window._statCsv()">⬇ Scarica CSV</button>
+                <button class="tab-btn" onclick="window.print()">🖨 Stampa / PDF</button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px">
+                ${tile(fmt(tot.v), 'Visitatori', 'persone diverse, giorno per giorno')}
+                ${tile(fmt(tot.p), 'Pagine viste')}
+                ${tile(fmt(tot.s), 'Visite', 'sessioni di navigazione')}
+                ${tile(ppv, 'Pagine per visita')}
+                ${tile(fmt(iscr), 'Nuovi iscritti', conv + ' dei visitatori')}
+                ${tile(fmt(d.iscritti_totali), 'Iscritti in tutto')}
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px">
+                ${box('Visitatori al giorno', barre(serie(g, 'visitatori', giorni), 'var(--accent,#e8001d)'))}
+                ${box('Nuovi iscritti al giorno (storico completo)', barre(serie(d.iscritti || [], 'n', giorni), '#22c55e'))}
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px">
+                ${box('Da dove arrivano', lista(fonti.map(x => ({ val: x.val, n: x.n })), totF))}
+                ${box('Che dispositivo usano', lista(devs.map(x => ({ val: x.val, n: x.n })), totD))}
+                ${box('Chi si iscrive (ruolo)', lista((d.ruoli || []).map(x => ({ val: x.role, n: x.n })), iscr))}
+              </div>
+              ${box('Pagine più viste', pagine || '<span style="color:var(--text-muted);font-size:.84rem">Ancora nessun dato.</span>')}
+              <p style="margin:12px 0 0;font-size:.76rem;color:var(--text-muted);line-height:1.5">${dalTxt} Gli iscritti, invece, vengono dall'anagrafica e coprono tutta la storia del sito. «Visitatori» conta persone diverse per ogni giorno: chi torna in giorni diversi viene contato in ognuno.</p>`;
+            window._statCsv = () => {
+              const rows = [['giorno', 'visitatori', 'pagine_viste', 'visite', 'nuovi_iscritti']];
+              const mi = new Map((d.iscritti || []).map(x => [x.day, x.n]));
+              g.forEach(x => rows.push([x.day, x.visitatori, x.pageviews, x.sessioni, mi.get(x.day) || 0]));
+              const blob = new Blob([rows.map(r => r.join(';')).join('\n')], { type: 'text/csv;charset=utf-8' });
+              const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `statistiche-ics-${giorni}g.csv`; a.click();
+            };
+          } catch (e) { body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`; }
+        };
+        window._statGiorni = (n) => { giorni = n; disegna(); };
         await disegna();
       })();
       break;
@@ -29012,7 +29127,7 @@ function renderPrivacy() {
       ${P('<b>Se navighi senza iscriverti</b>')}
       ${L([
         'dati tecnici di collegamento (indirizzo IP, browser, orario) che i fornitori del servizio registrano per far funzionare e proteggere il sito;',
-        'contatori anonimi e aggregati (ad esempio quante persone aprono la pagina di iscrizione): non sono collegati a te e non usano cookie;',
+        'contatori anonimi e aggregati delle visite (pagine aperte, sito di provenienza, tipo di dispositivo, passaggi dell\'iscrizione): non usano cookie e non ti identificano. Per contare i visitatori unici usiamo un codice casuale che cambia ogni giorno e viene cancellato dopo due giorni;',
         'statistiche di Google Analytics, <b>solo se premi «Accetta»</b> nel banner dei cookie.'
       ])}
       ${P('<b>Se ti iscrivi</b>')}
