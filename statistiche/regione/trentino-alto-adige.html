@@ -26,19 +26,8 @@
     })();
   </script>
   <meta name="google-site-verification" content="8bzaM6fB1nV-c8HZ1qeO0L32Vll32XVKU1pXkDpa4Mc" />
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1329Z3BXWE"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    // send_page_view:false — il sito è una SPA con hash-routing (#/gara/...,
-    // #/atleta/... ecc.): il page_view automatico vedrebbe solo il primo
-    // caricamento. I page_view reali per ogni cambio pagina vengono inviati
-    // da app.js (vedi _trackPageView), uno per ogni vera navigazione.
-    gtag('config', 'G-1329Z3BXWE', { send_page_view: false });
-  </script>
+  <!-- Consenso cookie: Google Analytics parte solo dopo «Accetta» -->
+  <script src="/consent.js?v=1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Statistiche del ciclismo giovanile in Trentino Alto Adige: record, campioni e squadre | ICS</title>
   <meta name="description" content="Chi ha vinto di più, le squadre più forti e l&#x27;albo anno per anno nelle gare disputate in Trentino Alto Adige, dal 2007." />
@@ -230,6 +219,10 @@
   <span class="footer-sep">•</span>
   <a href="#/regolamento" class="footer-link">Regolamento</a>
   <span class="footer-sep">•</span>
+  <a href="/privacy" class="footer-link">Privacy e cookie</a>
+  <span class="footer-sep">•</span>
+  <button class="footer-link" style="background:none;border:none;cursor:pointer;font:inherit" onclick="window.icsCookiePrefs && window.icsCookiePrefs()">Preferenze cookie</button>
+  <span class="footer-sep">•</span>
   <button class="footer-link" style="background:none;border:none;cursor:pointer;font:inherit" onclick="window.shareApp()">📤 Condividi</button>
   <span class="footer-sep">•</span>
   <button id="push-toggle-btn" style="display:none;background:transparent;border:1px solid var(--accent,#e8001d);color:var(--accent,#e8001d);padding:3px 12px;border-radius:14px;font-size:.78rem;cursor:pointer;font-weight:600">🔔 Attiva notifiche</button>
@@ -244,7 +237,7 @@
 /* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
    Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
 (function () {
-  var L = ['app.js?v=1080', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
+  var L = ['app.js?v=1081', 'home.js?v=28', 'procorse.js?v=4', 'forma.js?v=10', 'risultati.js?v=11', 'elenchi.js?v=5', 'almanacco.js?v=12', 'carriere.js?v=1', 'titoli.js?v=11', 'redazione.js?v=13', 'articoli.js?v=1'];
   var R = 'https://italiacrit.onrender.com/';
   function load(base) {
     L.forEach(function (f) {

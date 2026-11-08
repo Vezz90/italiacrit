@@ -21,6 +21,7 @@ PAGES = {
     'statistiche': ("Statistiche del ciclismo agonistico italiano | ICS", "Statistiche, tendenze e numeri della stagione del ciclismo agonistico italiano su strada."),
     'comparatore': ("Comparatore atleti e team | ICS", "Confronta due atleti o due team del ciclismo agonistico italiano: punti, vittorie, podi e risultati."),
     'regolamento': ("Regolamento punteggi e classifiche | ICS", "Come vengono calcolati i punti e le classifiche di Italia Cycling Stats."),
+    'privacy':     ("Privacy e cookie | Italia Cycling Stats", "Come Italia Cycling Stats tratta i dati di visitatori e iscritti, quali cookie usa e come esercitare i tuoi diritti."),
     'record':      ("Record e primati del ciclismo agonistico italiano | ICS", "I record e i primati di atleti e team del ciclismo agonistico italiano."),
 }
 

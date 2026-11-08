@@ -4362,7 +4362,7 @@ function updateSeasonChip() {
 function _shouldShowSeasonBar() {
   const h = (location.hash || '#/').split('?')[0];
   if (/^#\/atleta\//.test(h) || /^#\/team\/[^/]+/.test(h) || /^#\/gara\//.test(h)) return false;
-  if (/^#\/(login|register|messaggi|regolamento|media)\b/.test(h)) return false;
+  if (/^#\/(login|register|messaggi|regolamento|privacy|media)\b/.test(h)) return false;
   if (h === '#/' || h === '') return false;
   return true;
 }
@@ -5116,6 +5116,7 @@ function route() {
   if (match('/statistiche')) return (typeof window.renderAlmanacco === 'function' ? window.renderAlmanacco() : renderHomeDashboard());
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
+  if (match('/privacy')) return renderPrivacy();
   if (match('/login')) return renderLogin();
   if (match('/reset-password')) return renderResetPassword();
   if (match('/register')) return renderRegister();
@@ -28993,6 +28994,77 @@ window.shareBattle = (url, title) => {
   }
 };
 
+function renderPrivacy() {
+  const H = (t) => `<h2 style="font-size:1.05rem;margin:26px 0 8px;color:var(--text-primary)">${t}</h2>`;
+  const P = (t) => `<p style="margin:0 0 10px;color:var(--text-secondary);font-size:.92rem;line-height:1.7">${t}</p>`;
+  const L = (items) => `<ul style="margin:0 0 10px;padding-left:20px;color:var(--text-secondary);font-size:.92rem;line-height:1.7">${items.map(i => `<li style="margin-bottom:4px">${i}</li>`).join('')}</ul>`;
+  setPage(`
+    <div class="pg-header">
+      <div class="pg-eyebrow">ICS · Informativa</div>
+      <h1 class="pg-title">Privacy e cookie</h1>
+    </div>
+    <div style="max-width:760px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:8px 28px 26px">
+      ${P('<span style="color:var(--text-muted)">Ultimo aggiornamento: 8 novembre 2026</span>')}
+      ${H('Chi siamo')}
+      ${P('Il sito <b>Italia Cycling Stats</b> (italiacyclingstats.com) è un progetto indipendente, non affiliato alla Federazione Ciclistica Italiana. Il titolare del trattamento è Italia Cycling Stats. Per qualsiasi richiesta sui tuoi dati scrivi a <a href="mailto:info@italiacyclingstats.com" style="color:var(--accent)">info@italiacyclingstats.com</a>.')}
+
+      ${H('Quali dati trattiamo')}
+      ${P('<b>Se navighi senza iscriverti</b>')}
+      ${L([
+        'dati tecnici di collegamento (indirizzo IP, browser, orario) che i fornitori del servizio registrano per far funzionare e proteggere il sito;',
+        'contatori anonimi e aggregati (ad esempio quante persone aprono la pagina di iscrizione): non sono collegati a te e non usano cookie;',
+        'statistiche di Google Analytics, <b>solo se premi «Accetta»</b> nel banner dei cookie.'
+      ])}
+      ${P('<b>Se ti iscrivi</b>')}
+      ${L([
+        'email e password (la password è conservata in forma cifrata, non possiamo leggerla), oppure nome ed email del tuo account Google se scegli «Accedi con Google»;',
+        'nome, ruolo scelto (atleta, team, media, genitore, parente, appassionato) e il profilo del sito a cui chiedi di essere collegato;',
+        'foto e informazioni del profilo che decidi di inserire (località, anno di nascita, biografia, contatti, social, squadra o atleta preferiti): sono facoltative;',
+        '<b>attività sul sito</b>: data dell\'ultima visita, numero di visite, tempo di permanenza e ultime pagine viste. Servono a capire come viene usato il sito e a migliorarlo; li vedono solo gli amministratori.'
+      ])}
+      ${P('<b>Risultati sportivi</b>: classifiche, risultati e profili di atleti e squadre provengono da fonti pubbliche (risultati ufficiali delle gare, Federazione Ciclistica Italiana e altri siti di statistica) e sono mostrati anche per chi non è iscritto. Se sei un atleta, un genitore o un team e vuoi correggere o togliere un dato, scrivici.')}
+
+      ${H('Perché li trattiamo e su quale base')}
+      ${L([
+        '<b>Creare e gestire il tuo account</b> e collegarlo al tuo profilo: è necessario per fornirti il servizio che chiedi iscrivendoti.',
+        '<b>Sicurezza del sito</b> (ad esempio limitare i tentativi di accesso) e <b>miglioramento del servizio</b> con statistiche d\'uso degli iscritti: è il nostro legittimo interesse a mantenere il sito sicuro e utile.',
+        '<b>Pubblicare i dati sportivi</b> già pubblici: legittimo interesse a informare sul ciclismo agonistico.',
+        '<b>Google Analytics e notifiche push</b>: solo con il tuo consenso, che puoi ritirare in qualsiasi momento.'
+      ])}
+
+      ${H('A chi possono arrivare i dati')}
+      ${P('Per far funzionare il sito ci appoggiamo a questi fornitori, che trattano i dati per nostro conto:')}
+      ${L([
+        'Render (server del sito) e Supabase (database);',
+        'Cloudflare e GitHub Pages (consegna delle pagine);',
+        'Brevo (invio delle email di servizio, ad esempio il recupero password);',
+        'Google (accesso con Google, se lo scegli; Google Analytics, se lo accetti).'
+      ])}
+      ${P('Alcuni fornitori hanno sede fuori dall\'Unione Europea, in particolare negli Stati Uniti; in questi casi il trasferimento avviene con le garanzie previste dal GDPR (ad esempio le clausole contrattuali standard). Non vendiamo i tuoi dati e non li usiamo per pubblicità.')}
+
+      ${H('Per quanto tempo')}
+      ${L([
+        'I dati dell\'account restano finché non chiedi di cancellarlo.',
+        'Dell\'attività sul sito conserviamo per ogni iscritto solo le ultime pagine viste e i totali.',
+        'I registri tecnici dei fornitori hanno i tempi di conservazione indicati da ciascuno.'
+      ])}
+
+      ${H('I tuoi diritti')}
+      ${P('Puoi chiederci in ogni momento di vedere i tuoi dati, correggerli, cancellarli, limitarne l\'uso, riceverli in un formato leggibile o opporti al loro trattamento. Scrivi a <a href="mailto:info@italiacyclingstats.com" style="color:var(--accent)">info@italiacyclingstats.com</a>: rispondiamo appena possibile. Se ritieni che i tuoi dati non siano trattati correttamente puoi anche rivolgerti al Garante per la protezione dei dati personali (garanteprivacy.it).')}
+
+      ${H('Cookie')}
+      ${P('<b>Tecnici</b> (non richiedono consenso): servono a tenerti connesso dopo il login e a ricordare tema, lingua e le tue scelte sul sito. Sono memorizzati nel tuo browser.')}
+      ${P('<b>Statistici</b> (Google Analytics, solo con il tuo consenso): ci dicono quante persone visitano il sito e quali pagine vengono aperte, in forma aggregata. Se rifiuti, non vengono caricati. Puoi cambiare scelta in qualsiasi momento dal pulsante qui sotto.')}
+      <button type="button" class="auth-btn" style="width:auto;padding:10px 20px" onclick="window.icsCookiePrefs && window.icsCookiePrefs()">Cambia le preferenze cookie</button>
+
+      ${H('Minori')}
+      ${P('Per iscriversi in autonomia bisogna avere almeno 14 anni. Per i più giovani l\'iscrizione deve essere fatta da un genitore, che può collegare il profilo del figlio dal proprio account.')}
+
+      ${H('Modifiche')}
+      ${P('Se cambiamo il modo in cui trattiamo i dati aggiorneremo questa pagina e la data in alto.')}
+    </div>`);
+}
+
 function renderRegolamento() {
   setPage(`
     <div class="pg-header">
@@ -34281,7 +34353,10 @@ function _regPasso3() {
          <div class="auth-field"><label class="auth-label" for="reg-pwd">Password <span style="color:var(--red-hot)">*</span></label><div class="auth-input-wrap"><input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" autocomplete="new-password" minlength="6" required /></div></div>
          <button type="submit" class="auth-btn" id="reg-fine">Crea il mio account</button>
        </form>`;
+  const consenso = `<label style="display:flex;gap:9px;align-items:flex-start;margin:0 0 14px;font-size:.86rem;line-height:1.5;color:var(--text-secondary);cursor:pointer">
+      <input type="checkbox" id="reg-privacy" style="margin-top:3px;flex:none"> <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">informativa privacy</a> e voglio creare l'account.</span></label>`;
   _regCornice(3, 'Come vuoi entrare?', 'Ultimo passo: crea il tuo accesso. I dati che hai inserito sono già pronti.', `
+    ${consenso}
     ${corpo}
     <div style="text-align:center;margin-top:12px"><a href="#" onclick="window._regTornaDati();return false" style="font-size:.86rem;color:var(--text-muted);text-decoration:underline">Indietro</a></div>`);
   if (!gp && !inApp) _renderGoogleButton('google-signin-register', '_regGoogleCb');
@@ -34313,6 +34388,7 @@ window._regCompleta = async function() {
     if (!/^\S+@\S+\.\S+$/.test(email)) return window._regErrore('Scrivi un indirizzo email valido.');
     if (pwd.length < 6) return window._regErrore('La password deve avere almeno 6 caratteri.');
   }
+  if (!document.getElementById('reg-privacy')?.checked) return window._regErrore("Per creare l'account spunta «Ho letto l'informativa privacy».");
   const prefisso = (gp ? gp.email : email).split('@')[0];
   const nomeFinale = role === 'atleta'
     ? (b.atleta_label || `${b.lname || ''} ${b.fname || ''}`.trim() || (gp && gp.name) || prefisso)

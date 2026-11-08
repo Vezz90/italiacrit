@@ -173,7 +173,7 @@ const VAPID_PRIVATE = process.env.VAPID_PRIVATE || '';
 try {
   webpush = require('web-push');
   if (VAPID_PUBLIC && VAPID_PRIVATE) {
-    webpush.setVapidDetails('mailto:info@italiacrit.it', VAPID_PUBLIC, VAPID_PRIVATE);
+    webpush.setVapidDetails('mailto:info@italiacyclingstats.com', VAPID_PUBLIC, VAPID_PRIVATE);
     console.log('[push] Web Push attivo');
   } else {
     console.log('[push] VAPID keys mancanti — imposta VAPID_PUBLIC/VAPID_PRIVATE su Render');
@@ -666,6 +666,7 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
         .map(r => ({ loc: `${CANONICAL}/statistiche/regione/${r}`, priority: '0.5', changefreq: 'monthly' })),
       { loc: `${CANONICAL}/comparatore`,   priority: '0.4', changefreq: 'monthly' },
       { loc: `${CANONICAL}/regolamento`,   priority: '0.3', changefreq: 'monthly' },
+      { loc: `${CANONICAL}/privacy`,        priority: '0.2', changefreq: 'yearly' },
       { loc: `${CANONICAL}/record`,        priority: '0.4', changefreq: 'weekly' },
     ];
     const lastOf = list => (list || []).reduce((m, r) => (r && r.data && r.data > m ? r.data : m), '');
