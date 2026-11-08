@@ -3172,6 +3172,14 @@ app.post('/api/hit', async (req, res) => {
     res.json({ ok: true });
   } catch (e) { res.json({ ok: false }); }
 });
+app.post('/api/admin/analytics/import-ga', requireAdmin, async (req, res) => {
+  try {
+    const rows = Array.isArray(req.body && req.body.rows) ? req.body.rows.slice(0, 2000) : [];
+    const ok = rows.filter(r => ['giorno', 'pagina', 'fonte'].includes(r.kind) && typeof r.key === 'string' && r.key.length <= 200);
+    await queries.importGaStorico(ok);
+    res.json({ ok: true, importate: ok.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
   try { res.json(await queries.getAnalytics(req.query.days)); }
   catch (e) { res.status(500).json({ error: e.message }); }

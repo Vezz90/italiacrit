@@ -13625,7 +13625,7 @@ window.adminNav = async function(section) {
         const barre = (s, colore) => {
           const max = Math.max(1, ...s.map(x => x.v));
           return `<div style="display:flex;align-items:flex-end;gap:${s.length > 60 ? 1 : 3}px;height:120px;padding-top:6px">${s.map(x =>
-            `<div title="${dl(x.day)}: ${fmt(x.v)}" style="flex:1;min-width:1px;height:${Math.max(x.v ? 3 : 1, Math.round(x.v / max * 100))}%;background:${colore};opacity:${x.v ? 1 : .25};border-radius:2px 2px 0 0"></div>`).join('')}</div>
+            `<div title="${dl(x.day)}: ${fmt(x.v)}${x.ga ? ' (Google Analytics)' : ''}" style="flex:1;min-width:1px;height:${Math.max(x.v ? 3 : 1, Math.round(x.v / max * 100))}%;background:${x.ga ? '#64748b' : colore};opacity:${x.v ? 1 : .25};border-radius:2px 2px 0 0"></div>`).join('')}</div>
             <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:4px"><span>${dl(s[0].day)}</span><span>${dl(s[s.length - 1].day)}</span></div>`;
         };
         const lista = (rows, tot) => rows.length ? rows.map(r => {
@@ -13668,7 +13668,13 @@ window.adminNav = async function(section) {
                 ${tile(fmt(d.iscritti_totali), 'Iscritti in tutto')}
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px">
-                ${box('Visitatori al giorno', barre(serie(g, 'visitatori', giorni), 'var(--accent,#e8001d)'))}
+                ${box('Visitatori al giorno', (() => {
+                  const sg = d.storico || { giorni: [], pagine: [], fonti: [] };
+                  const mg = new Map(sg.giorni.map(x => [x.day, x.visitatori]));
+                  const mi = new Map(g.map(x => [x.day, x.visitatori]));
+                  const s = serie([], 'v', giorni).map(x => mi.has(x.day) ? { day: x.day, v: mi.get(x.day) } : (mg.has(x.day) ? { day: x.day, v: mg.get(x.day), ga: true } : x));
+                  return barre(s, 'var(--accent,#e8001d)') + (sg.giorni.length ? '<div style="font-size:.72rem;color:var(--text-muted);margin-top:6px"><span style="display:inline-block;width:9px;height:9px;background:#64748b;border-radius:2px;margin-right:5px"></span>fino all\'8/11: dati di Google Analytics (solo chi non bloccava gli script) · <span style="display:inline-block;width:9px;height:9px;background:var(--accent,#e8001d);border-radius:2px;margin:0 5px"></span>dal 9/11: conteggio interno, tutti i visitatori</div>' : '');
+                })())}
                 ${box('Nuovi iscritti al giorno (storico completo)', barre(serie(d.iscritti || [], 'n', giorni), '#22c55e'))}
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px">
@@ -13677,6 +13683,10 @@ window.adminNav = async function(section) {
                 ${box('Chi si iscrive (ruolo)', lista((d.ruoli || []).map(x => ({ val: x.role, n: x.n })), iscr))}
               </div>
               ${box('Pagine più viste', pagine || '<span style="color:var(--text-muted);font-size:.84rem">Ancora nessun dato.</span>')}
+              ${(d.storico && (d.storico.pagine.length || d.storico.fonti.length)) ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px">
+                ${box('Storico: pagine più viste (luglio - 8 novembre 2026, Google Analytics)', d.storico.pagine.map(p => `<div style="display:grid;grid-template-columns:1fr 54px;gap:10px;padding:4px 0;border-bottom:1px solid var(--border-subtle);font-size:.84rem"><span style="overflow-wrap:anywhere">${esc(p.page)}</span><b style="text-align:right">${fmt(p.n)}</b></div>`).join(''))}
+                ${box('Storico: da dove arrivavano (sessioni, Google Analytics)', lista(d.storico.fonti.map(x => ({ val: x.val, n: x.n })), d.storico.fonti.reduce((a, x) => a + x.n, 0)))}
+              </div>` : ''}
               <p style="margin:12px 0 0;font-size:.76rem;color:var(--text-muted);line-height:1.5">${dalTxt} Gli iscritti, invece, vengono dall'anagrafica e coprono tutta la storia del sito. «Visitatori» conta persone diverse per ogni giorno: chi torna in giorni diversi viene contato in ognuno.</p>`;
             window._statCsv = () => {
               const rows = [['giorno', 'visitatori', 'pagine_viste', 'visite', 'nuovi_iscritti']];

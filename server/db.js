@@ -484,6 +484,11 @@ async function migrate() {
     `CREATE TABLE IF NOT EXISTS site_daily (
       day DATE PRIMARY KEY, pageviews INTEGER NOT NULL DEFAULT 0, visitatori INTEGER NOT NULL DEFAULT 0, sessioni INTEGER NOT NULL DEFAULT 0
     )`,
+    // Storico importato da Google Analytics (prima dell'avvio dei conteggi interni): giorno / pagina / fonte
+    `CREATE TABLE IF NOT EXISTS ga_storico (
+      kind TEXT NOT NULL, key TEXT NOT NULL, a INTEGER NOT NULL DEFAULT 0, b INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (kind, key)
+    )`,
     `CREATE TABLE IF NOT EXISTS visit_hashes (day DATE NOT NULL, h TEXT NOT NULL, PRIMARY KEY (day, h))`,
     `CREATE TABLE IF NOT EXISTS page_daily (day DATE NOT NULL, page TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, page))`,
     `CREATE TABLE IF NOT EXISTS dim_daily (day DATE NOT NULL, dim TEXT NOT NULL, val TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, dim, val))`,
@@ -822,7 +827,19 @@ const queries = {
       one(`SELECT to_char(MIN(day), 'YYYY-MM-DD') AS da FROM site_daily`),
       one(`SELECT COUNT(*)::int AS n FROM users`),
     ]);
-    return { giorni, pagine, dims, iscritti, ruoli, da: primo && primo.da, iscritti_totali: totUtenti ? totUtenti.n : 0 };
+    const [sg, sp, sf] = await Promise.all([
+      all(`SELECT key AS day, a AS pageviews, b AS visitatori FROM ga_storico WHERE kind = 'giorno' AND key::date > (NOW() AT TIME ZONE 'Europe/Rome')::date - $1::int ORDER BY key`, [d]).catch(() => []),
+      all(`SELECT key AS page, a AS n, b AS utenti FROM ga_storico WHERE kind = 'pagina' ORDER BY a DESC LIMIT 25`).catch(() => []),
+      all(`SELECT key AS val, a AS n FROM ga_storico WHERE kind = 'fonte' ORDER BY a DESC`).catch(() => []),
+    ]);
+    return { giorni, pagine, dims, iscritti, ruoli, da: primo && primo.da, iscritti_totali: totUtenti ? totUtenti.n : 0,
+             storico: { giorni: sg, pagine: sp, fonti: sf } };
+  },
+  importGaStorico: async (rows) => {
+    for (const r of rows) {
+      await run(`INSERT INTO ga_storico (kind, key, a, b) VALUES ($1, $2, $3, $4)
+                 ON CONFLICT (kind, key) DO UPDATE SET a = EXCLUDED.a, b = EXCLUDED.b`, [r.kind, r.key, r.a | 0, r.b | 0]);
+    }
   },
   // Imbuto iscrizione
   trackFunnelEvent: (event) =>
