@@ -13049,6 +13049,7 @@ window.adminNav = async function(section) {
             <option value="">Tutti i ruoli</option>
             ${ROLES_ALL.map(r=>`<option value="${r}">${r}</option>`).join('')}
             <option value="_non_collegati">— Non collegati</option>
+            <option value="_online">— Online ora</option>
             <option value="_senza_foto">— Senza foto</option>
           </select>
         </div>
@@ -13066,6 +13067,7 @@ window.adminNav = async function(section) {
             const rf = (document.getElementById('utenti-role-filter')?.value)||'';
             let list = users;
             if (q) list = list.filter(u => (u.email||'').toLowerCase().includes(q.toLowerCase()) || (u.display_name||'').toLowerCase().includes(q.toLowerCase()));
+            if (rf === '_online') list = list.filter(u => u.presenza && (Date.now() - new Date(u.presenza.last_seen).getTime()) < 120000);
             if (rf === '_non_collegati') list = list.filter(u => u.completamento && u.completamento.collegato === false);
             else if (rf === '_senza_foto') list = list.filter(u => u.completamento && u.completamento.foto === false);
             else if (rf) list = list.filter(u => (u.role||'') === rf);
@@ -13115,6 +13117,26 @@ window.adminNav = async function(section) {
             }
           };
 
+          window.adminUserPages = async (userId) => {
+            const u = window._adminUtentiAll.find(x => x.id === userId);
+            document.getElementById('admin-user-pages')?.remove();
+            const box = document.createElement('div');
+            box.id = 'admin-user-pages';
+            box.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+            box.onclick = (e) => { if (e.target === box) box.remove(); };
+            box.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;max-width:560px;width:100%;max-height:80vh;overflow:auto;padding:18px 20px">
+              <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px"><b>Pagine viste · ${esc(u?.display_name || u?.email || '')}</b>
+              <button onclick="document.getElementById('admin-user-pages').remove()" style="border:0;background:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem">✕</button></div>
+              <div id="aup-body" style="font-size:.84rem">Caricamento…</div></div>`;
+            document.body.appendChild(box);
+            try {
+              const d = await fetch(`${API_BASE}/admin/users/${userId}/pagine`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
+              const righe = (d.pagine || []).map(p => `<div style="display:grid;grid-template-columns:96px 1fr;gap:10px;padding:5px 0;border-bottom:1px solid var(--border-subtle)">
+                <span style="color:var(--text-muted)">${new Date(p.seen_at).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
+                <span style="overflow-wrap:anywhere">${esc(p.title || p.page)}<br><span style="font-size:.72rem;color:var(--text-muted)">${esc(p.page)}</span></span></div>`).join('');
+              document.getElementById('aup-body').innerHTML = righe || '<span style="color:var(--text-muted)">Nessuna pagina registrata ancora: si riempie da ora in poi, quando la persona naviga da iscritta.</span>';
+            } catch (e) { document.getElementById('aup-body').textContent = 'Errore: ' + e.message; }
+          };
           window.adminViewUserProfile = (userId) => {
             const u = window._adminUtentiAll.find(x => x.id === userId);
             if (!u) return;
@@ -13200,6 +13222,7 @@ window.adminNav = async function(section) {
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Nome</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ruolo</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Profilo</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Attività</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Registrato</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Azioni</th>
                   </tr>
@@ -13219,6 +13242,17 @@ window.adminNav = async function(section) {
                         const c = u.completamento || {};
                         const chip = (ok, t) => ok === null || ok === undefined ? '' : `<span style="display:inline-block;margin-right:4px;padding:2px 7px;border-radius:999px;font-size:.72rem;font-weight:700;background:${ok ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)'};color:${ok ? '#22c55e' : '#ef4444'}">${ok ? '✓' : '✗'} ${t}</span>`;
                         return chip(c.collegato, 'collegato') + chip(c.foto, 'foto') + chip(c.dati, 'dati');
+                      })()}</td>
+                      <td style="padding:9px 10px;white-space:nowrap;cursor:pointer" onclick="window.adminUserPages(${u.id})" title="Clic: pagine viste">${(() => {
+                        const p = u.presenza;
+                        const ts = p ? new Date(p.last_seen).getTime() : (u.last_login ? new Date(u.last_login).getTime() : 0);
+                        const online = p && (Date.now() - ts) < 120000;
+                        const fa = (t) => { const m = Math.round((Date.now() - t) / 60000); if (m < 60) return m + ' min fa'; const h = Math.round(m / 60); if (h < 48) return h + ' h fa'; return Math.round(h / 24) + ' giorni fa'; };
+                        const dot = `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:${online ? '#22c55e' : '#94a3b8'};${online ? 'box-shadow:0 0 0 3px rgba(34,197,94,.25)' : ''}"></span>`;
+                        const stato = online ? '<b style="color:#22c55e">online</b>' : (ts ? 'visto ' + fa(ts) : '<span style="color:var(--text-muted)">mai visto</span>');
+                        const dur = p ? (p.total_seconds >= 3600 ? (p.total_seconds / 3600).toFixed(1) + ' h' : Math.round(p.total_seconds / 60) + ' min') : '';
+                        const det = p ? `<div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${p.visits} ${p.visits === 1 ? 'visita' : 'visite'} · ${dur} in tutto${p.last_page ? ' · ' + esc(String(p.last_page).slice(0, 28)) : ''}</div>` : '';
+                        return dot + stato + det;
                       })()}</td>
                       <td style="padding:9px 10px;color:var(--text-muted)">${(u.created_at||'').slice(0,10)}</td>
                       <td style="padding:9px 10px">
@@ -34784,6 +34818,26 @@ window._cpCreaMedia = async function() {
 
 // ── Imbuto dell'iscrizione: contatori anonimi ───────────────────────────────
 // Ogni passaggio si conta una volta per sessione del browser; nessun dato personale.
+// Presenza: segnale ogni 30 s (solo se la scheda è visibile e si è iscritti) + a ogni cambio pagina
+let _presUltimo = 0;
+function _presenza(forza) {
+  try {
+    if (!authToken() || document.hidden) return;
+    const now = Date.now();
+    if (!forza && now - _presUltimo < 25000) return;
+    _presUltimo = now;
+    const page = location.hash ? location.hash.replace(/^#/, '') : (location.pathname || '/');
+    fetch(API_BASE + '/presence', { method: 'POST', keepalive: true,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken() },
+      body: JSON.stringify({ page, title: document.title }) }).catch(() => {});
+  } catch (e) {}
+}
+setInterval(() => _presenza(false), 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) _presenza(false); });
+setTimeout(() => _presenza(true), 2500);
+window.addEventListener('popstate', () => setTimeout(() => _presenza(true), 500));
+window.addEventListener('hashchange', () => setTimeout(() => _presenza(true), 500));
+
 function _track(ev) {
   try {
     const k = 'ics-ev-' + ev;

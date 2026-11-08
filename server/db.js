@@ -463,6 +463,22 @@ async function migrate() {
     )`,
     `CREATE INDEX IF NOT EXISTS profile_changes_status_idx ON profile_changes (status, created_at DESC)`,
     // Imbuto dell'iscrizione: solo contatori anonimi per giorno ed evento (nessun dato personale)
+    // Presenza degli iscritti: ultimo segnale, visite, tempo totale; e le ultime pagine viste
+    `CREATE TABLE IF NOT EXISTS user_presence (
+      user_id       INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      last_seen     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      visits        INTEGER NOT NULL DEFAULT 1,
+      total_seconds INTEGER NOT NULL DEFAULT 0,
+      last_page     TEXT
+    )`,
+    `CREATE TABLE IF NOT EXISTS user_pages (
+      id       BIGSERIAL PRIMARY KEY,
+      user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      page     TEXT NOT NULL,
+      title    TEXT,
+      seen_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS user_pages_user_idx ON user_pages (user_id, seen_at DESC)`,
     `CREATE TABLE IF NOT EXISTS funnel_events (
       day    DATE    NOT NULL,
       event  TEXT    NOT NULL,
@@ -749,6 +765,26 @@ const queries = {
       status ? [status, limit] : [limit]
     ),
   getProfileChange: (id) => one(`SELECT * FROM profile_changes WHERE id = $1`, [id]),
+  // Presenza iscritti
+  touchPresence: (userId, page) =>
+    one(`
+      INSERT INTO user_presence (user_id, last_seen, visits, total_seconds, last_page)
+      VALUES ($1, NOW(), 1, 0, $2)
+      ON CONFLICT (user_id) DO UPDATE SET
+        visits = user_presence.visits + (CASE WHEN NOW() - user_presence.last_seen > INTERVAL '30 minutes' THEN 1 ELSE 0 END),
+        total_seconds = user_presence.total_seconds + (CASE WHEN NOW() - user_presence.last_seen <= INTERVAL '90 seconds'
+                          THEN EXTRACT(EPOCH FROM NOW() - user_presence.last_seen)::int ELSE 0 END),
+        last_seen = NOW(),
+        last_page = COALESCE($2, user_presence.last_page)
+      RETURNING user_id`, [userId, page]),
+  logUserPage: async (userId, page, title) => {
+    await run(`INSERT INTO user_pages (user_id, page, title) VALUES ($1, $2, $3)`, [userId, page, title]);
+    await run(`DELETE FROM user_pages WHERE user_id = $1 AND id NOT IN
+               (SELECT id FROM user_pages WHERE user_id = $1 ORDER BY seen_at DESC LIMIT 40)`, [userId]);
+  },
+  getLastUserPage: (userId) => one(`SELECT page FROM user_pages WHERE user_id = $1 ORDER BY seen_at DESC LIMIT 1`, [userId]),
+  getPresenceAll: () => all(`SELECT user_id, last_seen, visits, total_seconds, last_page FROM user_presence`),
+  getUserPages: (userId) => all(`SELECT page, title, seen_at FROM user_pages WHERE user_id = $1 ORDER BY seen_at DESC LIMIT 40`, [userId]),
   // Imbuto iscrizione
   trackFunnelEvent: (event) =>
     run(`INSERT INTO funnel_events (day, event, n) VALUES (CURRENT_DATE, $1, 1)

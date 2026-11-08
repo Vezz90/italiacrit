@@ -3176,14 +3176,44 @@ app.get('/api/admin/funnel', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Segnale di presenza degli iscritti (ogni ~30 s mentre la pagina è aperta e visibile)
+const _presenzaUltimo = new Map();
+app.post('/api/presence', requireAuth, async (req, res) => {
+  try {
+    const uid = req.user.id;
+    const now = Date.now();
+    if (now - (_presenzaUltimo.get(uid) || 0) < 4000) return res.json({ ok: true });
+    _presenzaUltimo.set(uid, now);
+    if (_presenzaUltimo.size > 5000) _presenzaUltimo.clear();
+    let page = String(req.body?.page || '').split('?')[0].slice(0, 200);
+    if (!page.startsWith('/') && !page.startsWith('#')) page = '';
+    if (/reset|token|password/i.test(page)) page = '';
+    const title = String(req.body?.title || '').slice(0, 160);
+    await queries.touchPresence(uid, page || null);
+    if (page) {
+      const last = await queries.getLastUserPage(uid);
+      if (!last || last.page !== page) await queries.logUserPage(uid, page, title);
+    }
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/admin/users/:id/pagine', requireAdmin, async (req, res) => {
+  try { res.json({ pagine: await queries.getUserPages(parseInt(req.params.id, 10)) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
   try {
-    const [users, fotoKeys, covers, dettagli] = await Promise.all([
+    const [users, fotoKeys, covers, dettagli, presenze] = await Promise.all([
       queries.getAllUsers(),
       queries.getPhotoOverrideKeys().catch(() => []),
       queries.getMediaCoverByUser().catch(() => []),
       queries.getUserDetailsFilledIds().catch(() => []),
+      queries.getPresenceAll().catch(() => []),
     ]);
+    const presBy = new Map(presenze.map(p => [p.user_id, p]));
+    for (const u of users) { const p = presBy.get(u.id); u.presenza = p ? { last_seen: p.last_seen, visits: p.visits, total_seconds: p.total_seconds, last_page: p.last_page } : null; }
     const foto = new Set(fotoKeys.map(r => `${r.entity_type}:${r.entity_id}`));
     const coverBy = new Map(covers.map(r => [r.user_id, r.cover_url]));
     const dett = new Set(dettagli.map(r => r.user_id));
