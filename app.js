@@ -29173,7 +29173,7 @@ function renderPrivacy() {
       <button type="button" class="auth-btn" style="width:auto;padding:10px 20px" onclick="window.icsCookiePrefs && window.icsCookiePrefs()">Cambia le preferenze cookie</button>
 
       ${H('Minori')}
-      ${P('Per iscriversi in autonomia bisogna avere almeno 14 anni. Per i più giovani l\'iscrizione deve essere fatta da un genitore, che può collegare il profilo del figlio dal proprio account.')}
+      ${P('Molti atleti del sito sono giovani e sono i benvenuti. Dai 14 anni ci si può iscrivere da soli. Sotto i 14 anni serve il consenso di un genitore o tutore: per questo, iscrivendosi, si dichiara di avere almeno 14 anni oppure che un genitore è d\'accordo. Il genitore può anche iscriversi lui con il ruolo «Genitore» e collegare il profilo del figlio. Collegare un profilo non pubblica nulla di nuovo: i risultati sportivi sono già pubblici. Foto e dati facoltativi dei più giovani si aggiungono solo con il consenso del genitore, e possiamo toglierli su richiesta.')}
 
       ${H('Modifiche')}
       ${P('Se cambiamo il modo in cui trattiamo i dati aggiorneremo questa pagina e la data in alto.')}
@@ -34469,7 +34469,7 @@ function _regPasso3() {
          <button type="submit" class="auth-btn" id="reg-fine">Crea il mio account</button>
        </form>`;
   const consenso = `<label style="display:flex;gap:9px;align-items:flex-start;margin:0 0 14px;font-size:.86rem;line-height:1.5;color:var(--text-secondary);cursor:pointer">
-      <input type="checkbox" id="reg-privacy" style="margin-top:3px;flex:none"> <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">informativa privacy</a> e voglio creare l'account.</span></label>`;
+      <input type="checkbox" id="reg-privacy" style="margin-top:3px;flex:none"> <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">informativa privacy</a>. Ho almeno 14 anni, oppure un mio genitore è d'accordo con questa iscrizione.</span></label>`;
   _regCornice(3, 'Come vuoi entrare?', 'Ultimo passo: crea il tuo accesso. I dati che hai inserito sono già pronti.', `
     ${consenso}
     ${corpo}
@@ -34503,7 +34503,7 @@ window._regCompleta = async function() {
     if (!/^\S+@\S+\.\S+$/.test(email)) return window._regErrore('Scrivi un indirizzo email valido.');
     if (pwd.length < 6) return window._regErrore('La password deve avere almeno 6 caratteri.');
   }
-  if (!document.getElementById('reg-privacy')?.checked) return window._regErrore("Per creare l'account spunta «Ho letto l'informativa privacy».");
+  if (!document.getElementById('reg-privacy')?.checked) return window._regErrore("Per creare l'account spunta la casella dell'informativa privacy.");
   const prefisso = (gp ? gp.email : email).split('@')[0];
   const nomeFinale = role === 'atleta'
     ? (b.atleta_label || `${b.lname || ''} ${b.fname || ''}`.trim() || (gp && gp.name) || prefisso)
