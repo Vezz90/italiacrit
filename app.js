@@ -34111,6 +34111,26 @@ function renderRegister() {
   return _regPasso2();
 }
 
+// Se qualcuno scrive il nome della squadra (o dell'atleta) per intero ma non sceglie dall'elenco,
+// lo riconosciamo noi quando il nome coincide con UNA sola voce: niente profili «in attesa» per un semplice clic mancato.
+function _regNorm(x) {
+  const STOP = new Set(['ASD', 'A', 'S', 'D', 'GS', 'G', 'SC', 'S', 'C', 'UC', 'U', 'US', 'POL', 'POLISPORTIVA', 'SSD', 'SRL', 'TEAM', 'CLUB']);
+  return String(x || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, ' ').trim()
+    .split(' ').filter(t => t && !STOP.has(t)).join(' ');
+}
+function _regTrovaSquadra(nome) {
+  const n = _regNorm(nome); if (!n) return null;
+  const teams = (typeof globalData !== 'undefined' && globalData && globalData.teams) || {};
+  const m = Object.entries(teams).filter(([, t]) => _regNorm(t.nome) === n);
+  return m.length === 1 ? { id: m[0][0], nome: m[0][1].nome } : null;
+}
+function _regTrovaAtleta(testo) {
+  const n = _regNorm(testo); if (!n) return null;
+  const ath = (typeof globalData !== 'undefined' && globalData && globalData.athletes) || {};
+  const m = Object.entries(ath).filter(([, a]) => _regNorm(`${a.cognome || ''} ${a.nome || ''}`) === n || _regNorm(`${a.nome || ''} ${a.cognome || ''}`) === n);
+  return m.length === 1 ? { id: m[0][0], label: `${m[0][1].cognome || ''} ${m[0][1].nome || ''}`.trim() } : null;
+}
+
 // Passo 1: chi sei
 function _regPasso1() {
   const cards = _REG_RUOLI.map(([k, ico, t, d]) => `
@@ -34192,15 +34212,19 @@ window._regAvantiDati = function() {
   const p = { nome: v('reg-name') };
   if (r === 'atleta') {
     Object.assign(p, { atleta_id: v('reg-atleta-id'), atleta_label: v('reg-atleta-search'), fname: v('reg-fname'), lname: v('reg-lname'), genere: v('reg-genere') || 'M', birth: v('reg-birth'), team_id: v('reg-team-id'), team_name: v('reg-team-search') });
+    if (!p.atleta_id && p.atleta_label) { const m = _regTrovaAtleta(p.atleta_label); if (m) { p.atleta_id = m.id; p.atleta_label = m.label; } }
+    if (!p.team_id && p.team_name) { const m = _regTrovaSquadra(p.team_name); if (m) { p.team_id = m.id; p.team_name = m.nome; } }
     if (!p.atleta_id && !(p.fname && p.lname)) return window._regErrore('Cerca il tuo profilo: se non ti trovi, scegli «Non mi trovo» e scrivi nome e cognome.');
     if (!p.atleta_id && !/^(19|20)\d\d$/.test(p.birth)) return window._regErrore('Scrivi il tuo anno di nascita, per esempio 2008.');
     if (p.atleta_id) { p.fname = ''; p.lname = ''; p.birth = ''; }
   } else if (r === 'team') {
     Object.assign(p, { team_id: v('reg-team-id'), team_name: v('reg-team-search') });
     if (!p.team_name) return window._regErrore('Cerca la tua squadra, o scrivi il nome e scegli «Usa il nome scritto sopra».');
+    if (!p.team_id) { const m = _regTrovaSquadra(p.team_name); if (m) { p.team_id = m.id; p.team_name = m.nome; } }
     if (!p.nome) p.nome = p.team_name;
   } else if (r === 'genitore' || r === 'parente') {
     Object.assign(p, { follow_id: v('reg-follow-id'), follow_label: v('reg-follow-search') });
+    if (!p.follow_id && p.follow_label) { const m = _regTrovaAtleta(p.follow_label); if (m) { p.follow_id = m.id; p.follow_label = m.label; } }
     if (!p.nome) return window._regErrore('Scrivi il tuo nome.');
   } else if (!p.nome) return window._regErrore('Scrivi il tuo nome.');
   _regBozzaSalva(Object.assign(p, { passo: 3 }));
@@ -34678,7 +34702,9 @@ function _cpDisegna(user, comp, det, famiglia) {
       </div>
       <button type="button" class="auth-btn" id="cp-m-crea" style="margin-bottom:16px" onclick="window._cpCreaMedia()">Crea il mio spazio</button>`;
   } else if (role === 'atleta' || role === 'team') {
-    fotoHtml = `<div style="font-size:.86rem;color:var(--text-muted);margin-bottom:14px">Il tuo profilo non è ancora collegato a ${role === 'team' ? 'una squadra' : 'una scheda atleta'}: lo trovi nella pagina del profilo, poi potrai aggiungere la foto.</div>`;
+    fotoHtml = `<div style="font-size:.86rem;color:var(--text-muted);margin-bottom:14px">${role === 'team'
+      ? 'Stiamo collegando la tua squadra alla sua pagina sul sito: appena è pronta ti chiederemo il logo.'
+      : 'Il tuo profilo non è ancora collegato a una scheda atleta: lo trovi nella pagina del profilo, poi potrai aggiungere la foto.'}</div>`;
   }
 
   // Genitore / parente: gli atleti collegati
