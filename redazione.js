@@ -170,20 +170,24 @@
 .rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
-.st-room{position:relative;container-type:inline-size;width:100%;max-width:960px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
+.st-scroll{overflow-x:auto;max-width:900px;border-radius:16px}
+.st-room{position:relative;container-type:inline-size;width:100%;min-width:640px;aspect-ratio:400/340;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
 .st-cv{position:absolute;inset:0;width:100%;height:100%}
 .st-ov{position:absolute;inset:0;pointer-events:none}
-.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.5cqw;transform:translate(-50%,-100%);z-index:2}
+.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.4cqw;transform:translate(-50%,-100%);z-index:2}
 .st-ag.parla{z-index:6}
-.st-nome{display:flex;align-items:center;font:600 max(7px,1.25cqw)/1.2 system-ui,-apple-system,sans-serif;padding:.25cqw .9cqw .25cqw .6cqw;border-radius:99px;background:rgba(255,255,255,.92);color:#0f172a;white-space:nowrap;box-shadow:0 1px 4px rgba(15,23,42,.18)}
-.st-nome::before{content:"";width:.8cqw;height:.8cqw;border-radius:50%;background:var(--c,#64748b);margin-right:.6cqw;flex:none}
-.st-bub{position:relative;font:500 max(8px,1.5cqw)/1.3 system-ui,-apple-system,sans-serif;max-width:24cqw;padding:.8cqw 1.2cqw;margin-bottom:.9cqw;border-radius:1.4cqw;background:#fff;color:#0f172a;text-align:left;overflow-wrap:anywhere;box-shadow:0 6px 18px rgba(15,23,42,.2),0 0 0 1px rgba(15,23,42,.06)}
+.st-nome{display:flex;align-items:center;font:600 max(7px,1.12cqw)/1.2 system-ui,-apple-system,sans-serif;padding:.2cqw .8cqw .2cqw .55cqw;border-radius:99px;background:rgba(255,255,255,.93);color:#0f172a;white-space:nowrap;box-shadow:0 1px 4px rgba(15,23,42,.18)}
+.st-nome::before{content:"";width:.75cqw;height:.75cqw;border-radius:50%;background:var(--c,#64748b);margin-right:.5cqw;flex:none}
+.st-bub{position:relative;font:500 max(8px,1.35cqw)/1.3 system-ui,-apple-system,sans-serif;max-width:21cqw;padding:.7cqw 1.1cqw;margin-bottom:.9cqw;border-radius:1.3cqw;background:#fff;color:#0f172a;text-align:left;overflow-wrap:anywhere;box-shadow:0 6px 18px rgba(15,23,42,.2),0 0 0 1px rgba(15,23,42,.06)}
 .st-bub[hidden]{display:none}
-.st-bub::after{content:"";position:absolute;left:50%;bottom:-.55cqw;width:1.1cqw;height:1.1cqw;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:.2cqw;box-shadow:2px 2px 4px rgba(15,23,42,.08)}
+.st-bub::after{content:"";position:absolute;left:50%;bottom:-.5cqw;width:1cqw;height:1cqw;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:.2cqw;box-shadow:2px 2px 4px rgba(15,23,42,.08)}
 .st-bub.lavoro{background:#f0fdf4;color:#14532d;box-shadow:0 6px 18px rgba(22,163,74,.2),0 0 0 1px rgba(22,163,74,.35)}
 .st-bub.errore{background:#fef2f2;color:#7f1d1d;box-shadow:0 6px 18px rgba(220,38,38,.2),0 0 0 1px rgba(220,38,38,.4)}
 .st-bub.chiac{background:rgba(255,255,255,.82);color:#475569;font-style:italic;box-shadow:0 4px 12px rgba(15,23,42,.12),0 0 0 1px rgba(100,116,139,.35)}
-.st-lavagna{position:absolute;left:43.1%;top:5.2%;width:20.2%;height:9%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.2cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.st-lavagna{position:absolute;left:39.75%;top:2.35%;width:18.25%;height:3.6%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.05cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.st-zona{position:absolute;bottom:1.3%;transform:translateX(-50%);font:700 max(7px,.95cqw)/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:rgba(30,41,59,.55);white-space:nowrap;pointer-events:none}
+.rd-tag.rd-ag{background:rgba(99,102,241,.2)}
+.st-elenco summary{cursor:pointer;margin:6px 0 2px;font-weight:600}
 .st-avviso{margin:0 0 8px;padding:8px 12px;border-radius:10px;background:#fef3c7;color:#78350f;font-size:.85rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:960px}
 .st-avviso[hidden]{display:none}
 .st-sotto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px;max-width:960px}
@@ -221,59 +225,98 @@
     } catch (_) { return ''; }
   }
 
+  /* ---------- Gli addetti: la direzione (6) e un reparto per categoria e sesso (20: atleti + team) ---------- */
+  const CATEGORIE = [['ELI', 'Elite/U23'], ['JUN', 'Juniores'], ['AL', 'Allievi'], ['ES2', 'Esord. 2°'], ['ES1', 'Esord. 1°']];
+  const STAFF = [
+    ['Caporedattore', 0, 4, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }, 'Coordina e decide'],
+    ['Cronista', 0, 5, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }, 'Gare e punto della settimana'],
+    ['Ricercatore', 1, 4, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web'],
+    ['Analista', 1, 5, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
+    ['Inviato speciale', 2, 4, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
+    ['Cassiere', 2, 5, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
+  ];
+  const PELLI = ['#f1c9a5', '#e8b98e', '#8d5a3b', '#f5d0b0', '#c68642', '#d8a06f', '#e0ac82', '#a9714b'];
+  const CAPELLI = ['#4b5563', '#78350f', '#111827', '#92400e', '#374151', '#1f2937', '#422006', '#7c2d12'];
+  const CAMICIA_AT = { ELI: '#2563eb', JUN: '#16a34a', AL: '#d97706', ES2: '#db2777', ES1: '#7c3aed' };
+  const CAMICIA_TM = { ELI: '#1e3a8a', JUN: '#14532d', AL: '#92400e', ES2: '#9d174d', ES1: '#5b21b6' };
+  const REPARTI = (() => {
+    const out = [];
+    CATEGORIE.forEach(([c, nome], riga) => [['M', 0], ['F', 2]].forEach(([sx, c0]) => ['atleti', 'team'].forEach((ruolo, i) => {
+      const n = out.length;
+      out.push({ nome: `${ruolo === 'atleti' ? 'Atleti' : 'Team'} ${nome} ${sx}`, ruolo, cod: `${c}_${sx}`, riga, col: c0 + i,
+        look: { camicia: (ruolo === 'atleti' ? CAMICIA_AT : CAMICIA_TM)[c], capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle: PELLI[(n * 5 + 2) % PELLI.length],
+          stile: sx === 'F' ? ['lungo', 'riccio'][n % 2] : ['corto', 'riccio', 'corto'][n % 3], extra: ruolo === 'team' ? 'cravatta' : (n % 3 === 0 ? 'occhiali' : '') } });
+    })));
+    return out;
+  })();
+  const nomeRep = (ruolo, cod) => { const r = REPARTI.find(x => x.ruolo === ruolo && x.cod === cod); return r ? r.nome : null; };
+  const agenteSpunto = s => nomeRep(/^squadra/.test(s.tipo) ? 'team' : 'atleti', s.codice_categoria);
+  // chi lavora a una bozza: i reparti per atleti/squadre/stagione, il Cronista per gare e settimana, l'Inviato per le richieste libere
+  function agenteDiBozza(b) {
+    const p = b.parametri || {}, cod = c => (c && /_[MF]$/.test(c) ? c : null);
+    if (b.tipo === 'stagione') return nomeRep('atleti', cod(p.id)) || 'Inviato speciale';
+    if (b.tipo === 'squadre') return nomeRep('team', cod(p.id)) || 'Inviato speciale';
+    if (b.tipo === 'atleta') return nomeRep('atleti', cod(p.cat)) || 'Inviato speciale';
+    if (b.tipo === 'libero') {
+      const s = /^spunto\|/.test(p.chiave || '') && st.spunti && st.spunti.spunti.find(x => 'spunto|' + x.id === p.chiave);
+      return (s && agenteSpunto(s)) || 'Inviato speciale';
+    }
+    return 'Cronista';
+  }
+
   function agenti() {
     const k = st.costi, cfg = k && k.config, ora = Date.now();
     const attive = st.bozze.filter(b => b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000);
     const errori = st.bozze.filter(b => b.stato === 'errore' && ora - Date.parse(b.aggiornato || b.creato) < 30 * 60000);
     const usd = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
-    const scrive = (nome, ruolo, colore, capelli, tipi, riposo) => {
-      const a = attive.filter(b => tipi.includes(b.tipo)), e = errori.filter(b => tipi.includes(b.tipo));
-      if (a.length) return { nome, ruolo, colore, capelli, stato: 'lavora', testo: `Scrive: ${a[0].soggetto || 'un articolo'}${a.length > 1 ? ` (+${a.length - 1} in coda)` : ''}` };
-      if (e.length) return { nome, ruolo, colore, capelli, stato: 'errore', testo: `Non è riuscito: ${e[0].soggetto || 'ultima bozza'}` };
-      return { nome, ruolo, colore, capelli, stato: 'riposa', testo: riposo };
+    const sp = st.spunti;
+    const di = (lista, nome) => lista.filter(b => agenteDiBozza(b) === nome);
+    const lavoro = (nome, riposo) => {
+      const a = di(attive, nome), e = di(errori, nome);
+      if (a.length) return { stato: 'lavora', testo: `Scrive: ${a[0].soggetto || 'un articolo'}${a.length > 1 ? ` (+${a.length - 1} in coda)` : ''}` };
+      if (e.length) return { stato: 'errore', testo: `Non è riuscito: ${e[0].soggetto || 'ultima bozza'}` };
+      return { stato: 'riposa', testo: riposo };
     };
     const cap = (() => {
       const auto = attive.some(b => b.parametri && b.parametri.auto);
-      const base = { nome: 'Caporedattore', ruolo: 'Giri automatici', colore: '#7c3aed', capelli: '#4b5563' };
-      if (auto) return { ...base, stato: 'lavora', testo: 'Coordina il giro automatico' };
-      if (!k) return { ...base, stato: 'riposa', testo: 'Impostazioni non disponibili' };
-      if (!cfg.ai_attiva) return { ...base, stato: 'riposa', testo: 'AI spenta: nessuno scrive' };
-      if (!cfg.auto_attiva) return { ...base, stato: 'riposa', testo: 'Scrittura automatica spenta. Si lavora a mano.' };
-      return { ...base, stato: 'riposa', testo: `Prossimo giro ${prossimoGiro(cfg.auto_orari)}` };
+      if (auto) return { stato: 'lavora', testo: 'Coordina il giro automatico' };
+      if (!k) return { stato: 'riposa', testo: 'Impostazioni non disponibili' };
+      if (!cfg.ai_attiva) return { stato: 'riposa', testo: 'AI spenta: nessuno scrive' };
+      if (!cfg.auto_attiva) return { stato: 'riposa', testo: 'Scrittura automatica spenta. Si lavora a mano.' };
+      return { stato: 'riposa', testo: `Prossimo giro ${prossimoGiro(cfg.auto_orari)}` };
     })();
     const ricerca = (() => {
-      const base = { nome: 'Ricercatore', ruolo: 'Notizie dal web', colore: '#0ea5e9', capelli: '#1f2937' };
       const a = attive.filter(b => b.parametri && b.parametri.web);
-      if (a.length) return { ...base, stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
-      if (cfg && Number(cfg.web_auto_da_imp) === 99) return { ...base, stato: 'riposa', testo: 'Ricerca automatica: mai' };
-      const at = st.spunti && st.spunti.attesa || [];
-      return { ...base, stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : 'Nessuna ricerca in corso' };
+      if (a.length) return { stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
+      if (cfg && Number(cfg.web_auto_da_imp) === 99) return { stato: 'riposa', testo: 'Ricerca automatica: mai' };
+      const at = (sp && sp.attesa) || [];
+      return { stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : 'Nessuna ricerca in corso' };
     })();
     const cassa = (() => {
-      const base = { nome: 'Cassiere', ruolo: 'Costi e limite', colore: '#d97706', capelli: '#7c2d12' };
-      if (!k) return { ...base, stato: 'riposa', testo: 'Costi non disponibili' };
+      if (!k) return { stato: 'riposa', testo: 'Costi non disponibili' };
       const lim = Number(cfg.limite_mensile_usd) || 0, pct = lim > 0 ? Math.round(k.spesa_mese / lim * 100) : 100;
       const u = k.ultime && k.ultime[0], ultima = u ? ` · ultima: ${u.uso || 'chiamata'}, ${fmtData(u.ts).split(', ').pop() || ''}` : '';
-      if (pct >= 100) return { ...base, stato: 'errore', testo: `Limite raggiunto: ${usd(k.spesa_mese)} su ${usd(lim)}. Chiamate bloccate.` };
-      return { ...base, stato: attive.length ? 'lavora' : 'riposa', testo: `${usd(k.spesa_mese)} su ${usd(lim)} (${pct}%)${ultima}` };
+      if (pct >= 100) return { stato: 'errore', testo: `Limite raggiunto: ${usd(k.spesa_mese)} su ${usd(lim)}. Chiamate bloccate.` };
+      return { stato: attive.length ? 'lavora' : 'riposa', testo: `${usd(k.spesa_mese)} su ${usd(lim)} (${pct}%)${ultima}` };
     })();
-    return [
-      cap,
-      scrive('Cronista', 'Gare e punto della settimana', '#16a34a', '#78350f', ['gara', 'settimana'], 'Aspetta una gara da raccontare'),
-      scrive('Cronista di stagione', 'Fine stagione e squadre', '#2563eb', '#111827', ['stagione', 'squadre'], 'Aspetta la fine stagione'),
-      scrive('Profilista', 'Schede e storie degli atleti', '#db2777', '#92400e', ['atleta'], 'Nessun atleta da raccontare'),
-      scrive('Inviato speciale', 'Richieste libere', '#0d9488', '#374151', ['libero'], 'Aspetta una richiesta libera'),
-      ricerca, cassa,
-      (() => {
-        const base = { nome: 'Analista', ruolo: 'Spunti dai dati', colore: '#65a30d', capelli: '#422006' };
-        const occ = st.spOcc.size ? [...st.spOcc.values()][0] : null, sp = st.spunti;
-        if (occ) return { ...base, stato: 'lavora', testo: occ };
-        if (st.spErr) return { ...base, stato: 'errore', testo: st.spErr };
-        if (!sp) return { ...base, stato: 'riposa', testo: 'Spunti non disponibili' };
-        const n = sp.spunti.filter(s => s.stato === 'nuovo').length;
-        return { ...base, stato: 'riposa', testo: n ? `${n} spunt${n === 1 ? 'o pronto' : 'i pronti'} da leggere` : 'Nessuno spunto forte in questo periodo' };
-      })()
-    ];
+    const analista = (() => {
+      const occ = st.spOcc.size ? [...st.spOcc.values()][0] : null;
+      if (occ) return { stato: 'lavora', testo: occ };
+      if (st.spErr) return { stato: 'errore', testo: st.spErr };
+      if (!sp) return { stato: 'riposa', testo: 'Spunti non disponibili' };
+      const n = sp.spunti.filter(s => s.stato === 'nuovo').length;
+      return { stato: 'riposa', testo: n ? `${n} spunt${n === 1 ? 'o pronto' : 'i pronti'} da leggere` : 'Nessuno spunto forte in questo periodo' };
+    })();
+    const stato = {
+      'Caporedattore': cap, 'Ricercatore': ricerca, 'Cassiere': cassa, 'Analista': analista,
+      'Cronista': lavoro('Cronista', 'Aspetta una gara da raccontare'), 'Inviato speciale': lavoro('Inviato speciale', 'Aspetta una richiesta libera')
+    };
+    const direzione = STAFF.map(([nome, , , , ruolo]) => ({ nome, ruolo, reparto: false, ...stato[nome] }));
+    const reparti = REPARTI.map(r => {
+      const mio = sp && sp.spunti.filter(s => s.stato !== 'scartato' && agenteSpunto(s) === r.nome).sort((a, b) => b.score - a.score)[0];
+      return { nome: r.nome, ruolo: r.ruolo === 'atleti' ? 'Atleti' : 'Team', reparto: true, ...lavoro(r.nome, mio ? `Radar: ${mio.titolo}` : 'Nessuno spunto in questa categoria') };
+    });
+    return [...direzione, ...reparti];
   }
 
   /* ---------- Spunti dell'Analista: calcolati dai dati con regole fisse, l'AI li spiega soltanto ---------- */
@@ -283,7 +326,7 @@
     const sp = st.spunti, occ = st.spOcc.size > 0;
     if (!sp) return `<div class="hx-panel rd-sp"><h3>Spunti dell'Analista</h3><small class="rd-muted">${esc(st.spErr || 'Caricamento…')}</small></div>`;
     const card = s => `<div class="rd-spc ${s.stato}">
-      <div class="rd-spc-top"><span class="rd-tag">${esc(SP_TIPI[s.tipo] || s.tipo)}</span><small class="rd-muted">${esc(s.categoria)} · ${esc(fmtGiorno(s.periodo.dal))} – ${esc(fmtGiorno(s.periodo.al))}</small>${s.stato === 'usato' ? '<span class="rd-tag rd-usato">Bozza creata</span>' : ''}</div>
+      <div class="rd-spc-top"><span class="rd-tag">${esc(SP_TIPI[s.tipo] || s.tipo)}</span><span class="rd-tag rd-ag">${esc(agenteSpunto(s) || "")}</span><small class="rd-muted">${esc(s.categoria)} · ${esc(fmtGiorno(s.periodo.dal))} – ${esc(fmtGiorno(s.periodo.al))}</small>${s.stato === 'usato' ? '<span class="rd-tag rd-usato">Bozza creata</span>' : ''}</div>
       <b>${esc(s.titolo)}</b>
       <small class="rd-muted">${esc(s.motivo)}</small>
       ${(s.gare || []).length ? `<div class="rd-spg">${s.gare.slice(0, 4).map(g => `<span>${esc(g.nome)} <i>${esc(fmtGiorno(g.data))}${typeof g.pos === 'number' ? ' · ' + g.pos + '°' : ' · ' + esc(g.pos)}</i></span>`).join('')}${s.gare.length > 4 ? `<span>+${s.gare.length - 4}</span>` : ''}</div>` : ''}
@@ -299,7 +342,7 @@
       <small>${sp.fine ? 'dati fino al ' + esc(fmtGiorno(sp.fine)) + ' · ' : ''}scelti con regole fisse sui risultati del sito, senza AI</small>
       <button type="button" class="admin-edit-btn" data-sp="calcola" ${occ ? 'disabled' : ''}>Aggiorna</button></div>
       ${(sp.attesa || []).length ? `<small class="rd-muted"><b>In attesa di risultati:</b> ${sp.attesa.slice(0, 6).map(g => esc(g.nome) + ' (' + esc(fmtGiorno(g.data)) + ')').join(' · ')}${sp.attesa.length > 6 ? ' · +' + (sp.attesa.length - 6) : ''}</small>` : ''}
-      ${buoni.length ? `<div class="rd-spl">${buoni.map(card).join('')}</div>` : '<small class="rd-muted">Nessuno spunto forte negli ultimi 28 giorni.</small>'}
+      ${buoni.length ? `<div class="rd-spl">${buoni.slice(0, 8).map(card).join('')}</div>${buoni.length > 8 ? `<details class="rd-box"><summary>Altri ${buoni.length - 8} spunti degli altri reparti</summary><div class="rd-spl">${buoni.slice(8).map(card).join('')}</div></details>` : ''}` : '<small class="rd-muted">Nessuno spunto forte negli ultimi 28 giorni.</small>'}
       ${scart.length ? `<details class="rd-box"><summary>${scart.length} scartat${scart.length === 1 ? 'o' : 'i'}</summary><div class="rd-spl">${scart.map(card).join('')}</div></details>` : ''}
       <small class="rd-muted">Calcolati sui risultati presenti nel sito: se una gara non è stata importata, il conteggio può essere più basso del reale.</small></div>`;
   }
@@ -324,24 +367,17 @@
     };
   }
 
-  /* ---------- La stanza: gli agenti in un ufficio stile gioco. Camminano, lavorano e si parlano.
-     I fumetti con il bordo pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
-  const SW = 320, SH = 180, SCALA = 4;
-  const ROW_Y = [62, 150], DESK_X = [50, 130, 210, 290], LANE = [92, 114];
-  const ORDINE = [
-    ['Caporedattore', 0, 0, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }],
-    ['Cronista', 0, 1, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }],
-    ['Cronista di stagione', 0, 2, { camicia: '#2563eb', capelli: '#111827', pelle: '#8d5a3b', stile: 'riccio' }],
-    ['Profilista', 0, 3, { camicia: '#db2777', capelli: '#92400e', pelle: '#f5d0b0', stile: 'lungo' }],
-    ['Inviato speciale', 1, 0, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }],
-    ['Ricercatore', 1, 1, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }],
-    ['Analista', 1, 2, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }],
-    ['Cassiere', 1, 3, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }]
-  ];
+  /* ---------- La stanza: gli addetti in un ufficio stile moderno. Camminano, lavorano e si parlano.
+     I fumetti con il riquadro pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
+  const SW = 400, SH = 340, SCALA = 3;
+  const COL_X = [38, 102, 166, 230, 294, 358], ROW_Y = [62, 118, 174, 230, 286], LANE = ROW_Y.map(y => y + 30);
+  const sullaCorsia = y => LANE.some(l => Math.abs(l - y) < 0.7);
+  const laneVicina = y => LANE.reduce((m, v) => (Math.abs(v - y) < Math.abs(m - y) ? v : m), LANE[0]);
+  const ORDINE = [...STAFF.map(([nome, riga, col, look]) => ({ nome, riga, col, look })), ...REPARTI];
   const SPOTS = [
-    { id: 'caffe', x: 290, y: 100, frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
-    { id: 'acqua', x: 28, y: 100, frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
-    { id: 'lavagna', x: 170, y: 48, frasi: ['Aggiorno i totali sulla lavagna.', 'Segno le gare da seguire.'] }
+    { id: 'caffe', x: COL_X[4] - 24, y: LANE[3], frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
+    { id: 'acqua', x: COL_X[5] - 24, y: LANE[4], frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
+    { id: 'lavagna', x: COL_X[2] + 24, y: 52, frasi: ['Controllo i totali sullo schermo.', 'Segno le gare da seguire.'] }
   ];
   const CHIACCHIERE = [
     ['Hai visto che volata, domenica?', 'Eh, in rettilineo non lo riprendevi più.'],
@@ -351,8 +387,7 @@
     ['Pronostico per il campionato italiano?', 'Mai fare pronostici, lo dice il Capo.'],
     ['Io salgo in bici solo in discesa.', 'Si vede dai tuoi articoli sulle salite.']
   ];
-  const DI = { gara: 'Cronista', settimana: 'Cronista', stagione: 'Cronista di stagione', squadre: 'Cronista di stagione', atleta: 'Profilista', libero: 'Inviato speciale' };
-  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null };
+  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null, spIds: null, spAtt: undefined, repAperti: false };
   const FMT_ORA = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: false });
   const rnd = n => Math.floor(Math.random() * n);
   const eur = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
@@ -363,34 +398,33 @@
   function inizStanza() {
     if (stanza.ag) return;
     const now = performance.now();
-    stanza.ag = ORDINE.map(([nome, riga, col, look]) => {
-      const cx = DESK_X[col], D = ROW_Y[riga], sx = cx - 5, sy = D + 3;
-      return { nome, riga, col, look, cx, D, sx, sy, x: sx, y: sy, dir: 1, stato: 'seduto', path: [], parla: null, parlaChiac: false, fase: 'riposa', lavoro: '', scena: null, giro: null, prossimo: now + 4000 + rnd(9000), el: null, bub: null, _k: '' };
+    stanza.ag = ORDINE.map(({ nome, riga, col, look }) => {
+      const cx = COL_X[col], D = ROW_Y[riga], sx = cx - 5, sy = D + 3;
+      return { nome, riga, col, look, cx, D, sx, sy, x: sx, y: sy, dir: 1, stato: 'seduto', path: [], parla: null, parlaChiac: false, fase: 'riposa', lavoro: '', scena: null, giro: null, prossimo: now + 4000 + rnd(14000), el: null, bub: null, _k: '' };
     });
   }
 
-  // ---- movimento: si cammina solo lungo le corsie e nei corridoi tra le scrivanie
+  // ---- movimento: si cammina solo nelle corsie sotto ogni fila e nei corridoi verticali tra le scrivanie
   function vai(a, tx, ty) {
-    const lane = LANE[a.riga], p = [];
+    const p = [];
     let x = a.x, y = a.y;
-    if (Math.abs(a.x - a.sx) < 1 && Math.abs(a.y - a.sy) < 1) { p.push([a.cx - 20, a.sy], [a.cx - 20, lane]); x = a.cx - 20; y = lane; }
-    else if (y < 74 || y > 128) { p.push([x, lane]); y = lane; }
+    if (Math.abs(a.x - a.sx) < 1 && Math.abs(a.y - a.sy) < 1) { p.push([a.cx - 20, a.sy], [a.cx - 20, LANE[a.riga]]); x = a.cx - 20; y = LANE[a.riga]; }
+    else if (!sullaCorsia(y)) { const l = laneVicina(y); p.push([x, l]); y = l; }
     if (Math.abs(x - tx) > 0.5) p.push([tx, y]);
     if (Math.abs(y - ty) > 0.5) p.push([tx, ty]);
     a.path = p;
     if (stanza.rm) { a.path = []; a.x = tx; a.y = ty; }
   }
   function tornaAlPosto(a) {
-    const lane = LANE[a.riga], fuori = a.y < 74 || a.y > 128, p = [];
-    if (fuori) p.push([a.x, lane]);
-    const ya = fuori ? lane : a.y;
-    p.push([a.cx - 20, ya], [a.cx - 20, a.sy], [a.sx, a.sy]);
+    const p = []; let y = a.y;
+    if (!sullaCorsia(y)) { y = laneVicina(y); p.push([a.x, y]); }
+    p.push([a.cx - 20, y], [a.cx - 20, a.sy], [a.sx, a.sy]);
     a.path = p;
     if (stanza.rm) { a.path = []; a.x = a.sx; a.y = a.sy; }
   }
   function muovi(a, dt) {
     if (a.path.length) {
-      const [tx, ty] = a.path[0], dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy), passo = 32 * dt;
+      const [tx, ty] = a.path[0], dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy), passo = 36 * dt;
       if (d <= passo) { a.x = tx; a.y = ty; a.path.shift(); } else { a.x += dx / d * passo; a.y += dy / d * passo; }
       if (Math.abs(dx) > 0.5) a.dir = dx > 0 ? 1 : -1;
     }
@@ -402,12 +436,12 @@
   function scena(da, a, t1, t2, opz) {
     inizStanza();
     const chiac = !!(opz && opz.chiac);
-    if (stanza.coda.some(x => x.da === da && x.a === a && x.t1 === t1)) return;
+    if (!da || !a || stanza.coda.some(x => x.da === da && x.a === a && x.t1 === t1)) return;
     stanza.coda.push({ da, a, t1, t2: t2 || '', chiac, fase: 'attesa', fino: 0, scad: 0 });
-    if (stanza.coda.length > 14) { const i = stanza.coda.findIndex(x => x.chiac && x.fase === 'attesa'); stanza.coda.splice(i >= 0 ? i : 0, 1); }
+    if (stanza.coda.length > 16) { const i = stanza.coda.findIndex(x => x.chiac && x.fase === 'attesa'); stanza.coda.splice(i >= 0 ? i : 0, 1); }
     if (!chiac) { stanza.log.unshift({ ts: Date.now(), da, a, t1, t2: t2 || '' }); stanza.log.length = Math.min(stanza.log.length, 40); }
   }
-  function rilascia(sc, A, B) { if (A) A.parla = null; if (B) B.parla = null; if (A) A.scena = null; if (B) B.scena = null; sc.fase = 'fine'; }
+  function rilascia(sc, A, B) { if (A) { A.parla = null; A.scena = null; } if (B) { B.parla = null; B.scena = null; } sc.fase = 'fine'; }
   function giraScene(now) {
     const urgenti = stanza.coda.some(x => !x.chiac && x.fase === 'attesa');
     for (const sc of stanza.coda) {
@@ -415,8 +449,8 @@
       const A = trova(sc.da), B = trova(sc.a);
       if (!A || !B) { sc.fase = 'fine'; continue; }
       if (A.scena || B.scena || A.giro || B.giro) continue;
-      sc.fase = 'vai'; sc.scad = now + 70000; A.scena = B.scena = sc;
-      vai(A, B.col === 3 ? B.cx - 24 : B.cx + 24, B.riga ? 124 : 84);
+      sc.fase = 'vai'; sc.scad = now + 90000; A.scena = B.scena = sc;
+      vai(A, B.col === 5 ? B.cx - 24 : B.cx + 24, LANE[B.riga]);
     }
     for (const sc of stanza.coda) {
       if (sc.fase === 'attesa' || sc.fase === 'fine') continue;
@@ -432,22 +466,23 @@
     }
     stanza.coda = stanza.coda.filter(x => x.fase !== 'fine');
   }
-  // ---- pause e chiacchiere: solo per chi non sta lavorando
+  // ---- pause e chiacchiere: solo per chi non sta lavorando, e mai troppi insieme in giro
   function giraGiretti(now) {
     for (const a of stanza.ag) {
       if (a.giro) {
         const g = a.giro;
-        if (g.fase === 'vai' && !a.path.length) { g.fase = 'sosta'; g.fino = now + 4200 + rnd(2500); a.parla = g.sp.frasi[rnd(g.sp.frasi.length)]; a.parlaChiac = true; a.dir = g.sp.id === 'acqua' ? -1 : 1; }
+        if (g.fase === 'vai' && !a.path.length) { g.fase = 'sosta'; g.fino = now + 4200 + rnd(2500); a.parla = g.sp.frasi[rnd(g.sp.frasi.length)]; a.parlaChiac = true; a.dir = 1; }
         else if (g.fase === 'sosta' && now >= g.fino) { a.parla = null; g.fase = 'torna'; tornaAlPosto(a); }
         else if (g.fase === 'torna' && !a.path.length && a.stato === 'seduto') { a.giro = null; a.prossimo = now + 9000 + rnd(14000); }
         continue;
       }
       if (a.scena || a.stato !== 'seduto' || now < a.prossimo) continue;
       if (a.fase === 'lavora') { a.prossimo = now + 20000; continue; }
-      if (stanza.coda.some(x => !x.chiac)) { a.prossimo = now + 5000; continue; }
+      if (stanza.coda.some(x => !x.chiac) || stanza.ag.filter(x => x.giro || x.scena).length >= 6) { a.prossimo = now + 4000 + rnd(3000); continue; }
       if (Math.random() < 0.5) {
         const altri = stanza.ag.filter(b => b !== a && !b.scena && !b.giro && b.stato === 'seduto' && b.fase !== 'lavora');
-        if (altri.length) { const b = altri[rnd(altri.length)], c = CHIACCHIERE[rnd(CHIACCHIERE.length)]; scena(a.nome, b.nome, c[0], c[1], { chiac: true }); a.prossimo = now + 14000 + rnd(12000); continue; }
+        const vicini = altri.filter(b => b.riga === a.riga), pool = vicini.length && Math.random() < 0.7 ? vicini : altri;
+        if (pool.length) { const b = pool[rnd(pool.length)], c = CHIACCHIERE[rnd(CHIACCHIERE.length)]; scena(a.nome, b.nome, c[0], c[1], { chiac: true }); a.prossimo = now + 14000 + rnd(12000); continue; }
       }
       const sp = SPOTS[rnd(SPOTS.length)]; a.giro = { fase: 'vai', sp, fino: 0 }; vai(a, sp.x, sp.y);
     }
@@ -456,11 +491,11 @@
   // ---- collegamento con lo stato vero della redazione: ogni novità diventa una scena
   function aggiornaStanza() {
     inizStanza();
-    for (const d of agenti()) { const a = trova(d.nome); if (a) { a.fase = d.stato === 'vuoto' ? 'riposa' : d.stato; a.lavoro = d.testo; } }
+    for (const d of agenti()) { const a = trova(d.nome); if (a) { a.fase = d.stato; a.lavoro = d.testo; } }
     const ora = Date.now(), k = st.costi;
     if (stanza.prevB) {
       for (const b of st.bozze) {
-        const prima = stanza.prevB.get(b.id), agente = DI[b.tipo] || 'Inviato speciale';
+        const prima = stanza.prevB.get(b.id), agente = agenteDiBozza(b);
         if (prima === undefined && b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000) {
           scena('Caporedattore', agente, `${b.parametri && b.parametri.auto ? 'Giro automatico' : 'Nuovo incarico'}: ${b.soggetto}`, 'Ricevuto, ci penso io.');
           if (b.parametri && b.parametri.web) scena(agente, 'Ricercatore', `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
@@ -479,17 +514,19 @@
     }
     const sp = st.spunti;
     if (sp) {
-      const gen = sp.generato || '', ids = sp.spunti.map(x => x.id).join(), at = (sp.attesa || []).map(x => x.nome + x.data).join();
-      if (stanza.spGen !== undefined) {
-        if (gen !== stanza.spGen && ids !== stanza.spIds) { const nuovi = sp.spunti.filter(x => x.stato === 'nuovo'); if (nuovi.length) scena('Analista', 'Caporedattore', `Ho riguardato i dati: ${nuovi.length} spunt${nuovi.length === 1 ? 'o' : 'i'}. Il primo: ${nuovi[0].titolo}`, 'Bene, vediamo se vale un articolo.'); }
+      const ids = new Set(sp.spunti.map(x => x.id)), at = (sp.attesa || []).map(x => x.nome + x.data).join();
+      if (stanza.spIds) {                                                    // ogni addetto riferisce al Caporedattore il suo spunto nuovo
+        const nuovi = sp.spunti.filter(x => x.stato === 'nuovo' && !stanza.spIds.has(x.id)).sort((x, y) => y.score - x.score);
+        nuovi.slice(0, 3).forEach(x => scena(agenteSpunto(x), 'Caporedattore', `Ho trovato qualcosa: ${x.titolo}`, 'Ok, lo segno tra gli spunti.'));
+        if (nuovi.length) scena('Analista', 'Caporedattore', `Giro dei dati finito: ${nuovi.length} spunt${nuovi.length === 1 ? 'o nuovo' : 'i nuovi'}.`, 'Bene, vediamo cosa vale un articolo.');
         if (at !== stanza.spAtt && (sp.attesa || []).length) { const q = sp.attesa; scena('Ricercatore', 'Caporedattore', `Aspetto ancora i risultati di ${q[0].nome}${q.length > 1 ? ` e di altre ${q.length - 1} gare` : ''}`, 'Appena arrivano, li scrive il Cronista.'); }
       }
-      stanza.spGen = gen; stanza.spIds = ids; stanza.spAtt = at;
+      stanza.spIds = ids; stanza.spAtt = at;
     }
     aggiornaPannelli();
   }
 
-  // ---- disegno: stile moderno, forme morbide e ombre leggere (coordinate logiche 320x180, canvas ad alta risoluzione)
+  // ---- disegno: stile moderno, forme morbide e ombre leggere (coordinate logiche, canvas ad alta risoluzione)
   const rr = (c, x, y, w, h, r, fill) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } };
   const cerchio = (c, x, y, r, fill) => { c.beginPath(); c.arc(x, y, r, 0, 6.2832); if (fill) { c.fillStyle = fill; c.fill(); } };
   const ombra = (c, x, y, rx, ry, a) => { c.save(); c.translate(x, y); c.scale(1, ry / rx); cerchio(c, 0, 0, rx, `rgba(15,23,42,${a})`); c.restore(); };
@@ -503,6 +540,7 @@
     [[-3.4, -8.5, -0.75, '#16a34a'], [3.4, -8.5, 0.75, '#22c55e'], [0, -11, 0, '#15803d'], [-1.7, -7.5, -0.35, '#4ade80'], [1.7, -7.5, 0.35, '#16a34a']].forEach(([dx, dy, rot, col]) => { c.save(); c.translate(x + dx, y + dy); c.rotate(rot); c.beginPath(); c.ellipse(0, 0, 1.9, 4.3, 0, 0, 6.2832); c.fillStyle = col; c.fill(); c.restore(); });
     rr(c, x - 3.3, y - 5, 6.6, 5.4, 1.5, '#f8fafc'); rr(c, x - 3.3, y - 5, 6.6, 1.3, 0.65, '#e2e8f0');
   }
+  const ZONE = [[6, 134, '96,165,250'], [138, 262, '244,114,182'], [266, 394, '139,92,246']];      // uomini, donne, direzione
   function costruisciSfondo() {
     const cv = document.createElement('canvas'); cv.width = SW * SCALA; cv.height = SH * SCALA;
     const c = cv.getContext('2d'); c.setTransform(SCALA, 0, 0, SCALA, 0, 0);
@@ -513,27 +551,30 @@
     for (let x = 0; x <= SW; x += 40) { c.moveTo(x, 45); c.lineTo(x, SH); }
     for (let y = 45; y <= SH; y += 30) { c.moveTo(0, y); c.lineTo(SW, y); }
     c.stroke();
-    rr(c, 14, 74, 292, 58, 6, 'rgba(129,140,248,.20)'); c.strokeStyle = 'rgba(99,102,241,.28)'; c.lineWidth = 0.5; c.stroke();   // tappeto
-    for (const a of ORDINE) { const cx = DESK_X[a[2]], D = ROW_Y[a[1]]; const g = c.createRadialGradient(cx, D + 6, 2, cx, D + 6, 30); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(cx - 32, D - 24, 64, 60); }   // luce sulle scrivanie
-    rr(c, 17, 5, 60, 34, 3, '#ffffff'); c.shadowColor = 'rgba(15,23,42,.18)';                                     // cornice finestra (il cielo è dinamico)
-    rr(c, 134, 6, 72, 30, 3.5, '#0f172a'); rr(c, 135.5, 7.5, 69, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
-    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 142 + i * 5.5, 32 - h, 3.2, h, 1.1, col));
-    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(141, 32.5); c.lineTo(176, 32.5); c.stroke();
-    rr(c, 261, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
+    ZONE.forEach(([x0, x1, rgb]) => { rr(c, x0, 51, x1 - x0, SH - 60, 8, `rgba(${rgb},.12)`); c.strokeStyle = `rgba(${rgb},.34)`; c.lineWidth = 0.5; c.stroke(); });   // tre zone colorate
+    for (const a of ORDINE) { const cx = COL_X[a.col], D = ROW_Y[a.riga]; const g = c.createRadialGradient(cx, D + 6, 2, cx, D + 6, 30); g.addColorStop(0, 'rgba(255,255,255,.5)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(cx - 32, D - 24, 64, 60); }   // luce sulle scrivanie
+    rr(c, 15, 5, 64, 34, 3, '#ffffff');                                                                         // cornice finestra (il cielo è dinamico)
+    rr(c, 158, 6, 76, 30, 3.5, '#0f172a'); rr(c, 159.5, 7.5, 73, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
+    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 166 + i * 6, 32 - h, 3.4, h, 1.1, col));
+    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(164, 32.5); c.lineTo(204, 32.5); c.stroke();
+    rr(c, 300, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
     c.strokeStyle = '#6366f1'; c.lineWidth = 0.9; c.lineCap = 'round'; c.lineJoin = 'round';
-    [270, 284].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
-    c.beginPath(); c.moveTo(270, 27); c.lineTo(276, 19.5); c.lineTo(284, 27); c.moveTo(276, 19.5); c.lineTo(281.5, 19.5); c.moveTo(270, 27); c.lineTo(277.5, 27); c.stroke();
-    pianta(c, 17, 68); pianta(c, 305, 66); pianta(c, 14, 174); pianta(c, 306, 175);
-    ombra(c, 308, 108.5, 11, 2, 0.16); rr(c, 300, 80, 16, 27, 3.2, '#334155'); rr(c, 302, 82.5, 12, 7, 1.8, '#94a3b8');    // macchina del caffè
-    cerchio(c, 304.5, 94, 0.9, '#22c55e'); cerchio(c, 308, 94, 0.9, '#f59e0b'); rr(c, 305.5, 98, 5.5, 5.2, 1.2, '#f8fafc'); rr(c, 306.4, 99, 3.7, 1.6, 0.6, '#92400e'); rr(c, 300, 105.5, 16, 2, 1, '#1e293b');
-    ombra(c, 13, 106.5, 8, 1.8, 0.16); rr(c, 8.5, 75, 9, 13, 3.2, 'rgba(125,211,252,.75)'); rr(c, 8, 87, 10, 18, 2, '#f8fafc');   // distributore dell'acqua
-    c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.4; c.stroke(); rr(c, 11, 91, 4, 2, 0.8, '#60a5fa');
+    [309, 323].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
+    c.beginPath(); c.moveTo(309, 27); c.lineTo(315, 19.5); c.lineTo(323, 27); c.moveTo(315, 19.5); c.lineTo(320.5, 19.5); c.moveTo(309, 27); c.lineTo(316.5, 27); c.stroke();
+    const mx = COL_X[4] - 8, my = ROW_Y[3] - 14;                                                                 // macchina del caffè
+    ombra(c, mx + 8, my + 28.5, 11, 2, 0.16); rr(c, mx, my, 16, 27, 3.2, '#334155'); rr(c, mx + 2, my + 2.5, 12, 7, 1.8, '#94a3b8');
+    cerchio(c, mx + 4.5, my + 14, 0.9, '#22c55e'); cerchio(c, mx + 8, my + 14, 0.9, '#f59e0b'); rr(c, mx + 5.5, my + 18, 5.5, 5.2, 1.2, '#f8fafc'); rr(c, mx + 6.4, my + 19, 3.7, 1.6, 0.6, '#92400e'); rr(c, mx, my + 25.5, 16, 2, 1, '#1e293b');
+    const dx0 = COL_X[5] - 5, dy0 = ROW_Y[4] - 12;                                                               // distributore dell'acqua
+    ombra(c, dx0 + 5, dy0 + 31.5, 8, 1.8, 0.16); rr(c, dx0 + 0.5, dy0, 9, 13, 3.2, 'rgba(125,211,252,.75)'); rr(c, dx0, dy0 + 12, 10, 18, 2, '#f8fafc');
+    c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.4; c.stroke(); rr(c, dx0 + 3, dy0 + 16, 4, 2, 0.8, '#60a5fa');
+    pianta(c, COL_X[5], ROW_Y[3] + 12); pianta(c, COL_X[4], ROW_Y[4] + 12); pianta(c, 20, SH - 14); pianta(c, SW - 14, SH - 14);
     return cv;
   }
   function scrivania(c, a, t) {
     const cx = a.cx, D = a.D;
     ombra(c, cx, D + 12, 15.5, 2.2, 0.16);
     rr(c, cx - 13.5, D + 3.5, 27, 8, 1.6, '#f8fafc'); c.strokeStyle = '#d5dde8'; c.lineWidth = 0.35; c.stroke();     // fianco bianco
+    rr(c, cx - 5, D + 6, 10, 2, 1, a.look.camicia);                                                            // targhetta col colore del reparto
     rr(c, cx - 15, D - 0.6, 30, 5, 2.2, '#e9d6b8'); rr(c, cx - 15, D - 0.6, 30, 1.4, 0.7, 'rgba(255,255,255,.5)');   // piano in legno chiaro
     rr(c, cx - 12, D + 0.2, 11, 2.2, 0.9, '#cbd5e1');                                                         // tastiera
     cerchio(c, cx - 13, D + 1.3, 1.4, '#ffffff'); cerchio(c, cx - 13, D + 1.3, 0.8, '#92400e');                // tazza
@@ -572,19 +613,19 @@
     const c = stanza.ctx;
     c.drawImage(stanza.bg, 0, 0, SW, SH);
     const o = oraRoma(ms), giorno = o.h >= 7 && o.h < 18, sera = (o.h >= 18 && o.h < 21) || (o.h >= 5 && o.h < 7);
-    c.save(); rr(c, 19, 7, 56, 30, 2); c.clip();                                                                  // cielo nella finestra
+    c.save(); rr(c, 17, 7, 60, 30, 2); c.clip();                                                                  // cielo nella finestra
     c.fillStyle = giorno ? grad(c, 0, 7, 0, 37, [[0, '#9bd3ff'], [1, '#e6f4ff']]) : sera ? grad(c, 0, 7, 0, 37, [[0, '#fb923c'], [1, '#fecdd3']]) : grad(c, 0, 7, 0, 37, [[0, '#0b1220'], [1, '#1e3a8a']]);
-    c.fillRect(19, 7, 56, 30);
-    if (giorno) { c.fillStyle = 'rgba(255,255,255,.9)'; [[22 + ((t * 1.4) % 46), 14, 6, 2.2], [40 + ((t * 0.9) % 36), 22, 5, 1.8]].forEach(([x, y, rx, ry]) => { c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, 6.2832); c.fill(); }); }
-    else if (!sera) { c.fillStyle = 'rgba(226,232,240,.9)'; [[26, 13], [38, 21], [32, 28], [58, 14], [67, 24], [61, 30]].forEach(([x, y]) => cerchio(c, x, y, 0.45)); c.fill(); }
+    c.fillRect(17, 7, 60, 30);
+    if (giorno) { c.fillStyle = 'rgba(255,255,255,.9)'; [[20 + ((t * 1.4) % 50), 14, 6, 2.2], [42 + ((t * 0.9) % 38), 22, 5, 1.8]].forEach(([x, y, rx, ry]) => { c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, 6.2832); c.fill(); }); }
+    else if (!sera) { c.fillStyle = 'rgba(226,232,240,.9)'; [[24, 13], [36, 21], [30, 28], [58, 14], [68, 24], [62, 30]].forEach(([x, y]) => cerchio(c, x, y, 0.45)); c.fill(); }
     c.fillStyle = giorno ? 'rgba(100,116,139,.35)' : 'rgba(15,23,42,.55)';
-    [[20, 28, 6, 9], [27, 24, 5, 13], [33, 29, 7, 8], [41, 26, 5, 11], [52, 27, 6, 10], [59, 23, 5, 14], [65, 28, 7, 9]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
+    [[18, 28, 6, 9], [25, 24, 5, 13], [31, 29, 7, 8], [39, 26, 5, 11], [52, 27, 6, 10], [60, 23, 5, 14], [67, 28, 8, 9]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
     c.restore();
-    c.fillStyle = '#ffffff'; c.fillRect(46.5, 7, 2, 30);
-    cerchio(c, 241, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
+    c.fillStyle = '#ffffff'; c.fillRect(46, 7, 2, 30);
+    cerchio(c, 270, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
     const am = o.m * 6 * Math.PI / 180, ah = ((o.h % 12) + o.m / 60) * 30 * Math.PI / 180;
-    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
-    c.lineWidth = 1.4; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
+    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(270, 20); c.lineTo(270 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
+    c.lineWidth = 1.4; c.beginPath(); c.moveTo(270, 20); c.lineTo(270 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
     for (const a of stanza.ag) rr(c, a.sx - 5.8, a.D - 9.5, 11.6, 10, 3.6, '#64748b');                               // schienali
     stanza.ag.filter(a => a.stato === 'seduto').forEach(a => sprite(c, a, true, t));
     stanza.ag.forEach(a => scrivania(c, a, t));
@@ -615,8 +656,10 @@
     }
     const lav = host.querySelector('.st-lavagna');
     if (lav) lav.textContent = `Bozze ${st.bozze.filter(b => b.stato === 'bozza').length} · Spunti ${st.spunti ? st.spunti.spunti.filter(s => s.stato === 'nuovo').length : 0}`;
-    const el = host.querySelector('.st-elenco'), h1 = ag.map(d => `<div><span class="st-pt ${d.stato}"></span><span><b>${esc(d.nome)}</b>: ${esc(d.testo)}</span></div>`).join('');
-    if (el && el.dataset.h !== h1) { el.dataset.h = h1; el.innerHTML = '<b>Chi fa cosa adesso</b>' + h1; }
+    const riga = d => `<div><span class="st-pt ${d.stato}"></span><span><b>${esc(d.nome)}</b>: ${esc(d.testo)}</span></div>`;
+    const el = host.querySelector('.st-elenco'), dir = ag.filter(d => !d.reparto), rep = ag.filter(d => d.reparto), nl = rep.filter(d => d.stato === 'lavora').length;
+    const h1 = dir.map(riga).join('') + `<details ${stanza.repAperti ? 'open' : ''}><summary>Reparti per categoria (${rep.length}${nl ? ', ' + nl + ' al lavoro' : ''})</summary>${rep.map(riga).join('')}</details>`;
+    if (el && el.dataset.h !== h1) { el.dataset.h = h1; el.innerHTML = '<b>Chi fa cosa adesso</b>' + h1; const d = el.querySelector('details'); if (d) d.ontoggle = () => { stanza.repAperti = d.open; }; }
     const lg = host.querySelector('.st-log'), h2 = stanza.log.map(l => `<li><time>${esc(hhmm(l.ts))}</time><b>${esc(l.da)}</b> a <b>${esc(l.a)}</b>: ${esc(l.t1)}${l.t2 ? ' «' + esc(l.t2) + '»' : ''}</li>`).join('');
     if (lg && lg.dataset.h !== h2) { lg.dataset.h = h2; lg.innerHTML = '<b>Cosa si sono detti</b>' + (h2 ? `<ol>${h2}</ol>` : '<div class="rd-muted">Ancora niente: appena parte un incarico, li vedi parlare.</div>'); }
   }
@@ -626,7 +669,9 @@
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
       <div class="st-avviso" hidden></div>
-      <div class="st-room"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div><div class="st-ov"></div></div>
+      <div class="st-scroll"><div class="st-room"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div>
+        <div class="st-zona" style="left:${(ZONE[0][0] + ZONE[0][1]) / 2 / SW * 100}%">UOMINI · atleti e team</div><div class="st-zona" style="left:${(ZONE[1][0] + ZONE[1][1]) / 2 / SW * 100}%">DONNE · atleti e team</div><div class="st-zona" style="left:${(ZONE[2][0] + ZONE[2][1]) / 2 / SW * 100}%">DIREZIONE</div>
+        <div class="st-ov"></div></div></div>
       <div class="st-sotto"><div class="st-elenco"></div><div class="st-log"></div></div>`;
     host.onclick = async ev => {
       if (!ev.target.closest('[data-accendi]')) return;

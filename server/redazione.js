@@ -641,7 +641,13 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   });
 
   // crea la bozza (in scrittura) e la completa in background: la generazione puo durare 1-2 minuti con la ricerca web
+  async function catDiAtleta(id) {
+    const raw = await getData('results_raw.json'); let best = null;
+    for (const r of raw) if (r.atleta_id === id && catOf(r) && (!best || r.data > best.data)) best = r;
+    return best ? catOf(best) : null;
+  }
   async function avvia(tipo, p, soggetto) {
+    if (tipo === 'atleta' && p.id && !p.cat) { try { p.cat = await catDiAtleta(p.id); } catch (_) { /* senza categoria */ } }
     const id = crypto.randomBytes(6).toString('hex'), now = new Date().toISOString();
     await mutate(arr => { arr.push({ id, tipo, stato: 'in_generazione', soggetto: soggetto || p.id || 'settimana', parametri: p, creato: now, aggiornato: now }); });
     const fine = genera(tipo, p).then(art => mutate(arr => { const x = arr.find(a => a.id === id); if (x) Object.assign(x, art, { stato: 'bozza', aggiornato: new Date().toISOString() }); }))
@@ -773,19 +779,15 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       if (gA.length >= 5 && gA.every(r => pos(r) <= 10)) mie.push({ ...base, tipo: 'costanza', score: gA.length * 4, titolo: `${a.nome}: ${gA.length} gare in quattro settimane, sempre nei primi 10`, motivo: 'Almeno 5 gare in 28 giorni, tutte nei primi 10.', gare: gA.map(gara).slice(-6), dati: { gare: gA.length, miglior_piazzamento: Math.min(...gA.map(pos)) } });
       if (mie.length) cands.push({ ...mie.sort((x, y) => y.score - x.score)[0], _k: k });
     }
-    // --- squadre
+    // --- squadre: ogni squadra si valuta per categoria e sesso, cosi ogni addetto ai team vede solo il suo campo
     const perTeam = new Map();
-    for (const r of righe) if (r.data <= fine && r.team) { const k = r.team_id || r.team; if (!perTeam.has(k)) perTeam.set(k, { nome: r.team, A: 0, B: 0, vittorie: new Map(), cat: {} }); const t = perTeam.get(k); if (inA(r)) { t.A += pt(r); if (pos(r) === 1) t.vittorie.set(r.gara_id, r); t.cat[catOf(r)] = (t.cat[catOf(r)] || 0) + 1; } else if (inB(r)) t.B += pt(r); }
-    const squadre = [];
+    for (const r of righe) if (r.data <= fine && r.team) { const cat = catOf(r), k = (r.team_id || r.team) + '|' + cat; if (!perTeam.has(k)) perTeam.set(k, { nome: r.team, cat, A: 0, B: 0, vittorie: new Map() }); const t = perTeam.get(k); if (inA(r)) { t.A += pt(r); if (pos(r) === 1) t.vittorie.set(r.gara_id, r); } else if (inB(r)) t.B += pt(r); }
     for (const [k, t] of perTeam) {
-      const catTop = Object.entries(t.cat).sort((x, y) => y[1] - x[1])[0], cat = catTop ? catTop[0] : '';
-      const base = { categoria: cat ? (CAT_NOME[cat] || cat) : 'più categorie', codice_categoria: cat, periodo, atleti: [], team: t.nome };
-      const mie = [];
-      if (t.vittorie.size >= 4) mie.push({ ...base, tipo: 'squadra_vittorie', score: t.vittorie.size * 6, titolo: `${tc(t.nome)}: ${t.vittorie.size} vittorie in quattro settimane`, motivo: 'Almeno 4 vittorie di squadra in 28 giorni.', gare: [...t.vittorie.values()].sort(ord).map(gara).slice(-6), dati: { vittorie: t.vittorie.size, punti_ultime_4_settimane: t.A } });
-      if (t.A >= 40 && t.A >= 1.5 * t.B && t.A - t.B >= 25) mie.push({ ...base, tipo: 'squadra_crescita', score: (t.A - t.B) / 3, titolo: `${tc(t.nome)} in crescita: ${t.A} punti in quattro settimane contro ${t.B}`, motivo: 'Punti di squadra almeno 1,5 volte quelli delle 4 settimane prima (minimo 40, +25).', gare: [], dati: { punti_ultime_4_settimane: t.A, punti_4_settimane_prima: t.B } });
-      if (mie.length) squadre.push({ ...mie.sort((x, y) => y.score - x.score)[0], _k: 'team|' + k });
+      const cat = t.cat, nc = CAT_NOME[cat] || cat, base = { categoria: nc, codice_categoria: cat, periodo, atleti: [], team: t.nome }, mie = [];
+      if (t.vittorie.size >= 3) mie.push({ ...base, tipo: 'squadra_vittorie', score: t.vittorie.size * 6, titolo: `${tc(t.nome)}: ${t.vittorie.size} vittorie in quattro settimane (${nc})`, motivo: 'Almeno 3 vittorie di squadra in questa categoria in 28 giorni.', gare: [...t.vittorie.values()].sort(ord).map(gara).slice(-6), dati: { vittorie: t.vittorie.size, punti_ultime_4_settimane: t.A } });
+      if (t.A >= 25 && t.A >= 1.5 * t.B && t.A - t.B >= 15) mie.push({ ...base, tipo: 'squadra_crescita', score: (t.A - t.B) / 3, titolo: `${tc(t.nome)} in crescita: ${t.A} punti in quattro settimane contro ${t.B} (${nc})`, motivo: 'Punti di squadra in questa categoria almeno 1,5 volte quelli delle 4 settimane prima (minimo 25, +15).', gare: [], dati: { punti_ultime_4_settimane: t.A, punti_4_settimane_prima: t.B } });
+      if (mie.length) cands.push({ ...mie.sort((x, y) => y.score - x.score)[0], _k: 'team|' + k });
     }
-    cands.push(...squadre.sort((x, y) => y.score - x.score).slice(0, 3));
     // --- rivalita: due atleti insieme sul podio in almeno 3 gare delle ultime 8 settimane
     const podi = new Map();
     for (const r of righe) if (r.data >= dalC && r.data <= fine && pos(r) <= 3) { if (!podi.has(r.gara_id)) podi.set(r.gara_id, []); podi.get(r.gara_id).push(r); }
@@ -802,10 +804,10 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
         titolo: `${nomeAtl(c.x)} e ${nomeAtl(c.y)}: ${c.n} podi insieme in otto settimane`, motivo: 'Due atleti insieme sul podio in almeno 3 gare delle ultime 8 settimane.',
         gare: c.gare.sort((p, q) => p.data.localeCompare(q.data)).slice(-6), dati: { podi_insieme: c.n, [`davanti_${nomeAtl(c.x)}`]: c.xAvanti, [`davanti_${nomeAtl(c.y)}`]: yAvanti } });
     }
-    // --- scelta: i migliori, massimo 2 per tipo, al massimo 5
-    const per = {}, scelti = [];
-    for (const c of cands.sort((x, y) => y.score - x.score)) { per[c.tipo] = (per[c.tipo] || 0) + 1; if (per[c.tipo] <= 2 && scelti.length < 5) scelti.push(c); }
-    return { fine, spunti: scelti.map(({ _k, ...c }) => ({ id: idSpunto(c.tipo, _k || c.titolo, fine), ...c, score: Math.round(c.score * 10) / 10 })) };
+    // --- scelta: il migliore per ogni addetto (atleti o team, per categoria e sesso)
+    const ruoloDi = c => (/^squadra/.test(c.tipo) ? 'team' : 'atleti'), migliori = new Map();
+    for (const c of cands.sort((x, y) => y.score - x.score)) { const k = ruoloDi(c) + '|' + c.codice_categoria; if (!migliori.has(k)) migliori.set(k, c); }
+    return { fine, spunti: [...migliori.values()].map(({ _k, ...c }) => ({ id: idSpunto(c.tipo, _k || c.titolo, fine), ...c, ruolo: ruoloDi(c), score: Math.round(c.score * 10) / 10 })) };
   }
   async function leggiSpunti() {
     const { data, error } = await sb().from('kv_store').select('value').eq('key', SPUNTI_KEY).maybeSingle();
@@ -843,7 +845,8 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     return bl.length ? bl : [{ tipo: 'settimana', rif: 'ultima' }];
   }
   async function avviaDaSpunto(s, web, auto) {
-    const richiesta = `Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
+    const ruolo = /^squadra/.test(s.tipo) ? `Sei l'addetto ai team della categoria ${s.categoria}: parla solo di squadre di questa categoria, non di altre categorie.` : `Sei l'addetto agli atleti della categoria ${s.categoria}: parla solo di atleti di questa categoria, non di altre categorie.`;
+    const richiesta = `${ruolo} Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
     const indicazioni = JSON.stringify({ titolo: s.titolo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati }).slice(0, 2400);
     const { id, fine } = await avvia('libero', { richiesta, indicazioni, blocchi: blocchiSpunto(s), web: !!web, link: [], auto: !!auto, chiave: 'spunto|' + s.id }, s.titolo.slice(0, 70));
     await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) { t.stato = 'usato'; t.bozza_id = id; } });
