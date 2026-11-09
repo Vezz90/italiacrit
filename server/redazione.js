@@ -679,7 +679,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   });
 
   // ---------- articoli automatici: ogni evento importante recente (o imminente) ha gia la sua bozza ----------
-  const MAX_PER_GIRO = 4, MAX_AL_GIORNO = 12;
+  const MAX_PER_GIRO = 4, MAX_AL_GIORNO = 12, GIORNI_INDIETRO = 7;   // una gara senza risultati viene ripresa nelle fasce dei 7 giorni successivi
   let inCorso = false;
   async function autoGenera() {
     if (inCorso) return { avviati: 0, nota: 'gia in corso' };
@@ -692,11 +692,11 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       const chiavi = new Set(arr.map(b => b.parametri && b.parametri.chiave).filter(Boolean));
       const oggiFatte = arr.filter(b => b.parametri && b.parametri.auto && String(b.creato).slice(0, 10) === t).length;
       let manual = [];
-      try { const { data } = await sb().from('manual_results').select('gara_id,data,nome_gara,posizione').gte('data', shift(t, -2)); manual = data || []; } catch (_) { /* solo scraper */ }
-      const righe = (raw || []).filter(r => r.data >= shift(t, -2)).concat(manual);
+      try { const { data } = await sb().from('manual_results').select('gara_id,data,nome_gara,posizione').gte('data', shift(t, -GIORNI_INDIETRO)); manual = data || []; } catch (_) { /* solo scraper */ }
+      const righe = (raw || []).filter(r => r.data >= shift(t, -GIORNI_INDIETRO)).concat(manual);
       const vistiEv = new Set(), cand = [];
       for (const c of (cal || [])) {
-        if (!c.data || c.data < shift(t, -2) || c.data > shift(t, 2) || !c.nome || c.nome.trim() === '-') continue;
+        if (!c.data || c.data < shift(t, -GIORNI_INDIETRO) || c.data > shift(t, 2) || !c.nome || c.nome.trim() === '-') continue;
         const ev = `${c.data}|${alboBase(c.nome)}`;
         if (vistiEv.has(ev)) continue; vistiEv.add(ev);
         const imp = (c.campionato_italiano ? 3 : 0) + (c.campionato_regionale ? 2 : 0) + ((c.moltiplicatore || 1) >= 2 ? 1 : 0) + (c.tipo === 'nazionale' ? 1 : 0);
