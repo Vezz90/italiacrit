@@ -688,6 +688,39 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     }
     return out.sort((x, y) => y.imp - x.imp || y.data.localeCompare(x.data));
   }
+  function codiciCalendario(cat) {
+    const t = up(cat), out = new Set();
+    const sessi = /M\/F|MULTICATEGORIA|PROMISCUA/.test(t) ? ['M', 'F'] : /DONN|FEMMIN|ALLIEVE/.test(t) ? ['F'] : ['M'];
+    const bande = [];
+    if (/MULTICATEGORIA DA ESORD/.test(t)) bande.push('ES1', 'ES2', 'AL', 'JUN', 'ELI');
+    else if (/MULTICATEGORIA DA ELITE/.test(t)) bande.push('ELI');
+    else {
+      if (/ALLIEV|\bALL\b/.test(t)) bande.push('AL');
+      if (/JUNIOR|\bJUN\b/.test(t)) bande.push('JUN');
+      if (/ELITE|UNDER|U23|UN23|OPEN/.test(t)) bande.push('ELI');
+      if (/ESORD/.test(t)) { const u = /1/.test(t), d = /2/.test(t); if (u || !d) bande.push('ES1'); if (d || !u) bande.push('ES2'); }
+    }
+    for (const b of bande) for (const x of sessi) out.add(b + '_' + x);
+    return [...out];
+  }
+  async function codiciEventi() {                                                       // evento (data|nome) -> reparti coinvolti
+    const m = new Map();
+    for (const c of ((await getData('calendar.json')) || [])) {
+      if (!c.data || !c.nome) continue;
+      const k = `${c.data}|${alboBase(c.nome)}`; if (!m.has(k)) m.set(k, new Set());
+      codiciCalendario(c.categoria).forEach(x => m.get(k).add(x));
+    }
+    return m;
+  }
+  async function codiciAtleti() {                                                       // atleta -> reparto (dall'ultima gara registrata)
+    const m = new Map(), ultimo = new Map();
+    for (const r of await getData('results_raw.json')) { const c = catOf(r); if (r.atleta_id && c && (!ultimo.has(r.atleta_id) || r.data > ultimo.get(r.atleta_id))) { ultimo.set(r.atleta_id, r.data); m.set(r.atleta_id, c); } }
+    return m;
+  }
+  async function annotaRadar(items) {
+    const [ev, at] = await Promise.all([codiciEventi(), codiciAtleti()]);
+    return items.map(x => ({ ...x, reparti: [...new Set([...(x.gare || []).flatMap(k => [...(ev.get(k) || [])]), ...(x.atleti || []).map(id => at.get(id)).filter(Boolean)])] }));
+  }
   const pausa = ms => new Promise(r => setTimeout(r, ms));
   let radarInCorso = null;
   function aggiornaRadar() {
@@ -761,11 +794,11 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     try {
       let v = await leggiRadar();
       if (!v.aggiornato || Date.now() - Date.parse(v.aggiornato) > 90 * 60 * 1000) { await aggiornaRadar(); v = await leggiRadar(); }
-      res.json({ aggiornato: v.aggiornato, items: v.items.slice(0, 40), totale: v.items.length });
+      res.json({ aggiornato: v.aggiornato, items: await annotaRadar(v.items.slice(0, 40)), totale: v.items.length });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
   app.post('/api/admin/redazione/radar/aggiorna', requireAdmin, async (req, res) => {
-    try { const r = await aggiornaRadar(), v = await leggiRadar(); res.json({ ok: true, nuovi: r.nuovi, errori: r.errori, aggiornato: v.aggiornato, items: v.items.slice(0, 40), totale: v.items.length }); }
+    try { const r = await aggiornaRadar(), v = await leggiRadar(); res.json({ ok: true, nuovi: r.nuovi, errori: r.errori, aggiornato: v.aggiornato, items: await annotaRadar(v.items.slice(0, 40)), totale: v.items.length }); }
     catch (e) { res.status(500).json({ error: e.message }); }
   });
   // «Segnala una notizia»: per cio che non e raggiungibile da solo (per esempio un post sui social): si incolla il testo
@@ -1229,18 +1262,18 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
   async function gareInAttesa() {
     try {
       const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
-      const t = today(), da = shift(t, -GIORNI_INDIETRO), visti = new Set(), out = [];
+      const t = today(), da = shift(t, -GIORNI_INDIETRO), eventi = new Map();
       const con = new Set(raw.filter(r => r.data >= da).map(r => `${r.data}|${alboBase(r.nome_gara)}`));
       for (const c of (cal || [])) {
         if (!c.data || c.data < da || c.data > t || !c.nome || c.nome.trim() === '-') continue;
         const k = `${c.data}|${alboBase(c.nome)}`;
-        if (visti.has(k)) continue; visti.add(k);
-        if (!con.has(k)) out.push({ nome: c.nome, data: c.data, regione: c.regione || '' });
+        if (!eventi.has(k)) eventi.set(k, { nome: c.nome, data: c.data, regione: c.regione || '', cods: new Set() });
+        codiciCalendario(c.categoria).forEach(x => eventi.get(k).cods.add(x));
       }
-      return out.sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
+      return [...eventi.entries()].filter(([k]) => !con.has(k)).map(([, e]) => ({ nome: e.nome, data: e.data, regione: e.regione, cods: [...e.cods] })).sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
     } catch (_) { return []; }
   }
-  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto, leggiRss, tokenGara, garaTocca, aggiornaRadar });
+  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto, leggiRss, tokenGara, garaTocca, aggiornaRadar, codiciCalendario, gareInAttesa });
   app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
     try {
       let v = await leggiSpunti();

@@ -192,22 +192,28 @@
 .rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
+.st-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px;max-width:900px}
+.st-tab{border:1px solid rgba(128,128,128,.35);background:rgba(128,128,128,.08);border-radius:99px;padding:4px 12px;font:600 .8rem system-ui,sans-serif;cursor:pointer;color:inherit}
+.st-tab.on{background:#4f46e5;border-color:#4f46e5;color:#fff}
+.st-tab small{opacity:.8;font-weight:500}
 .st-scroll{overflow-x:auto;max-width:900px;border-radius:16px}
-.st-room{position:relative;container-type:inline-size;width:100%;min-width:640px;aspect-ratio:520/370;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
+.st-room{position:relative;container-type:inline-size;width:min(100%,900px);min-width:720px;aspect-ratio:var(--ar,660/370);border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
+.st-world{--u:calc(var(--tz,1) * 1cqw);position:absolute;top:0;left:var(--wl,0%);width:var(--ww,100%);aspect-ratio:660/370}
 .st-cv{position:absolute;inset:0;width:100%;height:100%}
 .st-ov{position:absolute;inset:0;pointer-events:none}
-.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.4cqw;transform:translate(-50%,-100%);z-index:2}
+.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u) * .4);transform:translate(-50%,-100%);z-index:2}
 .st-ag.parla{z-index:6}
-.st-nome{display:flex;align-items:center;font:600 max(7px,1.12cqw)/1.2 system-ui,-apple-system,sans-serif;padding:.2cqw .8cqw .2cqw .55cqw;border-radius:99px;background:rgba(255,255,255,.93);color:#0f172a;white-space:nowrap;box-shadow:0 1px 4px rgba(15,23,42,.18)}
-.st-nome::before{content:"";width:.75cqw;height:.75cqw;border-radius:50%;background:var(--c,#64748b);margin-right:.5cqw;flex:none}
-.st-bub{position:relative;font:500 max(8px,1.35cqw)/1.3 system-ui,-apple-system,sans-serif;max-width:21cqw;padding:.7cqw 1.1cqw;margin-bottom:.9cqw;border-radius:1.3cqw;background:#fff;color:#0f172a;text-align:left;overflow-wrap:anywhere;box-shadow:0 6px 18px rgba(15,23,42,.2),0 0 0 1px rgba(15,23,42,.06)}
+.st-nome{display:flex;align-items:center;font:600 max(7px,calc(var(--u) * 1.12))/1.2 system-ui,-apple-system,sans-serif;padding:calc(var(--u) * .2) calc(var(--u) * .8) calc(var(--u) * .2) calc(var(--u) * .55);border-radius:99px;background:rgba(255,255,255,.93);color:#0f172a;white-space:nowrap;box-shadow:0 1px 4px rgba(15,23,42,.18)}
+.st-nome::before{content:"";width:calc(var(--u) * .75);height:calc(var(--u) * .75);border-radius:50%;background:var(--c,#64748b);margin-right:calc(var(--u) * .5);flex:none}
+.st-bub{position:relative;font:500 max(8px,calc(var(--u) * 1.35))/1.3 system-ui,-apple-system,sans-serif;max-width:calc(1cqw * 21 * min(var(--tz,1), 1.3));padding:calc(var(--u) * .7) calc(var(--u) * 1.1);margin-bottom:calc(var(--u) * .9);border-radius:calc(var(--u) * 1.3);background:#fff;color:#0f172a;text-align:left;overflow-wrap:anywhere;box-shadow:0 6px 18px rgba(15,23,42,.2),0 0 0 1px rgba(15,23,42,.06)}
 .st-bub[hidden]{display:none}
-.st-bub::after{content:"";position:absolute;left:50%;bottom:-.5cqw;width:1cqw;height:1cqw;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:.2cqw;box-shadow:2px 2px 4px rgba(15,23,42,.08)}
+.st-bub::after{content:"";position:absolute;left:50%;bottom:-calc(var(--u) * .5);width:calc(var(--u) * 1);height:calc(var(--u) * 1);background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:calc(var(--u) * .2);box-shadow:2px 2px 4px rgba(15,23,42,.08)}
 .st-bub.lavoro{background:#f0fdf4;color:#14532d;box-shadow:0 6px 18px rgba(22,163,74,.2),0 0 0 1px rgba(22,163,74,.35)}
 .st-bub.errore{background:#fef2f2;color:#7f1d1d;box-shadow:0 6px 18px rgba(220,38,38,.2),0 0 0 1px rgba(220,38,38,.4)}
 .st-bub.chiac{background:rgba(255,255,255,.82);color:#475569;font-style:italic;box-shadow:0 4px 12px rgba(15,23,42,.12),0 0 0 1px rgba(100,116,139,.35)}
-.st-lavagna{position:absolute;left:42.98%;top:2.16%;width:14.04%;height:3.24%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.05cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
-.st-zona{position:absolute;bottom:1.3%;transform:translateX(-50%);font:700 max(7px,.95cqw)/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:rgba(30,41,59,.55);white-space:nowrap;pointer-events:none}
+.st-lavagna{position:absolute;left:44.17%;top:2.16%;width:11.06%;height:3.24%;display:flex;align-items:center;justify-content:center;font:600 max(7px,calc(var(--u) * 1.05))/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.st-zona{position:absolute;bottom:1.3%;transform:translateX(-50%);font:700 max(7px,calc(var(--u) * .95))/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:rgba(30,41,59,.55);white-space:nowrap;cursor:pointer}
+.st-zona:hover{color:#4f46e5}
 .rd-tag.rd-ag{background:rgba(99,102,241,.2)}
 .rd-rdr{margin:0 0 16px}
 .rd-rdl{list-style:none;margin:8px 0;padding:0}
@@ -254,35 +260,39 @@
     } catch (_) { return ''; }
   }
 
-  /* ---------- Gli addetti: la direzione (7) e un reparto per categoria e sesso (30: responsabile, atleti, team) ---------- */
+  /* ---------- Gli addetti: la direzione (7) e un reparto per categoria e sesso (40: responsabile, atleti, team, ricercatore) ---------- */
   const CATEGORIE = [['ELI', 'Elite/U23'], ['JUN', 'Juniores'], ['AL', 'Allievi'], ['ES2', 'Esord. 2°'], ['ES1', 'Esord. 1°']];
   const STAFF = [
-    ['Caporedattore', 0, 6, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }, 'Coordina e decide'],
-    ['Capo servizio', 0, 7, { camicia: '#475569', capelli: '#9ca3af', pelle: '#e0ac82', stile: 'corto', extra: 'cravatta' }, 'Controlla gare, settimana e richieste libere'],
-    ['Cronista', 1, 6, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }, 'Gare e punto della settimana'],
-    ['Ricercatore', 1, 7, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web'],
-    ['Analista', 2, 6, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
-    ['Inviato speciale', 2, 7, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
-    ['Cassiere', 3, 6, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
+    ['Caporedattore', 0, 8, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }, 'Coordina e decide'],
+    ['Capo servizio', 0, 9, { camicia: '#475569', capelli: '#9ca3af', pelle: '#e0ac82', stile: 'corto', extra: 'cravatta' }, 'Controlla gare, settimana e richieste libere'],
+    ['Cronista', 1, 8, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }, 'Gare e punto della settimana'],
+    ['Ricercatore', 1, 9, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web per le gare'],
+    ['Analista', 2, 8, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
+    ['Inviato speciale', 2, 9, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
+    ['Cassiere', 3, 8, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
   ];
   const PELLI = ['#f1c9a5', '#e8b98e', '#8d5a3b', '#f5d0b0', '#c68642', '#d8a06f', '#e0ac82', '#a9714b'];
   const CAPELLI = ['#4b5563', '#78350f', '#111827', '#92400e', '#374151', '#1f2937', '#422006', '#7c2d12'];
   const CAMICIA_AT = { ELI: '#2563eb', JUN: '#16a34a', AL: '#d97706', ES2: '#db2777', ES1: '#7c3aed' };
   const CAMICIA_TM = { ELI: '#1e3a8a', JUN: '#14532d', AL: '#92400e', ES2: '#9d174d', ES1: '#5b21b6' };
-  const ETI_RUOLO = { resp: 'Responsabile', atleti: 'Atleti', team: 'Team' };
+  const ETI_RUOLO = { resp: 'Responsabile', atleti: 'Atleti', team: 'Team', ric: 'Ricercatore' };
   const REPARTI = (() => {
     const out = [];
-    CATEGORIE.forEach(([c, nome], riga) => [['M', 0], ['F', 3]].forEach(([sx, c0]) => ['resp', 'atleti', 'team'].forEach((ruolo, i) => {
-      const n = out.length;
+    CATEGORIE.forEach(([c, nome], riga) => [['M', 0], ['F', 4]].forEach(([sx, c0]) => ['resp', 'atleti', 'team', 'ric'].forEach((ruolo, i) => {
+      const n = out.length, pelle = PELLI[(n * 5 + 2) % PELLI.length];
       out.push({ nome: `${ETI_RUOLO[ruolo]} ${nome} ${sx}`, ruolo, cod: `${c}_${sx}`, riga, col: c0 + i,
         look: ruolo === 'resp'
-          ? { camicia: '#334155', capelli: '#9ca3af', pelle: PELLI[(n * 5 + 2) % PELLI.length], stile: sx === 'F' ? 'lungo' : 'corto', extra: 'occhiali' }
-          : { camicia: (ruolo === 'atleti' ? CAMICIA_AT : CAMICIA_TM)[c], capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle: PELLI[(n * 5 + 2) % PELLI.length],
-            stile: sx === 'F' ? ['lungo', 'riccio'][n % 2] : ['corto', 'riccio', 'corto'][n % 3], extra: ruolo === 'team' ? 'cravatta' : (n % 3 === 0 ? 'occhiali' : '') } });
+          ? { camicia: '#334155', capelli: '#9ca3af', pelle, stile: sx === 'F' ? 'lungo' : 'corto', extra: 'occhiali' }
+          : ruolo === 'ric'
+            ? { camicia: '#0369a1', capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle, stile: sx === 'F' ? 'lungo' : 'corto', extra: 'occhiali' }
+            : { camicia: (ruolo === 'atleti' ? CAMICIA_AT : CAMICIA_TM)[c], capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle,
+              stile: sx === 'F' ? ['lungo', 'riccio'][n % 2] : ['corto', 'riccio', 'corto'][n % 3], extra: ruolo === 'team' ? 'cravatta' : (n % 3 === 0 ? 'occhiali' : '') } });
     })));
     return out;
   })();
   // chi controlla: il responsabile del reparto per atleti/squadre/stagione, il Capo servizio per gare, settimana e richieste libere
+  // chi cerca le informazioni: il Ricercatore del reparto per atleti/squadre/stagione, quello delle gare per il resto
+  const ricDi = agente => (/^(Atleti|Team) /.test(agente || '') ? 'Ricercatore ' + agente.replace(/^(Atleti|Team) /, '') : 'Ricercatore');
   const respDi = agente => (/^(Atleti|Team) /.test(agente || '') ? 'Responsabile ' + agente.replace(/^(Atleti|Team) /, '') : 'Capo servizio');
   const nomeRep = (ruolo, cod) => { const r = REPARTI.find(x => x.ruolo === ruolo && x.cod === cod); return r ? r.nome : null; };
   const agenteSpunto = s => nomeRep(/^squadra/.test(s.tipo) ? 'team' : 'atleti', s.codice_categoria);
@@ -321,7 +331,7 @@
       return { stato: 'riposa', testo: `Prossimo giro ${prossimoGiro(cfg.auto_orari)}` };
     })();
     const ricerca = (() => {
-      const a = attive.filter(b => b.parametri && b.parametri.web);
+      const a = attive.filter(b => b.parametri && b.parametri.web && ricDi(agenteDiBozza(b)) === 'Ricercatore');
       if (a.length) return { stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
       if (cfg && Number(cfg.web_auto_da_imp) === 99) return { stato: 'riposa', testo: 'Ricerca automatica: mai' };
       const at = (sp && sp.attesa) || [];
@@ -360,6 +370,12 @@
     stato['Capo servizio'] = dellaSupervisione('Capo servizio', 'Controlla gare, settimana e richieste libere');
     const direzione = STAFF.map(([nome, , , , ruolo]) => ({ nome, ruolo, reparto: false, ...stato[nome] }));
     const reparti = REPARTI.map(r => {
+      if (r.ruolo === 'ric') {
+        const a = attive.filter(b => b.parametri && b.parametri.web && ricDi(agenteDiBozza(b)) === r.nome);
+        if (a.length) return { nome: r.nome, ruolo: 'Ricercatore', reparto: true, stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
+        const rd = st.radar && st.radar.items ? st.radar.items.filter(x => (x.reparti || []).includes(r.cod)) : [], at = sp && sp.attesa ? sp.attesa.filter(g => (g.cods || []).includes(r.cod)) : [];
+        return { nome: r.nome, ruolo: 'Ricercatore', reparto: true, stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : rd.length ? `Radar: ${rd.length} notizie, ultima da ${rd[0].fonte || 'una testata'}` : 'Nessuna notizia per questa categoria' };
+      }
       if (r.ruolo === 'resp') {
         const mia = ['Atleti', 'Team'].map(x => x + ' ' + r.nome.replace('Responsabile ', ''));
         const best = sp && sp.spunti.filter(s => s.stato !== 'scartato' && mia.includes(agenteSpunto(s))).sort((a, b) => b.score - a.score)[0];
@@ -461,15 +477,15 @@
 
   /* ---------- La stanza: gli addetti in un ufficio stile moderno. Camminano, lavorano e si parlano.
      I fumetti con il riquadro pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
-  const SW = 520, SH = 370, SCALA = 3;
-  const COL_X = [38, 102, 166, 230, 294, 358, 422, 486], ROW_Y = [92, 148, 204, 260, 316], LANE = ROW_Y.map(y => y + 30);
+  const SW = 660, SH = 370, SCALA = 3;
+  const COL_X = [38, 102, 166, 230, 294, 358, 422, 486, 550, 614], ROW_Y = [92, 148, 204, 260, 316], LANE = ROW_Y.map(y => y + 30);
   const sullaCorsia = y => LANE.some(l => Math.abs(l - y) < 0.7);
   const laneVicina = y => LANE.reduce((m, v) => (Math.abs(v - y) < Math.abs(m - y) ? v : m), LANE[0]);
   const ORDINE = [...STAFF.map(([nome, riga, col, look]) => ({ nome, riga, col, look })), ...REPARTI];
   const SPOTS = [
-    { id: 'caffe', x: COL_X[7] - 24, y: LANE[3], frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
-    { id: 'acqua', x: COL_X[6] - 24, y: LANE[4], frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
-    { id: 'lavagna', x: COL_X[3] + 24, y: 82, frasi: ['Controllo i totali sullo schermo.', 'Segno le gare da seguire.'] }
+    { id: 'caffe', x: COL_X[9] - 24, y: LANE[3], frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
+    { id: 'acqua', x: COL_X[8] - 24, y: LANE[4], frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
+    { id: 'lavagna', x: COL_X[4] + 24, y: 82, frasi: ['Controllo i totali sullo schermo.', 'Segno le gare da seguire.'] }
   ];
   const CHIACCHIERE = [
     ['Hai visto che volata, domenica?', 'Eh, in rettilineo non lo riprendevi più.'],
@@ -479,7 +495,7 @@
     ['Pronostico per il campionato italiano?', 'Mai fare pronostici, lo dice il Capo.'],
     ['Io salgo in bici solo in discesa.', 'Si vede dai tuoi articoli sulle salite.']
   ];
-  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null, spIds: null, spAtt: undefined, rdIds: null, repAperti: false };
+  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null, spIds: null, spAtt: undefined, rdIds: null, repAperti: false, vista: 'tutto' };
   const FMT_ORA = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: false });
   const rnd = n => Math.floor(Math.random() * n);
   const eur = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
@@ -530,7 +546,10 @@
     const chiac = !!(opz && opz.chiac);
     if (!da || !a || stanza.coda.some(x => x.da === da && x.a === a && x.t1 === t1)) return;
     stanza.coda.push({ da, a, t1, t2: t2 || '', chiac, fase: 'attesa', fino: 0, scad: 0 });
-    if (stanza.coda.length > 16) { const i = stanza.coda.findIndex(x => x.chiac && x.fase === 'attesa'); stanza.coda.splice(i >= 0 ? i : 0, 1); }
+    if (stanza.coda.length > 16) {                                             // si scartano solo scene non ancora iniziate (mai quelle in corso: gli agenti resterebbero bloccati)
+      let i = stanza.coda.findIndex(x => x.chiac && x.fase === 'attesa'); if (i < 0) i = stanza.coda.findIndex(x => x.fase === 'attesa');
+      if (i >= 0) stanza.coda.splice(i, 1);
+    }
     if (!chiac) { stanza.log.unshift({ ts: Date.now(), da, a, t1, t2: t2 || '' }); stanza.log.length = Math.min(stanza.log.length, 40); }
   }
   function rilascia(sc, A, B) { if (A) { A.parla = null; A.scena = null; } if (B) { B.parla = null; B.scena = null; } sc.fase = 'fine'; }
@@ -542,7 +561,7 @@
       if (!A || !B) { sc.fase = 'fine'; continue; }
       if (A.scena || B.scena || A.giro || B.giro) continue;
       sc.fase = 'vai'; sc.scad = now + 90000; A.scena = B.scena = sc;
-      vai(A, B.col === 7 ? B.cx - 24 : B.cx + 24, LANE[B.riga]);
+      vai(A, B.col === 9 ? B.cx - 24 : B.cx + 24, LANE[B.riga]);
     }
     for (const sc of stanza.coda) {
       if (sc.fase === 'attesa' || sc.fase === 'fine') continue;
@@ -590,7 +609,7 @@
         const prima = stanza.prevB.get(b.id), agente = agenteDiBozza(b);
         if (prima === undefined && b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000) {
           scena('Caporedattore', agente, `${b.parametri && b.parametri.auto ? 'Giro automatico' : 'Nuovo incarico'}: ${b.soggetto}`, 'Ricevuto, ci penso io.');
-          if (b.parametri && b.parametri.web) scena(agente, 'Ricercatore', `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
+          if (b.parametri && b.parametri.web) scena(agente, ricDi(agente), `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
         } else if (prima === 'in_generazione' && b.stato === 'bozza') {                 // addetto -> responsabile (controlla) -> Caporedattore
           const rv = b.revisione, resp = rv && rv.responsabile && trova(rv.responsabile) ? rv.responsabile : null;
           if (resp && resp !== agente) {
@@ -630,7 +649,8 @@
         nuove.forEach(x => { const k = nomeGaraDaChiave((x.gare || [])[0]) || 'atleti citati'; if (!per.has(k)) per.set(k, []); per.get(k).push(x); });
         [...per.entries()].slice(0, 2).forEach(([k, l]) => {
           const fonti = [...new Set(l.map(x => x.fonte).filter(Boolean))].slice(0, 3).join(', ');
-          scena('Ricercatore', 'Caporedattore', `Radar: ${l.length} notizi${l.length === 1 ? 'a nuova' : 'e nuove'} su ${k.toLowerCase().replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())}${fonti ? ' (' + fonti + ')' : ''}`, 'Bene, le useremo nei dossier.');
+          const codR = (l[0].reparti || [])[0], ricR = codR && nomeRep('ric', codR), respR = codR && nomeRep('resp', codR);
+          scena(ricR || 'Ricercatore', respR || 'Caporedattore', `Radar: ${l.length} notizi${l.length === 1 ? 'a nuova' : 'e nuove'} su ${k.toLowerCase().replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())}${fonti ? ' (' + fonti + ')' : ''}`, 'Bene, le useremo nei dossier.');
         });
       }
       stanza.rdIds = ids;
@@ -652,7 +672,8 @@
     [[-3.4, -8.5, -0.75, '#16a34a'], [3.4, -8.5, 0.75, '#22c55e'], [0, -11, 0, '#15803d'], [-1.7, -7.5, -0.35, '#4ade80'], [1.7, -7.5, 0.35, '#16a34a']].forEach(([dx, dy, rot, col]) => { c.save(); c.translate(x + dx, y + dy); c.rotate(rot); c.beginPath(); c.ellipse(0, 0, 1.9, 4.3, 0, 0, 6.2832); c.fillStyle = col; c.fill(); c.restore(); });
     rr(c, x - 3.3, y - 5, 6.6, 5.4, 1.5, '#f8fafc'); rr(c, x - 3.3, y - 5, 6.6, 1.3, 0.65, '#e2e8f0');
   }
-  const ZONE = [[6, 198, '96,165,250'], [202, 390, '244,114,182'], [394, 514, '139,92,246']];      // uomini, donne, direzione
+  const ZONE = [[6, 262, '96,165,250'], [266, 518, '244,114,182'], [522, 654, '139,92,246']];
+  const VISTE = { tutto: [0, SW], uomini: [0, 264], donne: [264, 520], direzione: [500, SW] };      // uomini, donne, direzione
   function costruisciSfondo() {
     const cv = document.createElement('canvas'); cv.width = SW * SCALA; cv.height = SH * SCALA;
     const c = cv.getContext('2d'); c.setTransform(SCALA, 0, 0, SCALA, 0, 0);
@@ -666,20 +687,20 @@
     ZONE.forEach(([x0, x1, rgb]) => { rr(c, x0, 81, x1 - x0, SH - 90, 8, `rgba(${rgb},.12)`); c.strokeStyle = `rgba(${rgb},.34)`; c.lineWidth = 0.5; c.stroke(); });   // tre zone colorate
     for (const a of ORDINE) { const cx = COL_X[a.col], D = ROW_Y[a.riga]; const g = c.createRadialGradient(cx, D + 6, 2, cx, D + 6, 30); g.addColorStop(0, 'rgba(255,255,255,.5)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(cx - 32, D - 24, 64, 60); }   // luce sulle scrivanie
     rr(c, 15, 5, 64, 34, 3, '#ffffff');                                                                         // cornice finestra (il cielo è dinamico)
-    rr(c, 222, 6, 76, 30, 3.5, '#0f172a'); rr(c, 223.5, 7.5, 73, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
-    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 230 + i * 6, 32 - h, 3.4, h, 1.1, col));
-    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(228, 32.5); c.lineTo(268, 32.5); c.stroke();
-    rr(c, 440, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
+    rr(c, 290, 6, 76, 30, 3.5, '#0f172a'); rr(c, 291.5, 7.5, 73, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
+    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 298 + i * 6, 32 - h, 3.4, h, 1.1, col));
+    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(296, 32.5); c.lineTo(336, 32.5); c.stroke();
+    rr(c, 600, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
     c.strokeStyle = '#6366f1'; c.lineWidth = 0.9; c.lineCap = 'round'; c.lineJoin = 'round';
-    [449, 463].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
-    c.beginPath(); c.moveTo(449, 27); c.lineTo(455, 19.5); c.lineTo(463, 27); c.moveTo(455, 19.5); c.lineTo(460.5, 19.5); c.moveTo(449, 27); c.lineTo(456.5, 27); c.stroke();
-    const mx = COL_X[7] - 8, my = ROW_Y[3] - 14;                                                                 // macchina del caffè
+    [609, 623].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
+    c.beginPath(); c.moveTo(609, 27); c.lineTo(615, 19.5); c.lineTo(623, 27); c.moveTo(615, 19.5); c.lineTo(620.5, 19.5); c.moveTo(609, 27); c.lineTo(616.5, 27); c.stroke();
+    const mx = COL_X[9] - 8, my = ROW_Y[3] - 14;                                                                 // macchina del caffè
     ombra(c, mx + 8, my + 28.5, 11, 2, 0.16); rr(c, mx, my, 16, 27, 3.2, '#334155'); rr(c, mx + 2, my + 2.5, 12, 7, 1.8, '#94a3b8');
     cerchio(c, mx + 4.5, my + 14, 0.9, '#22c55e'); cerchio(c, mx + 8, my + 14, 0.9, '#f59e0b'); rr(c, mx + 5.5, my + 18, 5.5, 5.2, 1.2, '#f8fafc'); rr(c, mx + 6.4, my + 19, 3.7, 1.6, 0.6, '#92400e'); rr(c, mx, my + 25.5, 16, 2, 1, '#1e293b');
-    const dx0 = COL_X[6] - 5, dy0 = ROW_Y[4] - 12;                                                               // distributore dell'acqua
+    const dx0 = COL_X[8] - 5, dy0 = ROW_Y[4] - 12;                                                               // distributore dell'acqua
     ombra(c, dx0 + 5, dy0 + 31.5, 8, 1.8, 0.16); rr(c, dx0 + 0.5, dy0, 9, 13, 3.2, 'rgba(125,211,252,.75)'); rr(c, dx0, dy0 + 12, 10, 18, 2, '#f8fafc');
     c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.4; c.stroke(); rr(c, dx0 + 3, dy0 + 16, 4, 2, 0.8, '#60a5fa');
-    pianta(c, COL_X[7], ROW_Y[4] + 12); pianta(c, COL_X[3], SH - 14); pianta(c, 20, SH - 14); pianta(c, SW - 14, SH - 14);
+    pianta(c, COL_X[9], ROW_Y[4] + 12); pianta(c, COL_X[4], SH - 14); pianta(c, 20, SH - 14); pianta(c, SW - 14, SH - 14);
     return cv;
   }
   function scrivania(c, a, t) {
@@ -734,10 +755,10 @@
     [[18, 28, 6, 9], [25, 24, 5, 13], [31, 29, 7, 8], [39, 26, 5, 11], [52, 27, 6, 10], [60, 23, 5, 14], [67, 28, 8, 9]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
     c.restore();
     c.fillStyle = '#ffffff'; c.fillRect(46, 7, 2, 30);
-    cerchio(c, 340, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
+    cerchio(c, 440, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
     const am = o.m * 6 * Math.PI / 180, ah = ((o.h % 12) + o.m / 60) * 30 * Math.PI / 180;
-    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(340, 20); c.lineTo(340 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
-    c.lineWidth = 1.4; c.beginPath(); c.moveTo(340, 20); c.lineTo(340 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
+    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(440, 20); c.lineTo(440 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
+    c.lineWidth = 1.4; c.beginPath(); c.moveTo(440, 20); c.lineTo(440 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
     for (const a of stanza.ag) rr(c, a.sx - 5.8, a.D - 9.5, 11.6, 10, 3.6, '#64748b');                               // schienali
     stanza.ag.filter(a => a.stato === 'seduto').forEach(a => sprite(c, a, true, t));
     stanza.ag.forEach(a => scrivania(c, a, t));
@@ -758,6 +779,9 @@
   function aggiornaPannelli() {
     const host = document.querySelector('.rd-ufficio'); if (!host) return;
     const ag = agenti(), n = ag.filter(a => a.stato === 'lavora').length;
+    const per = { uomini: 0, donne: 0, direzione: 0 };
+    stanza.ag.forEach(a => { if (a.fase === 'lavora') per[a.col < 4 ? 'uomini' : a.col < 8 ? 'donne' : 'direzione']++; });
+    host.querySelectorAll('[data-bd]').forEach(el => { const n = per[el.dataset.bd]; el.textContent = n ? ' · ' + n + ' al lavoro' : ''; });
     const conto = host.querySelector('.st-conto'); if (conto) conto.textContent = n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura';
     const av = host.querySelector('.st-avviso'), kk = st.costi;
     if (av) {
@@ -775,17 +799,30 @@
     const lg = host.querySelector('.st-log'), h2 = stanza.log.map(l => `<li><time>${esc(hhmm(l.ts))}</time><b>${esc(l.da)}</b> a <b>${esc(l.a)}</b>: ${esc(l.t1)}${l.t2 ? ' «' + esc(l.t2) + '»' : ''}</li>`).join('');
     if (lg && lg.dataset.h !== h2) { lg.dataset.h = h2; lg.innerHTML = '<b>Cosa si sono detti</b>' + (h2 ? `<ol>${h2}</ol>` : '<div class="rd-muted">Ancora niente: appena parte un incarico, li vedi parlare.</div>'); }
   }
+  function applicaVista() {
+    const room = document.querySelector('.st-room'); if (!room) return;
+    const [x0, x1] = VISTE[stanza.vista] || VISTE.tutto, w = x1 - x0, tutto = stanza.vista === 'tutto';
+    room.style.setProperty('--ar', w + '/' + SH); room.style.setProperty('--ww', (SW / w * 100) + '%'); room.style.setProperty('--wl', (-x0 / w * 100) + '%');
+    room.style.width = tutto ? 'min(100%, 900px)' : 'min(100%, ' + Math.round(w * 2.5) + 'px)'; room.style.minWidth = tutto ? '720px' : '0';
+    const px = room.clientWidth || 900;                                          // nello zoom il testo e un po piu grande, ma sempre proporzionato alla finestra
+    room.style.setProperty('--tz', tutto ? '1' : String(+(11.5 * 100 / (1.12 * px)).toFixed(3)));
+    if (!stanza.rz) { stanza.rz = true; window.addEventListener('resize', () => { if (document.querySelector('.st-room')) applicaVista(); }); }
+    document.querySelectorAll('.st-tab').forEach(b => b.classList.toggle('on', b.dataset.vista === stanza.vista));
+  }
   function montaStanza() {
     const host = document.querySelector('.rd-ufficio'); if (!host) return;
     inizStanza();
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
       <div class="st-avviso" hidden></div>
-      <div class="st-scroll"><div class="st-room"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div>
-        <div class="st-zona" style="left:${(ZONE[0][0] + ZONE[0][1]) / 2 / SW * 100}%">UOMINI · atleti e team</div><div class="st-zona" style="left:${(ZONE[1][0] + ZONE[1][1]) / 2 / SW * 100}%">DONNE · atleti e team</div><div class="st-zona" style="left:${(ZONE[2][0] + ZONE[2][1]) / 2 / SW * 100}%">DIREZIONE</div>
-        <div class="st-ov"></div></div></div>
+      <div class="st-tabs"><button type="button" class="st-tab" data-vista="tutto">Tutto l'ufficio</button><button type="button" class="st-tab" data-vista="uomini">Uomini<small data-bd="uomini"></small></button><button type="button" class="st-tab" data-vista="donne">Donne<small data-bd="donne"></small></button><button type="button" class="st-tab" data-vista="direzione">Direzione<small data-bd="direzione"></small></button></div>
+      <div class="st-scroll"><div class="st-room"><div class="st-world"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div>
+        <div class="st-zona" data-vista="uomini" style="left:${(ZONE[0][0] + ZONE[0][1]) / 2 / SW * 100}%">UOMINI · reparti</div><div class="st-zona" data-vista="donne" style="left:${(ZONE[1][0] + ZONE[1][1]) / 2 / SW * 100}%">DONNE · reparti</div><div class="st-zona" data-vista="direzione" style="left:${(ZONE[2][0] + ZONE[2][1]) / 2 / SW * 100}%">DIREZIONE</div>
+        <div class="st-ov"></div></div></div></div>
       <div class="st-sotto"><div class="st-elenco"></div><div class="st-log"></div></div>`;
+    applicaVista();
     host.onclick = async ev => {
+      const vv = ev.target.closest('[data-vista]'); if (vv) { stanza.vista = vv.dataset.vista; applicaVista(); return; }
       if (!ev.target.closest('[data-accendi]')) return;
       try {
         await api('/config', { method: 'PUT', body: { auto_attiva: true } });
@@ -799,7 +836,7 @@
     for (const a of stanza.ag) {
       a.el = document.createElement('div'); a.el.className = 'st-ag'; a._k = '';
       a.bub = document.createElement('div'); a.bub.className = 'st-bub'; a.bub.hidden = true;
-      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome.replace('Responsabile', 'Resp.'); nome.style.setProperty('--c', a.look.camicia);
+      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome.replace('Responsabile', 'Resp.').replace(/^Ricercatore /, 'Ric. '); nome.style.setProperty('--c', a.look.camicia);
       a.el.appendChild(a.bub); a.el.appendChild(nome); ov.appendChild(a.el);
     }
     aggiornaStanza(); aggiornaOverlay();
