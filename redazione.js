@@ -146,8 +146,10 @@
         <label class="rd-c"><input type="checkbox" id="cs-ai" ${c.ai_attiva ? 'checked' : ''}> AI attiva</label>
         <label class="rd-c"><input type="checkbox" id="cs-auto" ${c.auto_attiva ? 'checked' : ''}> Scrittura automatica: 3 volte al giorno (${(c.auto_orari || []).map(h => h + ':00').join(', ')})</label>
         <label class="rd-c">Limite mensile <input type="number" id="cs-lim" min="0" max="1000" step="1" value="${c.limite_mensile_usd}" style="width:70px"> $</label>
+        <label class="rd-c">Ricerca web (scrittura automatica)
+          <select id="cs-web">${[[0, 'su tutte le gare'], [1, 'solo gare con un peso (regionali, nazionali…)'], [3, 'solo campionati italiani'], [99, 'mai']].map(([v, t]) => `<option value="${v}" ${Number(c.web_auto_da_imp) === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
         <button type="button" class="admin-edit-btn" id="cs-salva">Salva</button></div>
-      <div style="margin:10px 0 4px;font-size:.88rem"><b>${usd(k.spesa_mese)}</b> su ${usd(c.limite_mensile_usd)} questo mese (${k.richieste_mese} richieste${pct >= 100 ? ' · LIMITE RAGGIUNTO: le chiamate sono bloccate' : ''})</div>
+      <div style="margin:10px 0 4px;font-size:.88rem"><b>${usd(k.spesa_mese)}</b> su ${usd(c.limite_mensile_usd)} questo mese · ${pct}% della soglia, restano ${usd(Math.max(0, c.limite_mensile_usd - k.spesa_mese))} (${k.richieste_mese} richieste${pct >= 100 ? ' · LIMITE RAGGIUNTO: le chiamate sono bloccate' : ''})</div>
       <div style="height:8px;background:var(--border-subtle,#ddd);border-radius:4px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${col}"></div></div>
       <details class="rd-box"><summary>Ultime richieste e mesi precedenti</summary>
         <div style="overflow-x:auto"><table style="width:100%;font-size:.8rem;border-collapse:collapse">
@@ -194,7 +196,7 @@
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
-        await api('/config', { method: 'PUT', body: { ai_attiva: w.querySelector('#cs-ai').checked, auto_attiva: w.querySelector('#cs-auto').checked, limite_mensile_usd: Number(w.querySelector('#cs-lim').value) } });
+        await api('/config', { method: 'PUT', body: { ai_attiva: w.querySelector('#cs-ai').checked, auto_attiva: w.querySelector('#cs-auto').checked, limite_mensile_usd: Number(w.querySelector('#cs-lim').value), web_auto_da_imp: Number(w.querySelector('#cs-web').value) } });
         await caricaCosti(); w.querySelector('.rd-costiwrap').innerHTML = costiPanel(); lega();
         if (typeof showToast === 'function') showToast('Impostazioni AI salvate');
       } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }

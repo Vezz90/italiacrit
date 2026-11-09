@@ -740,6 +740,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       if (typeof b.ai_attiva === 'boolean') nuovo.ai_attiva = b.ai_attiva;
       if (typeof b.auto_attiva === 'boolean') nuovo.auto_attiva = b.auto_attiva;
       if (b.limite_mensile_usd != null) { const n = Number(b.limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite non valido (0-1000 $)' }); nuovo.limite_mensile_usd = n; }
+      if (b.web_auto_da_imp != null) { const n = Number(b.web_auto_da_imp); if (![0, 1, 3, 99].includes(n)) return res.status(400).json({ error: 'soglia ricerca web non valida' }); nuovo.web_auto_da_imp = n; }
       if (b.prezzi && typeof b.prezzi === 'object') for (const [m, p] of Object.entries(b.prezzi)) if (p && p.in >= 0 && p.out >= 0) nuovo.prezzi[m] = { in: Number(p.in), out: Number(p.out) };
       const { error } = await sb().from('kv_store').upsert({ key: CFG_KEY, value: nuovo, updated_at: new Date().toISOString() });
       if (error) throw new Error(error.message);
