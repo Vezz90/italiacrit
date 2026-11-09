@@ -103,6 +103,14 @@
       <div class="rd-publ">${l.map(a => `<label><input type="checkbox" data-pa="${esc(a.id)}" ${a.on ? 'checked' : ''}> ${esc(a.nome)} <small class="rd-muted">${a.nel_testo ? 'citato nel testo' : 'in classifica/risultati'}${a.rango ? ' · ' + a.rango + '°' : ''}</small></label>`).join('') || '<small class="rd-muted">Nessun corridore riconosciuto: l\'articolo avrà solo la sua pagina.</small>'}</div>
       <div class="rd-btns"><button type="button" class="admin-edit-btn ok" data-act="pubOk">Pubblica ora</button><button type="button" class="admin-edit-btn" data-act="pubNo">Annulla</button></div>`}</div>`;
   }
+  function dossierHtml(b) {
+    const d = b.dossier; if (!d) return '';
+    const voci = (d.voci || []).map(v => `<li><b>${esc(v.tema)}</b>: ${esc(v.fatto)} <a href="${esc(v.fonte.url)}" target="_blank" rel="noopener noreferrer">${esc(v.fonte.nome || v.fonte.url)}</a> <small class="rd-muted">(${esc(v.fonte.livello)}${v.conferme > 1 ? ', ' + v.conferme + ' fonti' : ''}${v.fonte.data ? ', ' + esc(v.fonte.data) : ''})</small></li>`).join('');
+    const nt = (d.non_trovato || []).map(x => `<li>${esc(x)}</li>`).join(''), co = (d.contraddizioni || []).map(x => `<li>${esc(x)}</li>`).join('');
+    return `<details class="rd-box"><summary><b>Dossier del Ricercatore</b>: ${(d.voci || []).length} informazioni da altre fonti${d.dallarchivio ? ' (già pronto, riusato)' : ''}</summary>
+      <ul>${voci || '<li class="rd-muted">Nessuna informazione trovata fuori dal sito.</li>'}</ul>
+      ${co ? '<b>Fonti in contrasto con i dati</b><ul>' + co + '</ul>' : ''}${nt ? '<b>Non trovato</b><ul>' + nt + '</ul>' : ''}</details>`;
+  }
   function editor() { return editorBase() + pubPanel(); }
   function editorBase() {
     const b = sel();
@@ -120,6 +128,7 @@
       <label class="rd-l">Testo <small id="ed-parole">${parole(b.corpo)} parole</small><textarea id="ed-corpo" rows="18">${esc(b.corpo)}</textarea></label>
       ${dv ? `<div class="rd-box warn"><b>Da verificare prima di pubblicare</b><ul>${dv}</ul></div>` : ''}
       <div class="rd-box"><b>Fonti</b><ul>${fonti || '<li class="rd-muted">Nessuna fonte esterna: solo i dati del sito.</li>'}</ul></div>
+      ${dossierHtml(b)}
       <details class="rd-box"><summary>Dati usati dall'AI</summary><pre>${esc(JSON.stringify(b.dati, null, 1)).slice(0, 12000)}</pre></details>
       <div class="rd-btns">
         <button type="button" class="admin-edit-btn" data-act="prev">Anteprima</button>

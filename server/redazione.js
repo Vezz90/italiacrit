@@ -477,12 +477,12 @@ module.exports = function registerRedazione(app, deps) {
         [meseOra(), modello, String(uso || '').slice(0, 40), tin, tout, ricerche, costo.toFixed(5), esito || 'ok']);
     } catch (e) { console.warn('[redazione] registro consumi:', e.message); }
   }
-  async function callClaude(prompt, web, uso) {
+  async function callClaude(prompt, web, uso, opz) {
     const key = process.env.ANTHROPIC_API_KEY;
     if (!key) throw new Error('ANTHROPIC_API_KEY non configurata');
     let messages = [{ role: 'user', content: prompt }];
     const body0 = { model: MODEL, max_tokens: web ? 14000 : 6000, thinking: { type: 'disabled' } };
-    if (web) body0.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
+    if (web) body0.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: (opz && opz.maxUses) || 5, ...((opz && opz.regione) ? { user_location: { type: 'approximate', country: 'IT', region: String(opz.regione) } } : {}) }];
     const fonti = new Map(); let texts = [], usage = null, stop = '';
     for (let giro = 0; giro < 4; giro++) {
       const cfg = await consentiChiamata();                                  // prima di OGNI chiamata a pagamento
@@ -532,9 +532,9 @@ module.exports = function registerRedazione(app, deps) {
 
 REGOLE DI METODO (obbligatorie):
 1. NOMI, NUMERI, POSIZIONI, TEMPI, DATE E PUNTI vengono SOLO dal blocco DATI (o dalle PAGINE UFFICIALI indicate). Non ricalcolarli e non inventarli.
-2. La ricerca web (se attiva) serve per il CONTESTO: programma e orari, percorso, notizie, storia della corsa. Riscrivi sempre con parole tue: è vietato copiare frasi, anche brevi, dalle fonti. Elenca ogni fonte usata in "fonti".
-3. Usa un'informazione presa dal web solo se la fonte è affidabile (federazione, organizzatore, testata nota) e non contraddice i DATI. Se il web contraddice i DATI vincono i DATI: scrivilo in "da_verificare". Se non sei sicuro di un fatto, non usarlo e mettilo in "da_verificare".
-4. Niente citazioni o dichiarazioni di persone, niente aneddoti privati, niente stati d'animo attribuiti a una persona precisa che non siano nei DATI o nelle fonti. Il RACCONTO pero deve avere ritmo ed emozione: costruiscila con i fatti che i DATI dimostrano (un duello, una striscia di vittorie, una rimonta, un margine di pochi secondi, il giorno del tricolore) e con immagini efficaci. Se mancano dati scrivi un testo piu breve invece di riempire.
+2. La ricerca web (se attiva) e il DOSSIER DEL RICERCATORE (se presente) servono per il CONTESTO: programma e orari, percorso, notizie, cronaca di altre testate, storia della corsa. Riscrivi sempre con parole tue: è vietato copiare frasi, anche brevi, dalle fonti. Quando riporti un'informazione che viene da terzi, NOMINA la fonte nel testo come farebbe un giornalista ("secondo il comitato regionale", "come riferisce Tuttobiciweb", "scrive l'organizzatore"). Elenca ogni fonte usata in "fonti".
+3. Usa un'informazione presa dal web solo se la fonte è affidabile (federazione, organizzatore, testata nota) e non contraddice i DATI. Se il web contraddice i DATI vincono i DATI: scrivilo in "da_verificare". Se non sei sicuro di un fatto, non usarlo e mettilo in "da_verificare". Un'informazione che ha UNA SOLA fonte non ufficiale (o solo un social) va in "da_verificare", non nel testo.
+4. Notizie e dichiarazioni di terzi si riportano SOLO se sono nel DOSSIER o nelle fonti, in forma indiretta e attribuita ("secondo l'organizzatore..."), mai come citazione testuale tra virgolette e mai inventate. Niente aneddoti privati, niente stati d'animo attribuiti a una persona precisa che non siano nei DATI o nelle fonti. Il RACCONTO pero deve avere ritmo ed emozione: costruiscila con i fatti che i DATI dimostrano (un duello, una striscia di vittorie, una rimonta, un margine di pochi secondi, il giorno del tricolore) e con immagini efficaci. Se mancano dati scrivi un testo piu breve invece di riempire.
 5. DATI PERSONALI: per tutti gli atleti, minorenni compresi, si raccontano i fatti sportivi pubblici (nome, squadra, risultati, titoli, carriera, selezioni): sono la ragione d'essere del sito. Non scrivere mai dati personali che non siano sportivi (eta o data di nascita, scuola, residenza, famiglia, salute, social privati) e usa il web solo per contesto sportivo (risultati, squadre, selezioni, programma), mai per notizie sulla persona.
 6. NOMI: scrivi sempre "Nome Cognome" in maiuscolo/minuscolo normale (nei DATI il cognome viene prima e spesso e tutto maiuscolo: "MILESI NICOLAS" diventa "Nicolas Milesi"). Usa i nomi delle squadre come sono nei DATI, scritti in modo leggibile.
 7. TITOLO: deve contenere i nomi dei vincitori principali. Se l'evento ha piu categorie, nel titolo devono comparire SEMPRE i vincitori delle categorie piu alte presenti (prima Elite/Under 23 uomini e Donne Elite, poi Juniores, poi Allievi), senza dimenticarne nessuno tra Elite/Under 23: se non ci stanno tutti nel titolo, mettili nel sommario e nelle prime righe. Le sezioni dell'articolo vanno dalla categoria piu alta alla piu bassa.
@@ -597,6 +597,94 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     return { tipo: 'gara', p: { id: best.id, tutte: true }, dati: await factsGara(best.id, { tutte: true }) };
   }
 
+  // ---------- DOSSIER: il Ricercatore cerca fuori dal sito, come un giornalista, prima che si scriva ----------
+  const DOSSIER_KEY = 'redazione_dossier';
+  const TTL_DOSSIER = { gara: 2 * 24 * 3600 * 1000, atleta: 7 * 24 * 3600 * 1000 };
+  let dsChain = Promise.resolve();
+  async function leggiDossierTutti() {
+    const { data, error } = await sb().from('kv_store').select('value').eq('key', DOSSIER_KEY).maybeSingle();
+    if (error) throw new Error('lettura dossier: ' + error.message);
+    return data && data.value && typeof data.value === 'object' && !Array.isArray(data.value) ? data.value : {};
+  }
+  function salvaDossier(chiave, d) {
+    const run = dsChain.then(async () => {
+      const tutti = await leggiDossierTutti();
+      tutti[chiave] = d;
+      const chiavi = Object.keys(tutti).sort((a, b) => String(tutti[b].creato).localeCompare(String(tutti[a].creato)));
+      chiavi.slice(150).forEach(k => delete tutti[k]);                          // si tengono i 150 piu recenti
+      const { error } = await sb().from('kv_store').upsert({ key: DOSSIER_KEY, value: tutti, updated_at: new Date().toISOString() });
+      if (error) throw new Error('scrittura dossier: ' + error.message);
+    });
+    dsChain = run.catch(() => {});
+    return run;
+  }
+  const impGara = g => (g.campionato_italiano ? 3 : 0) + (g.campionato_regionale ? 2 : 0) + ((g.moltiplicatore_punti || 1) >= 2 ? 1 : 0) + (g.tipo === 'nazionale' ? 1 : 0);
+  function impostaDossier(tipo, facts, p) {
+    if (tipo === 'gara') {
+      const g = facts.gara, imp = impGara(g), anteprima = facts.stato !== 'risultati';
+      const cat = [...new Set((facts.risultati || []).map(r => r.categoria))].join(', ') || g.categoria_calendario;
+      const vincitori = (facts.risultati || []).map(r => (r.top10 || [])[0] ? `${r.categoria}: ${r.top10[0].atleta} (${r.top10[0].team || 's.t.'})` : null).filter(Boolean);
+      return {
+        chiave: `gara|${g.data}|${alboBase(g.nome)}|${facts.stato}`, ttl: TTL_DOSSIER.gara, ricerche: imp >= 3 ? 8 : imp >= 1 ? 5 : 3, regione: g.regione ? tc(g.regione) : '',
+        oggetto: `la gara «${g.nome}» del ${g.data}${g.luogo ? ' a ' + g.luogo : ''}${g.regione ? ' (' + tc(g.regione) + ')' : ''}, categorie: ${cat}`,
+        cosa: anteprima
+          ? 'Cerca: programma e orari, percorso e circuito, organizzatore, iscrizioni, note del comitato regionale o provinciale, articoli di presentazione sulla stampa specializzata e locale, storia della corsa.'
+          : 'Cerca: cronaca della gara su altre testate (specializzate e locali), comunicati della federazione e dell\'organizzatore, ordine d\'arrivo ufficiale per confrontarlo con i DATI, condizioni di gara (meteo, percorso), notizie dei giorni prima e dopo.',
+        dati: { gara: g.nome, data: g.data, luogo: g.luogo, regione: g.regione, stato: facts.stato, campionato_italiano: g.campionato_italiano, campionato_regionale: g.campionato_regionale, vincitori }
+      };
+    }
+    const a = facts.atleta || {};
+    return {
+      chiave: `atleta|${(p && p.id) || a.nome}`, ttl: TTL_DOSSIER.atleta, ricerche: 4, regione: '',
+      oggetto: `l'atleta ${a.nome || ''}`,
+      cosa: 'Cerca SOLO fatti sportivi pubblici: squadra attuale, risultati e vittorie citati dalla stampa specializzata o locale, convocazioni e selezioni, titoli. Nessuna informazione privata.',
+      dati: { atleta: a.nome, squadra: a.team_attuale || null, categoria: a.categoria || null }
+    };
+  }
+  function leggiJson(testo) {
+    const t = String(testo || ''), i = t.indexOf('{'), j = t.lastIndexOf('}');
+    if (i < 0 || j <= i) return null;
+    try { return JSON.parse(t.slice(i, j + 1)); } catch (_) { return null; }
+  }
+  const LIVELLI = ['ufficiale', 'testata', 'locale', 'social'];
+  async function ottieniDossier(tipo, facts, p) {
+    const im = impostaDossier(tipo, facts, p);
+    try {
+      const tutti = await leggiDossierTutti(), hit = tutti[im.chiave];
+      if (hit && Date.now() - Date.parse(hit.creato) < im.ttl) return { ...hit, dallarchivio: true };       // gia fatto per questa gara/atleta: nessun costo
+    } catch (_) { /* si rifa */ }
+    const prompt = `Sei il RICERCATORE di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Prepari un DOSSIER per il cronista: cerchi sul web, come farebbe un giornalista, informazioni su ${im.oggetto}. Oggi e ${today()}.
+
+${im.cosa}
+Fai fino a ${im.ricerche} ricerche mirate (nome della gara e anno, organizzatore, località, comitato regionale/provinciale, parole come "risultati", "cronaca", "presentazione"). Cerca in questo ordine di affidabilità: 1) UFFICIALE: Federazione Ciclistica Italiana (nazionale, comitato regionale, provinciale), società organizzatrice; 2) TESTATA: siti e giornali di ciclismo; 3) LOCALE: giornali, siti e portali del territorio; 4) SOCIAL: pagine pubbliche e forum, solo come indizio e mai come fonte unica.
+
+REGOLE:
+- Ogni informazione è una voce del dossier, riscritta con parole tue: è vietato copiare frasi dalle fonti.
+- Per ogni voce indica ente o testata, indirizzo (https), data della fonte e il livello (ufficiale, testata, locale o social). "conferme" è il numero di fonti DIVERSE che riportano lo stesso fatto.
+- I DATI DEL SITO qui sotto prevalgono: se una fonte li contraddice, scrivilo in "contraddizioni".
+- Mai dati personali non sportivi (età, scuola, residenza, famiglia, salute, social privati). Per i minorenni solo risultati, squadra, convocazioni.
+- Dichiarazioni di persone: solo come sintesi attribuita e solo se scritte in una fonte. Non inventare nulla: ciò che non trovi va in "non_trovato".
+
+Rispondi SOLO con un JSON, senza altro testo:
+{"voci":[{"tema":"programma|percorso|cronaca|storia|selezioni|squadra|altro","fatto":"...","fonte":{"nome":"...","url":"https://...","data":"AAAA-MM-GG oppure vuoto","livello":"ufficiale|testata|locale|social"},"conferme":1}],"contraddizioni":["..."],"non_trovato":["..."]}
+
+DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
+    const res = await callClaude(prompt, true, 'dossier', { maxUses: im.ricerche, regione: im.regione });
+    const j = leggiJson(res.text) || leggiJson(res.lastText);
+    if (!j) throw new Error('dossier non leggibile');
+    const voci = (Array.isArray(j.voci) ? j.voci : []).map(v => {
+      const f = v && v.fonte || {};
+      return { tema: String(v.tema || 'altro').slice(0, 20), fatto: String(v.fatto || '').slice(0, 600), conferme: Math.max(1, Number(v.conferme) || 1),
+        fonte: { nome: String(f.nome || '').slice(0, 80), url: String(f.url || ''), data: /^\d{4}-\d{2}-\d{2}$/.test(String(f.data || '')) ? f.data : '', livello: LIVELLI.includes(f.livello) ? f.livello : 'testata' } };
+    }).filter(v => v.fatto && /^https?:\/\//i.test(v.fonte.url)).slice(0, 25);        // una voce senza fonte non vale: si scarta
+    const d = { chiave: im.chiave, creato: new Date().toISOString(), tipo, oggetto: im.oggetto, ricerche_max: im.ricerche, voci,
+      contraddizioni: (Array.isArray(j.contraddizioni) ? j.contraddizioni : []).map(x => String(x).slice(0, 300)).slice(0, 8),
+      non_trovato: (Array.isArray(j.non_trovato) ? j.non_trovato : []).map(x => String(x).slice(0, 200)).slice(0, 10) };
+    try { await salvaDossier(im.chiave, d); } catch (e) { console.warn('[redazione] salvataggio dossier:', e.message); }
+    return d;
+  }
+
+  const dichiara = (corpo, nome) => { const n = up(nome).replace(/[^A-Z0-9 ]/g, ' ').trim(); return n.length >= 3 && up(corpo).includes(n); };
   async function genera(tipo, p) {
     let facts, soggetto;
     if (tipo === 'gara') { facts = await factsGara(p.id, { tutte: !!p.tutte }); soggetto = facts.gara.nome; }
@@ -614,12 +702,15 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     else throw new Error('tipo non valido');
     const link = await leggiLink((p.link || []).filter(Boolean));
     // per i profili di atleti la ricerca web e consentita solo per gli adulti (gia garantito da factsAtleta); per le gare/settimana senza restrizioni
-    const web = !!p.web;
+    let dossier = null;
+    if (p.web && (tipo === 'gara' || tipo === 'atleta')) { try { dossier = await ottieniDossier(tipo, facts, p); } catch (e) { console.warn('[redazione] dossier:', e.message); } }
+    const web = !!p.web && !dossier;                                           // con il dossier lo scrittore non ripete la ricerca
     const prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
+      (dossier ? `\nDOSSIER DEL RICERCATORE (informazioni prese da altre fonti: ufficiali, testate, giornali locali). Usalo per il contesto e riportalo come farebbe un giornalista: con parole tue e nominando la fonte nel testo. Le voci con livello "social" o con una sola fonte non ufficiale vanno in DA_VERIFICARE, non nel testo. Le fonti che usi vanno in FONTI con il loro indirizzo. Cio che e in non_trovato NON va inventato.\n${JSON.stringify({ voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato }, null, 1)}\n` : '') +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
       (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, tipo === 'libero' ? 2500 : 600)}\n` : '');
     const cand = await fotoCandidate(tipo, p, facts);
-    const res = await callClaude(prompt, web);
+    const res = await callClaude(prompt, web, 'articolo');
     const j = parseJson(res);
     const piazzata = piazzaFotoAuto(String(j.corpo || ''), cand, facts, p);
     j.corpo = piazzata.corpo;
@@ -627,9 +718,10 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     const fonti = [...(Array.isArray(j.fonti) ? j.fonti : [])];
     link.filter(l => !l.errore).forEach(l => { if (!fonti.some(f => f.url === l.url)) fonti.push({ titolo: l.titolo || l.url, url: l.url, uso: 'pagina ufficiale indicata' }); });
     const dv = Array.isArray(j.da_verificare) ? j.da_verificare : [];
+    if (dossier) { dossier.contraddizioni.forEach(x => dv.push('Dal dossier, fonte in contrasto con i dati: ' + x)); dossier.voci.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && v.fonte.livello !== 'social' && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'dal dossier del Ricercatore (' + v.fonte.livello + ')' }); }); }
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor };   // per le prove
