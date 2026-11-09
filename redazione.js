@@ -184,6 +184,8 @@
 .st-bub.errore{background:#fef2f2;color:#7f1d1d;box-shadow:0 6px 18px rgba(220,38,38,.2),0 0 0 1px rgba(220,38,38,.4)}
 .st-bub.chiac{background:rgba(255,255,255,.82);color:#475569;font-style:italic;box-shadow:0 4px 12px rgba(15,23,42,.12),0 0 0 1px rgba(100,116,139,.35)}
 .st-lavagna{position:absolute;left:43.1%;top:5.2%;width:20.2%;height:9%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.2cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.st-avviso{margin:0 0 8px;padding:8px 12px;border-radius:10px;background:#fef3c7;color:#78350f;font-size:.85rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:960px}
+.st-avviso[hidden]{display:none}
 .st-sotto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px;max-width:960px}
 .st-elenco,.st-log{font-size:.8rem;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);padding:8px 10px}
 .st-elenco>div{display:flex;gap:7px;align-items:baseline;padding:2px 0}
@@ -244,7 +246,8 @@
       const a = attive.filter(b => b.parametri && b.parametri.web);
       if (a.length) return { ...base, stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
       if (cfg && Number(cfg.web_auto_da_imp) === 99) return { ...base, stato: 'riposa', testo: 'Ricerca automatica: mai' };
-      return { ...base, stato: 'riposa', testo: 'Nessuna ricerca in corso' };
+      const at = st.spunti && st.spunti.attesa || [];
+      return { ...base, stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : 'Nessuna ricerca in corso' };
     })();
     const cassa = (() => {
       const base = { nome: 'Cassiere', ruolo: 'Costi e limite', colore: '#d97706', capelli: '#7c2d12' };
@@ -295,6 +298,7 @@
     return `<div class="hx-panel rd-sp"><div class="rd-uff-head"><h3>Spunti dell'Analista</h3>
       <small>${sp.fine ? 'dati fino al ' + esc(fmtGiorno(sp.fine)) + ' · ' : ''}scelti con regole fisse sui risultati del sito, senza AI</small>
       <button type="button" class="admin-edit-btn" data-sp="calcola" ${occ ? 'disabled' : ''}>Aggiorna</button></div>
+      ${(sp.attesa || []).length ? `<small class="rd-muted"><b>In attesa di risultati:</b> ${sp.attesa.slice(0, 6).map(g => esc(g.nome) + ' (' + esc(fmtGiorno(g.data)) + ')').join(' · ')}${sp.attesa.length > 6 ? ' · +' + (sp.attesa.length - 6) : ''}</small>` : ''}
       ${buoni.length ? `<div class="rd-spl">${buoni.map(card).join('')}</div>` : '<small class="rd-muted">Nessuno spunto forte negli ultimi 28 giorni.</small>'}
       ${scart.length ? `<details class="rd-box"><summary>${scart.length} scartat${scart.length === 1 ? 'o' : 'i'}</summary><div class="rd-spl">${scart.map(card).join('')}</div></details>` : ''}
       <small class="rd-muted">Calcolati sui risultati presenti nel sito: se una gara non è stata importata, il conteggio può essere più basso del reale.</small></div>`;
@@ -361,7 +365,7 @@
     const now = performance.now();
     stanza.ag = ORDINE.map(([nome, riga, col, look]) => {
       const cx = DESK_X[col], D = ROW_Y[riga], sx = cx - 5, sy = D + 3;
-      return { nome, riga, col, look, cx, D, sx, sy, x: sx, y: sy, dir: 1, stato: 'seduto', path: [], parla: null, parlaChiac: false, fase: 'riposa', lavoro: '', scena: null, giro: null, prossimo: now + 7000 + rnd(15000), el: null, bub: null, _k: '' };
+      return { nome, riga, col, look, cx, D, sx, sy, x: sx, y: sy, dir: 1, stato: 'seduto', path: [], parla: null, parlaChiac: false, fase: 'riposa', lavoro: '', scena: null, giro: null, prossimo: now + 4000 + rnd(9000), el: null, bub: null, _k: '' };
     });
   }
 
@@ -435,7 +439,7 @@
         const g = a.giro;
         if (g.fase === 'vai' && !a.path.length) { g.fase = 'sosta'; g.fino = now + 4200 + rnd(2500); a.parla = g.sp.frasi[rnd(g.sp.frasi.length)]; a.parlaChiac = true; a.dir = g.sp.id === 'acqua' ? -1 : 1; }
         else if (g.fase === 'sosta' && now >= g.fino) { a.parla = null; g.fase = 'torna'; tornaAlPosto(a); }
-        else if (g.fase === 'torna' && !a.path.length && a.stato === 'seduto') { a.giro = null; a.prossimo = now + 16000 + rnd(26000); }
+        else if (g.fase === 'torna' && !a.path.length && a.stato === 'seduto') { a.giro = null; a.prossimo = now + 9000 + rnd(14000); }
         continue;
       }
       if (a.scena || a.stato !== 'seduto' || now < a.prossimo) continue;
@@ -443,7 +447,7 @@
       if (stanza.coda.some(x => !x.chiac)) { a.prossimo = now + 5000; continue; }
       if (Math.random() < 0.5) {
         const altri = stanza.ag.filter(b => b !== a && !b.scena && !b.giro && b.stato === 'seduto' && b.fase !== 'lavora');
-        if (altri.length) { const b = altri[rnd(altri.length)], c = CHIACCHIERE[rnd(CHIACCHIERE.length)]; scena(a.nome, b.nome, c[0], c[1], { chiac: true }); a.prossimo = now + 25000 + rnd(20000); continue; }
+        if (altri.length) { const b = altri[rnd(altri.length)], c = CHIACCHIERE[rnd(CHIACCHIERE.length)]; scena(a.nome, b.nome, c[0], c[1], { chiac: true }); a.prossimo = now + 14000 + rnd(12000); continue; }
       }
       const sp = SPOTS[rnd(SPOTS.length)]; a.giro = { fase: 'vai', sp, fino: 0 }; vai(a, sp.x, sp.y);
     }
@@ -472,6 +476,15 @@
       const lim = Number(k.config.limite_mensile_usd) || 0, pct = lim > 0 ? k.spesa_mese / lim * 100 : 0;
       if (pct >= 100 && !stanza.avvisi.has(100)) { stanza.avvisi.add(100); scena('Cassiere', 'Caporedattore', 'Limite mensile raggiunto: blocco le chiamate.', 'Lo alzo io o fermiamo la scrittura?'); }
       else if (pct >= 80 && !stanza.avvisi.has(80)) { stanza.avvisi.add(80); scena('Cassiere', 'Caporedattore', `Attenzione: siamo al ${Math.round(pct)}% del limite.`, 'Teniamo d\'occhio la spesa.'); }
+    }
+    const sp = st.spunti;
+    if (sp) {
+      const gen = sp.generato || '', ids = sp.spunti.map(x => x.id).join(), at = (sp.attesa || []).map(x => x.nome + x.data).join();
+      if (stanza.spGen !== undefined) {
+        if (gen !== stanza.spGen && ids !== stanza.spIds) { const nuovi = sp.spunti.filter(x => x.stato === 'nuovo'); if (nuovi.length) scena('Analista', 'Caporedattore', `Ho riguardato i dati: ${nuovi.length} spunt${nuovi.length === 1 ? 'o' : 'i'}. Il primo: ${nuovi[0].titolo}`, 'Bene, vediamo se vale un articolo.'); }
+        if (at !== stanza.spAtt && (sp.attesa || []).length) { const q = sp.attesa; scena('Ricercatore', 'Caporedattore', `Aspetto ancora i risultati di ${q[0].nome}${q.length > 1 ? ` e di altre ${q.length - 1} gare` : ''}`, 'Appena arrivano, li scrive il Cronista.'); }
+      }
+      stanza.spGen = gen; stanza.spIds = ids; stanza.spAtt = at;
     }
     aggiornaPannelli();
   }
@@ -593,6 +606,13 @@
     const host = document.querySelector('.rd-ufficio'); if (!host) return;
     const ag = agenti(), n = ag.filter(a => a.stato === 'lavora').length;
     const conto = host.querySelector('.st-conto'); if (conto) conto.textContent = n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura';
+    const av = host.querySelector('.st-avviso'), kk = st.costi;
+    if (av) {
+      const msg = !kk ? '' : !kk.chiave ? 'Manca la chiave dell\'AI sul server: nessuno può scrivere.' : !kk.config.ai_attiva ? 'L\'AI è spenta: nessuno può scrivere.' : !kk.config.auto_attiva ? 'La scrittura automatica è spenta: nessuno scrive da solo (gli spunti si calcolano lo stesso).' : '';
+      const btn = kk && kk.chiave && kk.config.ai_attiva && !kk.config.auto_attiva;
+      const h = msg + '|' + btn;
+      if (av.dataset.h !== h) { av.dataset.h = h; av.hidden = !msg; av.innerHTML = esc(msg) + (btn ? ' <button type="button" class="admin-edit-btn" data-accendi="1">Accendi la scrittura automatica</button>' : ''); }
+    }
     const lav = host.querySelector('.st-lavagna');
     if (lav) lav.textContent = `Bozze ${st.bozze.filter(b => b.stato === 'bozza').length} · Spunti ${st.spunti ? st.spunti.spunti.filter(s => s.stato === 'nuovo').length : 0}`;
     const el = host.querySelector('.st-elenco'), h1 = ag.map(d => `<div><span class="st-pt ${d.stato}"></span><span><b>${esc(d.nome)}</b>: ${esc(d.testo)}</span></div>`).join('');
@@ -605,8 +625,18 @@
     inizStanza();
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
+      <div class="st-avviso" hidden></div>
       <div class="st-room"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div><div class="st-ov"></div></div>
       <div class="st-sotto"><div class="st-elenco"></div><div class="st-log"></div></div>`;
+    host.onclick = async ev => {
+      if (!ev.target.closest('[data-accendi]')) return;
+      try {
+        await api('/config', { method: 'PUT', body: { auto_attiva: true } });
+        await caricaCosti(); aggiornaStanza();
+        const w = document.querySelector('.rd-costiwrap'); if (w) { w.innerHTML = costiPanel(); lega(); }
+        if (typeof showToast === 'function') showToast('Scrittura automatica accesa: 3 volte al giorno, entro il limite mensile');
+      } catch (e) { if (typeof showToast === 'function') showToast((e && e.message) || 'Errore', 'error'); }
+    };
     const canvas = host.querySelector('.st-cv'), ov = host.querySelector('.st-ov');
     stanza.canvas = canvas; stanza.ctx = canvas.getContext('2d'); stanza.ctx.setTransform(SCALA, 0, 0, SCALA, 0, 0); stanza.bg = costruisciSfondo();
     for (const a of stanza.ag) {
@@ -634,6 +664,7 @@
     if (!document.querySelector('.rd-wrap')) return;
     st.tu = setTimeout(async () => {
       if (document.querySelector('.rd-wrap') && !document.hidden) {
+        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await caricaSpunti(); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); }
         const firma = () => st.bozze.map(b => b.id + b.stato).join();
         const prima = firma();
         await Promise.all([carica(), caricaCosti()]);

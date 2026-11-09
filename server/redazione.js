@@ -444,7 +444,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0,limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true,limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -582,6 +582,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   const tokensDi = s => up(s).replace(/[^A-Z0-9 ]/g, ' ').split(' ').filter(w => w.length > 2);
   async function risolvi(b) {
     if (b.tipo === 'stagione') { const c = up(b.rif).replace(/[^A-Z0-9_]/g, ''); return { tipo: 'stagione', p: { id: c }, dati: await factsStagione(c) }; }
+    if (b.tipo === 'squadre') { const c = up(b.rif).replace(/[^A-Z0-9_]/g, ''); return { tipo: 'squadre', p: { id: c }, dati: await factsSquadre(c) }; }
     if (b.tipo === 'settimana') { const fine = /^\d{4}-\d{2}-\d{2}$/.test(b.rif) ? b.rif : null; return { tipo: 'settimana', p: { fine }, dati: await factsSettimana(fine) }; }
     if (b.tipo === 'atleta') {
       const t = tokensDi(b.rif), ath = Object.values(await getData('athletes.json'));
@@ -603,7 +604,13 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     else if (tipo === 'atleta') { facts = await factsAtleta(p.id); soggetto = facts.atleta.nome; }
     else if (tipo === 'squadre') { facts = await factsSquadre(p.id); soggetto = `Squadre ${facts.stagione}: ${facts.categoria}`; }
     else if (tipo === 'stagione') { facts = await factsStagione(p.id); soggetto = `Stagione ${facts.stagione}: ${facts.categoria}`; }
-    else if (tipo === 'libero') { const bl = []; for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b)); facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
+    else if (tipo === 'libero') {
+      const bl = [];
+      if (Array.isArray(p.blocchi) && p.blocchi.length) {                      // dati gia scelti (spunti dell'Analista): niente pianificazione con l'AI, un blocco che non si risolve si salta
+        for (const b of p.blocchi) { try { bl.push(await risolvi(b)); } catch (e) { console.warn('[redazione] blocco saltato:', e.message); } }
+        if (!bl.length) bl.push(await risolvi({ tipo: 'settimana', rif: 'ultima' }));
+      } else for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b));
+      facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
     else throw new Error('tipo non valido');
     const link = await leggiLink((p.link || []).filter(Boolean));
     // per i profili di atleti la ricerca web e consentita solo per gli adulti (gia garantito da factsAtleta); per le gare/settimana senza restrizioni
@@ -713,6 +720,13 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
         const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= webDa, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
         avviati++; await fine;                                           // una alla volta: niente raffiche di richieste
       }
+      // il miglior spunto dell'Analista non ancora usato: una bozza per giro (solo bozza, mai pubblicata)
+      if (cfgA.auto_spunti !== false && oggiFatte + avviati < MAX_AL_GIORNO) {
+        try {
+          const v = await leggiSpunti(), s = v && v.spunti.find(x => x.stato === 'nuovo' && !chiavi.has('spunto|' + x.id));
+          if (s) { const r = await avviaDaSpunto(s, false, true); avviati++; await r.fine; }
+        } catch (e) { console.warn('[redazione] auto spunto:', e.message); }
+      }
       // il punto della settimana: lunedi e martedi, per l'ultima settimana con gare
       const gg = new Date().getUTCDay();
       if ((gg === 1 || gg === 2) && oggiFatte + avviati < MAX_AL_GIORNO) {
@@ -811,19 +825,53 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     return run;
   }
   async function ricalcolaSpunti() {
-    const nuovo = calcolaSpunti(await getData('results_raw.json'));
+    const nuovo = calcolaSpunti(await getData('results_raw.json')), attesa = await gareInAttesa();
     return mutaSpunti(v => {
       const vecchi = new Map(v.spunti.map(s => [s.id, s]));
       v.spunti = nuovo.spunti.map(s => { const o = vecchi.get(s.id); return o ? { ...s, spiegazione: o.spiegazione, stato: o.stato || 'nuovo', bozza_id: o.bozza_id } : { ...s, stato: 'nuovo' }; });
-      v.fine = nuovo.fine; v.generato = new Date().toISOString();
+      v.fine = nuovo.fine; v.generato = new Date().toISOString(); v.attesa = attesa;
       return v;
     });
   }
-  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti });
+  // l'Analista guarda i dati da solo, ogni ora (calcolo gratuito)
+  const _tmrAnalista = setInterval(() => { ricalcolaSpunti().catch(e => console.warn('[redazione] analista:', e.message)); }, 60 * 60 * 1000);
+  if (_tmrAnalista.unref) _tmrAnalista.unref();
+  // i dati dell'articolo li sceglie il codice (non l'AI): atleti dello spunto, oppure le squadre della categoria
+  function blocchiSpunto(s) {
+    const bl = /^squadra/.test(s.tipo) ? [] : (s.atleti || []).slice(0, 2).map(a => ({ tipo: 'atleta', rif: a.nome }));
+    if (!bl.length && s.codice_categoria) bl.push({ tipo: 'squadre', rif: s.codice_categoria });
+    return bl.length ? bl : [{ tipo: 'settimana', rif: 'ultima' }];
+  }
+  async function avviaDaSpunto(s, web, auto) {
+    const richiesta = `Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
+    const indicazioni = JSON.stringify({ titolo: s.titolo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati }).slice(0, 2400);
+    const { id, fine } = await avvia('libero', { richiesta, indicazioni, blocchi: blocchiSpunto(s), web: !!web, link: [], auto: !!auto, chiave: 'spunto|' + s.id }, s.titolo.slice(0, 70));
+    await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) { t.stato = 'usato'; t.bozza_id = id; } });
+    return { id, fine };
+  }
+  // gare passate senza risultati nel sito (ultimi 7 giorni): servono a sapere cosa si sta aspettando
+  async function gareInAttesa() {
+    try {
+      const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
+      const t = today(), da = shift(t, -GIORNI_INDIETRO), visti = new Set(), out = [];
+      const con = new Set(raw.filter(r => r.data >= da).map(r => `${r.data}|${alboBase(r.nome_gara)}`));
+      for (const c of (cal || [])) {
+        if (!c.data || c.data < da || c.data > t || !c.nome || c.nome.trim() === '-') continue;
+        const k = `${c.data}|${alboBase(c.nome)}`;
+        if (visti.has(k)) continue; visti.add(k);
+        if (!con.has(k)) out.push({ nome: c.nome, data: c.data, regione: c.regione || '' });
+      }
+      return out.sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
+    } catch (_) { return []; }
+  }
+  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto });
   app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
     try {
       let v = await leggiSpunti();
-      if (!v || !v.generato || Date.now() - Date.parse(v.generato) > 12 * 3600 * 1000) v = await ricalcolaSpunti();   // il calcolo e gratuito: nessuna chiamata a Claude
+      if (!v || !v.generato || !v.attesa || Date.now() - Date.parse(v.generato) > 3 * 3600 * 1000) v = await ricalcolaSpunti();
+      const bz = new Map((await readAll()).map(b => [b.id, b.stato]));       // uno spunto la cui bozza e fallita o stata cancellata torna disponibile
+      if (v.spunti.some(s => s.stato === 'usato' && s.bozza_id && (!bz.has(s.bozza_id) || bz.get(s.bozza_id) === 'errore')))
+        v = await mutaSpunti(x => { x.spunti.forEach(s => { if (s.stato === 'usato' && s.bozza_id && (!bz.has(s.bozza_id) || bz.get(s.bozza_id) === 'errore')) { s.stato = 'nuovo'; delete s.bozza_id; } }); return x; });   // il calcolo e gratuito: nessuna chiamata a Claude
       res.json(v);
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
@@ -854,11 +902,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     try {
       const v = await leggiSpunti(), s = v && v.spunti.find(x => x.id === req.params.id);
       if (!s) return res.status(404).json({ error: 'spunto non trovato' });
-      const richiesta = `Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
-      const indicazioni = JSON.stringify({ titolo: s.titolo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati }).slice(0, 2400);
-      const { id } = await avvia('libero', { richiesta, indicazioni, web: !!(req.body || {}).web, link: [] }, s.titolo.slice(0, 70));
-      await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) { t.stato = 'usato'; t.bozza_id = id; } });
-      res.json({ ok: true, id });
+      res.json({ ok: true, id: (await avviaDaSpunto(s, !!(req.body || {}).web, false)).id });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 
