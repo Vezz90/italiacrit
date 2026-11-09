@@ -726,6 +726,142 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   }
   if (deps._test) deps._test({ callClaude, getCfg, spesaMese });            // solo per le prove automatiche
   // impostazioni e consumi (solo amministratori)
+  // ---------- ANALISTA: spunti calcolati dai dati con regole fisse. L'AI non sceglie nulla: al massimo li spiega o li trasforma in bozza ----------
+  const SPUNTI_KEY = 'redazione_spunti';
+  const tc = s => String(s || '').toLowerCase().replace(/(^|[\s'’-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+  const nomeAtl = r => `${tc(r.nome)} ${tc(r.cognome)}`.trim();
+  const idSpunto = (tipo, chiave, fine) => tipo + '-' + crypto.createHash('sha1').update(`${tipo}|${chiave}|${fine}`).digest('hex').slice(0, 8);
+  function calcolaSpunti(raw, fineOpt) {
+    const righe = (raw || []).filter(r => r.data && r.tipo !== 'pista' && Number(r.posizione) > 0 && r.atleta_id && catOf(r));
+    const fine = fineOpt || righe.reduce((m, r) => (r.data <= today() && r.data > m ? r.data : m), '');
+    if (!fine) return { fine: null, spunti: [] };
+    const dalA = shift(fine, -27), dalB = shift(fine, -55), alB = shift(fine, -28), dalC = shift(fine, -59);
+    const inA = r => r.data >= dalA && r.data <= fine, inB = r => r.data >= dalB && r.data <= alB;
+    const pos = r => Number(r.posizione), pt = r => Number(r.punti_effettivi) || 0;
+    const gara = r => ({ nome: r.nome_gara, data: r.data, pos: pos(r) });
+    const periodo = { dal: dalA, al: fine };
+    const ord = (a, b) => a.data.localeCompare(b.data) || (a._scrape_seq || 0) - (b._scrape_seq || 0);
+    const cands = [];
+    // --- atleti (un solo spunto per atleta e categoria: il migliore)
+    const perAtl = new Map();
+    for (const r of righe) if (r.data <= fine) { const k = r.atleta_id + '|' + catOf(r); if (!perAtl.has(k)) perAtl.set(k, []); perAtl.get(k).push(r); }
+    for (const [k, lista0] of perAtl) {
+      const seen = new Set(), lista = lista0.sort(ord).filter(r => !seen.has(r.gara_id) && seen.add(r.gara_id));
+      const ultima = lista[lista.length - 1], cat = catOf(ultima), a = { id: ultima.atleta_id, nome: nomeAtl(ultima), team: ultima.team || '' };
+      const base = { categoria: CAT_NOME[cat] || cat, codice_categoria: cat, periodo, atleti: [a] }, mie = [];
+      const winsA = lista.filter(r => inA(r) && pos(r) === 1);
+      if (winsA.length >= 3) mie.push({ ...base, tipo: 'vittorie', score: winsA.length * 10, titolo: `${a.nome} ha vinto ${winsA.length} gare in quattro settimane`, motivo: 'Almeno 3 vittorie in 28 giorni.', gare: winsA.slice(-6).map(gara), dati: { vittorie: winsA.length } });
+      let serie = 0; for (let i = lista.length - 1; i >= 0 && pos(lista[i]) <= 3; i--) serie++;
+      if (serie >= 3 && ultima.data >= dalA) mie.push({ ...base, tipo: 'podi', score: serie * 8, titolo: `${a.nome} sul podio per ${serie} gare di fila`, motivo: 'Almeno 3 podi consecutivi, l\'ultimo negli ultimi 28 giorni.', gare: lista.slice(-Math.min(serie, 6)).map(gara), dati: { podi_consecutivi: serie } });
+      const pA = lista.filter(inA).reduce((s, r) => s + pt(r), 0), pB = lista.filter(inB).reduce((s, r) => s + pt(r), 0);
+      if (pA >= 20 && pA >= 2 * pB && pA - pB >= 15) mie.push({ ...base, tipo: 'crescita', score: (pA - pB) / 2, titolo: `${a.nome} accelera: ${pA} punti in quattro settimane contro ${pB} delle precedenti`, motivo: 'Punti almeno doppi rispetto alle 4 settimane prima (minimo 20 punti, +15).', gare: lista.filter(inA).map(gara).slice(-6), dati: { punti_ultime_4_settimane: pA, punti_4_settimane_prima: pB } });
+      const gA = lista.filter(inA);
+      if (gA.length >= 5 && gA.every(r => pos(r) <= 10)) mie.push({ ...base, tipo: 'costanza', score: gA.length * 4, titolo: `${a.nome}: ${gA.length} gare in quattro settimane, sempre nei primi 10`, motivo: 'Almeno 5 gare in 28 giorni, tutte nei primi 10.', gare: gA.map(gara).slice(-6), dati: { gare: gA.length, miglior_piazzamento: Math.min(...gA.map(pos)) } });
+      if (mie.length) cands.push({ ...mie.sort((x, y) => y.score - x.score)[0], _k: k });
+    }
+    // --- squadre
+    const perTeam = new Map();
+    for (const r of righe) if (r.data <= fine && r.team) { const k = r.team_id || r.team; if (!perTeam.has(k)) perTeam.set(k, { nome: r.team, A: 0, B: 0, vittorie: new Map(), cat: {} }); const t = perTeam.get(k); if (inA(r)) { t.A += pt(r); if (pos(r) === 1) t.vittorie.set(r.gara_id, r); t.cat[catOf(r)] = (t.cat[catOf(r)] || 0) + 1; } else if (inB(r)) t.B += pt(r); }
+    const squadre = [];
+    for (const [k, t] of perTeam) {
+      const catTop = Object.entries(t.cat).sort((x, y) => y[1] - x[1])[0], cat = catTop ? catTop[0] : '';
+      const base = { categoria: cat ? (CAT_NOME[cat] || cat) : 'più categorie', codice_categoria: cat, periodo, atleti: [], team: t.nome };
+      const mie = [];
+      if (t.vittorie.size >= 4) mie.push({ ...base, tipo: 'squadra_vittorie', score: t.vittorie.size * 6, titolo: `${tc(t.nome)}: ${t.vittorie.size} vittorie in quattro settimane`, motivo: 'Almeno 4 vittorie di squadra in 28 giorni.', gare: [...t.vittorie.values()].sort(ord).map(gara).slice(-6), dati: { vittorie: t.vittorie.size, punti_ultime_4_settimane: t.A } });
+      if (t.A >= 40 && t.A >= 1.5 * t.B && t.A - t.B >= 25) mie.push({ ...base, tipo: 'squadra_crescita', score: (t.A - t.B) / 3, titolo: `${tc(t.nome)} in crescita: ${t.A} punti in quattro settimane contro ${t.B}`, motivo: 'Punti di squadra almeno 1,5 volte quelli delle 4 settimane prima (minimo 40, +25).', gare: [], dati: { punti_ultime_4_settimane: t.A, punti_4_settimane_prima: t.B } });
+      if (mie.length) squadre.push({ ...mie.sort((x, y) => y.score - x.score)[0], _k: 'team|' + k });
+    }
+    cands.push(...squadre.sort((x, y) => y.score - x.score).slice(0, 3));
+    // --- rivalita: due atleti insieme sul podio in almeno 3 gare delle ultime 8 settimane
+    const podi = new Map();
+    for (const r of righe) if (r.data >= dalC && r.data <= fine && pos(r) <= 3) { if (!podi.has(r.gara_id)) podi.set(r.gara_id, []); podi.get(r.gara_id).push(r); }
+    const coppie = new Map();
+    for (const lista of podi.values()) for (let i = 0; i < lista.length; i++) for (let j = i + 1; j < lista.length; j++) {
+      const [x, y] = [lista[i], lista[j]].sort((p, q) => p.atleta_id.localeCompare(q.atleta_id)), k = x.atleta_id + '|' + y.atleta_id;
+      if (!coppie.has(k)) coppie.set(k, { x, y, n: 0, xAvanti: 0, gare: [] });
+      const c = coppie.get(k); c.n++; if (pos(x) < pos(y)) c.xAvanti++; c.gare.push({ nome: x.nome_gara, data: x.data, pos: `${nomeAtl(x)} ${pos(x)}°, ${nomeAtl(y)} ${pos(y)}°` });
+    }
+    for (const [k, c] of coppie) if (c.n >= 3) {
+      const cat = catOf(c.x), yAvanti = c.n - c.xAvanti;
+      cands.push({ tipo: 'rivalita', _k: 'riv|' + k, categoria: CAT_NOME[cat] || cat, codice_categoria: cat, periodo: { dal: dalC, al: fine }, score: c.n * 7,
+        atleti: [{ id: c.x.atleta_id, nome: nomeAtl(c.x), team: c.x.team || '' }, { id: c.y.atleta_id, nome: nomeAtl(c.y), team: c.y.team || '' }],
+        titolo: `${nomeAtl(c.x)} e ${nomeAtl(c.y)}: ${c.n} podi insieme in otto settimane`, motivo: 'Due atleti insieme sul podio in almeno 3 gare delle ultime 8 settimane.',
+        gare: c.gare.sort((p, q) => p.data.localeCompare(q.data)).slice(-6), dati: { podi_insieme: c.n, [`davanti_${nomeAtl(c.x)}`]: c.xAvanti, [`davanti_${nomeAtl(c.y)}`]: yAvanti } });
+    }
+    // --- scelta: i migliori, massimo 2 per tipo, al massimo 5
+    const per = {}, scelti = [];
+    for (const c of cands.sort((x, y) => y.score - x.score)) { per[c.tipo] = (per[c.tipo] || 0) + 1; if (per[c.tipo] <= 2 && scelti.length < 5) scelti.push(c); }
+    return { fine, spunti: scelti.map(({ _k, ...c }) => ({ id: idSpunto(c.tipo, _k || c.titolo, fine), ...c, score: Math.round(c.score * 10) / 10 })) };
+  }
+  async function leggiSpunti() {
+    const { data, error } = await sb().from('kv_store').select('value').eq('key', SPUNTI_KEY).maybeSingle();
+    if (error) throw new Error('lettura spunti: ' + error.message);
+    return data && data.value && Array.isArray(data.value.spunti) ? data.value : null;
+  }
+  let spChain = Promise.resolve();
+  function mutaSpunti(fn) {
+    const run = spChain.then(async () => {
+      const v = (await leggiSpunti()) || { generato: null, fine: null, spunti: [] };
+      const out = await fn(v);
+      const { error } = await sb().from('kv_store').upsert({ key: SPUNTI_KEY, value: v, updated_at: new Date().toISOString() });
+      if (error) throw new Error('scrittura spunti: ' + error.message);
+      return out;
+    });
+    spChain = run.catch(() => {});
+    return run;
+  }
+  async function ricalcolaSpunti() {
+    const nuovo = calcolaSpunti(await getData('results_raw.json'));
+    return mutaSpunti(v => {
+      const vecchi = new Map(v.spunti.map(s => [s.id, s]));
+      v.spunti = nuovo.spunti.map(s => { const o = vecchi.get(s.id); return o ? { ...s, spiegazione: o.spiegazione, stato: o.stato || 'nuovo', bozza_id: o.bozza_id } : { ...s, stato: 'nuovo' }; });
+      v.fine = nuovo.fine; v.generato = new Date().toISOString();
+      return v;
+    });
+  }
+  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti });
+  app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
+    try {
+      let v = await leggiSpunti();
+      if (!v || !v.generato || Date.now() - Date.parse(v.generato) > 12 * 3600 * 1000) v = await ricalcolaSpunti();   // il calcolo e gratuito: nessuna chiamata a Claude
+      res.json(v);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/spunti/calcola', requireAdmin, async (req, res) => {
+    try { res.json(await ricalcolaSpunti()); } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/spunti/:id/stato', requireAdmin, async (req, res) => {
+    try {
+      const stato = String((req.body || {}).stato || '');
+      if (!['nuovo', 'scartato'].includes(stato)) return res.status(400).json({ error: 'stato non valido' });
+      const ok = await mutaSpunti(v => { const s = v.spunti.find(x => x.id === req.params.id); if (!s) return false; s.stato = stato; return true; });
+      res.status(ok ? 200 : 404).json(ok ? { ok: true } : { error: 'spunto non trovato' });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/spunti/:id/spiega', requireAdmin, async (req, res) => {   // una chiamata breve a Claude, senza ricerca web
+    try {
+      const v = await leggiSpunti(), s = v && v.spunti.find(x => x.id === req.params.id);
+      if (!s) return res.status(404).json({ error: 'spunto non trovato' });
+      const dati = JSON.stringify({ titolo: s.titolo, categoria: s.categoria, periodo: s.periodo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati, perche_scelto: s.motivo });
+      const r = await callClaude(`Sei l'analista di una redazione di ciclismo giovanile e dilettantistico italiano. Spiega a un redattore, in 3 frasi al massimo, perche questo spunto e interessante da raccontare. Usa SOLO i numeri e i nomi dei DATI: non inventare niente, non aggiungere contesto esterno. Rispondi solo con il testo, senza titoli ne elenchi.\n\nDATI: ${dati}`, false, 'spunto');
+      const testo = String(r.text || '').trim().slice(0, 1200);
+      if (!testo) throw new Error('risposta vuota');
+      await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) t.spiegazione = testo; });
+      res.json({ ok: true, spiegazione: testo });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/spunti/:id/articolo', requireAdmin, async (req, res) => {   // trasforma lo spunto in una bozza (richiesta libera)
+    try {
+      const v = await leggiSpunti(), s = v && v.spunti.find(x => x.id === req.params.id);
+      if (!s) return res.status(404).json({ error: 'spunto non trovato' });
+      const richiesta = `Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
+      const indicazioni = JSON.stringify({ titolo: s.titolo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati }).slice(0, 2400);
+      const { id } = await avvia('libero', { richiesta, indicazioni, web: !!(req.body || {}).web, link: [] }, s.titolo.slice(0, 70));
+      await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) { t.stato = 'usato'; t.bozza_id = id; } });
+      res.json({ ok: true, id });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
   app.get('/api/admin/redazione/costi', requireAdmin, async (req, res) => {
     try {
       const c = await getCfg(true), s = await spesaMese();

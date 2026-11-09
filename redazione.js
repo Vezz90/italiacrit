@@ -8,7 +8,7 @@
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', squadre: 'Fine stagione: le squadre', libero: 'Richiesta libera' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', pubblicata: 'Pubblicata', scartata: 'Scartata', errore: 'Errore' };
-  const st = { prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
+  const st = { spOcc: new Map(), spunti: null, spErr: '', prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
   const api = (p, o) => apiCall('/admin/redazione' + p, o);
@@ -196,6 +196,18 @@
 @keyframes om-look{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
 @keyframes om-nod{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
 @keyframes om-z{0%{opacity:0;transform:translate(0,4px)}30%{opacity:.7}100%{opacity:0;transform:translate(6px,-10px)}}
+.rd-sp{margin:0 0 16px}
+.rd-spl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:8px 0}
+.rd-spc{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.06)}
+.rd-spc.usato{border-color:#16a34a}
+.rd-spc.scartato{opacity:.65}
+.rd-spc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rd-tag{font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(101,163,13,.22)}
+.rd-tag.rd-usato{background:#16a34a;color:#fff}
+.rd-spg{display:flex;flex-wrap:wrap;gap:5px}
+.rd-spg span{font-size:.72rem;padding:2px 7px;border-radius:6px;background:rgba(128,128,128,.14)}
+.rd-spg i{opacity:.7;font-style:normal}
+.rd-sp-sp{margin:0;font-size:.84rem;line-height:1.4;padding:6px 8px;border-radius:8px;background:rgba(101,163,13,.1)}
 @media (prefers-reduced-motion:reduce){.rd-om *{animation:none!important}}`;
 
   function prossimoGiro(orari) {
@@ -250,8 +262,63 @@
       scrive('Profilista', 'Schede e storie degli atleti', '#db2777', '#92400e', ['atleta'], 'Nessun atleta da raccontare'),
       scrive('Inviato speciale', 'Richieste libere', '#0d9488', '#374151', ['libero'], 'Aspetta una richiesta libera'),
       ricerca, cassa,
-      { nome: 'Analista', ruolo: 'Spunti dai dati', colore: '#9ca3af', capelli: '#9ca3af', stato: 'vuoto', testo: 'Posto libero. Arriva nel prossimo passo.' }
+      (() => {
+        const base = { nome: 'Analista', ruolo: 'Spunti dai dati', colore: '#65a30d', capelli: '#422006' };
+        const occ = st.spOcc.size ? [...st.spOcc.values()][0] : null, sp = st.spunti;
+        if (occ) return { ...base, stato: 'lavora', testo: occ };
+        if (st.spErr) return { ...base, stato: 'errore', testo: st.spErr };
+        if (!sp) return { ...base, stato: 'riposa', testo: 'Spunti non disponibili' };
+        const n = sp.spunti.filter(s => s.stato === 'nuovo').length;
+        return { ...base, stato: 'riposa', testo: n ? `${n} spunt${n === 1 ? 'o pronto' : 'i pronti'} da leggere` : 'Nessuno spunto forte in questo periodo' };
+      })()
     ];
+  }
+
+  /* ---------- Spunti dell'Analista: calcolati dai dati con regole fisse, l'AI li spiega soltanto ---------- */
+  const SP_TIPI = { vittorie: 'Vittorie', podi: 'Serie di podi', crescita: 'Progressione', costanza: 'Costanza', squadra_vittorie: 'Squadra', squadra_crescita: 'Squadra in crescita', rivalita: 'Rivalità' };
+  async function caricaSpunti() { try { st.spunti = await api('/spunti'); st.spErr = ''; } catch (e) { st.spunti = null; st.spErr = 'Spunti non disponibili'; } }
+  function spuntiPanel() {
+    const sp = st.spunti, occ = st.spOcc.size > 0;
+    if (!sp) return `<div class="hx-panel rd-sp"><h3>Spunti dell'Analista</h3><small class="rd-muted">${esc(st.spErr || 'Caricamento…')}</small></div>`;
+    const card = s => `<div class="rd-spc ${s.stato}">
+      <div class="rd-spc-top"><span class="rd-tag">${esc(SP_TIPI[s.tipo] || s.tipo)}</span><small class="rd-muted">${esc(s.categoria)} · ${esc(fmtGiorno(s.periodo.dal))} – ${esc(fmtGiorno(s.periodo.al))}</small>${s.stato === 'usato' ? '<span class="rd-tag rd-usato">Bozza creata</span>' : ''}</div>
+      <b>${esc(s.titolo)}</b>
+      <small class="rd-muted">${esc(s.motivo)}</small>
+      ${(s.gare || []).length ? `<div class="rd-spg">${s.gare.slice(0, 4).map(g => `<span>${esc(g.nome)} <i>${esc(fmtGiorno(g.data))}${typeof g.pos === 'number' ? ' · ' + g.pos + '°' : ' · ' + esc(g.pos)}</i></span>`).join('')}${s.gare.length > 4 ? `<span>+${s.gare.length - 4}</span>` : ''}</div>` : ''}
+      ${s.spiegazione ? `<p class="rd-sp-sp">${esc(s.spiegazione)}</p>` : ''}
+      <div class="rd-btns">
+        ${s.stato === 'scartato' ? `<button type="button" class="admin-edit-btn" data-sp="ripristina" data-id="${esc(s.id)}" ${occ ? 'disabled' : ''}>Ripristina</button>` : `
+        ${s.spiegazione ? '' : `<button type="button" class="admin-edit-btn" data-sp="spiega" data-id="${esc(s.id)}" ${occ ? 'disabled' : ''} title="Una richiesta breve all'AI, senza ricerca web">Spiega (AI)</button>`}
+        ${s.stato === 'usato' && s.bozza_id ? `<button type="button" class="admin-edit-btn" data-open="${esc(s.bozza_id)}">Apri la bozza</button>` : `<button type="button" class="admin-edit-btn rd-go" data-sp="articolo" data-id="${esc(s.id)}" ${occ ? 'disabled' : ''}>Scrivi l'articolo</button>`}
+        <button type="button" class="admin-edit-btn" data-sp="scarta" data-id="${esc(s.id)}" ${occ ? 'disabled' : ''}>Scarta</button>`}
+      </div></div>`;
+    const buoni = sp.spunti.filter(s => s.stato !== 'scartato'), scart = sp.spunti.filter(s => s.stato === 'scartato');
+    return `<div class="hx-panel rd-sp"><div class="rd-uff-head"><h3>Spunti dell'Analista</h3>
+      <small>${sp.fine ? 'dati fino al ' + esc(fmtGiorno(sp.fine)) + ' · ' : ''}scelti con regole fisse sui risultati del sito, senza AI</small>
+      <button type="button" class="admin-edit-btn" data-sp="calcola" ${occ ? 'disabled' : ''}>Aggiorna</button></div>
+      ${buoni.length ? `<div class="rd-spl">${buoni.map(card).join('')}</div>` : '<small class="rd-muted">Nessuno spunto forte negli ultimi 28 giorni.</small>'}
+      ${scart.length ? `<details class="rd-box"><summary>${scart.length} scartat${scart.length === 1 ? 'o' : 'i'}</summary><div class="rd-spl">${scart.map(card).join('')}</div></details>` : ''}
+      <small class="rd-muted">Calcolati sui risultati presenti nel sito: se una gara non è stata importata, il conteggio può essere più basso del reale.</small></div>`;
+  }
+  const fmtGiorno = iso => { try { return new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (_) { return iso; } };
+  function legaSpunti() {
+    const el = document.querySelector('.rd-spunti'); if (!el) return;
+    const ridisegna = () => { el.innerHTML = spuntiPanel(); const u = document.querySelector('.rd-ufficio'); if (u) u.innerHTML = ufficio(); };
+    const errore = e => { if (typeof showToast === 'function') showToast((e && e.message) || 'Errore', 'error'); };
+    el.onclick = async ev => {
+      const ap = ev.target.closest('[data-open]'); if (ap) { st.sel = ap.dataset.open; st.prev = false; paint(); return; }
+      const b = ev.target.closest('[data-sp]'); if (!b || st.spOcc.size) return;
+      const act = b.dataset.sp, id = b.dataset.id, s = st.spunti && st.spunti.spunti.find(x => x.id === id);
+      const nomi = { calcola: 'Rilegge i risultati per trovare gli spunti', spiega: `Spiega: ${s ? s.titolo : 'uno spunto'}`, articolo: `Prepara la bozza: ${s ? s.titolo : 'uno spunto'}`, scarta: 'Mette da parte uno spunto', ripristina: 'Rimette in lista uno spunto' };
+      st.spOcc.set(id || 'calcola', nomi[act] || 'Lavora'); ridisegna();
+      try {
+        if (act === 'calcola') st.spunti = await api('/spunti/calcola', { method: 'POST' });
+        else if (act === 'spiega') { await api(`/spunti/${encodeURIComponent(id)}/spiega`, { method: 'POST' }); await caricaSpunti(); }
+        else if (act === 'articolo') { const r = await api(`/spunti/${encodeURIComponent(id)}/articolo`, { method: 'POST', body: {} }); st.sel = r.id; st.attesa = Date.now() + 6 * 60000; await Promise.all([carica(), caricaSpunti()]); st.spOcc.clear(); paint(); return; }
+        else { await api(`/spunti/${encodeURIComponent(id)}/stato`, { method: 'POST', body: { stato: act === 'scarta' ? 'scartato' : 'nuovo' } }); await caricaSpunti(); }
+      } catch (e) { errore(e); }
+      st.spOcc.clear(); ridisegna();
+    };
   }
 
   function omino(d) {
@@ -310,6 +377,7 @@
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-ufficio">${ufficio()}</div>
+      <div class="rd-spunti">${spuntiPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
         <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso.</small>
@@ -328,6 +396,7 @@
 
   function lega() {
     const w = document.querySelector('.rd-wrap'); if (!w) return;
+    legaSpunti();
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
@@ -420,7 +489,7 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
-    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
     paint(); tickUfficio();
