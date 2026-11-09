@@ -676,6 +676,8 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   const garaTocca = (testo, tokens, nome) => {
     const u = normFrase(testo), frase = nome ? normFrase(nomePulito(nome)) : '';
     if (frase.trim().length >= 6 && u.includes(frase)) return true;
+    const comp = x => up(x).replace(/[^A-Z0-9]+/g, ''), fc = nome ? comp(nomePulito(nome)) : '';   // «G.P. D'Autunno» e «GP d'Autunno» sono la stessa corsa
+    if (fc.length >= 8 && comp(testo).includes(fc)) return true;
     return tokens.length >= 2 && tokens.filter(t => u.includes(' ' + t)).length >= Math.min(3, tokens.length) - (tokens.length >= 3 ? 1 : 0);
   };
   // le gare da seguire: da una settimana fa a tre giorni avanti, le piu importanti per prime
