@@ -6,6 +6,7 @@
 // Regole di metodo (vedi REGOLE): nomi/numeri solo dai DATI calcolati qui; il web serve per il contesto e viene riscritto con parole proprie,
 // con le fonti elencate; cio che non e sicuro finisce in "da_verificare".
 const crypto = require('crypto');
+const { rawQuery } = require('./db');
 const fs = require('fs');
 const path = require('path');
 
@@ -440,7 +441,43 @@ module.exports = function registerRedazione(app, deps) {
     for (const t of blocks) { if (/^\s*={3}[A-Z_]+={3}/.test(t) && out && !out.endsWith('\n')) out += '\n'; out += t; }
     return out;
   }
-  async function callClaude(prompt, web) {
+  // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
+  // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
+  const CFG_KEY = 'redazione_ai_config';
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+    prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
+  let _cfg = null;
+  async function getCfg(fresh) {
+    if (_cfg && !fresh && Date.now() - _cfg.ts < 20000) return _cfg.v;
+    let v = {};
+    try { const { data } = await sb().from('kv_store').select('value').eq('key', CFG_KEY).maybeSingle(); v = (data && data.value) || {}; } catch (_) { /* valori predefiniti */ }
+    const out = { ...CFG_DEFAULT, ...v, prezzi: { ...CFG_DEFAULT.prezzi, ...(v.prezzi || {}) } };
+    _cfg = { v: out, ts: Date.now() };
+    return out;
+  }
+  const meseOra = () => new Date().toISOString().slice(0, 7);
+  async function spesaMese() {
+    const r = await rawQuery(`SELECT COALESCE(SUM(costo_usd),0)::float AS usd, COUNT(*)::int AS n FROM ai_usage WHERE mese=$1 AND esito='ok'`, [meseOra()]);
+    return r.rows[0] || { usd: 0, n: 0 };
+  }
+  async function consentiChiamata() {                                        // se non e consentito, NON si chiama Claude
+    const c = await getCfg();
+    if (!c.ai_attiva) throw new Error("AI disattivata dalle impostazioni della Redazione");
+    const s = await spesaMese();
+    if (s.usd >= c.limite_mensile_usd) throw new Error(`limite mensile raggiunto (${s.usd.toFixed(2)} $ su ${c.limite_mensile_usd} $): alzalo nelle impostazioni per continuare`);
+    return c;
+  }
+  async function registraUso(c, modello, usage, uso, esito) {
+    try {
+      const u = usage || {}, pr = c.prezzi[modello] || c.prezzi[MODEL] || { in: 3, out: 15 };
+      const ricerche = (u.server_tool_use && u.server_tool_use.web_search_requests) || 0;
+      const tin = (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0), tout = u.output_tokens || 0;
+      const costo = tin / 1e6 * pr.in + tout / 1e6 * pr.out + ricerche * c.prezzo_ricerca_usd;
+      await rawQuery(`INSERT INTO ai_usage (mese, modello, uso, token_in, token_out, ricerche, costo_usd, esito) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [meseOra(), modello, String(uso || '').slice(0, 40), tin, tout, ricerche, costo.toFixed(5), esito || 'ok']);
+    } catch (e) { console.warn('[redazione] registro consumi:', e.message); }
+  }
+  async function callClaude(prompt, web, uso) {
     const key = process.env.ANTHROPIC_API_KEY;
     if (!key) throw new Error('ANTHROPIC_API_KEY non configurata');
     let messages = [{ role: 'user', content: prompt }];
@@ -448,10 +485,12 @@ module.exports = function registerRedazione(app, deps) {
     if (web) body0.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
     const fonti = new Map(); let texts = [], usage = null, stop = '';
     for (let giro = 0; giro < 4; giro++) {
+      const cfg = await consentiChiamata();                                  // prima di OGNI chiamata a pagamento
       const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ ...body0, messages }), signal: AbortSignal.timeout(170000) });
       const j = await r.json();
-      if (!r.ok) throw new Error(`Claude ${r.status}: ${(j.error && j.error.message) || ''}`);
+      if (!r.ok) { await registraUso(cfg, MODEL, null, uso, 'errore'); throw new Error(`Claude ${r.status}: ${(j.error && j.error.message) || ''}`); }
+      await registraUso(cfg, MODEL, j.usage, uso, 'ok');
       usage = j.usage; stop = j.stop_reason;
       for (const b of j.content || []) {
         if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) b.content.forEach(x => { if (x.url) fonti.set(x.url, { titolo: x.title || x.url, url: x.url, uso: 'consultata nella ricerca' }); });
@@ -645,6 +684,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   async function autoGenera() {
     if (inCorso) return { avviati: 0, nota: 'gia in corso' };
     if (!process.env.ANTHROPIC_API_KEY) return { avviati: 0, nota: 'ANTHROPIC_API_KEY non configurata' };
+    if (!(await getCfg()).auto_attiva) return { avviati: 0, nota: 'generazione automatica spenta' };   // spenta di default: la accende l'amministratore
     inCorso = true;
     try {
       const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
@@ -682,6 +722,29 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     } catch (e) { console.warn('[redazione] auto:', e.message); return { avviati: 0, errore: e.message }; }
     finally { inCorso = false; }
   }
+  if (deps._test) deps._test({ callClaude, getCfg, spesaMese });            // solo per le prove automatiche
+  // impostazioni e consumi (solo amministratori)
+  app.get('/api/admin/redazione/costi', requireAdmin, async (req, res) => {
+    try {
+      const c = await getCfg(true), s = await spesaMese();
+      const ultime = (await rawQuery(`SELECT ts, modello, uso, token_in, token_out, ricerche, costo_usd::float AS costo_usd, esito FROM ai_usage ORDER BY ts DESC LIMIT 30`)).rows;
+      const mesi = (await rawQuery(`SELECT mese, COUNT(*)::int AS richieste, COALESCE(SUM(token_in),0)::int AS token_in, COALESCE(SUM(token_out),0)::int AS token_out, COALESCE(SUM(costo_usd),0)::float AS costo_usd FROM ai_usage WHERE esito='ok' GROUP BY mese ORDER BY mese DESC LIMIT 6`)).rows;
+      res.json({ config: c, modello: MODEL, chiave: !!process.env.ANTHROPIC_API_KEY, mese: meseOra(), spesa_mese: s.usd, richieste_mese: s.n, ultime, mesi });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.put('/api/admin/redazione/config', requireAdmin, async (req, res) => {
+    try {
+      const b = req.body || {}, c = await getCfg(true), nuovo = { ...c };
+      if (typeof b.ai_attiva === 'boolean') nuovo.ai_attiva = b.ai_attiva;
+      if (typeof b.auto_attiva === 'boolean') nuovo.auto_attiva = b.auto_attiva;
+      if (b.limite_mensile_usd != null) { const n = Number(b.limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite non valido (0-1000 $)' }); nuovo.limite_mensile_usd = n; }
+      if (b.prezzi && typeof b.prezzi === 'object') for (const [m, p] of Object.entries(b.prezzi)) if (p && p.in >= 0 && p.out >= 0) nuovo.prezzi[m] = { in: Number(p.in), out: Number(p.out) };
+      const { error } = await sb().from('kv_store').upsert({ key: CFG_KEY, value: nuovo, updated_at: new Date().toISOString() });
+      if (error) throw new Error(error.message);
+      _cfg = null;
+      res.json({ ok: true, config: await getCfg(true) });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
   app.post('/api/admin/redazione/auto', requireAdmin, async (req, res) => {
     if (inCorso) return res.json({ ok: true, nota: 'sto gia scrivendo' });
     autoGenera().catch(() => {});                                        // in background: la pagina vede le bozze comparire

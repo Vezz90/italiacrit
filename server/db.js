@@ -484,6 +484,13 @@ async function migrate() {
     `CREATE TABLE IF NOT EXISTS site_daily (
       day DATE PRIMARY KEY, pageviews INTEGER NOT NULL DEFAULT 0, visitatori INTEGER NOT NULL DEFAULT 0, sessioni INTEGER NOT NULL DEFAULT 0
     )`,
+    // Registro dei consumi dell'AI (Redazione): una riga per chiamata a Claude, costo stimato in dollari
+    `CREATE TABLE IF NOT EXISTS ai_usage (
+      id BIGSERIAL PRIMARY KEY, ts TIMESTAMPTZ NOT NULL DEFAULT NOW(), mese TEXT NOT NULL, modello TEXT NOT NULL,
+      uso TEXT, token_in INTEGER NOT NULL DEFAULT 0, token_out INTEGER NOT NULL DEFAULT 0, ricerche INTEGER NOT NULL DEFAULT 0,
+      costo_usd NUMERIC(10,5) NOT NULL DEFAULT 0, esito TEXT NOT NULL DEFAULT 'ok'
+    )`,
+    `CREATE INDEX IF NOT EXISTS ai_usage_mese_idx ON ai_usage (mese, ts DESC)`,
     // Storico importato da Google Analytics (prima dell'avvio dei conteggi interni): giorno / pagina / fonte
     `CREATE TABLE IF NOT EXISTS ga_storico (
       kind TEXT NOT NULL, key TEXT NOT NULL, a INTEGER NOT NULL DEFAULT 0, b INTEGER NOT NULL DEFAULT 0,

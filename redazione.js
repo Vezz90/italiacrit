@@ -134,6 +134,34 @@
       </div></div>`;
   }
 
+  // costi e impostazioni dell'AI: interruttori, limite mensile, consumi registrati
+  function costiPanel() {
+    const k = st.costi; if (!k) return '<div class="hx-panel rd-costi"><h3>Costi e impostazioni AI</h3><small class="rd-muted">Non disponibili: ricarica la pagina.</small></div>';
+    const c = k.config, pct = c.limite_mensile_usd > 0 ? Math.min(100, Math.round(k.spesa_mese / c.limite_mensile_usd * 100)) : 100;
+    const col = pct >= 100 ? '#dc2626' : pct >= 80 ? '#d97706' : '#16a34a';
+    const usd = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+    return `<div class="hx-panel rd-costi"><h3>Costi e impostazioni AI <small class="rd-muted">modello ${esc(k.modello)} · stime in dollari</small></h3>
+      ${k.chiave ? '' : '<div class="rd-err">Chiave ANTHROPIC_API_KEY non configurata sul server: nessuna chiamata possibile.</div>'}
+      <div class="rd-btns" style="gap:14px;align-items:center;flex-wrap:wrap">
+        <label class="rd-c"><input type="checkbox" id="cs-ai" ${c.ai_attiva ? 'checked' : ''}> AI attiva</label>
+        <label class="rd-c"><input type="checkbox" id="cs-auto" ${c.auto_attiva ? 'checked' : ''}> Scrittura automatica ogni mezz'ora</label>
+        <label class="rd-c">Limite mensile <input type="number" id="cs-lim" min="0" max="1000" step="1" value="${c.limite_mensile_usd}" style="width:70px"> $</label>
+        <button type="button" class="admin-edit-btn" id="cs-salva">Salva</button></div>
+      <div style="margin:10px 0 4px;font-size:.88rem"><b>${usd(k.spesa_mese)}</b> su ${usd(c.limite_mensile_usd)} questo mese (${k.richieste_mese} richieste${pct >= 100 ? ' · LIMITE RAGGIUNTO: le chiamate sono bloccate' : ''})</div>
+      <div style="height:8px;background:var(--border-subtle,#ddd);border-radius:4px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${col}"></div></div>
+      <details class="rd-box"><summary>Ultime richieste e mesi precedenti</summary>
+        <div style="overflow-x:auto"><table style="width:100%;font-size:.8rem;border-collapse:collapse">
+          <tr><th align="left">Mese</th><th align="right">Richieste</th><th align="right">Token in</th><th align="right">Token out</th><th align="right">Costo</th></tr>
+          ${k.mesi.map(m => `<tr><td>${esc(m.mese)}</td><td align="right">${m.richieste}</td><td align="right">${m.token_in}</td><td align="right">${m.token_out}</td><td align="right">${usd(m.costo_usd)}</td></tr>`).join('') || '<tr><td colspan="5" class="rd-muted">Ancora nessuna richiesta registrata.</td></tr>'}
+        </table>
+        <table style="width:100%;font-size:.78rem;border-collapse:collapse;margin-top:10px">
+          <tr><th align="left">Quando</th><th align="left">Modello</th><th align="right">Token in/out</th><th align="right">Ricerche</th><th align="right">Costo</th><th align="left">Esito</th></tr>
+          ${k.ultime.map(u => `<tr><td>${fmtData(u.ts)}</td><td>${esc(u.modello)}</td><td align="right">${u.token_in}/${u.token_out}</td><td align="right">${u.ricerche}</td><td align="right">${usd(u.costo_usd)}</td><td>${esc(u.esito)}</td></tr>`).join('')}
+        </table></div>
+        <small class="rd-muted">Prezzi usati per la stima ($ per milione di token): ${Object.entries(c.prezzi).map(([m, p]) => `${esc(m)} ${p.in} in / ${p.out} out`).join(' · ')} · ricerca web ${c.prezzo_ricerca_usd} $ l'una. Sono stime: verifica sul listino Anthropic e sul saldo della console.</small></details></div>`;
+  }
+  async function caricaCosti() { try { st.costi = await api('/costi'); } catch (e) { st.costi = null; } }
+
   function paint(soloLista) {
     const w = document.querySelector('.rd-wrap');
     if (soloLista && w) { // aggiornamento durante la scrittura: non toccare i campi che si stanno compilando
@@ -145,8 +173,9 @@
     }
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
+      <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
-        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico ogni mezz'ora.</small>
+        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico ogni mezz'ora, solo se l'interruttore «Scrittura automatica» è acceso.</small>
         <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-squadre" title="Un articolo sulle squadre per ciascuna categoria">Articoli sulle squadre</button>
         <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
@@ -163,6 +192,13 @@
   function lega() {
     const w = document.querySelector('.rd-wrap'); if (!w) return;
     let tm = null;
+    const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
+      try {
+        await api('/config', { method: 'PUT', body: { ai_attiva: w.querySelector('#cs-ai').checked, auto_attiva: w.querySelector('#cs-auto').checked, limite_mensile_usd: Number(w.querySelector('#cs-lim').value) } });
+        await caricaCosti(); w.querySelector('.rd-costiwrap').innerHTML = costiPanel(); lega();
+        if (typeof showToast === 'function') showToast('Impostazioni AI salvate');
+      } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
+    };
     const t = w.querySelector('#rd-tipo'); if (t) t.onchange = async () => { st.tipo = t.value; st.pick = null; st.q = ''; await cercaOra(); w.querySelector('.rd-form').innerHTML = form(); lega(); };
     const q = w.querySelector('#rd-q'); if (q) q.oninput = () => { clearTimeout(tm); tm = setTimeout(async () => { st.q = q.value; await cercaOra(); const pos = q.selectionStart; w.querySelector('.rd-form').innerHTML = form(); lega(); const n = w.querySelector('#rd-q'); n.focus(); try { n.setSelectionRange(pos, pos); } catch (_) {} }, 350); };
     w.querySelectorAll('[data-pick]').forEach(b => { b.onclick = () => { const r = st.cerca.find(x => x.id === b.dataset.pick); st.pick = r || null; w.querySelector('.rd-form').innerHTML = form(); lega(); }; });
@@ -247,7 +283,7 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
-    st.msg = ''; await Promise.all([carica(), cercaOra()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     paint();
   }
