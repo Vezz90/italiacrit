@@ -164,6 +164,140 @@
   }
   async function caricaCosti() { try { st.costi = await api('/costi'); } catch (e) { st.costi = null; } }
 
+  /* ---------- L'ufficio: gli agenti alle scrivanie, calcolati dallo stato vero della redazione ---------- */
+  const UFF_CSS = `
+.rd-ufficio{margin:0 0 16px}
+.rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
+.rd-uff-head h3{margin:0;font-size:1rem}
+.rd-uff-head small{opacity:.7}
+.rd-uff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px}
+.rd-sc{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px 10px;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);text-align:center;transition:border-color .3s,background .3s}
+.rd-sc.lavora{border-color:#16a34a;background:rgba(22,163,74,.09)}
+.rd-sc.errore{border-color:#dc2626;background:rgba(220,38,38,.08)}
+.rd-sc.vuoto{border-style:dashed}
+.rd-pill{position:absolute;top:8px;right:8px;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(128,128,128,.2)}
+.rd-sc.lavora .rd-pill{background:#16a34a;color:#fff}
+.rd-sc.errore .rd-pill{background:#dc2626;color:#fff}
+.rd-om{width:100%;max-width:150px;height:auto;color:inherit}
+.rd-sc-nome{font-weight:700;font-size:.92rem}
+.rd-sc-ruolo{font-size:.72rem;opacity:.65}
+.rd-sc-fumetto{margin-top:6px;font-size:.78rem;line-height:1.3;min-height:2.6em;padding:5px 8px;border-radius:8px;background:rgba(128,128,128,.14);width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+.rd-om *{transform-box:fill-box}
+.lavora .om-bs{animation:om-tip .45s ease-in-out infinite alternate}
+.lavora .om-bd{animation:om-tip .45s .22s ease-in-out infinite alternate}
+.lavora .om-sch{animation:om-blink 1.1s steps(2,jump-none) infinite}
+.lavora .om-testa{animation:om-look 3s ease-in-out infinite}
+.riposa .om-testa{animation:om-nod 4.5s ease-in-out infinite}
+.om-z{font:700 11px sans-serif;fill:currentColor;opacity:0}
+.riposa .om-z{animation:om-z 3.6s ease-in-out infinite}
+.riposa .om-z2{animation-delay:1.2s}
+@keyframes om-tip{to{transform:translateY(-3px)}}
+@keyframes om-blink{50%{opacity:.55}}
+@keyframes om-look{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
+@keyframes om-nod{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
+@keyframes om-z{0%{opacity:0;transform:translate(0,4px)}30%{opacity:.7}100%{opacity:0;transform:translate(6px,-10px)}}
+@media (prefers-reduced-motion:reduce){.rd-om *{animation:none!important}}`;
+
+  function prossimoGiro(orari) {
+    try {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', hour12: false }).formatToParts(new Date()).map(x => [x.type, x.value]));
+      const ora = Number(p.hour) % 24, hs = (orari || []).map(Number).sort((a, b) => a - b);
+      if (!hs.length) return '';
+      const h = hs.find(x => x > ora);
+      return h != null ? `oggi alle ${h}:00` : `domani alle ${hs[0]}:00`;
+    } catch (_) { return ''; }
+  }
+
+  function agenti() {
+    const k = st.costi, cfg = k && k.config, ora = Date.now();
+    const attive = st.bozze.filter(b => b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000);
+    const errori = st.bozze.filter(b => b.stato === 'errore' && ora - Date.parse(b.aggiornato || b.creato) < 30 * 60000);
+    const usd = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+    const scrive = (nome, ruolo, colore, capelli, tipi, riposo) => {
+      const a = attive.filter(b => tipi.includes(b.tipo)), e = errori.filter(b => tipi.includes(b.tipo));
+      if (a.length) return { nome, ruolo, colore, capelli, stato: 'lavora', testo: `Scrive: ${a[0].soggetto || 'un articolo'}${a.length > 1 ? ` (+${a.length - 1} in coda)` : ''}` };
+      if (e.length) return { nome, ruolo, colore, capelli, stato: 'errore', testo: `Non è riuscito: ${e[0].soggetto || 'ultima bozza'}` };
+      return { nome, ruolo, colore, capelli, stato: 'riposa', testo: riposo };
+    };
+    const cap = (() => {
+      const auto = attive.some(b => b.parametri && b.parametri.auto);
+      const base = { nome: 'Caporedattore', ruolo: 'Giri automatici', colore: '#7c3aed', capelli: '#4b5563' };
+      if (auto) return { ...base, stato: 'lavora', testo: 'Coordina il giro automatico' };
+      if (!k) return { ...base, stato: 'riposa', testo: 'Impostazioni non disponibili' };
+      if (!cfg.ai_attiva) return { ...base, stato: 'riposa', testo: 'AI spenta: nessuno scrive' };
+      if (!cfg.auto_attiva) return { ...base, stato: 'riposa', testo: 'Scrittura automatica spenta. Si lavora a mano.' };
+      return { ...base, stato: 'riposa', testo: `Prossimo giro ${prossimoGiro(cfg.auto_orari)}` };
+    })();
+    const ricerca = (() => {
+      const base = { nome: 'Ricercatore', ruolo: 'Notizie dal web', colore: '#0ea5e9', capelli: '#1f2937' };
+      const a = attive.filter(b => b.parametri && b.parametri.web);
+      if (a.length) return { ...base, stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
+      if (cfg && Number(cfg.web_auto_da_imp) === 99) return { ...base, stato: 'riposa', testo: 'Ricerca automatica: mai' };
+      return { ...base, stato: 'riposa', testo: 'Nessuna ricerca in corso' };
+    })();
+    const cassa = (() => {
+      const base = { nome: 'Cassiere', ruolo: 'Costi e limite', colore: '#d97706', capelli: '#7c2d12' };
+      if (!k) return { ...base, stato: 'riposa', testo: 'Costi non disponibili' };
+      const lim = Number(cfg.limite_mensile_usd) || 0, pct = lim > 0 ? Math.round(k.spesa_mese / lim * 100) : 100;
+      const u = k.ultime && k.ultime[0], ultima = u ? ` · ultima: ${u.uso || 'chiamata'}, ${fmtData(u.ts).split(', ').pop() || ''}` : '';
+      if (pct >= 100) return { ...base, stato: 'errore', testo: `Limite raggiunto: ${usd(k.spesa_mese)} su ${usd(lim)}. Chiamate bloccate.` };
+      return { ...base, stato: attive.length ? 'lavora' : 'riposa', testo: `${usd(k.spesa_mese)} su ${usd(lim)} (${pct}%)${ultima}` };
+    })();
+    return [
+      cap,
+      scrive('Cronista', 'Gare e punto della settimana', '#16a34a', '#78350f', ['gara', 'settimana'], 'Aspetta una gara da raccontare'),
+      scrive('Cronista di stagione', 'Fine stagione e squadre', '#2563eb', '#111827', ['stagione', 'squadre'], 'Aspetta la fine stagione'),
+      scrive('Profilista', 'Schede e storie degli atleti', '#db2777', '#92400e', ['atleta'], 'Nessun atleta da raccontare'),
+      scrive('Inviato speciale', 'Richieste libere', '#0d9488', '#374151', ['libero'], 'Aspetta una richiesta libera'),
+      ricerca, cassa,
+      { nome: 'Analista', ruolo: 'Spunti dai dati', colore: '#9ca3af', capelli: '#9ca3af', stato: 'vuoto', testo: 'Posto libero. Arriva nel prossimo passo.' }
+    ];
+  }
+
+  function omino(d) {
+    const vuoto = d.stato === 'vuoto';
+    return `<svg class="rd-om" viewBox="0 0 140 110" role="img" aria-label="${esc(d.nome)}: ${esc(d.testo)}">
+      <ellipse cx="70" cy="105" rx="54" ry="4" fill="currentColor" opacity=".08"/>
+      ${vuoto ? '<text x="52" y="50" font-size="26" font-family="sans-serif" fill="currentColor" opacity=".3">?</text>' : `
+      <rect x="40" y="56" width="32" height="26" rx="9" fill="${d.colore}"/>
+      <g class="om-testa"><circle cx="56" cy="44" r="12" fill="#f1c9a5"/><path d="M44 42c1-10 8-14 14-13 7 1 11 7 10 13-4-5-8-6-12-6-4 0-9 2-12 6z" fill="${d.capelli}"/></g>
+      <text class="om-z" x="68" y="34">z</text><text class="om-z om-z2" x="72" y="26">z</text>
+      <rect class="om-bs" x="34" y="66" width="9" height="15" rx="4" fill="${d.colore}"/>
+      <rect class="om-bd" x="68" y="66" width="9" height="15" rx="4" fill="${d.colore}"/>`}
+      <rect x="22" y="78" width="96" height="7" rx="2" fill="#8b6f4e"/>
+      <rect x="28" y="85" width="5" height="18" fill="#6f5a40"/><rect x="107" y="85" width="5" height="18" fill="#6f5a40"/>
+      <rect x="38" y="75" width="30" height="3" rx="1" fill="#9ca3af"/>
+      <rect x="82" y="55" width="30" height="21" rx="3" fill="#1f2937"/>
+      <rect class="om-sch" x="85" y="58" width="24" height="15" rx="1.5" fill="${d.stato === 'lavora' ? '#38bdf8' : d.stato === 'errore' ? '#f87171' : '#374151'}"/>
+      <rect x="94" y="76" width="6" height="2" fill="#1f2937"/>
+      ${d.stato === 'lavora' ? '<rect x="88" y="62" width="12" height="2" fill="#fff" opacity=".7"/><rect x="88" y="66" width="16" height="2" fill="#fff" opacity=".5"/>' : ''}
+      ${vuoto ? '<rect x="52" y="30" width="36" height="18" rx="3" fill="none" stroke="currentColor" stroke-dasharray="3 2" opacity=".4"/>' : ''}
+    </svg>`;
+  }
+
+  function ufficio() {
+    const ag = agenti(), n = ag.filter(a => a.stato === 'lavora').length;
+    const ETI = { lavora: 'Al lavoro', riposa: 'Libero', errore: 'Problema', vuoto: 'Libero' };
+    return `<div class="rd-uff-head"><h3>L'ufficio</h3><small>${n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura'} · si aggiorna da solo</small></div>
+      <div class="rd-uff-grid">${ag.map(d => `<div class="rd-sc ${d.stato}"><span class="rd-pill">${d.stato === 'vuoto' ? 'Posto libero' : ETI[d.stato]}</span>${omino(d)}
+        <div class="rd-sc-nome">${esc(d.nome)}</div><div class="rd-sc-ruolo">${esc(d.ruolo)}</div><div class="rd-sc-fumetto">${esc(d.testo)}</div></div>`).join('')}</div>`;
+  }
+
+  function tickUfficio() {
+    clearTimeout(st.tu);
+    if (!document.querySelector('.rd-wrap')) return;
+    st.tu = setTimeout(async () => {
+      if (document.querySelector('.rd-wrap') && !document.hidden) {
+        const firma = () => st.bozze.map(b => b.id + b.stato).join();
+        const prima = firma();
+        await Promise.all([carica(), caricaCosti()]);
+        const el = document.querySelector('.rd-ufficio'); if (el) el.innerHTML = ufficio();
+        if (firma() !== prima) paint(true);
+      }
+      tickUfficio();
+    }, 8000);
+  }
+
   function paint(soloLista) {
     const w = document.querySelector('.rd-wrap');
     if (soloLista && w) { // aggiornamento durante la scrittura: non toccare i campi che si stanno compilando
@@ -175,6 +309,7 @@
     }
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
+      <div class="rd-ufficio">${ufficio()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
         <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso.</small>
@@ -287,7 +422,8 @@
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
     st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
-    paint();
+    if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
+    paint(); tickUfficio();
   }
   window.renderRedazione = render;
 })();
