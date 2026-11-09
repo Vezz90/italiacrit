@@ -170,32 +170,30 @@
 .rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
-.rd-uff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px}
-.rd-sc{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px 10px;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);text-align:center;transition:border-color .3s,background .3s}
-.rd-sc.lavora{border-color:#16a34a;background:rgba(22,163,74,.09)}
-.rd-sc.errore{border-color:#dc2626;background:rgba(220,38,38,.08)}
-.rd-sc.vuoto{border-style:dashed}
-.rd-pill{position:absolute;top:8px;right:8px;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(128,128,128,.2)}
-.rd-sc.lavora .rd-pill{background:#16a34a;color:#fff}
-.rd-sc.errore .rd-pill{background:#dc2626;color:#fff}
-.rd-om{width:100%;max-width:150px;height:auto;color:inherit}
-.rd-sc-nome{font-weight:700;font-size:.92rem}
-.rd-sc-ruolo{font-size:.72rem;opacity:.65}
-.rd-sc-fumetto{margin-top:6px;font-size:.78rem;line-height:1.3;min-height:2.6em;padding:5px 8px;border-radius:8px;background:rgba(128,128,128,.14);width:100%;box-sizing:border-box;overflow-wrap:anywhere}
-.rd-om *{transform-box:fill-box}
-.lavora .om-bs{animation:om-tip .45s ease-in-out infinite alternate}
-.lavora .om-bd{animation:om-tip .45s .22s ease-in-out infinite alternate}
-.lavora .om-sch{animation:om-blink 1.1s steps(2,jump-none) infinite}
-.lavora .om-testa{animation:om-look 3s ease-in-out infinite}
-.riposa .om-testa{animation:om-nod 4.5s ease-in-out infinite}
-.om-z{font:700 11px sans-serif;fill:currentColor;opacity:0}
-.riposa .om-z{animation:om-z 3.6s ease-in-out infinite}
-.riposa .om-z2{animation-delay:1.2s}
-@keyframes om-tip{to{transform:translateY(-3px)}}
-@keyframes om-blink{50%{opacity:.55}}
-@keyframes om-look{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
-@keyframes om-nod{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
-@keyframes om-z{0%{opacity:0;transform:translate(0,4px)}30%{opacity:.7}100%{opacity:0;transform:translate(6px,-10px)}}
+.st-room{position:relative;container-type:inline-size;width:100%;max-width:960px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:3px solid #3b2f2f;background:#222}
+.st-cv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.st-ov{position:absolute;inset:0;pointer-events:none}
+.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.4cqw;transform:translate(-50%,-100%);z-index:2}
+.st-ag.parla{z-index:6}
+.st-nome{font:700 max(7px,1.3cqw)/1.2 system-ui,sans-serif;padding:.15cqw .8cqw;border-radius:99px;background:rgba(15,23,42,.8);color:#fff;white-space:nowrap}
+.st-bub{position:relative;font:600 max(8px,1.5cqw)/1.25 system-ui,sans-serif;max-width:23cqw;padding:.7cqw 1cqw;margin-bottom:1cqw;border-radius:1cqw;background:#fff;color:#111;border:.25cqw solid #111;text-align:center;overflow-wrap:anywhere}
+.st-bub[hidden]{display:none}
+.st-bub::after{content:"";position:absolute;left:50%;bottom:-1.05cqw;width:1.2cqw;height:1.2cqw;background:inherit;border:inherit;border-width:0 .25cqw .25cqw 0;transform:translateX(-50%) rotate(45deg)}
+.st-bub.lavoro{background:#ecfdf5;border-color:#15803d;font-weight:500}
+.st-bub.errore{background:#fee2e2;border-color:#b91c1c}
+.st-bub.chiac{border-style:dashed;background:#f8fafc;font-weight:500;font-style:italic}
+.st-lavagna{position:absolute;left:42.8%;top:5%;width:20.6%;height:9%;display:flex;align-items:center;justify-content:center;font:700 max(7px,1.2cqw)/1.15 system-ui,sans-serif;color:#1e3a8a;white-space:nowrap;pointer-events:none}
+.st-sotto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px;max-width:960px}
+.st-elenco,.st-log{font-size:.8rem;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);padding:8px 10px}
+.st-elenco>div{display:flex;gap:7px;align-items:baseline;padding:2px 0}
+.st-pt{width:9px;height:9px;border-radius:50%;flex:none;background:#9ca3af}
+.st-pt.lavora{background:#16a34a;animation:st-pulsa 1s infinite alternate}
+.st-pt.errore{background:#dc2626}
+@keyframes st-pulsa{to{opacity:.35}}
+.st-log ol{margin:4px 0 0;padding:0;list-style:none;max-height:190px;overflow:auto}
+.st-log li{padding:3px 0;border-top:1px solid rgba(128,128,128,.18)}
+.st-log time{opacity:.6;margin-right:6px}
+@media (prefers-reduced-motion:reduce){.st-pt.lavora{animation:none}}
 .rd-sp{margin:0 0 16px}
 .rd-spl{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:8px 0}
 .rd-spc{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.06)}
@@ -303,7 +301,7 @@
   const fmtGiorno = iso => { try { return new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (_) { return iso; } };
   function legaSpunti() {
     const el = document.querySelector('.rd-spunti'); if (!el) return;
-    const ridisegna = () => { el.innerHTML = spuntiPanel(); const u = document.querySelector('.rd-ufficio'); if (u) u.innerHTML = ufficio(); };
+    const ridisegna = () => { el.innerHTML = spuntiPanel(); aggiornaStanza(); };
     const errore = e => { if (typeof showToast === 'function') showToast((e && e.message) || 'Errore', 'error'); };
     el.onclick = async ev => {
       const ap = ev.target.closest('[data-open]'); if (ap) { st.sel = ap.dataset.open; st.prev = false; paint(); return; }
@@ -312,42 +310,301 @@
       const nomi = { calcola: 'Rilegge i risultati per trovare gli spunti', spiega: `Spiega: ${s ? s.titolo : 'uno spunto'}`, articolo: `Prepara la bozza: ${s ? s.titolo : 'uno spunto'}`, scarta: 'Mette da parte uno spunto', ripristina: 'Rimette in lista uno spunto' };
       st.spOcc.set(id || 'calcola', nomi[act] || 'Lavora'); ridisegna();
       try {
-        if (act === 'calcola') st.spunti = await api('/spunti/calcola', { method: 'POST' });
-        else if (act === 'spiega') { await api(`/spunti/${encodeURIComponent(id)}/spiega`, { method: 'POST' }); await caricaSpunti(); }
-        else if (act === 'articolo') { const r = await api(`/spunti/${encodeURIComponent(id)}/articolo`, { method: 'POST', body: {} }); st.sel = r.id; st.attesa = Date.now() + 6 * 60000; await Promise.all([carica(), caricaSpunti()]); st.spOcc.clear(); paint(); return; }
+        if (act === 'calcola') { st.spunti = await api('/spunti/calcola', { method: 'POST' }); const n = st.spunti.spunti.filter(x => x.stato === 'nuovo').length; scena('Analista', 'Caporedattore', `Ho riletto i risultati: ${n} spunt${n === 1 ? 'o pronto' : 'i pronti'}`, 'Bene, vediamo quali valgono un articolo.'); }
+        else if (act === 'spiega') { await api(`/spunti/${encodeURIComponent(id)}/spiega`, { method: 'POST' }); await caricaSpunti(); scena('Analista', 'Caporedattore', `Ho spiegato lo spunto: ${s ? s.titolo : ''}`, 'Chiaro, grazie.'); }
+        else if (act === 'articolo') { const r = await api(`/spunti/${encodeURIComponent(id)}/articolo`, { method: 'POST', body: {} }); st.sel = r.id; st.attesa = Date.now() + 6 * 60000; await Promise.all([carica(), caricaSpunti()]); scena('Analista', 'Inviato speciale', `Ti passo lo spunto: ${s ? s.titolo : ''}`, 'Lo scrivo subito.'); st.spOcc.clear(); paint(); return; }
         else { await api(`/spunti/${encodeURIComponent(id)}/stato`, { method: 'POST', body: { stato: act === 'scarta' ? 'scartato' : 'nuovo' } }); await caricaSpunti(); }
       } catch (e) { errore(e); }
       st.spOcc.clear(); ridisegna();
     };
   }
 
-  function omino(d) {
-    const vuoto = d.stato === 'vuoto';
-    return `<svg class="rd-om" viewBox="0 0 140 110" role="img" aria-label="${esc(d.nome)}: ${esc(d.testo)}">
-      <ellipse cx="70" cy="105" rx="54" ry="4" fill="currentColor" opacity=".08"/>
-      ${vuoto ? '<text x="52" y="50" font-size="26" font-family="sans-serif" fill="currentColor" opacity=".3">?</text>' : `
-      <rect x="40" y="56" width="32" height="26" rx="9" fill="${d.colore}"/>
-      <g class="om-testa"><circle cx="56" cy="44" r="12" fill="#f1c9a5"/><path d="M44 42c1-10 8-14 14-13 7 1 11 7 10 13-4-5-8-6-12-6-4 0-9 2-12 6z" fill="${d.capelli}"/></g>
-      <text class="om-z" x="68" y="34">z</text><text class="om-z om-z2" x="72" y="26">z</text>
-      <rect class="om-bs" x="34" y="66" width="9" height="15" rx="4" fill="${d.colore}"/>
-      <rect class="om-bd" x="68" y="66" width="9" height="15" rx="4" fill="${d.colore}"/>`}
-      <rect x="22" y="78" width="96" height="7" rx="2" fill="#8b6f4e"/>
-      <rect x="28" y="85" width="5" height="18" fill="#6f5a40"/><rect x="107" y="85" width="5" height="18" fill="#6f5a40"/>
-      <rect x="38" y="75" width="30" height="3" rx="1" fill="#9ca3af"/>
-      <rect x="82" y="55" width="30" height="21" rx="3" fill="#1f2937"/>
-      <rect class="om-sch" x="85" y="58" width="24" height="15" rx="1.5" fill="${d.stato === 'lavora' ? '#38bdf8' : d.stato === 'errore' ? '#f87171' : '#374151'}"/>
-      <rect x="94" y="76" width="6" height="2" fill="#1f2937"/>
-      ${d.stato === 'lavora' ? '<rect x="88" y="62" width="12" height="2" fill="#fff" opacity=".7"/><rect x="88" y="66" width="16" height="2" fill="#fff" opacity=".5"/>' : ''}
-      ${vuoto ? '<rect x="52" y="30" width="36" height="18" rx="3" fill="none" stroke="currentColor" stroke-dasharray="3 2" opacity=".4"/>' : ''}
-    </svg>`;
+  /* ---------- La stanza: gli agenti in un ufficio stile gioco. Camminano, lavorano e si parlano.
+     I fumetti con il bordo pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
+  const SW = 320, SH = 180;
+  const ROW_Y = [62, 150], DESK_X = [50, 130, 210, 290], LANE = [92, 114];
+  const ORDINE = [
+    ['Caporedattore', 0, 0, { camicia: '#7c3aed', capelli: '#4b5563', extra: 'cravatta' }],
+    ['Cronista', 0, 1, { camicia: '#16a34a', capelli: '#78350f' }],
+    ['Cronista di stagione', 0, 2, { camicia: '#2563eb', capelli: '#111827' }],
+    ['Profilista', 0, 3, { camicia: '#db2777', capelli: '#92400e' }],
+    ['Inviato speciale', 1, 0, { camicia: '#0d9488', capelli: '#374151' }],
+    ['Ricercatore', 1, 1, { camicia: '#0ea5e9', capelli: '#1f2937', extra: 'occhiali' }],
+    ['Analista', 1, 2, { camicia: '#65a30d', capelli: '#422006', extra: 'occhiali' }],
+    ['Cassiere', 1, 3, { camicia: '#d97706', capelli: '#7c2d12', extra: 'visiera' }]
+  ];
+  const SPOTS = [
+    { id: 'caffe', x: 290, y: 100, frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
+    { id: 'acqua', x: 28, y: 100, frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
+    { id: 'lavagna', x: 170, y: 48, frasi: ['Aggiorno i totali sulla lavagna.', 'Segno le gare da seguire.'] }
+  ];
+  const CHIACCHIERE = [
+    ['Hai visto che volata, domenica?', 'Eh, in rettilineo non lo riprendevi più.'],
+    ['Quanti chilometri avrà fatto oggi il gruppo?', 'Abbastanza da meritarsi una birra.'],
+    ['Dicono vento contrario in Toscana.', 'Allora oggi fughe vietate!'],
+    ['Pausa pranzo?', 'Prima finiamo la bozza.'],
+    ['Pronostico per il campionato italiano?', 'Mai fare pronostici, lo dice il Capo.'],
+    ['Io salgo in bici solo in discesa.', 'Si vede dai tuoi articoli sulle salite.']
+  ];
+  const DI = { gara: 'Cronista', settimana: 'Cronista', stagione: 'Cronista di stagione', squadre: 'Cronista di stagione', atleta: 'Profilista', libero: 'Inviato speciale' };
+  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null };
+  const FMT_ORA = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: false });
+  const rnd = n => Math.floor(Math.random() * n);
+  const eur = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+  const hhmm = ts => { try { return new Date(ts).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
+  const trova = nome => stanza.ag.find(a => a.nome === nome);
+  const durata = t => Math.min(7000, 1900 + String(t || '').length * 55);
+
+  function inizStanza() {
+    if (stanza.ag) return;
+    const now = performance.now();
+    stanza.ag = ORDINE.map(([nome, riga, col, look]) => {
+      const cx = DESK_X[col], D = ROW_Y[riga], sx = cx - 5, sy = D + 3;
+      return { nome, riga, col, look, cx, D, sx, sy, x: sx, y: sy, dir: 1, stato: 'seduto', path: [], parla: null, parlaChiac: false, fase: 'riposa', lavoro: '', scena: null, giro: null, prossimo: now + 7000 + rnd(15000), el: null, bub: null, _k: '' };
+    });
   }
 
-  function ufficio() {
+  // ---- movimento: si cammina solo lungo le corsie e nei corridoi tra le scrivanie
+  function vai(a, tx, ty) {
+    const lane = LANE[a.riga], p = [];
+    let x = a.x, y = a.y;
+    if (Math.abs(a.x - a.sx) < 1 && Math.abs(a.y - a.sy) < 1) { p.push([a.cx - 20, a.sy], [a.cx - 20, lane]); x = a.cx - 20; y = lane; }
+    else if (y < 74 || y > 128) { p.push([x, lane]); y = lane; }
+    if (Math.abs(x - tx) > 0.5) p.push([tx, y]);
+    if (Math.abs(y - ty) > 0.5) p.push([tx, ty]);
+    a.path = p;
+    if (stanza.rm) { a.path = []; a.x = tx; a.y = ty; }
+  }
+  function tornaAlPosto(a) {
+    const lane = LANE[a.riga], fuori = a.y < 74 || a.y > 128, p = [];
+    if (fuori) p.push([a.x, lane]);
+    const ya = fuori ? lane : a.y;
+    p.push([a.cx - 20, ya], [a.cx - 20, a.sy], [a.sx, a.sy]);
+    a.path = p;
+    if (stanza.rm) { a.path = []; a.x = a.sx; a.y = a.sy; }
+  }
+  function muovi(a, dt) {
+    if (a.path.length) {
+      const [tx, ty] = a.path[0], dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy), passo = 32 * dt;
+      if (d <= passo) { a.x = tx; a.y = ty; a.path.shift(); } else { a.x += dx / d * passo; a.y += dy / d * passo; }
+      if (Math.abs(dx) > 0.5) a.dir = dx > 0 ? 1 : -1;
+    }
+    const alPosto = Math.abs(a.x - a.sx) < 0.6 && Math.abs(a.y - a.sy) < 0.6;
+    a.stato = a.path.length ? 'cammina' : (alPosto ? 'seduto' : 'fermo');
+  }
+
+  // ---- conversazioni
+  function scena(da, a, t1, t2, opz) {
+    inizStanza();
+    const chiac = !!(opz && opz.chiac);
+    if (stanza.coda.some(x => x.da === da && x.a === a && x.t1 === t1)) return;
+    stanza.coda.push({ da, a, t1, t2: t2 || '', chiac, fase: 'attesa', fino: 0, scad: 0 });
+    if (stanza.coda.length > 14) { const i = stanza.coda.findIndex(x => x.chiac && x.fase === 'attesa'); stanza.coda.splice(i >= 0 ? i : 0, 1); }
+    if (!chiac) { stanza.log.unshift({ ts: Date.now(), da, a, t1, t2: t2 || '' }); stanza.log.length = Math.min(stanza.log.length, 40); }
+  }
+  function rilascia(sc, A, B) { if (A) A.parla = null; if (B) B.parla = null; if (A) A.scena = null; if (B) B.scena = null; sc.fase = 'fine'; }
+  function giraScene(now) {
+    const urgenti = stanza.coda.some(x => !x.chiac && x.fase === 'attesa');
+    for (const sc of stanza.coda) {
+      if (sc.fase !== 'attesa' || (sc.chiac && urgenti)) continue;
+      const A = trova(sc.da), B = trova(sc.a);
+      if (!A || !B) { sc.fase = 'fine'; continue; }
+      if (A.scena || B.scena || A.giro || B.giro) continue;
+      sc.fase = 'vai'; sc.scad = now + 70000; A.scena = B.scena = sc;
+      vai(A, B.col === 3 ? B.cx - 24 : B.cx + 24, B.riga ? 124 : 84);
+    }
+    for (const sc of stanza.coda) {
+      if (sc.fase === 'attesa' || sc.fase === 'fine') continue;
+      const A = trova(sc.da), B = trova(sc.a);
+      if (now > sc.scad) { rilascia(sc, A, B); tornaAlPosto(A); continue; }              // sicurezza: nessuna scena resta bloccata
+      if (sc.fase === 'vai' && !A.path.length) { sc.fase = 'p1'; sc.fino = now + durata(sc.t1); A.parla = sc.t1; A.parlaChiac = sc.chiac; A.dir = B.sx > A.x ? 1 : -1; }
+      else if (sc.fase === 'p1' && now >= sc.fino) {
+        A.parla = null;
+        if (sc.t2) { sc.fase = 'p2'; sc.fino = now + durata(sc.t2); B.parla = sc.t2; B.parlaChiac = sc.chiac; }
+        else { sc.fase = 'torna'; tornaAlPosto(A); }
+      } else if (sc.fase === 'p2' && now >= sc.fino) { B.parla = null; sc.fase = 'torna'; tornaAlPosto(A); }
+      else if (sc.fase === 'torna' && !A.path.length && A.stato === 'seduto') rilascia(sc, A, B);
+    }
+    stanza.coda = stanza.coda.filter(x => x.fase !== 'fine');
+  }
+  // ---- pause e chiacchiere: solo per chi non sta lavorando
+  function giraGiretti(now) {
+    for (const a of stanza.ag) {
+      if (a.giro) {
+        const g = a.giro;
+        if (g.fase === 'vai' && !a.path.length) { g.fase = 'sosta'; g.fino = now + 4200 + rnd(2500); a.parla = g.sp.frasi[rnd(g.sp.frasi.length)]; a.parlaChiac = true; a.dir = g.sp.id === 'acqua' ? -1 : 1; }
+        else if (g.fase === 'sosta' && now >= g.fino) { a.parla = null; g.fase = 'torna'; tornaAlPosto(a); }
+        else if (g.fase === 'torna' && !a.path.length && a.stato === 'seduto') { a.giro = null; a.prossimo = now + 16000 + rnd(26000); }
+        continue;
+      }
+      if (a.scena || a.stato !== 'seduto' || now < a.prossimo) continue;
+      if (a.fase === 'lavora') { a.prossimo = now + 20000; continue; }
+      if (stanza.coda.some(x => !x.chiac)) { a.prossimo = now + 5000; continue; }
+      if (Math.random() < 0.5) {
+        const altri = stanza.ag.filter(b => b !== a && !b.scena && !b.giro && b.stato === 'seduto' && b.fase !== 'lavora');
+        if (altri.length) { const b = altri[rnd(altri.length)], c = CHIACCHIERE[rnd(CHIACCHIERE.length)]; scena(a.nome, b.nome, c[0], c[1], { chiac: true }); a.prossimo = now + 25000 + rnd(20000); continue; }
+      }
+      const sp = SPOTS[rnd(SPOTS.length)]; a.giro = { fase: 'vai', sp, fino: 0 }; vai(a, sp.x, sp.y);
+    }
+  }
+
+  // ---- collegamento con lo stato vero della redazione: ogni novità diventa una scena
+  function aggiornaStanza() {
+    inizStanza();
+    for (const d of agenti()) { const a = trova(d.nome); if (a) { a.fase = d.stato === 'vuoto' ? 'riposa' : d.stato; a.lavoro = d.testo; } }
+    const ora = Date.now(), k = st.costi;
+    if (stanza.prevB) {
+      for (const b of st.bozze) {
+        const prima = stanza.prevB.get(b.id), agente = DI[b.tipo] || 'Inviato speciale';
+        if (prima === undefined && b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000) {
+          scena('Caporedattore', agente, `${b.parametri && b.parametri.auto ? 'Giro automatico' : 'Nuovo incarico'}: ${b.soggetto}`, 'Ricevuto, ci penso io.');
+          if (b.parametri && b.parametri.web) scena(agente, 'Ricercatore', `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
+        } else if (prima === 'in_generazione' && b.stato === 'bozza') scena(agente, 'Caporedattore', `Bozza pronta: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
+        else if (prima === 'in_generazione' && b.stato === 'errore') scena(agente, 'Caporedattore', `Non mi è riuscita: ${b.soggetto}`, 'Capito, controlla l\'errore e riproviamo.');
+      }
+    }
+    stanza.prevB = new Map(st.bozze.map(b => [b.id, b.stato]));
+    if (k && k.config) {
+      const u = (k.ultime || [])[0], ts = u ? String(u.ts) : null;
+      if (stanza.ultimoTs !== undefined && ts && ts !== stanza.ultimoTs) scena('Cassiere', 'Caporedattore', `Registrato: ${u.uso || 'chiamata'}, ${eur(u.costo_usd)}`, `Spesa del mese: ${eur(k.spesa_mese)} su ${eur(k.config.limite_mensile_usd)}`);
+      stanza.ultimoTs = ts;
+      const lim = Number(k.config.limite_mensile_usd) || 0, pct = lim > 0 ? k.spesa_mese / lim * 100 : 0;
+      if (pct >= 100 && !stanza.avvisi.has(100)) { stanza.avvisi.add(100); scena('Cassiere', 'Caporedattore', 'Limite mensile raggiunto: blocco le chiamate.', 'Lo alzo io o fermiamo la scrittura?'); }
+      else if (pct >= 80 && !stanza.avvisi.has(80)) { stanza.avvisi.add(80); scena('Cassiere', 'Caporedattore', `Attenzione: siamo al ${Math.round(pct)}% del limite.`, 'Teniamo d\'occhio la spesa.'); }
+    }
+    aggiornaPannelli();
+  }
+
+  // ---- disegno (pixel-art 320x180, ingrandita dal browser senza sfumature)
+  function oraRoma(ms) {
+    if (!stanza.ora || ms - stanza.oraTs > 5000) { const p = Object.fromEntries(FMT_ORA.formatToParts(new Date()).map(x => [x.type, x.value])); stanza.ora = { h: Number(p.hour) % 24, m: Number(p.minute) }; stanza.oraTs = ms; }
+    return stanza.ora;
+  }
+  function pianta(c, x, y) { c.fillStyle = '#a16207'; c.fillRect(x, y + 8, 8, 6); c.fillStyle = '#854d0e'; c.fillRect(x, y + 8, 8, 1); c.fillStyle = '#15803d'; c.fillRect(x - 2, y + 2, 12, 7); c.fillStyle = '#22c55e'; c.fillRect(x + 1, y - 2, 6, 6); c.fillStyle = '#16a34a'; c.fillRect(x + 3, y + 1, 2, 5); }
+  function costruisciSfondo() {
+    const cv = document.createElement('canvas'); cv.width = SW; cv.height = SH;
+    const c = cv.getContext('2d');
+    c.fillStyle = '#c9d3e0'; c.fillRect(0, 0, SW, 44);
+    c.fillStyle = '#b8c3d3'; for (let x = 0; x < SW; x += 16) c.fillRect(x, 0, 1, 44);
+    c.fillStyle = '#7b8798'; c.fillRect(0, 42, SW, 3);
+    for (let y = 45, j = 0; y < SH; y += 15, j++) for (let x = 0, i = 0; x < SW; x += 20, i++) { c.fillStyle = (i + j) % 2 === 0 ? '#b98f66' : '#ad8460'; c.fillRect(x, y, 20, 15); }
+    c.fillStyle = 'rgba(71,85,125,.42)'; c.fillRect(14, 76, 292, 54);
+    c.fillStyle = 'rgba(255,255,255,.2)'; c.fillRect(14, 76, 292, 1); c.fillRect(14, 129, 292, 1);
+    c.fillStyle = '#5b4636'; c.fillRect(19, 7, 58, 30); c.fillStyle = '#3f2f24'; c.fillRect(46, 7, 3, 30);           // finestra (i vetri sono dinamici)
+    c.fillStyle = '#6b7280'; c.fillRect(135, 6, 70, 30); c.fillStyle = '#f8fafc'; c.fillRect(137, 8, 66, 26);       // lavagna
+    c.fillStyle = '#93c5fd'; [4, 9, 6, 12, 8].forEach((h, i) => c.fillRect(142 + i * 5, 32 - h, 3, h));
+    c.fillStyle = '#fca5a5'; c.fillRect(172, 28, 26, 1); c.fillStyle = '#86efac'; c.fillRect(172, 31, 18, 1);
+    c.fillStyle = '#fde68a'; c.fillRect(262, 8, 30, 26); c.strokeStyle = '#92400e'; c.lineWidth = 1; c.strokeRect(262.5, 8.5, 29, 25);   // poster bici
+    c.strokeStyle = '#be123c'; [270, 284].forEach(x => { c.beginPath(); c.arc(x, 26, 4, 0, 6.283); c.stroke(); });
+    c.beginPath(); c.moveTo(270, 26); c.lineTo(276, 18); c.lineTo(284, 26); c.moveTo(276, 18); c.lineTo(281, 18); c.moveTo(270, 26); c.lineTo(277, 26); c.stroke();
+    pianta(c, 10, 56); pianta(c, 306, 54); pianta(c, 8, 160); pianta(c, 306, 162);
+    c.fillStyle = '#374151'; c.fillRect(300, 80, 16, 26); c.fillStyle = '#9ca3af'; c.fillRect(302, 83, 12, 6);       // macchina del caffè
+    c.fillStyle = '#ef4444'; c.fillRect(303, 92, 2, 2); c.fillStyle = '#f9fafb'; c.fillRect(306, 98, 5, 5); c.fillStyle = '#78350f'; c.fillRect(307, 99, 3, 2);
+    c.fillStyle = '#1f2937'; c.fillRect(300, 106, 16, 2);
+    c.fillStyle = '#bae6fd'; c.fillRect(8, 76, 10, 12); c.fillStyle = '#e5e7eb'; c.fillRect(8, 88, 10, 16);          // distributore dell'acqua
+    c.fillStyle = '#9ca3af'; c.fillRect(11, 92, 4, 2); c.fillStyle = '#6b7280'; c.fillRect(8, 104, 10, 2);
+    return cv;
+  }
+  function scrivania(c, a, t) {
+    const cx = a.cx, D = a.D;
+    c.fillStyle = '#d6b182'; c.fillRect(cx - 14, D, 28, 4); c.fillStyle = '#e8cfa4'; c.fillRect(cx - 14, D, 28, 1);
+    c.fillStyle = '#8b6b4a'; c.fillRect(cx - 14, D + 4, 28, 6); c.fillStyle = '#6f553a'; c.fillRect(cx - 13, D + 10, 2, 3); c.fillRect(cx + 11, D + 10, 2, 3);
+    c.fillStyle = '#e5e7eb'; c.fillRect(cx - 5, D + 6, 10, 2);
+    c.fillStyle = '#1f2937'; c.fillRect(cx + 3, D - 10, 12, 10);
+    c.fillStyle = a.fase === 'lavora' ? ((Math.floor(t * 4) % 2) ? '#38bdf8' : '#7dd3fc') : a.fase === 'errore' ? '#f87171' : '#334155';
+    c.fillRect(cx + 4, D - 9, 10, 7);
+    if (a.fase === 'lavora') { c.fillStyle = 'rgba(255,255,255,.75)'; c.fillRect(cx + 5, D - 8, 3 + (Math.floor(t * 3) % 5), 1); c.fillRect(cx + 5, D - 6, 7 - (Math.floor(t * 2) % 3), 1); c.fillRect(cx + 5, D - 4, 4, 1); }
+    c.fillStyle = '#374151'; c.fillRect(cx + 8, D, 3, 1);
+    c.fillStyle = '#94a3b8'; c.fillRect(cx - 12, D + 1, 11, 2);
+    if (a.stato === 'seduto') {
+      c.fillStyle = '#f1c9a5';
+      if (a.fase === 'lavora') { const k = Math.floor(t * 7) % 2; c.fillRect(cx - 10 + k * 2, D, 2, 1); c.fillRect(cx - 6 + (1 - k) * 2, D, 2, 1); }
+      else { c.fillRect(cx - 9, D, 2, 1); c.fillRect(cx - 5, D, 2, 1); }
+    }
+  }
+  function sprite(c, a, seduto, t) {
+    const L = a.look, X = Math.round(a.x) - 5, Y = Math.round(a.y) - 16, cam = L.camicia;
+    if (!seduto) { c.fillStyle = 'rgba(0,0,0,.22)'; c.fillRect(X + 1, Y + 16, 8, 1); const m = a.stato === 'cammina' ? Math.floor(t * 8) % 2 : 0; c.fillStyle = '#334155'; c.fillRect(X + 2, Y + 12, 3, 4 - m); c.fillRect(X + 5, Y + 12, 3, 3 + m); }
+    c.fillStyle = cam; c.fillRect(X + 1, Y + 6, 8, 6); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X + 1, Y + 11, 8, 1);
+    c.fillStyle = cam;
+    if (!seduto && a.stato === 'cammina') { const m = Math.floor(t * 8) % 2; c.fillRect(X, Y + 7 + m, 1, 4); c.fillRect(X + 9, Y + 8 - m, 1, 4); }
+    else { c.fillRect(X, Y + 7, 1, 4); c.fillRect(X + 9, Y + 7, 1, 4); }
+    c.fillStyle = '#f1c9a5'; c.fillRect(X + 2, Y + 1, 6, 5);
+    c.fillStyle = L.capelli; c.fillRect(X + 2, Y, 6, 2); c.fillRect(X + 1, Y + 1, 1, 3); c.fillRect(X + 8, Y + 1, 1, 3);
+    const e1 = seduto ? 3 : (a.dir > 0 ? 4 : 3), e2 = seduto ? 6 : (a.dir > 0 ? 6 : 5);
+    c.fillStyle = '#111827'; c.fillRect(X + e1, Y + 3, 1, 1); c.fillRect(X + e2, Y + 3, 1, 1);
+    if (a.parla && Math.floor(t * 6) % 2) { c.fillStyle = '#9f1239'; c.fillRect(X + 4, Y + 5, 2, 1); }
+    if (L.extra === 'cravatta') { c.fillStyle = '#dc2626'; c.fillRect(X + 4, Y + 6, 2, 4); }
+    else if (L.extra === 'occhiali') { c.fillStyle = 'rgba(17,24,39,.9)'; c.fillRect(X + 2, Y + 2, 6, 1); }
+    else if (L.extra === 'visiera') { c.fillStyle = '#16a34a'; c.fillRect(X + 1, Y + 1, 8, 1); c.fillRect(a.dir > 0 ? X + 8 : X, Y + 2, 2, 1); }
+  }
+  function disegna(t, ms) {
+    const c = stanza.ctx;
+    c.drawImage(stanza.bg, 0, 0);
+    const o = oraRoma(ms), giorno = o.h >= 7 && o.h < 18, sera = o.h >= 18 && o.h < 21 || o.h >= 5 && o.h < 7;
+    c.fillStyle = giorno ? '#7dd3fc' : sera ? '#fb923c' : '#1e293b';
+    c.fillRect(22, 10, 24, 24); c.fillRect(49, 10, 25, 24);
+    if (giorno) { c.fillStyle = '#fff'; c.fillRect(24 + ((t * 1.5) % 14), 15, 8, 3); c.fillRect(54 + ((t * 1.1) % 10), 21, 7, 2); }
+    else if (!sera) { c.fillStyle = '#e2e8f0'; [[26, 14], [38, 22], [32, 29], [56, 15], [66, 25], [60, 31]].forEach(([x, y]) => c.fillRect(x, y, 1, 1)); }
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(241, 20, 9, 0, 6.283); c.fill();
+    c.strokeStyle = '#374151'; c.lineWidth = 1.5; c.stroke();
+    const am = o.m * 6 * Math.PI / 180, ah = ((o.h % 12) + o.m / 60) * 30 * Math.PI / 180;
+    c.lineWidth = 1; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(am) * 6.5, 20 - Math.cos(am) * 6.5); c.moveTo(241, 20); c.lineTo(241 + Math.sin(ah) * 4, 20 - Math.cos(ah) * 4); c.stroke();
+    for (const a of stanza.ag) { c.fillStyle = '#475569'; c.fillRect(a.sx - 7, a.D - 9, 14, 9); c.fillStyle = '#64748b'; c.fillRect(a.sx - 7, a.D - 9, 14, 1); }
+    stanza.ag.filter(a => a.stato === 'seduto').forEach(a => sprite(c, a, true, t));
+    stanza.ag.forEach(a => scrivania(c, a, t));
+    stanza.ag.filter(a => a.stato !== 'seduto').sort((p, q) => p.y - q.y).forEach(a => sprite(c, a, false, t));
+  }
+  function aggiornaOverlay() {
+    for (const a of stanza.ag) {
+      if (!a.el) continue;
+      a.el.style.left = (a.x / SW * 100).toFixed(2) + '%'; a.el.style.top = ((a.y - 17) / SH * 100).toFixed(2) + '%';
+      let testo = '', cls = '';
+      if (a.parla) { testo = a.parla; cls = a.parlaChiac ? 'chiac' : ''; }
+      else if (a.stato === 'seduto' && a.fase === 'lavora') { testo = a.lavoro; cls = 'lavoro'; }
+      else if (a.stato === 'seduto' && a.fase === 'errore') { testo = a.lavoro; cls = 'errore'; }
+      const k = cls + '|' + testo;
+      if (k !== a._k) { a._k = k; a.bub.textContent = testo; a.bub.hidden = !testo; a.bub.className = 'st-bub ' + cls; a.el.classList.toggle('parla', !!a.parla); }
+    }
+  }
+  function aggiornaPannelli() {
+    const host = document.querySelector('.rd-ufficio'); if (!host) return;
     const ag = agenti(), n = ag.filter(a => a.stato === 'lavora').length;
-    const ETI = { lavora: 'Al lavoro', riposa: 'Libero', errore: 'Problema', vuoto: 'Libero' };
-    return `<div class="rd-uff-head"><h3>L'ufficio</h3><small>${n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura'} · si aggiorna da solo</small></div>
-      <div class="rd-uff-grid">${ag.map(d => `<div class="rd-sc ${d.stato}"><span class="rd-pill">${d.stato === 'vuoto' ? 'Posto libero' : ETI[d.stato]}</span>${omino(d)}
-        <div class="rd-sc-nome">${esc(d.nome)}</div><div class="rd-sc-ruolo">${esc(d.ruolo)}</div><div class="rd-sc-fumetto">${esc(d.testo)}</div></div>`).join('')}</div>`;
+    const conto = host.querySelector('.st-conto'); if (conto) conto.textContent = n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura';
+    const lav = host.querySelector('.st-lavagna');
+    if (lav) lav.textContent = `Bozze ${st.bozze.filter(b => b.stato === 'bozza').length} · Spunti ${st.spunti ? st.spunti.spunti.filter(s => s.stato === 'nuovo').length : 0}`;
+    const el = host.querySelector('.st-elenco'), h1 = ag.map(d => `<div><span class="st-pt ${d.stato}"></span><span><b>${esc(d.nome)}</b>: ${esc(d.testo)}</span></div>`).join('');
+    if (el && el.dataset.h !== h1) { el.dataset.h = h1; el.innerHTML = '<b>Chi fa cosa adesso</b>' + h1; }
+    const lg = host.querySelector('.st-log'), h2 = stanza.log.map(l => `<li><time>${esc(hhmm(l.ts))}</time><b>${esc(l.da)}</b> a <b>${esc(l.a)}</b>: ${esc(l.t1)}${l.t2 ? ' «' + esc(l.t2) + '»' : ''}</li>`).join('');
+    if (lg && lg.dataset.h !== h2) { lg.dataset.h = h2; lg.innerHTML = '<b>Cosa si sono detti</b>' + (h2 ? `<ol>${h2}</ol>` : '<div class="rd-muted">Ancora niente: appena parte un incarico, li vedi parlare.</div>'); }
+  }
+  function montaStanza() {
+    const host = document.querySelector('.rd-ufficio'); if (!host) return;
+    inizStanza();
+    stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
+      <div class="st-room"><canvas class="st-cv" width="${SW}" height="${SH}"></canvas><div class="st-lavagna"></div><div class="st-ov"></div></div>
+      <div class="st-sotto"><div class="st-elenco"></div><div class="st-log"></div></div>`;
+    const canvas = host.querySelector('.st-cv'), ov = host.querySelector('.st-ov');
+    stanza.canvas = canvas; stanza.ctx = canvas.getContext('2d'); stanza.ctx.imageSmoothingEnabled = false; stanza.bg = costruisciSfondo();
+    for (const a of stanza.ag) {
+      a.el = document.createElement('div'); a.el.className = 'st-ag'; a._k = '';
+      a.bub = document.createElement('div'); a.bub.className = 'st-bub'; a.bub.hidden = true;
+      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome;
+      a.el.appendChild(a.bub); a.el.appendChild(nome); ov.appendChild(a.el);
+    }
+    aggiornaStanza(); aggiornaOverlay();
+    const gen = ++stanza.gen; let ultimo = 0;
+    const ciclo = ts => {
+      if (gen !== stanza.gen || !document.body.contains(canvas)) return;
+      if (!document.hidden) {
+        const dt = ultimo ? Math.min(0.25, (ts - ultimo) / 1000) : 0; ultimo = ts;
+        stanza.ag.forEach(a => muovi(a, dt)); giraScene(ts); giraGiretti(ts);
+        disegna(ts / 1000, ts); aggiornaOverlay();
+      } else ultimo = 0;
+      requestAnimationFrame(ciclo);
+    };
+    requestAnimationFrame(ciclo);
   }
 
   function tickUfficio() {
@@ -358,11 +615,11 @@
         const firma = () => st.bozze.map(b => b.id + b.stato).join();
         const prima = firma();
         await Promise.all([carica(), caricaCosti()]);
-        const el = document.querySelector('.rd-ufficio'); if (el) el.innerHTML = ufficio();
+        aggiornaStanza();
         if (firma() !== prima) paint(true);
       }
       tickUfficio();
-    }, 8000);
+    }, 5000);
   }
 
   function paint(soloLista) {
@@ -376,7 +633,7 @@
     }
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
-      <div class="rd-ufficio">${ufficio()}</div>
+      <div class="rd-ufficio"></div>
       <div class="rd-spunti">${spuntiPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
@@ -392,6 +649,7 @@
       <div class="rd-form rd-more" ${st.altro ? '' : 'hidden'}>${form()}</div>
       <div class="rd-grid"><div class="rd-side"><div class="rd-list">${lista()}</div></div><div class="rd-ed">${editor()}</div></div></div>`);
     lega();
+    montaStanza();
   }
 
   function lega() {
