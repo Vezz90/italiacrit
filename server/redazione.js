@@ -545,6 +545,7 @@ REGOLE DI METODO (obbligatorie):
 12. Mai citazioni tra virgolette prese dal web e mai frasi copiate: riformula con parole tue. Niente a-capo dentro un paragrafo: i paragrafi sono separati da una riga vuota.
 13. TONO: la voce di un cronista che ama questo sport e racconta una storia, non quella di un redattore di statistiche. Ritmo, verbi forti, suspense: apri con una scena o con un dato che colpisce, dai a ogni protagonista un'immagine (una frase che lo fa vedere), chiudi con una frase che resta. Alterna frasi brevi e lunghe, usa il presente quando racconta il momento decisivo. Per capire il registro (esempio inventato, NON da copiare): "Tre secondi. Tanto basta per separare un'estate di fatica da una maglia." Vietati i cliche ("saldamente", "da sottolineare", "gran finale", "protagonista assoluto") e l'elenco di numeri senza una storia dentro. Non ripetere due volte la stessa informazione.
 14. NIENTE CONFRONTI TESTA A TESTA tra atleti (chi e arrivato davanti a chi nelle gare in comune): i dati non lo permettono. LIMITI DEI DATI: del sito registriamo SOLO i primi 10 di ogni gara, quindi 'risultati_registrati' NON sono le gare corse da un atleta: non scrivere MAI 'N gare disputate' ne rapporti tra vittorie e gare; di' 'N vittorie e M podi'. Il punteggio di un atleta e ESCLUSIVAMENTE il campo 'punti' (lo stesso della classifica che chiude il post): i campi 'punti_di_ritardo_*' sono differenze tra due atleti, non punteggi, e non vanno mai presentati come punti di qualcuno.
+15. MAI GERGO INTERNO: nel testo non nominare il materiale di lavoro. Vietato scrivere "i DATI", "i dati del sito", "dossier", "JSON", "blocco", "le fonti del sistema" o frasi come "i dati non riportano". Se un'informazione manca, taci oppure scrivi in modo naturale che non e ancora nota; i dubbi vanno solo in DA_VERIFICARE.
 
 FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta dalla sua riga di intestazione, senza altro testo prima o dopo:
 ===TITOLO===
@@ -933,6 +934,9 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
     // 2) citazioni testuali tra virgolette (regola 12)
     const q = testo.match(/«[^»\n]{25,}»|“[^”\n]{25,}”|(?:^|[\s(])"[A-Za-zÀ-ÿ][^"\n]{24,}"(?=[\s.,;:!?)]|$)/gm) || [];     // i secondi (53") non sono virgolette: l'apertura deve seguire uno spazio
     q.filter(x => x.split(/\s+/).length >= 5).slice(0, 3).forEach(x => problemi.push({ tipo: 'citazione', gravita: 'alta', testo: `Citazione tra virgolette: ${x.slice(0, 80)}` }));
+    // 2b) gergo interno uscito dal materiale di lavoro ("i DATI del sito", "dossier")
+    const interno = testo.match(/\bDATI\b|\bdossier\b|\bJSON\b/) || testo.match(/\bi dati (?:ufficiali )?del sito\b/i);
+    if (interno) problemi.push({ tipo: 'interno', gravita: 'alta', testo: `Il testo cita il materiale di lavoro («${interno[0]}»): va riscritto in modo naturale` });
     // 3) il protagonista deve esserci: vincitore delle categorie piu alte, primo della classifica, atleta del profilo
     const maius = up(testo);
     const dovuti = tipo === 'gara' ? (((facts.risultati || []).filter(r => /^ELI_/.test(r.codice || ''))).length ? (facts.risultati || []).filter(r => /^ELI_/.test(r.codice || '')) : (facts.risultati || []).slice(0, 1)).map(r => (r.top10 || [])[0]).filter(Boolean)
@@ -1070,7 +1074,13 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       if (!['gara', 'settimana', 'atleta', 'stagione', 'squadre'].includes(tipo)) return res.status(400).json({ error: 'tipo non valido' });
       if ((tipo === 'gara' || tipo === 'atleta' || tipo === 'stagione' || tipo === 'squadre') && !b.id) return res.status(400).json({ error: "scegli la gara o l'atleta" });
       const p = { id: String(b.id || ''), fine: b.fine ? String(b.fine).slice(0, 10) : null, web: !!b.web, tutte: b.tutte !== false, link: Array.isArray(b.link) ? b.link.map(String).slice(0, 5) : [], indicazioni: b.indicazioni || '' };
-      const { id } = await avvia(tipo, p);
+      let soggetto;
+      if (tipo === 'gara') {
+        const f = await factsGara(p.id, { tutte: p.tutte });
+        if (f.stato !== 'risultati' && f.gara.data < today()) return res.status(409).json({ error: `La gara «${f.gara.nome}» si è corsa il ${f.gara.data} ma nel sito non ci sono ancora i risultati: non scrivo una presentazione di una gara già passata. Riprova quando i risultati vengono importati.` });
+        soggetto = f.gara.nome;
+      } else if (tipo === 'atleta') { try { soggetto = (await factsAtleta(p.id)).atleta.nome; } catch (_) { /* resta il codice */ } }
+      const { id } = await avvia(tipo, p, soggetto);
       res.json({ ok: true, id });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
