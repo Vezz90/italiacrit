@@ -444,7 +444,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0,limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -684,7 +684,8 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
   async function autoGenera() {
     if (inCorso) return { avviati: 0, nota: 'gia in corso' };
     if (!process.env.ANTHROPIC_API_KEY) return { avviati: 0, nota: 'ANTHROPIC_API_KEY non configurata' };
-    if (!(await getCfg()).auto_attiva) return { avviati: 0, nota: 'generazione automatica spenta' };   // spenta di default: la accende l'amministratore
+    const cfgA = await getCfg();
+    if (!cfgA.auto_attiva) return { avviati: 0, nota: 'generazione automatica spenta' };   // spenta di default: la accende l'amministratore
     inCorso = true;
     try {
       const [cal, raw] = await Promise.all([getData('calendar.json'), getData('results_raw.json')]);
@@ -705,10 +706,11 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
         else if (c.data > t && imp >= 1) cand.push({ c, imp, n: 0, chiave: `gara|anteprima|${ev}` });
       }
       cand.sort((a, b) => b.imp - a.imp || b.n - a.n);
-      const daFare = cand.filter(x => !chiavi.has(x.chiave) && x.imp >= 1).slice(0, Math.max(0, Math.min(MAX_PER_GIRO, MAX_AL_GIORNO - oggiFatte)));
+      const daFare = cand.filter(x => !chiavi.has(x.chiave) && (x.imp >= 1 || x.n > 0)).slice(0, Math.max(0, Math.min(MAX_PER_GIRO, MAX_AL_GIORNO - oggiFatte)));   // i resoconti con risultati valgono anche per le gare minori (la maggior parte)
+      const webDa = Number.isFinite(Number(cfgA.web_auto_da_imp)) ? Number(cfgA.web_auto_da_imp) : 0;
       let avviati = 0;
       for (const x of daFare) {
-        const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= 3, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
+        const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= webDa, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
         avviati++; await fine;                                           // una alla volta: niente raffiche di richieste
       }
       // il punto della settimana: lunedi e martedi, per l'ultima settimana con gare
