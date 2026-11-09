@@ -444,7 +444,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -750,7 +750,21 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     autoGenera().catch(() => {});                                        // in background: la pagina vede le bozze comparire
     res.json({ ok: true });
   });
-  if (process.env.ANTHROPIC_API_KEY) { setTimeout(() => autoGenera().catch(() => {}), 3 * 60 * 1000); setInterval(() => autoGenera().catch(() => {}), 30 * 60 * 1000); }
+  // fasce orarie (ora italiana): di default mattina, pranzo e sera. Un controllo ogni 5 minuti; ogni fascia parte una volta al giorno.
+  // Se il server si riavvia durante la fascia, il secondo giro non trova gare nuove da scrivere (le chiavi gia presenti vengono saltate).
+  const _fasceFatte = new Set();
+  if (process.env.ANTHROPIC_API_KEY) setInterval(async () => {
+    try {
+      const c = await getCfg();
+      if (!c.auto_attiva) return;
+      const f = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false }).formatToParts(new Date());
+      const g = Object.fromEntries(f.map(p => [p.type, p.value])), giorno = `${g.year}-${g.month}-${g.day}`, ora = Number(g.hour) % 24;
+      for (const h of (c.auto_orari || [])) {
+        const k = giorno + '|' + h;
+        if (ora === Number(h) && !_fasceFatte.has(k)) { _fasceFatte.add(k); if (_fasceFatte.size > 20) _fasceFatte.delete(_fasceFatte.values().next().value); await autoGenera(); }
+      }
+    } catch (e) { console.warn('[redazione] fasce auto:', e.message); }
+  }, 5 * 60 * 1000);
 
   app.put('/api/admin/redazione/bozze/:id', requireAdmin, async (req, res) => {
     try {

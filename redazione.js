@@ -144,7 +144,7 @@
       ${k.chiave ? '' : '<div class="rd-err">Chiave ANTHROPIC_API_KEY non configurata sul server: nessuna chiamata possibile.</div>'}
       <div class="rd-btns" style="gap:14px;align-items:center;flex-wrap:wrap">
         <label class="rd-c"><input type="checkbox" id="cs-ai" ${c.ai_attiva ? 'checked' : ''}> AI attiva</label>
-        <label class="rd-c"><input type="checkbox" id="cs-auto" ${c.auto_attiva ? 'checked' : ''}> Scrittura automatica ogni mezz'ora</label>
+        <label class="rd-c"><input type="checkbox" id="cs-auto" ${c.auto_attiva ? 'checked' : ''}> Scrittura automatica: 3 volte al giorno (${(c.auto_orari || []).map(h => h + ':00').join(', ')})</label>
         <label class="rd-c">Limite mensile <input type="number" id="cs-lim" min="0" max="1000" step="1" value="${c.limite_mensile_usd}" style="width:70px"> $</label>
         <button type="button" class="admin-edit-btn" id="cs-salva">Salva</button></div>
       <div style="margin:10px 0 4px;font-size:.88rem"><b>${usd(k.spesa_mese)}</b> su ${usd(c.limite_mensile_usd)} questo mese (${k.richieste_mese} richieste${pct >= 100 ? ' · LIMITE RAGGIUNTO: le chiamate sono bloccate' : ''})</div>
@@ -175,7 +175,7 @@
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
-        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico ogni mezz'ora, solo se l'interruttore «Scrittura automatica» è acceso.</small>
+        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso.</small>
         <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-squadre" title="Un articolo sulle squadre per ciascuna categoria">Articoli sulle squadre</button>
         <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
