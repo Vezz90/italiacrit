@@ -170,19 +170,20 @@
 .rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
-.st-room{position:relative;container-type:inline-size;width:100%;max-width:960px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:3px solid #3b2f2f;background:#222}
-.st-cv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.st-room{position:relative;container-type:inline-size;width:100%;max-width:960px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
+.st-cv{position:absolute;inset:0;width:100%;height:100%}
 .st-ov{position:absolute;inset:0;pointer-events:none}
-.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.4cqw;transform:translate(-50%,-100%);z-index:2}
+.st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.5cqw;transform:translate(-50%,-100%);z-index:2}
 .st-ag.parla{z-index:6}
-.st-nome{font:700 max(7px,1.3cqw)/1.2 system-ui,sans-serif;padding:.15cqw .8cqw;border-radius:99px;background:rgba(15,23,42,.8);color:#fff;white-space:nowrap}
-.st-bub{position:relative;font:600 max(8px,1.5cqw)/1.25 system-ui,sans-serif;max-width:23cqw;padding:.7cqw 1cqw;margin-bottom:1cqw;border-radius:1cqw;background:#fff;color:#111;border:.25cqw solid #111;text-align:center;overflow-wrap:anywhere}
+.st-nome{display:flex;align-items:center;font:600 max(7px,1.25cqw)/1.2 system-ui,-apple-system,sans-serif;padding:.25cqw .9cqw .25cqw .6cqw;border-radius:99px;background:rgba(255,255,255,.92);color:#0f172a;white-space:nowrap;box-shadow:0 1px 4px rgba(15,23,42,.18)}
+.st-nome::before{content:"";width:.8cqw;height:.8cqw;border-radius:50%;background:var(--c,#64748b);margin-right:.6cqw;flex:none}
+.st-bub{position:relative;font:500 max(8px,1.5cqw)/1.3 system-ui,-apple-system,sans-serif;max-width:24cqw;padding:.8cqw 1.2cqw;margin-bottom:.9cqw;border-radius:1.4cqw;background:#fff;color:#0f172a;text-align:left;overflow-wrap:anywhere;box-shadow:0 6px 18px rgba(15,23,42,.2),0 0 0 1px rgba(15,23,42,.06)}
 .st-bub[hidden]{display:none}
-.st-bub::after{content:"";position:absolute;left:50%;bottom:-1.05cqw;width:1.2cqw;height:1.2cqw;background:inherit;border:inherit;border-width:0 .25cqw .25cqw 0;transform:translateX(-50%) rotate(45deg)}
-.st-bub.lavoro{background:#ecfdf5;border-color:#15803d;font-weight:500}
-.st-bub.errore{background:#fee2e2;border-color:#b91c1c}
-.st-bub.chiac{border-style:dashed;background:#f8fafc;font-weight:500;font-style:italic}
-.st-lavagna{position:absolute;left:42.8%;top:5%;width:20.6%;height:9%;display:flex;align-items:center;justify-content:center;font:700 max(7px,1.2cqw)/1.15 system-ui,sans-serif;color:#1e3a8a;white-space:nowrap;pointer-events:none}
+.st-bub::after{content:"";position:absolute;left:50%;bottom:-.55cqw;width:1.1cqw;height:1.1cqw;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:.2cqw;box-shadow:2px 2px 4px rgba(15,23,42,.08)}
+.st-bub.lavoro{background:#f0fdf4;color:#14532d;box-shadow:0 6px 18px rgba(22,163,74,.2),0 0 0 1px rgba(22,163,74,.35)}
+.st-bub.errore{background:#fef2f2;color:#7f1d1d;box-shadow:0 6px 18px rgba(220,38,38,.2),0 0 0 1px rgba(220,38,38,.4)}
+.st-bub.chiac{background:rgba(255,255,255,.82);color:#475569;font-style:italic;box-shadow:0 4px 12px rgba(15,23,42,.12),0 0 0 1px rgba(100,116,139,.35)}
+.st-lavagna{position:absolute;left:43.1%;top:5.2%;width:20.2%;height:9%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.2cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
 .st-sotto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px;max-width:960px}
 .st-elenco,.st-log{font-size:.8rem;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);padding:8px 10px}
 .st-elenco>div{display:flex;gap:7px;align-items:baseline;padding:2px 0}
@@ -321,17 +322,17 @@
 
   /* ---------- La stanza: gli agenti in un ufficio stile gioco. Camminano, lavorano e si parlano.
      I fumetti con il bordo pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
-  const SW = 320, SH = 180;
+  const SW = 320, SH = 180, SCALA = 4;
   const ROW_Y = [62, 150], DESK_X = [50, 130, 210, 290], LANE = [92, 114];
   const ORDINE = [
-    ['Caporedattore', 0, 0, { camicia: '#7c3aed', capelli: '#4b5563', extra: 'cravatta' }],
-    ['Cronista', 0, 1, { camicia: '#16a34a', capelli: '#78350f' }],
-    ['Cronista di stagione', 0, 2, { camicia: '#2563eb', capelli: '#111827' }],
-    ['Profilista', 0, 3, { camicia: '#db2777', capelli: '#92400e' }],
-    ['Inviato speciale', 1, 0, { camicia: '#0d9488', capelli: '#374151' }],
-    ['Ricercatore', 1, 1, { camicia: '#0ea5e9', capelli: '#1f2937', extra: 'occhiali' }],
-    ['Analista', 1, 2, { camicia: '#65a30d', capelli: '#422006', extra: 'occhiali' }],
-    ['Cassiere', 1, 3, { camicia: '#d97706', capelli: '#7c2d12', extra: 'visiera' }]
+    ['Caporedattore', 0, 0, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }],
+    ['Cronista', 0, 1, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }],
+    ['Cronista di stagione', 0, 2, { camicia: '#2563eb', capelli: '#111827', pelle: '#8d5a3b', stile: 'riccio' }],
+    ['Profilista', 0, 3, { camicia: '#db2777', capelli: '#92400e', pelle: '#f5d0b0', stile: 'lungo' }],
+    ['Inviato speciale', 1, 0, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }],
+    ['Ricercatore', 1, 1, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }],
+    ['Analista', 1, 2, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }],
+    ['Cassiere', 1, 3, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }]
   ];
   const SPOTS = [
     { id: 'caffe', x: 290, y: 100, frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
@@ -475,82 +476,103 @@
     aggiornaPannelli();
   }
 
-  // ---- disegno (pixel-art 320x180, ingrandita dal browser senza sfumature)
+  // ---- disegno: stile moderno, forme morbide e ombre leggere (coordinate logiche 320x180, canvas ad alta risoluzione)
+  const rr = (c, x, y, w, h, r, fill) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } };
+  const cerchio = (c, x, y, r, fill) => { c.beginPath(); c.arc(x, y, r, 0, 6.2832); if (fill) { c.fillStyle = fill; c.fill(); } };
+  const ombra = (c, x, y, rx, ry, a) => { c.save(); c.translate(x, y); c.scale(1, ry / rx); cerchio(c, 0, 0, rx, `rgba(15,23,42,${a})`); c.restore(); };
+  const grad = (c, x0, y0, x1, y1, stops) => { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach(([o, col]) => g.addColorStop(o, col)); return g; };
   function oraRoma(ms) {
     if (!stanza.ora || ms - stanza.oraTs > 5000) { const p = Object.fromEntries(FMT_ORA.formatToParts(new Date()).map(x => [x.type, x.value])); stanza.ora = { h: Number(p.hour) % 24, m: Number(p.minute) }; stanza.oraTs = ms; }
     return stanza.ora;
   }
-  function pianta(c, x, y) { c.fillStyle = '#a16207'; c.fillRect(x, y + 8, 8, 6); c.fillStyle = '#854d0e'; c.fillRect(x, y + 8, 8, 1); c.fillStyle = '#15803d'; c.fillRect(x - 2, y + 2, 12, 7); c.fillStyle = '#22c55e'; c.fillRect(x + 1, y - 2, 6, 6); c.fillStyle = '#16a34a'; c.fillRect(x + 3, y + 1, 2, 5); }
+  function pianta(c, x, y) {                                                  // x,y = base del vaso
+    ombra(c, x, y + 0.6, 5.5, 1.5, 0.16);
+    [[-3.4, -8.5, -0.75, '#16a34a'], [3.4, -8.5, 0.75, '#22c55e'], [0, -11, 0, '#15803d'], [-1.7, -7.5, -0.35, '#4ade80'], [1.7, -7.5, 0.35, '#16a34a']].forEach(([dx, dy, rot, col]) => { c.save(); c.translate(x + dx, y + dy); c.rotate(rot); c.beginPath(); c.ellipse(0, 0, 1.9, 4.3, 0, 0, 6.2832); c.fillStyle = col; c.fill(); c.restore(); });
+    rr(c, x - 3.3, y - 5, 6.6, 5.4, 1.5, '#f8fafc'); rr(c, x - 3.3, y - 5, 6.6, 1.3, 0.65, '#e2e8f0');
+  }
   function costruisciSfondo() {
-    const cv = document.createElement('canvas'); cv.width = SW; cv.height = SH;
-    const c = cv.getContext('2d');
-    c.fillStyle = '#c9d3e0'; c.fillRect(0, 0, SW, 44);
-    c.fillStyle = '#b8c3d3'; for (let x = 0; x < SW; x += 16) c.fillRect(x, 0, 1, 44);
-    c.fillStyle = '#7b8798'; c.fillRect(0, 42, SW, 3);
-    for (let y = 45, j = 0; y < SH; y += 15, j++) for (let x = 0, i = 0; x < SW; x += 20, i++) { c.fillStyle = (i + j) % 2 === 0 ? '#b98f66' : '#ad8460'; c.fillRect(x, y, 20, 15); }
-    c.fillStyle = 'rgba(71,85,125,.42)'; c.fillRect(14, 76, 292, 54);
-    c.fillStyle = 'rgba(255,255,255,.2)'; c.fillRect(14, 76, 292, 1); c.fillRect(14, 129, 292, 1);
-    c.fillStyle = '#5b4636'; c.fillRect(19, 7, 58, 30); c.fillStyle = '#3f2f24'; c.fillRect(46, 7, 3, 30);           // finestra (i vetri sono dinamici)
-    c.fillStyle = '#6b7280'; c.fillRect(135, 6, 70, 30); c.fillStyle = '#f8fafc'; c.fillRect(137, 8, 66, 26);       // lavagna
-    c.fillStyle = '#93c5fd'; [4, 9, 6, 12, 8].forEach((h, i) => c.fillRect(142 + i * 5, 32 - h, 3, h));
-    c.fillStyle = '#fca5a5'; c.fillRect(172, 28, 26, 1); c.fillStyle = '#86efac'; c.fillRect(172, 31, 18, 1);
-    c.fillStyle = '#fde68a'; c.fillRect(262, 8, 30, 26); c.strokeStyle = '#92400e'; c.lineWidth = 1; c.strokeRect(262.5, 8.5, 29, 25);   // poster bici
-    c.strokeStyle = '#be123c'; [270, 284].forEach(x => { c.beginPath(); c.arc(x, 26, 4, 0, 6.283); c.stroke(); });
-    c.beginPath(); c.moveTo(270, 26); c.lineTo(276, 18); c.lineTo(284, 26); c.moveTo(276, 18); c.lineTo(281, 18); c.moveTo(270, 26); c.lineTo(277, 26); c.stroke();
-    pianta(c, 10, 56); pianta(c, 306, 54); pianta(c, 8, 160); pianta(c, 306, 162);
-    c.fillStyle = '#374151'; c.fillRect(300, 80, 16, 26); c.fillStyle = '#9ca3af'; c.fillRect(302, 83, 12, 6);       // macchina del caffè
-    c.fillStyle = '#ef4444'; c.fillRect(303, 92, 2, 2); c.fillStyle = '#f9fafb'; c.fillRect(306, 98, 5, 5); c.fillStyle = '#78350f'; c.fillRect(307, 99, 3, 2);
-    c.fillStyle = '#1f2937'; c.fillRect(300, 106, 16, 2);
-    c.fillStyle = '#bae6fd'; c.fillRect(8, 76, 10, 12); c.fillStyle = '#e5e7eb'; c.fillRect(8, 88, 10, 16);          // distributore dell'acqua
-    c.fillStyle = '#9ca3af'; c.fillRect(11, 92, 4, 2); c.fillStyle = '#6b7280'; c.fillRect(8, 104, 10, 2);
+    const cv = document.createElement('canvas'); cv.width = SW * SCALA; cv.height = SH * SCALA;
+    const c = cv.getContext('2d'); c.setTransform(SCALA, 0, 0, SCALA, 0, 0);
+    c.fillStyle = grad(c, 0, 0, 0, 44, [[0, '#f4f7fb'], [1, '#dde5ef']]); c.fillRect(0, 0, SW, 45);              // parete
+    c.fillStyle = '#c3cedd'; c.fillRect(0, 43, SW, 2);
+    c.fillStyle = grad(c, 0, 45, 0, SH, [[0, '#eef1f5'], [1, '#d9e0e8']]); c.fillRect(0, 45, SW, SH - 45);       // pavimento
+    c.strokeStyle = 'rgba(100,116,139,.10)'; c.lineWidth = 0.3; c.beginPath();
+    for (let x = 0; x <= SW; x += 40) { c.moveTo(x, 45); c.lineTo(x, SH); }
+    for (let y = 45; y <= SH; y += 30) { c.moveTo(0, y); c.lineTo(SW, y); }
+    c.stroke();
+    rr(c, 14, 74, 292, 58, 6, 'rgba(129,140,248,.20)'); c.strokeStyle = 'rgba(99,102,241,.28)'; c.lineWidth = 0.5; c.stroke();   // tappeto
+    for (const a of ORDINE) { const cx = DESK_X[a[2]], D = ROW_Y[a[1]]; const g = c.createRadialGradient(cx, D + 6, 2, cx, D + 6, 30); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(cx - 32, D - 24, 64, 60); }   // luce sulle scrivanie
+    rr(c, 17, 5, 60, 34, 3, '#ffffff'); c.shadowColor = 'rgba(15,23,42,.18)';                                     // cornice finestra (il cielo è dinamico)
+    rr(c, 134, 6, 72, 30, 3.5, '#0f172a'); rr(c, 135.5, 7.5, 69, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
+    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 142 + i * 5.5, 32 - h, 3.2, h, 1.1, col));
+    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(141, 32.5); c.lineTo(176, 32.5); c.stroke();
+    rr(c, 261, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
+    c.strokeStyle = '#6366f1'; c.lineWidth = 0.9; c.lineCap = 'round'; c.lineJoin = 'round';
+    [270, 284].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
+    c.beginPath(); c.moveTo(270, 27); c.lineTo(276, 19.5); c.lineTo(284, 27); c.moveTo(276, 19.5); c.lineTo(281.5, 19.5); c.moveTo(270, 27); c.lineTo(277.5, 27); c.stroke();
+    pianta(c, 17, 68); pianta(c, 305, 66); pianta(c, 14, 174); pianta(c, 306, 175);
+    ombra(c, 308, 108.5, 11, 2, 0.16); rr(c, 300, 80, 16, 27, 3.2, '#334155'); rr(c, 302, 82.5, 12, 7, 1.8, '#94a3b8');    // macchina del caffè
+    cerchio(c, 304.5, 94, 0.9, '#22c55e'); cerchio(c, 308, 94, 0.9, '#f59e0b'); rr(c, 305.5, 98, 5.5, 5.2, 1.2, '#f8fafc'); rr(c, 306.4, 99, 3.7, 1.6, 0.6, '#92400e'); rr(c, 300, 105.5, 16, 2, 1, '#1e293b');
+    ombra(c, 13, 106.5, 8, 1.8, 0.16); rr(c, 8.5, 75, 9, 13, 3.2, 'rgba(125,211,252,.75)'); rr(c, 8, 87, 10, 18, 2, '#f8fafc');   // distributore dell'acqua
+    c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.4; c.stroke(); rr(c, 11, 91, 4, 2, 0.8, '#60a5fa');
     return cv;
   }
   function scrivania(c, a, t) {
     const cx = a.cx, D = a.D;
-    c.fillStyle = '#d6b182'; c.fillRect(cx - 14, D, 28, 4); c.fillStyle = '#e8cfa4'; c.fillRect(cx - 14, D, 28, 1);
-    c.fillStyle = '#8b6b4a'; c.fillRect(cx - 14, D + 4, 28, 6); c.fillStyle = '#6f553a'; c.fillRect(cx - 13, D + 10, 2, 3); c.fillRect(cx + 11, D + 10, 2, 3);
-    c.fillStyle = '#e5e7eb'; c.fillRect(cx - 5, D + 6, 10, 2);
-    c.fillStyle = '#1f2937'; c.fillRect(cx + 3, D - 10, 12, 10);
-    c.fillStyle = a.fase === 'lavora' ? ((Math.floor(t * 4) % 2) ? '#38bdf8' : '#7dd3fc') : a.fase === 'errore' ? '#f87171' : '#334155';
-    c.fillRect(cx + 4, D - 9, 10, 7);
-    if (a.fase === 'lavora') { c.fillStyle = 'rgba(255,255,255,.75)'; c.fillRect(cx + 5, D - 8, 3 + (Math.floor(t * 3) % 5), 1); c.fillRect(cx + 5, D - 6, 7 - (Math.floor(t * 2) % 3), 1); c.fillRect(cx + 5, D - 4, 4, 1); }
-    c.fillStyle = '#374151'; c.fillRect(cx + 8, D, 3, 1);
-    c.fillStyle = '#94a3b8'; c.fillRect(cx - 12, D + 1, 11, 2);
-    if (a.stato === 'seduto') {
-      c.fillStyle = '#f1c9a5';
-      if (a.fase === 'lavora') { const k = Math.floor(t * 7) % 2; c.fillRect(cx - 10 + k * 2, D, 2, 1); c.fillRect(cx - 6 + (1 - k) * 2, D, 2, 1); }
-      else { c.fillRect(cx - 9, D, 2, 1); c.fillRect(cx - 5, D, 2, 1); }
-    }
+    ombra(c, cx, D + 12, 15.5, 2.2, 0.16);
+    rr(c, cx - 13.5, D + 3.5, 27, 8, 1.6, '#f8fafc'); c.strokeStyle = '#d5dde8'; c.lineWidth = 0.35; c.stroke();     // fianco bianco
+    rr(c, cx - 15, D - 0.6, 30, 5, 2.2, '#e9d6b8'); rr(c, cx - 15, D - 0.6, 30, 1.4, 0.7, 'rgba(255,255,255,.5)');   // piano in legno chiaro
+    rr(c, cx - 12, D + 0.2, 11, 2.2, 0.9, '#cbd5e1');                                                         // tastiera
+    cerchio(c, cx - 13, D + 1.3, 1.4, '#ffffff'); cerchio(c, cx - 13, D + 1.3, 0.8, '#92400e');                // tazza
+    rr(c, cx + 6.5, D - 0.6, 6, 1, 0.5, '#94a3b8'); rr(c, cx + 8.1, D - 2, 2.8, 1.6, 0.5, '#94a3b8');         // base e piede del monitor
+    rr(c, cx + 2.6, D - 11.2, 12.8, 9.4, 1.6, '#0f172a');
+    const f = a.fase;
+    c.fillStyle = f === 'lavora' ? grad(c, cx + 3, D - 10.5, cx + 15, D - 3, [[0, '#38bdf8'], [1, '#6366f1']]) : f === 'errore' ? grad(c, cx + 3, D - 10.5, cx + 15, D - 3, [[0, '#fca5a5'], [1, '#ef4444']]) : grad(c, cx + 3, D - 10.5, cx + 15, D - 3, [[0, '#1e293b'], [1, '#334155']]);
+    rr(c, cx + 3.4, D - 10.4, 11.2, 7.7, 1.1, c.fillStyle);
+    if (f === 'lavora') { c.fillStyle = 'rgba(255,255,255,.8)'; const k = Math.floor(t * 3); rr(c, cx + 4.6, D - 9.2, 3 + (k % 5), 0.9, 0.45, c.fillStyle); rr(c, cx + 4.6, D - 7.3, 7 - (k % 3), 0.9, 0.45, c.fillStyle); rr(c, cx + 4.6, D - 5.4, 4.2, 0.9, 0.45, c.fillStyle); }
   }
   function sprite(c, a, seduto, t) {
-    const L = a.look, X = Math.round(a.x) - 5, Y = Math.round(a.y) - 16, cam = L.camicia;
-    if (!seduto) { c.fillStyle = 'rgba(0,0,0,.22)'; c.fillRect(X + 1, Y + 16, 8, 1); const m = a.stato === 'cammina' ? Math.floor(t * 8) % 2 : 0; c.fillStyle = '#334155'; c.fillRect(X + 2, Y + 12, 3, 4 - m); c.fillRect(X + 5, Y + 12, 3, 3 + m); }
-    c.fillStyle = cam; c.fillRect(X + 1, Y + 6, 8, 6); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X + 1, Y + 11, 8, 1);
-    c.fillStyle = cam;
-    if (!seduto && a.stato === 'cammina') { const m = Math.floor(t * 8) % 2; c.fillRect(X, Y + 7 + m, 1, 4); c.fillRect(X + 9, Y + 8 - m, 1, 4); }
-    else { c.fillRect(X, Y + 7, 1, 4); c.fillRect(X + 9, Y + 7, 1, 4); }
-    c.fillStyle = '#f1c9a5'; c.fillRect(X + 2, Y + 1, 6, 5);
-    c.fillStyle = L.capelli; c.fillRect(X + 2, Y, 6, 2); c.fillRect(X + 1, Y + 1, 1, 3); c.fillRect(X + 8, Y + 1, 1, 3);
-    const e1 = seduto ? 3 : (a.dir > 0 ? 4 : 3), e2 = seduto ? 6 : (a.dir > 0 ? 6 : 5);
-    c.fillStyle = '#111827'; c.fillRect(X + e1, Y + 3, 1, 1); c.fillRect(X + e2, Y + 3, 1, 1);
-    if (a.parla && Math.floor(t * 6) % 2) { c.fillStyle = '#9f1239'; c.fillRect(X + 4, Y + 5, 2, 1); }
-    if (L.extra === 'cravatta') { c.fillStyle = '#dc2626'; c.fillRect(X + 4, Y + 6, 2, 4); }
-    else if (L.extra === 'occhiali') { c.fillStyle = 'rgba(17,24,39,.9)'; c.fillRect(X + 2, Y + 2, 6, 1); }
-    else if (L.extra === 'visiera') { c.fillStyle = '#16a34a'; c.fillRect(X + 1, Y + 1, 8, 1); c.fillRect(a.dir > 0 ? X + 8 : X, Y + 2, 2, 1); }
+    const L = a.look, x = a.x, y = a.y, cam = L.camicia;
+    const cammina = !seduto && a.stato === 'cammina', w = Math.sin(t * 9), yy = y - (cammina ? Math.abs(w) * 0.7 : 0), hy = yy - 13.6;
+    if (!seduto) ombra(c, x, y + 0.4, 5.2, 1.5, 0.2);
+    c.lineCap = 'round'; c.lineJoin = 'round';
+    if (!seduto) { const s = cammina ? w * 1.8 : 0; c.lineWidth = 2.3; c.strokeStyle = '#334155'; c.beginPath(); c.moveTo(x - 1.6, yy - 5); c.lineTo(x - 1.6 + s, y - 0.6); c.moveTo(x + 1.6, yy - 5); c.lineTo(x + 1.6 - s, y - 0.6); c.stroke(); }
+    if (L.stile === 'lungo') rr(c, x - 4.4, hy - 3.9, 8.8, 9.6, 3.9, L.capelli);                                 // capelli dietro
+    rr(c, x - 4, yy - 11.3, 8, 8.4, 3.3, cam); rr(c, x - 4, yy - 11.3, 8, 3.2, 1.6, 'rgba(255,255,255,.2)');     // busto
+    c.lineWidth = 2; c.strokeStyle = cam; c.beginPath();
+    if (seduto) { const k = a.fase === 'lavora' ? Math.sin(t * 14) * 0.9 : 0; c.moveTo(x - 3.6, yy - 9.5); c.lineTo(x - 2.6 + k, a.D + 0.8); c.moveTo(x + 3.6, yy - 9.5); c.lineTo(x + 2.6 - k, a.D + 0.8); }
+    else { const s = cammina ? w * 1.6 : 0; c.moveTo(x - 3.8, yy - 9.5); c.lineTo(x - 4.6, yy - 5.2 + s); c.moveTo(x + 3.8, yy - 9.5); c.lineTo(x + 4.6, yy - 5.2 - s); }
+    c.stroke();
+    if (L.extra === 'cravatta') { c.beginPath(); c.moveTo(x, yy - 10.7); c.lineTo(x - 0.9, yy - 9); c.lineTo(x, yy - 6.3); c.lineTo(x + 0.9, yy - 9); c.closePath(); c.fillStyle = '#ef4444'; c.fill(); }
+    rr(c, x - 1.2, yy - 11.6, 2.4, 2, 1, L.pelle);                                                             // collo
+    cerchio(c, x, hy, 3.75, L.pelle);                                                                          // testa
+    if (L.stile === 'riccio') [[-3, -2.4], [-1, -3.7], [1.2, -3.7], [3, -2.4]].forEach(([dx, dy]) => cerchio(c, x + dx, hy + dy, 1.95, L.capelli));
+    else { c.beginPath(); c.arc(x, hy, 3.95, Math.PI * 1.04, Math.PI * 1.96); c.quadraticCurveTo(x + 1, hy - 2.3, x - 3.85, hy - 1.1); c.closePath(); c.fillStyle = L.capelli; c.fill(); }
+    const ex = seduto ? 0 : a.dir * 0.5;
+    cerchio(c, x - 1.35 + ex, hy + 0.2, 0.55, '#0f172a'); cerchio(c, x + 1.35 + ex, hy + 0.2, 0.55, '#0f172a');
+    if (a.parla && Math.floor(t * 6) % 2) { c.beginPath(); c.ellipse(x + ex, hy + 1.6, 0.8, 0.6, 0, 0, 6.2832); c.fillStyle = '#9f1239'; c.fill(); }
+    else { c.strokeStyle = '#9a3412'; c.lineWidth = 0.35; c.beginPath(); c.arc(x + ex, hy + 1, 0.9, Math.PI * 0.15, Math.PI * 0.85); c.stroke(); }
+    if (L.extra === 'occhiali') { c.strokeStyle = '#0f172a'; c.lineWidth = 0.35; [-1.35, 1.35].forEach(d => { c.beginPath(); c.arc(x + d + ex, hy + 0.2, 1.15, 0, 6.2832); c.stroke(); }); c.beginPath(); c.moveTo(x - 0.2 + ex, hy + 0.2); c.lineTo(x + 0.2 + ex, hy + 0.2); c.stroke(); }
+    if (L.extra === 'visiera') { rr(c, x - 4.1, hy - 3.9, 8.2, 1.6, 0.8, '#16a34a'); rr(c, x + (a.dir > 0 ? 1.6 : -5.6), hy - 2.7, 4, 0.9, 0.45, '#15803d'); }
   }
   function disegna(t, ms) {
     const c = stanza.ctx;
-    c.drawImage(stanza.bg, 0, 0);
-    const o = oraRoma(ms), giorno = o.h >= 7 && o.h < 18, sera = o.h >= 18 && o.h < 21 || o.h >= 5 && o.h < 7;
-    c.fillStyle = giorno ? '#7dd3fc' : sera ? '#fb923c' : '#1e293b';
-    c.fillRect(22, 10, 24, 24); c.fillRect(49, 10, 25, 24);
-    if (giorno) { c.fillStyle = '#fff'; c.fillRect(24 + ((t * 1.5) % 14), 15, 8, 3); c.fillRect(54 + ((t * 1.1) % 10), 21, 7, 2); }
-    else if (!sera) { c.fillStyle = '#e2e8f0'; [[26, 14], [38, 22], [32, 29], [56, 15], [66, 25], [60, 31]].forEach(([x, y]) => c.fillRect(x, y, 1, 1)); }
-    c.fillStyle = '#fff'; c.beginPath(); c.arc(241, 20, 9, 0, 6.283); c.fill();
-    c.strokeStyle = '#374151'; c.lineWidth = 1.5; c.stroke();
+    c.drawImage(stanza.bg, 0, 0, SW, SH);
+    const o = oraRoma(ms), giorno = o.h >= 7 && o.h < 18, sera = (o.h >= 18 && o.h < 21) || (o.h >= 5 && o.h < 7);
+    c.save(); rr(c, 19, 7, 56, 30, 2); c.clip();                                                                  // cielo nella finestra
+    c.fillStyle = giorno ? grad(c, 0, 7, 0, 37, [[0, '#9bd3ff'], [1, '#e6f4ff']]) : sera ? grad(c, 0, 7, 0, 37, [[0, '#fb923c'], [1, '#fecdd3']]) : grad(c, 0, 7, 0, 37, [[0, '#0b1220'], [1, '#1e3a8a']]);
+    c.fillRect(19, 7, 56, 30);
+    if (giorno) { c.fillStyle = 'rgba(255,255,255,.9)'; [[22 + ((t * 1.4) % 46), 14, 6, 2.2], [40 + ((t * 0.9) % 36), 22, 5, 1.8]].forEach(([x, y, rx, ry]) => { c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, 6.2832); c.fill(); }); }
+    else if (!sera) { c.fillStyle = 'rgba(226,232,240,.9)'; [[26, 13], [38, 21], [32, 28], [58, 14], [67, 24], [61, 30]].forEach(([x, y]) => cerchio(c, x, y, 0.45)); c.fill(); }
+    c.fillStyle = giorno ? 'rgba(100,116,139,.35)' : 'rgba(15,23,42,.55)';
+    [[20, 28, 6, 9], [27, 24, 5, 13], [33, 29, 7, 8], [41, 26, 5, 11], [52, 27, 6, 10], [59, 23, 5, 14], [65, 28, 7, 9]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
+    c.restore();
+    c.fillStyle = '#ffffff'; c.fillRect(46.5, 7, 2, 30);
+    cerchio(c, 241, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
     const am = o.m * 6 * Math.PI / 180, ah = ((o.h % 12) + o.m / 60) * 30 * Math.PI / 180;
-    c.lineWidth = 1; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(am) * 6.5, 20 - Math.cos(am) * 6.5); c.moveTo(241, 20); c.lineTo(241 + Math.sin(ah) * 4, 20 - Math.cos(ah) * 4); c.stroke();
-    for (const a of stanza.ag) { c.fillStyle = '#475569'; c.fillRect(a.sx - 7, a.D - 9, 14, 9); c.fillStyle = '#64748b'; c.fillRect(a.sx - 7, a.D - 9, 14, 1); }
+    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
+    c.lineWidth = 1.4; c.beginPath(); c.moveTo(241, 20); c.lineTo(241 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
+    for (const a of stanza.ag) rr(c, a.sx - 5.8, a.D - 9.5, 11.6, 10, 3.6, '#64748b');                               // schienali
     stanza.ag.filter(a => a.stato === 'seduto').forEach(a => sprite(c, a, true, t));
     stanza.ag.forEach(a => scrivania(c, a, t));
     stanza.ag.filter(a => a.stato !== 'seduto').sort((p, q) => p.y - q.y).forEach(a => sprite(c, a, false, t));
@@ -558,7 +580,7 @@
   function aggiornaOverlay() {
     for (const a of stanza.ag) {
       if (!a.el) continue;
-      a.el.style.left = (a.x / SW * 100).toFixed(2) + '%'; a.el.style.top = ((a.y - 17) / SH * 100).toFixed(2) + '%';
+      a.el.style.left = (a.x / SW * 100).toFixed(2) + '%'; a.el.style.top = ((a.y - 19) / SH * 100).toFixed(2) + '%';
       let testo = '', cls = '';
       if (a.parla) { testo = a.parla; cls = a.parlaChiac ? 'chiac' : ''; }
       else if (a.stato === 'seduto' && a.fase === 'lavora') { testo = a.lavoro; cls = 'lavoro'; }
@@ -583,14 +605,14 @@
     inizStanza();
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
-      <div class="st-room"><canvas class="st-cv" width="${SW}" height="${SH}"></canvas><div class="st-lavagna"></div><div class="st-ov"></div></div>
+      <div class="st-room"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div><div class="st-ov"></div></div>
       <div class="st-sotto"><div class="st-elenco"></div><div class="st-log"></div></div>`;
     const canvas = host.querySelector('.st-cv'), ov = host.querySelector('.st-ov');
-    stanza.canvas = canvas; stanza.ctx = canvas.getContext('2d'); stanza.ctx.imageSmoothingEnabled = false; stanza.bg = costruisciSfondo();
+    stanza.canvas = canvas; stanza.ctx = canvas.getContext('2d'); stanza.ctx.setTransform(SCALA, 0, 0, SCALA, 0, 0); stanza.bg = costruisciSfondo();
     for (const a of stanza.ag) {
       a.el = document.createElement('div'); a.el.className = 'st-ag'; a._k = '';
       a.bub = document.createElement('div'); a.bub.className = 'st-bub'; a.bub.hidden = true;
-      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome;
+      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome; nome.style.setProperty('--c', a.look.camicia);
       a.el.appendChild(a.bub); a.el.appendChild(nome); ov.appendChild(a.el);
     }
     aggiornaStanza(); aggiornaOverlay();
