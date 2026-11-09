@@ -103,6 +103,18 @@
       <div class="rd-publ">${l.map(a => `<label><input type="checkbox" data-pa="${esc(a.id)}" ${a.on ? 'checked' : ''}> ${esc(a.nome)} <small class="rd-muted">${a.nel_testo ? 'citato nel testo' : 'in classifica/risultati'}${a.rango ? ' · ' + a.rango + '°' : ''}</small></label>`).join('') || '<small class="rd-muted">Nessun corridore riconosciuto: l\'articolo avrà solo la sua pagina.</small>'}</div>
       <div class="rd-btns"><button type="button" class="admin-edit-btn ok" data-act="pubOk">Pubblica ora</button><button type="button" class="admin-edit-btn" data-act="pubNo">Annulla</button></div>`}</div>`;
   }
+  function revisioneHtml(b) {
+    const r = b.revisione; if (!r) return '';
+    const ET = { confermata: 'Confermata', corretta: 'Corretta', segnalata: 'Con dubbi' };
+    const li = a => (a || []).map(x => `<li>${esc(typeof x === 'string' ? x : x.testo)}</li>`).join('');
+    const iniz = (r.problemi || []).filter(x => x.gravita !== 'bassa'), res = (r.residui || []).filter(x => x.gravita !== 'bassa'), bassi = ((r.residui || r.problemi) || []).filter(x => x.gravita === 'bassa');
+    return `<details class="rd-box ${r.esito === 'segnalata' ? 'warn' : ''}" ${r.esito === 'segnalata' ? 'open' : ''}><summary><b>Controllo del ${esc(r.responsabile)}</b>: ${esc(ET[r.esito] || r.esito)}</summary>
+      ${r.esito === 'confermata' ? '<p class="rd-muted">Numeri, nomi e citazioni controllati con i dati: tutto torna.</p>' : ''}
+      ${r.esito === 'corretta' ? '<b>Cosa è stato corretto</b><ul>' + (li(r.correzioni) || '<li>Il testo è stato ritoccato.</li>') + '</ul>' : ''}
+      ${iniz.length && r.esito !== 'confermata' ? '<b>Cosa non tornava</b><ul>' + li(iniz) + '</ul>' : ''}
+      ${res.length ? '<b>Cosa resta da controllare</b><ul>' + li(res) + '</ul>' : ''}${bassi.length ? '<small class="rd-muted">' + bassi.map(x => esc(x.testo)).join(' · ') + '</small>' : ''}
+      ${r.errore ? '<small class="rd-muted">Nota: ' + esc(r.errore) + '</small>' : ''}</details>`;
+  }
   function dossierHtml(b) {
     const d = b.dossier; if (!d) return '';
     const voci = (d.voci || []).map(v => `<li><b>${esc(v.tema)}</b>: ${esc(v.fatto)} <a href="${esc(v.fonte.url)}" target="_blank" rel="noopener noreferrer">${esc(v.fonte.nome || v.fonte.url)}</a> <small class="rd-muted">(${esc(v.fonte.livello)}${v.conferme > 1 ? ', ' + v.conferme + ' fonti' : ''}${v.fonte.data ? ', ' + esc(v.fonte.data) : ''})</small></li>`).join('');
@@ -128,6 +140,7 @@
       <label class="rd-l">Testo <small id="ed-parole">${parole(b.corpo)} parole</small><textarea id="ed-corpo" rows="18">${esc(b.corpo)}</textarea></label>
       ${dv ? `<div class="rd-box warn"><b>Da verificare prima di pubblicare</b><ul>${dv}</ul></div>` : ''}
       <div class="rd-box"><b>Fonti</b><ul>${fonti || '<li class="rd-muted">Nessuna fonte esterna: solo i dati del sito.</li>'}</ul></div>
+      ${revisioneHtml(b)}
       ${dossierHtml(b)}
       <details class="rd-box"><summary>Dati usati dall'AI</summary><pre>${esc(JSON.stringify(b.dati, null, 1)).slice(0, 12000)}</pre></details>
       <div class="rd-btns">
@@ -180,7 +193,7 @@
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
 .st-scroll{overflow-x:auto;max-width:900px;border-radius:16px}
-.st-room{position:relative;container-type:inline-size;width:100%;min-width:640px;aspect-ratio:400/340;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
+.st-room{position:relative;container-type:inline-size;width:100%;min-width:640px;aspect-ratio:520/370;border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
 .st-cv{position:absolute;inset:0;width:100%;height:100%}
 .st-ov{position:absolute;inset:0;pointer-events:none}
 .st-ag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:.4cqw;transform:translate(-50%,-100%);z-index:2}
@@ -193,7 +206,7 @@
 .st-bub.lavoro{background:#f0fdf4;color:#14532d;box-shadow:0 6px 18px rgba(22,163,74,.2),0 0 0 1px rgba(22,163,74,.35)}
 .st-bub.errore{background:#fef2f2;color:#7f1d1d;box-shadow:0 6px 18px rgba(220,38,38,.2),0 0 0 1px rgba(220,38,38,.4)}
 .st-bub.chiac{background:rgba(255,255,255,.82);color:#475569;font-style:italic;box-shadow:0 4px 12px rgba(15,23,42,.12),0 0 0 1px rgba(100,116,139,.35)}
-.st-lavagna{position:absolute;left:39.75%;top:2.35%;width:18.25%;height:3.6%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.05cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.st-lavagna{position:absolute;left:42.98%;top:2.16%;width:14.04%;height:3.24%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.05cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
 .st-zona{position:absolute;bottom:1.3%;transform:translateX(-50%);font:700 max(7px,.95cqw)/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:rgba(30,41,59,.55);white-space:nowrap;pointer-events:none}
 .rd-tag.rd-ag{background:rgba(99,102,241,.2)}
 .st-elenco summary{cursor:pointer;margin:6px 0 2px;font-weight:600}
@@ -234,30 +247,36 @@
     } catch (_) { return ''; }
   }
 
-  /* ---------- Gli addetti: la direzione (6) e un reparto per categoria e sesso (20: atleti + team) ---------- */
+  /* ---------- Gli addetti: la direzione (7) e un reparto per categoria e sesso (30: responsabile, atleti, team) ---------- */
   const CATEGORIE = [['ELI', 'Elite/U23'], ['JUN', 'Juniores'], ['AL', 'Allievi'], ['ES2', 'Esord. 2°'], ['ES1', 'Esord. 1°']];
   const STAFF = [
-    ['Caporedattore', 0, 4, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }, 'Coordina e decide'],
-    ['Cronista', 0, 5, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }, 'Gare e punto della settimana'],
-    ['Ricercatore', 1, 4, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web'],
-    ['Analista', 1, 5, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
-    ['Inviato speciale', 2, 4, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
-    ['Cassiere', 2, 5, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
+    ['Caporedattore', 0, 6, { camicia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5', stile: 'corto', extra: 'cravatta' }, 'Coordina e decide'],
+    ['Capo servizio', 0, 7, { camicia: '#475569', capelli: '#9ca3af', pelle: '#e0ac82', stile: 'corto', extra: 'cravatta' }, 'Controlla gare, settimana e richieste libere'],
+    ['Cronista', 1, 6, { camicia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e', stile: 'corto' }, 'Gare e punto della settimana'],
+    ['Ricercatore', 1, 7, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web'],
+    ['Analista', 2, 6, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
+    ['Inviato speciale', 2, 7, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
+    ['Cassiere', 3, 6, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
   ];
   const PELLI = ['#f1c9a5', '#e8b98e', '#8d5a3b', '#f5d0b0', '#c68642', '#d8a06f', '#e0ac82', '#a9714b'];
   const CAPELLI = ['#4b5563', '#78350f', '#111827', '#92400e', '#374151', '#1f2937', '#422006', '#7c2d12'];
   const CAMICIA_AT = { ELI: '#2563eb', JUN: '#16a34a', AL: '#d97706', ES2: '#db2777', ES1: '#7c3aed' };
   const CAMICIA_TM = { ELI: '#1e3a8a', JUN: '#14532d', AL: '#92400e', ES2: '#9d174d', ES1: '#5b21b6' };
+  const ETI_RUOLO = { resp: 'Responsabile', atleti: 'Atleti', team: 'Team' };
   const REPARTI = (() => {
     const out = [];
-    CATEGORIE.forEach(([c, nome], riga) => [['M', 0], ['F', 2]].forEach(([sx, c0]) => ['atleti', 'team'].forEach((ruolo, i) => {
+    CATEGORIE.forEach(([c, nome], riga) => [['M', 0], ['F', 3]].forEach(([sx, c0]) => ['resp', 'atleti', 'team'].forEach((ruolo, i) => {
       const n = out.length;
-      out.push({ nome: `${ruolo === 'atleti' ? 'Atleti' : 'Team'} ${nome} ${sx}`, ruolo, cod: `${c}_${sx}`, riga, col: c0 + i,
-        look: { camicia: (ruolo === 'atleti' ? CAMICIA_AT : CAMICIA_TM)[c], capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle: PELLI[(n * 5 + 2) % PELLI.length],
-          stile: sx === 'F' ? ['lungo', 'riccio'][n % 2] : ['corto', 'riccio', 'corto'][n % 3], extra: ruolo === 'team' ? 'cravatta' : (n % 3 === 0 ? 'occhiali' : '') } });
+      out.push({ nome: `${ETI_RUOLO[ruolo]} ${nome} ${sx}`, ruolo, cod: `${c}_${sx}`, riga, col: c0 + i,
+        look: ruolo === 'resp'
+          ? { camicia: '#334155', capelli: '#9ca3af', pelle: PELLI[(n * 5 + 2) % PELLI.length], stile: sx === 'F' ? 'lungo' : 'corto', extra: 'occhiali' }
+          : { camicia: (ruolo === 'atleti' ? CAMICIA_AT : CAMICIA_TM)[c], capelli: CAPELLI[(n * 3 + 1) % CAPELLI.length], pelle: PELLI[(n * 5 + 2) % PELLI.length],
+            stile: sx === 'F' ? ['lungo', 'riccio'][n % 2] : ['corto', 'riccio', 'corto'][n % 3], extra: ruolo === 'team' ? 'cravatta' : (n % 3 === 0 ? 'occhiali' : '') } });
     })));
     return out;
   })();
+  // chi controlla: il responsabile del reparto per atleti/squadre/stagione, il Capo servizio per gare, settimana e richieste libere
+  const respDi = agente => (/^(Atleti|Team) /.test(agente || '') ? 'Responsabile ' + agente.replace(/^(Atleti|Team) /, '') : 'Capo servizio');
   const nomeRep = (ruolo, cod) => { const r = REPARTI.find(x => x.ruolo === ruolo && x.cod === cod); return r ? r.nome : null; };
   const agenteSpunto = s => nomeRep(/^squadra/.test(s.tipo) ? 'team' : 'atleti', s.codice_categoria);
   // chi lavora a una bozza: i reparti per atleti/squadre/stagione, il Cronista per gare e settimana, l'Inviato per le richieste libere
@@ -317,11 +336,27 @@
       return { stato: 'riposa', testo: n ? `${n} spunt${n === 1 ? 'o pronto' : 'i pronti'} da leggere` : 'Nessuno spunto forte in questo periodo' };
     })();
     const stato = {
+      'Capo servizio': { stato: 'riposa', testo: 'Controlla gare, settimana e richieste libere' },
       'Caporedattore': cap, 'Ricercatore': ricerca, 'Cassiere': cassa, 'Analista': analista,
       'Cronista': lavoro('Cronista', 'Aspetta una gara da raccontare'), 'Inviato speciale': lavoro('Inviato speciale', 'Aspetta una richiesta libera')
     };
+    const seg = nome => attive.filter(b => respDi(agenteDiBozza(b)) === nome);                      // chi segue le bozze in corso
+    const ultimaRev = nome => st.bozze.filter(b => b.revisione && b.revisione.responsabile === nome).sort((x, y) => String(y.aggiornato || y.creato).localeCompare(String(x.aggiornato || x.creato)))[0];
+    const ETI_ES = { confermata: 'confermata', corretta: 'corretta', segnalata: 'con dubbi' };
+    const dellaSupervisione = (nome, riposo) => {
+      const s = seg(nome), e = errori.filter(b => respDi(agenteDiBozza(b)) === nome), u = ultimaRev(nome);
+      if (s.length) return { stato: 'lavora', testo: `Segue: ${s[0].soggetto || 'una bozza'}${s.length > 1 ? ` (+${s.length - 1})` : ''}` };
+      if (e.length) return { stato: 'errore', testo: `Una bozza non è riuscita: ${e[0].soggetto || ''}` };
+      return { stato: 'riposa', testo: u ? `Ultima: ${ETI_ES[u.revisione.esito] || u.revisione.esito} «${u.soggetto}»` : riposo };
+    };
+    stato['Capo servizio'] = dellaSupervisione('Capo servizio', 'Controlla gare, settimana e richieste libere');
     const direzione = STAFF.map(([nome, , , , ruolo]) => ({ nome, ruolo, reparto: false, ...stato[nome] }));
     const reparti = REPARTI.map(r => {
+      if (r.ruolo === 'resp') {
+        const mia = ['Atleti', 'Team'].map(x => x + ' ' + r.nome.replace('Responsabile ', ''));
+        const best = sp && sp.spunti.filter(s => s.stato !== 'scartato' && mia.includes(agenteSpunto(s))).sort((a, b) => b.score - a.score)[0];
+        return { nome: r.nome, ruolo: 'Responsabile', reparto: true, ...dellaSupervisione(r.nome, best ? `Reparto: ${best.titolo}` : 'Nessuno spunto in questa categoria') };
+      }
       const mio = sp && sp.spunti.filter(s => s.stato !== 'scartato' && agenteSpunto(s) === r.nome).sort((a, b) => b.score - a.score)[0];
       return { nome: r.nome, ruolo: r.ruolo === 'atleti' ? 'Atleti' : 'Team', reparto: true, ...lavoro(r.nome, mio ? `Radar: ${mio.titolo}` : 'Nessuno spunto in questa categoria') };
     });
@@ -378,15 +413,15 @@
 
   /* ---------- La stanza: gli addetti in un ufficio stile moderno. Camminano, lavorano e si parlano.
      I fumetti con il riquadro pieno raccontano fatti veri (bozze, ricerche, costi, spunti); quelli tratteggiati sono solo chiacchiere. ---------- */
-  const SW = 400, SH = 340, SCALA = 3;
-  const COL_X = [38, 102, 166, 230, 294, 358], ROW_Y = [62, 118, 174, 230, 286], LANE = ROW_Y.map(y => y + 30);
+  const SW = 520, SH = 370, SCALA = 3;
+  const COL_X = [38, 102, 166, 230, 294, 358, 422, 486], ROW_Y = [92, 148, 204, 260, 316], LANE = ROW_Y.map(y => y + 30);
   const sullaCorsia = y => LANE.some(l => Math.abs(l - y) < 0.7);
   const laneVicina = y => LANE.reduce((m, v) => (Math.abs(v - y) < Math.abs(m - y) ? v : m), LANE[0]);
   const ORDINE = [...STAFF.map(([nome, riga, col, look]) => ({ nome, riga, col, look })), ...REPARTI];
   const SPOTS = [
-    { id: 'caffe', x: COL_X[4] - 24, y: LANE[3], frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
-    { id: 'acqua', x: COL_X[5] - 24, y: LANE[4], frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
-    { id: 'lavagna', x: COL_X[2] + 24, y: 52, frasi: ['Controllo i totali sullo schermo.', 'Segno le gare da seguire.'] }
+    { id: 'caffe', x: COL_X[7] - 24, y: LANE[3], frasi: ['Un caffè e si riparte.', 'Il terzo caffè della mattina.'] },
+    { id: 'acqua', x: COL_X[6] - 24, y: LANE[4], frasi: ['Una pausa e torno.', 'Acqua fresca, idee fresche.'] },
+    { id: 'lavagna', x: COL_X[3] + 24, y: 82, frasi: ['Controllo i totali sullo schermo.', 'Segno le gare da seguire.'] }
   ];
   const CHIACCHIERE = [
     ['Hai visto che volata, domenica?', 'Eh, in rettilineo non lo riprendevi più.'],
@@ -459,7 +494,7 @@
       if (!A || !B) { sc.fase = 'fine'; continue; }
       if (A.scena || B.scena || A.giro || B.giro) continue;
       sc.fase = 'vai'; sc.scad = now + 90000; A.scena = B.scena = sc;
-      vai(A, B.col === 5 ? B.cx - 24 : B.cx + 24, LANE[B.riga]);
+      vai(A, B.col === 7 ? B.cx - 24 : B.cx + 24, LANE[B.riga]);
     }
     for (const sc of stanza.coda) {
       if (sc.fase === 'attesa' || sc.fase === 'fine') continue;
@@ -508,7 +543,14 @@
         if (prima === undefined && b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000) {
           scena('Caporedattore', agente, `${b.parametri && b.parametri.auto ? 'Giro automatico' : 'Nuovo incarico'}: ${b.soggetto}`, 'Ricevuto, ci penso io.');
           if (b.parametri && b.parametri.web) scena(agente, 'Ricercatore', `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
-        } else if (prima === 'in_generazione' && b.stato === 'bozza') scena(agente, 'Caporedattore', `Bozza pronta: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
+        } else if (prima === 'in_generazione' && b.stato === 'bozza') {                 // addetto -> responsabile (controlla) -> Caporedattore
+          const rv = b.revisione, resp = rv && rv.responsabile && trova(rv.responsabile) ? rv.responsabile : null;
+          if (resp && resp !== agente) {
+            scena(agente, resp, `Bozza pronta: ${b.soggetto}`, 'La controllo con i dati.');
+            const n = (rv.correzioni || []).length, dubbi = (rv.residui || []).filter(x => x.gravita !== 'bassa').length;
+            scena(resp, 'Caporedattore', rv.esito === 'corretta' ? `Corretta (${n} correzion${n === 1 ? 'e' : 'i'}): ${b.soggetto}` : rv.esito === 'segnalata' ? `Controllata, restano ${dubbi || 'dei'} dubbi: ${b.soggetto}` : `Confermata: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
+          } else scena(agente, 'Caporedattore', `Bozza pronta: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
+        }
         else if (prima === 'in_generazione' && b.stato === 'errore') scena(agente, 'Caporedattore', `Non mi è riuscita: ${b.soggetto}`, 'Capito, controlla l\'errore e riproviamo.');
       }
     }
@@ -549,34 +591,34 @@
     [[-3.4, -8.5, -0.75, '#16a34a'], [3.4, -8.5, 0.75, '#22c55e'], [0, -11, 0, '#15803d'], [-1.7, -7.5, -0.35, '#4ade80'], [1.7, -7.5, 0.35, '#16a34a']].forEach(([dx, dy, rot, col]) => { c.save(); c.translate(x + dx, y + dy); c.rotate(rot); c.beginPath(); c.ellipse(0, 0, 1.9, 4.3, 0, 0, 6.2832); c.fillStyle = col; c.fill(); c.restore(); });
     rr(c, x - 3.3, y - 5, 6.6, 5.4, 1.5, '#f8fafc'); rr(c, x - 3.3, y - 5, 6.6, 1.3, 0.65, '#e2e8f0');
   }
-  const ZONE = [[6, 134, '96,165,250'], [138, 262, '244,114,182'], [266, 394, '139,92,246']];      // uomini, donne, direzione
+  const ZONE = [[6, 198, '96,165,250'], [202, 390, '244,114,182'], [394, 514, '139,92,246']];      // uomini, donne, direzione
   function costruisciSfondo() {
     const cv = document.createElement('canvas'); cv.width = SW * SCALA; cv.height = SH * SCALA;
     const c = cv.getContext('2d'); c.setTransform(SCALA, 0, 0, SCALA, 0, 0);
-    c.fillStyle = grad(c, 0, 0, 0, 44, [[0, '#f4f7fb'], [1, '#dde5ef']]); c.fillRect(0, 0, SW, 45);              // parete
-    c.fillStyle = '#c3cedd'; c.fillRect(0, 43, SW, 2);
-    c.fillStyle = grad(c, 0, 45, 0, SH, [[0, '#eef1f5'], [1, '#d9e0e8']]); c.fillRect(0, 45, SW, SH - 45);       // pavimento
+    c.fillStyle = grad(c, 0, 0, 0, 74, [[0, '#f4f7fb'], [1, '#dde5ef']]); c.fillRect(0, 0, SW, 75);              // parete
+    c.fillStyle = '#c3cedd'; c.fillRect(0, 73, SW, 2);
+    c.fillStyle = grad(c, 0, 75, 0, SH, [[0, '#eef1f5'], [1, '#d9e0e8']]); c.fillRect(0, 75, SW, SH - 75);       // pavimento
     c.strokeStyle = 'rgba(100,116,139,.10)'; c.lineWidth = 0.3; c.beginPath();
-    for (let x = 0; x <= SW; x += 40) { c.moveTo(x, 45); c.lineTo(x, SH); }
-    for (let y = 45; y <= SH; y += 30) { c.moveTo(0, y); c.lineTo(SW, y); }
+    for (let x = 0; x <= SW; x += 40) { c.moveTo(x, 75); c.lineTo(x, SH); }
+    for (let y = 75; y <= SH; y += 30) { c.moveTo(0, y); c.lineTo(SW, y); }
     c.stroke();
-    ZONE.forEach(([x0, x1, rgb]) => { rr(c, x0, 51, x1 - x0, SH - 60, 8, `rgba(${rgb},.12)`); c.strokeStyle = `rgba(${rgb},.34)`; c.lineWidth = 0.5; c.stroke(); });   // tre zone colorate
+    ZONE.forEach(([x0, x1, rgb]) => { rr(c, x0, 81, x1 - x0, SH - 90, 8, `rgba(${rgb},.12)`); c.strokeStyle = `rgba(${rgb},.34)`; c.lineWidth = 0.5; c.stroke(); });   // tre zone colorate
     for (const a of ORDINE) { const cx = COL_X[a.col], D = ROW_Y[a.riga]; const g = c.createRadialGradient(cx, D + 6, 2, cx, D + 6, 30); g.addColorStop(0, 'rgba(255,255,255,.5)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(cx - 32, D - 24, 64, 60); }   // luce sulle scrivanie
     rr(c, 15, 5, 64, 34, 3, '#ffffff');                                                                         // cornice finestra (il cielo è dinamico)
-    rr(c, 158, 6, 76, 30, 3.5, '#0f172a'); rr(c, 159.5, 7.5, 73, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
-    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 166 + i * 6, 32 - h, 3.4, h, 1.1, col));
-    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(164, 32.5); c.lineTo(204, 32.5); c.stroke();
-    rr(c, 300, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
+    rr(c, 222, 6, 76, 30, 3.5, '#0f172a'); rr(c, 223.5, 7.5, 73, 27, 2.6, grad(c, 0, 7, 0, 35, [[0, '#1e293b'], [1, '#0f172a']]));   // schermo a parete
+    [[4, '#818cf8'], [7, '#38bdf8'], [5, '#34d399'], [9, '#fbbf24'], [6, '#f472b6'], [11, '#818cf8']].forEach(([h, col], i) => rr(c, 230 + i * 6, 32 - h, 3.4, h, 1.1, col));
+    c.strokeStyle = 'rgba(148,163,184,.5)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(228, 32.5); c.lineTo(268, 32.5); c.stroke();
+    rr(c, 440, 8, 31, 27, 2, '#ffffff'); c.strokeStyle = '#e2e8f0'; c.lineWidth = 0.6; c.stroke();                  // quadro con la bici
     c.strokeStyle = '#6366f1'; c.lineWidth = 0.9; c.lineCap = 'round'; c.lineJoin = 'round';
-    [309, 323].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
-    c.beginPath(); c.moveTo(309, 27); c.lineTo(315, 19.5); c.lineTo(323, 27); c.moveTo(315, 19.5); c.lineTo(320.5, 19.5); c.moveTo(309, 27); c.lineTo(316.5, 27); c.stroke();
-    const mx = COL_X[4] - 8, my = ROW_Y[3] - 14;                                                                 // macchina del caffè
+    [449, 463].forEach(x => { c.beginPath(); c.arc(x, 27, 4.2, 0, 6.2832); c.stroke(); });
+    c.beginPath(); c.moveTo(449, 27); c.lineTo(455, 19.5); c.lineTo(463, 27); c.moveTo(455, 19.5); c.lineTo(460.5, 19.5); c.moveTo(449, 27); c.lineTo(456.5, 27); c.stroke();
+    const mx = COL_X[7] - 8, my = ROW_Y[3] - 14;                                                                 // macchina del caffè
     ombra(c, mx + 8, my + 28.5, 11, 2, 0.16); rr(c, mx, my, 16, 27, 3.2, '#334155'); rr(c, mx + 2, my + 2.5, 12, 7, 1.8, '#94a3b8');
     cerchio(c, mx + 4.5, my + 14, 0.9, '#22c55e'); cerchio(c, mx + 8, my + 14, 0.9, '#f59e0b'); rr(c, mx + 5.5, my + 18, 5.5, 5.2, 1.2, '#f8fafc'); rr(c, mx + 6.4, my + 19, 3.7, 1.6, 0.6, '#92400e'); rr(c, mx, my + 25.5, 16, 2, 1, '#1e293b');
-    const dx0 = COL_X[5] - 5, dy0 = ROW_Y[4] - 12;                                                               // distributore dell'acqua
+    const dx0 = COL_X[6] - 5, dy0 = ROW_Y[4] - 12;                                                               // distributore dell'acqua
     ombra(c, dx0 + 5, dy0 + 31.5, 8, 1.8, 0.16); rr(c, dx0 + 0.5, dy0, 9, 13, 3.2, 'rgba(125,211,252,.75)'); rr(c, dx0, dy0 + 12, 10, 18, 2, '#f8fafc');
     c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.4; c.stroke(); rr(c, dx0 + 3, dy0 + 16, 4, 2, 0.8, '#60a5fa');
-    pianta(c, COL_X[5], ROW_Y[3] + 12); pianta(c, COL_X[4], ROW_Y[4] + 12); pianta(c, 20, SH - 14); pianta(c, SW - 14, SH - 14);
+    pianta(c, COL_X[7], ROW_Y[4] + 12); pianta(c, COL_X[3], SH - 14); pianta(c, 20, SH - 14); pianta(c, SW - 14, SH - 14);
     return cv;
   }
   function scrivania(c, a, t) {
@@ -631,10 +673,10 @@
     [[18, 28, 6, 9], [25, 24, 5, 13], [31, 29, 7, 8], [39, 26, 5, 11], [52, 27, 6, 10], [60, 23, 5, 14], [67, 28, 8, 9]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
     c.restore();
     c.fillStyle = '#ffffff'; c.fillRect(46, 7, 2, 30);
-    cerchio(c, 270, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
+    cerchio(c, 340, 20, 9.4, '#ffffff'); c.strokeStyle = '#cbd5e1'; c.lineWidth = 0.8; c.stroke();                // orologio
     const am = o.m * 6 * Math.PI / 180, ah = ((o.h % 12) + o.m / 60) * 30 * Math.PI / 180;
-    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(270, 20); c.lineTo(270 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
-    c.lineWidth = 1.4; c.beginPath(); c.moveTo(270, 20); c.lineTo(270 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
+    c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.lineWidth = 1; c.beginPath(); c.moveTo(340, 20); c.lineTo(340 + Math.sin(am) * 6.6, 20 - Math.cos(am) * 6.6); c.stroke();
+    c.lineWidth = 1.4; c.beginPath(); c.moveTo(340, 20); c.lineTo(340 + Math.sin(ah) * 4.2, 20 - Math.cos(ah) * 4.2); c.stroke();
     for (const a of stanza.ag) rr(c, a.sx - 5.8, a.D - 9.5, 11.6, 10, 3.6, '#64748b');                               // schienali
     stanza.ag.filter(a => a.stato === 'seduto').forEach(a => sprite(c, a, true, t));
     stanza.ag.forEach(a => scrivania(c, a, t));
@@ -696,7 +738,7 @@
     for (const a of stanza.ag) {
       a.el = document.createElement('div'); a.el.className = 'st-ag'; a._k = '';
       a.bub = document.createElement('div'); a.bub.className = 'st-bub'; a.bub.hidden = true;
-      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome; nome.style.setProperty('--c', a.look.camicia);
+      const nome = document.createElement('div'); nome.className = 'st-nome'; nome.textContent = a.nome.replace('Responsabile', 'Resp.'); nome.style.setProperty('--c', a.look.camicia);
       a.el.appendChild(a.bub); a.el.appendChild(nome); ov.appendChild(a.el);
     }
     aggiornaStanza(); aggiornaOverlay();

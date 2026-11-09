@@ -684,6 +684,98 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
     return d;
   }
 
+  // ---------- RESPONSABILE DI REPARTO: controlla senza AI numeri, nomi, citazioni e vincitori; se trova problemi seri chiede UNA correzione ----------
+  const REP_NOME = { ELI: 'Elite/U23', JUN: 'Juniores', AL: 'Allievi', ES2: 'Esord. 2°', ES1: 'Esord. 1°' };
+  function responsabileDi(tipo, p) {
+    const cod = tipo === 'atleta' ? p.cat : (tipo === 'stagione' || tipo === 'squadre') ? p.id : p.cod;
+    const m = String(cod || '').match(/^(ELI|JUN|AL|ES1|ES2)_([MF])$/);
+    return m ? { cod, nome: `Responsabile ${REP_NOME[m[1]]} ${m[2]}` } : { cod: null, nome: 'Capo servizio' };
+  }
+  const STOP_NOMI = new Set(['GENNAIO', 'FEBBRAIO', 'MARZO', 'APRILE', 'MAGGIO', 'GIUGNO', 'LUGLIO', 'AGOSTO', 'SETTEMBRE', 'OTTOBRE', 'NOVEMBRE', 'DICEMBRE', 'LUNEDI', 'MARTEDI', 'MERCOLEDI', 'GIOVEDI', 'VENERDI', 'SABATO', 'DOMENICA',
+    'ITALIA', 'ITALIANO', 'ITALIANA', 'ITALIANI', 'VALLE', 'VAL', 'MONTE', 'MONTI', 'LAGO', 'PASSO', 'COLLE', 'SAN', 'SANTA', 'SANTO', 'PORTA', 'PONTE', 'CASTEL', 'CASTELLO', 'COPPA', 'TROFEO', 'GRAN', 'PREMIO', 'MEMORIAL', 'GIRO', 'FEDERAZIONE', 'COMITATO', 'REGIONALE', 'PROVINCIALE', 'ELITE', 'UNDER', 'JUNIORES', 'ALLIEVI', 'ALLIEVE', 'ESORDIENTI', 'DONNE', 'UOMINI', 'CAMPIONATO', 'CAMPIONI', 'EUROPA', 'MONDIALE', 'MONDIALI', 'EUROPEI']);
+  const pulisciTesto = t => String(t || '').replace(/\[\[foto:\d+\]\]/g, ' ').replace(/^#+\s*/gm, '');
+  function controlliTesto(titolo, sommario, corpo, facts, dossier, tipo) {
+    const testo = pulisciTesto(titolo + '\n' + sommario + '\n' + corpo), problemi = [];
+    const sorgente = JSON.stringify(facts) + (dossier ? JSON.stringify(dossier.voci) : '');
+    const noti = new Set(up(sorgente + ' ' + titolo.length).split(/[^A-Z]+/).filter(w => w.length >= 3));
+    // 1) nomi: due parole con la maiuscola, in mezzo alla frase, che non compaiono ne nei dati ne nel dossier
+    const re = /([A-ZÀ-Ý][a-zà-ÿ'’]{2,})\s+([A-ZÀ-Ý][a-zà-ÿ'’]{2,})/g; let m; const visti = new Set();
+    while ((m = re.exec(testo))) {
+      const pre = testo.slice(Math.max(0, m.index - 4), m.index);
+      if (m.index === 0 || /[.!?:]\s*$|\n\s*$/.test(pre)) continue;                      // a inizio frase la maiuscola non dice niente
+      const a = up(m[1]), b = up(m[2]);
+      if (noti.has(a) || noti.has(b) || STOP_NOMI.has(a) || STOP_NOMI.has(b)) continue;
+      const k = a + ' ' + b; if (visti.has(k)) continue; visti.add(k);
+      problemi.push({ tipo: 'nome', gravita: 'alta', testo: `Il nome «${m[1]} ${m[2]}» non compare nei dati ne nel dossier` });
+    }
+    // 2) citazioni testuali tra virgolette (regola 12)
+    const q = testo.match(/«[^»\n]{25,}»|“[^”\n]{25,}”|(?:^|[\s(])"[A-Za-zÀ-ÿ][^"\n]{24,}"(?=[\s.,;:!?)]|$)/gm) || [];     // i secondi (53") non sono virgolette: l'apertura deve seguire uno spazio
+    q.filter(x => x.split(/\s+/).length >= 5).slice(0, 3).forEach(x => problemi.push({ tipo: 'citazione', gravita: 'alta', testo: `Citazione tra virgolette: ${x.slice(0, 80)}` }));
+    // 3) il protagonista deve esserci: vincitore delle categorie piu alte, primo della classifica, atleta del profilo
+    const maius = up(testo);
+    const dovuti = tipo === 'gara' ? (((facts.risultati || []).filter(r => /^ELI_/.test(r.codice || ''))).length ? (facts.risultati || []).filter(r => /^ELI_/.test(r.codice || '')) : (facts.risultati || []).slice(0, 1)).map(r => (r.top10 || [])[0]).filter(Boolean)
+      : tipo === 'stagione' ? [(facts.classifica_atleti || [])[0]].filter(Boolean) : [];
+    dovuti.filter(t => t.cognome && !maius.includes(up(t.cognome).replace(/[^A-Z ]/g, ' ').trim())).forEach(t => problemi.push({ tipo: 'vincitore', gravita: 'alta', testo: `Nel testo manca il nome di ${t.atleta || t.cognome}, ${tipo === 'gara' ? 'vincitore di una categoria alta' : 'primo in classifica'}` }));
+    // 4) numeri che non risultano ne dai dati ne dal dossier (gli anni e i numeri piccoli non si controllano)
+    const ok = new Set();
+    (sorgente.match(/\d+(?:[.,]\d+)?/g) || []).forEach(n => { ok.add(n.replace(',', '.')); ok.add(String(parseFloat(n.replace(',', '.')))); });
+    const nonVer = [...new Set((testo.match(/\d+(?:[.,]\d+)?/g) || []).map(n => n.replace(',', '.')))].filter(n => { const v = parseFloat(n); return v >= 10 && !(v >= 1900 && v <= 2100) && !ok.has(n) && !ok.has(String(v)); });
+    if (nonVer.length) problemi.push({ tipo: 'numeri', gravita: nonVer.length >= 4 ? 'alta' : 'media', testo: `Numeri non presenti nei dati: ${nonVer.slice(0, 8).join(', ')}` });
+    if (testo.split(/\s+/).filter(Boolean).length < 120) problemi.push({ tipo: 'lunghezza', gravita: 'bassa', testo: 'Il testo e molto corto (meno di 120 parole)' });
+    return problemi;
+  }
+  const marcatoriFoto = t => (String(t || '').match(/\[\[foto:\d+\]\]/g) || []).sort().join();
+  async function revisiona({ tipo, p, facts, j, dossier }) {
+    const resp = responsabileDi(tipo, p), ts = new Date().toISOString();
+    let iniziali = [];
+    try { iniziali = controlliTesto(String(j.titolo || ''), String(j.sommario || ''), String(j.corpo || ''), facts, dossier, tipo); }
+    catch (e) { return { revisione: { responsabile: resp.nome, reparto: resp.cod, esito: 'segnalata', problemi: [], correzioni: [], errore: 'controllo non eseguito: ' + e.message, ts }, dv: [] }; }
+    const gravi = iniziali.filter(x => x.gravita === 'alta');
+    const rev = { responsabile: resp.nome, reparto: resp.cod, esito: 'confermata', problemi: iniziali, correzioni: [], ts };
+    if (!gravi.length) return { revisione: rev, dv: iniziali.filter(x => x.gravita === 'media').map(x => 'Il responsabile segnala: ' + x.testo) };
+    // un solo tentativo di correzione, con l'elenco preciso di cio che non torna
+    try {
+      const orig = { titolo: String(j.titolo || ''), sommario: String(j.sommario || ''), corpo: String(j.corpo || '') };
+      const prompt = `Sei il RESPONSABILE DI REPARTO (${resp.nome}) di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Controlla questo articolo scritto da un tuo addetto e correggilo SOLO dove serve.
+
+SEGNALAZIONI DEL CONTROLLO AUTOMATICO:
+${iniziali.map(x => '- ' + x.testo).join('\n')}
+
+REGOLE: nomi, numeri, posizioni, tempi e punti solo dai DATI (o dal DOSSIER, nominando la fonte nel testo). Se un numero e un calcolo corretto fatto sui DATI, lascialo; se non e verificabile, toglilo o riscrivi la frase senza. Nessuna citazione tra virgolette: riformula in forma indiretta e attribuita. Non inventare niente. Mantieni stile, lunghezza e sezioni; non toccare i marcatori [[foto:N]] e i sottotitoli con '## ' se non servono.
+
+FORMATO: rispondi SOLO con queste sezioni:
+===TITOLO===
+(una riga)
+===SOMMARIO===
+(1-2 frasi)
+===CORPO===
+(l'articolo completo corretto)
+===CORREZIONI===
+(una per riga: cosa hai cambiato e perche; scrivi "nessuna" se era tutto corretto)
+
+ARTICOLO DA CONTROLLARE:
+TITOLO: ${orig.titolo}
+SOMMARIO: ${orig.sommario}
+CORPO:
+${orig.corpo}
+
+DATI (JSON): ${JSON.stringify(facts).slice(0, 40000)}
+${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: dossier.contraddizioni }).slice(0, 12000) : ''}`;
+      const r = await callClaude(prompt, false, 'revisione');
+      const x = sezioni(r.text || '');
+      const nuovo = { titolo: (x.TITOLO || '').split('\n')[0].trim(), sommario: x.SOMMARIO || '', corpo: x.CORPO || '' };
+      const valido = nuovo.corpo.length >= orig.corpo.length * 0.6 && nuovo.titolo && marcatoriFoto(nuovo.corpo) === marcatoriFoto(orig.corpo);
+      if (!valido) throw new Error('la correzione non era utilizzabile: si tiene il testo originale');
+      j.titolo = nuovo.titolo; j.sommario = nuovo.sommario || orig.sommario; j.corpo = nuovo.corpo;
+      rev.correzioni = String(x.CORREZIONI || '').split('\n').map(q => q.replace(/^[-*•]\s*/, '').trim()).filter(q => q && !/^nessuna\.?$/i.test(q));
+      rev.esito = 'corretta';
+    } catch (e) { rev.errore = e.message; rev.esito = 'segnalata'; }
+    let residui = [];
+    try { residui = controlliTesto(String(j.titolo || ''), String(j.sommario || ''), String(j.corpo || ''), facts, dossier, tipo); } catch (_) { residui = rev.esito === 'segnalata' ? iniziali : []; }
+    rev.residui = residui;
+    if (residui.some(x => x.gravita === 'alta')) rev.esito = 'segnalata';
+    return { revisione: rev, dv: residui.filter(x => x.gravita !== 'bassa').map(x => 'Il responsabile segnala: ' + x.testo) };
+  }
   const dichiara = (corpo, nome) => { const n = up(nome).replace(/[^A-Z0-9 ]/g, ' ').trim(); return n.length >= 3 && up(corpo).includes(n); };
   async function genera(tipo, p) {
     let facts, soggetto;
@@ -715,13 +807,15 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
     const piazzata = piazzaFotoAuto(String(j.corpo || ''), cand, facts, p);
     j.corpo = piazzata.corpo;
     j.titolo = await controllaTitolo(j, tipo, facts);
+    const rev = await revisiona({ tipo, p, facts, j, dossier });                // il responsabile controlla e, se serve, corregge una volta
     const fonti = [...(Array.isArray(j.fonti) ? j.fonti : [])];
     link.filter(l => !l.errore).forEach(l => { if (!fonti.some(f => f.url === l.url)) fonti.push({ titolo: l.titolo || l.url, url: l.url, uso: 'pagina ufficiale indicata' }); });
     const dv = Array.isArray(j.da_verificare) ? j.da_verificare : [];
+    rev.dv.forEach(x => dv.push(x));
     if (dossier) { dossier.contraddizioni.forEach(x => dv.push('Dal dossier, fonte in contrasto con i dati: ' + x)); dossier.voci.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && v.fonte.livello !== 'social' && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'dal dossier del Ricercatore (' + v.fonte.livello + ')' }); }); }
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, revisione: rev.revisione, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor };   // per le prove
@@ -940,7 +1034,7 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
     const ruolo = /^squadra/.test(s.tipo) ? `Sei l'addetto ai team della categoria ${s.categoria}: parla solo di squadre di questa categoria, non di altre categorie.` : `Sei l'addetto agli atleti della categoria ${s.categoria}: parla solo di atleti di questa categoria, non di altre categorie.`;
     const richiesta = `${ruolo} Scrivi un articolo su questo spunto dell'Analista: ${s.titolo}. Categoria: ${s.categoria}. Periodo: dal ${s.periodo.dal} al ${s.periodo.al}. ${s.motivo} Usa i dati del sito per i dettagli (gare, risultati, classifiche) e non inventare nulla.`;
     const indicazioni = JSON.stringify({ titolo: s.titolo, atleti: s.atleti, squadra: s.team, gare: s.gare, dati: s.dati }).slice(0, 2400);
-    const { id, fine } = await avvia('libero', { richiesta, indicazioni, blocchi: blocchiSpunto(s), web: !!web, link: [], auto: !!auto, chiave: 'spunto|' + s.id }, s.titolo.slice(0, 70));
+    const { id, fine } = await avvia('libero', { richiesta, indicazioni, blocchi: blocchiSpunto(s), cod: s.codice_categoria, web: !!web, link: [], auto: !!auto, chiave: 'spunto|' + s.id }, s.titolo.slice(0, 70));
     await mutaSpunti(x => { const t = x.spunti.find(z => z.id === s.id); if (t) { t.stato = 'usato'; t.bozza_id = id; } });
     return { id, fine };
   }
@@ -959,7 +1053,7 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
       return out.sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
     } catch (_) { return []; }
   }
-  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto });
+  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto });
   app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
     try {
       let v = await leggiSpunti();
