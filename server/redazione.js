@@ -597,6 +597,190 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     return { tipo: 'gara', p: { id: best.id, tutte: true }, dati: await factsGara(best.id, { tutte: true }) };
   }
 
+  // ---------- RADAR: segue senza AI federazione, testate e giornali locali e aggancia le notizie a gare e atleti ----------
+  const RADAR_KEY = 'redazione_radar';
+  const FEED_FISSI = [
+    { nome: 'Federazione Ciclistica Italiana', url: 'https://www.federciclismo.it/feed/' },
+    { nome: 'CiclismoWeb', url: 'https://www.ciclismoweb.net/feed' },
+    { nome: 'Cicloweb', url: 'https://www.cicloweb.it/feed' }
+  ];
+  const RE_TESTATE = /tuttobiciweb|bicisport|bici\.pro|bicitv|cyclingpro|oasport|ciclismoweb|cicloweb|cyclingnews|sprintcycling|bikechannel|tuttobici|spazioc|gazzetta|sky\s?sport|eurosport|raiplay|rai\s?sport|corriere|repubblica|ansa|sportmediaset/i;
+  const livelloDa = dom => (/federciclismo\.it|uci\.org|coni\.it|fci[a-z]*\.(it|org)/i.test(dom) ? 'ufficiale' : RE_TESTATE.test(dom) ? 'testata' : 'locale');
+  const NOISE_GARA = new Set([...RUMORE, 'COPPA', 'TROFEO', 'MEMORIAL', 'GRAN', 'PREMIO', 'GARA', 'CAMPIONATO', 'ITALIANO', 'REGIONALE', 'PROVINCIALE', 'EDIZIONE', 'DEL', 'DELLA', 'DELLE', 'DEI', 'DEGLI', 'DELL', 'GIRO', 'CITTA', 'CICLISTICA', 'CICLISTICO', 'CICLISMO', 'CIRCUITO', 'NAZIONALE', 'INTERNAZIONALE']);
+  const nomePulito = n => String(n || '').replace(/^\s*\d+\s*[°^ªoa]?\s*/i, '').replace(/\s+/g, ' ').trim();
+  const tokenGara = n => { const t = up(nomePulito(n)).split(/[^A-Z0-9]+/).filter(w => w.length >= 3); const d = t.filter(w => !NOISE_GARA.has(w)); return d.length ? d : t; };
+  const decodificaHtml = t => String(t || '').replace(/<[^>]*>/g, ' ').replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d))
+    .replace(/&quot;/g, '"').replace(/&apos;|&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  function leggiRss(xml, fonteFissa) {
+    const out = [];
+    for (const m of String(xml || '').matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+      const b = m[1], pick = tag => { const r = b.match(new RegExp('<' + tag + '[^>]*>([\\s\\S]*?)</' + tag + '>')); return r ? r[1].replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, '') : ''; };
+      const src = b.match(/<source[^>]*url="([^"]*)"[^>]*>([\s\S]*?)<\/source>/);
+      const fonte = decodificaHtml(src ? src[2] : fonteFissa || ''), dom = (src ? src[1] : '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      let titolo = decodificaHtml(pick('title')); if (fonte && titolo.endsWith(' - ' + fonte)) titolo = titolo.slice(0, -(fonte.length + 3)).trim();
+      const url = decodificaHtml(pick('link')), t = Date.parse(pick('pubDate'));
+      if (!titolo || !/^https?:\/\//.test(url)) continue;
+      out.push({ id: crypto.createHash('sha1').update(url).digest('hex').slice(0, 12), titolo: titolo.slice(0, 220), url, fonte: fonte || dom, dominio: dom,
+        livello: fonteFissa === 'Federazione Ciclistica Italiana' ? 'ufficiale' : livelloDa(dom + ' ' + fonte), data: Number.isFinite(t) ? new Date(t).toISOString() : null,
+        descr: decodificaHtml(pick('description')).slice(0, 240) });
+    }
+    return out;
+  }
+  async function scaricaTesto(url) {
+    const r = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; ICSbot/1.0; +https://italiacyclingstats.com)', accept: 'application/rss+xml, application/xml, text/xml' }, signal: AbortSignal.timeout(12000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  }
+  const urlGoogleNews = q => 'https://news.google.com/rss/search?q=' + encodeURIComponent(q) + '&hl=it&gl=IT&ceid=IT:it';
+  let rdChain = Promise.resolve();
+  async function leggiRadar() {
+    const { data, error } = await sb().from('kv_store').select('value').eq('key', RADAR_KEY).maybeSingle();
+    if (error) throw new Error('lettura radar: ' + error.message);
+    const v = data && data.value && typeof data.value === 'object' && !Array.isArray(data.value) ? data.value : {};
+    return { aggiornato: v.aggiornato || null, query: v.query || {}, items: Array.isArray(v.items) ? v.items : [] };
+  }
+  function mutaRadar(fn) {
+    const run = rdChain.then(async () => {
+      const v = await leggiRadar(); const out = await fn(v);
+      v.items.sort((a, b) => String(b.data || b.trovato).localeCompare(String(a.data || a.trovato)));
+      const limite = new Date(Date.now() - 30 * 86400000).toISOString();
+      v.items = v.items.filter(x => String(x.data || x.trovato) >= limite).slice(0, 400);
+      Object.keys(v.query).forEach(k => { if (v.query[k] < limite) delete v.query[k]; });
+      const { error } = await sb().from('kv_store').upsert({ key: RADAR_KEY, value: v, updated_at: new Date().toISOString() });
+      if (error) throw new Error('scrittura radar: ' + error.message);
+      return out;
+    });
+    rdChain = run.catch(() => {});
+    return run;
+  }
+  // gli atleti con risultati recenti, per riconoscerli nei titoli (nome e cognome devono comparire insieme)
+  async function mappaAtleti() {
+    const raw = await getData('results_raw.json'), da = shift(today(), -60), m = new Map(), visti = new Set();
+    for (const r of raw) {
+      if (!r.data || r.data < da || !r.atleta_id || visti.has(r.atleta_id)) continue; visti.add(r.atleta_id);
+      const cog = up(r.cognome).split(/[^A-Z]+/).filter(Boolean), nom = up(r.nome).split(/[^A-Z]+/).filter(Boolean);
+      if (!cog.length || !nom.length) continue;
+      const chiave = cog.sort((a, b) => b.length - a.length)[0];
+      if (!m.has(chiave)) m.set(chiave, []);
+      m.get(chiave).push({ id: r.atleta_id, tok: [...cog, ...nom] });
+    }
+    return m;
+  }
+  function atletiCitati(testo, mappa) {
+    const parole = new Set(up(testo).split(/[^A-Z]+/).filter(Boolean)), out = [];
+    for (const w of parole) { const l = mappa.get(w); if (l) for (const a of l) if (a.tok.every(t => parole.has(t))) out.push(a.id); }
+    return [...new Set(out)].slice(0, 6);
+  }
+  // una notizia riguarda la gara se compare il nome completo, oppure almeno due parole distintive del nome (con una sola parola distintiva non basta)
+  const normFrase = t => ' ' + up(t).replace(/[^A-Z0-9]+/g, ' ').trim() + ' ';
+  const garaTocca = (testo, tokens, nome) => {
+    const u = normFrase(testo), frase = nome ? normFrase(nomePulito(nome)) : '';
+    if (frase.trim().length >= 6 && u.includes(frase)) return true;
+    return tokens.length >= 2 && tokens.filter(t => u.includes(' ' + t)).length >= Math.min(3, tokens.length) - (tokens.length >= 3 ? 1 : 0);
+  };
+  // le gare da seguire: da una settimana fa a tre giorni avanti, le piu importanti per prime
+  async function gareDaSeguire() {
+    const cal = await getData('calendar.json'), t = today(), da = shift(t, -GIORNI_INDIETRO), a = shift(t, 3), visti = new Set(), out = [];
+    for (const c of (cal || [])) {
+      if (!c.data || c.data < da || c.data > a || !c.nome || c.nome.trim() === '-') continue;
+      const key = `${c.data}|${alboBase(c.nome)}`; if (visti.has(key)) continue; visti.add(key);
+      out.push({ key, nome: nomePulito(c.nome), data: c.data, tokens: tokenGara(c.nome), imp: (c.campionato_italiano ? 3 : 0) + (c.campionato_regionale ? 2 : 0) + ((c.moltiplicatore || 1) >= 2 ? 1 : 0) + (c.tipo === 'nazionale' ? 1 : 0) });
+    }
+    return out.sort((x, y) => y.imp - x.imp || y.data.localeCompare(x.data));
+  }
+  const pausa = ms => new Promise(r => setTimeout(r, ms));
+  let radarInCorso = null;
+  function aggiornaRadar() {
+    if (radarInCorso) return radarInCorso;
+    radarInCorso = (async () => {
+      const nuovi = [], errori = [], trovati = new Map();
+      const aggiungi = it => { const k = it.id; if (!trovati.has(k)) trovati.set(k, { ...it, gare: [], atleti: [] }); return trovati.get(k); };
+      try {
+        const [gare, mappa, stato] = await Promise.all([gareDaSeguire(), mappaAtleti(), leggiRadar()]);
+        for (const f of FEED_FISSI) {                                                     // 1) i feed fissi: federazione e testate di ciclismo
+          try { for (const it of leggiRss(await scaricaTesto(f.url), f.nome)) { const x = aggiungi(it); x.atleti = atletiCitati(it.titolo + ' ' + it.descr, mappa); gare.forEach(g => { if (garaTocca(it.titolo + ' ' + it.descr, g.tokens, g.nome)) x.gare.push(g.key); }); } }
+          catch (e) { errori.push(f.nome + ': ' + e.message); }
+        }
+        const tocca = gare.filter(g => !stato.query[g.key] || Date.now() - stato.query[g.key] > 3 * 3600 * 1000).slice(0, 12), interrogate = {};
+        for (const g of tocca) {                                                          // 2) giornali locali e altre testate: una ricerca per gara, via Google News
+          try {
+            const minimo = new Date(Date.parse(g.data + 'T00:00:00Z') - 10 * 86400000).toISOString();
+            for (const it of leggiRss(await scaricaTesto(urlGoogleNews('"' + g.nome + '" ciclismo')))) {
+              if (it.data && it.data < minimo) continue;
+              if (!garaTocca(it.titolo + ' ' + it.descr, g.tokens, g.nome)) continue;
+              const x = aggiungi(it); x.gare.push(g.key); x.atleti = atletiCitati(it.titolo + ' ' + it.descr, mappa);
+            }
+            interrogate[g.key] = Date.now();
+          } catch (e) { errori.push(g.nome + ': ' + e.message); }
+          await pausa(900);
+        }
+        const gia = new Set(stato.items.map(x => x.id));
+        await mutaRadar(v => {
+          const per = new Map(v.items.map(x => [x.id, x]));
+          for (const it of trovati.values()) {
+            if (!it.gare.length && !it.atleti.length) continue;                          // solo notizie agganciate a una gara o a un atleta
+            const o = per.get(it.id);
+            if (o) { o.gare = [...new Set([...(o.gare || []), ...it.gare])]; o.atleti = [...new Set([...(o.atleti || []), ...it.atleti])]; }
+            else { const n = { ...it, trovato: new Date().toISOString() }; v.items.push(n); per.set(it.id, n); if (!gia.has(it.id)) nuovi.push(n); }
+          }
+          Object.assign(v.query, interrogate); v.aggiornato = new Date().toISOString();
+        });
+      } catch (e) { errori.push(e.message); }
+      return { nuovi: nuovi.length, errori };
+    })().finally(() => { radarInCorso = null; });
+    return radarInCorso;
+  }
+  // le notizie utili per un dossier: quelle gia nel radar, piu una ricerca al momento (gratis) se serve
+  async function pisteRadar(tipo, facts, p) {
+    try {
+      if (tipo === 'gara') {
+        const g = facts.gara, key = `${g.data}|${alboBase(g.nome)}`, tokens = tokenGara(g.nome);
+        let st = await leggiRadar(), items = st.items.filter(x => (x.gare || []).includes(key));
+        if (items.length < 3 && (!st.query[key] || Date.now() - st.query[key] > 3 * 3600 * 1000)) {
+          const minimo = new Date(Date.parse(g.data + 'T00:00:00Z') - 10 * 86400000).toISOString(), nuovi = [];
+          for (const it of leggiRss(await scaricaTesto(urlGoogleNews('"' + nomePulito(g.nome) + '" ciclismo')))) if ((!it.data || it.data >= minimo) && garaTocca(it.titolo + ' ' + it.descr, tokens, g.nome)) nuovi.push({ ...it, gare: [key], atleti: [], trovato: new Date().toISOString() });
+          await mutaRadar(v => { const per = new Set(v.items.map(x => x.id)); nuovi.forEach(n => { if (!per.has(n.id)) v.items.push(n); }); v.query[key] = Date.now(); });
+          st = await leggiRadar(); items = st.items.filter(x => (x.gare || []).includes(key));
+        }
+        return items.slice(0, 10);
+      }
+      if (tipo === 'atleta') {
+        const nome = (facts.atleta && facts.atleta.nome) || '', tok = up(nome).split(/[^A-Z]+/).filter(w => w.length >= 2);
+        if (tok.length < 2) return [];
+        const out = [];
+        for (const it of leggiRss(await scaricaTesto(urlGoogleNews('"' + nome + '" ciclismo')))) { const u = up(it.titolo + ' ' + it.descr); if (tok.every(w => u.includes(w))) out.push({ ...it, gare: [], atleti: [p.id], trovato: new Date().toISOString() }); }
+        if (out.length) await mutaRadar(v => { const per = new Set(v.items.map(x => x.id)); out.forEach(n => { if (!per.has(n.id)) v.items.push(n); }); });
+        return out.slice(0, 8);
+      }
+    } catch (e) { console.warn('[redazione] radar per dossier:', e.message); }
+    return [];
+  }
+  const _tmrRadar = setInterval(() => { aggiornaRadar().then(r => { if (r.errori.length) console.warn('[redazione] radar:', r.errori.join(' | ')); }).catch(e => console.warn('[redazione] radar:', e.message)); }, 60 * 60 * 1000);
+  if (_tmrRadar.unref) _tmrRadar.unref();
+  app.get('/api/admin/redazione/radar', requireAdmin, async (req, res) => {
+    try {
+      let v = await leggiRadar();
+      if (!v.aggiornato || Date.now() - Date.parse(v.aggiornato) > 90 * 60 * 1000) { await aggiornaRadar(); v = await leggiRadar(); }
+      res.json({ aggiornato: v.aggiornato, items: v.items.slice(0, 40), totale: v.items.length });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/radar/aggiorna', requireAdmin, async (req, res) => {
+    try { const r = await aggiornaRadar(), v = await leggiRadar(); res.json({ ok: true, nuovi: r.nuovi, errori: r.errori, aggiornato: v.aggiornato, items: v.items.slice(0, 40), totale: v.items.length }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  // «Segnala una notizia»: per cio che non e raggiungibile da solo (per esempio un post sui social): si incolla il testo
+  app.post('/api/admin/redazione/radar/segnala', requireAdmin, async (req, res) => {
+    try {
+      const testo = String((req.body || {}).testo || '').trim().slice(0, 1500), url = String((req.body || {}).url || '').trim().slice(0, 400);
+      if (testo.length < 15) return res.status(400).json({ error: 'scrivi o incolla il testo della notizia (almeno una frase)' });
+      const [gare, mappa] = await Promise.all([gareDaSeguire(), mappaAtleti()]);
+      const it = { id: crypto.createHash('sha1').update(testo + url).digest('hex').slice(0, 12), titolo: testo.slice(0, 160), url: /^https?:\/\//.test(url) ? url : '', fonte: 'Segnalata dalla redazione', dominio: '', livello: 'segnalata', data: new Date().toISOString(), descr: testo,
+        gare: gare.filter(g => garaTocca(testo, g.tokens, g.nome)).map(g => g.key), atleti: atletiCitati(testo, mappa), trovato: new Date().toISOString() };
+      await mutaRadar(v => { if (!v.items.some(x => x.id === it.id)) v.items.push(it); });
+      res.json({ ok: true, agganciata_a: { gare: it.gare.length, atleti: it.atleti.length } });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
   // ---------- DOSSIER: il Ricercatore cerca fuori dal sito, come un giornalista, prima che si scriva ----------
   const DOSSIER_KEY = 'redazione_dossier';
   const TTL_DOSSIER = { gara: 2 * 24 * 3600 * 1000, atleta: 7 * 24 * 3600 * 1000 };
@@ -653,6 +837,9 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
       const tutti = await leggiDossierTutti(), hit = tutti[im.chiave];
       if (hit && Date.now() - Date.parse(hit.creato) < im.ttl) return { ...hit, dallarchivio: true };       // gia fatto per questa gara/atleta: nessun costo
     } catch (_) { /* si rifa */ }
+    const piste = await pisteRadar(tipo, facts, p);                              // notizie gia trovate dal radar (gratis): servono da piste e fanno risparmiare ricerche
+    if (piste.length >= 4) im.ricerche = Math.max(2, im.ricerche - 2);
+    const bloccoPiste = piste.length ? `NOTIZIE GIA TROVATE DAL RADAR (titolo | testata | livello | data | indirizzo). Sono PISTE, non fatti verificati: aprile con la ricerca, verifica cosa dicono davvero, riassumile con parole tue e inseriscile nelle voci con l'indirizzo reale della pagina. Se una conferma o smentisce i DATI, scrivilo.\n${piste.map(x => `- ${x.titolo} | ${x.fonte} | ${x.livello} | ${String(x.data || '').slice(0, 10)} | ${x.url}`).join('\n')}\n\n` : '';
     const prompt = `Sei il RICERCATORE di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Prepari un DOSSIER per il cronista: cerchi sul web, come farebbe un giornalista, informazioni su ${im.oggetto}. Oggi e ${today()}.
 
 ${im.cosa}
@@ -665,7 +852,7 @@ REGOLE:
 - Mai dati personali non sportivi (età, scuola, residenza, famiglia, salute, social privati). Per i minorenni solo risultati, squadra, convocazioni.
 - Dichiarazioni di persone: solo come sintesi attribuita e solo se scritte in una fonte. Non inventare nulla: ciò che non trovi va in "non_trovato".
 
-Rispondi SOLO con un JSON, senza altro testo:
+${bloccoPiste}Rispondi SOLO con un JSON, senza altro testo:
 {"voci":[{"tema":"programma|percorso|cronaca|storia|selezioni|squadra|altro","fatto":"...","fonte":{"nome":"...","url":"https://...","data":"AAAA-MM-GG oppure vuoto","livello":"ufficiale|testata|locale|social"},"conferme":1}],"contraddizioni":["..."],"non_trovato":["..."]}
 
 DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
@@ -677,7 +864,7 @@ DATI DEL SITO (riferimento, non da cercare): ${JSON.stringify(im.dati)}`;
       return { tema: String(v.tema || 'altro').slice(0, 20), fatto: String(v.fatto || '').slice(0, 600), conferme: Math.max(1, Number(v.conferme) || 1),
         fonte: { nome: String(f.nome || '').slice(0, 80), url: String(f.url || ''), data: /^\d{4}-\d{2}-\d{2}$/.test(String(f.data || '')) ? f.data : '', livello: LIVELLI.includes(f.livello) ? f.livello : 'testata' } };
     }).filter(v => v.fatto && /^https?:\/\//i.test(v.fonte.url)).slice(0, 25);        // una voce senza fonte non vale: si scarta
-    const d = { chiave: im.chiave, creato: new Date().toISOString(), tipo, oggetto: im.oggetto, ricerche_max: im.ricerche, voci,
+    const d = { chiave: im.chiave, creato: new Date().toISOString(), tipo, oggetto: im.oggetto, ricerche_max: im.ricerche, radar: piste.length, voci,
       contraddizioni: (Array.isArray(j.contraddizioni) ? j.contraddizioni : []).map(x => String(x).slice(0, 300)).slice(0, 8),
       non_trovato: (Array.isArray(j.non_trovato) ? j.non_trovato : []).map(x => String(x).slice(0, 200)).slice(0, 10) };
     try { await salvaDossier(im.chiave, d); } catch (e) { console.warn('[redazione] salvataggio dossier:', e.message); }
@@ -815,7 +1002,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     if (dossier) { dossier.contraddizioni.forEach(x => dv.push('Dal dossier, fonte in contrasto con i dati: ' + x)); dossier.voci.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && v.fonte.livello !== 'social' && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'dal dossier del Ricercatore (' + v.fonte.livello + ')' }); }); }
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, revisione: rev.revisione, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, revisione: rev.revisione, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, radar: dossier.radar || 0, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor };   // per le prove
@@ -1053,7 +1240,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       return out.sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
     } catch (_) { return []; }
   }
-  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto });
+  app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto, leggiRss, tokenGara, garaTocca, aggiornaRadar });
   app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
     try {
       let v = await leggiSpunti();

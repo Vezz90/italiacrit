@@ -8,7 +8,7 @@
 (function () {
   const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', squadre: 'Fine stagione: le squadre', libero: 'Richiesta libera' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', pubblicata: 'Pubblicata', scartata: 'Scartata', errore: 'Errore' };
-  const st = { spOcc: new Map(), spunti: null, spErr: '', prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
+  const st = { radar: null, spOcc: new Map(), spunti: null, spErr: '', prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
   const parole = t => (String(t || '').trim().match(/\S+/g) || []).length;
   const api = (p, o) => apiCall('/admin/redazione' + p, o);
@@ -119,7 +119,7 @@
     const d = b.dossier; if (!d) return '';
     const voci = (d.voci || []).map(v => `<li><b>${esc(v.tema)}</b>: ${esc(v.fatto)} <a href="${esc(v.fonte.url)}" target="_blank" rel="noopener noreferrer">${esc(v.fonte.nome || v.fonte.url)}</a> <small class="rd-muted">(${esc(v.fonte.livello)}${v.conferme > 1 ? ', ' + v.conferme + ' fonti' : ''}${v.fonte.data ? ', ' + esc(v.fonte.data) : ''})</small></li>`).join('');
     const nt = (d.non_trovato || []).map(x => `<li>${esc(x)}</li>`).join(''), co = (d.contraddizioni || []).map(x => `<li>${esc(x)}</li>`).join('');
-    return `<details class="rd-box"><summary><b>Dossier del Ricercatore</b>: ${(d.voci || []).length} informazioni da altre fonti${d.dallarchivio ? ' (già pronto, riusato)' : ''}</summary>
+    return `<details class="rd-box"><summary><b>Dossier del Ricercatore</b>: ${(d.voci || []).length} informazioni da altre fonti${d.radar ? ` (partito da ${d.radar} notizie del radar)` : ''}${d.dallarchivio ? ' (già pronto, riusato)' : ''}</summary>
       <ul>${voci || '<li class="rd-muted">Nessuna informazione trovata fuori dal sito.</li>'}</ul>
       ${co ? '<b>Fonti in contrasto con i dati</b><ul>' + co + '</ul>' : ''}${nt ? '<b>Non trovato</b><ul>' + nt + '</ul>' : ''}</details>`;
   }
@@ -209,6 +209,13 @@
 .st-lavagna{position:absolute;left:42.98%;top:2.16%;width:14.04%;height:3.24%;display:flex;align-items:center;justify-content:center;font:600 max(7px,1.05cqw)/1.15 system-ui,-apple-system,sans-serif;color:#e2e8f0;white-space:nowrap;pointer-events:none;letter-spacing:.02em}
 .st-zona{position:absolute;bottom:1.3%;transform:translateX(-50%);font:700 max(7px,.95cqw)/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:rgba(30,41,59,.55);white-space:nowrap;pointer-events:none}
 .rd-tag.rd-ag{background:rgba(99,102,241,.2)}
+.rd-rdr{margin:0 0 16px}
+.rd-rdl{list-style:none;margin:8px 0;padding:0}
+.rd-rdl li{padding:4px 0;border-top:1px solid rgba(128,128,128,.18);font-size:.85rem}
+.rd-lv-ufficiale{background:rgba(22,163,74,.25)!important}
+.rd-lv-testata{background:rgba(37,99,235,.2)!important}
+.rd-lv-locale{background:rgba(217,119,6,.22)!important}
+.rd-lv-segnalata{background:rgba(124,58,237,.22)!important}
 .st-elenco summary{cursor:pointer;margin:6px 0 2px;font-weight:600}
 .st-avviso{margin:0 0 8px;padding:8px 12px;border-radius:10px;background:#fef3c7;color:#78350f;font-size:.85rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:960px}
 .st-avviso[hidden]{display:none}
@@ -318,7 +325,8 @@
       if (a.length) return { stato: 'lavora', testo: `Cerca sul web: ${a[0].soggetto || 'contesto'}` };
       if (cfg && Number(cfg.web_auto_da_imp) === 99) return { stato: 'riposa', testo: 'Ricerca automatica: mai' };
       const at = (sp && sp.attesa) || [];
-      return { stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : 'Nessuna ricerca in corso' };
+      const ra = st.radar && st.radar.items && st.radar.items[0];
+      return { stato: 'riposa', testo: at.length ? `In attesa di risultati: ${at[0].nome}${at.length > 1 ? ` e altre ${at.length - 1}` : ''}` : ra ? `Radar: ${st.radar.totale} notizie seguite, ultima da ${ra.fonte || 'una testata'}` : 'Nessuna ricerca in corso' };
     })();
     const cassa = (() => {
       if (!k) return { stato: 'riposa', testo: 'Costi non disponibili' };
@@ -391,6 +399,46 @@
       <small class="rd-muted">Calcolati sui risultati presenti nel sito: se una gara non è stata importata, il conteggio può essere più basso del reale.</small></div>`;
   }
   const fmtGiorno = iso => { try { return new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (_) { return iso; } };
+  /* ---------- Radar delle notizie: federazione, testate e giornali locali, seguiti senza AI e agganciati a gare e atleti ---------- */
+  const LIV_RADAR = { ufficiale: 'ufficiale', testata: 'testata', locale: 'locale', segnalata: 'segnalata' };
+  const nomeGaraDaChiave = k => String(k || '').split('|')[1] || '';
+  async function caricaRadar() { try { st.radar = await api('/radar'); } catch (e) { st.radar = null; } }
+  function radarPanel() {
+    const r = st.radar;
+    if (!r) return '<div class="hx-panel rd-rdr"><h3>Radar delle notizie</h3><small class="rd-muted">Non disponibile: riprova tra poco.</small></div>';
+    const vol = st.radarBusy;
+    const righe = (r.items || []).slice(0, 10).map(x => {
+      const gara = nomeGaraDaChiave((x.gare || [])[0]), dove = gara ? ' · ' + esc(gara.toLowerCase().replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())) : ((x.atleti || []).length ? ' · atleta citato' : '');
+      const t = x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.titolo)}</a>` : esc(x.titolo);
+      return `<li><span class="rd-tag rd-lv-${esc(x.livello)}">${esc(LIV_RADAR[x.livello] || x.livello)}</span> ${t} <small class="rd-muted">${esc(x.fonte || '')}${x.data ? ' · ' + esc(fmtGiorno(String(x.data).slice(0, 10))) : ''}${dove}</small></li>`;
+    }).join('');
+    return `<div class="hx-panel rd-rdr"><div class="rd-uff-head"><h3>Radar delle notizie</h3>
+      <small>segue federazione, testate e giornali locali · senza AI${r.aggiornato ? ' · aggiornato alle ' + esc(hhmm(r.aggiornato)) : ''} · ${r.totale || 0} in archivio</small>
+      <button type="button" class="admin-edit-btn" data-rd="agg" ${vol ? 'disabled' : ''}>${vol ? 'Cerco…' : 'Aggiorna ora'}</button></div>
+      <ul class="rd-rdl">${righe || '<li class="rd-muted">Ancora nessuna notizia agganciata alle gare di questi giorni.</li>'}</ul>
+      <details class="rd-box"><summary>Segnala una notizia (per esempio un post sui social)</summary>
+        <textarea id="rd-sg-testo" rows="3" maxlength="1500" placeholder="Incolla qui il testo: il sito lo aggancia alla gara o all'atleta giusto e lo passa al Ricercatore"></textarea>
+        <input id="rd-sg-url" type="url" placeholder="Indirizzo della pagina (facoltativo)" style="width:100%;margin:6px 0">
+        <button type="button" class="admin-edit-btn" data-rd="segnala" ${vol ? 'disabled' : ''}>Segnala</button></details>
+      <small class="rd-muted">Facebook e i profili di altri non si possono seguire in automatico: se trovi qualcosa di importante, segnalalo qui.</small></div>`;
+  }
+  function legaRadar() {
+    const el = document.querySelector('.rd-radar'); if (!el) return;
+    el.onclick = async ev => {
+      const b = ev.target.closest('[data-rd]'); if (!b || st.radarBusy) return;
+      const toast = (m, t) => { if (typeof showToast === 'function') showToast(m, t); };
+      st.radarBusy = true; el.innerHTML = radarPanel();
+      try {
+        if (b.dataset.rd === 'agg') { const r = await api('/radar/aggiorna', { method: 'POST' }); st.radar = { aggiornato: r.aggiornato, items: r.items, totale: r.totale }; toast(r.nuovi ? r.nuovi + ' notizie nuove' : 'Nessuna notizia nuova'); }
+        else {
+          const testo = (el.querySelector('#rd-sg-testo') || {}).value || '', url = (el.querySelector('#rd-sg-url') || {}).value || '';
+          const r = await api('/radar/segnala', { method: 'POST', body: { testo, url } });
+          await caricaRadar(); toast(r.agganciata_a && (r.agganciata_a.gare || r.agganciata_a.atleti) ? 'Segnalazione salvata e agganciata' : 'Segnalazione salvata (non riconosco una gara o un atleta: resta nell\'archivio)');
+        }
+      } catch (e) { toast((e && e.message) || 'Errore', 'error'); }
+      st.radarBusy = false; el.innerHTML = radarPanel(); aggiornaStanza();
+    };
+  }
   function legaSpunti() {
     const el = document.querySelector('.rd-spunti'); if (!el) return;
     const ridisegna = () => { el.innerHTML = spuntiPanel(); aggiornaStanza(); };
@@ -431,7 +479,7 @@
     ['Pronostico per il campionato italiano?', 'Mai fare pronostici, lo dice il Capo.'],
     ['Io salgo in bici solo in discesa.', 'Si vede dai tuoi articoli sulle salite.']
   ];
-  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null, spIds: null, spAtt: undefined, repAperti: false };
+  const stanza = { ag: null, gen: 0, coda: [], log: [], prevB: null, ultimoTs: undefined, avvisi: new Set(), ora: null, oraTs: 0, rm: false, canvas: null, ctx: null, bg: null, spIds: null, spAtt: undefined, rdIds: null, repAperti: false };
   const FMT_ORA = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: false });
   const rnd = n => Math.floor(Math.random() * n);
   const eur = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
@@ -573,6 +621,19 @@
         if (at !== stanza.spAtt && (sp.attesa || []).length) { const q = sp.attesa; scena('Ricercatore', 'Caporedattore', `Aspetto ancora i risultati di ${q[0].nome}${q.length > 1 ? ` e di altre ${q.length - 1} gare` : ''}`, 'Appena arrivano, li scrive il Cronista.'); }
       }
       stanza.spIds = ids; stanza.spAtt = at;
+    }
+    const rd = st.radar;
+    if (rd && rd.items) {
+      const ids = new Set(rd.items.map(x => x.id));
+      if (stanza.rdIds) {                                                    // il Ricercatore riferisce al Caporedattore le notizie nuove, gara per gara
+        const nuove = rd.items.filter(x => !stanza.rdIds.has(x.id) && x.livello !== 'segnalata'), per = new Map();
+        nuove.forEach(x => { const k = nomeGaraDaChiave((x.gare || [])[0]) || 'atleti citati'; if (!per.has(k)) per.set(k, []); per.get(k).push(x); });
+        [...per.entries()].slice(0, 2).forEach(([k, l]) => {
+          const fonti = [...new Set(l.map(x => x.fonte).filter(Boolean))].slice(0, 3).join(', ');
+          scena('Ricercatore', 'Caporedattore', `Radar: ${l.length} notizi${l.length === 1 ? 'a nuova' : 'e nuove'} su ${k.toLowerCase().replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())}${fonti ? ' (' + fonti + ')' : ''}`, 'Bene, le useremo nei dossier.');
+        });
+      }
+      stanza.rdIds = ids;
     }
     aggiornaPannelli();
   }
@@ -760,7 +821,7 @@
     if (!document.querySelector('.rd-wrap')) return;
     st.tu = setTimeout(async () => {
       if (document.querySelector('.rd-wrap') && !document.hidden) {
-        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await caricaSpunti(); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); }
+        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await Promise.all([caricaSpunti(), st.radarBusy ? null : caricaRadar()]); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); const er = document.querySelector('.rd-radar'); if (er && !st.radarBusy) er.innerHTML = radarPanel(); }
         const firma = () => st.bozze.map(b => b.id + b.stato).join();
         const prima = firma();
         await Promise.all([carica(), caricaCosti()]);
@@ -784,6 +845,7 @@
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-ufficio"></div>
       <div class="rd-spunti">${spuntiPanel()}</div>
+      <div class="rd-radar">${radarPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
         <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso.</small>
@@ -803,7 +865,7 @@
 
   function lega() {
     const w = document.querySelector('.rd-wrap'); if (!w) return;
-    legaSpunti();
+    legaSpunti(); legaRadar();
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
@@ -896,7 +958,7 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
-    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti(), caricaRadar()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
     paint(); tickUfficio();
