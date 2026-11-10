@@ -288,8 +288,8 @@ module.exports = function registerRedazione(app, deps) {
         try { const cal = await getData('calendar.json'); const c = cal.find(x => x.id === pp.id); if (c) cal.filter(x => x.data === c.data && alboBase(x.nome) === alboBase(c.nome)).forEach(x => garaIds.push(x.id)); } catch (_) { /* solo l'id indicato */ }
         (f.risultati || []).forEach(r => { if (r.gara_id) garaIds.push(r.gara_id); (r.top10 || []).slice(0, 3).forEach(t2 => t2.id && atletaIds.push(t2.id)); });
       } else if (t === 'atleta') atletaIds.push(pp.id);
-      else if (t === 'stagione') (f.classifica_atleti || []).slice(0, 3).forEach(a => a.id && atletaIds.push(a.id));
-      else if (t === 'squadre') (f.classifica_team || []).slice(0, 3).forEach(a => a.punta_id && atletaIds.push(a.punta_id));
+      else if (t === 'stagione') (f.classifica_atleti || []).slice(0, 6).forEach(a => a.id && atletaIds.push(a.id));
+      else if (t === 'squadre') (f.classifica_team || []).slice(0, 6).forEach(a => a.punta_id && atletaIds.push(a.punta_id));
     };
     if (tipo === 'libero') for (const b of (facts.blocchi || [])) await blocco(b.tipo, b.p || {}, b.dati || {});
     else await blocco(tipo, p, facts);
@@ -355,16 +355,18 @@ module.exports = function registerRedazione(app, deps) {
     const haTitoli = bl.some(b => b.t === 'h');
     const sezione = []; let sez = 0;
     bl.forEach(b => { if (b.t === 'h') sez++; sezione.push(sez); });
-    const usate = new Set(), inserimenti = {}; let n = 0;
+    const inserimenti = {}; let n = 0;                                       // una foto per atleta, sotto il paragrafo in cui se ne parla (fino a 2 per paragrafo)
     const tutti = Object.keys(migliore).map(id => atleti.get(id)).sort((a, b) => a.rango - b.rango || migliore[a.id].pr - migliore[b.id].pr);
-    const ordine = tutti.filter(a => a.rango <= 3).concat(tutti.filter(a => a.rango > 3)).slice(0, 12);
+    const ordine = tutti.filter(a => a.rango <= 3).concat(tutti.filter(a => a.rango > 3)).slice(0, 16);
     for (const a of ordine) {
-      if (n >= 6 || (a.rango > 3 && n > 0)) break;
+      if (n >= 10 || (a.rango > 3 && n > 0)) break;
       const cogn = ' ' + normN(a.cognome || (a.nome || '').split(' ')[0]) + ' ';
       if (cogn.trim() === '') continue;
-      const i = bl.findIndex((b, k) => b.t === 'p' && (haTitoli ? sezione[k] > 0 : true) && !usate.has(sezione[k]) && (' ' + up(b.s).replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ') + ' ').includes(cogn));
+      const cita = (b, k) => b.t === 'p' && (haTitoli ? sezione[k] > 0 : true) && (' ' + up(b.s).replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ') + ' ').includes(cogn);
+      let i = bl.findIndex((b, k) => cita(b, k) && !(inserimenti[k] || []).length);
+      if (i < 0) i = bl.findIndex((b, k) => cita(b, k) && (inserimenti[k] || []).length < 2);
       if (i < 0) continue;
-      usate.add(sezione[i]); (inserimenti[i] = inserimenti[i] || []).push(migliore[a.id].f); n++;
+      (inserimenti[i] = inserimenti[i] || []).push(migliore[a.id].f); n++;
     }
     const foto = [], testo = [];
     bl.forEach((b, i) => {
@@ -405,7 +407,7 @@ module.exports = function registerRedazione(app, deps) {
       if (!mappa.has(+n)) { mappa.set(+n, foto.length + 1); foto.push({ url: f.url, credito: f.credito, didascalia: f.didascalia }); }
       return `[[foto:${mappa.get(+n)}]]`;
     });
-    return { corpo: nuovo.replace(/\n{3,}/g, '\n\n').trim(), foto: foto.slice(0, 6) };
+    return { corpo: nuovo.replace(/\n{3,}/g, '\n\n').trim(), foto: foto.slice(0, 10) };
   }
   // il titolo deve nominare i vincitori delle categorie piu alte: se manca qualcuno lo si riscrive (una chiamata breve, senza ricerca web)
   async function controllaTitolo(j, tipo, facts) {
@@ -1030,7 +1032,6 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
     else if (tipo === 'tech') {
       const c = await getCfg(true);
-      if (c.tech_attivo === false) throw new Error('il reparto Tech e spento nelle impostazioni');
       const usd = await spesaTech();
       if (usd >= Number(c.tech_limite_mensile_usd)) throw new Error(`limite mensile del reparto Tech raggiunto (${usd.toFixed(2)} $ su ${c.tech_limite_mensile_usd} $)`);
       const radar = await leggiTech(), voci = (p.ids || []).map(i => radar.items.find(x => x.id === i)).filter(Boolean), notizie = [];
@@ -1319,8 +1320,8 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     });
   }
   // l'Analista guarda i dati da solo, ogni ora (calcolo gratuito)
-  const _tmrAnalista = setInterval(() => { ricalcolaSpunti().catch(e => console.warn('[redazione] analista:', e.message)); }, 60 * 60 * 1000);
-  if (_tmrAnalista.unref) _tmrAnalista.unref();
+  // (spento il 10/11/2026: l'Analista non propone piu nulla da solo)
+  const _tmrAnalista = { unref() {} };
   // i dati dell'articolo li sceglie il codice (non l'AI): atleti dello spunto, oppure le squadre della categoria
   function blocchiSpunto(s) {
     const bl = /^squadra/.test(s.tipo) ? [] : (s.atleti || []).slice(0, 2).map(a => ({ tipo: 'atleta', rif: a.nome }));
@@ -1709,7 +1710,8 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
   // fasce orarie (ora italiana): di default mattina, pranzo e sera. Un controllo ogni 5 minuti; ogni fascia parte una volta al giorno.
   // Se il server si riavvia durante la fascia, il secondo giro non trova gare nuove da scrivere (le chiavi gia presenti vengono saltate).
   const _fasceFatte = new Set();
-  if (process.env.ANTHROPIC_API_KEY) setInterval(async () => {
+  // 10/11/2026: il giro automatico e SPENTO per scelta dell'amministratore (scrive solo su richiesta). Per riaccenderlo togliere `false &&`.
+  if (false && process.env.ANTHROPIC_API_KEY) setInterval(async () => {
     try {
       const c = await getCfg();
       if (!c.auto_attiva) return;
@@ -1729,7 +1731,7 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
         const x = arr.find(a => a.id === req.params.id); if (!x) return null;
         ['titolo', 'sommario', 'corpo'].forEach(k => { if (typeof b[k] === 'string') x[k] = b[k]; });
         if (['bozza', 'approvata', 'scartata'].includes(b.stato)) x.stato = b.stato;
-        if (Array.isArray(b.foto)) x.foto = b.foto.filter(f => f && /^https?:\/\//i.test(f.url || '')).slice(0, 6).map(f => ({ url: String(f.url), credito: String(f.credito || '').slice(0, 120), didascalia: String(f.didascalia || '').slice(0, 200) }));
+        if (Array.isArray(b.foto)) x.foto = b.foto.filter(f => f && /^https?:\/\//i.test(f.url || '')).slice(0, 10).map(f => ({ url: String(f.url), credito: String(f.credito || '').slice(0, 120), didascalia: String(f.didascalia || '').slice(0, 200) }));
         x.aggiornato = new Date().toISOString(); _pubMemo.t = 0;
         return x;
       });
@@ -1760,7 +1762,7 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
   const nomeDi = async id => { try { const a = (await getData('athletes.json'))[id]; return a ? nomeBello(fullName(a)) : nomeBello(String(id).split('_').reverse().join(' ')); } catch (_) { return nomeBello(String(id).split('_').reverse().join(' ')); } };
   async function pubblico(b, completo) {
     const atleti = await Promise.all((b.atleti_ids || []).slice(0, 60).map(async id => ({ id, nome: await nomeDi(id) })));
-    const o = { slug: b.slug, titolo: b.titolo, sommario: b.sommario, foto: (b.foto || []).slice(0, 6), pubblicata_il: b.pubblicata_il, tipo: b.tipo, atleti };
+    const o = { slug: b.slug, titolo: b.titolo, sommario: b.sommario, foto: (b.foto || []).slice(0, 10), pubblicata_il: b.pubblicata_il, tipo: b.tipo, atleti };
     if (completo) { o.corpo = b.corpo; o.tag = b.tag || []; o.aggiornata_il = b.aggiornato; }
     return o;
   }

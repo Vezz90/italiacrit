@@ -13834,7 +13834,7 @@ async function _redazioneFoto({ garaIds = [], atletaIds = [], vittorie = {}, per
     const x = xpix[a]; if (x) for (const u of (Array.isArray(x.photos) && x.photos.length ? x.photos : [x.url]).filter(Boolean).slice(0, 12)) add(u, 'xpix.it', x.album_name || '', 'xpix');
     const c = ic[a]; if (c && (c.url || c.filename)) add(c.url || c.filename, 'ciclismo.info', c.name || '', 'ic');
   }
-  const ath = [...new Set(atletaIds.filter(Boolean))].slice(0, 8);
+  const ath = [...new Set(atletaIds.filter(Boolean))].slice(0, 16);
   for (const a of ath) add(await getEntityPhoto('atleta', a).catch(() => null), '', a.replace(/_/g, ' '), 'profilo', '', a);
   // foto in cui l'atleta e' taggato (le stesse del suo profilo): prima quelle di gare che ha vinto
   const tagged = {};

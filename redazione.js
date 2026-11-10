@@ -166,10 +166,7 @@
       ${k.chiave ? '' : '<div class="rd-err">Chiave ANTHROPIC_API_KEY non configurata sul server: nessuna chiamata possibile.</div>'}
       <div class="rd-btns" style="gap:14px;align-items:center;flex-wrap:wrap">
         <label class="rd-c"><input type="checkbox" id="cs-ai" ${c.ai_attiva ? 'checked' : ''}> AI attiva</label>
-        <label class="rd-c"><input type="checkbox" id="cs-auto" ${c.auto_attiva ? 'checked' : ''}> Scrittura automatica: 3 volte al giorno (${(c.auto_orari || []).map(h => h + ':00').join(', ')})</label>
         <label class="rd-c">Limite mensile <input type="number" id="cs-lim" min="0" max="1000" step="1" value="${c.limite_mensile_usd}" style="width:70px"> $</label>
-        <label class="rd-c">Ricerca web (scrittura automatica)
-          <select id="cs-web">${[[0, 'su tutte le gare'], [1, 'solo gare con un peso (regionali, nazionali…)'], [3, 'solo campionati italiani'], [99, 'mai']].map(([v, t]) => `<option value="${v}" ${Number(c.web_auto_da_imp) === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
         <button type="button" class="admin-edit-btn" id="cs-salva">Salva</button></div>
       <div style="margin:10px 0 4px;font-size:.88rem"><b>${usd(k.spesa_mese)}</b> su ${usd(c.limite_mensile_usd)} questo mese · ${pct}% della soglia, restano ${usd(Math.max(0, c.limite_mensile_usd - k.spesa_mese))} (${k.richieste_mese} richieste${pct >= 100 ? ' · LIMITE RAGGIUNTO: le chiamate sono bloccate' : ''})</div>
       <div style="height:8px;background:var(--border-subtle,#ddd);border-radius:4px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${col}"></div></div>
@@ -337,12 +334,9 @@
       return { stato: 'riposa', testo: riposo };
     };
     const cap = (() => {
-      const auto = attive.some(b => b.parametri && b.parametri.auto);
-      if (auto) return { stato: 'lavora', testo: 'Coordina il giro automatico' };
       if (!k) return { stato: 'riposa', testo: 'Impostazioni non disponibili' };
       if (!cfg.ai_attiva) return { stato: 'riposa', testo: 'AI spenta: nessuno scrive' };
-      if (!cfg.auto_attiva) return { stato: 'riposa', testo: 'Scrittura automatica spenta. Si lavora a mano.' };
-      return { stato: 'riposa', testo: `Prossimo giro ${prossimoGiro(cfg.auto_orari)}` };
+      return { stato: 'riposa', testo: 'Aspetta i tuoi ordini' };
     })();
     const ricerca = (() => {
       const a = attive.filter(b => b.parametri && b.parametri.web && ricDi(agenteDiBozza(b)) === 'Ricercatore');
@@ -359,17 +353,10 @@
       if (pct >= 100) return { stato: 'errore', testo: `Limite raggiunto: ${usd(k.spesa_mese)} su ${usd(lim)}. Chiamate bloccate.` };
       return { stato: attive.length ? 'lavora' : 'riposa', testo: `${usd(k.spesa_mese)} su ${usd(lim)} (${pct}%)${ultima}` };
     })();
-    const analista = (() => {
-      const occ = st.spOcc.size ? [...st.spOcc.values()][0] : null;
-      if (occ) return { stato: 'lavora', testo: occ };
-      if (st.spErr) return { stato: 'errore', testo: st.spErr };
-      if (!sp) return { stato: 'riposa', testo: 'Spunti non disponibili' };
-      const n = sp.spunti.filter(s => s.stato === 'nuovo').length;
-      return { stato: 'riposa', testo: n ? `${n} spunt${n === 1 ? 'o pronto' : 'i pronti'} da leggere` : 'Nessuno spunto forte in questo periodo' };
-    })();
+    const analista = () => ({ stato: 'riposa', testo: 'Aspetta le tue richieste' });
     const stato = {
       'Capo servizio': { stato: 'riposa', testo: 'Controlla gare, settimana e richieste libere' },
-      'Caporedattore': cap, 'Ricercatore': ricerca, 'Cassiere': cassa, 'Analista': analista,
+      'Caporedattore': cap, 'Ricercatore': ricerca, 'Cassiere': cassa, 'Analista': analista(),
       'Cronista': lavoro('Cronista', 'Aspetta una gara da raccontare'), 'Inviato speciale': lavoro('Inviato speciale', 'Aspetta una richiesta libera'),
       'Redattore Tech': lavoro('Redattore Tech', st.tech && st.tech.totale ? `Aspetta una novità: ${st.tech.totale} notizie nel radar` : 'Aspetta una novità tecnica'),
       'Ricercatore Tech': (() => { const t = st.tech, it = t && t.items && t.items[0]; return { stato: 'riposa', testo: it ? `Radar Tech: ${t.totale} notizie, ultima da ${it.fonte}` : 'Radar Tech non disponibile' }; })()
@@ -467,9 +454,8 @@
       <ul class="rd-rdl">${righe || '<li class="rd-muted">Nessuna novità nel radar: premi «Aggiorna ora».</li>'}</ul>
       <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" data-tc="scrivi" ${vol ? 'disabled' : ''}>${vol === 'scrivi' ? 'Il Redattore Tech legge…' : 'Scrivi un articolo dalle notizie spuntate'}</button>
         <small class="rd-muted">Spunta da 1 a 3 notizie sullo stesso tema. Il Redattore Tech legge le pagine, riscrive con parole sue e nomina le fonti; non abbiamo provato i prodotti, quindi niente giudizi di guida. Costa circa 0,05 $.</small></div>
-      <details class="rd-box"><summary>Impostazioni del reparto</summary>
-        <div class="rd-btns"><label class="rd-c"><input id="tc-attivo" type="checkbox" ${cfg.tech_attivo !== false ? 'checked' : ''}> Reparto acceso</label>
-          <label class="rd-c"><input id="tc-auto" type="checkbox" ${cfg.tech_auto !== false ? 'checked' : ''}> Scrive da solo nel giro automatico</label>
+      <details class="rd-box"><summary>Tetti di spesa del reparto</summary>
+        <div class="rd-btns">
           <label class="rd-c">Tetto mensile $ <input id="tc-lim" type="number" min="0" max="100" step="0.5" value="${esc(cfg.tech_limite_mensile_usd != null ? cfg.tech_limite_mensile_usd : 3)}" style="width:70px"></label>
           <label class="rd-c">Articoli a settimana <input id="tc-sett" type="number" min="0" max="14" step="1" value="${esc(cfg.tech_max_settimana != null ? cfg.tech_max_settimana : 2)}" style="width:60px"></label>
           <button type="button" class="admin-edit-btn" data-tc="salva" ${vol ? 'disabled' : ''}>Salva</button></div></details>
@@ -483,7 +469,7 @@
       const b = ev.target.closest('[data-tc]'); if (!b || st.techBusy) return;
       const a = b.dataset.tc;
       const ids = [...el.querySelectorAll('[data-tk]')].filter(x => x.checked).map(x => x.dataset.tk).slice(0, 3);
-      const imp = { tech_attivo: (el.querySelector('#tc-attivo') || {}).checked, tech_auto: (el.querySelector('#tc-auto') || {}).checked, tech_limite_mensile_usd: Number((el.querySelector('#tc-lim') || {}).value), tech_max_settimana: Number((el.querySelector('#tc-sett') || {}).value) };
+      const imp = { tech_limite_mensile_usd: Number((el.querySelector('#tc-lim') || {}).value), tech_max_settimana: Number((el.querySelector('#tc-sett') || {}).value) };
       if (a === 'scrivi' && !ids.length) { toast('Spunta almeno una notizia dal radar', 'error'); return; }
       st.techBusy = a; ridisegna();
       try {
@@ -534,7 +520,7 @@
     const righe = (r.items || []).slice(0, 10).map(x => {
       const gara = nomeGaraDaChiave((x.gare || [])[0]), dove = gara ? ' · ' + esc(gara.toLowerCase().replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())) : ((x.atleti || []).length ? ' · atleta citato' : '');
       const t = x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.titolo)}</a>` : esc(x.titolo);
-      return `<li><span class="rd-tag rd-lv-${esc(x.livello)}">${esc(LIV_RADAR[x.livello] || x.livello)}</span> ${t} <small class="rd-muted">${esc(x.fonte || '')}${x.data ? ' · ' + esc(fmtGiorno(String(x.data).slice(0, 10))) : ''}${dove}</small></li>`;
+      return `<li><span class="rd-tag rd-lv-${esc(x.livello)}">${esc(LIV_RADAR[x.livello] || x.livello)}</span> ${t} <small class="rd-muted">${esc(x.fonte || '')}${x.data ? ' · ' + esc(fmtGiorno(String(x.data).slice(0, 10))) : ''}${dove}</small> <button type="button" class="admin-edit-btn" data-rd="art" data-id="${esc(x.id)}" ${vol ? 'disabled' : ''}>Crea articolo</button></li>`;
     }).join('');
     return `<div class="hx-panel rd-rdr"><div class="rd-uff-head"><h3>Radar delle notizie</h3>
       <small>segue federazione, testate e giornali locali · senza AI${r.aggiornato ? ' · aggiornato alle ' + esc(hhmm(r.aggiornato)) : ''} · ${r.totale || 0} in archivio</small>
@@ -551,6 +537,18 @@
     el.onclick = async ev => {
       const b = ev.target.closest('[data-rd]'); if (!b || st.radarBusy) return;
       const toast = (m, t) => { if (typeof showToast === 'function') showToast(m, t); };
+      if (b.dataset.rd === 'art') {                                           // articolo da una notizia del radar: lo scrive l'addetto del reparto, solo se lo chiedi tu
+        const x = ((st.radar && st.radar.items) || []).find(i => String(i.id) === b.dataset.id); if (!x) return;
+        const cod = (x.reparti || [])[0], agente = (cod && nomeRep('atleti', cod)) || '';
+        const testo = `Scrivi un articolo su questa notizia: «${x.titolo}» (${x.fonte || 'fonte'}${x.data ? ', ' + String(x.data).slice(0, 10) : ''}). Leggi la pagina indicata, racconta i fatti con parole tue, nomina la fonte nel testo e usa i dati del sito per i nomi e i risultati.`;
+        if (!confirm(`Creo un articolo da questa notizia?\n\n«${x.titolo}»\n\nL'addetto${agente ? ' (' + agente + ')' : ''} scrive una bozza: costa come un articolo (circa 0,06-0,30 $).`)) return;
+        st.radarBusy = true; el.innerHTML = radarPanel();
+        try {
+          const r = await api('/richiesta', { method: 'POST', body: { testo, web: false, link: x.url ? [x.url] : [], agente } });
+          st.sel = r.id; st.attesa = Date.now() + 6 * 60000; await carica(); toast('Articolo in scrittura: compare tra le bozze');
+        } catch (e) { toast((e && e.message) || 'Errore', 'error'); }
+        st.radarBusy = false; el.innerHTML = radarPanel(); paint(); return;
+      }
       st.radarBusy = true; el.innerHTML = radarPanel();
       try {
         if (b.dataset.rd === 'agg') { const r = await api('/radar/aggiorna', { method: 'POST' }); st.radar = { aggiornato: r.aggiornato, items: r.items, totale: r.totale }; toast(r.nuovi ? r.nuovi + ' notizie nuove' : 'Nessuna notizia nuova'); }
@@ -894,8 +892,8 @@
     const conto = host.querySelector('.st-conto'); if (conto) conto.textContent = n ? `${n} al lavoro adesso` : 'tutti fermi, nessuna bozza in scrittura';
     const av = host.querySelector('.st-avviso'), kk = st.costi;
     if (av) {
-      const msg = !kk ? '' : !kk.chiave ? 'Manca la chiave dell\'AI sul server: nessuno può scrivere.' : !kk.config.ai_attiva ? 'L\'AI è spenta: nessuno può scrivere.' : !kk.config.auto_attiva ? 'La scrittura automatica è spenta: nessuno scrive da solo (gli spunti si calcolano lo stesso).' : '';
-      const btn = kk && kk.chiave && kk.config.ai_attiva && !kk.config.auto_attiva;
+      const msg = !kk ? '' : !kk.chiave ? 'Manca la chiave dell\'AI sul server: nessuno può scrivere.' : !kk.config.ai_attiva ? 'L\'AI è spenta: nessuno può scrivere.' : '';
+      const btn = false;
       const h = msg + '|' + btn;
       if (av.dataset.h !== h) { av.dataset.h = h; av.hidden = !msg; av.innerHTML = esc(msg) + (btn ? ' <button type="button" class="admin-edit-btn" data-accendi="1">Accendi la scrittura automatica</button>' : ''); }
     }
@@ -1038,7 +1036,7 @@
     if (!document.querySelector('.rd-wrap')) return;
     st.tu = setTimeout(async () => {
       if (document.querySelector('.rd-wrap') && !document.hidden) {
-        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await Promise.all([caricaSpunti(), st.radarBusy ? null : caricaRadar()]); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); const er = document.querySelector('.rd-radar'); if (er && !st.radarBusy) er.innerHTML = radarPanel();
+        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await Promise.all([st.radarBusy ? null : caricaRadar()]); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); const er = document.querySelector('.rd-radar'); if (er && !st.radarBusy) er.innerHTML = radarPanel();
           await Promise.all([st.ordBusy ? null : caricaOrdini(), st.techBusy ? null : caricaTech()]);
           const eo = document.querySelector('.rd-ordini'); if (eo && !st.ordBusy && !eo.querySelector('textarea:focus') && !(eo.querySelector('#rd-ord-testo') || {}).value) eo.innerHTML = ordiniPanel();
           const et = document.querySelector('.rd-tech'); if (et && !st.techBusy && !et.querySelector('input:focus') && !et.querySelector('[data-tk]:checked')) et.innerHTML = techPanel(); }
@@ -1065,15 +1063,14 @@
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-ufficio"></div>
       <div class="rd-ordini">${ordiniPanel()}</div>
-      <div class="rd-spunti">${spuntiPanel()}</div>
       <div class="rd-tech">${techPanel()}</div>
       <div class="rd-radar">${radarPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
-      <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto lavorando…' : 'Esegui il giro ora'}</button>
-        <small class="rd-muted">Il giro scrive gli articoli delle gare (campionati e gare importanti, con i risultati), esegue la linea editoriale fissa del direttore e le novità Tech. Spunti e bilanci non partono più da soli. Parte anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso; quello che vuoi di più, lo chiedi al direttore qui sopra.</small>
+      <div class="rd-bar">
         <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-squadre" title="Un articolo sulle squadre per ciascuna categoria">Articoli sulle squadre</button>
-        <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
+        <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button>
+        <small class="rd-muted">Niente parte da solo: scrivono gli addetti solo quando lo chiedi tu (qui, dal radar, dagli ordini al direttore o dal palazzo 3D).</small></div>
       <div class="hx-panel rd-ask"><h3>Scrivi all'AI cosa vuoi realizzare</h3>
         <textarea id="rd-richiesta" rows="3" maxlength="2000" placeholder="Es. Un articolo sulla stagione di Nicolas Milesi, dai primi anni a oggi · Il confronto tra le squadre Juniores di quest'anno · Un'anteprima della prossima stagione per gli Allievi">${esc(st.richiesta || '')}</textarea>
         <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" id="rd-invia">Invia alla redazione</button>
@@ -1091,7 +1088,7 @@
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
-        await api('/config', { method: 'PUT', body: { ai_attiva: w.querySelector('#cs-ai').checked, auto_attiva: w.querySelector('#cs-auto').checked, limite_mensile_usd: Number(w.querySelector('#cs-lim').value), web_auto_da_imp: Number(w.querySelector('#cs-web').value) } });
+        await api('/config', { method: 'PUT', body: { ai_attiva: w.querySelector('#cs-ai').checked, auto_attiva: false, limite_mensile_usd: Number(w.querySelector('#cs-lim').value) } });
         await caricaCosti(); w.querySelector('.rd-costiwrap').innerHTML = costiPanel(); lega();
         if (typeof showToast === 'function') showToast('Impostazioni AI salvate');
       } catch (e) { if (typeof showToast === 'function') showToast(e.message || 'Errore', 'error'); }
@@ -1181,7 +1178,7 @@
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
     st.p3 = null; st.forza2d = false;
-    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti(), caricaRadar(), caricaOrdini(), caricaTech()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaRadar(), caricaOrdini(), caricaTech()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
     paint(); tickUfficio();
