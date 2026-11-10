@@ -993,8 +993,8 @@
       <div class="rd-tech">${techPanel()}</div>
       <div class="rd-radar">${radarPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
-      <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
-        <small class="rd-muted">Prepara da solo gli articoli dei campionati e delle gare importanti di questi giorni (e il punto della settimana il lunedì). Lo fa anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso.</small>
+      <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto lavorando…' : 'Esegui il giro ora'}</button>
+        <small class="rd-muted">Gli articoli di gara non si scrivono più da soli (i risultati del sito li raccontano già). Il giro esegue la linea editoriale fissa del direttore e le novità Tech. Parte anche in automatico 3 volte al giorno (mattina, pranzo e sera), solo se l'interruttore «Scrittura automatica» è acceso; quello che vuoi di più, lo chiedi al direttore qui sopra.</small>
         <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-squadre" title="Un articolo sulle squadre per ciascuna categoria">Articoli sulle squadre</button>
         <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button></div>
