@@ -105,11 +105,11 @@
   }
   function revisioneHtml(b) {
     const r = b.revisione; if (!r) return '';
-    const ET = { confermata: 'Confermata', corretta: 'Corretta', segnalata: 'Con dubbi' };
+    const ET = { confermata: 'controlli automatici superati', corretta: 'corretta dai controlli automatici', segnalata: 'controlli automatici con avvisi' };
     const li = a => (a || []).map(x => `<li>${esc(typeof x === 'string' ? x : x.testo)}</li>`).join('');
     const iniz = (r.problemi || []).filter(x => x.gravita !== 'bassa'), res = (r.residui || []).filter(x => x.gravita !== 'bassa'), bassi = ((r.residui || r.problemi) || []).filter(x => x.gravita === 'bassa');
-    return `<details class="rd-box ${r.esito === 'segnalata' ? 'warn' : ''}" ${r.esito === 'segnalata' ? 'open' : ''}><summary><b>Controllo del ${esc(r.responsabile)}</b>: ${esc(ET[r.esito] || r.esito)}</summary>
-      ${r.esito === 'confermata' ? '<p class="rd-muted">Numeri, nomi e citazioni controllati con i dati: tutto torna.</p>' : ''}
+    return `<details class="rd-box ${r.esito === 'segnalata' ? 'warn' : ''}" ${r.esito === 'segnalata' ? 'open' : ''}><summary><b>Controlli automatici (${esc(r.responsabile)})</b>: ${esc(ET[r.esito] || r.esito)}</summary>
+      ${r.esito === 'confermata' ? '<p class="rd-muted">Nomi, numeri e citazioni non hanno dato problemi nei controlli automatici. Non sono una verifica giornalistica: leggi il testo prima di approvarlo.</p>' : ''}
       ${r.esito === 'corretta' ? '<b>Cosa è stato corretto</b><ul>' + (li(r.correzioni) || '<li>Il testo è stato ritoccato.</li>') + '</ul>' : ''}
       ${iniz.length && r.esito !== 'confermata' ? '<b>Cosa non tornava</b><ul>' + li(iniz) + '</ul>' : ''}
       ${res.length ? '<b>Cosa resta da controllare</b><ul>' + li(res) + '</ul>' : ''}${bassi.length ? '<small class="rd-muted">' + bassi.map(x => esc(x.testo)).join(' · ') + '</small>' : ''}
@@ -150,7 +150,8 @@
         <button type="button" class="admin-edit-btn" data-act="del">Elimina</button>
         ${b.stato === 'pubblicata'
           ? `<a class="admin-edit-btn ok" href="/articolo/${esc(b.slug)}" target="_blank" rel="noopener">Pubblicato ✓ · apri la pagina</a><button type="button" class="admin-edit-btn" data-act="pubblica">Cambia i corridori</button><button type="button" class="admin-edit-btn" data-act="ritira">Ritira dal sito</button>`
-          : `<button type="button" class="admin-edit-btn ok" data-act="pubblica">Pubblica sulle pagine dei corridori</button>`}
+          : b.stato === 'approvata' ? `<button type="button" class="admin-edit-btn ok" data-act="pubblica">Pubblica sulle pagine dei corridori</button>`
+          : `<button type="button" class="admin-edit-btn" disabled title="Prima approva la bozza">Pubblica (prima approva la bozza)</button>`}
       </div></div>`;
   }
 
@@ -309,7 +310,7 @@
     if (b.tipo === 'squadre') return nomeRep('team', cod(p.id)) || 'Inviato speciale';
     if (b.tipo === 'atleta') return nomeRep('atleti', cod(p.cat)) || 'Inviato speciale';
     if (b.tipo === 'tech') return 'Redattore Tech';
-    if (b.tipo === 'libero' && p.agente) return p.agente;                        // compito diretto dal palazzo 3D
+    if (b.tipo === 'libero' && p.agente) return p.agente;                        // compito diretto dalla redazione 3D
     if (b.tipo === 'libero' && /^ordine\|/.test(p.chiave || '') && cod(p.cod)) return nomeRep(p.ruolo === 'team' ? 'team' : 'atleti', p.cod) || 'Inviato speciale';
     if (b.tipo === 'libero') {
       const s = /^spunto\|/.test(p.chiave || '') && st.spunti && st.spunti.spunti.find(x => 'spunto|' + x.id === p.chiave);
@@ -361,7 +362,7 @@
     };
     const seg = nome => attive.filter(b => respDi(agenteDiBozza(b)) === nome);                      // chi segue le bozze in corso
     const ultimaRev = nome => st.bozze.filter(b => b.revisione && b.revisione.responsabile === nome).sort((x, y) => String(y.aggiornato || y.creato).localeCompare(String(x.aggiornato || x.creato)))[0];
-    const ETI_ES = { confermata: 'confermata', corretta: 'corretta', segnalata: 'con dubbi' };
+    const ETI_ES = { confermata: 'controlli superati', corretta: 'corretta dai controlli', segnalata: 'con avvisi' };
     const dellaSupervisione = (nome, riposo) => {
       const s = seg(nome), e = errori.filter(b => respDi(agenteDiBozza(b)) === nome), u = ultimaRev(nome);
       if (s.length) return { stato: 'lavora', testo: `Segue: ${s[0].soggetto || 'una bozza'}${s.length > 1 ? ` (+${s.length - 1})` : ''}` };
@@ -718,9 +719,9 @@
         } else if (prima === 'in_generazione' && b.stato === 'bozza') {                 // addetto -> responsabile (controlla) -> Caporedattore
           const rv = b.revisione, resp = rv && rv.responsabile && trova(rv.responsabile) ? rv.responsabile : null;
           if (resp && resp !== agente) {
-            scena(agente, resp, `Bozza pronta: ${b.soggetto}`, 'La controllo con i dati.');
+            scena(agente, resp, `Bozza pronta: ${b.soggetto}`, 'La controllo.');
             const n = (rv.correzioni || []).length, dubbi = (rv.residui || []).filter(x => x.gravita !== 'bassa').length;
-            scena(resp, 'Caporedattore', rv.esito === 'corretta' ? `Corretta (${n} correzion${n === 1 ? 'e' : 'i'}): ${b.soggetto}` : rv.esito === 'segnalata' ? `Controllata, restano ${dubbi || 'dei'} dubbi: ${b.soggetto}` : `Confermata: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
+            scena(resp, 'Caporedattore', rv.esito === 'corretta' ? `Corretta (${n} correzion${n === 1 ? 'e' : 'i'}): ${b.soggetto}` : rv.esito === 'segnalata' ? `Controlli automatici: restano ${dubbi || 'degli'} avvisi: ${b.soggetto}` : `Controlli automatici superati: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
           } else scena(agente, 'Caporedattore', `Bozza pronta: ${b.soggetto}`, 'Bene, la leggo e decido se approvarla.');
         }
         else if (prima === 'in_generazione' && b.stato === 'errore') scena(agente, 'Caporedattore', `Non mi è riuscita: ${b.soggetto}`, 'Capito, controlla l\'errore e riproviamo.');
@@ -922,7 +923,7 @@
     if (palazzoP) return palazzoP;
     palazzoP = new Promise(res => {
       const me = document.querySelector('script[src*="redazione.js"]'), base = me ? me.src.replace(/redazione\.js.*$/, '') : '';
-      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=2'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
+      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=4'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
       document.head.appendChild(sc);
     });
     return palazzoP;
@@ -952,7 +953,7 @@
     if (vuole3d()) { monta3d(host); return; }
     if (st.p3) spegni3d();
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    const modoBtn = webgl3d() ? '<span class="st-modo"><button type="button" class="st-tab on" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab" data-modo="3d">Palazzo 3D</button></span>' : '';
+    const modoBtn = webgl3d() ? '<span class="st-modo"><button type="button" class="st-tab on" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab" data-modo="3d">Redazione 3D</button></span>' : '';
     host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small>${modoBtn}</div>
       <div class="st-avviso" hidden></div>
       <div class="st-tabs"><button type="button" class="st-tab" data-vista="tutto">Tutto l'ufficio</button><button type="button" class="st-tab" data-vista="uomini">Uomini<small data-bd="uomini"></small></button><button type="button" class="st-tab" data-vista="donne">Donne<small data-bd="donne"></small></button><button type="button" class="st-tab" data-vista="direzione">Direzione<small data-bd="direzione"></small></button></div>
@@ -1000,7 +1001,7 @@
   }
   function monta3d(host) {
     stanza.gen++;                                                          // ferma l'eventuale ciclo della stanza 2D
-    host.innerHTML = `<div class="rd-uff-head"><h3>Il palazzo della redazione</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small><span class="st-modo"><button type="button" class="st-tab" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab on" data-modo="3d">Palazzo 3D</button></span></div>
+    host.innerHTML = `<div class="rd-uff-head"><h3>La redazione in 3D</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small><span class="st-modo"><button type="button" class="st-tab" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab on" data-modo="3d">Redazione 3D</button></span></div>
       <div class="st-avviso" hidden></div><div class="p3-slot"></div>
       <div class="st-sotto"><div class="st-elenco"></div></div>`;
     host.onclick = async ev => {
@@ -1017,7 +1018,7 @@
     const indietro2d = () => { spegni3d(); st.forza2d = true; montaStanza(); };
     if (st.p3 && st.p3.inst) { slot.appendChild(st.p3.el); aggiornaStanza(); return; }   // il palazzo resta vivo quando la pagina si ridisegna
     const el = document.createElement('div'); st.p3 = { el, inst: null }; slot.appendChild(el);
-    slot.insertAdjacentHTML('afterbegin', '<small class="rd-muted p3-attesa">Sto montando il palazzo…</small>');
+    slot.insertAdjacentHTML('afterbegin', '<small class="rd-muted p3-attesa">Sto montando la redazione…</small>');
     caricaPalazzo().then(ok => ok ? window.PalazzoRedazione.carica() : false).then(ok => {
       const p = st.p3; if (!p || p.el !== el) return;
       const att = slot.querySelector('.p3-attesa'); if (att) att.remove();
@@ -1068,7 +1069,7 @@
         <button type="button" class="admin-edit-btn" id="rd-stagione" title="Un articolo per ciascuna delle 10 categorie">Articoli di fine stagione</button>
         <button type="button" class="admin-edit-btn" id="rd-squadre" title="Un articolo sulle squadre per ciascuna categoria">Articoli sulle squadre</button>
         <button type="button" class="admin-edit-btn" id="rd-altro">${st.altro ? 'Chiudi' : 'Un altro articolo…'}</button>
-        <small class="rd-muted">Niente parte da solo: scrivono gli addetti solo quando lo chiedi tu (qui, dal radar, dagli ordini al direttore o dal palazzo 3D).</small></div>
+        <small class="rd-muted">Niente parte da solo: scrivono gli addetti solo quando lo chiedi tu (qui, dal radar, dagli ordini al direttore o dalla redazione 3D).</small></div>
       <div class="hx-panel rd-ask"><h3>Scrivi all'AI cosa vuoi realizzare</h3>
         <textarea id="rd-richiesta" rows="3" maxlength="2000" placeholder="Es. Un articolo sulla stagione di Nicolas Milesi, dai primi anni a oggi · Il confronto tra le squadre Juniores di quest'anno · Un'anteprima della prossima stagione per gli Allievi">${esc(st.richiesta || '')}</textarea>
         <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" id="rd-invia">Invia alla redazione</button>
