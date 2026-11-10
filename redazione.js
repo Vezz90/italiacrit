@@ -907,7 +907,7 @@
     const room = document.querySelector('.st-room'); if (!room) return;
     const [x0, x1] = VISTE[stanza.vista] || VISTE.tutto, w = x1 - x0, tutto = stanza.vista === 'tutto';
     room.style.setProperty('--ar', w + '/' + SH); room.style.setProperty('--ww', (SW / w * 100) + '%'); room.style.setProperty('--wl', (-x0 / w * 100) + '%');
-    room.style.width = tutto ? 'min(100%, 900px)' : 'min(100%, ' + Math.round(w * 2.5) + 'px)'; room.style.minWidth = tutto ? '720px' : '0';
+    room.style.width = 'min(100%, calc((100vh - 170px) * ' + (w / SH).toFixed(3) + '))';   // a tutta larghezza, ma mai piu alta dello schermo room.style.minWidth = tutto ? '720px' : '0';
     const px = room.clientWidth || 900;                                          // nello zoom il testo e un po piu grande, ma sempre proporzionato alla finestra
     room.style.setProperty('--tz', tutto ? '1' : String(+(11.5 * 100 / (1.12 * px)).toFixed(3)));
     if (!stanza.rz) { stanza.rz = true; window.addEventListener('resize', () => { if (document.querySelector('.st-room')) applicaVista(); }); }
