@@ -1110,7 +1110,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
   });
 
   // ---------- articoli automatici: ogni evento importante recente (o imminente) ha gia la sua bozza ----------
-  const MAX_PER_GIRO = 4, MAX_AL_GIORNO = 12, GIORNI_INDIETRO = 7;   // una gara senza risultati viene ripresa nelle fasce dei 7 giorni successivi
+  const MAX_PER_GIRO = 4, MAX_BILANCI = 3, MAX_AL_GIORNO = 12, GIORNI_INDIETRO = 7;   // una gara senza risultati viene ripresa nelle fasce dei 7 giorni successivi
   let inCorso = false;
   async function autoGenera() {
     if (inCorso) return { avviati: 0, nota: 'gia in corso' };
@@ -1144,8 +1144,23 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
         const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= webDa, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
         avviati++; await fine;                                           // una alla volta: niente raffiche di richieste
       }
-      // il miglior spunto dell'Analista non ancora usato: una bozza per giro (solo bozza, mai pubblicata)
-      if (cfgA.auto_spunti !== false && oggiFatte + avviati < MAX_AL_GIORNO) {
+      // fuori stagione (nessuna gara da raccontare e l'ultima corsa e vecchia di oltre 14 giorni): si passa ai bilanci dell'anno,
+      // atleti (stagione) e squadre, categoria per categoria, MAX_BILANCI per giro; finiti quelli, si torna a riposo
+      const ultimaGara = (raw || []).reduce((m, r) => (r.data && r.data <= t && r.data > m ? r.data : m), '');
+      const fuoriStagione = !daFare.length && (!ultimaGara || ultimaGara < shift(t, -14));
+      if (fuoriStagione && cfgA.auto_bilanci !== false) {
+        try {
+          const y = await anno();
+          const coda = [];
+          for (const kind of ['stagione', 'squadre']) for (const c of CATS_ALL) if (!chiavi.has(`${kind}|${y}|${c}`)) coda.push({ kind, c });
+          for (const x of coda.slice(0, Math.max(0, Math.min(MAX_BILANCI, MAX_AL_GIORNO - oggiFatte - avviati)))) {
+            const { fine } = await avvia(x.kind, { id: x.c, web: false, link: [], indicazioni: '', chiave: `${x.kind}|${y}|${x.c}`, auto: true }, `${x.kind === 'squadre' ? 'Squadre' : 'Stagione'} ${y}: ${CAT_NOME[x.c]}`);
+            avviati++; await fine;
+          }
+        } catch (e) { console.warn('[redazione] auto bilanci:', e.message); }
+      }
+      // il miglior spunto dell'Analista non ancora usato: una bozza per giro (solo bozza, mai pubblicata); fuori stagione i suoi spunti sono vecchi
+      if (cfgA.auto_spunti !== false && !fuoriStagione && oggiFatte + avviati < MAX_AL_GIORNO) {
         try {
           const v = await leggiSpunti(), s = v && v.spunti.find(x => x.stato === 'nuovo' && !chiavi.has('spunto|' + x.id));
           if (s) { const r = await avviaDaSpunto(s, false, true); avviati++; await r.fine; }
