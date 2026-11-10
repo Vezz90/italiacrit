@@ -6,7 +6,7 @@
 'use strict';
 
 (function () {
-  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', squadre: 'Fine stagione: le squadre', libero: 'Richiesta libera' };
+  const TIPI = { gara: 'Gara (resoconto o anteprima)', settimana: 'Il punto della settimana', atleta: 'Profilo atleta', stagione: 'Fine stagione per categoria', squadre: 'Fine stagione: le squadre', libero: 'Richiesta libera', tech: 'Novità tecniche' };
   const STATI = { in_generazione: 'In scrittura…', bozza: 'Bozza', approvata: 'Approvata', pubblicata: 'Pubblicata', scartata: 'Scartata', errore: 'Errore' };
   const st = { radar: null, spOcc: new Map(), spunti: null, spErr: '', prev: false, cand: {}, attesa: 0, altro: false, bozze: [], sel: null, tipo: 'gara', pick: null, cerca: [], q: '', timer: null, busy: false, msg: '' };
   const fmtData = iso => { try { return new Date(iso).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
@@ -225,6 +225,12 @@
 .st-elenco summary{cursor:pointer;margin:6px 0 2px;font-weight:600}
 .st-avviso{margin:0 0 8px;padding:8px 12px;border-radius:10px;background:#fef3c7;color:#78350f;font-size:.85rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .st-avviso[hidden]{display:none}
+.rd-ord textarea{width:100%;box-sizing:border-box;margin:6px 0}
+.rd-piano{margin-top:10px;padding-top:8px;border-top:1px solid rgba(128,128,128,.25)}
+.rd-piano-top{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.rd-inl{list-style:none;margin:6px 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.rd-inc.tolto{opacity:.45;text-decoration:line-through}
+.rd-fissi{margin-top:8px}
 .st-sotto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px}
 .st-elenco,.st-log{font-size:.8rem;border:1px solid rgba(128,128,128,.28);border-radius:10px;background:rgba(128,128,128,.07);padding:8px 10px}
 .st-elenco>div{display:flex;gap:7px;align-items:baseline;padding:2px 0}
@@ -269,7 +275,9 @@
     ['Ricercatore', 1, 9, { camicia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Notizie dal web per le gare'],
     ['Analista', 2, 8, { camicia: '#65a30d', capelli: '#422006', pelle: '#d8a06f', stile: 'riccio', extra: 'occhiali' }, 'Spunti dai dati'],
     ['Inviato speciale', 2, 9, { camicia: '#0d9488', capelli: '#374151', pelle: '#c68642', stile: 'corto' }, 'Richieste libere'],
-    ['Cassiere', 3, 8, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite']
+    ['Cassiere', 3, 8, { camicia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82', stile: 'corto', extra: 'visiera' }, 'Costi e limite'],
+    ['Redattore Tech', 3, 9, { camicia: '#ea580c', capelli: '#1f2937', pelle: '#d8a06f', stile: 'corto', extra: 'occhiali' }, 'Novità su materiali, componenti e bici'],
+    ['Ricercatore Tech', 4, 8, { camicia: '#0891b2', capelli: '#422006', pelle: '#f1c9a5', stile: 'lungo', extra: 'occhiali' }, 'Segue i siti di tecnica']
   ];
   const PELLI = ['#f1c9a5', '#e8b98e', '#8d5a3b', '#f5d0b0', '#c68642', '#d8a06f', '#e0ac82', '#a9714b'];
   const CAPELLI = ['#4b5563', '#78350f', '#111827', '#92400e', '#374151', '#1f2937', '#422006', '#7c2d12'];
@@ -302,6 +310,8 @@
     if (b.tipo === 'stagione') return nomeRep('atleti', cod(p.id)) || 'Inviato speciale';
     if (b.tipo === 'squadre') return nomeRep('team', cod(p.id)) || 'Inviato speciale';
     if (b.tipo === 'atleta') return nomeRep('atleti', cod(p.cat)) || 'Inviato speciale';
+    if (b.tipo === 'tech') return 'Redattore Tech';
+    if (b.tipo === 'libero' && /^ordine\|/.test(p.chiave || '') && cod(p.cod)) return nomeRep(p.ruolo === 'team' ? 'team' : 'atleti', p.cod) || 'Inviato speciale';
     if (b.tipo === 'libero') {
       const s = /^spunto\|/.test(p.chiave || '') && st.spunti && st.spunti.spunti.find(x => 'spunto|' + x.id === p.chiave);
       return (s && agenteSpunto(s)) || 'Inviato speciale';
@@ -356,7 +366,9 @@
     const stato = {
       'Capo servizio': { stato: 'riposa', testo: 'Controlla gare, settimana e richieste libere' },
       'Caporedattore': cap, 'Ricercatore': ricerca, 'Cassiere': cassa, 'Analista': analista,
-      'Cronista': lavoro('Cronista', 'Aspetta una gara da raccontare'), 'Inviato speciale': lavoro('Inviato speciale', 'Aspetta una richiesta libera')
+      'Cronista': lavoro('Cronista', 'Aspetta una gara da raccontare'), 'Inviato speciale': lavoro('Inviato speciale', 'Aspetta una richiesta libera'),
+      'Redattore Tech': lavoro('Redattore Tech', st.tech && st.tech.totale ? `Aspetta una novità: ${st.tech.totale} notizie nel radar` : 'Aspetta una novità tecnica'),
+      'Ricercatore Tech': (() => { const t = st.tech, it = t && t.items && t.items[0]; return { stato: 'riposa', testo: it ? `Radar Tech: ${t.totale} notizie, ultima da ${it.fonte}` : 'Radar Tech non disponibile' }; })()
     };
     const seg = nome => attive.filter(b => respDi(agenteDiBozza(b)) === nome);                      // chi segue le bozze in corso
     const ultimaRev = nome => st.bozze.filter(b => b.revisione && b.revisione.responsabile === nome).sort((x, y) => String(y.aggiornato || y.creato).localeCompare(String(x.aggiornato || x.creato)))[0];
@@ -385,6 +397,98 @@
       return { nome: r.nome, ruolo: r.ruolo === 'atleti' ? 'Atleti' : 'Team', reparto: true, ...lavoro(r.nome, mio ? `Radar: ${mio.titolo}` : 'Nessuno spunto in questa categoria') };
     });
     return [...direzione, ...reparti];
+  }
+
+  /* ---------- Ordini al direttore: li scrive l'amministratore, il Caporedattore li trasforma in incarichi per i reparti ---------- */
+  async function caricaOrdini() { try { st.ordini = await api('/ordini'); } catch (e) { st.ordini = null; } }
+  const INC_ETI = { stagione: 'Bilancio atleti', squadre: 'Bilancio squadre', gara: 'Gara', atleta: 'Profilo atleta', settimana: 'Punto della settimana', libero: 'Articolo su misura', tech: 'Tech' };
+  const INC_STATO = { proposto: 'da avviare', in_corso: 'in partenza', avviato: 'avviato', tolto: 'tolto', errore: 'errore' };
+  function ordiniPanel() {
+    const o = st.ordini, occ = st.ordBusy;
+    if (!o) return '<div class="hx-panel rd-ord"><h3>Ordini al direttore</h3><small class="rd-muted">Non disponibili: riprova tra poco.</small></div>';
+    const inc = (p, i) => `<li class="rd-inc ${esc(i.stato)}"><span class="rd-tag">${esc(INC_ETI[i.tipo] || i.tipo)}</span> <b>${esc(i.titolo)}</b> <small class="rd-muted">${esc(i.motivo || '')}</small> <span class="rd-tag ${i.stato === 'errore' ? 'rd-lv-locale' : 'rd-lv-testata'}">${esc(INC_STATO[i.stato] || i.stato)}</span>${i.errore ? ` <small class="rd-muted">${esc(i.errore)}</small>` : ''}${i.stato === 'proposto' ? ` <button type="button" class="admin-edit-btn" data-ord="togli" data-p="${esc(p.id)}" data-i="${esc(i.id)}" ${occ ? 'disabled' : ''}>Togli</button>` : ''}${i.bozza_id ? ` <button type="button" class="admin-edit-btn" data-open="${esc(i.bozza_id)}">Apri</button>` : ''}</li>`;
+    const piano = p => {
+      const da = p.incarichi.filter(i => i.stato === 'proposto').length;
+      return `<div class="rd-piano"><div class="rd-piano-top"><small class="rd-muted">${esc(fmtData(p.creato))}</small> ${p.fisso ? '<span class="rd-tag">linea fissa</span>' : ''}${p.auto ? '<span class="rd-tag">giro automatico</span>' : ''} <b>«${esc(p.testo.slice(0, 140))}»</b></div>
+        ${p.riassunto ? `<small class="rd-muted">Il Caporedattore ha capito: ${esc(p.riassunto)}</small>` : ''}${p.nota ? `<small class="rd-muted"> · Non posso fare: ${esc(p.nota)}</small>` : ''}
+        ${p.incarichi.length ? `<ul class="rd-inl">${p.incarichi.map(i => inc(p, i)).join('')}</ul>` : '<small class="rd-muted">Nessun incarico utile: forse è già tutto fatto o i dati non lo permettono.</small>'}
+        ${da ? `<div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" data-ord="avvia" data-p="${esc(p.id)}" ${occ ? 'disabled' : ''}>Avvia ${da} incaric${da === 1 ? 'o' : 'hi'}</button><small class="rd-muted">Parte uno alla volta; ogni bozza resta privata finché non la pubblichi tu.</small></div>` : ''}</div>`;
+    };
+    const recenti = o.piani.filter(p => p.stato !== 'scartato').slice(0, 4);
+    return `<div class="hx-panel rd-ord"><div class="rd-uff-head"><h3>Ordini al direttore</h3><small>scrivi cosa vuoi: il Caporedattore lo trasforma in incarichi per i reparti</small></div>
+      <textarea id="rd-ord-testo" rows="3" maxlength="1500" placeholder="Es. Questa settimana i bilanci delle Juniores · Un pezzo sulle squadre Allieve che sono cresciute di più · Ogni lunedì un giovane da seguire · Una novità tecnica sulle ruote">${esc(st.ordTesto || '')}</textarea>
+      <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" data-ord="dai" ${occ ? 'disabled' : ''}>${occ === 'dai' ? 'Il Caporedattore legge…' : "Dai l'ordine"}</button>
+        <label class="rd-c"><input id="rd-ord-fisso" type="checkbox"> Tienilo come linea editoriale fissa</label>
+        <small class="rd-muted">Una linea fissa vale anche per la scrittura automatica: finché ce n'è una, il direttore sceglie cosa scrivere al posto delle regole automatiche.</small></div>
+      ${o.fissi.length ? `<div class="rd-fissi"><b>Linea editoriale fissa</b><ul class="rd-inl">${o.fissi.map(f => `<li>«${esc(f.testo.slice(0, 200))}» <button type="button" class="admin-edit-btn" data-ord="fisso-togli" data-p="${esc(f.id)}" ${occ ? 'disabled' : ''}>Togli</button></li>`).join('')}</ul></div>` : ''}
+      ${recenti.map(piano).join('')}</div>`;
+  }
+  function legaOrdini() {
+    const el = document.querySelector('.rd-ordini'); if (!el) return;
+    const toast = (m, t) => { if (typeof showToast === 'function') showToast(m, t); };
+    const ridisegna = () => { el.innerHTML = ordiniPanel(); aggiornaStanza(); };
+    el.onclick = async ev => {
+      const ap = ev.target.closest('[data-open]'); if (ap) { st.sel = ap.dataset.open; st.prev = false; paint(); return; }
+      const b = ev.target.closest('[data-ord]'); if (!b || st.ordBusy) return;
+      const a = b.dataset.ord, testo = (el.querySelector('#rd-ord-testo') || {}).value || '', fisso = !!(el.querySelector('#rd-ord-fisso') || {}).checked;
+      st.ordBusy = a === 'dai' ? 'dai' : 'lavora'; if (a === 'dai') st.ordTesto = testo; ridisegna();
+      try {
+        if (a === 'dai') {
+          const r = await api('/ordini', { method: 'POST', body: { testo, fisso } }); st.ordTesto = ''; await caricaOrdini();
+          const n = r.piano.incarichi.length;
+          scena('Caporedattore', 'Capo servizio', 'Ordine dal direttore: ' + testo.replace(/\s+/g, ' ').slice(0, 60), n ? `Preparo ${n} incaric${n === 1 ? 'o' : 'hi'}.` : 'Non vedo nulla da fare, controllo.');
+          toast(n ? `Il Caporedattore ha preparato ${n} incaric${n === 1 ? 'o' : 'hi'}: controllali e avviali` : 'Nessun incarico utile per questo ordine');
+        } else if (a === 'avvia') {
+          const r = await api(`/ordini/${encodeURIComponent(b.dataset.p)}/avvia`, { method: 'POST', body: {} }); st.attesa = Date.now() + 12 * 60000;
+          await Promise.all([carica(), caricaOrdini()]);
+          scena('Caporedattore', 'Cronista', `Via: ${r.avviati} incaric${r.avviati === 1 ? 'o' : 'hi'} ai reparti`, 'Ricevuto, ci mettiamo al lavoro.');
+          toast(`Sto scrivendo ${r.avviati} bozz${r.avviati === 1 ? 'a' : 'e'}: compaiono a sinistra man mano`);
+        } else if (a === 'togli') { await api(`/ordini/${encodeURIComponent(b.dataset.p)}/inc/${encodeURIComponent(b.dataset.i)}/togli`, { method: 'POST' }); await caricaOrdini(); }
+        else if (a === 'fisso-togli') { await api(`/ordini/${encodeURIComponent(b.dataset.p)}/togli`, { method: 'POST' }); await caricaOrdini(); }
+      } catch (e) { toast((e && e.message) || 'Errore', 'error'); }
+      st.ordBusy = ''; ridisegna();
+    };
+  }
+
+  /* ---------- Reparto Tech: radar dei siti di tecnica (senza AI) e articoli sulle novita di materiali, componenti e bici ---------- */
+  async function caricaTech() { try { st.tech = await api('/tech/radar'); } catch (e) { st.tech = null; } }
+  function techPanel() {
+    const t = st.tech, cfg = (st.costi && st.costi.config) || {}, vol = st.techBusy;
+    if (!t) return '<div class="hx-panel rd-tec"><h3>Reparto Tech</h3><small class="rd-muted">Non disponibile: riprova tra poco.</small></div>';
+    const righe = (t.items || []).slice(0, 14).map(x => `<li><label class="rd-c"><input type="checkbox" data-tk="${esc(x.id)}"></label> <a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.titolo)}</a> <small class="rd-muted">${esc(x.fonte || '')}${x.data ? ' · ' + esc(fmtGiorno(String(x.data).slice(0, 10))) : ''}</small></li>`).join('');
+    const usd = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+    return `<div class="hx-panel rd-tec"><div class="rd-uff-head"><h3>Reparto Tech</h3>
+      <small>novità di materiali, componenti, aziende e bici da ${(t.fonti || []).length} siti di tecnica · radar senza AI${t.aggiornato ? ' · aggiornato alle ' + esc(hhmm(t.aggiornato)) : ''} · speso ${usd(t.spesa)} su ${usd(cfg.tech_limite_mensile_usd)} questo mese</small>
+      <button type="button" class="admin-edit-btn" data-tc="agg" ${vol ? 'disabled' : ''}>${vol === 'agg' ? 'Cerco…' : 'Aggiorna ora'}</button></div>
+      <ul class="rd-rdl">${righe || '<li class="rd-muted">Nessuna novità nel radar: premi «Aggiorna ora».</li>'}</ul>
+      <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" data-tc="scrivi" ${vol ? 'disabled' : ''}>${vol === 'scrivi' ? 'Il Redattore Tech legge…' : 'Scrivi un articolo dalle notizie spuntate'}</button>
+        <small class="rd-muted">Spunta da 1 a 3 notizie sullo stesso tema. Il Redattore Tech legge le pagine, riscrive con parole sue e nomina le fonti; non abbiamo provato i prodotti, quindi niente giudizi di guida. Costa circa 0,05 $.</small></div>
+      <details class="rd-box"><summary>Impostazioni del reparto</summary>
+        <div class="rd-btns"><label class="rd-c"><input id="tc-attivo" type="checkbox" ${cfg.tech_attivo !== false ? 'checked' : ''}> Reparto acceso</label>
+          <label class="rd-c"><input id="tc-auto" type="checkbox" ${cfg.tech_auto !== false ? 'checked' : ''}> Scrive da solo nel giro automatico</label>
+          <label class="rd-c">Tetto mensile $ <input id="tc-lim" type="number" min="0" max="100" step="0.5" value="${esc(cfg.tech_limite_mensile_usd != null ? cfg.tech_limite_mensile_usd : 3)}" style="width:70px"></label>
+          <label class="rd-c">Articoli a settimana <input id="tc-sett" type="number" min="0" max="14" step="1" value="${esc(cfg.tech_max_settimana != null ? cfg.tech_max_settimana : 2)}" style="width:60px"></label>
+          <button type="button" class="admin-edit-btn" data-tc="salva" ${vol ? 'disabled' : ''}>Salva</button></div></details>
+      <small class="rd-muted">Fonti seguite: ${esc((t.fonti || []).join(', '))}. I pezzi Tech restano bozze private come tutti gli altri.</small></div>`;
+  }
+  function legaTech() {
+    const el = document.querySelector('.rd-tech'); if (!el) return;
+    const toast = (m, t) => { if (typeof showToast === 'function') showToast(m, t); };
+    const ridisegna = () => { el.innerHTML = techPanel(); aggiornaStanza(); };
+    el.onclick = async ev => {
+      const b = ev.target.closest('[data-tc]'); if (!b || st.techBusy) return;
+      const a = b.dataset.tc;
+      const ids = [...el.querySelectorAll('[data-tk]')].filter(x => x.checked).map(x => x.dataset.tk).slice(0, 3);
+      const imp = { tech_attivo: (el.querySelector('#tc-attivo') || {}).checked, tech_auto: (el.querySelector('#tc-auto') || {}).checked, tech_limite_mensile_usd: Number((el.querySelector('#tc-lim') || {}).value), tech_max_settimana: Number((el.querySelector('#tc-sett') || {}).value) };
+      if (a === 'scrivi' && !ids.length) { toast('Spunta almeno una notizia dal radar', 'error'); return; }
+      st.techBusy = a; ridisegna();
+      try {
+        if (a === 'agg') { const r = await api('/tech/radar/aggiorna', { method: 'POST' }); st.tech = { ...(st.tech || {}), aggiornato: r.aggiornato, totale: r.totale, items: r.items, spesa: r.spesa }; toast(r.nuovi ? r.nuovi + ' notizie nuove' : 'Nessuna notizia nuova'); }
+        else if (a === 'scrivi') { const r = await api('/tech/scrivi', { method: 'POST', body: { ids } }); st.sel = r.id; st.attesa = Date.now() + 6 * 60000; await carica(); scena('Ricercatore Tech', 'Redattore Tech', 'Ti passo le notizie dal radar', 'Le leggo e le riscrivo.'); st.techBusy = ''; paint(); return; }
+        else { await api('/config', { method: 'PUT', body: imp }); await caricaCosti(); await caricaTech(); toast('Impostazioni Tech salvate'); }
+      } catch (e) { toast((e && e.message) || 'Errore', 'error'); }
+      st.techBusy = ''; ridisegna();
+    };
   }
 
   /* ---------- Spunti dell'Analista: calcolati dai dati con regole fisse, l'AI li spiega soltanto ---------- */
@@ -858,7 +962,10 @@
     if (!document.querySelector('.rd-wrap')) return;
     st.tu = setTimeout(async () => {
       if (document.querySelector('.rd-wrap') && !document.hidden) {
-        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await Promise.all([caricaSpunti(), st.radarBusy ? null : caricaRadar()]); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); const er = document.querySelector('.rd-radar'); if (er && !st.radarBusy) er.innerHTML = radarPanel(); }
+        st.nt = (st.nt || 0) + 1; if (st.nt % 12 === 0 && !st.spOcc.size) { await Promise.all([caricaSpunti(), st.radarBusy ? null : caricaRadar()]); const el = document.querySelector('.rd-spunti'); if (el) el.innerHTML = spuntiPanel(); const er = document.querySelector('.rd-radar'); if (er && !st.radarBusy) er.innerHTML = radarPanel();
+          await Promise.all([st.ordBusy ? null : caricaOrdini(), st.techBusy ? null : caricaTech()]);
+          const eo = document.querySelector('.rd-ordini'); if (eo && !st.ordBusy && !eo.querySelector('textarea:focus') && !(eo.querySelector('#rd-ord-testo') || {}).value) eo.innerHTML = ordiniPanel();
+          const et = document.querySelector('.rd-tech'); if (et && !st.techBusy && !et.querySelector('input:focus') && !et.querySelector('[data-tk]:checked')) et.innerHTML = techPanel(); }
         const firma = () => st.bozze.map(b => b.id + b.stato).join();
         const prima = firma();
         await Promise.all([carica(), caricaCosti()]);
@@ -881,7 +988,9 @@
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-ufficio"></div>
+      <div class="rd-ordini">${ordiniPanel()}</div>
       <div class="rd-spunti">${spuntiPanel()}</div>
+      <div class="rd-tech">${techPanel()}</div>
       <div class="rd-radar">${radarPanel()}</div>
       <div class="rd-costiwrap">${costiPanel()}</div>
       <div class="rd-bar"><button type="button" class="admin-edit-btn rd-go" id="rd-auto">${Date.now() < st.attesa ? 'Sto scrivendo…' : 'Scrivi gli articoli'}</button>
@@ -902,7 +1011,7 @@
 
   function lega() {
     const w = document.querySelector('.rd-wrap'); if (!w) return;
-    legaSpunti(); legaRadar();
+    legaSpunti(); legaRadar(); legaOrdini(); legaTech();
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
@@ -995,7 +1104,7 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
-    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti(), caricaRadar()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti(), caricaRadar(), caricaOrdini(), caricaTech()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
     paint(); tickUfficio();

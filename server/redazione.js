@@ -444,7 +444,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true,limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -571,6 +571,7 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
 
   ISTRUZIONI.stagione = f => `TIPO: RACCONTO DI FINE STAGIONE PER CATEGORIA (600-900 parole), scritto come un racconto, non come un riepilogo. La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}" come una storia: chi l'ha dominata, chi l'ha inseguita, quali giorni l'hanno decisa. Materiale: "storie_dei_primi_tre" (prima e ultima vittoria, vittorie mese per mese, la striscia di successi, la vittoria piu importante, il distacco piu largo, i successi di misura), "vittorie_importanti" e i campioni. REGOLA FERREA sui numeri: la classifica finale e quella UFFICIALE del sito (classifica_atleti): nomi, posizioni e punti si copiano cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura narrativa sul protagonista (una scena presa dai dati, poi il quadro: punti, vittorie); la seconda e il terzo della classifica, raccontati ciascuno per la propria stagione (mai confronti testa a testa); "I giorni che hanno deciso la stagione" (vittorie importanti, campioni italiani e regionali, solo se nei DATI); chiusura "Come e finita" con i primi della classifica ufficiale in una frase scorrevole con i punti. NON trattare le squadre (hanno un articolo a parte) e non fare confronti con altre stagioni.`;
   ISTRUZIONI.squadre = f => `TIPO: RACCONTO DI FINE STAGIONE SULLE SQUADRE (500-800 parole) della categoria "${f.categoria}", stagione ${f.stagione}. Racconta le squadre che hanno fatto la stagione: chi ha comandato la classifica, come (una squadra costruita su un solo campione oppure su tanti atleti che portano punti: guarda quota_dei_punti_portata_dal_migliore e atleti_a_punti), chi l'ha inseguita, quali atleti hanno portato in alto ciascuna. La classifica delle squadre e UFFICIALE (classifica_team): nomi, posizioni e punti si copiano cosi come sono, nell'ordine ufficiale. Apri con la squadra prima in classifica e con l'immagine di come ha vinto; sottotitoli '## ' che dicano qualcosa; chiudi con una frase che resta. Non confondere questo articolo con la classifica degli atleti e non fare confronti con altre stagioni.`;
+  ISTRUZIONI.tech = () => '';
   ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI. Lunghezza e forma come richiesto; se non le indica, 400-700 parole con titolo e sottotitoli. Se la richiesta chiede cose che non hai nei DATI, non inventarle: scrivilo in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
 
   // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
@@ -1017,20 +1018,35 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
         if (!bl.length) bl.push(await risolvi({ tipo: 'settimana', rif: 'ultima' }));
       } else for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b));
       facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
+    else if (tipo === 'tech') {
+      const c = await getCfg(true);
+      if (c.tech_attivo === false) throw new Error('il reparto Tech e spento nelle impostazioni');
+      const usd = await spesaTech();
+      if (usd >= Number(c.tech_limite_mensile_usd)) throw new Error(`limite mensile del reparto Tech raggiunto (${usd.toFixed(2)} $ su ${c.tech_limite_mensile_usd} $)`);
+      const radar = await leggiTech(), voci = (p.ids || []).map(i => radar.items.find(x => x.id === i)).filter(Boolean), notizie = [];
+      for (const v of voci.slice(0, 3)) {
+        try { const a = await leggiArticoloTech(v.url); notizie.push({ fonte: v.fonte, url: v.url, data: v.data, titolo: v.titolo, anteprima: v.descr, testo: a.testo }); }
+        catch (e) { notizie.push({ fonte: v.fonte, url: v.url, data: v.data, titolo: v.titolo, anteprima: v.descr, testo: '', nota: 'pagina non leggibile: ' + e.message }); }
+      }
+      facts = { argomento: p.argomento || (voci[0] && voci[0].titolo) || '', notizie };
+      soggetto = String(facts.argomento || 'Novità tecniche').slice(0, 90);
+      if (!notizie.length && !p.web) throw new Error('nessuna notizia di partenza: scegli una notizia dal radar Tech o attiva la ricerca web');
+    }
     else throw new Error('tipo non valido');
     const link = await leggiLink((p.link || []).filter(Boolean));
     // per i profili di atleti la ricerca web e consentita solo per gli adulti (gia garantito da factsAtleta); per le gare/settimana senza restrizioni
     let dossier = null;
     if (p.web && (tipo === 'gara' || tipo === 'atleta')) { try { dossier = await ottieniDossier(tipo, facts, p); } catch (e) { console.warn('[redazione] dossier:', e.message); } }
     const web = !!p.web && !dossier;                                           // con il dossier lo scrittore non ripete la ricerca
-    const prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
+    let prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
       (dossier ? `\nDOSSIER DEL RICERCATORE (informazioni prese da altre fonti: ufficiali, testate, giornali locali). Usalo per il contesto e riportalo come farebbe un giornalista: con parole tue e nominando la fonte nel testo. Le voci con livello "social" o con una sola fonte non ufficiale vanno in DA_VERIFICARE, non nel testo. Le fonti che usi vanno in FONTI con il loro indirizzo. Cio che e in non_trovato NON va inventato.\n${JSON.stringify({ voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato }, null, 1)}\n` : '') +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
       (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, tipo === 'libero' ? 2500 : 600)}\n` : '');
-    const cand = await fotoCandidate(tipo, p, facts);
-    const res = await callClaude(prompt, web, 'articolo');
+    if (tipo === 'tech') prompt = `${REGOLE_TECH}\n\nOGGI: ${today()}. Ricerca web: ${web ? 'ATTIVA (massimo 3 ricerche, solo siti di tecnica e delle aziende)' : 'NON disponibile: usa solo le FONTI'}.\n\nARGOMENTO: ${facts.argomento}\n\nFONTI (JSON):\n${JSON.stringify(facts, null, 1)}`;
+    const cand = tipo === 'tech' ? [] : await fotoCandidate(tipo, p, facts);
+    const res = await callClaude(prompt, web, tipo === 'tech' ? 'tech' : 'articolo', tipo === 'tech' ? { maxUses: 3 } : undefined);
     const j = parseJson(res);
-    const piazzata = piazzaFotoAuto(String(j.corpo || ''), cand, facts, p);
+    const piazzata = tipo === 'tech' ? { corpo: String(j.corpo || ''), foto: [] } : piazzaFotoAuto(String(j.corpo || ''), cand, facts, p);
     j.corpo = piazzata.corpo;
     j.titolo = await controllaTitolo(j, tipo, facts);
     const rev = await revisiona({ tipo, p, facts, j, dossier });                // il responsabile controlla e, se serve, corregge una volta
@@ -1110,7 +1126,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
   });
 
   // ---------- articoli automatici: ogni evento importante recente (o imminente) ha gia la sua bozza ----------
-  const MAX_PER_GIRO = 4, MAX_BILANCI = 3, MAX_AL_GIORNO = 12, GIORNI_INDIETRO = 7;   // una gara senza risultati viene ripresa nelle fasce dei 7 giorni successivi
+  const MAX_PER_GIRO = 4, MAX_ORDINI = 3, MAX_BILANCI = 3, MAX_AL_GIORNO = 12, GIORNI_INDIETRO = 7;   // una gara senza risultati viene ripresa nelle fasce dei 7 giorni successivi
   let inCorso = false;
   async function autoGenera() {
     if (inCorso) return { avviati: 0, nota: 'gia in corso' };
@@ -1144,11 +1160,28 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
         const { fine } = await avvia('gara', { id: x.c.id, tutte: true, web: x.imp >= webDa, link: [], indicazioni: '', chiave: x.chiave, auto: true }, x.c.nome);
         avviati++; await fine;                                           // una alla volta: niente raffiche di richieste
       }
+      // il direttore: se c'e una linea editoriale fissa decide lui cosa scrivere al posto delle regole automatiche
+      let dirDecide = false;
+      if (cfgA.auto_ordini !== false && oggiFatte + avviati < MAX_AL_GIORNO) {
+        try { const g = await giroDirettore(Math.min(MAX_ORDINI, MAX_AL_GIORNO - oggiFatte - avviati)); dirDecide = g.attivo; avviati += g.avviati; }
+        catch (e) { console.warn('[redazione] direttore:', e.message); dirDecide = true; }
+      }
+      // reparto Tech: una novita per giro, al massimo tech_max_settimana alla settimana, dentro il suo tetto mensile
+      if (cfgA.tech_auto !== false && cfgA.tech_attivo !== false && oggiFatte + avviati < MAX_AL_GIORNO) {
+        try {
+          const nSett = arr.filter(b => b.tipo === 'tech' && b.parametri && b.parametri.auto && Date.parse(b.creato) > Date.now() - 7 * 86400000).length;
+          if (nSett < (Number.isFinite(Number(cfgA.tech_max_settimana)) ? Number(cfgA.tech_max_settimana) : 2) && await spesaTech() < Number(cfgA.tech_limite_mensile_usd)) {
+            const usati = new Set(); arr.forEach(b => ((b.parametri && b.parametri.ids) || []).forEach(i => usati.add(i)));
+            const sc = sceltaTech((await leggiTech()).items, usati);
+            if (sc) { const r = await avvia('tech', { ids: [sc.x.id, ...sc.amici.map(a => a.id)], argomento: '', web: false, link: [], indicazioni: '', chiave: 'tech|' + sc.x.id, auto: true }, sc.x.titolo.slice(0, 90)); avviati++; await r.fine; }
+          }
+        } catch (e) { console.warn('[redazione] auto tech:', e.message); }
+      }
       // fuori stagione (nessuna gara da raccontare e l'ultima corsa e vecchia di oltre 14 giorni): si passa ai bilanci dell'anno,
       // atleti (stagione) e squadre, categoria per categoria, MAX_BILANCI per giro; finiti quelli, si torna a riposo
       const ultimaGara = (raw || []).reduce((m, r) => (r.data && r.data <= t && r.data > m ? r.data : m), '');
       const fuoriStagione = !daFare.length && (!ultimaGara || ultimaGara < shift(t, -14));
-      if (fuoriStagione && cfgA.auto_bilanci !== false) {
+      if (fuoriStagione && !dirDecide && cfgA.auto_bilanci !== false) {
         try {
           const y = await anno();
           const coda = [];
@@ -1160,7 +1193,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
         } catch (e) { console.warn('[redazione] auto bilanci:', e.message); }
       }
       // il miglior spunto dell'Analista non ancora usato: una bozza per giro (solo bozza, mai pubblicata); fuori stagione i suoi spunti sono vecchi
-      if (cfgA.auto_spunti !== false && !fuoriStagione && oggiFatte + avviati < MAX_AL_GIORNO) {
+      if (cfgA.auto_spunti !== false && !fuoriStagione && !dirDecide && oggiFatte + avviati < MAX_AL_GIORNO) {
         try {
           const v = await leggiSpunti(), s = v && v.spunti.find(x => x.stato === 'nuovo' && !chiavi.has('spunto|' + x.id));
           if (s) { const r = await avviaDaSpunto(s, false, true); avviati++; await r.fine; }
@@ -1300,6 +1333,289 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       return [...eventi.entries()].filter(([k]) => !con.has(k)).map(([, e]) => ({ nome: e.nome, data: e.data, regione: e.regione, cods: [...e.cods] })).sort((a, b) => b.data.localeCompare(a.data)).slice(0, 12);
     } catch (_) { return []; }
   }
+  // ---------- REPARTO TECH: radar gratuito dei siti di tecnica e articoli sulle novita di materiali, componenti e bici ----------
+  const TECH_KEY = 'redazione_tech_radar';
+  const FEED_TECH = [                                                   // tutto:true = il feed parla solo di tecnica, niente filtro
+    { nome: 'BikeRumor', url: 'https://www.bikerumor.com/feed', tutto: true },
+    { nome: 'Cyclingnews', url: 'https://www.cyclingnews.com/feeds.xml' },
+    { nome: 'CyclingTips', url: 'https://cyclingtips.com/feed' },
+    { nome: 'DC Rainmaker', url: 'https://www.dcrainmaker.com/feed', tutto: true },
+    { nome: 'The Inner Ring', url: 'https://inrng.com/feed' },
+    { nome: 'Aerogeeks', url: 'https://aerogeeks.com/feed', tutto: true },
+    { nome: 'Bicycle Design', url: 'https://bicycledesign.net/feed', tutto: true },
+    { nome: 'Bici.PRO Tecnica', url: 'https://bici.pro/tecnica/feed', tutto: true },
+    { nome: 'Bici.PRO', url: 'https://bici.pro/feed' },
+    { nome: 'BDC Tech', url: 'https://www.bdc-mag.com/category/mag/tech/feed', tutto: true },
+    { nome: 'BDC', url: 'https://www.bdc-mag.com/feed' }
+  ];
+  const RE_TECH_FORTE = /\b(groupset|drivetrain|derailleurs?|chainrings?|cassettes?|wheelsets?|wheels|tyres?|tires?|handlebars?|saddles?|power meters?|bike computers?|helmets?|disc brakes?|firmware|frameset|shimano|sram|campagnolo|zipp|enve|fulcrum|vittoria|continental|pirelli|garmin|wahoo|hammerhead|rotor|quarq|favero|assioma|gruppo|ruote|copertoni?|telaio|manubrio|sella|pedali|guarnitura|ciclocomputer|casco|cambio elettronico|freni a disco|aerodinamic\w*|misuratore di potenza)\b/gi;
+  const RE_TECH_NOVITA = /launch|unveil|introduc|announc|new|present|lanci|nuov|debutt|update|aggiorn/i;
+  const STOP_TECH = new Set(['WITH', 'FROM', 'THAT', 'THIS', 'YOUR', 'AFTER', 'REVIEW', 'FIRST', 'BEST', 'HERE', 'THEIR', 'MORE', 'WHAT', 'WILL', 'HAVE', 'BEEN', 'ABOUT', 'TOUR', 'RACE', 'STAGE', 'BIKE', 'BIKES', 'CYCLING', 'NEWS', 'PER', 'NUOVO', 'NUOVA', 'DELLA', 'DELLE', 'NELLA']);
+  const tokTech = s => up(s).replace(/[^A-Z0-9 ]/g, ' ').split(' ').filter(w => w.length >= 4 && !STOP_TECH.has(w));
+  const nForti = s => (String(s || '').match(RE_TECH_FORTE) || []).length;
+  let techChain = Promise.resolve();
+  async function leggiTech() {
+    const { data, error } = await sb().from('kv_store').select('value').eq('key', TECH_KEY).maybeSingle();
+    if (error) throw new Error('lettura radar tech: ' + error.message);
+    const v = data && data.value && typeof data.value === 'object' && !Array.isArray(data.value) ? data.value : {};
+    return { aggiornato: v.aggiornato || null, items: Array.isArray(v.items) ? v.items : [] };
+  }
+  function aggiornaTech() {
+    const run = techChain.then(async () => {
+      const vecchio = await leggiTech(), per = new Map(vecchio.items.map(x => [x.id, x]));
+      const esiti = await Promise.all(FEED_TECH.map(async f => {
+        try { return leggiRss(await scaricaTesto(f.url), f.nome).filter(x => f.tutto || nForti(x.titolo + ' ' + x.descr) > 0).map(x => ({ ...x, fonte: f.nome, livello: 'testata' })); }
+        catch (e) { console.warn('[redazione] feed tech', f.nome, e.message); return []; }
+      }));
+      let nuovi = 0; for (const x of esiti.flat()) if (!per.has(x.id)) { per.set(x.id, x); nuovi++; }
+      const limite = Date.now() - 21 * 86400000;
+      const items = [...per.values()].filter(x => !x.data || Date.parse(x.data) >= limite).sort((a, b) => String(b.data || '').localeCompare(String(a.data || ''))).slice(0, 300);
+      const v = { aggiornato: new Date().toISOString(), items };
+      const { error } = await sb().from('kv_store').upsert({ key: TECH_KEY, value: v, updated_at: new Date().toISOString() });
+      if (error) throw new Error('scrittura radar tech: ' + error.message);
+      return { ...v, nuovi };
+    });
+    techChain = run.catch(() => {});
+    return run;
+  }
+  if (process.env.ANTHROPIC_API_KEY) {
+    const _t1 = setTimeout(() => { aggiornaTech().catch(e => console.warn('[redazione] radar tech:', e.message)); }, 90 * 1000);
+    const _t2 = setInterval(() => { aggiornaTech().catch(e => console.warn('[redazione] radar tech:', e.message)); }, 3 * 3600 * 1000);
+    if (_t1.unref) _t1.unref(); if (_t2.unref) _t2.unref();
+  }
+  async function spesaTech() {
+    const r = await rawQuery(`SELECT COALESCE(SUM(costo_usd),0)::float AS usd FROM ai_usage WHERE mese=$1 AND esito='ok' AND uso='tech'`, [meseOra()]);
+    return (r.rows[0] || {}).usd || 0;
+  }
+  // la notizia piu interessante tra quelle non ancora usate: parole tecniche forti, novita, e la stessa notizia su piu testate
+  function sceltaTech(items, usati) {
+    const t0 = Date.now() - 6 * 86400000;
+    const fresche = items.filter(x => !usati.has(x.id) && (!x.data || Date.parse(x.data) >= t0));
+    let best = null;
+    for (const x of fresche) {
+      const tk = new Set(tokTech(x.titolo));
+      const amici = fresche.filter(y => y.id !== x.id && y.fonte !== x.fonte && tokTech(y.titolo).filter(w => tk.has(w)).length >= 2);
+      const score = nForti(x.titolo) * 2 + (RE_TECH_NOVITA.test(x.titolo) ? 2 : 0) + new Set(amici.map(a => a.fonte)).size * 3;
+      if (score >= 4 && (!best || score > best.score)) best = { x, amici: amici.slice(0, 2), score };
+    }
+    return best;
+  }
+  async function leggiArticoloTech(url) {
+    const cheerio = require('cheerio');
+    const r = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ICS-Redazione)' } });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const $ = cheerio.load(await r.text()); $('script,style,nav,footer,noscript,aside,form,header').remove();
+    const blocco = $('article').first().text() || $('main').first().text() || $('body').text();
+    return { titolo: $('title').first().text().trim().slice(0, 200), testo: blocco.replace(/\s+/g, ' ').trim().slice(0, 6000) };
+  }
+  const REGOLE_TECH = `Sei il redattore tecnico di italiacyclingstats.com, sito italiano di statistiche del ciclismo giovanile e dilettantistico. Scrivi in italiano un articolo breve di NOVITA TECNICHE (materiali, componenti, biciclette, aziende) per ciclisti, famiglie e squadre.
+
+REGOLE (obbligatorie):
+1. Ogni fatto (nomi di prodotti e aziende, specifiche, pesi, misure, prezzi, date di uscita, disponibilita) viene SOLO dalle FONTI qui sotto. Niente dalla tua memoria. Se un dato manca, non scriverlo. Prezzi e pesi: solo se ci sono, e attribuiti.
+2. Riscrivi con parole tue: e vietato copiare frasi, anche brevi. Nessuna citazione tra virgolette. Le fonti sono spesso in inglese: traduci il senso, non le parole.
+3. Nomina la fonte nel testo come farebbe un giornalista ("scrive BikeRumor", "secondo Cyclingnews"). Un dato che ha una sola fonte va attribuito a quella fonte; se due fonti si contraddicono usa il dato piu prudente e scrivilo in DA_VERIFICARE.
+4. NON abbiamo provato nessun prodotto: niente impressioni di guida, niente "abbiamo testato", niente giudizi sulle prestazioni che non siano dichiarati dalla fonte e attribuiti a chi li dichiara ("dichiara l'azienda").
+5. Nessuna pubblicita: tono neutro e informativo. Spiega perche la novita puo interessare a chi pedala, in una frase concreta, senza inventare.
+6. MAI GERGO INTERNO: non nominare "le fonti fornite", "il materiale", "dossier", "JSON", "blocco".
+7. 300-500 parole, titolo specifico (nome del prodotto o dell'azienda), 2-3 sottotitoli con '## ', paragrafi brevi separati da una riga vuota.
+8. Nessun dato personale.
+
+${REGOLE.slice(REGOLE.indexOf('FORMATO DELLA RISPOSTA'))}`;
+
+  // ---------- ORDINI DEL DIRETTORE: scrive l'amministratore, il Caporedattore li trasforma in incarichi precisi per i reparti ----------
+  const ORD_KEY = 'redazione_ordini';
+  let ordChain = Promise.resolve();
+  async function leggiOrdini() {
+    const { data, error } = await sb().from('kv_store').select('value').eq('key', ORD_KEY).maybeSingle();
+    if (error) throw new Error('lettura ordini: ' + error.message);
+    const v = data && data.value && typeof data.value === 'object' && !Array.isArray(data.value) ? data.value : {};
+    return { fissi: Array.isArray(v.fissi) ? v.fissi : [], piani: Array.isArray(v.piani) ? v.piani : [] };
+  }
+  function mutaOrdini(fn) {
+    const run = ordChain.then(async () => {
+      const v = await leggiOrdini(), out = await fn(v);
+      const { error } = await sb().from('kv_store').upsert({ key: ORD_KEY, value: v, updated_at: new Date().toISOString() });
+      if (error) throw new Error('scrittura ordini: ' + error.message);
+      return out;
+    });
+    ordChain = run.catch(() => {});
+    return run;
+  }
+  const sha = s => crypto.createHash('sha1').update(String(s)).digest('hex');
+  async function contestoDirettore() {
+    const [cal, raw, arr, tech, ath] = await Promise.all([getData('calendar.json'), getData('results_raw.json'), readAll(), leggiTech().catch(() => ({ items: [] })), getData('athletes.json')]);
+    const t = today(), da = shift(t, -21), con = new Set(raw.filter(r => r.data >= da).map(r => `${r.data}|${alboBase(r.nome_gara)}`));
+    const gare = [], visti = new Set();
+    for (const c of (cal || [])) {
+      if (!c.data || c.data < da || c.data > t || !c.nome || c.nome.trim() === '-') continue;
+      const k = `${c.data}|${alboBase(c.nome)}`; if (!con.has(k) || visti.has(k)) continue; visti.add(k);
+      gare.push({ id: c.id, nome: c.nome, data: c.data, categoria: c.categoria || '' });
+    }
+    gare.sort((a, b) => b.data.localeCompare(a.data));
+    const ultimo = raw.reduce((m, r) => (r.data && r.data <= t && r.data > m ? r.data : m), '');
+    const usati = new Set(); arr.forEach(b => (b.parametri && b.parametri.ids || []).forEach(i => usati.add(i)));
+    return { anno: await anno(), gare: gare.slice(0, 25), ultimo, atleti: Object.values(ath || {}), techItems: tech.items, techIds: new Set(tech.items.map(x => x.id)), techUsati: usati,
+      fatti: new Set(arr.map(b => b.parametri && b.parametri.chiave).filter(Boolean)),
+      recenti: arr.filter(b => b.stato !== 'errore' && Date.parse(b.creato) > Date.now() - 30 * 86400000).map(b => String(b.titolo || b.soggetto || '').slice(0, 90)).filter(Boolean).slice(-30) };
+  }
+  async function validaIncarichi(lista, ctx) {
+    const out = [], y = ctx.anno, sett = shift(today(), 0).slice(0, 7);
+    for (const a of (Array.isArray(lista) ? lista : []).slice(0, 12)) {
+      const tipo = String(a.tipo || '').toLowerCase(), cat = String(a.cat || '').toUpperCase();
+      const base = { id: crypto.randomBytes(4).toString('hex'), tipo, motivo: String(a.perche || '').slice(0, 220), stato: 'proposto' };
+      const dup = ch => ctx.fatti.has(ch) || out.some(o => o.chiave === ch);
+      if (tipo === 'stagione' || tipo === 'squadre') {
+        if (!CATS_ALL.includes(cat)) continue;
+        const chiave = `${tipo}|${y}|${cat}`; if (dup(chiave)) continue;
+        out.push({ ...base, cat, chiave, titolo: `${tipo === 'squadre' ? 'Squadre' : 'Stagione'} ${y}: ${CAT_NOME[cat]}` });
+      } else if (tipo === 'gara') {
+        const g = ctx.gare.find(x => x.id === a.id); if (!g) continue;
+        const chiave = `gara|risultati|${g.data}|${alboBase(g.nome)}`; if (dup(chiave)) continue;
+        out.push({ ...base, rif: g.id, chiave, titolo: g.nome });
+      } else if (tipo === 'atleta') {
+        const t = tokensDi(a.nome || ''); if (!t.length) continue;
+        const hit = ctx.atleti.filter(x => { const n = up(fullName(x)); return t.every(w => n.includes(w)); }).sort((p, q) => (q.punti_totali || 0) - (p.punti_totali || 0))[0];
+        if (!hit) continue;
+        const chiave = `atleta|${hit.id}|${y}`; if (dup(chiave)) continue;
+        out.push({ ...base, rif: hit.id, chiave, titolo: fullName(hit) });
+      } else if (tipo === 'settimana') {
+        if (!ctx.ultimo) continue;
+        const chiave = `settimana|${ctx.ultimo}`; if (dup(chiave)) continue;
+        out.push({ ...base, rif: ctx.ultimo, chiave, titolo: `Il punto della settimana (fino al ${ctx.ultimo})` });
+      } else if (tipo === 'libero') {
+        const richiesta = String(a.richiesta || '').replace(/\s+/g, ' ').slice(0, 400), ruolo = a.ruolo === 'team' ? 'team' : 'atleti';
+        if (!CATS_ALL.includes(cat) || richiesta.length < 8) continue;
+        const chiave = 'ordine|' + sha(cat + ruolo + richiesta + sett).slice(0, 10); if (dup(chiave)) continue;
+        out.push({ ...base, cat, ruolo, richiesta, chiave, titolo: richiesta.slice(0, 70) });
+      } else if (tipo === 'tech') {
+        const ids = (Array.isArray(a.ids) ? a.ids : []).filter(i => ctx.techIds.has(i)).slice(0, 3), argomento = String(a.argomento || '').replace(/\s+/g, ' ').slice(0, 200);
+        if (!ids.length && argomento.length < 8) continue;
+        const chiave = 'tech|' + (ids[0] || sha(argomento).slice(0, 8)); if (dup(chiave) || ids.some(i => ctx.techUsati.has(i))) continue;
+        const prima = ctx.techItems.find(x => x.id === ids[0]);
+        out.push({ ...base, ids, argomento, chiave, titolo: (argomento || (prima && prima.titolo) || 'Novità tecniche').slice(0, 90) });
+      }
+    }
+    return out;
+  }
+  async function pianificaOrdine(testo, fissi, max) {
+    const ctx = await contestoDirettore();
+    const prompt = `Sei il CAPOREDATTORE di una redazione sportiva (ciclismo giovanile e dilettantistico italiano, sito italiacyclingstats.com). Oggi e ${today()}. Il direttore ti ha dato un ORDINE: trasformalo in incarichi precisi per i reparti.
+
+TIPI DI INCARICO:
+- stagione: bilancio dell'anno degli atleti di una categoria (campo cat)
+- squadre: bilancio dell'anno delle squadre di una categoria (campo cat)
+- gara: resoconto di una gara GIA CORSA: scegli l'id SOLO dall'elenco GARE CON RISULTATI
+- atleta: profilo di un atleta (campo nome = Nome Cognome)
+- settimana: il punto dell'ultima settimana di gare
+- libero: articolo su misura di un reparto (campi cat, ruolo = atleti o team, richiesta = cosa scrivere in una frase)
+- tech: novita di materiali, componenti, aziende e bici: ids scelti dall'elenco NOTIZIE TECH (anche piu notizie sullo stesso tema, massimo 3) e argomento (una frase)
+CATEGORIE: ${CATS_ALL.map(c => c + ' = ' + CAT_NOME[c]).join('; ')}
+
+REGOLE: al massimo ${max} incarichi. Non ripetere cio che e gia stato fatto (vedi GIA FATTI e ARTICOLI RECENTI). Se l'ordine chiede qualcosa che i dati non permettono (per esempio una gara senza risultati), ignoralo e spiegalo in "nota". Se l'ordine e vago, scegli tu i pezzi piu sensati e utili. Rispondi SOLO con un JSON, senza altro testo:
+{"riassunto":"una frase su come hai capito l'ordine","nota":"cio che non hai potuto fare, oppure vuoto","incarichi":[{"tipo":"...","cat":"...","id":"...","nome":"...","ids":["..."],"ruolo":"...","argomento":"...","richiesta":"...","perche":"una frase"}]}
+
+ORDINE DEL DIRETTORE: ${String(testo).slice(0, 1500)}
+${fissi.length ? 'LINEA EDITORIALE FISSA (vale sempre):\n' + fissi.map(f => '- ' + String(f.testo).slice(0, 500)).join('\n') : ''}
+GARE CON RISULTATI (id | nome | data | categoria): ${JSON.stringify(ctx.gare)}
+GIA FATTI (chiavi): ${JSON.stringify([...ctx.fatti].filter(k => /^(stagione|squadre|settimana|atleta)\|/.test(k)).slice(-60))}
+ARTICOLI RECENTI (titoli): ${JSON.stringify(ctx.recenti)}
+NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, titolo: x.titolo, fonte: x.fonte, data: String(x.data || '').slice(0, 10) })))}`;
+    const res = await callClaude(prompt, false, 'ordine');
+    const m = String(res.text || '').match(/\{[\s\S]*\}/);
+    let j = {}; try { j = JSON.parse(m ? m[0] : '{}'); } catch (_) { throw new Error("il Caporedattore non ha risposto in modo leggibile: riprova con parole piu semplici"); }
+    return { riassunto: String(j.riassunto || '').slice(0, 400), nota: String(j.nota || '').slice(0, 400), incarichi: (await validaIncarichi(j.incarichi, ctx)).slice(0, max) };
+  }
+  async function lanciaIncarico(inc, auto) {
+    const cfg = await getCfg(), comune = { link: [], indicazioni: '', chiave: inc.chiave, auto: !!auto };
+    switch (inc.tipo) {
+      case 'stagione': case 'squadre': return avvia(inc.tipo, { ...comune, id: inc.cat, web: false }, inc.titolo);
+      case 'gara': return avvia('gara', { ...comune, id: inc.rif, tutte: true, web: Number(cfg.web_auto_da_imp) !== 99 }, inc.titolo);
+      case 'atleta': return avvia('atleta', { ...comune, id: inc.rif, web: false }, inc.titolo);
+      case 'settimana': return avvia('settimana', { ...comune, fine: inc.rif, web: false }, inc.titolo);
+      case 'libero': return avvia('libero', { ...comune, richiesta: `Sei l'addetto ${inc.ruolo === 'team' ? 'ai team' : 'agli atleti'} della categoria ${CAT_NOME[inc.cat]}: ${inc.richiesta}. Usa i dati del sito e non inventare nulla.`, indicazioni: inc.richiesta,
+        blocchi: [inc.ruolo === 'team' ? { tipo: 'squadre', rif: inc.cat } : { tipo: 'stagione', rif: inc.cat }], cod: inc.cat, ruolo: inc.ruolo, web: false }, inc.titolo);
+      case 'tech': return avvia('tech', { ...comune, ids: inc.ids || [], argomento: inc.argomento || '', web: !(inc.ids || []).length }, inc.titolo);
+      default: throw new Error('tipo di incarico non valido');
+    }
+  }
+  // esegue gli incarichi approvati uno alla volta, senza raffiche
+  async function eseguiIncarichi(pid, iids, auto) {
+    for (const iid of iids) {
+      let inc = null;
+      await mutaOrdini(o => { const p = o.piani.find(x => x.id === pid), i = p && p.incarichi.find(x => x.id === iid); if (i && i.stato === 'proposto') { i.stato = 'in_corso'; inc = { ...i }; } });
+      if (!inc) continue;
+      try {
+        const r = await lanciaIncarico(inc, auto);
+        await mutaOrdini(o => { const p = o.piani.find(x => x.id === pid), i = p && p.incarichi.find(x => x.id === iid); if (i) { i.stato = 'avviato'; i.bozza_id = r.id; } });
+        await r.fine;
+      } catch (e) {
+        console.warn('[redazione] incarico:', e.message);
+        await mutaOrdini(o => { const p = o.piani.find(x => x.id === pid), i = p && p.incarichi.find(x => x.id === iid); if (i) { i.stato = 'errore'; i.errore = String(e.message).slice(0, 200); } });
+        if (/limite mensile|AI disattivata/.test(e.message)) break;
+      }
+    }
+  }
+  // giro automatico: il Caporedattore applica la linea editoriale fissa e lancia gli incarichi (max n)
+  async function giroDirettore(n) {
+    const o = await leggiOrdini(); if (!o.fissi.length) return { avviati: 0, attivo: false };
+    const pr = await pianificaOrdine('Applica la linea editoriale fissa a questo giro: scegli solo incarichi davvero utili adesso.', o.fissi, n);
+    if (!pr.incarichi.length) return { avviati: 0, attivo: true };
+    const rec = { id: crypto.randomBytes(5).toString('hex'), testo: 'Giro automatico (linea editoriale fissa)', fisso: false, auto: true, creato: new Date().toISOString(), riassunto: pr.riassunto, nota: pr.nota, incarichi: pr.incarichi, stato: 'avviato' };
+    await mutaOrdini(x => { x.piani.unshift(rec); x.piani = x.piani.slice(0, 20); });
+    await eseguiIncarichi(rec.id, rec.incarichi.map(i => i.id), true);
+    return { avviati: rec.incarichi.length, attivo: true };
+  }
+  app.get('/api/admin/redazione/ordini', requireAdmin, async (req, res) => {
+    try { res.json(await leggiOrdini()); } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/ordini', requireAdmin, async (req, res) => {
+    try {
+      const testo = String((req.body || {}).testo || '').replace(/\s+/g, ' ').trim(), fisso = !!(req.body || {}).fisso;
+      if (testo.length < 8) return res.status(400).json({ error: 'scrivi cosa vuoi dal direttore (almeno una frase)' });
+      if (!process.env.ANTHROPIC_API_KEY) return res.status(400).json({ error: 'ANTHROPIC_API_KEY non configurata' });
+      const o = await leggiOrdini(), pr = await pianificaOrdine(testo, o.fissi, 8);
+      const rec = { id: crypto.randomBytes(5).toString('hex'), testo: testo.slice(0, 1500), fisso, creato: new Date().toISOString(), riassunto: pr.riassunto, nota: pr.nota, incarichi: pr.incarichi, stato: pr.incarichi.length ? 'proposto' : 'vuoto' };
+      await mutaOrdini(x => { x.piani.unshift(rec); x.piani = x.piani.slice(0, 20); if (fisso) { x.fissi.push({ id: rec.id, testo: rec.testo, creato: rec.creato }); x.fissi = x.fissi.slice(-10); } });
+      res.json({ ok: true, piano: rec });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/ordini/:id/avvia', requireAdmin, async (req, res) => {
+    try {
+      const pid = req.params.id, voluti = Array.isArray((req.body || {}).inc) ? req.body.inc.map(String) : null;
+      let iids = [];
+      await mutaOrdini(o => { const p = o.piani.find(x => x.id === pid); if (!p) return; iids = p.incarichi.filter(i => i.stato === 'proposto' && (!voluti || voluti.includes(i.id))).map(i => i.id); if (iids.length) p.stato = 'avviato'; });
+      if (!iids.length) return res.status(404).json({ error: 'nessun incarico da avviare' });
+      res.json({ ok: true, avviati: iids.length });
+      eseguiIncarichi(pid, iids, false).catch(e => console.warn('[redazione] ordini:', e.message));
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/ordini/:id/inc/:iid/togli', requireAdmin, async (req, res) => {
+    try { await mutaOrdini(o => { const p = o.piani.find(x => x.id === req.params.id), i = p && p.incarichi.find(x => x.id === req.params.iid); if (i && i.stato === 'proposto') i.stato = 'tolto'; }); res.json({ ok: true }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/ordini/:id/togli', requireAdmin, async (req, res) => {          // toglie un ordine fisso (e scarta il piano non ancora avviato)
+    try { await mutaOrdini(o => { o.fissi = o.fissi.filter(f => f.id !== req.params.id); const p = o.piani.find(x => x.id === req.params.id); if (p && p.stato === 'proposto') p.stato = 'scartato'; }); res.json({ ok: true }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.get('/api/admin/redazione/tech/radar', requireAdmin, async (req, res) => {
+    try { const v = await leggiTech(); res.json({ aggiornato: v.aggiornato, totale: v.items.length, items: v.items.slice(0, 60), spesa: await spesaTech(), fonti: FEED_TECH.map(f => f.nome) }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/tech/radar/aggiorna', requireAdmin, async (req, res) => {
+    try { const v = await aggiornaTech(); res.json({ aggiornato: v.aggiornato, totale: v.items.length, nuovi: v.nuovi, items: v.items.slice(0, 60), spesa: await spesaTech() }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/tech/scrivi', requireAdmin, async (req, res) => {
+    try {
+      if (!process.env.ANTHROPIC_API_KEY) return res.status(400).json({ error: 'ANTHROPIC_API_KEY non configurata' });
+      const v = await leggiTech(), ids = (Array.isArray((req.body || {}).ids) ? req.body.ids : []).map(String).filter(i => v.items.some(x => x.id === i)).slice(0, 3);
+      const argomento = String((req.body || {}).argomento || '').slice(0, 200);
+      if (!ids.length && argomento.length < 8) return res.status(400).json({ error: 'scegli una notizia dal radar oppure scrivi l\'argomento' });
+      const prima = v.items.find(x => x.id === ids[0]);
+      const { id } = await avvia('tech', { ids, argomento, web: !ids.length, link: [], indicazioni: '', chiave: 'tech|' + (ids[0] || sha(argomento).slice(0, 8)), auto: false }, (argomento || (prima && prima.titolo) || 'Novità tecniche').slice(0, 90));
+      res.json({ ok: true, id });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
   app.locals.redazione = Object.assign(app.locals.redazione || {}, { calcolaSpunti, blocchiSpunto, controlliTesto, leggiRss, tokenGara, garaTocca, aggiornaRadar, codiciCalendario, gareInAttesa });
   app.get('/api/admin/redazione/spunti', requireAdmin, async (req, res) => {
     try {
@@ -1347,7 +1663,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       const c = await getCfg(true), s = await spesaMese();
       const ultime = (await rawQuery(`SELECT ts, modello, uso, token_in, token_out, ricerche, costo_usd::float AS costo_usd, esito FROM ai_usage ORDER BY ts DESC LIMIT 30`)).rows;
       const mesi = (await rawQuery(`SELECT mese, COUNT(*)::int AS richieste, COALESCE(SUM(token_in),0)::int AS token_in, COALESCE(SUM(token_out),0)::int AS token_out, COALESCE(SUM(costo_usd),0)::float AS costo_usd FROM ai_usage WHERE esito='ok' GROUP BY mese ORDER BY mese DESC LIMIT 6`)).rows;
-      res.json({ config: c, modello: MODEL, chiave: !!process.env.ANTHROPIC_API_KEY, mese: meseOra(), spesa_mese: s.usd, richieste_mese: s.n, ultime, mesi });
+      res.json({ config: c, modello: MODEL, chiave: !!process.env.ANTHROPIC_API_KEY, mese: meseOra(), spesa_mese: s.usd, richieste_mese: s.n, spesa_tech: await spesaTech().catch(() => 0), ultime, mesi });
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
   app.put('/api/admin/redazione/config', requireAdmin, async (req, res) => {
@@ -1355,6 +1671,10 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       const b = req.body || {}, c = await getCfg(true), nuovo = { ...c };
       if (typeof b.ai_attiva === 'boolean') nuovo.ai_attiva = b.ai_attiva;
       if (typeof b.auto_attiva === 'boolean') nuovo.auto_attiva = b.auto_attiva;
+      if (typeof b.tech_attivo === 'boolean') nuovo.tech_attivo = b.tech_attivo;
+      if (typeof b.tech_auto === 'boolean') nuovo.tech_auto = b.tech_auto;
+      if (b.tech_limite_mensile_usd != null) { const n = Number(b.tech_limite_mensile_usd); if (!(n >= 0 && n <= 100)) return res.status(400).json({ error: 'limite Tech non valido (0-100 $)' }); nuovo.tech_limite_mensile_usd = n; }
+      if (b.tech_max_settimana != null) { const n = Number(b.tech_max_settimana); if (!(Number.isInteger(n) && n >= 0 && n <= 14)) return res.status(400).json({ error: 'articoli Tech a settimana non validi (0-14)' }); nuovo.tech_max_settimana = n; }
       if (b.limite_mensile_usd != null) { const n = Number(b.limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite non valido (0-1000 $)' }); nuovo.limite_mensile_usd = n; }
       if (b.web_auto_da_imp != null) { const n = Number(b.web_auto_da_imp); if (![0, 1, 3, 99].includes(n)) return res.status(400).json({ error: 'soglia ricerca web non valida' }); nuovo.web_auto_da_imp = n; }
       if (b.prezzi && typeof b.prezzi === 'object') for (const [m, p] of Object.entries(b.prezzi)) if (p && p.in >= 0 && p.out >= 0) nuovo.prezzi[m] = { in: Number(p.in), out: Number(p.out) };
