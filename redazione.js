@@ -924,7 +924,7 @@
     if (palazzoP) return palazzoP;
     palazzoP = new Promise(res => {
       const me = document.querySelector('script[src*="redazione.js"]'), base = me ? me.src.replace(/redazione\.js.*$/, '') : '';
-      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=1'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
+      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=2'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
       document.head.appendChild(sc);
     });
     return palazzoP;

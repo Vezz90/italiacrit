@@ -804,6 +804,37 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     } catch (e) { console.warn('[redazione] radar per dossier:', e.message); }
     return [];
   }
+  // ---------- Google News (gratis) per i corridori e le squadre di un articolo: titoli, testate, date e indirizzi da usare come piste ----------
+  const gnCache = new Map();
+  const SIGLE_SQ = new Set(['ASD', 'SSD', 'ASDC', 'SRL', 'TEAM', 'CICLISMO', 'CICLISTICA', 'SOCIETA', 'POLISPORTIVA', 'SC', 'GS', 'CC', 'UC', 'US', 'ASS', 'DILETTANTISTICA', 'SPORTIVA', 'DEL', 'DELLA', 'DI']);
+  function bersagliGoogle(tipo, facts, out = []) {
+    if (tipo === 'atleta' && facts.atleta && facts.atleta.nome) out.push({ chi: String(facts.atleta.nome), ruolo: 'atleta' });
+    else if (tipo === 'squadre') (facts.classifica_team || []).slice(0, 4).forEach(t => t.team && out.push({ chi: String(t.team), ruolo: 'squadra' }));
+    else if (tipo === 'stagione') (facts.classifica_atleti || []).slice(0, 3).forEach(a => a.atleta && out.push({ chi: String(a.atleta), ruolo: 'atleta' }));
+    else if (tipo === 'libero') (facts.blocchi || []).forEach(b => bersagliGoogle(b.tipo, b.dati || {}, out));
+    return out;
+  }
+  async function notizieGoogle(tipo, facts) {
+    const bers = bersagliGoogle(tipo, facts).slice(0, 6), out = [], visti = new Set(), minimo = new Date(Date.now() - 60 * 86400000).toISOString();
+    for (const b of bers) {
+      const tok = up(b.chi).split(/[^A-Z0-9]+/).filter(w => w.length >= 3 && !SIGLE_SQ.has(w));
+      if (b.ruolo === 'atleta' ? tok.length < 2 : tok.length < 1) continue;
+      const q = '"' + b.chi + '" ciclismo', c = gnCache.get(q);
+      let items = c && Date.now() - c.t < 3 * 3600 * 1000 ? c.items : null;
+      if (!items) {
+        try { items = leggiRss(await scaricaTesto(urlGoogleNews(q))); } catch (e) { console.warn('[redazione] google news:', e.message); continue; }
+        gnCache.set(q, { t: Date.now(), items }); if (gnCache.size > 60) gnCache.delete(gnCache.keys().next().value);
+      }
+      let n = 0;
+      for (const it of items) {
+        if (visti.has(it.id) || (it.data && it.data < minimo)) continue;
+        const u = up(it.titolo + ' ' + it.descr); if (!tok.every(w => u.includes(w))) continue;
+        visti.add(it.id); out.push({ riguarda: b.chi, titolo: it.titolo, testata: it.fonte, livello: it.livello, data: it.data ? it.data.slice(0, 10) : '', url: it.url });
+        if (++n >= 4) break;
+      }
+    }
+    return out.slice(0, 14);
+  }
   const _tmrRadar = setInterval(() => { aggiornaRadar().then(r => { if (r.errori.length) console.warn('[redazione] radar:', r.errori.join(' | ')); }).catch(e => console.warn('[redazione] radar:', e.message)); }, 60 * 60 * 1000);
   if (_tmrRadar.unref) _tmrRadar.unref();
   app.get('/api/admin/redazione/radar', requireAdmin, async (req, res) => {
@@ -1045,12 +1076,17 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     }
     else throw new Error('tipo non valido');
     const link = await leggiLink((p.link || []).filter(Boolean));
+    let notizieGn = [];                                                          // notizie su Google News sui corridori e sulle squadre dell'articolo (gratis)
+    if (['atleta', 'squadre', 'stagione', 'libero'].includes(tipo)) { try { notizieGn = await notizieGoogle(tipo, facts); } catch (e) { console.warn('[redazione] google news:', e.message); } }
+    const vociGn = notizieGn.map(n => ({ tema: 'altro', fatto: n.titolo, conferme: 1, fonte: { nome: n.testata, url: n.url, data: n.data, livello: n.livello || 'testata' } }));
     // per i profili di atleti la ricerca web e consentita solo per gli adulti (gia garantito da factsAtleta); per le gare/settimana senza restrizioni
     let dossier = null;
     if (p.web && (tipo === 'gara' || tipo === 'atleta')) { try { dossier = await ottieniDossier(tipo, facts, p); } catch (e) { console.warn('[redazione] dossier:', e.message); } }
     const web = !!p.web && !dossier;                                           // con il dossier lo scrittore non ripete la ricerca
+    const dossierRev = vociGn.length ? { ...(dossier || { contraddizioni: [], voci: [] }), voci: [...(dossier ? dossier.voci : []), ...vociGn] } : dossier;
     let prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
       (dossier ? `\nDOSSIER DEL RICERCATORE (informazioni prese da altre fonti: ufficiali, testate, giornali locali). Usalo per il contesto e riportalo come farebbe un giornalista: con parole tue e nominando la fonte nel testo. Le voci con livello "social" o con una sola fonte non ufficiale vanno in DA_VERIFICARE, non nel testo. Le fonti che usi vanno in FONTI con il loro indirizzo. Cio che e in non_trovato NON va inventato.\n${JSON.stringify({ voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato }, null, 1)}\n` : '') +
+      (notizieGn.length ? `\nNOTIZIE TROVATE SU GOOGLE NEWS per i corridori e le squadre dell'articolo (ricerca gratuita per nome: titolo, testata, data, indirizzo). Sono PISTE: conta solo cio che dice il titolo, il resto della notizia non lo conosci e non va inventato. Se ne usi una, nomina la testata nel testo (ad esempio «secondo CicloWeb») e metti l'indirizzo in FONTI; un fatto che non e nei DATI e non e confermato da una seconda fonte va in DA_VERIFICARE, non nel testo. Solo notizie sportive (risultati, squadra, selezioni), mai dati personali.\n${JSON.stringify(notizieGn, null, 1)}\n` : '') +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
       (p.indicazioni ? `\nINDICAZIONI DEL REDATTORE: ${String(p.indicazioni).slice(0, tipo === 'libero' ? 2500 : 600)}\n` : '');
     if (tipo === 'tech') prompt = `${REGOLE_TECH}\n\nOGGI: ${today()}. Ricerca web: ${web ? 'ATTIVA (massimo 3 ricerche, solo siti di tecnica e delle aziende)' : 'NON disponibile: usa solo le FONTI'}.\n\nARGOMENTO: ${facts.argomento}\n\nFONTI (JSON):\n${JSON.stringify(facts, null, 1)}`;
@@ -1060,15 +1096,16 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     const piazzata = tipo === 'tech' ? { corpo: String(j.corpo || ''), foto: [] } : piazzaFotoAuto(String(j.corpo || ''), cand, facts, p);
     j.corpo = piazzata.corpo;
     j.titolo = await controllaTitolo(j, tipo, facts);
-    const rev = await revisiona({ tipo, p, facts, j, dossier });                // il responsabile controlla e, se serve, corregge una volta
+    const rev = await revisiona({ tipo, p, facts, j, dossier: dossierRev });                // il responsabile controlla e, se serve, corregge una volta
     const fonti = [...(Array.isArray(j.fonti) ? j.fonti : [])];
     link.filter(l => !l.errore).forEach(l => { if (!fonti.some(f => f.url === l.url)) fonti.push({ titolo: l.titolo || l.url, url: l.url, uso: 'pagina ufficiale indicata' }); });
     const dv = Array.isArray(j.da_verificare) ? j.da_verificare : [];
     rev.dv.forEach(x => dv.push(x));
     if (dossier) { dossier.contraddizioni.forEach(x => dv.push('Dal dossier, fonte in contrasto con i dati: ' + x)); dossier.voci.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && v.fonte.livello !== 'social' && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'dal dossier del Ricercatore (' + v.fonte.livello + ')' }); }); }
+    vociGn.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'da Google News (titolo)' }); });
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti, da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, revisione: rev.revisione, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, radar: dossier.radar || 0, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, revisione: rev.revisione, notizie_google: notizieGn, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, radar: dossier.radar || 0, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor };   // per le prove

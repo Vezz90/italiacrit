@@ -55,8 +55,9 @@
   .barra { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 8px; font-size:12px; opacity:.85; }
   .barra select { margin-left:auto; font:inherit; font-size:12px; padding:3px 6px; border-radius:8px; border:1px solid rgba(128,128,128,.4); background:rgba(128,128,128,.1); color:inherit; }
   .barra select option { color:#0f172a; }
+  .gen { display:flex; gap:4px; } .gen button { border:1px solid rgba(128,128,128,.45); background:rgba(128,128,128,.12); color:inherit; border-radius:99px; padding:3px 14px; font:700 12px system-ui; cursor:pointer; } .gen button.on { background:#4f46e5; border-color:#4f46e5; color:#fff; }
 `;
-  const HTML = `<div class="barra"><span>Clicca un piano o un omino · trascina per ruotare · rotella per avvicinarti (dopo aver cliccato sulla scena)</span>
+  const HTML = `<div class="barra"><span class="gen"><button type="button" data-g="M">Uomini</button><button type="button" data-g="F">Donne</button></span><span>Clicca un piano per mandarci Vezz · clicca un omino: Vezz gli va accanto · trascina per ruotare · rotella per avvicinarti</span>
   <select id="qual" title="Qualità grafica"><option value="auto">Qualità: automatica</option><option value="0">Qualità alta</option><option value="1">Qualità media</option><option value="2">Qualità bassa</option><option value="3">Qualità minima</option></select></div>
 <div class="scena" id="scena">
   <div class="piani" id="piani"><b>Ascensore</b></div>
@@ -68,7 +69,7 @@
 </div>
 <div class="sotto">
   <div class="box"><h3>Cosa si sono detti</h3><ol id="log"></ol></div>
-  <div class="box"><h3>Come si usa</h3><small>Un piano per categoria: Uomini a sinistra, Donne a destra, due file di banchi con il cartello del ruolo a muro. Clicca un omino per leggere cosa fa, seguirlo o dargli un compito diretto (parte una richiesta vera, a pagamento come un articolo). <b>Vezz</b> è il tuo personaggio (parte nella hall): personalizzalo, mandalo ai piani o da un addetto. Fumetto pieno = fatto vero, tratteggiato = chiacchiere.</small></div>
+  <div class="box"><h3>Come si usa</h3><small>Un piano per categoria: Uomini a sinistra, Donne a destra, due file di banchi con il cartello del ruolo a muro. <b>Vezz</b> è il tuo personaggio e riparte dall'ultimo piano dove sei stato: clicca un piano (o il pavimento) e ci va, clicca un omino e gli va accanto; lì si apre la scheda e gli dici cosa fare (compito diretto: parte una richiesta vera, a pagamento come un articolo). Puoi anche personalizzarlo. Fumetto pieno = fatto vero, tratteggiato = chiacchiere.</small></div>
 </div>`;
 
   function carica() {
@@ -86,45 +87,47 @@
   const host = root.getElementById('scena');
   if (!window.THREE) { root.getElementById('avviso').style.display = 'flex'; return null; }
   let morto = false;
-  const FH = 4.6, NP = 8, AIS_Z = 3.9, CORR = 7.6;                 // altezza piano, numero piani, corsia davanti, corridoi laterali
+  const FH = 4.6, NP = 6, AIS_Z = 3.9, CORR = 7.6;                 // altezza piano, numero piani, corsia davanti, corridoi laterali
   // posti: due file in profondita per lato (fondo e davanti), due colonne
   const SLOTP = [[-9.6, -2.9], [-5.6, -2.9], [-9.6, 1.4], [-5.6, 1.4], [5.6, -2.9], [9.6, -2.9], [5.6, 1.4], [9.6, 1.4]];
 
   // ---------- struttura del palazzo ----------
   const CATS = { ES1: ['Esord. 1°', '#7c3aed'], ES2: ['Esord. 2°', '#db2777'], AL: ['Allievi', '#d97706'], JUN: ['Juniores', '#16a34a'], ELI: ['Elite/U23', '#2563eb'] };
+  const CATN = { ES1: 'Esordienti 1° anno', ES2: 'Esordienti 2° anno', AL: 'Allievi', JUN: 'Juniores', ELI: 'Elite / Under 23' };
   const PIANI = [
     { nome: 'Hall', sotto: 'Cassa e notizie', col: '#475569' },
-    { nome: 'Esordienti 1° anno', cat: 'ES1' }, { nome: 'Esordienti 2° anno', cat: 'ES2' }, { nome: 'Allievi', cat: 'AL' },
-    { nome: 'Juniores', cat: 'JUN' }, { nome: 'Elite / Under 23', cat: 'ELI' },
+    { nome: 'Esordienti', cats: ['ES1', 'ES2'] }, { nome: 'Allievi e Juniores', cats: ['AL', 'JUN'] }, { nome: 'Elite / Under 23', cats: ['ELI'] },
     { nome: 'Tech', sotto: 'Materiali e bici', col: '#ea580c' }, { nome: 'Direzione', sotto: 'Caporedattore e redazione', col: '#6d28d9' }
   ];
-  PIANI.forEach((p, i) => { p.i = i; p.y = i * FH; if (p.cat) { p.col = CATS[p.cat][1]; p.sotto = 'Uomini · Donne'; } p.attivo = true; });
+  PIANI.forEach((p, i) => { p.i = i; p.y = i * FH; if (p.cats) { p.col = CATS[p.cats[0]][1]; p.sotto = p.cats.map(c => CATS[c][0]).join(' · '); } p.attivo = true; });
+  let pianoIniz = 0; try { pianoIniz = Math.max(0, Math.min(NP - 1, parseInt(localStorage.getItem('p3d-piano') || '0', 10) || 0)); } catch (e) { /* parte dalla hall */ }
+  let genere = 'M'; try { genere = localStorage.getItem('p3d-genere') === 'F' ? 'F' : 'M'; } catch (e) { /* default */ }
   const PELLI = ['#f1c9a5', '#e8b98e', '#8d5a3b', '#f5d0b0', '#c68642', '#d8a06f', '#e0ac82', '#a9714b'];
   const CAPELLI = ['#4b5563', '#78350f', '#111827', '#92400e', '#374151', '#1f2937', '#422006', '#7c2d12'];
   const COLORI = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#111827', '#f8fafc'];
   const scuro = (hex, k) => { const c = new THREE.Color(hex); c.multiplyScalar(k); return '#' + c.getHexString(); };
   const DEFS = [];                                                // chi lavora dove (i nomi sono quelli veri del sito)
   Object.keys(CATS).forEach(cat => {
-    const p = PIANI.findIndex(x => x.cat === cat), [nome, col] = CATS[cat];
-    ['M', 'F'].forEach((sx, si) => [['resp', 'Responsabile'], ['atleti', 'Atleti'], ['team', 'Team'], ['ric', 'Ricercatore']].forEach(([r, et], ri) => {
+    const p = PIANI.findIndex(x => x.cats && x.cats.includes(cat)), latoCat = PIANI[p].cats.indexOf(cat), [nome, col] = CATS[cat];
+    ['M', 'F'].forEach(sx => [['resp', 'Responsabile'], ['atleti', 'Atleti'], ['team', 'Team'], ['ric', 'Ricercatore']].forEach(([r, et], ri) => {
       const k = DEFS.length;
-      DEFS.push({ nome: `${et} ${nome} ${sx}`, etich: et, piano: p, slot: si * 4 + ri, ruolo: r, sesso: sx, cat,
+      DEFS.push({ nome: `${et} ${nome} ${sx}`, etich: et, piano: p, slot: latoCat * 4 + ri, ruolo: r, sesso: sx, cat,
         look: { maglia: r === 'resp' ? '#334155' : r === 'team' ? scuro(col, 0.62) : r === 'ric' ? '#0369a1' : col, accento: col, casco: r === 'team' ? '#f8fafc' : r === 'ric' ? '#e0f2fe' : col, lunga: r === 'resp', occhiali: true,
           pelle: PELLI[(k * 5 + 2) % 8], capelli: CAPELLI[(k * 3 + 1) % 8], coda: sx === 'F', copricapo: 'casco' } });
     }));
   });
   const STAFF = [
-    ['Caporedattore', 7, 0, { maglia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5' }], ['Capo servizio', 7, 1, { maglia: '#475569', capelli: '#9ca3af', pelle: '#e0ac82' }],
-    ['Cronista', 7, 2, { maglia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e' }], ['Ricercatore', 7, 3, { maglia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', coda: true }],
-    ['Analista', 7, 4, { maglia: '#65a30d', capelli: '#422006', pelle: '#d8a06f' }], ['Inviato speciale', 7, 5, { maglia: '#0d9488', capelli: '#374151', pelle: '#c68642' }],
-    ['Redattore Tech', 6, 1, { maglia: '#ea580c', capelli: '#1f2937', pelle: '#d8a06f' }], ['Ricercatore Tech', 6, 5, { maglia: '#0891b2', capelli: '#422006', pelle: '#f1c9a5', coda: true }],
+    ['Caporedattore', 5, 0, { maglia: '#7c3aed', capelli: '#4b5563', pelle: '#f1c9a5' }], ['Capo servizio', 5, 1, { maglia: '#475569', capelli: '#9ca3af', pelle: '#e0ac82' }],
+    ['Cronista', 5, 2, { maglia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e' }], ['Ricercatore', 5, 3, { maglia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', coda: true }],
+    ['Analista', 5, 4, { maglia: '#65a30d', capelli: '#422006', pelle: '#d8a06f' }], ['Inviato speciale', 5, 5, { maglia: '#0d9488', capelli: '#374151', pelle: '#c68642' }],
+    ['Redattore Tech', 4, 1, { maglia: '#ea580c', capelli: '#1f2937', pelle: '#d8a06f' }], ['Ricercatore Tech', 4, 5, { maglia: '#0891b2', capelli: '#422006', pelle: '#f1c9a5', coda: true }],
     ['Cassiere', 0, 4, { maglia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82' }]
   ];
   STAFF.forEach(([nome, piano, slot, l]) => DEFS.push({ nome, etich: nome, piano, slot, ruolo: 'staff', sesso: l.coda ? 'F' : 'M', cat: null, look: Object.assign({ accento: '#ffffff', casco: l.maglia, lunga: true, occhiali: false, copricapo: 'berretto' }, l) }));
   // Vezz: il personaggio dell'utente, senza banco
   const VEZZ0 = { maglia: '#be123c', casco: '#f8fafc', pelle: '#e8b98e', capelli: '#1f2937', occhiali: true, coda: false, lunga: false, copricapo: 'casco' };
   let vezzLook = Object.assign({}, VEZZ0); try { Object.assign(vezzLook, JSON.parse(localStorage.getItem('p3d-vezz') || '{}')); } catch (e) { /* default */ }
-  DEFS.push({ nome: 'Vezz', etich: 'Vezz', piano: 0, slot: -1, ruolo: 'vezz', sesso: 'M', cat: null, look: Object.assign({}, vezzLook, { accento: '#fbbf24' }) });
+  DEFS.push({ nome: 'Vezz', etich: 'Vezz', piano: pianoIniz, slot: -1, ruolo: 'vezz', sesso: 'M', cat: null, look: Object.assign({}, vezzLook, { accento: '#fbbf24' }) });
 
   // ---------- renderer, camera, luci ----------
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -176,13 +179,13 @@
   const finestre = [];
   const matLegno = mat(0xe9d8bf), matGamba = mat(0x64748b), matMon = mat(0x1e293b), matSedia = mat(0x475569);
   const geoTop = new THREE.BoxGeometry(2.1, 0.08, 0.95), geoFianco = new THREE.BoxGeometry(0.06, 0.78, 0.9), geoBase = new THREE.BoxGeometry(0.62, 0.03, 0.42), geoLap = new THREE.BoxGeometry(0.64, 0.4, 0.025), geoLogo = new THREE.PlaneGeometry(0.14, 0.14), geoSch2 = new THREE.PlaneGeometry(0.58, 0.34);
-  function scrivania(piano, x, z, k) {
+  function scrivania(piano, x, z, k, colore) {
     const g = new THREE.Group(), y = piano.y;
     const top = new THREE.Mesh(geoTop, matLegno); top.position.set(0, 0.8, 0.9); g.add(top);
     [-1, 1].forEach(l => { const f = new THREE.Mesh(geoFianco, matGamba); f.position.set(l * 1.0, 0.4, 0.9); g.add(f); });
     const base = new THREE.Mesh(geoBase, matMon); base.position.set(0, 0.85, 0.62); g.add(base);
     const sch = new THREE.Mesh(geoLap, matMon); sch.position.set(0, 1.03, 0.82); sch.rotation.x = 0.2; g.add(sch);
-    const logo = new THREE.Mesh(geoLogo, new THREE.MeshBasicMaterial({ color: new THREE.Color(piano.col) })); logo.position.set(0, 1.04, 0.842); logo.rotation.x = 0.2; g.add(logo);
+    const logo = new THREE.Mesh(geoLogo, new THREE.MeshBasicMaterial({ color: new THREE.Color(colore || piano.col) })); logo.position.set(0, 1.04, 0.842); logo.rotation.x = 0.2; g.add(logo);
     const sm = new THREE.MeshBasicMaterial({ map: SCHERMI[k % 4].t }); const sc = new THREE.Mesh(geoSch2, sm); sc.position.set(0, 1.035, 0.793); sc.rotation.set(0.2, Math.PI, 0); g.add(sc);
     g.position.set(x, y, z); dest.add(ombra(g));
     const s = new THREE.Group();
@@ -205,11 +208,13 @@
     const wins = [];
     [-9.5, -6, 6, 9.5].forEach(x => { const f = box(2.4, 1.05, 0.08, mat(0xbfdbfe, { emissive: 0xfde68a, emissiveIntensity: 0.1 })); f.position.set(x, y + 1.55, -5.0); dest.add(f); wins.push(f); });
     finestre.push(wins);
-    // cartelli a muro: il piano, sopra l'ascensore; Uomini/Donne; il ruolo sopra ogni banco
-    targa(p.nome, p.cat ? '' : p.sotto, 6, p.cat ? 0.95 : 1.2, 0, y + 3.72, -4.93, p.col);
-    if (p.cat) { targa('UOMINI', '', 3.2, 0.55, -7.6, y + 3.87, -4.93, scuro(p.col, 0.75)); targa('DONNE', '', 3.2, 0.55, 7.6, y + 3.87, -4.93, scuro(p.col, 0.75)); }
+    // cartelli a muro: il piano (con Uomini/Donne) sopra l'ascensore; le categorie ai due lati; il ruolo sopra ogni banco
+    p.targa = targa(p.nome, p.cats ? (genere === 'M' ? 'Uomini' : 'Donne') : p.sotto, 6, 1.2, 0, y + 3.72, -4.93, p.col);
+    if (p.cats) p.cats.forEach((c, k) => targa(CATN[c], '', 4.2, 0.55, k ? 7.6 : -7.6, y + 3.87, -4.93, scuro(CATS[c][1], 0.8)));
     if (p.i === 0) tabellone = targa('Bozze 7 · Spunti 15', 'Costi 0,57 $ su 10 $', 4.8, 1.1, 7.5, y + 3.7, -4.93, '#0f172a');
-    DEFS.filter(d => d.piano === p.i && d.slot >= 0).forEach(d => { const [sx, sz] = SLOTP[d.slot]; scrivania(p, sx, sz, d.slot + p.i); targa(d.etich, '', 2.1, 0.46, sx, y + (sz < 0 ? 3.25 : 2.74), -4.93, p.col); });   // fila di fondo in alto, fila davanti sotto
+    DEFS.filter(d => d.piano === p.i && d.slot >= 0 && (d.sesso === 'M' || !d.cat)).forEach(d => {          // una scrivania per posto (uomini e donne si siedono alla stessa)
+      const [sx, sz] = SLOTP[d.slot], cc = d.cat ? CATS[d.cat][1] : p.col; scrivania(p, sx, sz, d.slot + p.i, cc); targa(d.etich, '', 2.1, 0.46, sx, y + (sz < 0 ? 3.25 : 2.74), -4.93, cc);
+    });   // fila di fondo in alto, fila davanti sotto
     dest = scene;
   });
   const roof = box(27.8, 0.4, 11, mat(0x94a3b8)); roof.position.set(0, NP * FH + 0.05, 0.4); scene.add(roof); pianoG.roof = roof;
@@ -319,6 +324,7 @@
     return a;
   });
   const per = n => agenti.find(a => a.nome === n);
+  const fuori = a => !!a.cat && a.sesso !== genere;                // gli addetti dell'altro sesso non si vedono
   const vezz = per('Vezz');
   const yDi = a => (a.bordo ? CAB.y : PIANI[a.piano].y);
 
@@ -398,7 +404,7 @@
     a.bordo = true; a.rot = 0; yield* aspetta(0.5);
     CAB.target = aP;
     yield* finche(() => cabPronta(aP));
-    a.bordo = false; a.piano = aP;
+    a.bordo = false; a.piano = aP; if (a === vezz) salvaPiano();
     yield* cammina(a, [[0, AIS_Z]]);
     CAB.occupata = false;
   }
@@ -436,24 +442,24 @@
   const SC_INTRA = [['atleti', 'resp', 'Ho una bozza su un atleta del reparto.', 'Bene, la controllo.', 1], ['team', 'resp', 'Il bilancio delle squadre è pronto.', 'Lo leggo subito.', 1], ['ric', 'atleti', 'Ho trovato 3 notizie sulla gara di domenica.', 'Perfetto, le uso.', 1],
     ['resp', 'team', 'Ricontrolla i punti delle squadre.', 'Ricevuto.', 1], ['atleti', 'team', 'Un caffè?', 'Volentieri.', 0], ['ric', 'resp', 'Hai visto che nebbia stamattina?', 'Ottima per le fughe.', 0]];
   const SC_STAFF = {
-    7: [['Caporedattore', 'Capo servizio', 'Ordine fisso di oggi: bilanci e gare.', 'Lo passo ai reparti.', 1], ['Cronista', 'Capo servizio', 'La cronaca di domenica è pronta.', 'La controllo ora.', 1], ['Analista', 'Caporedattore', 'Ho 5 spunti nuovi dai dati.', 'Quali per le Juniores?', 1],
+    5: [['Caporedattore', 'Capo servizio', 'Ordine fisso di oggi: bilanci e gare.', 'Lo passo ai reparti.', 1], ['Cronista', 'Capo servizio', 'La cronaca di domenica è pronta.', 'La controllo ora.', 1], ['Analista', 'Caporedattore', 'Ho 5 spunti nuovi dai dati.', 'Quali per le Juniores?', 1],
       ['Inviato speciale', 'Caporedattore', 'Una richiesta libera è in coda.', 'Dalle la priorità.', 1], ['Ricercatore', 'Cronista', 'Nuove notizie nel radar.', 'Le uso per la gara.', 1], ['Cronista', 'Analista', 'Hai visto la nebbia?', 'Stamattina, sì.', 0]],
-    6: [['Ricercatore Tech', 'Redattore Tech', 'Nel radar Tech è arrivata una novità sulle ruote.', 'Ottimo, la leggo.', 1], ['Redattore Tech', 'Ricercatore Tech', 'Cerca altre fonti sul nuovo gruppo.', 'Subito.', 1]]
+    4: [['Ricercatore Tech', 'Redattore Tech', 'Nel radar Tech è arrivata una novità sulle ruote.', 'Ottimo, la leggo.', 1], ['Redattore Tech', 'Ricercatore Tech', 'Cerca altre fonti sul nuovo gruppo.', 'Subito.', 1]]
   };
   const eventi = [];                                               // fatti veri dal sito: [chi, con chi, frase, risposta]
   function scegliScena() {
-    const libere = agenti.filter(a => a.ruolo !== 'vezz' && !a.imp && a.stato === 'siede' && a.piano === a.casa && !a.bolla), r = Math.random();
+    const libere = agenti.filter(a => a.ruolo !== 'vezz' && !fuori(a) && !a.imp && a.stato === 'siede' && a.piano === a.casa && !a.bolla), r = Math.random();
     const trova = (nome) => libere.find(a => a.nome === nome);
     let A, B, t;
     if (eventi.length) { const e = eventi.shift(); A = trova(e[0]); B = trova(e[1]); t = e; if (!A || !B) { if (eventi.length < 6) eventi.push(e); return null; } }
-    else if (focus != null && r < 0.85 && PIANI[focus].cat) {         // il piano che guardi: conversazione tra i suoi addetti
-      const pi = focus, sx = lato ? lato : (Math.random() < 0.5 ? 'M' : 'F'), s = SC_INTRA[Math.floor(Math.random() * SC_INTRA.length)];
-      A = libere.find(a => a.piano === pi && a.sesso === sx && a.ruolo === s[0]); B = libere.find(a => a.piano === pi && a.sesso === sx && a.ruolo === s[1]); t = s;
+    else if (focus != null && r < 0.85 && PIANI[focus].cats) {        // il piano che guardi: conversazione tra gli addetti di una sua categoria
+      const cs = PIANI[focus].cats, cat = lato ? (cs[lato === 'R' ? 1 : 0] || cs[0]) : cs[Math.floor(Math.random() * cs.length)], s = SC_INTRA[Math.floor(Math.random() * SC_INTRA.length)];
+      A = libere.find(a => a.cat === cat && a.ruolo === s[0]); B = libere.find(a => a.cat === cat && a.ruolo === s[1]); t = s;
     } else if (focus != null && r < 0.85 && SC_STAFF[focus]) {       // Direzione / Tech: i loro scambi
       const l = SC_STAFF[focus], s = l[Math.floor(Math.random() * l.length)]; A = trova(s[0]); B = trova(s[1]); t = s;
     } else if (r < 0.5) {
-      const pcand = PIANI.filter(p => p.cat).map(p => p.i), pi = pcand[Math.floor(Math.random() * pcand.length)], sx = Math.random() < 0.5 ? 'M' : 'F', s = SC_INTRA[Math.floor(Math.random() * SC_INTRA.length)];
-      A = libere.find(a => a.piano === pi && a.sesso === sx && a.ruolo === s[0]); B = libere.find(a => a.piano === pi && a.sesso === sx && a.ruolo === s[1]); t = s;
+      const cands = Object.keys(CATS), cat = cands[Math.floor(Math.random() * cands.length)], s = SC_INTRA[Math.floor(Math.random() * SC_INTRA.length)];
+      A = libere.find(a => a.cat === cat && a.ruolo === s[0]); B = libere.find(a => a.cat === cat && a.ruolo === s[1]); t = s;
     } else if (!CAB.occupata) {                                    // fra piani diversi: ascensore
       const resp = libere.filter(a => a.ruolo === 'resp');
       const ch = [
@@ -481,6 +487,32 @@
   // ---------- Vezz e compiti: comandi dell'utente ----------
   function avvisa(t) { const e = root.getElementById('toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(avvisa.t); avvisa.t = setTimeout(() => { e.style.display = 'none'; }, 2600); }
   function* vaiVezzA(x, z) { yield* cammina(vezz, route(vezz, x, z, false)); vezz.occupato = false; }
+  function salvaPiano() { try { localStorage.setItem('p3d-piano', String(vezz.piano)); } catch (e) { /* senza memoria locale */ } }
+  function* vezzVaAlPiano(n) {                                     // Vezz prende l'ascensore (la camera lo segue) e a destinazione la vista passa al piano
+    if (vezz.piano !== n) { seguiA(vezz); yield* viaggia(vezz, vezz.piano, n); }
+    vezz.occupato = false; salvaPiano();
+    if (follow === vezz) fermaSegui();
+    vaiAlPiano(n, null);
+  }
+  function* vezzVaDa(a) {                                          // Vezz va accanto all'addetto cliccato; li' si apre la scheda per dirgli cosa fare
+    sel = a;
+    if (vezz.piano !== a.piano) { seguiA(vezz); yield* viaggia(vezz, vezz.piano, a.piano); }
+    yield* cammina(vezz, route(vezz, a.corr, a.sz, false));
+    volto(vezz, a); vezz.occupato = false; salvaPiano();
+    if (follow === vezz) fermaSegui();
+    vaiAlPiano(a.piano, PIANI[a.piano].cats ? (a.corr < 0 ? 'L' : 'R') : null);
+    apriCard(a);
+  }
+  function mandaVezz(i) {
+    if (vezz.piano === i && !vezz.occupato) { vaiAlPiano(i); return true; }
+    const ok = comandoVezz(vezzVaAlPiano(i)); if (ok) avvisa('Vezz va al piano «' + PIANI[i].nome + '»'); return ok;
+  }
+  function cliccaOmino(a) {
+    if (a === vezz) { apriCard(a); return; }
+    if (vezz.occupato) { avvisa('Vezz è ancora in cammino: aspetta un attimo'); return; }
+    if (vezz.piano === a.piano && Math.hypot(vezz.x - a.corr, vezz.z - a.sz) < 1.3) { apriCard(a); return; }   // e gia accanto a lui
+    if (comandoVezz(vezzVaDa(a))) avvisa('Vezz va da ' + a.nome);
+  }
   function* vezzAlPiano(n) {
     if (vezz.piano !== n) yield* viaggia(vezz, vezz.piano, n);
     vezz.occupato = false;
@@ -499,7 +531,7 @@
   function snap(x, z) { return (z > 3.2 || Math.abs(x) < 2) ? [Math.max(-CORR, Math.min(CORR, x)), AIS_Z] : [x < 0 ? -CORR : CORR, Math.max(-3.5, Math.min(3.2, z))]; }
 
   // ---------- camera, piani, selezione ----------
-  let focus = null, lato = null, aspetto = 1.6, sel = null, follow = null, guida = false;
+  let focus = null, lato = null, aspetto = 1.6, sel = null, follow = null, guida = true;
   const T16 = Math.tan(16 * Math.PI / 180);
   const cam = { look: new THREE.Vector3(0, 17, 0), dist: 80, az: 0, el: 0.12 }, mira = { look: new THREE.Vector3(0, 17, 0), dist: 80, az: 0, el: 0.12 };
   const distPiano = () => (lato ? Math.max(11, 8.2 / (T16 * aspetto)) : Math.max(22, 14.9 / (T16 * aspetto))), distTutto = () => Math.max(NP * FH / 2 / T16 * 1.12, 14.5 / (T16 * aspetto));
@@ -512,7 +544,7 @@
   }
   function applicaPiano(i) {                                       // mostra/nasconde i piani e aggiorna i pulsanti (non muove la camera)
     focus = i;
-    if (barraLato) barraLato.style.display = i == null || follow ? 'none' : '';
+    if (barraLato) { barraLato.style.display = i == null || follow || !PIANI[i].cats ? 'none' : ''; if (i != null && PIANI[i].cats) { const cs = PIANI[i].cats; barraLato.children[1].textContent = CATS[cs[0]][0]; barraLato.children[2].textContent = cs[1] ? CATS[cs[1]][0] : ''; barraLato.children[2].style.display = cs[1] ? '' : 'none'; } }
     pianoG.forEach((G, j) => { G.visible = i == null || j <= i; }); pianoG.roof.visible = i == null;
     etichette.forEach((e, j) => { e.dataset.nascosta = (i != null && j > i) ? '1' : ''; });
     pulsanti.forEach((b, k) => b.classList.toggle('on', (i == null && k === NP) || k === NP - 1 - i));
@@ -523,7 +555,7 @@
     fermaSegui(); lato = i == null ? null : (l || null);
     applicaPiano(i);
     if (barraLato) [...barraLato.children].forEach(b => b.classList.toggle('on', (b.dataset.l || '') === (lato || '')));
-    mira.look.set(lato === 'M' ? -6.8 : lato === 'F' ? 6.8 : 0, i == null ? NP * FH / 2 : PIANI[i].y + 1.7, i == null ? 0 : 0.5); mira.dist = i == null ? distTutto() : distPiano(); mira.el = i == null ? 0.1 : 0.58; mira.az = 0;
+    mira.look.set(lato === 'L' ? -6.8 : lato === 'R' ? 6.8 : 0, i == null ? NP * FH / 2 : PIANI[i].y + 1.7, i == null ? 0 : 0.5); mira.dist = i == null ? distTutto() : distPiano(); mira.el = i == null ? 0.1 : 0.58; mira.az = 0;
     if (i != null && !CAB.occupata) CAB.target = i;
     prossima = Math.min(prossima, 0.7);
   }
@@ -534,12 +566,24 @@
   }
   root.getElementById('segui').onclick = () => { fermaSegui(); vaiAlPiano(focus); };
   const bar = root.getElementById('piani'), pulsanti = []; let barraLato = null;
-  for (let i = NP - 1; i >= 0; i--) { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<i>' + i + '</i>' + PIANI[i].nome; b.onclick = () => vaiAlPiano(i, null); bar.appendChild(b); pulsanti.push(b); }
+  for (let i = NP - 1; i >= 0; i--) { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<i>' + i + '</i>' + PIANI[i].nome; b.onclick = () => mandaVezz(i); bar.appendChild(b); pulsanti.push(b); }
   { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<i>⌂</i>Tutto il palazzo'; b.onclick = () => vaiAlPiano(null); bar.appendChild(b); pulsanti.push(b); }
   barraLato = document.createElement('div'); barraLato.className = 'lati'; barraLato.style.display = 'none';
-  [['', 'Tutto il piano'], ['M', 'Uomini'], ['F', 'Donne']].forEach(([l, t]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.l = l; b.textContent = t; b.style.justifyContent = 'center'; b.style.padding = '6px 8px'; b.onclick = () => vaiAlPiano(focus, l || null); barraLato.appendChild(b); });
+  [['', 'Tutto il piano'], ['L', 'Sinistra'], ['R', 'Destra']].forEach(([l, t]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.l = l; b.textContent = t; b.style.justifyContent = 'center'; b.style.padding = '6px 8px'; b.onclick = () => vaiAlPiano(focus, l || null); barraLato.appendChild(b); });
   bar.appendChild(barraLato);
   const etichette = PIANI.map(p => { const e = document.createElement('div'); e.className = 'etich'; e.innerHTML = p.nome + '<small>' + p.sotto + '</small>'; e.style.borderLeft = '4px solid ' + p.col; host.appendChild(e); return e; });
+
+  function setGenere(g, init) {
+    genere = g; try { localStorage.setItem('p3d-genere', g); } catch (e) { /* senza memoria locale */ }
+    root.querySelectorAll('[data-g]').forEach(b => b.classList.toggle('on', b.dataset.g === g));
+    PIANI.forEach(q => { if (q.cats && q.targa) disegnaTarga(q.targa, q.nome, g === 'M' ? 'Uomini' : 'Donne'); });
+    if (!init) {
+      if (follow && fuori(follow)) { fermaSegui(); vaiAlPiano(focus); }
+      if (cardAg && fuori(cardAg)) { card.style.display = 'none'; cardAg = null; sel = null; }
+      prossima = Math.min(prossima, 0.7); avvisa(g === 'M' ? 'Palazzo degli uomini' : 'Palazzo delle donne');
+    }
+  }
+  root.querySelectorAll('[data-g]').forEach(b => { b.onclick = () => setGenere(b.dataset.g); });
 
   // ---------- scheda dell'omino ----------
   const card = root.getElementById('card'); let cardAg = null;
@@ -555,7 +599,7 @@
     if (vz) {
       card.querySelector('#cPers').onclick = apriEditor;
       const g = card.querySelector('#cGuida'); const sg = () => { g.textContent = 'Guida con clic: ' + (guida ? 'sì' : 'no'); g.classList.toggle('on', guida); }; sg(); g.onclick = () => { guida = !guida; sg(); avvisa(guida ? 'Clicca il pavimento per far camminare Vezz' : 'Guida spenta'); };
-      const cp = card.querySelector('#cPiani'); PIANI.forEach((q, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = i; b.title = q.nome; b.onclick = () => { if (comandoVezz(vezzAlPiano(i))) avvisa('Vezz va al piano «' + q.nome + '»'); }; cp.appendChild(b); });
+      const cp = card.querySelector('#cPiani'); PIANI.forEach((q, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = i; b.title = q.nome; b.onclick = () => mandaVezz(i); cp.appendChild(b); });
     } else {
       card.querySelector('#cVai').onclick = () => { if (comandoVezz((function* () { if (vezz.piano !== a.piano) yield* viaggia(vezz, vezz.piano, a.piano); yield* cammina(vezz, route(vezz, a.corr, a.sz, false)); volto(vezz, a); vezz.occupato = false; })())) avvisa('Vezz va da ' + a.nome); };
       card.querySelector('#cInvia').onclick = async () => { const t = card.querySelector('#cTesto'); if (await daiCompito(a, t.value)) t.value = ''; };
@@ -599,7 +643,7 @@
   renderer.domElement.addEventListener('pointermove', e => { if (!drag) return; if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 5) mosso = true; if (mosso) { mira.az = Math.max(-0.9, Math.min(0.9, drag.az - (e.clientX - drag.x) * 0.006)); mira.el = Math.max(0.05, Math.min(1.1, drag.el + (e.clientY - drag.y) * 0.004)); } });
   renderer.domElement.addEventListener('pointerup', e => {
     drag = null; if (mosso) return;
-    const hit = agenteSotto(e); if (hit) { apriCard(hit); return; }
+    const hit = agenteSotto(e); if (hit) { cliccaOmino(hit); return; }
     const r = renderer.domElement.getBoundingClientRect(); rc.setFromCamera({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }, camera);
     const o = rc.ray.origin, d = rc.ray.direction;
     if (focus != null && guida && vezz.piano === focus && Math.abs(d.y) > 1e-4) {                     // Vezz cammina dove clicchi
@@ -608,7 +652,7 @@
     }
     if (follow || Math.abs(d.z) < 1e-4) return;
     const t = (0.5 - o.z) / d.z, y = o.y + d.y * t, i = Math.floor((y + 0.3) / FH);
-    if (i >= 0 && i < NP && i !== focus) vaiAlPiano(i);
+    if (i >= 0 && i < NP && i !== focus) mandaVezz(i);
   });
   renderer.domElement.addEventListener('wheel', e => { if (!zoomAttivo) return; e.preventDefault(); mira.dist = Math.max(6, Math.min(140, mira.dist * (1 + Math.sign(e.deltaY) * 0.09))); }, { passive: false });
   function misura() { const w = host.clientWidth, h = host.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; aspetto = w / h; camera.updateProjectionMatrix(); if (!follow) { if (focus != null) mira.dist = distPiano(); else mira.dist = distTutto(); } }
@@ -673,16 +717,16 @@
     agenti.forEach(a => {
       muovi(a, dt); const y = yDi(a), yf = focus == null ? -999 : PIANI[focus].y; a.det = Math.abs(y - yf) < 2.6; posa(a, dt);
       if (a.stato === 'fermo' && !scenaCorr && a.ruolo !== 'vezz' && !a.imp) a.stato = 'siede';
-      const sopra = focus != null && y > PIANI[focus].y + 1; a.g.visible = !sopra;
-      a.blob.visible = blobOn && !sopra; if (a.blob.visible) a.blob.position.set(a.x, y + 0.05, a.z);
-      const forza = a === vezz || a === sel || a === follow, mostra = !sopra && (forza || (a.det && focus != null));
+      const sopra = focus != null && y > PIANI[focus].y + 1; const nasc = fuori(a); a.g.visible = !sopra && !nasc;
+      a.blob.visible = blobOn && !sopra && !nasc; if (a.blob.visible) a.blob.position.set(a.x, y + 0.05, a.z);
+      const forza = a === vezz || a === sel || a === follow, mostra = !sopra && !nasc && (forza || (a.det && focus != null));
       a.tag.style.display = mostra ? '' : 'none';
       if (mostra) {
         const txt = (lato || forza) ? a.nome : a.etich; if (a.tag.dataset.t !== txt) { a.tag.dataset.t = txt; a.tag.textContent = txt; }
         a.tag.classList.toggle('sel', a === sel); a.tag.classList.toggle('lav', !!(a.lavoraVero || a.compito));
         proietta(a.x, y - 0.43 * a.sit + 0.02, a.z, a.tag); a.tag.style.marginTop = '4px';
       }
-      if (a.bolla) { proietta(a.x, y + 2.15 - 0.43 * a.sit, a.z, a.bolla.el); if (sopra) a.bolla.el.style.display = 'none'; }
+      if (a.bolla) { proietta(a.x, y + 2.15 - 0.43 * a.sit, a.z, a.bolla.el); if (sopra || nasc) a.bolla.el.style.display = 'none'; }
     });
     if (sel && sel.g.visible) { anello.visible = true; anello.position.set(sel.x, yDi(sel) + 0.07, sel.z); } else anello.visible = false;
     tCard -= dt; if (tCard <= 0) { tCard = 0.4; aggiornaCard(false); }
@@ -693,7 +737,7 @@
   }
   function giro(now) { if (morto) return; if (!contenitore.isConnected) { distruggi(); return; } requestAnimationFrame(giro); if (window.__virt == null && visibile && !document.hidden && host.clientWidth) frame(now); else ultimo = now; }
   Q.tier = (window.matchMedia('(max-width:700px)').matches || /Mobi|Android/i.test(navigator.userAgent)) ? 1 : 0; applicaQualita();
-  misura(); vaiAlPiano(null); cam.dist = mira.dist; cam.look.copy(mira.look);
+  setGenere(genere, true); misura(); vaiAlPiano(vezz.piano); CAB.piano = CAB.target = vezz.piano; CAB.y = PIANI[vezz.piano].y; cam.dist = mira.dist; cam.look.copy(mira.look);
   requestAnimationFrame(giro);
 
   function distruggi() {
@@ -703,7 +747,7 @@
     agenti.forEach(a => { if (a.bolla) a.bolla.el.remove(); });
     if (window.__p3d && window.__p3d.agenti === agenti) delete window.__p3d;
   }
-  window.__p3d = { agenti, PIANI, CAB, frame, vaiAlPiano, mira, cam, scena: () => scenaCorr, avvia: () => { scenaCorr = scegliScena(); return !!scenaCorr; }, camera, renderer, vezz, route, apriCard, seguiA, daiCompito, comandoVezz, vezzAlPiano, extra, get focus() { return focus; }, get follow() { return follow; }, Q, DATI, eventi, aggiornaTabellone, aggiorna, SLOTP };
+  window.__p3d = { setGenere, fuori, mandaVezz, cliccaOmino, agenti, PIANI, CAB, frame, vaiAlPiano, mira, cam, scena: () => scenaCorr, avvia: () => { scenaCorr = scegliScena(); return !!scenaCorr; }, camera, renderer, vezz, route, apriCard, seguiA, daiCompito, comandoVezz, vezzAlPiano, extra, get focus() { return focus; }, get follow() { return follow; }, Q, DATI, eventi, aggiornaTabellone, aggiorna, SLOTP };
   return { aggiorna, distruggi };
 
   }
