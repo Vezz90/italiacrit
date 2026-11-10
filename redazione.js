@@ -139,9 +139,7 @@
       <div class="rd-foto" data-foto="${b.id}">${fotoHtml(b)}</div>
       <label class="rd-l">Testo <small id="ed-parole">${parole(b.corpo)} parole</small><textarea id="ed-corpo" rows="18">${esc(b.corpo)}</textarea></label>
       ${dv ? `<div class="rd-box warn"><b>Da verificare prima di pubblicare</b><ul>${dv}</ul></div>` : ''}
-      <div class="rd-box"><b>Fonti</b><ul>${fonti || '<li class="rd-muted">Nessuna fonte esterna: solo i dati del sito.</li>'}</ul></div>
       ${revisioneHtml(b)}
-      ${dossierHtml(b)}
       <details class="rd-box"><summary>Dati usati dall'AI</summary><pre>${esc(JSON.stringify(b.dati, null, 1)).slice(0, 12000)}</pre></details>
       <div class="rd-btns">
         <button type="button" class="admin-edit-btn" data-act="prev">Anteprima</button>
@@ -453,7 +451,7 @@
       <button type="button" class="admin-edit-btn" data-tc="agg" ${vol ? 'disabled' : ''}>${vol === 'agg' ? 'Cerco…' : 'Aggiorna ora'}</button></div>
       <ul class="rd-rdl">${righe || '<li class="rd-muted">Nessuna novità nel radar: premi «Aggiorna ora».</li>'}</ul>
       <div class="rd-btns"><button type="button" class="admin-edit-btn rd-go" data-tc="scrivi" ${vol ? 'disabled' : ''}>${vol === 'scrivi' ? 'Il Redattore Tech legge…' : 'Scrivi un articolo dalle notizie spuntate'}</button>
-        <small class="rd-muted">Spunta da 1 a 3 notizie sullo stesso tema. Il Redattore Tech legge le pagine, riscrive con parole sue e nomina le fonti; non abbiamo provato i prodotti, quindi niente giudizi di guida. Costa circa 0,05 $.</small></div>
+        <small class="rd-muted">Spunta da 1 a 3 notizie sullo stesso tema. Il Redattore Tech legge le pagine, riscrive con parole sue senza nominare le fonti; non abbiamo provato i prodotti, quindi niente giudizi di guida. Costa circa 0,05 $.</small></div>
       <details class="rd-box"><summary>Tetti di spesa del reparto</summary>
         <div class="rd-btns">
           <label class="rd-c">Tetto mensile $ <input id="tc-lim" type="number" min="0" max="100" step="0.5" value="${esc(cfg.tech_limite_mensile_usd != null ? cfg.tech_limite_mensile_usd : 3)}" style="width:70px"></label>
@@ -540,7 +538,7 @@
       if (b.dataset.rd === 'art') {                                           // articolo da una notizia del radar: lo scrive l'addetto del reparto, solo se lo chiedi tu
         const x = ((st.radar && st.radar.items) || []).find(i => String(i.id) === b.dataset.id); if (!x) return;
         const cod = (x.reparti || [])[0], agente = (cod && nomeRep('atleti', cod)) || '';
-        const testo = `Scrivi un articolo su questa notizia: «${x.titolo}» (${x.fonte || 'fonte'}${x.data ? ', ' + String(x.data).slice(0, 10) : ''}). Leggi la pagina indicata, racconta i fatti con parole tue, nomina la fonte nel testo e usa i dati del sito per i nomi e i risultati.`;
+        const testo = `Scrivi un articolo su questa notizia: «${x.titolo}» (${x.fonte || 'fonte'}${x.data ? ', ' + String(x.data).slice(0, 10) : ''}). Leggi la pagina indicata, racconta i fatti con parole tue senza nominare la testata né il giornalista (la notizia è solo uno spunto) e usa i dati del sito per i nomi e i risultati.`;
         if (!confirm(`Creo un articolo da questa notizia?\n\n«${x.titolo}»\n\nL'addetto${agente ? ' (' + agente + ')' : ''} scrive una bozza: costa come un articolo (circa 0,06-0,30 $).`)) return;
         st.radarBusy = true; el.innerHTML = radarPanel();
         try {
@@ -716,7 +714,7 @@
         const prima = stanza.prevB.get(b.id), agente = agenteDiBozza(b);
         if (prima === undefined && b.stato === 'in_generazione' && ora - Date.parse(b.creato) < 12 * 60000) {
           scena('Caporedattore', agente, `${b.parametri && b.parametri.auto ? 'Giro automatico' : 'Nuovo incarico'}: ${b.soggetto}`, 'Ricevuto, ci penso io.');
-          if (b.parametri && b.parametri.web) scena(agente, ricDi(agente), `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo le fonti.');
+          if (b.parametri && b.parametri.web) scena(agente, ricDi(agente), `Mi serve il contesto su ${b.soggetto}`, 'Cerco sul web e ti passo il contesto.');
         } else if (prima === 'in_generazione' && b.stato === 'bozza') {                 // addetto -> responsabile (controlla) -> Caporedattore
           const rv = b.revisione, resp = rv && rv.responsabile && trova(rv.responsabile) ? rv.responsabile : null;
           if (resp && resp !== agente) {
