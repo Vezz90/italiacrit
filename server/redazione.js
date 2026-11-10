@@ -444,7 +444,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: false, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: true, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -1153,7 +1153,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
         else if (c.data > t && imp >= 1) cand.push({ c, imp, n: 0, chiave: `gara|anteprima|${ev}` });
       }
       cand.sort((a, b) => b.imp - a.imp || b.n - a.n);
-      const daFare = cfgA.auto_gare !== true ? [] : cand.filter(x => !chiavi.has(x.chiave) && (x.imp >= 1 || x.n > 0)).slice(0, Math.max(0, Math.min(MAX_PER_GIRO, MAX_AL_GIORNO - oggiFatte)));   // i resoconti con risultati valgono anche per le gare minori (la maggior parte)
+      const daFare = cfgA.auto_gare === false ? [] : cand.filter(x => !chiavi.has(x.chiave) && (x.imp >= 1 || x.n > 0)).slice(0, Math.max(0, Math.min(MAX_PER_GIRO, MAX_AL_GIORNO - oggiFatte)));   // i resoconti con risultati valgono anche per le gare minori (la maggior parte)
       const webDa = Number.isFinite(Number(cfgA.web_auto_da_imp)) ? Number(cfgA.web_auto_da_imp) : 0;
       let avviati = 0;
       for (const x of daFare) {
