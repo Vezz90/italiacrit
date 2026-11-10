@@ -923,7 +923,7 @@
     if (palazzoP) return palazzoP;
     palazzoP = new Promise(res => {
       const me = document.querySelector('script[src*="redazione.js"]'), base = me ? me.src.replace(/redazione\.js.*$/, '') : '';
-      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=4'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
+      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=8'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
       document.head.appendChild(sc);
     });
     return palazzoP;
@@ -935,7 +935,7 @@
   };
   const spegni3d = () => { if (st.p3 && st.p3.inst) st.p3.inst.distruggi(); st.p3 = null; };
   const ponte3d = {
-    leggi: () => ({ agenti: agenti(), bozze: st.bozze, costi: st.costi, spunti: st.spunti }),
+    leggi: () => ({ agenti: agenti(), bozze: st.bozze, costi: st.costi, spunti: st.spunti, classifiche: st.classifiche }),
     agenteDiBozza, respDi,
     passa2D: () => { try { localStorage.setItem('rd-vista', '2d'); } catch (_) { /* ok */ } spegni3d(); montaStanza(); },
     inviaCompito: async (nome, testo) => {                              // compito diretto: una richiesta vera a quell'addetto, a pagamento come un articolo
@@ -999,7 +999,16 @@
     try { localStorage.setItem('rd-vista', m); } catch (_) { /* ok */ }
     st.forza2d = false; if (m === '2d') spegni3d(); montaStanza();
   }
+  async function caricaClassifiche() {                                  // le classifiche Elite/U23 vere del sito, per il muro delle classifiche nella redazione 3D
+    try {
+      if (typeof loadRanking !== 'function') return;
+      const [m, f] = await Promise.all([loadRanking('ELI_M'), loadRanking('ELI_F')]);
+      const top = l => (Array.isArray(l) ? l : []).slice().sort((a, b) => (a.pos || 999) - (b.pos || 999)).slice(0, 5).map(a => ({ nome: `${a.cognome || ''} ${a.nome || ''}`.trim(), punti: Math.round((Number(a.punti) || 0) * 100) / 100 }));
+      st.classifiche = { M: top(m), F: top(f) };
+    } catch (_) { /* senza classifiche resta la schermata neutra */ }
+  }
   function monta3d(host) {
+    caricaClassifiche().then(() => { if (st.p3 && st.p3.inst) st.p3.inst.aggiorna(); });
     stanza.gen++;                                                          // ferma l'eventuale ciclo della stanza 2D
     host.innerHTML = `<div class="rd-uff-head"><h3>La redazione in 3D</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small><span class="st-modo"><button type="button" class="st-tab" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab on" data-modo="3d">Redazione 3D</button></span></div>
       <div class="st-avviso" hidden></div><div class="p3-slot"></div>
