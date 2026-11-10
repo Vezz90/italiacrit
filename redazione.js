@@ -196,6 +196,9 @@
 .st-tab{border:1px solid rgba(128,128,128,.35);background:rgba(128,128,128,.08);border-radius:99px;padding:4px 12px;font:600 .8rem system-ui,sans-serif;cursor:pointer;color:inherit}
 .st-tab.on{background:#4f46e5;border-color:#4f46e5;color:#fff}
 .st-tab small{opacity:.8;font-weight:500}
+.st-modo{margin-left:auto;display:flex;gap:6px}
+.p3-slot{margin:0 0 10px}
+.p3-attesa{display:block;padding:20px;text-align:center}
 .st-scroll{overflow-x:auto;border-radius:16px}
 .st-room{position:relative;container-type:inline-size;width:min(100%,calc((100vh - 170px) * 1.78));min-width:720px;aspect-ratio:var(--ar,660/370);border-radius:16px;overflow:hidden;background:#e8ecf1;box-shadow:0 10px 30px rgba(15,23,42,.16),0 0 0 1px rgba(15,23,42,.06)}
 .st-world{--u:calc(var(--tz,1) * 1cqw);position:absolute;top:0;left:var(--wl,0%);width:var(--ww,100%);aspect-ratio:660/370}
@@ -311,6 +314,7 @@
     if (b.tipo === 'squadre') return nomeRep('team', cod(p.id)) || 'Inviato speciale';
     if (b.tipo === 'atleta') return nomeRep('atleti', cod(p.cat)) || 'Inviato speciale';
     if (b.tipo === 'tech') return 'Redattore Tech';
+    if (b.tipo === 'libero' && p.agente) return p.agente;                        // compito diretto dal palazzo 3D
     if (b.tipo === 'libero' && /^ordine\|/.test(p.chiave || '') && cod(p.cod)) return nomeRep(p.ruolo === 'team' ? 'team' : 'atleti', p.cod) || 'Inviato speciale';
     if (b.tipo === 'libero') {
       const s = /^spunto\|/.test(p.chiave || '') && st.spunti && st.spunti.spunti.find(x => 'spunto|' + x.id === p.chiave);
@@ -706,6 +710,7 @@
   // ---- collegamento con lo stato vero della redazione: ogni novità diventa una scena
   function aggiornaStanza() {
     inizStanza();
+    if (st.p3) { aggiornaPannelli(); if (st.p3.inst) st.p3.inst.aggiorna(); return; }   // vista 3D: le scene le gestisce il palazzo
     for (const d of agenti()) { const a = trova(d.nome); if (a) { a.fase = d.stato; a.lavoro = d.testo; } }
     const ora = Date.now(), k = st.costi;
     if (stanza.prevB) {
@@ -913,11 +918,46 @@
     if (!stanza.rz) { stanza.rz = true; window.addEventListener('resize', () => { if (document.querySelector('.st-room')) applicaVista(); }); }
     document.querySelectorAll('.st-tab').forEach(b => b.classList.toggle('on', b.dataset.vista === stanza.vista));
   }
+  /* ---------- vista 3D (palazzo.js): scelta, ponte con la pagina, compito diretto ---------- */
+  const webgl3d = () => { try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch (_) { return false; } };
+  let palazzoP = null;
+  function caricaPalazzo() {                                            // palazzo.js si scarica solo quando un admin apre la Redazione
+    if (window.PalazzoRedazione) return Promise.resolve(true);
+    if (palazzoP) return palazzoP;
+    palazzoP = new Promise(res => {
+      const me = document.querySelector('script[src*="redazione.js"]'), base = me ? me.src.replace(/redazione\.js.*$/, '') : '';
+      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=1'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
+      document.head.appendChild(sc);
+    });
+    return palazzoP;
+  }
+  const vuole3d = () => {
+    if (st.forza2d || !webgl3d()) return false;
+    try { const v = localStorage.getItem('rd-vista'); if (v === '2d') return false; if (v === '3d') return true; } catch (_) { /* senza memoria locale */ }
+    return window.innerWidth >= 700;                                    // sui telefoni parte la stanza 2D, il 3D si sceglie a mano
+  };
+  const spegni3d = () => { if (st.p3 && st.p3.inst) st.p3.inst.distruggi(); st.p3 = null; };
+  const ponte3d = {
+    leggi: () => ({ agenti: agenti(), bozze: st.bozze, costi: st.costi, spunti: st.spunti }),
+    agenteDiBozza, respDi,
+    passa2D: () => { try { localStorage.setItem('rd-vista', '2d'); } catch (_) { /* ok */ } spegni3d(); montaStanza(); },
+    inviaCompito: async (nome, testo) => {                              // compito diretto: una richiesta vera a quell'addetto, a pagamento come un articolo
+      if (!confirm(`Vezz porta a ${nome} questo compito:\n\n«${testo.slice(0, 300)}»\n\nParte una richiesta vera: l'addetto scrive una bozza e costa come un articolo (circa 0,06-0,30 $). Procedere?`)) return null;
+      try {
+        const r = await api('/richiesta', { method: 'POST', body: { testo, web: false, agente: nome } });
+        st.attesa = Date.now() + 6 * 60000; await carica(); paint(true); aggiornaStanza();
+        return r;
+      } catch (e) { if (typeof showToast === 'function') showToast((e && e.message) || 'Errore', 'error'); return null; }
+    }
+  };
   function montaStanza() {
     const host = document.querySelector('.rd-ufficio'); if (!host) return;
     inizStanza();
+    if (vuole3d()) { monta3d(host); return; }
+    if (st.p3) spegni3d();
     stanza.rm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small></div>
+    const modoBtn = webgl3d() ? '<span class="st-modo"><button type="button" class="st-tab on" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab" data-modo="3d">Palazzo 3D</button></span>' : '';
+    host.innerHTML = `<div class="rd-uff-head"><h3>L'ufficio</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small>${modoBtn}</div>
       <div class="st-avviso" hidden></div>
       <div class="st-tabs"><button type="button" class="st-tab" data-vista="tutto">Tutto l'ufficio</button><button type="button" class="st-tab" data-vista="uomini">Uomini<small data-bd="uomini"></small></button><button type="button" class="st-tab" data-vista="donne">Donne<small data-bd="donne"></small></button><button type="button" class="st-tab" data-vista="direzione">Direzione<small data-bd="direzione"></small></button></div>
       <div class="st-scroll"><div class="st-room"><div class="st-world"><canvas class="st-cv" width="${SW * SCALA}" height="${SH * SCALA}"></canvas><div class="st-lavagna"></div>
@@ -927,6 +967,7 @@
     applicaVista();
     host.onclick = async ev => {
       const vv = ev.target.closest('[data-vista]'); if (vv) { stanza.vista = vv.dataset.vista; applicaVista(); return; }
+      const mm = ev.target.closest('[data-modo]'); if (mm) { cambiaModo(mm.dataset.modo); return; }
       if (!ev.target.closest('[data-accendi]')) return;
       try {
         await api('/config', { method: 'PUT', body: { auto_attiva: true } });
@@ -955,6 +996,41 @@
       requestAnimationFrame(ciclo);
     };
     requestAnimationFrame(ciclo);
+  }
+
+  function cambiaModo(m) {
+    try { localStorage.setItem('rd-vista', m); } catch (_) { /* ok */ }
+    st.forza2d = false; if (m === '2d') spegni3d(); montaStanza();
+  }
+  function monta3d(host) {
+    stanza.gen++;                                                          // ferma l'eventuale ciclo della stanza 2D
+    host.innerHTML = `<div class="rd-uff-head"><h3>Il palazzo della redazione</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small><span class="st-modo"><button type="button" class="st-tab" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab on" data-modo="3d">Palazzo 3D</button></span></div>
+      <div class="st-avviso" hidden></div><div class="p3-slot"></div>
+      <div class="st-sotto"><div class="st-elenco"></div></div>`;
+    host.onclick = async ev => {
+      const mm = ev.target.closest('[data-modo]'); if (mm) { cambiaModo(mm.dataset.modo); return; }
+      if (!ev.target.closest('[data-accendi]')) return;
+      try {
+        await api('/config', { method: 'PUT', body: { auto_attiva: true } });
+        await caricaCosti(); aggiornaStanza();
+        const w = document.querySelector('.rd-costiwrap'); if (w) { w.innerHTML = costiPanel(); lega(); }
+        if (typeof showToast === 'function') showToast('Scrittura automatica accesa: 3 volte al giorno, entro il limite mensile');
+      } catch (e) { if (typeof showToast === 'function') showToast((e && e.message) || 'Errore', 'error'); }
+    };
+    const slot = host.querySelector('.p3-slot');
+    const indietro2d = () => { spegni3d(); st.forza2d = true; montaStanza(); };
+    if (st.p3 && st.p3.inst) { slot.appendChild(st.p3.el); aggiornaStanza(); return; }   // il palazzo resta vivo quando la pagina si ridisegna
+    const el = document.createElement('div'); st.p3 = { el, inst: null }; slot.appendChild(el);
+    slot.insertAdjacentHTML('afterbegin', '<small class="rd-muted p3-attesa">Sto montando il palazzo…</small>');
+    caricaPalazzo().then(ok => ok ? window.PalazzoRedazione.carica() : false).then(ok => {
+      const p = st.p3; if (!p || p.el !== el) return;
+      const att = slot.querySelector('.p3-attesa'); if (att) att.remove();
+      if (!ok) { indietro2d(); return; }
+      try { p.inst = window.PalazzoRedazione.monta(el, ponte3d); } catch (e) { p.inst = null; }
+      if (!p.inst) { indietro2d(); return; }
+      aggiornaStanza();
+    });
+    aggiornaPannelli();
   }
 
   function tickUfficio() {
@@ -1104,6 +1180,7 @@
     const u = authUser();
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
+    st.p3 = null; st.forza2d = false;
     st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaSpunti(), caricaRadar(), caricaOrdini(), caricaTech()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }

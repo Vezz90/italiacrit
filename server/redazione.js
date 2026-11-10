@@ -180,6 +180,16 @@ module.exports = function registerRedazione(app, deps) {
   }
 
   const CATS_ALL = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F', 'AL_M', 'AL_F', 'ES2_M', 'ES2_F', 'ES1_M', 'ES1_F'];
+  // i nomi veri degli addetti (gli stessi della stanza e del palazzo 3D nel client): servono a controllare i compiti diretti
+  const agentiValidi = (() => {
+    let set = null;
+    return () => {
+      if (set) return set;
+      set = new Set(['Caporedattore', 'Capo servizio', 'Cronista', 'Ricercatore', 'Analista', 'Inviato speciale', 'Cassiere', 'Redattore Tech', 'Ricercatore Tech']);
+      for (const c of ['Elite/U23', 'Juniores', 'Allievi', 'Esord. 2°', 'Esord. 1°']) for (const sx of ['M', 'F']) for (const r of ['Responsabile', 'Atleti', 'Team', 'Ricercatore']) set.add(`${r} ${c} ${sx}`);
+      return set;
+    };
+  })();
   async function anno() { const raw = await getData('results_raw.json'); return raw.reduce((m, r) => (r.data && r.data.slice(0, 4) > m ? r.data.slice(0, 4) : m), '2000'); }
 
   // riepilogo di una stagione per una categoria (risultati scraper + inseriti a mano), tutto calcolato qui: l'AI non fa conti
@@ -1107,6 +1117,13 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       const testo = String((req.body || {}).testo || '').trim();
       if (testo.length < 8) return res.status(400).json({ error: 'scrivi cosa vuoi realizzare (almeno una frase)' });
       const p = { richiesta: testo.slice(0, 2000), indicazioni: testo.slice(0, 2000), web: !!(req.body || {}).web, link: Array.isArray((req.body || {}).link) ? req.body.link.map(String).slice(0, 5) : [] };
+      // compito diretto dell'admin a un addetto del palazzo 3D: il nome deve essere uno dei veri (il codice lo controlla, non l'AI)
+      const ag = String((req.body || {}).agente || '').trim();
+      if (ag) {
+        if (!agentiValidi().has(ag)) return res.status(400).json({ error: 'addetto sconosciuto' });
+        p.agente = ag;
+        p.richiesta = `Sei ${ag} della redazione e l'amministratore ti affida questo compito: ${testo.slice(0, 1800)}. Usa i dati del sito e non inventare nulla.`;
+      }
       const { id } = await avvia('libero', p, testo.replace(/\s+/g, ' ').slice(0, 70));
       res.json({ ok: true, id });
     } catch (e) { res.status(500).json({ error: e.message }); }
