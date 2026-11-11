@@ -8,6 +8,7 @@
 const crypto = require('crypto');
 const { scarica: scaricaSicuro } = require('./rete-sicura');
 const D = require('./redazione-dati');
+const { creaArchivio } = require('./redazione-archivio');
 const { rawQuery } = require('./db');
 const fs = require('fs');
 const path = require('path');
@@ -96,6 +97,9 @@ module.exports = function registerRedazione(app, deps) {
     return _titoliCache.v;
   }
 
+  // archivio completo del sito (storico 2007-2025, squadre, calendario, gare pro, medaglie, schede FCI, racconti, carriere complete)
+  const ARC = creaArchivio({ getData, sb, rawQuery, today });
+
   // albo d'oro della corsa (ultime edizioni): serie precalcolate in data/albo, chiavi "NOME|sesso|fascia"
   const RUMORE = new Set(['ALLIEVI', 'ALLIEVE', 'ALLIEVO', 'JUNIORES', 'JUNIOR', 'DONNE', 'UNDER', 'UNDER23', '23', 'U23', 'ELITE', 'ES', 'ESORDIENTI', 'CAT', 'FEMMINILE', 'MASCHILE', 'UOMINI', 'E']);
   function alboBase(nome) { const t = baseName(nome).split(' '); while (t.length > 2 && RUMORE.has(t[t.length - 1])) t.pop(); return t.join(' '); }
@@ -154,13 +158,15 @@ module.exports = function registerRedazione(app, deps) {
       categoria: CAT_NOME[k] || k, codice: k, gara_id: (list[0] || {}).gara_id, partecipanti: list.length,
       top10: list.sort((a, b) => a.posizione - b.posizione).slice(0, 10).map(r => ({ pos: r.posizione, id: r.atleta_id, cognome: r.cognome, atleta: fullName(r), team: r.team, tempo: r.tempo || null, km: r.km || null, media: r.media || null, punti: r.punti_effettivi })),
     }));
-    return {
+    const fattiGara = {
       oggi: today(), stato: rows.length ? 'risultati' : 'anteprima',
       gara: { nome: (opts.tutte && rows.length) ? rows.map(r => r.nome_gara).filter(Boolean).sort((x, y) => x.length - y.length)[0] || c.nome : c.nome, data: c.data, luogo: c.luogo, regione: c.regione,
         categoria_calendario: opts.tutte ? 'tutte le categorie dell evento (vedi risultati)' : c.categoria, tipo: c.tipo, moltiplicatore_punti: c.moltiplicatore,
         campionato_italiano: !!c.campionato_italiano, campionato_regionale: !!c.campionato_regionale, ...(proclamati.length ? { titoli_regionali_assegnati: proclamati } : {}) },
       risultati, albo_doro: await albi(c, cal, opts),
     };
+    try { Object.assign(fattiGara, await ARC.arricchisciGara(fattiGara, c)); } catch (e) { console.warn('[redazione] arricchimento gara:', e.message); }
+    return fattiGara;
   }
 
   async function factsSettimana(fine) {
@@ -222,10 +228,12 @@ module.exports = function registerRedazione(app, deps) {
       const m = {}; (data || []).forEach(r => { const s = m[r.season] || (m[r.season] = { stagione: r.season, gare: 0, vittorie: 0, podi: 0 }); s.gare++; if (r.posizione === 1) s.vittorie++; if (r.posizione >= 1 && r.posizione <= 3) s.podi++; });
       pcs = Object.values(m).sort((a, b) => b.stagione - a.stagione);
     } catch (_) { /* nessuno */ }
+    let extra = {};
+    try { extra = await ARC.arricchisciAtleta(id); } catch (e) { console.warn('[redazione] arricchimento atleta:', e.message); }
     return {
       atleta: { nome: fullName(ath), team_attuale: ath.team_attuale, categoria: CAT_NOME[ath.categoria] || ath.categoria, categoria_codice: codice || null, minorenne, punti_stagione: ath.punti_totali },
       stagione_in_corso: { gare: ris.length, vittorie: ris.filter(r => r.posizione === 1).length, podi: ris.filter(r => r.posizione >= 1 && r.posizione <= 3).length, migliori_risultati: best },
-      carriera_archivio_2007_2025: carriera, titoli, risultati_pcs_per_stagione: pcs,
+      carriera_archivio_2007_2025: carriera, titoli, risultati_pcs_per_stagione: pcs, ...extra,
     };
   }
 
@@ -305,7 +313,10 @@ module.exports = function registerRedazione(app, deps) {
         ultimo_risultato_della_stagione: ult ? { data: ult.data, gara: ult.nome_gara, posizione: ult.posizione } : null,
       };
     });
+    let archivio = null;                                                     // la stessa categoria negli anni 2007-2025: per i confronti con il passato
+    if (/^(ES1|ES2|AL|JUN|ELI)_M$|^(AL|JUN|ES2|ES1)_F$/.test(cat)) { try { archivio = await ARC.factsStorico('nazionale ' + cat); } catch (_) { /* senza archivio */ } }
     return {
+      ...(archivio ? { archivio_storico_della_categoria: archivio } : {}),
       nota: 'la classifica e quella UFFICIALE del sito (pagina Classifica): nomi, punti e posizioni vanno usati cosi come sono. "risultati_registrati" NON sono le gare corse dall\'atleta: del sito abbiamo solo i primi 10 di ogni gara.',
       stagione: y, categoria: CAT_NOME[cat] || cat, codice: cat, gare_disputate: gare.size, atleti_in_classifica: rk.length,
       classifica_atleti: classifica, piu_vittorie: piuVitt,
@@ -633,23 +644,79 @@ FORMATO DELLA RISPOSTA: rispondi SOLO con queste sezioni, ciascuna introdotta da
     atleta: () => `TIPO: PROFILO DI UN ATLETA (400-600 parole). Racconta la carriera dai dati: dalle categorie giovanili (archivio) alla stagione in corso, titoli, risultati migliori, evoluzione per anno, risultati su PCS. Il web può aggiungere contesto sportivo (squadra, successi noti) ma nessun dato privato.`,
   };
 
-  ISTRUZIONI.stagione = f => `TIPO: RACCONTO DI FINE STAGIONE PER CATEGORIA (600-900 parole), scritto come un racconto, non come un riepilogo. La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}" come una storia: chi l'ha dominata, chi l'ha inseguita, quali giorni l'hanno decisa. Materiale: "storie_dei_primi_tre" (prima e ultima vittoria, vittorie mese per mese, la striscia di successi, la vittoria piu importante, il distacco piu largo, i successi di misura), "vittorie_importanti" e i campioni. REGOLA FERREA sui numeri: la classifica finale e quella UFFICIALE del sito (classifica_atleti): nomi, posizioni e punti si copiano cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura narrativa sul protagonista (una scena presa dai dati, poi il quadro: punti, vittorie); la seconda e il terzo della classifica, raccontati ciascuno per la propria stagione (mai confronti testa a testa); "I giorni che hanno deciso la stagione" (vittorie importanti, campioni italiani e regionali, solo se nei DATI); chiusura "Come e finita" con i primi della classifica ufficiale in una frase scorrevole con i punti. NON trattare le squadre (hanno un articolo a parte) e non fare confronti con altre stagioni.`;
-  ISTRUZIONI.squadre = f => `TIPO: RACCONTO DI FINE STAGIONE SULLE SQUADRE (500-800 parole) della categoria "${f.categoria}", stagione ${f.stagione}. Racconta le squadre che hanno fatto la stagione: chi ha comandato la classifica, come (una squadra costruita su un solo campione oppure su tanti atleti che portano punti: guarda quota_dei_punti_portata_dal_migliore e atleti_a_punti), chi l'ha inseguita, quali atleti hanno portato in alto ciascuna. La classifica delle squadre e UFFICIALE (classifica_team): nomi, posizioni e punti si copiano cosi come sono, nell'ordine ufficiale. Apri con la squadra prima in classifica e con l'immagine di come ha vinto; sottotitoli '## ' che dicano qualcosa; chiudi con una frase che resta. Non confondere questo articolo con la classifica degli atleti e non fare confronti con altre stagioni.`;
+  ISTRUZIONI.stagione = f => `TIPO: RACCONTO DI FINE STAGIONE PER CATEGORIA (600-900 parole), scritto come un racconto, non come un riepilogo. La stagione ${f.stagione} e conclusa: racconta la categoria "${f.categoria}" come una storia: chi l'ha dominata, chi l'ha inseguita, quali giorni l'hanno decisa. Materiale: "storie_dei_primi_tre" (prima e ultima vittoria, vittorie mese per mese, la striscia di successi, la vittoria piu importante, il distacco piu largo, i successi di misura), "vittorie_importanti" e i campioni. REGOLA FERREA sui numeri: la classifica finale e quella UFFICIALE del sito (classifica_atleti): nomi, posizioni e punti si copiano cosi come sono, nello stesso ordine, e non si sostituiscono con numeri tuoi. Il titolo deve nominare il numero uno e, se e un'altra persona, il campione italiano. Struttura con sottotitoli '## ' che dicano qualcosa: apertura narrativa sul protagonista (una scena presa dai dati, poi il quadro: punti, vittorie); la seconda e il terzo della classifica, raccontati ciascuno per la propria stagione (mai confronti testa a testa); "I giorni che hanno deciso la stagione" (vittorie importanti, campioni italiani e regionali, solo se nei DATI); chiusura "Come e finita" con i primi della classifica ufficiale in una frase scorrevole con i punti. NON trattare le squadre (hanno un articolo a parte). Confronti con altre stagioni: SOLO con "archivio_storico_della_categoria" (numeri uno degli anni passati e i loro punti, record di stagione, piu vincenti di sempre), scrivendo i numeri esatti e chiarendo che sono i numeri uno della classifica di fine stagione; usane uno o due, quelli che danno peso alla stagione (es. il punteggio piu alto da anni).`;
+  ISTRUZIONI.squadre = f => `TIPO: RACCONTO DI FINE STAGIONE SULLE SQUADRE (500-800 parole) della categoria "${f.categoria}", stagione ${f.stagione}. Racconta le squadre che hanno fatto la stagione: chi ha comandato la classifica, come (una squadra costruita su un solo campione oppure su tanti atleti che portano punti: guarda quota_dei_punti_portata_dal_migliore e atleti_a_punti), chi l'ha inseguita, quali atleti hanno portato in alto ciascuna. La classifica delle squadre e UFFICIALE (classifica_team): nomi, posizioni e punti si copiano cosi come sono, nell'ordine ufficiale. Apri con la squadra prima in classifica e con l'immagine di come ha vinto; sottotitoli '## ' che dicano qualcosa; chiudi con una frase che resta. Non confondere questo articolo con la classifica degli atleti. Confronti con altre stagioni solo se nei DATI c'e un blocco storico o squadra con la storia di quella squadra (posizioni e punti per anno).`;
   ISTRUZIONI.tech = () => '';
-  ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI. Lunghezza e forma come richiesto; se non le indica, 400-700 parole con titolo e sottotitoli. Se la richiesta chiede cose che non hai nei DATI, non inventarle: scrivilo in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
+  ISTRUZIONI.libero = f => `TIPO: RICHIESTA LIBERA DELLA REDAZIONE. Realizza esattamente cio che chiede il redattore (vedi INDICAZIONI DEL REDATTORE), usando i DATI: sono divisi in blocchi (gara, atleta, stagione, squadre, squadra, storico 2007-2025 nazionale o regionale, calendario, pro, medaglie, settimana) e puoi incrociarli. Lunghezza e forma come richiesto; se non le indica, 600-900 parole con titolo e sottotitoli. Per statistiche e storia del movimento usa i blocchi storico: gare per anno (con il crollo del 2020 e la ripresa), numeri uno di ogni stagione, i piu vincenti, le dinastie di squadre, le stagioni record, le scalate, e confrontali con la stagione in corso se c'e. Se la richiesta chiede cose che non hai nei DATI, non inventarle e non dichiararlo nel testo: scrivi il pezzo con cio che c'e e metti la mancanza in "da_verificare". RICHIESTA: ${String(f.richiesta || '').slice(0, 2000)}`;
+
+  // ---------- METODO A TRE TEMPI: riunione (angolo e agganci) -> scrittura per genere -> revisione ----------
+  const GENERI = {
+    cronaca: 'CRONACA: il fatto prima di tutto. Attacco sulla scena decisiva o sul risultato che conta, poi come e nato, il podio, e un paragrafo di contesto (albo d\'oro, precedenti, cosa cambia in classifica). Tempo dei verbi: passato prossimo, presente per il momento decisivo.',
+    analisi: 'ANALISI DATI: un\'idea forte sostenuta dai numeri, non una lista di numeri. Ogni dato deve rispondere a una domanda ("chi domina davvero?", "il movimento cresce o cala?", "quanto conta una squadra?"). Tre o quattro sezioni, ciascuna con una tesi nel sottotitolo, il dato che la prova e il confronto con il passato che le da senso. Al massimo un numero importante per frase. Chiudi con una lettura: cosa ci dicono questi numeri sul ciclismo italiano.',
+    ritratto: 'RITRATTO: la storia di una persona o di una squadra attraverso le tappe sportive. Parti da un momento che la definisce, poi il percorso anno per anno (categorie, squadre, vittorie che contano), il presente, e cosa la rende diversa dagli altri. Niente vita privata: solo sport.',
+    anteprima: 'ANTEPRIMA: cosa succede, dove, quando, perche conta. Percorso e programma se ci sono, la storia della corsa (albo d\'oro, chi ha vinto di piu), cosa c\'e in palio. Niente pronostici su nomi se i dati non li sostengono.',
+    commento: 'COMMENTO: la voce del giornale su un tema. Una tesi chiara nelle prime righe, argomenti costruiti sui dati e sul confronto storico, un\'obiezione onesta, una chiusura che prende posizione con misura.',
+    punto: 'IL PUNTO: panoramica ordinata di un periodo. La notizia principale in apertura, poi poche sezioni per categoria o tema, ognuna con un fatto e il suo significato (cambio al comando, striscia, record vicino).',
+  };
+  const GUIDA_STILE = `GUIDA DI STILE DEL GIORNALE (vale per ogni pezzo):
+- Scrivi come una testata sportiva nazionale: autorevole, chiara, con passione. Il lettore deve capire subito perche la notizia conta.
+- OGNI NUMERO HA UN PERCHE: un numero si scrive solo se dice qualcosa (un record, un confronto, una tendenza). "12 vittorie" da solo e vuoto; "12 vittorie, nessuno ne aveva vinte tante dal 2019" e una notizia.
+- IL CONTESTO E OBBLIGATORIO: ogni pezzo deve avere almeno due agganci al passato o al quadro generale presi dai DATI (albo d'oro, record di sempre, numeri uno degli anni precedenti, storia della squadra, gare per anno, scalate). Senza contesto e un tabellino, non un articolo.
+- Mai scrivere che qualcosa "non e possibile", che "mancano i dati" o frasi su cosa sai e non sai: scrivi il miglior pezzo possibile con cio che c'e, e metti i dubbi in DA_VERIFICARE.
+- Titolo da giornale: concreto, con il nome e il fatto (non generico, non una domanda vaga). Sommario che aggiunga un'informazione al titolo.`;
+
+  async function riunione(tipo, facts, p) {
+    if (tipo === 'tech') return null;
+    const generiPossibili = Object.keys(GENERI).join(', ');
+    const prompt = `Sei il CAPOREDATTORE di una testata sportiva nazionale sul ciclismo italiano (giovanile, dilettanti, under 23/elite). Oggi e ${today()}. Fai la riunione di redazione: guarda i DATI e decidi COME raccontarli. Non scrivere l'articolo.
+
+TIPO DI LAVORO: ${tipo}${p.richiesta ? '\nRICHIESTA DEL DIRETTORE: ' + String(p.richiesta).slice(0, 1500) : ''}${p.indicazioni ? '\nINDICAZIONI: ' + String(p.indicazioni).slice(0, 800) : ''}
+
+Rispondi SOLO con queste sezioni:
+===GENERE===
+(uno tra: ${generiPossibili})
+===ANGOLO===
+(in 1-2 frasi: la storia che vale la pena raccontare, la tesi o la notizia; deve stare in piedi sui DATI)
+===TITOLO_DI_LAVORO===
+(una riga)
+===GANCI===
+(da 3 a 5 righe: ogni riga e un fatto di contesto preso dai DATI che rende il pezzo piu ricco, soprattutto confronti con il passato, record, tendenze, storia; scrivi il fatto con i suoi numeri esatti)
+===STRUTTURA===
+(3-5 righe: i sottotitoli delle sezioni nell'ordine, ciascuno con cosa contiene)
+===DA_EVITARE===
+(1-3 righe: le trappole di questo pezzo, es. numeri da non mescolare, confronti non dimostrati)
+
+Regole: solo fatti presenti nei DATI, numeri esatti, niente invenzioni, niente dati personali non sportivi.
+
+DATI (JSON): ${JSON.stringify(facts).slice(0, 60000)}`;
+    try {
+      const r = await callClaude(prompt, false, 'riunione');
+      const x = sezioni(r.text || '');
+      const righe = v => String(v || '').split('\n').map(q => q.replace(/^[-*•\d.)\s]+/, '').trim()).filter(Boolean);
+      const genere = (String(x.GENERE || '').toLowerCase().match(/cronaca|analisi|ritratto|anteprima|commento|punto/) || [])[0] || null;
+      if (!x.ANGOLO) return null;
+      return { genere, angolo: String(x.ANGOLO).trim().slice(0, 600), titolo_di_lavoro: String(x.TITOLO_DI_LAVORO || '').split('\n')[0].trim().slice(0, 200), ganci: righe(x.GANCI).slice(0, 6), struttura: righe(x.STRUTTURA).slice(0, 6), da_evitare: righe(x.DA_EVITARE).slice(0, 4) };
+    } catch (e) { console.warn('[redazione] riunione non riuscita, si scrive senza piano:', e.message); return null; }
+  }
+  const testoPiano = piano => !piano ? '' : `\nPIANO DELLA RIUNIONE DI REDAZIONE (seguilo: e la linea del giornale per questo pezzo)\nGenere: ${piano.genere || 'a scelta'}\nAngolo: ${piano.angolo}\nTitolo di lavoro: ${piano.titolo_di_lavoro}\nAgganci di contesto da usare (verificali sui DATI, usa almeno due):\n${piano.ganci.map(g => '- ' + g).join('\n')}\nStruttura:\n${piano.struttura.map(g => '- ' + g).join('\n')}\nDa evitare:\n${piano.da_evitare.map(g => '- ' + g).join('\n')}\n${piano.genere && GENERI[piano.genere] ? '\nCOME SI SCRIVE QUESTO GENERE: ' + GENERI[piano.genere] + '\n' : ''}`;
 
   // una richiesta scritta a parole: l'AI sceglie quali dati del sito servono, noi li calcoliamo
   async function pianifica(richiesta) {
-    const r = await callClaude(`Sei l'assistente di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Oggi e ${today()}. Data la RICHIESTA, scegli quali DATI del sito servono. Rispondi SOLO con righe nel formato "BLOCCO: tipo | riferimento", massimo 6 righe. Includi TUTTE le categorie che la richiesta nomina o implica: "Esordienti" sono quattro righe (ES1_M ES1_F ES2_M ES2_F), "Allievi" due (AL_M AL_F), "Juniores" due (JUN_M JUN_F), "Elite/Under 23" due (ELI_M ELI_F), a meno che la richiesta indichi solo uomini o solo donne. Tipi: gara (nome della gara come lo scriverebbe il redattore), atleta (nome e cognome), stagione (UN codice tra ${CATS_ALL.join(' ')}), settimana (data AAAA-MM-GG dell'ultimo giorno, oppure "ultima"). Se la richiesta non richiede dati specifici rispondi "BLOCCO: settimana | ultima".\n\nRICHIESTA: ${richiesta.slice(0, 1500)}`, false);
+    const r = await callClaude(`Sei l'assistente di una redazione sportiva (ciclismo giovanile e dilettantistico italiano). Oggi e ${today()}. Data la RICHIESTA, scegli quali DATI del sito servono. Rispondi SOLO con righe nel formato "BLOCCO: tipo | riferimento", massimo 6 righe. Includi TUTTE le categorie che la richiesta nomina o implica: "Esordienti" sono quattro righe (ES1_M ES1_F ES2_M ES2_F), "Allievi" due (AL_M AL_F), "Juniores" due (JUN_M JUN_F), "Elite/Under 23" due (ELI_M ELI_F), a meno che la richiesta indichi solo uomini o solo donne. Tipi: gara (nome della gara come lo scriverebbe il redattore: porta risultati, albo d'oro, scheda federale con percorso e km, racconto gia scritto), atleta (nome e cognome: porta la carriera completa dal 2007, piazzamenti per stagione, squadre, titoli, risultati pro), stagione (UN codice tra ${CATS_ALL.join(' ')}: la stagione in corso di una categoria), squadre (UN codice: classifica delle squadre della stagione in corso), squadra (nome di UNA squadra: la sua stagione e la sua storia dal 2007), storico (archivio 2007-2025: "nazionale" oppure il nome di una regione, seguiti dalle categorie se servono, es. "nazionale allievi" o "Lombardia juniores": gare per anno, numeri uno di ogni stagione, record, dinastie di squadre, scalate, piu vincenti di sempre), calendario (prossime gare: numero di giorni ed eventuale regione, es. "14 Veneto"), pro (gare professionistiche in Italia: anno), medaglie (medaglie a Mondiali ed Europei: anno e/o categoria), settimana (data AAAA-MM-GG dell'ultimo giorno, oppure "ultima"). Per una richiesta su statistiche, storia, record, movimento, numeri del ciclismo o confronti tra epoche usa SEMPRE storico (piu righe se servono nazionale e regioni o categorie diverse) e aggiungi la stagione in corso delle categorie in questione. Se la richiesta non richiede dati specifici rispondi "BLOCCO: settimana | ultima".\n\nRICHIESTA: ${richiesta.slice(0, 1500)}`, false, 'pianificazione');
     const out = [];
-    for (const m of String(r.text || '').matchAll(/BLOCCO:\s*(gara|atleta|stagione|settimana)\s*\|\s*([^\n]+)/gi)) out.push({ tipo: m[1].toLowerCase(), rif: m[2].trim() });
-    return out.slice(0, 6).length ? out.slice(0, 6) : [{ tipo: 'settimana', rif: 'ultima' }];
+    for (const m of String(r.text || '').matchAll(/BLOCCO:\s*(gara|atleta|stagione|settimana|squadre|squadra|storico|calendario|pro|medaglie)\s*\|\s*([^\n]+)/gi)) out.push({ tipo: m[1].toLowerCase(), rif: m[2].trim() });
+    return out.slice(0, 8).length ? out.slice(0, 8) : [{ tipo: 'settimana', rif: 'ultima' }];
   }
   const tokensDi = s => up(s).replace(/[^A-Z0-9 ]/g, ' ').split(' ').filter(w => w.length > 2);
   async function risolvi(b) {
     if (b.tipo === 'stagione') { const c = up(b.rif).replace(/[^A-Z0-9_]/g, ''); return { tipo: 'stagione', p: { id: c }, dati: await factsStagione(c) }; }
     if (b.tipo === 'squadre') { const c = up(b.rif).replace(/[^A-Z0-9_]/g, ''); return { tipo: 'squadre', p: { id: c }, dati: await factsSquadre(c) }; }
     if (b.tipo === 'settimana') { const fine = /^\d{4}-\d{2}-\d{2}$/.test(b.rif) ? b.rif : null; return { tipo: 'settimana', p: { fine }, dati: await factsSettimana(fine) }; }
+    if (b.tipo === 'storico') return { tipo: 'storico', p: { rif: b.rif }, dati: await ARC.factsStorico(b.rif) };
+    if (b.tipo === 'squadra') return { tipo: 'squadra', p: { rif: b.rif }, dati: await ARC.factsSquadra(b.rif) };
+    if (b.tipo === 'calendario') return { tipo: 'calendario', p: { rif: b.rif }, dati: await ARC.factsCalendario(b.rif) };
+    if (b.tipo === 'pro') return { tipo: 'pro', p: { rif: b.rif }, dati: await ARC.factsPro(b.rif) };
+    if (b.tipo === 'medaglie') return { tipo: 'medaglie', p: { rif: b.rif }, dati: await ARC.factsMedaglie(b.rif) };
     if (b.tipo === 'atleta') {
       const t = tokensDi(b.rif), ath = Object.values(await getData('athletes.json'));
       const hit = ath.filter(a => { const n = up(fullName(a)); return t.length && t.every(w => n.includes(w)); }).sort((x, y) => (y.punti_totali || 0) - (x.punti_totali || 0))[0];
@@ -1134,7 +1201,12 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
       if (Array.isArray(p.blocchi) && p.blocchi.length) {                      // dati gia scelti (spunti dell'Analista): niente pianificazione con l'AI, un blocco che non si risolve si salta
         for (const b of p.blocchi) { try { bl.push(await risolvi(b)); } catch (e) { console.warn('[redazione] blocco saltato:', e.message); } }
         if (!bl.length) bl.push(await risolvi({ tipo: 'settimana', rif: 'ultima' }));
-      } else for (const b of await pianifica(p.richiesta)) bl.push(await risolvi(b));
+      } else {
+        const piani = await pianifica(p.richiesta), saltati = [];
+        for (const b of piani) { try { bl.push(await risolvi(b)); } catch (e) { saltati.push(`${b.tipo} «${b.rif}»: ${e.message}`); } }
+        if (!bl.length) throw new Error('nessun dato trovato per la richiesta' + (saltati.length ? ' (' + saltati.join('; ') + ')' : ''));
+        if (saltati.length) p._saltati = saltati;
+      }
       facts = { richiesta: p.richiesta, blocchi: bl }; soggetto = String(p.richiesta).replace(/\s+/g, ' ').slice(0, 70); }
     else if (tipo === 'tech') {
       const c = await getCfg(true);
@@ -1160,7 +1232,8 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     if (p.web && (tipo === 'gara' || (tipo === 'atleta' && prot.web))) { try { dossier = await ottieniDossier(tipo, facts, p); } catch (e) { console.warn('[redazione] dossier:', e.message); } }
     const web = !!p.web && prot.web && !dossier;                                           // con il dossier lo scrittore non ripete la ricerca
     const dossierRev = vociGn.length ? { ...(dossier || { contraddizioni: [], voci: [] }), voci: [...(dossier ? dossier.voci : []), ...vociGn] } : dossier;
-    let prompt = `${REGOLE}\n\n${ISTRUZIONI[tipo](facts)}\n\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
+    const piano = await riunione(tipo, facts, p);                                  // primo tempo: la riunione decide angolo, genere e agganci
+    let prompt = `${REGOLE}\n\n${GUIDA_STILE}\n\n${ISTRUZIONI[tipo](facts)}\n${testoPiano(piano)}\nRicerca web: ${web ? 'ATTIVA (usala per il contesto, max 5 ricerche)' : 'NON disponibile: usa solo DATI e pagine ufficiali'}.\n\nDATI (JSON):\n${JSON.stringify(facts, null, 1)}\n` +
       (dossier ? `\nDOSSIER DEL RICERCATORE (informazioni prese da altre fonti: ufficiali, testate, giornali locali). Usalo per il contesto e riportalo come farebbe un giornalista: con parole tue, senza nominare testate o siti. Le voci con livello "social" o con una sola fonte non ufficiale vanno in DA_VERIFICARE, non nel testo. Non elencare fonti: lascia FONTI vuoto. Cio che e in non_trovato NON va inventato.\n${JSON.stringify({ voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato }, null, 1)}\n` : '') +
       (notizieGn.length ? `\nNOTIZIE TROVATE SU GOOGLE NEWS per i corridori e le squadre dell'articolo (ricerca gratuita per nome: titolo, testata, data, indirizzo). Sono PISTE: conta solo cio che dice il titolo, il resto della notizia non lo conosci e non va inventato. Usale solo come spunto per un'idea o un dettaglio in piu: racconta con parole tue, SENZA nominare la testata, il giornalista o l'indirizzo e senza «secondo…», e lascia FONTI vuoto; un fatto che non e nei DATI e non e confermato da una seconda fonte va in DA_VERIFICARE, non nel testo. Solo notizie sportive (risultati, squadra, selezioni), mai dati personali.\n${JSON.stringify(notizieGn, null, 1)}\n` : '') +
       (link.length ? `\nPAGINE UFFICIALI INDICATE DALLA REDAZIONE (testo estratto; puoi usarle come fonte, riscrivendo con parole tue):\n${JSON.stringify(link, null, 1)}\n` : '') +
@@ -1180,6 +1253,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     if (dossier) { dossier.contraddizioni.forEach(x => dv.push('Dal dossier, fonte in contrasto con i dati: ' + x)); dossier.voci.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && v.fonte.livello !== 'social' && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'dal dossier del Ricercatore (' + v.fonte.livello + ')' }); }); }
     vociGn.forEach(v => { if (!fonti.some(f => f.url === v.fonte.url) && dichiara(j.corpo, v.fonte.nome)) fonti.push({ titolo: v.fonte.nome || v.fonte.url, url: v.fonte.url, uso: 'da Google News (titolo)' }); });
     link.filter(l => l.errore).forEach(l => dv.push(`Link non letto (${l.errore}): ${l.url}`));
+    (p._saltati || []).forEach(s => dv.push('Dati non trovati per: ' + s)); delete p._saltati;
     // fonti consultate: restano SOLO dietro le quinte (mai nel testo, mai nelle pagine pubbliche); l'admin le legge da /fonti/:id
     const quando = new Date().toISOString(), fi = new Map();
     const registra = (url, titolo, tipoF, uso) => { if (/^https?:\/\//i.test(String(url || '')) && !fi.has(url)) fi.set(url, { titolo: String(titolo || url).slice(0, 200), url, tipo: tipoF, uso: String(uso || '').slice(0, 200), consultata_il: quando }); };
@@ -1189,7 +1263,7 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     notizieGn.forEach(n => registra(n.url, `${n.testata}: ${n.titolo}`, 'google_news', 'titolo letto'));
     (Array.isArray(j.fonti) ? j.fonti : []).forEach(f => registra(f.url, f.titolo, 'indicata_dallo_scrittore', f.uso));
     return { titolo: String(j.titolo || soggetto), sommario: String(j.sommario || ''), corpo: String(j.corpo || ''), fonti: [], da_verificare: dv, tag: Array.isArray(j.tag) ? j.tag : [],
-      soggetto, revisione: rev.revisione, notizie_google: notizieGn, fonti_interne: [...fi.values()].slice(0, 80), protezione: { web_richiesto: prot.web_richiesto, web_eseguito: !!(web || (dossier && !dossier.dallarchivio)), motivo: prot.motivo || null }, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, radar: dossier.radar || 0, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
+      soggetto, piano: piano || null, revisione: rev.revisione, notizie_google: notizieGn, fonti_interne: [...fi.values()].slice(0, 80), protezione: { web_richiesto: prot.web_richiesto, web_eseguito: !!(web || (dossier && !dossier.dallarchivio)), motivo: prot.motivo || null }, dossier: dossier ? { creato: dossier.creato, dallarchivio: !!dossier.dallarchivio, radar: dossier.radar || 0, voci: dossier.voci, contraddizioni: dossier.contraddizioni, non_trovato: dossier.non_trovato } : null, foto: piazzata.foto, dati: JSON.stringify(facts).length < 80000 ? facts : { nota: 'dati troppo grandi per essere salvati' }, token: res.usage };
   }
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor, risultatiUniti, protezione, titoliAssegnati };   // per le prove
