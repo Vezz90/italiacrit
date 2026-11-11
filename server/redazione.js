@@ -1268,6 +1268,17 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
 
   app.locals.redazione = { factsGara, factsSettimana, factsAtleta, factsStagione, factsSquadre, leggiLink, alboFor, risultatiUniti, protezione, titoliAssegnati };   // per le prove
 
+  // bozze rimaste "in scrittura" da un processo che non c'e piu (riavvio o deploy di Render): all'avvio diventano errore, cosi si possono rigenerare o eliminare.
+  // Si aspetta qualche minuto: durante un deploy la vecchia istanza puo ancora finire il suo lavoro e salvarlo.
+  const AVVIO = Date.now();
+  setTimeout(() => {
+    mutate(arr => {
+      let n = 0;
+      arr.forEach(x => { if (x.stato === 'in_generazione' && Date.parse(x.aggiornato || x.creato) < AVVIO) { Object.assign(x, { stato: 'errore', errore: 'Scrittura interrotta da un riavvio del server: rigenerala o eliminala.', aggiornato: new Date().toISOString() }); n++; } });
+      if (n) console.warn('[redazione] bozze interrotte dal riavvio:', n);
+    }).catch(e => console.warn('[redazione] controllo bozze interrotte:', e.message));
+  }, 6 * 60000).unref();
+
   // ---------- API ----------
   app.get('/api/admin/redazione/bozze', requireAdmin, async (req, res) => {
     try { res.json({ bozze: (await readAll()).sort((a, b) => String(b.creato).localeCompare(String(a.creato))) }); }
