@@ -386,8 +386,12 @@
       const mio = sp && sp.spunti.filter(s => s.stato !== 'scartato' && agenteSpunto(s) === r.nome).sort((a, b) => b.score - a.score)[0];
       return { nome: r.nome, ruolo: r.ruolo === 'atleti' ? 'Atleti' : 'Team', reparto: true, ...lavoro(r.nome, mio ? `Radar: ${mio.titolo}` : 'Nessuno spunto in questa categoria') };
     });
-    return [...direzione, ...reparti];
+    const ar = st.archivio, n = v => v == null ? 'non disponibile' : Number(v).toLocaleString('it-IT');
+    const archivio = [['Archivista Squadre', 'squadre', 'collegamenti tra squadre da verificare'], ['Archivista Corse', 'corse', 'coppie di corse dell’albo da abbinare'], ['Archivista Omonimi', 'omonimi', 'profili con schede doppie']]
+      .map(([nome, k, cosa]) => ({ nome, ruolo: 'Archivio', reparto: false, stato: 'riposa', testo: ar ? `In coda: ${n(ar[k])} ${cosa}` : 'Code non ancora lette' }));
+    return [...direzione, ...reparti, ...archivio];
   }
+  async function caricaArchivio() { try { st.archivio = await api('/archivio/stato'); } catch (e) { st.archivio = null; } }
 
   /* ---------- Ordini al direttore: li scrive l'amministratore, il Caporedattore li trasforma in incarichi per i reparti ---------- */
   async function caricaOrdini() { try { st.ordini = await api('/ordini'); } catch (e) { st.ordini = null; } }
@@ -923,7 +927,7 @@
     if (palazzoP) return palazzoP;
     palazzoP = new Promise(res => {
       const me = document.querySelector('script[src*="redazione.js"]'), base = me ? me.src.replace(/redazione\.js.*$/, '') : '';
-      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=8'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
+      const sc = document.createElement('script'); sc.src = base + 'palazzo.js?v=9'; sc.onload = () => res(!!window.PalazzoRedazione); sc.onerror = () => { palazzoP = null; res(false); };
       document.head.appendChild(sc);
     });
     return palazzoP;
@@ -935,7 +939,7 @@
   };
   const spegni3d = () => { if (st.p3 && st.p3.inst) st.p3.inst.distruggi(); st.p3 = null; };
   const ponte3d = {
-    leggi: () => ({ agenti: agenti(), bozze: st.bozze, costi: st.costi, spunti: st.spunti, classifiche: st.classifiche }),
+    leggi: () => ({ agenti: agenti(), bozze: st.bozze, costi: st.costi, spunti: st.spunti, classifiche: st.classifiche, archivio: st.archivio }),
     agenteDiBozza, respDi,
     passa2D: () => { try { localStorage.setItem('rd-vista', '2d'); } catch (_) { /* ok */ } spegni3d(); montaStanza(); },
     inviaCompito: async (nome, testo) => {                              // compito diretto: una richiesta vera a quell'addetto, a pagamento come un articolo
@@ -1009,6 +1013,7 @@
   }
   function monta3d(host) {
     caricaClassifiche().then(() => { if (st.p3 && st.p3.inst) st.p3.inst.aggiorna(); });
+    caricaArchivio().then(() => { if (st.p3 && st.p3.inst) st.p3.inst.aggiorna(); });
     stanza.gen++;                                                          // ferma l'eventuale ciclo della stanza 2D
     host.innerHTML = `<div class="rd-uff-head"><h3>La redazione in 3D</h3><small class="st-conto"></small><small>fumetto pieno = fatto vero · tratteggiato = chiacchiere</small><span class="st-modo"><button type="button" class="st-tab" data-modo="2d">Stanza 2D</button><button type="button" class="st-tab on" data-modo="3d">Redazione 3D</button></span></div>
       <div class="st-avviso" hidden></div><div class="p3-slot"></div>

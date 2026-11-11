@@ -22,8 +22,15 @@ test('sintesi dell almanacco nazionale: albo dei numeri uno, record, codici per 
   const eli = s.albo_dei_numeri_uno.find(c => c.codice === 'ELI_M');
   assert.ok(eli && eli.numeri_uno_per_anno.length >= 15, 'servono i numeri uno di quasi tutti gli anni');
   assert.ok(eli.numeri_uno_per_anno.every(x => x.anno && x.numero_uno && Number.isFinite(x.punti)));
-  assert.ok(s.gare_per_anno.some(g => g.anno === 2020));
   assert.ok(s.albo_dei_numeri_uno.every(c => c.codice === 'ELI_M'), 'filtrato sulla categoria chiesta');
+  // con una categoria scelta i record sono di QUELLA categoria, non la somma di tutte (errore visto l'11/11: gare e vittorie giovanili attribuite agli Elite)
+  const rec = s.record_per_categoria[0], alm = leggi('almanacco.json');
+  assert.strictEqual(rec.codice, 'ELI_M');
+  const g19 = rec.gare_per_anno.find(g => g.anno === 2019).gare;
+  assert.strictEqual(g19, alm.cat.ELITE_UNDER23.racesPerYear.find(r => r.y === 2019).n);
+  assert.ok(g19 < alm.racesPerYear.find(r => r.y === 2019).n, 'le gare Elite sono meno del totale di tutte le categorie');
+  assert.ok(!('tutte_le_categorie_insieme' in s), 'niente totali di tutte le categorie quando se ne chiede una');
+  assert.ok(rec.piu_vittorie.every(a => alm.cat.ELITE_UNDER23.winsTop.some(w => w.w === a.vittorie)), 'vittorie prese dalla classifica della categoria');
   assert.strictEqual(D.contieneMinorenni(s), false, 'solo Elite: il web resta possibile');
   const tutto = sintesiAlmanacco(leggi('almanacco.json'));
   assert.strictEqual(D.contieneMinorenni(tutto), true, 'con le categorie giovanili il web si spegne');

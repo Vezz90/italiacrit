@@ -95,15 +95,19 @@
   let morto = false;
   // ---------- pianta: un solo livello di 56 x 38, origine al centro; x verso est, z verso sud (verso la camera) ----------
   const XMIN = -28, XMAX = 28, ZMIN = -19, ZMAX = 19;
+  // annesso dell'Archivio, attaccato al lato est (14 x 16), con un varco verso l'area Elite
+  const XEST = 42, ANX = [28, -13, 42, 3], VARCO = [-6.1, -2.5];
+  const inAnnesso = (x, z, m) => x > ANX[0] + (m || 0) && x < ANX[2] - (m || 0) && z > ANX[1] + (m || 0) && z < ANX[3] - (m || 0);
   const CATS = { ES1: ['Esord. 1°', '#7c3aed'], ES2: ['Esord. 2°', '#db2777'], AL: ['Allievi', '#d97706'], JUN: ['Juniores', '#16a34a'], ELI: ['Elite/U23', '#2563eb'] };
   const CATN = { ES1: 'Esordienti 1° anno', ES2: 'Esordienti 2° anno', AL: 'Allievi', JUN: 'Juniores', ELI: 'Elite / Under 23' };
   // le quattro aree: rettangolo [x0, z0, x1, z1], punto di vista, ingombro (larghezza e profondita in unita) per inquadrarle
   const AREE = [
-    { id: 'tutto', nome: 'Tutta la redazione', look: [0, 0.6, 1.2], ew: 62, ed: 41, col: '#f59e0b' },
+    { id: 'tutto', nome: 'Tutta la redazione', look: [7, 0.6, 1.2], ew: 76, ed: 41, col: '#f59e0b' },
     { id: 'giovanile', nome: 'Ciclismo giovanile', sigla: 'A', look: [-18, 0.6, 0], ew: 23, ed: 39, col: '#0d9488', rect: [-28, -19, -8, 19], ancora: [-18, 4.6, -19] },
     { id: 'elite', nome: 'Elite e Under 23', sigla: 'B', look: [18, 0.6, -9.5], ew: 23, ed: 21, col: '#2563eb', rect: [8, -19, 28, 0], ancora: [18, 4.6, -19] },
     { id: 'tech', nome: 'Tech', sigla: 'C', look: [18, 0.6, 9.5], ew: 23, ed: 21, col: '#ea580c', rect: [8, 0, 28, 19], ancora: [18, 3.4, 0] },
-    { id: 'direzione', nome: 'Direzione', sigla: 'D', look: [0, 0.6, 0], ew: 18, ed: 39, col: '#6d28d9', rect: [-8, -19, 8, 19], ancora: [0, 4.6, -19] }
+    { id: 'direzione', nome: 'Direzione', sigla: 'D', look: [0, 0.6, 0], ew: 18, ed: 39, col: '#6d28d9', rect: [-8, -19, 8, 19], ancora: [0, 4.6, -19] },
+    { id: 'archivio', nome: 'Archivio', sigla: 'E', look: [35, 0.6, -5], ew: 17, ed: 18, col: '#a16207', rect: ANX, ancora: [35, 4.6, -13] }
   ];
   const areaDi = id => AREE.find(a => a.id === id);
   let areaIniz = 'tutto'; try { const sa = localStorage.getItem('p3d-area'); if (AREE.some(x => x.id === sa)) areaIniz = sa; } catch (e) { /* parte dalla vista generale */ }
@@ -133,7 +137,10 @@
     ['Cronista', 'direzione', -3.6, 6, { maglia: '#16a34a', capelli: '#78350f', pelle: '#e8b98e' }], ['Inviato speciale', 'direzione', 3.6, 6, { maglia: '#0d9488', capelli: '#374151', pelle: '#c68642' }],
     ['Ricercatore', 'direzione', -3.6, 11, { maglia: '#0ea5e9', capelli: '#1f2937', pelle: '#f1c9a5', coda: true }], ['Analista', 'direzione', 3.6, 11, { maglia: '#65a30d', capelli: '#422006', pelle: '#d8a06f' }],
     ['Cassiere', 'direzione', 3.6, 15.4, { maglia: '#d97706', capelli: '#7c2d12', pelle: '#e0ac82' }],
-    ['Redattore Tech', 'tech', 13, 5.5, { maglia: '#ea580c', capelli: '#1f2937', pelle: '#d8a06f' }], ['Ricercatore Tech', 'tech', 23, 5.5, { maglia: '#0891b2', capelli: '#422006', pelle: '#f1c9a5', coda: true }]
+    ['Redattore Tech', 'tech', 13, 5.5, { maglia: '#ea580c', capelli: '#1f2937', pelle: '#d8a06f' }], ['Ricercatore Tech', 'tech', 23, 5.5, { maglia: '#0891b2', capelli: '#422006', pelle: '#f1c9a5', coda: true }],
+    // Ufficio Archivio: tre archivisti che studiano le code di abbinamento e propongono, l'admin decide
+    ['Archivista Squadre', 'archivio', 31, -8.6, { maglia: '#a16207', capelli: '#374151', pelle: '#e8b98e' }], ['Archivista Corse', 'archivio', 35, -8.6, { maglia: '#7c2d12', capelli: '#9ca3af', pelle: '#f1c9a5' }],
+    ['Archivista Omonimi', 'archivio', 39, -8.6, { maglia: '#365314', capelli: '#78350f', pelle: '#c68642', coda: true }]
   ];
   STAFF.forEach(([nome, area, x, z, l]) => DEFS.push({ nome, etich: nome, area, ruolo: 'staff', sesso: l.coda ? 'F' : 'M', cat: null, seat: [x, z], dir: 1, col: areaDi(area).col,
     look: Object.assign({ accento: '#ffffff', casco: l.maglia, lunga: true, occhiali: false, copricapo: 'berretto' }, l) }));
@@ -170,7 +177,7 @@
   }
 
   // ---------- griglia di camminamento (celle da mezza unita) e ricerca del percorso ----------
-  const CELLA = 0.5, GX = Math.round((XMAX - XMIN) / CELLA), GZ = Math.round((ZMAX - ZMIN) / CELLA), MARG = 0.25;
+  const CELLA = 0.5, GX = Math.round((XEST - XMIN) / CELLA), GZ = Math.round((ZMAX - ZMIN) / CELLA), MARG = 0.25;
   const blocc = new Uint8Array(GX * GZ);
   function ostacolo(x0, z0, x1, z1) {                              // blocca le celle il cui centro sta nel rettangolo, allargato di un margine
     const i0 = Math.max(0, Math.floor((x0 - MARG - XMIN) / CELLA)), i1 = Math.min(GX - 1, Math.floor((x1 + MARG - XMIN) / CELLA));
@@ -180,7 +187,9 @@
       if (cx >= x0 - MARG && cx <= x1 + MARG && cz >= z0 - MARG && cz <= z1 + MARG) blocc[j * GX + i] = 1;
     }
   }
-  ostacolo(XMIN - 2, ZMIN - 2, XMIN + 0.3, ZMAX + 2); ostacolo(XMAX - 0.3, ZMIN - 2, XMAX + 2, ZMAX + 2); ostacolo(XMIN - 2, ZMIN - 2, XMAX + 2, ZMIN + 0.3); ostacolo(XMIN - 2, ZMAX - 0.3, XMAX + 2, ZMAX + 2);
+  ostacolo(XMIN - 2, ZMIN - 2, XMIN + 0.3, ZMAX + 2); ostacolo(XMIN - 2, ZMIN - 2, XMAX + 2, ZMIN + 0.3); ostacolo(XMIN - 2, ZMAX - 0.3, XMAX + 2, ZMAX + 2);
+  ostacolo(XMAX - 0.3, ZMIN - 2, XMAX + 0.3, VARCO[0]); ostacolo(XMAX - 0.3, VARCO[1], XMAX + 0.3, ZMAX + 2);          // parete est del palazzo, con il varco verso l'Archivio
+  ostacolo(XMAX + 0.3, ZMIN - 2, XEST + 2, ANX[1] + 0.3); ostacolo(XMAX + 0.3, ANX[3] - 0.3, XEST + 2, ZMAX + 2); ostacolo(XEST - 0.3, ZMIN - 2, XEST + 2, ZMAX + 2);   // fuori dall'annesso non si cammina
   const ci = x => Math.max(0, Math.min(GX - 1, Math.floor((x - XMIN) / CELLA))), cj = z => Math.max(0, Math.min(GZ - 1, Math.floor((z - ZMIN) / CELLA)));
   const cxm = i => XMIN + (i + 0.5) * CELLA, czm = j => ZMIN + (j + 0.5) * CELLA;
   const libera = (i, j) => i >= 0 && j >= 0 && i < GX && j < GZ && !blocc[j * GX + i];
@@ -245,6 +254,15 @@
     if (sotto) { g.fillStyle = 'rgba(255,255,255,.78)'; g.font = '500 ' + Math.round(c.height * 0.18) + 'px system-ui'; g.fillText(sotto, c.width / 2, c.height * 0.8); }
     m.userData.t.needsUpdate = true;
   }
+  function disegnaLavagna(m, titolo, n) {                          // lavagna: titolo in alto, il numero grande in gesso
+    const c = m.userData.c, g = c.getContext('2d'), W = c.width, H = c.height;
+    g.fillStyle = '#1f3a2e'; g.fillRect(0, 0, W, H);
+    g.fillStyle = 'rgba(255,255,255,.035)'; for (let i = 0; i < 40; i++) g.fillRect((i * 97) % W, (i * 53) % H, 60, 2);   // aloni di gesso
+    g.textAlign = 'center'; g.fillStyle = 'rgba(240,236,224,.85)'; g.font = '600 ' + Math.round(H * 0.15) + 'px system-ui'; g.fillText(titolo.toUpperCase(), W / 2, H * 0.24);
+    g.fillStyle = '#f5f1e6'; g.font = '800 ' + Math.round(H * 0.5) + 'px system-ui'; g.fillText(n == null ? '—' : Number(n).toLocaleString('it-IT'), W / 2, H * 0.78);
+    g.fillStyle = 'rgba(240,236,224,.5)'; g.fillRect(W * 0.3, H * 0.86, W * 0.4, 3);
+    m.userData.t.needsUpdate = true;
+  }
   function targa(testo, sotto, w, h, x, y, z, col, rotY) {
     const c = document.createElement('canvas'); c.width = 512; c.height = Math.round(512 * h / w);
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
@@ -286,7 +304,22 @@
     const rail = (w, d, x, y, z) => { const m = box(w, 0.1, d, matAntr); m.position.set(x, y, z); scene.add(m); };
     lastra(56.6, 4.1, 0.1, 0, 2.05, ZMIN - 0.1); rail(56.8, 0.22, 0, 4.1, ZMIN - 0.1);
     lastra(0.1, 4.1, 38.6, XMIN - 0.1, 2.05, 0); rail(0.22, 38.8, XMIN - 0.1, 4.1, 0);
-    lastra(0.1, 4.1, 38.6, XMAX + 0.1, 2.05, 0); rail(0.22, 38.8, XMAX + 0.1, 4.1, 0);
+    // parete est: due lastre ai lati del varco verso l'Archivio
+    [[ZMIN - 0.3, VARCO[0]], [VARCO[1], ZMAX + 0.3]].forEach(([a, b]) => lastra(0.1, 4.1, b - a, XMAX + 0.1, 2.05, (a + b) / 2)); rail(0.22, 38.8, XMAX + 0.1, 4.1, 0);
+    // l'annesso dell'Archivio: pavimento in rovere, vetrate a nord e a est, parapetto a sud come il palazzo
+    {
+      const [ax0, az0, ax1, az1] = ANX, w = ax1 - ax0, d = az1 - az0, cx = (ax0 + ax1) / 2, cz = (az0 + az1) / 2;
+      const s2 = box(w + 0.6, 0.6, d + 2.8, mat(0x3a3d42)); s2.position.set(cx + 0.3, -0.33, cz); s2.receiveShadow = true; scene.add(s2);
+      const g2 = new THREE.PlaneGeometry(w, d), uv = g2.attributes.uv;                                   // stesso materiale del pavimento grande (e le stesse texture PBR quando arrivano), con le doghe della stessa misura
+      for (let k = 0; k < uv.count; k++) uv.setXY(k, uv.getX(k) * w / 56, uv.getY(k) * d / 38);
+      const p2 = new THREE.Mesh(g2, matPav); p2.rotation.x = -Math.PI / 2; p2.position.set(cx, 0, cz); p2.receiveShadow = true; scene.add(p2);
+      lastra(w + 0.2, 4.1, 0.1, cx, 2.05, az0 - 0.1); rail(w + 0.4, 0.22, cx, 4.1, az0 - 0.1);
+      lastra(0.1, 4.1, d + 0.2, ax1 + 0.1, 2.05, cz); rail(0.22, d + 0.4, ax1 + 0.1, 4.1, cz);
+      lastra(w + 0.2, 1.05, 0.1, cx, 0.55, az1 + 0.1); rail(w + 0.4, 0.18, cx, 1.08, az1 + 0.1);
+      for (let x = ax0 + 3.5; x <= ax1; x += 3.5) { montante(x, az0 - 0.1, 4.1); montante(x, az1 + 0.1, 1.08); }
+      for (let z = az0; z <= az1; z += 4) montante(ax1 + 0.1, z, 4.1);
+      const trave = box(0.14, 0.18, d + 0.4, matAntr); trave.position.set(ax0, 4.2, cz); scene.add(trave);
+    }
     lastra(56.6, 1.05, 0.1, 0, 0.55, ZMAX + 0.1); rail(56.8, 0.18, 0, 1.08, ZMAX + 0.1);
     for (let x = -28; x <= 28; x += 7) { montante(x, ZMIN - 0.1, 4.1); montante(x, ZMAX + 0.1, 1.08); }
     for (let z = -19; z <= 19; z += 6.33) { montante(XMIN - 0.1, z, 4.1); montante(XMAX + 0.1, z, 4.1); }
@@ -311,7 +344,7 @@
   // ---------- scrivanie, sedie, schermi: tutto istanziato (poche chiamate grafiche per 50 postazioni) ----------
   const SCHERMO_FERMO = (function () { const c = document.createElement('canvas'); c.width = 96; c.height = 60; const g = c.getContext('2d'); g.fillStyle = '#1b2026'; g.fillRect(0, 0, 96, 60); g.fillStyle = '#2b333c'; g.fillRect(0, 0, 96, 7); g.fillStyle = '#3a4550'; g.fillRect(8, 22, 80, 2); g.fillRect(8, 30, 56, 2); const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
   const matSchermoFermo = new THREE.MeshBasicMaterial({ map: SCHERMO_FERMO }), matSchermoLav = [0, 1, 2, 3].map(i => new THREE.MeshBasicMaterial({ map: SCHERMI[i].t })), geoSchermo = new THREE.PlaneGeometry(0.57, 0.325), SCHERMI_DESK = [];
-  const DOPPI = new Set(['Vezz', 'Analista', 'Ricercatore', 'Cassiere', 'Caporedattore', 'Capo servizio', 'Redattore Tech', 'Ricercatore Tech', 'Cronista']), SCHERMI_DESK2 = [];
+  const DOPPI = new Set(['Vezz', 'Analista', 'Ricercatore', 'Cassiere', 'Caporedattore', 'Capo servizio', 'Redattore Tech', 'Ricercatore Tech', 'Cronista', 'Archivista Squadre', 'Archivista Corse', 'Archivista Omonimi']), SCHERMI_DESK2 = [];
   const POSTAZIONI = DEFS.map((d, k) => ({ x: d.seat[0], z: d.seat[1], dir: d.dir, col: d.col || '#78716c', k, doppio: !d.cat && DOPPI.has(d.nome) }));
   (function () {
     const n = POSTAZIONI.length, Tm = new THREE.Matrix4(), Lm = new THREE.Matrix4(), M = new THREE.Matrix4(), qx = new THREE.Quaternion(), eu = new THREE.Euler(), pos = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1);
@@ -370,7 +403,7 @@
     });
     // piante in vaso agli angoli e ai varchi
     const vaso = mat(0x57534e), fogl = [mat(0x4d7c3a, { roughness: 0.9 }), mat(0x5f9448, { roughness: 0.9 }), mat(0x3f6a30, { roughness: 0.9 })];
-    [[-26.9, -17.8], [26.9, -17.8], [26.9, 17.8], [-26.9, 17.8], [-7.2, -17.8], [7.2, -17.8], [7.2, 17.8], [-7.2, 17.8], [26.9, -1.4], [9.2, 17.8]].forEach(([x, z], i) => {
+    [[-26.9, -17.8], [26.9, -17.8], [26.9, 17.8], [-26.9, 17.8], [-7.2, -17.8], [7.2, -17.8], [7.2, 17.8], [-7.2, 17.8], [26.9, -1.4], [9.2, 17.8], [29.1, 2.1], [41.0, 2.1]].forEach(([x, z], i) => {
       const g = new THREE.Group(), p = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.3, 0.55, 14), vaso); p.position.y = 0.27; g.add(p);
       [[0, 1.0, 0, 0.5], [0.22, 1.3, 0.1, 0.38], [-0.2, 1.2, -0.12, 0.34]].forEach(([dx, dy, dz, r], k) => { const f = tondo(r, fogl[(i + k) % 3], 1, 1.1, 1); f.position.set(dx, dy, dz); g.add(f); });
       g.position.set(x, 0, z); scene.add(ombra(g)); DECOR.push(g); PIANTE.push({ g, x, z, i }); ostacolo(x - 0.45, z - 0.45, x + 0.45, z + 0.45);
@@ -419,6 +452,34 @@
     // Direzione: l'angolo caffe, per dare vita al centro
     const tavolino = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.06, 20), mat(0xe8e0d3)); tavolino.position.set(-5.9, 0.72, 15.6); scene.add(tavolino);
     const gamba = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.2, 0.7, 10), matAntr); gamba.position.set(-5.9, 0.35, 15.6); scene.add(gamba); ostacolo(-6.6, 14.9, -5.2, 16.3);
+    // Archivio (area E): scaffalature piene di faldoni a nord, cassettiere a est, schedario con le code vere, tavolo di consultazione
+    const AZ = ANX[1] + 0.42, faldCol = [0x7c2d12, 0x1e3a8a, 0x365314, 0x92400e, 0x3f3f46, 0x9f1239, 0x0f766e, 0xa16207];
+    const scaffali = [31, 35, 39], piani = [0.12, 0.72, 1.32, 1.92, 2.52];
+    scaffali.forEach(x => {
+      [-1.75, 1.75].forEach(dx => { const f = box(0.06, 2.6, 0.5, matAntr); f.position.set(x + dx, 1.3, AZ); f.castShadow = true; scene.add(f); });
+      piani.forEach(y => { const p = box(3.5, 0.04, 0.5, matLegno); p.position.set(x, y, AZ); p.receiveShadow = true; scene.add(p); });
+    });
+    ostacolo(29.1, ANX[1], 40.9, AZ + 0.3);
+    (function () {                                                 // i faldoni: una sola chiamata grafica
+      const L = []; scaffali.forEach((x, s) => piani.slice(0, 4).forEach((y, r) => { let px = x - 1.65; let k = 0; while (px < x + 1.6) { const w = 0.11 + ((s * 7 + r * 5 + k * 3) % 4) * 0.025; if (((s + r + k) % 11) !== 4) L.push([px + w / 2, y + 0.02, w, 0.4 + ((k + r) % 3) * 0.04, faldCol[(s * 3 + r * 5 + k * 7) % faldCol.length]]); px += w + 0.012; k++; } }));
+      const im = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 0.36), mat(0xffffff, { roughness: 0.85 }), L.length), M = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
+      L.forEach((f, i) => { M.compose(p.set(f[0], f[1] + f[3] / 2, AZ + 0.02), q, s.set(f[2], f[3], 1)); im.setMatrixAt(i, M); im.setColorAt(i, new THREE.Color(f[4])); });
+      im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; im.castShadow = true; im.receiveShadow = true; scene.add(im); DECOR.push(im);
+    })();
+    [-11.4, -10.0, -8.6, -7.2].forEach(z => { const c = box(0.75, 1.3, 1.25, mat(0x9aa3ab, { metalness: 0.5, roughness: 0.45 })); c.position.set(XEST - 0.5, 0.65, z); c.castShadow = true; scene.add(c);
+      for (let k = 0; k < 4; k++) { const m = box(0.03, 0.04, 0.3, matAntr); m.position.set(XEST - 0.89, 0.25 + k * 0.3, z); scene.add(m); } });
+    ostacolo(XEST - 0.9, -12.1, XEST, -6.5);
+    // tre lavagne, una dietro ogni archivista, con i casi che gli restano da guardare (numeri veri delle code)
+    [['squadre', 31, 'Squadre da abbinare'], ['corse', 35, 'Corse da abbinare'], ['omonimi', 39, 'Omonimi da verificare']].forEach(([k, x, tit]) => {
+      const m = targa('', '', 3.3, 1.2, x, 3.28, ANX[1] + 0.22, '#1f3a2e', 0); m.userData.lavagna = tit; disegnaLavagna(m, tit, null);
+      const cor = box(3.45, 1.34, 0.06, matLegno); cor.position.set(x, 3.28, ANX[1] + 0.17); scene.add(cor);
+      tabelloni.push({ m, tipo: 'archivio', k });
+    });
+    const tc = box(3.4, 0.06, 1.5, matLegno); tc.position.set(34, 0.78, -1.6); tc.castShadow = true; tc.receiveShadow = true; scene.add(tc);
+    [[-1.55, -0.6], [1.55, -0.6], [-1.55, 0.6], [1.55, 0.6]].forEach(([dx, dz]) => { const g = box(0.06, 0.76, 0.06, matAntr); g.position.set(34 + dx, 0.38, -1.6 + dz); scene.add(g); });
+    [[-0.9, 0x7c2d12], [-0.55, 0x1e3a8a], [0.7, 0x365314]].forEach(([dx, c], i) => { const f = box(0.42, 0.1 + i * 0.04, 0.32, mat(c, { roughness: 0.85 })); f.position.set(34 + dx, 0.86 + (0.1 + i * 0.04) / 2, -1.7 + i * 0.12); f.rotation.y = 0.2 * (i - 1); scene.add(f); });
+    ostacolo(32.2, -2.45, 35.8, -0.75);
+    [32.8, 35.2].forEach(x => { sediaStat(x, -0.25, Math.PI); });
   })();
   function sediaStat(x, z, rot) {
     const g = new THREE.Group(), s = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.07, 14), matSedia); s.position.y = 0.5; g.add(s);
@@ -515,7 +576,10 @@
     const blocco = (w, h, d, m, x, y, z) => { const b = box(w, h, d, m); b.position.set(x, y, z); b.castShadow = true; b.receiveShadow = true; scene.add(b); return b; };
     blocco(56.8, 0.95, 0.34, matCemento, 0, 0.475, ZMIN - 0.1);                    // zoccolo in cemento sotto la vetrata nord
     blocco(0.34, 0.95, 38.8, matLegno, XMIN - 0.1, 0.475, 0);                      // ovest: zoccolo in rovere
-    blocco(0.34, 0.95, 38.8, matIntonaco, XMAX + 0.1, 0.475, 0);                   // est: zoccolo in intonaco
+    [[ZMIN - 0.4, VARCO[0]], [VARCO[1], ZMAX + 0.4]].forEach(([a, b]) => blocco(0.34, 0.95, b - a, matIntonaco, XMAX + 0.1, 0.475, (a + b) / 2));   // est: zoccolo in intonaco, aperto sul varco
+    blocco(14.4, 0.95, 0.34, matCemento, 35, 0.475, ANX[1] - 0.1);                 // Archivio: zoccolo nord in cemento
+    blocco(0.34, 0.95, 16.4, matIntonaco, XEST + 0.1, 0.475, -5);                  // Archivio: zoccolo est
+    const stE = box(12.4, 0.07, 0.06, new THREE.MeshBasicMaterial({ color: 0xa16207 })); stE.position.set(35, 3.95, ANX[1] + 0.3); scene.add(stE);   // segnaletica dell'area E
     blocco(18, 4.1, 0.3, matCemento, 18, 2.05, ZMIN - 0.05);                       // pannello in cemento dietro il muro delle classifiche (area B)
     blocco(11, 3.9, 0.22, matFeltro, 0, 1.95, ZMIN - 0.02);                        // feltro fonoassorbente dietro la sala riunioni (area D)
     for (let k = 0; k < 6; k++) blocco(0.05, 3.5, 0.1, matLegno, -5.2 + k * 2.08, 1.95, ZMIN + 0.12);   // doghe in rovere davanti al feltro
@@ -563,7 +627,8 @@
     };
     DEFS.forEach(d => { if (d.cat && d.ruolo === 'resp') lampada(d.pod[0], d.pod[1], 3.6, 0); });
     lampada(0, -1, 3.2, 0); lampada(0, -13, 6, 0); lampada(-3.6, 8.5, 2.4, 0); lampada(3.6, 8.5, 2.4, 0); lampada(3.6, 14, 2.4, 0); lampada(13, 5.5, 2.6, 0); lampada(23, 5.5, 2.6, 0); lampada(18, 16, 5.4, 0); lampada(18, 10.3, 3, 0); lampada(18, -4.5, 3.2, 0);
-    [[-18, -4, 0xffe0b8], [0, 2, 0xffe6c4], [18, -9, 0xdfe9ff], [18, 10, 0xffd9b0]].forEach(([x, z, c]) => { const l = new THREE.PointLight(c, 0.5, 34, 2); l.position.set(x, 3.0, z); scene.add(l); luciRealismo.push(l); });
+    lampada(35, -7.7, 10.4, 0); lampada(34, -1.6, 3, 0);                                          // Archivio
+    [[-18, -4, 0xffe0b8], [0, 2, 0xffe6c4], [18, -9, 0xdfe9ff], [18, 10, 0xffd9b0], [35, -5, 0xffe2bd]].forEach(([x, z, c]) => { const l = new THREE.PointLight(c, 0.5, 34, 2); l.position.set(x, 3.0, z); scene.add(l); luciRealismo.push(l); });
   })();
 
   // ombre di contatto: danno peso ad arredi, sedie e piante (al posto di un ambient occlusion vero, troppo pesante)
@@ -573,9 +638,9 @@
     DEFS.forEach(d => { if (d.cat && d.ruolo === 'resp') L.push([d.pod[0] + 0.15, d.pod[1] - 0.1, 6.2, 5.2]); });
     POSTAZIONI.forEach(p => L.push([p.x + 0.1, p.z - 0.1, 1.05, 1.05]));
     DEFS.forEach(d => { if (!d.cat) L.push([d.seat[0] + 0.12, d.seat[1] + 0.82, 2.9, 1.65]); });
-    L.push([0.2, -13.1, 9.6, 3.6], [18.2, -4.6, 4.6, 4.6], [18.2, 16.1, 13, 2.8], [18.2, 10.2, 5.2, 2.8], [6.0, -2.4, 4.8, 2.2], [27.3, 10.5, 1.8, 14.6], [14.3, 14.3, 2.2, 1.2], [21.9, 14.3, 2.2, 1.2], [-5.8, 15.7, 1.6, 1.6]);
+    L.push([0.2, -13.1, 9.6, 3.6], [18.2, -4.6, 4.6, 4.6], [18.2, 16.1, 13, 2.8], [18.2, 10.2, 5.2, 2.8], [6.0, -2.4, 4.8, 2.2], [27.3, 10.5, 1.8, 14.6], [14.3, 14.3, 2.2, 1.2], [21.9, 14.3, 2.2, 1.2], [-5.8, 15.7, 1.6, 1.6], [35, -12.5, 12.4, 1.2], [41.4, -9.3, 1.3, 5.4], [34.1, -1.7, 4.2, 2.2]);
     [-3, -1, 1, 3].forEach(x => L.push([x + 0.1, -14.6, 1, 1], [x + 0.1, -11.5, 1, 1]));
-    [[-26.9, -17.8], [26.9, -17.8], [26.9, 17.8], [-26.9, 17.8], [-7.2, -17.8], [7.2, -17.8], [7.2, 17.8], [-7.2, 17.8], [26.9, -1.4], [9.2, 17.8]].forEach(([x, z]) => L.push([x + 0.1, z - 0.1, 1.5, 1.5]));
+    [[-26.9, -17.8], [26.9, -17.8], [26.9, 17.8], [-26.9, 17.8], [-7.2, -17.8], [7.2, -17.8], [7.2, 17.8], [-7.2, 17.8], [26.9, -1.4], [9.2, 17.8], [29.1, 2.1], [41.0, 2.1]].forEach(([x, z]) => L.push([x + 0.1, z - 0.1, 1.5, 1.5]));
     [-16.2, -6.4, 3.6, 13.2].forEach(z => L.push([-26.9, z, 1.0, 2.0]));
     const im = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: to, transparent: true, depthWrite: false, opacity: 0.55, color: 0x000000 }), L.length);
     const M = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(-Math.PI / 2, 0, 0), p = new THREE.Vector3(), s = new THREE.Vector3();
@@ -975,6 +1040,7 @@
   const SC_STAFF = {
     direzione: [['Caporedattore', 'Capo servizio', 'Ordine fisso di oggi: bilanci e gare.', 'Lo passo ai reparti.', 1], ['Cronista', 'Capo servizio', 'La cronaca di domenica è pronta.', 'La controllo ora.', 1], ['Analista', 'Caporedattore', 'Ho 5 spunti nuovi dai dati.', 'Quali per le Juniores?', 1],
       ['Inviato speciale', 'Caporedattore', 'Una richiesta libera è in coda.', 'Dalle la priorità.', 1], ['Ricercatore', 'Cronista', 'Nuove notizie nel radar.', 'Le uso per la gara.', 1], ['Cronista', 'Analista', 'Hai visto la nebbia?', 'Stamattina, sì.', 0]],
+    archivio: [['Archivista Squadre', 'Archivista Corse', 'Questa squadra ha cambiato nome due volte.', 'Controlla chi è rimasto in rosa.', 1], ['Archivista Omonimi', 'Archivista Squadre', 'Due schede con lo stesso nome, regioni diverse.', 'Guarda gli anni di nascita.', 1]],
     tech: [['Ricercatore Tech', 'Redattore Tech', 'Nel radar Tech è arrivata una novità sulle ruote.', 'Ottimo, la leggo.', 1], ['Redattore Tech', 'Ricercatore Tech', 'Cerca altre fonti sul nuovo gruppo.', 'Subito.', 1]]
   };
   const eventi = [];                                               // fatti veri dal sito: [chi, con chi, frase, risposta]
@@ -988,7 +1054,7 @@
     else if (!DEMO) return null;                                   // produzione: nessuna conversazione inventata
     else if (focus === 'giovanile' && r < 0.85) { const x = intra(['ES1', 'ES2', 'AL', 'JUN']); A = x[0]; B = x[1]; t = x[2]; }
     else if (focus === 'elite' && r < 0.85) { const x = intra(['ELI']); A = x[0]; B = x[1]; t = x[2]; }
-    else if ((focus === 'direzione' || focus === 'tech') && r < 0.85) { const s = rnd(SC_STAFF[focus]); A = trova(s[0]); B = trova(s[1]); t = s; }
+    else if ((focus === 'direzione' || focus === 'tech' || focus === 'archivio') && r < 0.85) { const s = rnd(SC_STAFF[focus]); A = trova(s[0]); B = trova(s[1]); t = s; }
     else if (r < 0.5) { const x = intra(Object.keys(CATS)); A = x[0]; B = x[1]; t = x[2]; }
     else {                                                         // tra aree diverse: i responsabili e lo staff si parlano attraversando la redazione
       const resp = libere.filter(a => a.ruolo === 'resp');
@@ -1072,12 +1138,18 @@
 
   // ---------- scheda dell'omino ----------
   const card = root.getElementById('card'); let cardAg = null;
+  const COMPITI_ARCHIVIO = {
+    'Archivista Squadre': 'Studia i collegamenti tra il nome di una squadra e quello della stagione dopo (Storico Team): atleti rimasti in rosa, regione, sponsor che restano nel nome.',
+    'Archivista Corse': 'Abbina le edizioni della stessa corsa uscite con nomi diversi (Albo d’oro): luogo, scheda federale, numero di edizione, anni senza sovrapposizioni.',
+    'Archivista Omonimi': 'Distingue le schede doppie con lo stesso nome: anni di nascita, categorie, squadre, gare corse lo stesso giorno in posti diversi. Per i minorenni niente ricerche sul web.'
+  };
   const statoTesto = a => a.compito ? '✎ Compito: ' + a.compito.testo : a.lavoraVero ? '✎ ' + a.lavoraVero : a.errore ? '⚠ ' + a.dato : a.bolla ? 'Sta parlando' : a.stato === 'siede' ? 'Alla scrivania' : 'In movimento';
   function apriCard(a) {
-    cardAg = a; sel = a; const vz = a.ruolo === 'vezz';
+    cardAg = a; sel = a; const vz = a.ruolo === 'vezz', arc = a.area === 'archivio';
     card.innerHTML = '<button class="x" aria-label="chiudi">×</button><h4></h4><small></small>' +
       '<p id="cSt"></p><div class="rig"><button class="b" id="cSegui" type="button"></button>' + (vz ? '<button class="b" id="cPers" type="button">Personalizza</button><button class="b" id="cGuida" type="button"></button><button class="b" id="cTorna" type="button">Alla scrivania</button>' : '<button class="b" id="cVai" type="button">Vai da lui (Vezz)</button>') + '</div>' +
       (vz ? '<label>Manda Vezz in un’area</label><div class="rig" id="cAree"></div><small style="margin-top:6px">Con «Guida con clic» attivo, clicca il pavimento: Vezz ci va a piedi.</small>'
+        : arc ? '<label>Cosa fa</label><p id="cArc"></p><small>Propone e basta: ogni abbinamento lo confermi tu dal pannello admin. L’analisi automatica arriva nel prossimo passo.</small>'
         : '<label>Compito diretto, senza passare dal direttore</label><textarea id="cTesto" rows="3" maxlength="400" placeholder="Es. Scrivi il profilo di un giovane Juniores da tenere d’occhio"></textarea><div class="rig"><button class="b go" id="cInvia" type="button">Dai il compito</button></div><small>Parte una richiesta vera: l’addetto scrive una bozza (come un articolo, circa 0,06-0,30 $). Vezz glielo porta di persona.</small>');
     card.querySelector('h4').textContent = a.nome;
     card.querySelector('small').textContent = vz ? 'Il tuo personaggio' : a.ruolo === 'staff' ? 'Redazione · ' + areaDi(a.area).nome : a.etich + ' · ' + CATS[a.cat][0] + (a.sesso === 'F' ? ' · Donne' : ' · Uomini');
@@ -1090,7 +1162,8 @@
       const ca = card.querySelector('#cAree'); AREE.slice(1).forEach(q => { const b = document.createElement('button'); b.type = 'button'; b.className = 'b'; b.textContent = q.sigla + ' · ' + q.nome.replace('Ciclismo ', '').replace(' e Under 23', '/U23'); b.onclick = () => { if (comandoVezz(vaiVezzA(q.look[0], q.look[2]))) avvisa('Vezz va in ' + q.nome); }; ca.appendChild(b); });
     } else {
       card.querySelector('#cVai').onclick = () => { if (comandoVezz(vezzVaDa(a))) avvisa('Vezz va da ' + a.nome); };
-      card.querySelector('#cInvia').onclick = async () => { const t = card.querySelector('#cTesto'); if (await daiCompito(a, t.value)) t.value = ''; };
+      if (arc) card.querySelector('#cArc').textContent = COMPITI_ARCHIVIO[a.nome] || '';
+      else card.querySelector('#cInvia').onclick = async () => { const t = card.querySelector('#cTesto'); if (await daiCompito(a, t.value)) t.value = ''; };
     }
     aggiornaCard(true);
   }
@@ -1134,7 +1207,7 @@
     let o = h[0].object; while (o && !agenti.some(a => a.g === o)) o = o.parent; return o ? agenti.find(a => a.g === o) : null;
   }
   function suoloSotto(e) { rc.setFromCamera(ndc(e), camera); const o = rc.ray.origin, d = rc.ray.direction; if (Math.abs(d.y) < 1e-4) return null; const t = (0.05 - o.y) / d.y; return t > 0 ? [o.x + d.x * t, o.z + d.z * t] : null; }
-  const limitaVista = v => { v.x = Math.max(XMIN - 3, Math.min(XMAX + 3, v.x)); v.z = Math.max(ZMIN - 3, Math.min(ZMAX + 3, v.z)); };
+  const limitaVista = v => { v.x = Math.max(XMIN - 3, Math.min(XEST + 3, v.x)); v.z = Math.max(ZMIN - 3, Math.min(ZMAX + 3, v.z)); };
   function sposta(dx, dz) { mira.look.x += dx; mira.look.z += dz; cam.look.x += dx; cam.look.z += dz; limitaVista(mira.look); limitaVista(cam.look); manuale = true; if (follow) fermaSegui(); }
   function panPixel(dxPx, dyPx) {                                  // trascinare = afferrare il pavimento: la vista si sposta in senso opposto
     const u = 2 * cam.dist * T26 / (canvas.clientHeight || 1), c = Math.cos(cam.az), s = Math.sin(cam.az), a = -dxPx * u, b = dyPx * u / Math.max(0.35, Math.sin(cam.el));
@@ -1164,7 +1237,7 @@
     if (!era || mosso || era.tipo !== 'pan') return;                                    // un clic vero (non un trascinamento)
     const hit = agenteSotto(e); if (hit) { cliccaOmino(hit); return; }
     if (!guida) return; const P = suoloSotto(e);                                         // Vezz cammina dove clicchi
-    if (P && P[0] > XMIN + 0.5 && P[0] < XMAX - 0.5 && P[1] > ZMIN + 0.5 && P[1] < ZMAX - 0.5) comandoVezz(vaiVezzA(P[0], P[1]));
+    if (P && ((P[0] > XMIN + 0.5 && P[0] < XMAX - 0.5 && P[1] > ZMIN + 0.5 && P[1] < ZMAX - 0.5) || inAnnesso(P[0], P[1], 0.5))) comandoVezz(vaiVezzA(P[0], P[1]));
   });
   canvas.addEventListener('wheel', e => {
     if (!zoomAttivo) return; e.preventDefault();
@@ -1203,17 +1276,19 @@
   }
 
   // ---------- dati: arrivano dalla pagina Redazione (gia caricati dal sito, nessun token da incollare) ----------
-  const DATI = { bozze: 0, spunti: 0, spesa: 0, limite: 10, costoTxt: '—', stati: {}, pronti: false };
+  const DATI = { bozze: 0, spunti: 0, spesa: 0, limite: 10, costoTxt: '—', stati: {}, pronti: false, archivio: null };
   const usd = n => Number(n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function aggiornaTabellone() {
     DATI.costoTxt = usd(DATI.spesa) + ' $ su ' + usd(DATI.limite) + ' $';
-    tabelloni.forEach(t => { if (t.tipo === 'bacheca') disegnaTarga(t.m, 'Bozze ' + DATI.bozze + ' · Spunti ' + DATI.spunti, 'Costi ' + DATI.costoTxt); else disegnaTarga(t.m, 'Costi', DATI.costoTxt); });
+    const ar = DATI.archivio;
+    tabelloni.forEach(t => { if (t.tipo === 'archivio') disegnaLavagna(t.m, t.m.userData.lavagna, ar ? ar[t.k] : null); else if (t.tipo === 'bacheca') disegnaTarga(t.m, 'Bozze ' + DATI.bozze + ' · Spunti ' + DATI.spunti, 'Costi ' + DATI.costoTxt); else disegnaTarga(t.m, 'Costi', DATI.costoTxt); });
   }
   function aggiorna() {
     let d; try { d = ctx.leggi(); } catch (e) { return; }
     if (!d) return;
     const bozze = d.bozze || [], costi = d.costi, sp = (d.spunti && d.spunti.spunti) || [];
     DATI.bozze = bozze.filter(x => x.stato === 'bozza').length; DATI.spunti = sp.filter(x => x.stato === 'nuovo').length;
+    if (d.archivio) DATI.archivio = d.archivio;
     DATI.spesa = (costi && costi.spesa_mese) || 0; DATI.limite = (costi && costi.config && Number(costi.config.limite_mensile_usd)) || 10;
     aggiornaTabellone();
     if (d.classifiche) { const sig = JSON.stringify(d.classifiche); if (sig !== DATI.sigClass) { DATI.sigClass = sig; disegnaClassifica(d.classifiche); } }     // classifiche vere dal sito

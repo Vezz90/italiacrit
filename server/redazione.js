@@ -1871,6 +1871,29 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 
+  // Ufficio Archivio: quanti casi aspettano in ciascuna coda (squadre da collegare, corse dell'albo da abbinare, schede doppie). Solo conteggi, nessuna chiamata AI.
+  let _arcStato = null;
+  app.get('/api/admin/redazione/archivio/stato', requireAdmin, async (req, res) => {
+    try {
+      if (_arcStato && Date.now() - _arcStato.at < 5 * 60000) return res.json(_arcStato.v);
+      const kv = async k => { try { const { data } = await sb().from('kv_store').select('value').eq('key', k).maybeSingle(); return (data && data.value) || {}; } catch (_) { return {}; } };
+      const conta = async (sql) => { try { return Number(((await rawQuery(sql)).rows[0] || {}).n) || 0; } catch (_) { return null; } };
+      const squadre = await conta(`SELECT COUNT(*)::int AS n FROM team_lineage WHERE status = 'pending'`);
+      let corse = null;
+      try {
+        const rev = await getData('albo/review.json'), man = await kv('albo_manual');
+        const chiave = x => [x.a, x.b].sort().join('|') + '|' + (x.g || '');
+        const decise = new Set([...(man.merges || []), ...(man.distinct || [])].map(chiave));
+        corse = (Array.isArray(rev) ? rev : []).filter(x => !decise.has(chiave(x))).length;
+      } catch (_) { /* albo non disponibile */ }
+      let omonimi = await conta(`SELECT COUNT(*)::int AS n FROM (SELECT atleta_id FROM ciclismo_athletes WHERE atleta_id IS NOT NULL AND atleta_id !~ '_(19|20)[0-9][0-9]$' GROUP BY atleta_id HAVING COUNT(*) > 1) g`);
+      if (omonimi != null) omonimi = Math.max(0, omonimi - Object.keys(await kv('omonimi_decisioni')).length);
+      const v = { squadre, corse, omonimi, aggiornato: new Date().toISOString() };
+      _arcStato = { at: Date.now(), v };
+      res.json(v);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+
   app.get('/api/admin/redazione/costi', requireAdmin, async (req, res) => {
     try {
       const c = await getCfg(true), s = await spesaMese();

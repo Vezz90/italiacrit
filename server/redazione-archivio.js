@@ -54,24 +54,35 @@ function sintesiAlmanacco(alm, { categorie = [], regione = null, maxAnni = 19 } 
   }));
   const titoli = arr => (arr || []).map(([y, ci, p]) => ({ anno: y, categoria: NOME_ALM[nomeCat(ci)] || nomeCat(ci), punti: p })).filter(x => !categorie.length || categorie.includes(Object.keys(NOME_ALM).find(k => NOME_ALM[k] === x.categoria)));
   const sel = (arr, n, f) => (arr || []).map(f).filter(Boolean).slice(0, n);
-  const racesPerYear = (alm.racesPerYear || []).filter(r => anni.includes(r.y)).map(r => ({ anno: r.y, gare: r.n }));
+  const garePerAnno = src => (src.racesPerYear || []).filter(r => anni.includes(r.y) && r.n).map(r => ({ anno: r.y, gare: r.n }));
+  const conCat = (s, extra) => (!categorie.length || categorie.includes(nomeCat(s.c))) ? Object.assign(extra, { categoria: NOME_ALM[nomeCat(s.c)] || nomeCat(s.c) }) : null;
+  // record calcolati su una sorgente: l'almanacco intero (tutte le categorie insieme) o quello di una sola categoria
+  const record = src => ({
+    gare_per_anno: garePerAnno(src),
+    piu_vittorie: sel(src.winsTop, 10, a => ({ atleta: bello(a.n), vittorie: a.w, podi: a.p, dal: a.y && a.y[0], al: a.y && a.y[1] })),
+    piu_podi: sel(src.podiTop, 6, a => ({ atleta: bello(a.n), podi: a.p, vittorie: a.w })),
+    squadre_dinastia: sel(src.dynasties, 8, d => { const t = titoli(d.titles); return t.length ? { squadra: bello(d.team), stagioni_da_prima: t, stagioni_di_fila_al_massimo: d.streak } : null; }),
+    stagioni_record_atleti: sel(src.bestSeasons, 10, s => conCat(s, { atleta: bello(s.n), anno: s.y, punti: s.p })),
+    stagioni_record_squadre: sel(src.bestTeamSeasons, 8, s => conCat(s, { squadra: bello(s.team), anno: s.y, punti: s.p })),
+    scalate_piu_grandi: sel(src.rises, 6, r => conCat(r, { atleta: bello(r.n), anno: r.y, da_posizione: r.from, a_posizione: r.to })),
+  });
   const out = {
-    nota: `archivio storico ${alm.from}-${alm.to} del sito${regione ? ' per la regione ' + bello(regione) : ' (tutta Italia)'}: classifiche a punti di fine stagione, vittorie e podi sono quelli registrati dal sito. "numero_uno" e il primo della classifica di fine stagione, NON un campione italiano. Il 2020 ha poche gare per la pandemia.`,
+    nota: `archivio storico ${alm.from}-${alm.to} del sito${regione ? ' per la regione ' + bello(regione) : ' (tutta Italia)'}: classifiche a punti di fine stagione, vittorie e podi sono quelli registrati nell'archivio (fonte storica diversa dai risultati federali della stagione in corso: i punti e il numero di gare della stagione in corso NON si confrontano 1:1 con quelli di questo archivio). "numero_uno" e il primo della classifica di fine stagione, NON un campione italiano. Il 2020 ha poche gare per la pandemia. Ogni dato vale SOLO per la categoria indicata accanto: i dati "tutte_le_categorie_insieme" sommano esordienti, allievi, juniores ed elite e non vanno mai attribuiti a una sola categoria.`,
     ambito: regione ? 'regione ' + bello(regione) : 'Italia', anni: [alm.from, alm.to],
     categorie_comprese: (categorie.length ? categorie : cats).map(c => ({ categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null })),
-    totali: alm.counts || null, gare_per_anno: racesPerYear,
     albo_dei_numeri_uno: perCat,
-    piu_vittorie_di_sempre: sel(alm.winsTop, 12, a => ({ atleta: bello(a.n), vittorie: a.w, podi: a.p, dal: a.y && a.y[0], al: a.y && a.y[1] })),
-    piu_podi_di_sempre: sel(alm.podiTop, 8, a => ({ atleta: bello(a.n), podi: a.p, vittorie: a.w })),
-    numeri_uno_in_piu_categorie: sel(alm.hall, 10, a => { const t = titoli(a.titles); return t.length ? { atleta: bello(a.n), stagioni_da_numero_uno: t } : null; }),
-    squadre_dinastia: sel(alm.dynasties, 8, d => { const t = titoli(d.titles); return t.length ? { squadra: bello(d.team), stagioni_da_prima: t, stagioni_di_fila_al_massimo: d.streak } : null; }),
-    stagioni_record_atleti: sel(alm.bestSeasons, 10, s => (!categorie.length || categorie.includes(nomeCat(s.c))) ? { atleta: bello(s.n), anno: s.y, categoria: NOME_ALM[nomeCat(s.c)] || nomeCat(s.c), punti: s.p } : null),
-    stagioni_record_squadre: sel(alm.bestTeamSeasons, 8, s => (!categorie.length || categorie.includes(nomeCat(s.c))) ? { squadra: bello(s.team), anno: s.y, categoria: NOME_ALM[nomeCat(s.c)] || nomeCat(s.c), punti: s.p } : null),
-    scalate_piu_grandi: sel(alm.rises, 8, r => (!categorie.length || categorie.includes(nomeCat(r.c))) ? { atleta: bello(r.n), anno: r.y, categoria: NOME_ALM[nomeCat(r.c)] || nomeCat(r.c), da_posizione: r.from, a_posizione: r.to } : null),
+    numeri_uno_in_piu_categorie: sel(alm.hall, 10, a => { const t = titoli(a.titles); return t.length > 1 || !categorie.length ? (t.length ? { atleta: bello(a.n), stagioni_da_numero_uno: t } : null) : null; }),
   };
-  if (alm.winsByCat) out.piu_vittorie_per_categoria = Object.entries(alm.winsByCat).filter(([c]) => vuole(c)).map(([c, l]) => ({ categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null, atleti: (l || []).slice(0, 5).map(a => ({ atleta: bello(a.n), vittorie: a.w })) }));
-  if (alm.cat) out.per_categoria = Object.entries(alm.cat).filter(([c]) => vuole(c)).map(([c, v]) => ({ categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null, atleti: v.counts && v.counts.athletes, squadre: v.counts && v.counts.teams, gare: v.counts && v.counts.races,
-    gare_per_anno: (v.racesPerYear || []).filter(r => r.n).map(r => [r.y, r.n]) }));
+  // con una o piu categorie scelte: i record sono quelli DI QUELLA categoria (almanacco per categoria); senza scelta: totali dichiarati come tali
+  const perCategoria = alm.cat ? Object.entries(alm.cat).filter(([c]) => vuole(c)) : [];
+  if (categorie.length && perCategoria.length) {
+    out.record_per_categoria = perCategoria.map(([c, v]) => Object.assign({ categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null,
+      totali: v.counts ? { atleti: v.counts.athletes, squadre: v.counts.teams, gare: v.counts.races } : null }, record(v)));
+  } else {
+    out.tutte_le_categorie_insieme = Object.assign({ totali: alm.counts || null }, record(alm));
+    if (perCategoria.length) out.per_categoria = perCategoria.map(([c, v]) => ({ categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null, gare_per_anno: garePerAnno(v),
+      piu_vittorie: sel(v.winsTop, 5, a => ({ atleta: bello(a.n), vittorie: a.w, dal: a.y && a.y[0], al: a.y && a.y[1] })) }));
+  }
   if (alm.teamsTop) out.squadre_piu_vincenti = sel(alm.teamsTop, 8, t => ({ squadra: bello(t.n || t.team), vittorie: t.w, podi: t.p }));
   if ((out.categorie_comprese || []).some(c => GIOVANILI.has(Object.keys(COD_ALM).find(k => COD_ALM[k] === c.codice)))) out.categorie_giovanili = true;
   return out;
