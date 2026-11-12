@@ -257,7 +257,9 @@ function creaProcesso({ getData, sb, rawQuery, chiama, registraCosto, consenti }
     const esame = await kvLeggi('archivio_squadre_esame', null);
     if (!esame || !esame.ok) throw new Error('l\'esame di prova non è stato superato: l\'Archivista non può ancora decidere da solo');
     const lin = await getData('team_lineage.json').catch(() => []);
-    const da = await q(`SELECT id, team_from, season_from, team_to, season_to FROM team_lineage WHERE status = 'pending' AND season_to::int <= 2025 ORDER BY id LIMIT $1`, [Math.max(1, Math.min(100, Number(n) || 25))]);
+    const regPrima = await kvLeggi('archivio_squadre_registro', []);
+    const gia = regPrima.map(x => Number(x.id)).filter(Number.isFinite);                        // gia esaminati (difficili o annullati compresi): non si rifanno, restano all'admin
+    const da = await q(`SELECT id, team_from, season_from, team_to, season_to FROM team_lineage WHERE status = 'pending' AND season_to::int <= 2025 AND id <> ALL($2::int[]) ORDER BY id LIMIT $1`, [Math.max(1, Math.min(100, Number(n) || 25)), gia]);
     if (!da.length) throw new Error('nessun caso in attesa');
     registraJob('lotto', da.length);
     (async () => {
@@ -276,6 +278,19 @@ function creaProcesso({ getData, sb, rawQuery, chiama, registraCosto, consenti }
     return { casi: da.length };
   }
 
+  // Lavoro da solo: ogni giro (chiamato dal server a intervalli) fa un piccolo lotto, con un tetto giornaliero e solo dopo l'esame superato.
+  async function giroAutomatico(cfg) {
+    if (!cfg || !cfg.archivio_auto || job.attivo) return { fatto: false };
+    if (!process.env.ANTHROPIC_API_KEY) return { fatto: false, motivo: 'chiave mancante' };
+    const esame = await kvLeggi('archivio_squadre_esame', null);
+    if (!esame) { await avviaEsame(); return { fatto: 'esame' }; }                          // il primo esame parte da solo; se fallisce NON si ripete da solo
+    if (!esame.ok) return { fatto: false, motivo: 'esame non superato' };
+    const reg = await kvLeggi('archivio_squadre_registro', []), oggi = new Date().toISOString().slice(0, 10);
+    const fatti = reg.filter(x => String(x.ts).startsWith(oggi)).length, resta = Math.max(0, (Number(cfg.archivio_max_giorno) || 40) - fatti);
+    if (!resta) return { fatto: false, motivo: 'tetto giornaliero raggiunto' };
+    try { await avviaLotto({ n: Math.min(10, resta) }); return { fatto: 'lotto' }; } catch (e) { return { fatto: false, motivo: e.message }; }
+  }
+
   async function annulla(idCaso) {
     const reg = await kvLeggi('archivio_squadre_registro', []);
     const v = reg.find(x => String(x.id) === String(idCaso) && x.applicata && !x.annullata);
@@ -288,12 +303,13 @@ function creaProcesso({ getData, sb, rawQuery, chiama, registraCosto, consenti }
   async function stato() {
     const [esame, reg, conta] = await Promise.all([kvLeggi('archivio_squadre_esame', null), kvLeggi('archivio_squadre_registro', []), q(`SELECT status, COUNT(*)::int AS n FROM team_lineage GROUP BY status`)]);
     const per = Object.fromEntries(conta.map(r => [r.status, r.n]));
-    return { esame, in_attesa: per.pending || 0, confermate: per.confirmed || 0, respinte: per.rejected || 0, lavoro: { ...job },
+    const oggi = new Date().toISOString().slice(0, 10);
+    return { esame, in_attesa: per.pending || 0, confermate: per.confirmed || 0, respinte: per.rejected || 0, esaminati_oggi: reg.filter(x => String(x.ts).startsWith(oggi)).length, esaminati_in_tutto: reg.length, lavoro: { ...job },
       perplexity: !!process.env.PERPLEXITY_API_KEY,
       registro: reg.slice(0, 60).map(x => ({ id: x.id, ts: x.ts, da: x.da, a: x.a, anni: x.anni, decisione: x.decisione, perche: x.perche, applicata: x.applicata, annullata: x.annullata })),
       difficili: reg.filter(x => x.decisione === 'difficile' && !x.annullata).slice(0, 40).map(x => ({ id: x.id, da: x.da, a: x.a, anni: x.anni, perche: x.perche, in_comune: x.prove && x.prove.in_comune })) };
   }
-  return { esamina, avviaEsame, avviaLotto, annulla, stato, cercaWeb };
+  return { esamina, avviaEsame, avviaLotto, giroAutomatico, annulla, stato, cercaWeb };
 }
 
 module.exports = { creaArchivista, creaProcesso, decidi, pulisciEsito, leggiJson, promptEsaminatore, norm, parole };

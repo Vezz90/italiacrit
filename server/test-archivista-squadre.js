@@ -96,3 +96,25 @@ test('decidi: la soglia di sicurezza si puo abbassare (calibrata dall esame) ma 
   assert.strictEqual(decidi(prove(2, 0.5), esito('stessa', 78, 'contraddice'), b, 75).decisione, 'difficile', 'il web contrario blocca sempre');
   assert.strictEqual(decidi(prove(2, 0.5), esito('stessa', 78, 'no'), esito('stessa', 80, 'no'), 75).decisione, 'difficile', 'senza web e senza continuita forte non decide');
 });
+
+test('giro automatico: spento non fa nulla; senza esame lo avvia; con esame non superato si ferma; rispetta il tetto giornaliero', async () => {
+  const salvato = {};
+  const righe = [];
+  const sb = () => ({ from: () => ({ upsert: async r => { salvato[r.key] = r.value; return {}; }, select: () => ({ eq: (c, k) => ({ maybeSingle: async () => ({ data: salvato[k] !== undefined ? { value: salvato[k] } : null }) }) }) }) });
+  const sql = [];
+  const rawQuery = async (q, par) => { sql.push([q, par]); return { rows: righe }; };
+  process.env.ANTHROPIC_API_KEY = 'prova';
+  const chiama = async () => ({ text: '{"verdetto":"incerto","sicurezza":10}', fonti: [] });
+  const P = creaProcesso({ getData, sb, rawQuery, chiama });
+  assert.deepStrictEqual(await P.giroAutomatico({ archivio_auto: false }), { fatto: false });
+  salvato['archivio_squadre_esame'] = { ok: false };
+  assert.strictEqual((await P.giroAutomatico({ archivio_auto: true, archivio_max_giorno: 40 })).motivo, 'esame non superato');
+  salvato['archivio_squadre_esame'] = { ok: true, soglia_scelta: 80 };
+  salvato['archivio_squadre_registro'] = Array.from({ length: 40 }, (_, i) => ({ id: i + 1, ts: new Date().toISOString(), decisione: 'difficile' }));
+  assert.strictEqual((await P.giroAutomatico({ archivio_auto: true, archivio_max_giorno: 40 })).motivo, 'tetto giornaliero raggiunto');
+  salvato['archivio_squadre_registro'] = [{ id: 7, ts: new Date().toISOString(), decisione: 'difficile' }, { id: 9, ts: '2020-01-01T00:00:00Z', decisione: 'difficile', annullata: true }];
+  await P.giroAutomatico({ archivio_auto: true, archivio_max_giorno: 40 }).catch(() => {});
+  const ultima = sql.filter(x => /FROM team_lineage WHERE status = 'pending'/.test(x[0])).pop();
+  assert.ok(ultima, 'ha cercato i casi in attesa');
+  assert.deepStrictEqual(ultima[1][1], [7, 9], 'i casi gia esaminati (anche annullati) sono esclusi');
+});

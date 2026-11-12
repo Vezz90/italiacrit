@@ -519,7 +519,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: true, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, archivio_limite_mensile_usd: 54, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: true, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, archivio_limite_mensile_usd: 54, archivio_auto: true, archivio_max_giorno: 40, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -1296,6 +1296,14 @@ ${dossier ? 'DOSSIER: ' + JSON.stringify({ voci: dossier.voci, contraddizioni: d
     }).catch(e => console.warn('[redazione] controllo bozze interrotte:', e.message));
   }, 6 * 60000).unref();
 
+  // l'Archivio lavora da solo (se acceso nelle impostazioni): piccoli lotti a intervalli, tetto giornaliero e budget mensile separato. Parte 8 minuti dopo l'avvio, per non sovrapporsi a un deploy.
+  setTimeout(() => {
+    setInterval(async () => {
+      try { const r = await ARCH_SQ.giroAutomatico(await getCfg(true)); if (r && r.fatto) console.log('[archivio] giro automatico:', r.fatto); }
+      catch (e) { console.warn('[archivio] giro automatico:', e.message); }
+    }, 20 * 60000).unref();
+  }, 8 * 60000).unref();
+
   // ---------- API ----------
   app.get('/api/admin/redazione/bozze', requireAdmin, async (req, res) => {
     try { res.json({ bozze: (await readAll()).sort((a, b) => String(b.creato).localeCompare(String(a.creato))) }); }
@@ -1924,7 +1932,7 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
 
   // Archivista Squadre: stato, esame di prova, lotti, annullamento. Tutto solo su richiesta dell'admin.
   app.get('/api/admin/redazione/archivio/squadre', requireAdmin, async (req, res) => {
-    try { const c = await getCfg(), a = await spesaArchivio(); res.json({ ...(await ARCH_SQ.stato()), spesa_mese_usd: a.usd, limite_mensile_usd: Number(c.archivio_limite_mensile_usd) }); }
+    try { const c = await getCfg(), a = await spesaArchivio(); res.json({ ...(await ARCH_SQ.stato()), spesa_mese_usd: a.usd, limite_mensile_usd: Number(c.archivio_limite_mensile_usd), auto: !!c.archivio_auto, max_giorno: Number(c.archivio_max_giorno) }); }
     catch (e) { res.status(500).json({ error: e.message }); }
   });
   app.post('/api/admin/redazione/archivio/squadre/esame', requireAdmin, async (req, res) => {
@@ -1959,6 +1967,8 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
       if (typeof b.tech_auto === 'boolean') nuovo.tech_auto = b.tech_auto;
       if (b.tech_limite_mensile_usd != null) { const n = Number(b.tech_limite_mensile_usd); if (!(n >= 0 && n <= 100)) return res.status(400).json({ error: 'limite Tech non valido (0-100 $)' }); nuovo.tech_limite_mensile_usd = n; }
       if (b.tech_max_settimana != null) { const n = Number(b.tech_max_settimana); if (!(Number.isInteger(n) && n >= 0 && n <= 14)) return res.status(400).json({ error: 'articoli Tech a settimana non validi (0-14)' }); nuovo.tech_max_settimana = n; }
+      if (b.archivio_auto != null) nuovo.archivio_auto = !!b.archivio_auto;
+      if (b.archivio_max_giorno != null) { const n = Math.round(Number(b.archivio_max_giorno)); if (!(n >= 1 && n <= 300)) return res.status(400).json({ error: 'casi al giorno non validi (1-300)' }); nuovo.archivio_max_giorno = n; }
       if (b.archivio_limite_mensile_usd != null) { const n = Number(b.archivio_limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite Archivio non valido (0-1000 $)' }); nuovo.archivio_limite_mensile_usd = n; }
       if (b.limite_mensile_usd != null) { const n = Number(b.limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite non valido (0-1000 $)' }); nuovo.limite_mensile_usd = n; }
       if (b.web_auto_da_imp != null) { const n = Number(b.web_auto_da_imp); if (![0, 1, 3, 99].includes(n)) return res.status(400).json({ error: 'soglia ricerca web non valida' }); nuovo.web_auto_da_imp = n; }
