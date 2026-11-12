@@ -61,7 +61,7 @@ function archivioFinto(extra = {}) {
       { gara_id: 'G2_2026-05-01_ELI_M', nome_gara: 'COPPA DUE', data: '2026-05-01', atleta_nome: 'LUCA', atleta_cognome: 'BIANCHI', posizione: 3, moltiplicatore: 1 }] } },
     'team_rankings/ELI_M.json': [{ pos: 2, team_id: 'T1', team_nome: 'TEAM COLPACK BALLAN', punti: 900, p1: 1, n_atleti: 2 }],
     'ciclismo-storico/2016/classifica_team.json': { anno: 2016, classifica: { ELITE_UNDER23: [{ pos: 1, team: 'TEAM COLPACK', punti: 1142 }, { pos: 2, team: 'ZALF', punti: 800 }] } },
-    'almanacco.json': leggi('almanacco.json'),
+    'almanacco.json': leggi('almanacco.json'), 'team_lineage.json': leggi('team_lineage.json'),
     'calendar.json': [{ id: 'X_2026-11-15', nome: 'GIRO DI PROVA', data: '2026-11-15', regione: 'VENETO', categoria: 'Juniores', tipo: 'nazionale', moltiplicatore: 2 },
       { id: 'Y_2026-11-14', nome: 'COPPA LOMBARDA', data: '2026-11-14', regione: 'LOMBARDIA', categoria: 'Allievi', tipo: 'regionale', moltiplicatore: 1 }],
     'medaglie_internazionali.json': { cats: ['ESORDIENTI1', 'ESORDIENTI2', 'ALLIEVI', 'JUNIORES', 'ELITE_UNDER23', 'DONNE_ESORDIENTI', 'DONNE_ALLIEVE', 'DONNE_JUNIORES'],
@@ -108,4 +108,13 @@ test('storico per regione', async () => {
   assert.ok(s.albo_dei_numeri_uno.length >= 1);
   const n = await A.factsStorico('nazionale');
   assert.strictEqual(n.ambito, 'Italia');
+});
+
+test('almanacco: i nomi collegati dall admin sono una sola squadra (caso Zalf: titoli 2013-2014-2015 di fila)', () => {
+  const alm = leggi('almanacco.json'), z = alm.cat.ELITE_UNDER23.dynasties.filter(d => /ZALF/.test(d.team));
+  assert.strictEqual(z.length, 1, 'tutti i nomi Zalf in un solo gruppo, non ' + z.length);
+  const anni = z[0].titles.map(t => t[0]);
+  assert.ok([2013, 2014, 2015].every(y => anni.includes(y)), 'manca un anno: ' + anni);
+  assert.ok(z[0].streak >= 3, 'serie piu lunga: ' + z[0].streak);
+  assert.ok(Array.isArray(leggi('team_lineage.json')) && leggi('team_lineage.json').length > 100);
 });

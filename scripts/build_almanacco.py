@@ -39,6 +39,47 @@ def clean(s):
     return re.sub(r'\s+', ' ', str(s or '')).strip()
 
 
+def _carica_lineage():
+    """Squadre collegate dall'admin (team_lineage confermati, esportati da scripts/esporta_team_lineage.js):
+    tutti i nomi di uno stesso gruppo diventano UNA squadra, con il nome piu recente come riferimento.
+    Senza il file, ogni nome resta una squadra a se (comportamento di prima)."""
+    arch = jl(os.path.join(ROOT, 'data', 'team_lineage.json')) or []
+    padre, ultimo = {}, {}
+
+    def trova(x):
+        while padre.setdefault(x, x) != x:
+            padre[x] = padre[padre[x]]
+            x = padre[x]
+        return x
+    for a, sa, b, sb in arch:
+        ka, kb = norm(a), norm(b)
+        if not ka or not kb:
+            continue
+        for k, s in ((ka, sa), (kb, sb)):
+            try:
+                ultimo[k] = max(ultimo.get(k, 0), int(s))
+            except (TypeError, ValueError):
+                pass
+        padre[trova(ka)] = trova(kb)
+    gruppi = collections.defaultdict(list)
+    for k in list(padre):
+        gruppi[trova(k)].append(k)
+    canon = {}
+    for membri in gruppi.values():
+        capo = max(membri, key=lambda k: (ultimo.get(k, 0), len(k), k))
+        for k in membri:
+            canon[k] = capo
+    return canon
+
+
+TEAM_CANON = _carica_lineage()
+
+
+def tkey(name):
+    k = norm(name)
+    return TEAM_CANON.get(k, k)
+
+
 REG_FIX = {'TRENTINO': 'TRENTINO ALTO ADIGE', 'FRIULI': 'FRIULI VENEZIA GIULIA'}
 
 
@@ -88,7 +129,7 @@ def main():
 
     def reg_note(reg, y, cat, aid, x):
         R = reg_d.setdefault(reg, new_reg())
-        pz = x.get('posizione'); tn = clean(x.get('team')); tk = norm(tn)
+        pz = x.get('posizione'); tn = clean(x.get('team')); tk = tkey(tn)
         R['aseen'].add((aid, cat))
         sp = R['span'].get((aid, cat)); R['span'][(aid, cat)] = [min(sp[0], y), max(sp[1], y)] if sp else [y, y]
         if pz == 1:
@@ -129,7 +170,7 @@ def main():
             if cat not in CI:
                 continue
             for r in rows:
-                k = norm(r.get('team'))
+                k = tkey(r.get('team'))
                 if not k:
                     continue
                 team_names[k] = clean(r.get('team'))
@@ -139,7 +180,7 @@ def main():
             if rows:
                 r0 = rows[0]
                 py['teamChamps'][cat] = {'n': clean(r0.get('team')), 'p': r0.get('punti') or 0}
-                titles_team[norm(r0.get('team'))].append((y, cat, r0.get('punti') or 0))
+                titles_team[tkey(r0.get('team'))].append((y, cat, r0.get('punti') or 0))
         for e in rc:
             cs = set()
             reg = reg_of(e)

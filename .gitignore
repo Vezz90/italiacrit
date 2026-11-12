@@ -35,6 +35,7 @@ data/team_rankings/
 !data/titoli_campione.json
 !data/titoli_stagioni.json
 !data/medaglie_internazionali.json
+!data/team_lineage.json
 server/norton-root.pem
 ~$*.xlsx
 server/team-history-*.json

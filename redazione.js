@@ -182,9 +182,44 @@
   }
   async function caricaCosti() { try { st.costi = await api('/costi'); } catch (e) { st.costi = null; } }
 
+  /* ---------- Ufficio Archivio: l'Archivista Squadre (esame di prova, lotti, registro con annulla) ---------- */
+  async function caricaArcSq() { try { st.arcSq = await api('/archivio/squadre'); } catch (e) { st.arcSq = null; } }
+  function archivioPanel() { try { return archivioPanelDentro(); } catch (e) { return '<div class="hx-panel"><h3>Archivista Squadre</h3><small class="rd-muted">Pannello non disponibile.</small></div>'; } }
+  function archivioPanelDentro() {
+    const a = st.arcSq;
+    if (!a) return `<div class="hx-panel"><h3>Archivista Squadre</h3><small class="rd-muted">Stato non disponibile.</small></div>`;
+    const usd = n => (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+    const ex = a.esame, lav = a.lavoro || {};
+    const esame = ex
+      ? `<p>Ultimo esame (${esc(fmtData(ex.ts))}): su ${ex.casi} casi già decisi da te ne ha chiusi da solo <b>${ex.decisi_da_soli}</b> con <b>${ex.errori} error${ex.errori === 1 ? 'e' : 'i'}</b>; ${ex.passati_all_admin} li ha passati a te. <b>${ex.ok ? 'Esame superato: può decidere da solo.' : 'Esame NON superato: per ora può solo proporre.'}</b><br><small class="rd-muted">Regola: ${esc(ex.soglia || '')}${ex.soglia_scelta ? ` · sicurezza minima scelta dall'esame: ${ex.soglia_scelta}` : ''}${(ex.tabella_soglie || []).length ? ` · prove: ${ex.tabella_soglie.map(t => `${t.soglia}→${t.decisi_da_soli} decisi/${t.errori} err.`).join(' · ')}` : ''}.</small></p>
+         ${(ex.errori_dettaglio || []).length ? `<details><summary>Errori dell'esame (${ex.errori_dettaglio.length})</summary>${ex.errori_dettaglio.map(e => `<div class="rd-muted">${esc(e.da)} → ${esc(e.a)} (${esc((e.anni || []).join('→'))}): atteso «${esc(e.atteso)}», deciso «${esc(e.deciso)}»</div>`).join('')}</details>` : ''}`
+      : '<p>Nessun esame fatto: prima di decidere da solo l\'Archivista deve superare un esame sui casi che hai già deciso tu.</p>';
+    const lavoro = lav.attivo ? `<p><b>In corso:</b> ${esc(lav.tipo)} ${lav.fatti}/${lav.tot}${lav.errori ? ` · ${lav.errori} errori` : ''}${lav.ultimo ? ` · ultimo avviso: ${esc(lav.ultimo)}` : ''}</p>` : (lav.fine ? `<p class="rd-muted">Ultimo lavoro (${esc(lav.tipo)}) finito: ${lav.fatti}/${lav.tot}${lav.errori ? `, ${lav.errori} errori (${esc(lav.ultimo || '')})` : ''}.</p>` : '');
+    const reg = (a.registro || []).map(r => `<div class="rd-arc-r"><span>${r.decisione === 'difficile' ? '⚠ difficile' : r.decisione === 'stessa' ? '✓ stessa società' : '✗ società diverse'}${r.annullata ? ' (annullata)' : ''} · <b>${esc(r.da)}</b> → <b>${esc(r.a)}</b> (${esc((r.anni || []).join('→'))})<br><small class="rd-muted">${esc(r.perche || '')}</small></span>${r.applicata && !r.annullata ? `<button type="button" class="admin-edit-btn" data-arc-annulla="${esc(String(r.id))}">Annulla</button>` : ''}</div>`).join('');
+    return `<div class="hx-panel rd-arc"><h3>Archivista Squadre</h3>
+      <p>In attesa di decisione: <b>${a.in_attesa}</b> · confermate ${a.confermate} · respinte ${a.respinte}. Budget del mese: <b>${usd(a.spesa_mese_usd)}</b> su ${usd(a.limite_mensile_usd)} (separato dagli articoli). Ricerca web: ${a.perplexity ? 'Perplexity' : 'Claude'}.</p>
+      ${esame}${lavoro}
+      <div class="rd-btns"><button type="button" class="admin-edit-btn" id="arc-esame" ${lav.attivo ? 'disabled' : ''}>Esame di prova (circa 100 casi)</button>
+        <button type="button" class="admin-edit-btn rd-go" id="arc-lotto" ${lav.attivo || !(ex && ex.ok) ? 'disabled' : ''}>Lavora 25 casi</button>
+        <button type="button" class="admin-edit-btn" id="arc-agg">Aggiorna</button></div>
+      <small class="rd-muted">Decide da solo solo quando ricerca web, dati del sito e due esaminatori indipendenti sono d'accordo; il resto resta a te nella pagina «Storico Team». Ogni decisione si può annullare.</small>
+      ${reg ? `<details ${a.lavoro && a.lavoro.attivo ? 'open' : ''}><summary>Registro delle decisioni (${(a.registro || []).length})</summary>${reg}</details>` : ''}</div>`;
+  }
+  function legaArcSq() {
+    const w = document.querySelector('.rd-wrap'); if (!w) return;
+    const toast = (m, t) => { if (typeof showToast === 'function') showToast(m, t); };
+    const ricarica = async () => { await caricaArcSq(); const h = w.querySelector('.rd-archivio'); if (h) { h.innerHTML = archivioPanel(); legaArcSq(); } };
+    const agisci = async (id, fn, conferma) => { const b = w.querySelector(id); if (!b) return; b.onclick = async () => { if (conferma && !confirm(conferma)) return; try { await fn(); } catch (e) { toast((e && e.message) || 'Errore', 'error'); return; } await ricarica(); clearTimeout(st.arcT); st.arcT = setTimeout(function giro() { if (!document.querySelector('.rd-archivio')) return; ricarica().then(() => { if (st.arcSq && st.arcSq.lavoro && st.arcSq.lavoro.attivo) st.arcT = setTimeout(giro, 8000); }); }, 8000); }; };
+    agisci('#arc-esame', async () => { const r = await api('/archivio/squadre/esame', { method: 'POST', body: { n: 80 } }); toast(`Esame avviato su ${r.casi} casi: dura circa 20-30 minuti`); }, 'Avviare l\'esame di prova? Non modifica nessun dato; usa ricerca web e AI (circa 8-12 $ del budget dell\'Archivio).');
+    agisci('#arc-lotto', async () => { const r = await api('/archivio/squadre/lotto', { method: 'POST', body: { n: 25 } }); toast(`Lotto avviato: ${r.casi} casi`); }, 'Far lavorare l\'Archivista su 25 casi? Quelli chiari li decide da solo (annullabili), gli altri restano a te.');
+    const ag = w.querySelector('#arc-agg'); if (ag) ag.onclick = ricarica;
+    w.querySelectorAll('[data-arc-annulla]').forEach(b => { b.onclick = async () => { if (!confirm('Annullare questa decisione? Il caso torna tra quelli da decidere.')) return; try { await api('/archivio/squadre/annulla/' + encodeURIComponent(b.dataset.arcAnnulla), { method: 'POST', body: {} }); toast('Decisione annullata'); } catch (e) { toast((e && e.message) || 'Errore', 'error'); } await ricarica(); }; });
+  }
+
   /* ---------- L'ufficio: gli agenti alle scrivanie, calcolati dallo stato vero della redazione ---------- */
   const UFF_CSS = `
 .rd-ufficio{margin:0 0 16px}
+.rd-arc-r{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;padding:6px 0;border-top:1px solid rgba(128,128,128,.2);font-size:.82rem}
 .rd-uff-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px}
 .rd-uff-head h3{margin:0;font-size:1rem}
 .rd-uff-head small{opacity:.7}
@@ -1075,6 +1110,7 @@
     setPage(`<div class="hx-wrap rd-wrap">
       <div class="rs-head"><h1>Redazione</h1><span class="rs-cnt">articoli privati · nessuna pubblicazione</span></div>
       <div class="rd-ufficio"></div>
+      <div class="rd-archivio">${archivioPanel()}</div>
       <div class="rd-ordini">${ordiniPanel()}</div>
       <div class="rd-tech">${techPanel()}</div>
       <div class="rd-radar">${radarPanel()}</div>
@@ -1097,7 +1133,7 @@
 
   function lega() {
     const w = document.querySelector('.rd-wrap'); if (!w) return;
-    legaSpunti(); legaRadar(); legaOrdini(); legaTech();
+    legaSpunti(); legaRadar(); legaOrdini(); legaTech(); try { legaArcSq(); } catch (_) { /* il pannello dell'Archivio non deve fermare la pagina */ }
     let tm = null;
     const cs = w.querySelector('#cs-salva'); if (cs) cs.onclick = async () => {
       try {
@@ -1191,7 +1227,7 @@
     if (!u || u.role !== 'admin') { setPage('<div class="hx-wrap"><div class="hx-none">Area riservata agli amministratori.</div></div>'); return; }
     setPageMeta('Redazione AI (riservata)', 'Area riservata.');
     st.p3 = null; st.forza2d = false;
-    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaRadar(), caricaOrdini(), caricaTech()]);
+    st.msg = ''; await Promise.all([carica(), cercaOra(), caricaCosti(), caricaRadar(), caricaOrdini(), caricaTech(), caricaArcSq()]);
     if (!sel()) { const p = st.bozze.find(b => b.stato === 'bozza' || b.stato === 'approvata'); if (p) st.sel = p.id; }
     if (!document.getElementById('rd-uff-css')) { const s = document.createElement('style'); s.id = 'rd-uff-css'; s.textContent = UFF_CSS; document.head.appendChild(s); }
     paint(); tickUfficio();

@@ -121,12 +121,24 @@ function creaArchivio({ getData, sb, rawQuery, today }) {
     return sintesiAlmanacco(alm, { categorie, regione });
   }
 
-  async function storiaSquadra(parole) {
+  // nomi di squadra collegati dall'admin (team_lineage confermati, data/team_lineage.json): tutti i nomi di un gruppo sono la stessa societa
+  let _gruppi = null;
+  async function gruppiNomi() {
+    if (_gruppi && Date.now() - _gruppi.at < 10 * 60000) return _gruppi.f;
+    let arr = []; try { arr = await getData('team_lineage.json'); } catch (_) { /* senza collegamenti: ogni nome e una squadra */ }
+    const padre = new Map();
+    const trova = x => { if (!padre.has(x)) padre.set(x, x); let r = x; while (padre.get(r) !== r) r = padre.get(r); while (padre.get(x) !== r) { const n = padre.get(x); padre.set(x, r); x = n; } return r; };
+    (Array.isArray(arr) ? arr : []).forEach(l => { const ka = norm(l[0]), kb = norm(l[2]); if (ka && kb) padre.set(trova(ka), trova(kb)); });
+    const f = nome => { const k = norm(nome); return padre.has(k) ? trova(k) : k; };
+    _gruppi = { at: Date.now(), f }; return f;
+  }
+
+  async function storiaSquadra(parole, stessa) {
     const out = [];
     for (let y = 2007; y <= 2025; y++) {
       let ct; try { ct = await getData(`ciclismo-storico/${y}/classifica_team.json`); } catch (_) { continue; }
       for (const [c, lista] of Object.entries((ct && ct.classifica) || {})) {
-        const h = (lista || []).find(t => { const n = norm(t.team); return parole.every(w => n.includes(w)); });
+        const h = (lista || []).find(t => (stessa && stessa(t.team)) || (() => { const n = norm(t.team); return parole.every(w => n.includes(w)); })());
         if (h) out.push({ anno: y, categoria: NOME_ALM[c] || c, codice: COD_ALM[c] || null, nome_quell_anno: bello(h.team), posizione: h.pos, punti: h.punti, squadre_in_classifica: lista.length });
       }
     }
@@ -157,14 +169,15 @@ function creaArchivio({ getData, sb, rawQuery, today }) {
     }
     try {                                                                    // storia dal 2007: classifiche squadre di fine stagione dell'archivio (ciclismo.info)
       const parole = norm(nomeT).split(' ').filter(w => w.length > 3 && !PAROLE_SOCIETA.has(w)).slice(0, 1);   // la prima parola distintiva: regge i cambi di sponsor negli anni
-      if (parole.length) out.storia_per_anno = await storiaSquadra(parole);
+      const gid = await gruppiNomi(), mio = gid(nomeT);
+      out.storia_per_anno = await storiaSquadra(parole, x => gid(x) === mio);
     } catch (e) { out.storia_per_anno_errore = 'archivio storico non letto'; }
     try {
       const { data } = await sb().from('team_lineage').select('team_from,season_from,team_to,season_to,status').eq('status', 'confirmed').or(`team_from.ilike.%${norm(nomeT).split(' ').filter(w => w.length > 3)[0] || nomeT}%,team_to.ilike.%${norm(nomeT).split(' ').filter(w => w.length > 3)[0] || nomeT}%`).limit(40);
       if (data && data.length) out.cambi_di_nome_confermati = data.map(l => ({ da: bello(l.team_from), anno_da: l.season_from, a: bello(l.team_to), anno_a: l.season_to }));
     } catch (_) { /* senza storico nomi */ }
     try {
-      const alm = await getData('almanacco.json'), n = norm(nomeT), simile = x => { const a = norm(x); return a.includes(n) || n.includes(a); };
+      const alm = await getData('almanacco.json'), n = norm(nomeT), gid = await gruppiNomi(), mio = gid(nomeT), simile = x => { const a = norm(x); return gid(x) === mio || a.includes(n) || n.includes(a); };
       const din = (alm.dynasties || []).find(d => simile(d.team));
       if (din) out.stagioni_da_prima_in_classifica = din.titles.map(([y, ci, p]) => ({ anno: y, categoria: NOME_ALM[(alm.cats || CAT_ALM)[ci]], punti: p }));
       const rec = (alm.bestTeamSeasons || []).filter(s => simile(s.team));

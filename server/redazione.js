@@ -519,7 +519,7 @@ module.exports = function registerRedazione(app, deps) {
   // ---------- controllo dei costi: interruttori, limite mensile, registro dei consumi ----------
   // Impostazioni in kv_store ('redazione_ai_config'). Prezzi in dollari per milione di token: sono STIME da verificare sul listino Anthropic.
   const CFG_KEY = 'redazione_ai_config';
-  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: true, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, prezzo_ricerca_usd: 0.01,
+  const CFG_DEFAULT = { ai_attiva: true, auto_attiva: false, auto_orari: [8, 13, 19], web_auto_da_imp: 0, auto_spunti: true, auto_gare: true, auto_default: false, auto_ordini: true, tech_attivo: true, tech_auto: true, tech_limite_mensile_usd: 3, tech_max_settimana: 2, limite_mensile_usd: 10, archivio_limite_mensile_usd: 54, prezzo_ricerca_usd: 0.01,
     prezzi: { 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5-20251001': { in: 1, out: 5 } } };
   let _cfg = null;
   async function getCfg(fresh) {
@@ -531,13 +531,23 @@ module.exports = function registerRedazione(app, deps) {
     return out;
   }
   const meseOra = () => new Date().toISOString().slice(0, 7);
+  // l'Ufficio Archivio ha un budget proprio (uso 'archivio_*'): non consuma il limite degli articoli e viceversa
   async function spesaMese() {
-    const r = await rawQuery(`SELECT COALESCE(SUM(costo_usd),0)::float AS usd, COUNT(*)::int AS n FROM ai_usage WHERE mese=$1 AND esito='ok'`, [meseOra()]);
+    const r = await rawQuery(`SELECT COALESCE(SUM(costo_usd),0)::float AS usd, COUNT(*)::int AS n FROM ai_usage WHERE mese=$1 AND esito='ok' AND uso NOT LIKE 'archivio%'`, [meseOra()]);
     return r.rows[0] || { usd: 0, n: 0 };
   }
-  async function consentiChiamata() {                                        // se non e consentito, NON si chiama Claude
+  async function spesaArchivio() {
+    const r = await rawQuery(`SELECT COALESCE(SUM(costo_usd),0)::float AS usd, COUNT(*)::int AS n FROM ai_usage WHERE mese=$1 AND esito='ok' AND uso LIKE 'archivio%'`, [meseOra()]);
+    return r.rows[0] || { usd: 0, n: 0 };
+  }
+  async function consentiChiamata(uso) {                                     // se non e consentito, NON si chiama Claude
     const c = await getCfg();
     if (!c.ai_attiva) throw new Error("AI disattivata dalle impostazioni della Redazione");
+    if (String(uso || '').startsWith('archivio')) {
+      const a = await spesaArchivio();
+      if (a.usd >= c.archivio_limite_mensile_usd) throw new Error(`limite mensile dell'Archivio raggiunto (${a.usd.toFixed(2)} $ su ${c.archivio_limite_mensile_usd} $): alzalo nelle impostazioni per continuare`);
+      return c;
+    }
     const s = await spesaMese();
     if (s.usd >= c.limite_mensile_usd) throw new Error(`limite mensile raggiunto (${s.usd.toFixed(2)} $ su ${c.limite_mensile_usd} $): alzalo nelle impostazioni per continuare`);
     return c;
@@ -560,7 +570,7 @@ module.exports = function registerRedazione(app, deps) {
     if (web) body0.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: (opz && opz.maxUses) || 5, ...((opz && opz.regione) ? { user_location: { type: 'approximate', country: 'IT', region: String(opz.regione) } } : {}) }];
     const fonti = new Map(); let texts = [], usage = null, stop = '';
     for (let giro = 0; giro < 4; giro++) {
-      const cfg = await consentiChiamata();                                  // prima di OGNI chiamata a pagamento
+      const cfg = await consentiChiamata(uso);                               // prima di OGNI chiamata a pagamento
       const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ ...body0, messages }), signal: AbortSignal.timeout(170000) });
       const j = await r.json();
@@ -576,6 +586,13 @@ module.exports = function registerRedazione(app, deps) {
     }
     throw new Error('la ricerca web non si e conclusa: riprova');
   }
+  // Ufficio Archivio: l'Archivista Squadre studia i collegamenti tra squadre (ricerca web, due esaminatori, regole nel codice)
+  const ARCH_SQ = require('./archivista-squadre').creaProcesso({
+    getData, sb, rawQuery,
+    chiama: (prompt, web, uso, opz) => callClaude(prompt, web, uso, opz),
+    consenti: uso => consentiChiamata(uso),
+    registraCosto: async x => { try { await rawQuery(`INSERT INTO ai_usage (mese, modello, uso, token_in, token_out, ricerche, costo_usd, esito) VALUES ($1,$2,$3,$4,$5,$6,$7,'ok')`, [meseOra(), String(x.modello).slice(0, 60), String(x.uso).slice(0, 40), x.token_in || 0, x.token_out || 0, x.ricerche || 0, Number(x.costo || 0).toFixed(5)]); } catch (e) { console.warn('[archivio] registro costi:', e.message); } },
+  });
   function sezioni(t) {
     const out = {}; const re = /^={3}([A-Z_]+)={3}[ \t]*$/gm; let m, prev = null, start = 0;
     while ((m = re.exec(t))) { if (prev) out[prev] = t.slice(start, m.index).trim(); prev = m[1]; start = re.lastIndex; }
@@ -1905,6 +1922,26 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
 
+  // Archivista Squadre: stato, esame di prova, lotti, annullamento. Tutto solo su richiesta dell'admin.
+  app.get('/api/admin/redazione/archivio/squadre', requireAdmin, async (req, res) => {
+    try { const c = await getCfg(), a = await spesaArchivio(); res.json({ ...(await ARCH_SQ.stato()), spesa_mese_usd: a.usd, limite_mensile_usd: Number(c.archivio_limite_mensile_usd) }); }
+    catch (e) { res.status(500).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/archivio/squadre/esame', requireAdmin, async (req, res) => {
+    try {
+      if (!process.env.ANTHROPIC_API_KEY) return res.status(400).json({ error: 'ANTHROPIC_API_KEY non configurata' });
+      const n = Math.max(10, Math.min(200, Number((req.body || {}).n) || 80));
+      res.json({ ok: true, ...(await ARCH_SQ.avviaEsame({ nConf: n, nNeg: Math.round(n / 3) })) });
+    } catch (e) { res.status(409).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/archivio/squadre/lotto', requireAdmin, async (req, res) => {
+    try { res.json({ ok: true, ...(await ARCH_SQ.avviaLotto({ n: (req.body || {}).n })) }); }
+    catch (e) { res.status(409).json({ error: e.message }); }
+  });
+  app.post('/api/admin/redazione/archivio/squadre/annulla/:id', requireAdmin, async (req, res) => {
+    try { res.json(await ARCH_SQ.annulla(req.params.id)); } catch (e) { res.status(409).json({ error: e.message }); }
+  });
+
   app.get('/api/admin/redazione/costi', requireAdmin, async (req, res) => {
     try {
       const c = await getCfg(true), s = await spesaMese();
@@ -1922,6 +1959,7 @@ NOTIZIE TECH: ${JSON.stringify(ctx.techItems.slice(0, 15).map(x => ({ id: x.id, 
       if (typeof b.tech_auto === 'boolean') nuovo.tech_auto = b.tech_auto;
       if (b.tech_limite_mensile_usd != null) { const n = Number(b.tech_limite_mensile_usd); if (!(n >= 0 && n <= 100)) return res.status(400).json({ error: 'limite Tech non valido (0-100 $)' }); nuovo.tech_limite_mensile_usd = n; }
       if (b.tech_max_settimana != null) { const n = Number(b.tech_max_settimana); if (!(Number.isInteger(n) && n >= 0 && n <= 14)) return res.status(400).json({ error: 'articoli Tech a settimana non validi (0-14)' }); nuovo.tech_max_settimana = n; }
+      if (b.archivio_limite_mensile_usd != null) { const n = Number(b.archivio_limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite Archivio non valido (0-1000 $)' }); nuovo.archivio_limite_mensile_usd = n; }
       if (b.limite_mensile_usd != null) { const n = Number(b.limite_mensile_usd); if (!(n >= 0 && n <= 1000)) return res.status(400).json({ error: 'limite non valido (0-1000 $)' }); nuovo.limite_mensile_usd = n; }
       if (b.web_auto_da_imp != null) { const n = Number(b.web_auto_da_imp); if (![0, 1, 3, 99].includes(n)) return res.status(400).json({ error: 'soglia ricerca web non valida' }); nuovo.web_auto_da_imp = n; }
       if (b.prezzi && typeof b.prezzi === 'object') for (const [m, p] of Object.entries(b.prezzi)) if (p && p.in >= 0 && p.out >= 0) nuovo.prezzi[m] = { in: Number(p.in), out: Number(p.out) };
