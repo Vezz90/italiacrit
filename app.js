@@ -23034,7 +23034,7 @@ async function renderTeam(team_id, opts = {}) {
   `);
   window._tmClubId = team_id; window._tmClubLoaded = false;
   // un club senza risultati nella stagione aperta (es. una squadra che esiste solo nell'archivio storico) si apre direttamente sulla Carriera
-  if (_isLoadedYear && !(t.risultati || []).length) window._tmTab('c');
+  if (_isLoadedYear && !risultatiRows) window._tmTab('c');
 
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);

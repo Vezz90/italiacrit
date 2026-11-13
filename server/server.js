@@ -11300,7 +11300,7 @@ app.get('/api/users/lookup', requireAuth, async (req, res) => {
     } else if (req.query.team_name) {
       // Cerca tramite nome team
       const row = await rawQuery(
-        `SELECT u.id, u.display_name, u.role FROM users u JOIN team_profiles tp ON tp.user_id=u.id WHERE LOWER(tp.nome)=LOWER($1) AND tp.status='active' LIMIT 1`,
+        `SELECT u.id, u.display_name, u.role FROM users u JOIN team_profiles tp ON tp.user_id=u.id WHERE LOWER(tp.team_name)=LOWER($1) AND tp.status='active' LIMIT 1`,
         [req.query.team_name]
       ).then(r => r.rows[0] || null);
       user = row;
