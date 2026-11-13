@@ -161,7 +161,7 @@ window.openVideoFileModal = (url, title) => {
       <div class="video-modal-title">${esc(title || 'Video')}</div>
       <div class="video-modal-player">
         <video src="${esc(url)}" controls autoplay playsinline style="width:100%;height:100%;background:#000;border-radius:8px"
-               onerror="this.parentNode.innerHTML='<div style=\\'color:#fff;padding:24px;text-align:center\\'>Impossibile riprodurre il video qui. <a href=&quot;${esc(url)}&quot; target=_blank style=color:#60a5fa>Aprilo in una nuova scheda</a></div>'"></video>
+               onerror="this.parentNode.innerHTML='<div style=\\'color:#fff;padding:24px;text-align:center\\'>Impossibile riprodurre il video qui. <a href=&quot;${escJs(url)}&quot; target=_blank style=color:#60a5fa>Aprilo in una nuova scheda</a></div>'"></video>
       </div>
     </div>`;
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -317,7 +317,7 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
       ${camIcon}
     </button>
     <input type="file" id="photo-file-${esc(entityId)}" accept="image/jpeg,image/png,image/webp"
-      style="display:none" onchange="handlePhotoUpload(event,'${esc(entityType)}','${esc(entityId)}')">` : '';
+      style="display:none" onchange="handlePhotoUpload(event,'${escJs(entityType)}','${escJs(entityId)}')">` : '';
   return `<div class="photo-area${portrait ? ' photo-area--portrait' : ''}" style="width:${size}px;height:${sizeH}px;flex-shrink:0;position:relative">
     ${imgEl}${camBtn}
   </div>`;
@@ -335,7 +335,8 @@ function _normSocialUrl(kind, raw) {
   if (kind === 'facebook')  return 'https://facebook.com/'  + v.replace(/^.*facebook\.com\//i, '');
   if (kind === 'strava')    return 'https://www.strava.com/athletes/' + v.replace(/^.*strava\.com\/athletes\//i, '');
   if (kind === 'website')   return 'https://' + v;
-  return v;
+  if (kind === 'twitter')   return 'https://x.com/' + v.replace(/^.*(?:twitter|x)\.com\//i, '');
+  return '';   // mai il testo grezzo: un "javascript:..." diventerebbe un link eseguibile
 }
 
 // Costruisce la riga di icone social a partire dagli override entità
@@ -972,8 +973,8 @@ async function renderInbox(activeConvId) {
         if (!users.length) { box.innerHTML = '<div style="padding:12px 14px;font-size:.8rem;color:var(--text-muted)">Nessun utente trovato</div>'; box.style.display = 'block'; return; }
         const roleIcon = { atleta:'🚴', team:'👥', media:'📷', admin:'⚙️' };
         box.innerHTML = users.map(u => `
-          <div class="msg-user-result-item" onclick="window._msgStartFromSearch(${u.id},'${esc(u.display_name||'Utente')}')">
-            <div class="msg-user-result-avatar">${(u.display_name||'?')[0].toUpperCase()}</div>
+          <div class="msg-user-result-item" onclick="window._msgStartFromSearch(${u.id},'${escJs(u.display_name||'Utente')}')">
+            <div class="msg-user-result-avatar">${esc((u.display_name||'?')[0].toUpperCase())}</div>
             <div>
               <div class="msg-user-result-name">${esc(u.display_name||'Utente')}</div>
               <div class="msg-user-result-role">${roleIcon[u.role]||'👤'} ${u.role}</div>
@@ -3186,6 +3187,14 @@ function esc(s) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+// Per un valore dentro una stringa JavaScript tra apici di un attributo onclick="...('${escJs(x)}')":
+// esc() da solo NON basta, perche' il browser rimette l'apice (&#39; -> ') prima di eseguire il gestore
+// e il valore puo' uscire dalla stringa. Qui si protegge prima la stringa JS (\ ' a capo) e poi l'HTML.
+function escJs(s) {
+  if (s == null) return '';
+  return esc(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r?\n/g, '\\n').replace(/[\u2028\u2029]/g, ' '));
+}
+window.escJs = escJs;
 
 // ── Home navigation — va all'hub salvato o alla home ─────────────
 window.goHome = function(e) {
@@ -3530,7 +3539,7 @@ const ADMIN_EDIT_FIELDS = {
 
 function adminEditBtn(entityType, entityId) {
   if (authUser()?.role !== 'admin') return '';
-  return `<button class="admin-edit-btn" onclick="openAdminEdit('${esc(entityType)}','${esc(entityId)}')">✏ Modifica</button>`;
+  return `<button class="admin-edit-btn" onclick="openAdminEdit('${escJs(entityType)}','${escJs(entityId)}')">✏ Modifica</button>`;
 }
 
 // ── Titoli di Campione Regionale — assegnazione manuale da admin ─────
@@ -3743,7 +3752,7 @@ window._rcPickerSearch = function(q) {
     .sort(([, a], [, b]) => (b.categoria === cat) - (a.categoria === cat))
     .slice(0, 12);
   list.innerHTML = matches.length ? matches.map(([id, a]) => `
-    <div onclick="window._rcPickerPick('${esc(id)}')" style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);cursor:pointer;font-size:.86rem">
+    <div onclick="window._rcPickerPick('${escJs(id)}')" style="padding:8px 10px;border-bottom:1px solid var(--border-subtle);cursor:pointer;font-size:.86rem">
       <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
       <span style="color:var(--text-muted);font-size:.74rem"> · ${esc(a.team_attuale || '')} · ${esc(catLabel(a.categoria) || '')}</span>
     </div>`).join('') : '<div style="padding:10px;color:var(--text-muted);font-size:.82rem">Nessun atleta trovato.</div>';
@@ -3836,7 +3845,7 @@ window.openAdminEdit = async function(entityType, entityId) {
         ${fieldsHtml}
       </div>
       <div style="display:flex;gap:12px;margin-top:24px">
-        <button class="auth-btn" id="aedit-save-btn" onclick="saveAdminEdit('${esc(entityType)}','${esc(entityId)}')">SALVA</button>
+        <button class="auth-btn" id="aedit-save-btn" onclick="saveAdminEdit('${escJs(entityType)}','${escJs(entityId)}')">SALVA</button>
         <button class="auth-btn auth-btn-outline" onclick="document.getElementById('admin-edit-overlay').remove()">Annulla</button>
       </div>
       <p style="font-size:0.72rem;color:var(--text-muted);margin-top:12px">Le modifiche sovrascrivono i dati originali localmente.</p>
@@ -3859,7 +3868,7 @@ window.openAdminEdit = async function(entityType, entityId) {
       if (!matches.length) { drop.style.display = 'none'; return; }
       drop.innerHTML = matches.map(t => `
         <div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-          onmousedown="event.preventDefault();window._openAdminEditTeamSelect('${esc(String(t.id))}','${esc(t.nome||'')}')">
+          onmousedown="event.preventDefault();window._openAdminEditTeamSelect('${escJs(String(t.id))}','${escJs(t.nome||'')}')">
           <span style="font-weight:600">${esc(t.nome || t.id)}</span>
         </div>`).join('');
       drop.style.display = 'block';
@@ -4209,7 +4218,7 @@ window._openPcsHtmlPasteModal = function(garaId) {
         style="width:100%;height:160px;box-sizing:border-box;background:var(--bg-input,#1e293b);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:10px;font-size:.78rem;font-family:var(--font-mono);resize:vertical"></textarea>
       <div id="pcs-paste-err" style="display:none;color:var(--red-hot);font-size:.82rem;margin-top:8px"></div>
       <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="auth-btn" id="pcs-paste-save-btn" onclick="window._submitPcsHtml('${esc(garaId)}')">Importa</button>
+        <button class="auth-btn" id="pcs-paste-save-btn" onclick="window._submitPcsHtml('${escJs(garaId)}')">Importa</button>
         <button class="auth-btn auth-btn-outline" onclick="document.getElementById('pcs-paste-overlay').remove()">Annulla</button>
       </div>
     </div>`;
@@ -4379,7 +4388,7 @@ function seasonBarHtml() {
     ${years.map(y => {
       const on = String(y) === sel;
       const isCur = String(y) === cur;
-      return `<button onclick="window.setSeason('${isCur ? 'current' : y}')" style="padding:6px 15px;border-radius:16px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.85rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
+      return `<button onclick="window.setSeason('${escJs(isCur ? 'current' : y)}')" style="padding:6px 15px;border-radius:16px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.85rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
     }).join('')}
     ${activeSeason ? '<span style="font-size:.72rem;color:var(--text-muted);font-style:italic">stai guardando una stagione passata</span>' : ''}
   </div>`;
@@ -4686,8 +4695,8 @@ function _renderMultiLiveView() {
       <div class="multi-live-pane-title">
         <span>${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</span>
         <div class="multi-live-pane-actions">
-          <button onclick="window._focusMultiLivePane('${which}')" title="Metti in primo piano">${st.focus === which ? '▣' : '⤢'}</button>
-          <button onclick="window._dropMultiLivePane('${which}')" title="Chiudi questa">✕</button>
+          <button onclick="window._focusMultiLivePane('${escJs(which)}')" title="Metti in primo piano">${st.focus === which ? '▣' : '⤢'}</button>
+          <button onclick="window._dropMultiLivePane('${escJs(which)}')" title="Chiudi questa">✕</button>
         </div>
       </div>
       <div class="multi-live-pane-frame">
@@ -9920,7 +9929,7 @@ async function renderHubBars() {
           return `<span style="display:inline-block;width:5px;height:${h}px;background:${col};border-radius:1px" title="${r.posizione}° ${esc(r.nome_gara||'')} (${r.data||''})"></span>`;
         }).join('')
       }</div>` : '';
-      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(a.atleta_id))}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}${trendHtml}</div>
@@ -9949,7 +9958,7 @@ async function renderHubBars() {
       const teamHtml = teamName
         ? (teamId ? `<a href="#/team/${encodeURIComponent(teamId)}" onclick="event.stopPropagation()">${esc(teamName)}</a>` : esc(teamName))
         : '';
-      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(a.atleta_id))}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}</div>
@@ -10021,7 +10030,7 @@ async function renderHubBars() {
     const streak=(()=>{
       return consecutiveRun(hubRes.filter(r=>r.atleta_id===mvp.atleta_id),r=>r.posizione===1);
     })();
-    return `<div class="itc-card itc-mvp-card" onclick="location.hash='#/atleta/${encodeURIComponent(mvp.atleta_id)}'">
+    return `<div class="itc-card itc-mvp-card" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(mvp.atleta_id))}'">
       <div class="itc-card-hdr"><span class="itc-card-title">🏆 ATLETA DELLA SETTIMANA</span></div>
       <div class="itc-mvp-body">
         <div class="itc-mvp-crown">🏆</div>
@@ -10058,7 +10067,7 @@ async function renderHubBars() {
     }
     if(!bestUpset) return '';
     const {win,wPos,beaten,bPos}=bestUpset;
-    return `<div class="itc-card itc-upset-card" onclick="location.hash='#/gara/${encodeURIComponent(win.gara_id)}'">
+    return `<div class="itc-card itc-upset-card" onclick="location.hash='#/gara/${escJs(encodeURIComponent(win.gara_id))}'">
       <div class="itc-card-hdr"><span class="itc-card-title">😱 IL COLPO DI GIORNATA</span></div>
       <div class="itc-upset-body">
         <div class="itc-upset-side">
@@ -10098,7 +10107,7 @@ async function renderHubBars() {
     }
     if(!candidates.length) return '';
     const rookie=candidates.sort((a,b)=>a.pos-b.pos||b.wins-a.wins)[0];
-    return `<div class="itc-card itc-rookie-card" onclick="location.hash='#/atleta/${encodeURIComponent(rookie.atleta_id)}'">
+    return `<div class="itc-card itc-rookie-card" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(rookie.atleta_id))}'">
       <div class="itc-card-hdr"><span class="itc-card-title">🌱 TALENTO EMERGENTE</span></div>
       <div class="itc-rookie-body">
         <div class="itc-rookie-icon">🌱</div>
@@ -10130,12 +10139,12 @@ async function renderHubBars() {
       if (isTeam) {
         const tk = (globalData && globalData.teams) ? globalData.teams[w.id] : null;
         const sub = tk ? `${(tk.atleti||[]).length} atleti · ${tk.punti_totali||0} pt` : 'Team';
-        return `<div class="itc-watchlist-row" onclick="location.hash='#/team/${encodeURIComponent(w.id)}'">
+        return `<div class="itc-watchlist-row" onclick="location.hash='#/team/${escJs(encodeURIComponent(w.id))}'">
           <div class="itc-watchlist-info">
             <div class="itc-watchlist-name">${esc(w.cognome||w.id)} <span class="itc-wl-streak">TEAM</span></div>
             <div class="itc-watchlist-sub">${sub}</div>
           </div>
-          <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${w.id.replace(/'/g,"\\'")}','','','team');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
+          <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${escJs(w.id)}','','','team');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
         </div>`;
       }
       const re=hubRanking.find(r=>r.atleta_id===w.id);
@@ -10145,12 +10154,12 @@ async function renderHubBars() {
       for(const r of rs){if(r.posizione===1)streak++;else break;}
       if(streak>=2) stype=`🔥×${streak}`;
       else{streak=0;for(const r of rs){if(r.posizione<=3)streak++;else break;}if(streak>=2)stype=`⚡×${streak}`;}
-      return `<div class="itc-watchlist-row" onclick="location.hash='#/atleta/${encodeURIComponent(w.id)}'">
+      return `<div class="itc-watchlist-row" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(w.id))}'">
         <div class="itc-watchlist-info">
           <div class="itc-watchlist-name">${esc(w.cognome)} ${esc(w.nome)}${stype?` <span class="itc-wl-streak">${stype}</span>`:''}</div>
           <div class="itc-watchlist-sub">${pos?`${pos}° · ${pts||0} pt`:'Fuori categoria'}</div>
         </div>
-        <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${w.id.replace(/'/g,"\\'")}','${(w.cognome||'').replace(/'/g,"\\'")}','${(w.nome||'').replace(/'/g,"\\'")}');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
+        <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${escJs(w.id)}','${escJs((w.cognome||''))}','${escJs((w.nome||''))}');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
       </div>`;
     }).join('');
     return `<div class="itc-card itc-watchlist-card">
@@ -10166,7 +10175,7 @@ async function renderHubBars() {
       const isUp = dir === 'up';
       const gainLabel = isUp ? `+${m.gain}` : `${m.gain}`;
       const prevPos   = isUp ? m.pos + m.gain : m.pos + m.gain; // pos è quella attuale; gain è old-now
-      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/atleta/${encodeURIComponent(m.atleta_id)}'">
+      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(m.atleta_id))}'">
         <div class="itc-mover-badge itc-mover-badge--${dir}">${gainLabel}</div>
         <div class="itc-mover-info">
           <span class="itc-mover-name">${esc(m.cognome)} <span style="font-weight:400">${esc(m.nome)}</span></span>
@@ -10209,7 +10218,7 @@ async function renderHubBars() {
         <span class="itc-vs-encounters">${ptsGapNote}</span>
       </div>
       <div class="itc-vs-ring">
-        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/atleta/${encodeURIComponent(rv.aId)}'">
+        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(rv.aId))}'">
           <div class="itc-vs-wins">${rv.aRecentWins>0?rv.aRecentWins+'V':'–'}</div>
           <div class="itc-vs-name">${esc(rv.aCog)}<br><small>${esc(rv.aNom)}</small></div>
           <div class="itc-vs-team">${esc(rv.aTeam||'')}</div>
@@ -10223,7 +10232,7 @@ async function renderHubBars() {
           </div>
           <div class="itc-vs-bar-label">FORMA</div>
         </div>
-        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/atleta/${encodeURIComponent(rv.bId)}'">
+        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(rv.bId))}'">
           <div class="itc-vs-wins">${rv.bRecentWins>0?rv.bRecentWins+'V':'–'}</div>
           <div class="itc-vs-name">${esc(rv.bCog)}<br><small>${esc(rv.bNom)}</small></div>
           <div class="itc-vs-team">${esc(rv.bTeam||'')}</div>
@@ -10232,7 +10241,7 @@ async function renderHubBars() {
       </div>
       <div class="itc-vs-note">${encounterNote}</div>
       <div class="itc-vs-footer">
-        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${rv.aId}','${rv.bId}','atleta')">⚖ Confronta nel Comparatore</button>
+        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${escJs(rv.aId)}','${escJs(rv.bId)}','atleta')">⚖ Confronta nel Comparatore</button>
       </div>
     </div>`;
   }
@@ -10244,7 +10253,7 @@ async function renderHubBars() {
     return `<div class="itc-card itc-feed-card">
       <div class="itc-card-hdr"><span class="itc-card-title">📰 NOTIZIE & ANALISI</span><a href="#/risultati" class="itc-card-more">Tutti i risultati →</a></div>
       ${items.map(item=>{
-        const click=item.atleta_id?`onclick="location.hash='#/atleta/${encodeURIComponent(item.atleta_id)}'"`:item.team_id?`onclick="location.hash='#/team/${encodeURIComponent(item.team_id)}'"`:'';
+        const click=item.atleta_id?`onclick="location.hash='#/atleta/${escJs(encodeURIComponent(item.atleta_id))}'"`:item.team_id?`onclick="location.hash='#/team/${escJs(encodeURIComponent(item.team_id))}'"`:'';
         return `<div class="itc-feed-item${click?' itc-feed-item--link':''}" ${click}>
           <span class="itc-feed-icon">${item.icon||'📌'}</span>
           <div class="itc-feed-text">${item.text}</div>
@@ -10282,7 +10291,7 @@ async function renderHubBars() {
         const days=Math.round((gd-new Date(todayStr+'T00:00:00'))/86400000);
         const dayLbl=days===0?'OGGI':days===1?'DOMANI':DAY[gd.getDay()]+' '+gd.getDate()+' '+MESI[gd.getMonth()];
         const isCR=g.campionato_regionale||g.tipo==='CR', isCI=g.campionato_italiano||g.tipo==='CI';
-        return `<div class="itc-cal-row" onclick="location.hash='#/calendario/${encodeURIComponent(g.id)}'">
+        return `<div class="itc-cal-row" onclick="location.hash='#/calendario/${escJs(encodeURIComponent(g.id))}'">
           <span class="itc-cal-day${days<=1?' itc-cal-day--near':''}">${dayLbl}</span>
           <div class="itc-cal-info">
             <div class="itc-cal-name">${esc(g.nome)}${isCR?' <span class="itc-cal-badge cr">CR</span>':''}${isCI?' <span class="itc-cal-badge ci">CI</span>':''}</div>
@@ -10350,7 +10359,7 @@ async function renderHubBars() {
         else if (gain <= -1) trendHtml = `<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
       }
       const gap = i === 0 ? '' : `<span class="itc-rank-gap">−${leaderPts - t.punti}</span>`;
-      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${escJs(encodeURIComponent(t.team_id))}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(t.team)}${trendHtml}</div>
@@ -10370,7 +10379,7 @@ async function renderHubBars() {
   // ── Top 3 team per VITTORIE (non punti) — stesso spareggio degli atleti.
   function buildTeamWinsCard(winsRanking, title, catCode) {
     if (!winsRanking.length) return '';
-    const rows = winsRanking.map((t, i) => `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+    const rows = winsRanking.map((t, i) => `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${escJs(encodeURIComponent(t.team_id))}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(t.team)}</div>
@@ -10407,7 +10416,7 @@ async function renderHubBars() {
       const isUp    = dir === 'up';
       const gainLbl = isUp ? `+${t.gain}` : `${t.gain}`;
       const prevPos = t.pos + t.gain; // gain = old - now, so old = pos + gain
-      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/team/${escJs(encodeURIComponent(t.team_id))}'">
         <div class="itc-mover-badge itc-mover-badge--${dir}">${gainLbl}</div>
         <div class="itc-mover-info">
           <span class="itc-mover-name">${esc(t.team)}</span>
@@ -10456,7 +10465,7 @@ async function renderHubBars() {
         <span class="itc-vs-encounters">${gap} pt distacco</span>
       </div>
       <div class="itc-vs-ring">
-        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/team/${encodeURIComponent(a.team_id)}'">
+        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/team/${escJs(encodeURIComponent(a.team_id))}'">
           <div class="itc-vs-wins">${a.wins}V</div>
           <div class="itc-vs-name">${esc(a.team)}</div>
           <div class="itc-vs-recent-pts">${aRec} pt / 14gg</div>
@@ -10469,14 +10478,14 @@ async function renderHubBars() {
           </div>
           <div class="itc-vs-bar-label">FORMA</div>
         </div>
-        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/team/${encodeURIComponent(b.team_id)}'">
+        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/team/${escJs(encodeURIComponent(b.team_id))}'">
           <div class="itc-vs-wins">${b.wins}V</div>
           <div class="itc-vs-name">${esc(b.team)}</div>
           <div class="itc-vs-recent-pts">${bRec} pt / 14gg</div>
         </div>
       </div>
       <div class="itc-vs-footer">
-        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${a.team_id}','${b.team_id}','team')">⚖ Confronta</button>
+        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${escJs(a.team_id)}','${escJs(b.team_id)}','team')">⚖ Confronta</button>
       </div>
     </div>`;
   }
@@ -10561,7 +10570,7 @@ async function renderHubBars() {
     const title = hasRealViews ? '👁 POPOLARI OGGI' : '📈 TRENDING';
     return `<div class="itc-card itc-popular-card">
       <div class="itc-card-hdr"><span class="itc-card-title">${title}</span></div>
-      ${items.map((a,i)=>`<div class="itc-popular-row" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+      ${items.map((a,i)=>`<div class="itc-popular-row" onclick="location.hash='#/atleta/${escJs(encodeURIComponent(a.atleta_id))}'">
         <span class="itc-popular-rank">${i+1}</span>
         <div class="itc-popular-info">
           <span class="itc-popular-name">${esc(a.cognome)} ${esc(a.nome)}</span>
@@ -10838,7 +10847,7 @@ async function _renderNavBars() {
 
     const subsHtml = b.subs
       ? `<div class="hub-bar-subs">${b.subs.map(s =>
-          `<span class="hub-bar-sub-item" onclick="event.preventDefault();event.stopPropagation();window.location.hash='${s.h}'">${esc(s.l)}</span>`
+          `<span class="hub-bar-sub-item" onclick="event.preventDefault();event.stopPropagation();window.location.hash='${escJs(s.h)}'">${esc(s.l)}</span>`
         ).join('')}</div>`
       : '';
 
@@ -11076,10 +11085,10 @@ async function renderClassifica() {
   const currentCats = rankGender === 'M' ? catsMale : catsFemale;
 
   const genderTabs = ['M','F'].map(g => `
-    <button class="tab-btn ${rankGender===g?'active-gender':''}" id="tab-gender-${g}" onclick="setRankGender('${g}')">${g==='M'?'UOMINI':'DONNE'}</button>
+    <button class="tab-btn ${rankGender===g?'active-gender':''}" id="tab-gender-${g}" onclick="setRankGender('${escJs(g)}')">${g==='M'?'UOMINI':'DONNE'}</button>
   `).join('');
   const catTabs = currentCats.map(c => `
-    <button class="tab-btn ${rankCat===c?'active-cat':''}" id="tab-cat-${c}" onclick="setRankCat('${c}')">${catLabel(c)}</button>
+    <button class="tab-btn ${rankCat===c?'active-cat':''}" id="tab-cat-${c}" onclick="setRankCat('${escJs(c)}')">${catLabel(c)}</button>
   `).join('');
   // "Storia" e "Albo d'oro" richiesti esplicitamente accanto al selettore
   // Atleti/Team: cliccando aprono un pannello al posto della tabella (vedi
@@ -11211,10 +11220,10 @@ async function renderClassifica() {
       background:${y === _classCurYear ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === _classCurYear ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
   </div>`;
 
-  const _clsCats = currentCats.map(c => `<button type="button" onclick="setRankCat('${c}')" aria-pressed="${rankCat === c}">${esc(catLabel(c))}</button>`).join('');
+  const _clsCats = currentCats.map(c => `<button type="button" onclick="setRankCat('${escJs(c)}')" aria-pressed="${rankCat === c}">${esc(catLabel(c))}</button>`).join('');
   const _clsSel = (fn, label, inner) => `<label class="hx-sel"><span class="sr">${label}</span><select aria-label="${label}" onchange="${fn}(this.value)"><option value="">${label}</option>${inner}</select></label>`;
   const _clsYears = (() => { const o = []; for (let y = _classCurYear; y >= 2007; y--) o.push(`<option value="${y}"${y === _classCurYear ? ' selected' : ''}>Stagione ${y}</option>`); return o.join(''); })();
-  const _clsTab = (id, label, on) => `<button type="button" onclick="window.clsTab('${id}')" aria-pressed="${on}">${label}</button>`;
+  const _clsTab = (id, label, on) => `<button type="button" onclick="window.clsTab('${escJs(id)}')" aria-pressed="${on}">${label}</button>`;
   const _clsOnClass = rankPanel === 'classifica';
   const _clsTabs = _rkIsPista ? '' : `<div class="cls-tabs" role="group" aria-label="Vista">
       ${_clsTab('atleti', 'Atleti', _clsOnClass && rankView === 'atleti')}${_clsTab('team', 'Team', _clsOnClass && rankView === 'team')}${_clsTab('storia', 'Storia', rankPanel === 'storia')}${_clsTab('albo', 'Albo d’oro', rankPanel === 'albo')}</div>`;
@@ -11402,7 +11411,7 @@ async function renderClassificaStorica(anno) {
         <button type="button" onclick="window.classSetGender('F')" aria-pressed="${_classStoricoGender==='F'}">Donne</button>
       </div>` : ''}
       <div class="cls-cats" role="group" aria-label="Seleziona categoria">
-        ${cats.map(c => `<button type="button" onclick="window.classSetCat('${esc(c)}')" aria-pressed="${curCat === c}">${esc(_ciclismoCatLabel(c))}</button>`).join('')}
+        ${cats.map(c => `<button type="button" onclick="window.classSetCat('${escJs(c)}')" aria-pressed="${curCat === c}">${esc(_ciclismoCatLabel(c))}</button>`).join('')}
       </div>
       <input type="search" id="class-storico-search" class="rs-search" placeholder="Cerca atleta o team…" value="${esc(_classStoricoSearch)}"
         oninput="window.classSetSearch(this.value)" aria-label="Filtra classifica" autocomplete="off" />
@@ -11721,7 +11730,7 @@ function _alboCampioniHtml(code) {
 
   const _alTc = s => String(s || '').toLowerCase().replace(/(^|[\s'’(-])([a-zà-ÿ])/g, (m, x, y) => x + y.toUpperCase());
   const filters = `<div class="al-sp" role="group" aria-label="Specialità e anno">
-      ${['', ...ALBO_PROVE].map(pv => `<button type="button" onclick="setAlboProva('${pv}')" aria-pressed="${alboProva === pv}">${pv ? _titleCase(pv) : 'Tutte'}</button>`).join('')}
+      ${['', ...ALBO_PROVE].map(pv => `<button type="button" onclick="setAlboProva('${escJs(pv)}')" aria-pressed="${alboProva === pv}">${pv ? _titleCase(pv) : 'Tutte'}</button>`).join('')}
       <label class="hx-sel hx-yr"><span class="sr">Stagione</span><select aria-label="Stagione" onchange="setAlboYear(this.value)">${years.map(y => `<option value="${y}" ${y === year ? 'selected' : ''}>Stagione ${y}${y === thisYear ? ' (in corso)' : ''}</option>`).join('')}</select></label>
     </div>`;
 
@@ -11772,7 +11781,7 @@ async function renderAlboDoro() {
   const catsFemale = ['ES1_F','ES2_F','AL_F','JUN_F','ELI_F'];
   const cats = alboGender === 'M' ? catsMale : catsFemale;
 
-  const _alCats = cats.map(c => `<button type="button" onclick="setAlboCat('${c}')" aria-pressed="${alboCat === c}">${esc(catLabel(c))}</button>`).join('');
+  const _alCats = cats.map(c => `<button type="button" onclick="setAlboCat('${escJs(c)}')" aria-pressed="${alboCat === c}">${esc(catLabel(c))}</button>`).join('');
   const _alPodi = alboView !== 'campioni';
 
   setPageMeta("Albo d'Oro", "Albo d'oro delle gare di ciclismo agonistico italiano: vincitori per categoria, anno e genere.");
@@ -12665,7 +12674,7 @@ window.adminNav = async function(section) {
 
     // ── OVERVIEW ──────────────────────────────────────────────
     case 'overview': {
-      const card = (sec, ico, label, id, hint) => `<div class="adm-todo" id="card-${id}" onclick="adminNav('${sec}')" role="button" tabindex="0">
+      const card = (sec, ico, label, id, hint) => `<div class="adm-todo" id="card-${id}" onclick="adminNav('${escJs(sec)}')" role="button" tabindex="0">
           <div class="adm-todo-i">${ico}</div><div class="adm-todo-b"><b id="${id}">—</b><span>${label}</span><small>${hint}</small></div><span class="adm-todo-go">›</span></div>`;
       main.innerHTML = `
         <div class="admin-page-header">
@@ -13031,7 +13040,7 @@ window.adminNav = async function(section) {
             <div style="margin-bottom:10px;font-size:.8rem;color:var(--text-muted)">${photos.length} foto</div>
             <div class="admin-photo-grid">${photos.map(p => `
               <div class="admin-photo-card">
-                <img src="${p.src}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${p.src}')" style="cursor:zoom-in" loading="lazy" />
+                <img src="${p.src}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${escJs(p.src)}')" style="cursor:zoom-in" loading="lazy" />
                 <div class="admin-photo-card-body">
                   <div class="admin-photo-meta">
                     <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.78rem">${esc(p.gara_id)}</a>
@@ -13041,7 +13050,7 @@ window.adminNav = async function(section) {
                   </div>
                   ${p.source === 'uploaded' && p.id ? `
                   <div class="admin-photo-actions">
-                    <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${esc(p.caption||'')}','${esc(p.credit||'')}')">✏️</button>
+                    <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${escJs(p.caption||'')}','${escJs(p.credit||'')}')">✏️</button>
                     <button class="btn-reject"  onclick="window.adminPanelDeletePhoto(${p.id})">🗑</button>
                   </div>` : ''}
                 </div>
@@ -13226,7 +13235,7 @@ window.adminNav = async function(section) {
                   </div>
                   <div style="margin-top:20px;display:flex;gap:10px">
                     ${u.role==='atleta'&&linked ? `<a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--outline dash-btn--sm">🚴 Vai al profilo atleta</a>` : ''}
-                    <button onclick="window.adminDeleteUser(${u.id},'${esc(u.email||'')}');document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina utente</button>
+                    <button onclick="window.adminDeleteUser(${u.id},'${escJs(u.email||'')}');document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina utente</button>
                   </div>
                 </div>
               </div>`);
@@ -13282,7 +13291,7 @@ window.adminNav = async function(section) {
                       <td style="padding:9px 10px">
                         <div style="display:flex;gap:6px">
                           <button onclick="window.adminViewUserProfile(${u.id})" title="Dettaglio" style="padding:5px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">👁 Dettaglio</button>
-                          <button onclick="window.adminDeleteUser(${u.id},'${esc((u.email||'').replace(/'/g,''))}',)" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
+                          <button onclick="window.adminDeleteUser(${u.id},'${escJs((u.email||''))}',)" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
                         </div>
                       </td>
                     </tr>
@@ -13339,8 +13348,8 @@ window.adminNav = async function(section) {
                     </div>
                   </div>
                   <div style="display:flex;gap:8px">
-                    <button class="btn-approve" onclick="window.adminPendingAction('${p.type}',${p.id},'approve')" style="padding:7px 16px;font-size:.82rem">✓ Approva</button>
-                    <button class="btn-reject"  onclick="window.adminPendingAction('${p.type}',${p.id},'reject')"  style="padding:7px 14px;font-size:.82rem">✗ Rifiuta</button>
+                    <button class="btn-approve" onclick="window.adminPendingAction('${escJs(p.type)}',${p.id},'approve')" style="padding:7px 16px;font-size:.82rem">✓ Approva</button>
+                    <button class="btn-reject"  onclick="window.adminPendingAction('${escJs(p.type)}',${p.id},'reject')"  style="padding:7px 14px;font-size:.82rem">✗ Rifiuta</button>
                   </div>
                 </div>
               `).join('')}
@@ -13505,7 +13514,7 @@ window.adminNav = async function(section) {
         </div>`;
         const tabs = () => {
           document.getElementById('np-tabs').innerHTML = [['nuovo', 'Da vedere'], ['ok', 'Approvate'], ['annullato', 'Annullate']].map(([k, t]) =>
-            `<button class="tab-btn ${S.stato === k ? 'active-cat' : ''}" onclick="window._npLoad('${k}')">${t}${k === 'nuovo' ? ' ' + S.nuovi : ''}</button>`).join('') +
+            `<button class="tab-btn ${S.stato === k ? 'active-cat' : ''}" onclick="window._npLoad('${escJs(k)}')">${t}${k === 'nuovo' ? ' ' + S.nuovi : ''}</button>`).join('') +
             (S.stato === 'nuovo' && S.items.length ? `<button class="btn-approve" style="margin-left:auto;padding:7px 14px;font-size:.8rem" onclick="window._npTutte()">✓ Segna tutte come viste</button>` : '');
           const b = document.getElementById('badge-novita-profili');
           if (b) { b.textContent = S.nuovi || ''; b.style.display = S.nuovi ? '' : 'none'; }
@@ -13742,7 +13751,7 @@ window.adminNav = async function(section) {
           S.items.forEach(i => c[grp(i)]++);
           document.getElementById('omo-tabs').innerHTML =
             [['guarda', 'Da guardare'], ['stessa', 'Probabilmente stessa persona'], ['decisi', 'Già decisi']].map(([k, t]) =>
-              `<button class="tab-btn ${S.tab === k ? 'active-cat' : ''}" onclick="window._omo.tab='${k}';window._omo.n=60;window._omoRender()">${t} ${c[k]}</button>`).join('') +
+              `<button class="tab-btn ${S.tab === k ? 'active-cat' : ''}" onclick="window._omo.tab='${escJs(k)}';window._omo.n=60;window._omoRender()">${t} ${c[k]}</button>`).join('') +
             `<input id="omo-q" type="search" placeholder="Cerca nome…" value="${esc(S.q)}" oninput="window._omo.q=this.value;window._omo.n=60;window._omoRender(true)" style="margin-left:auto;padding:7px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;min-width:180px">`;
           const b = document.getElementById('badge-omonimi');
           if (b) { b.textContent = c.guarda || ''; b.style.display = c.guarda ? '' : 'none'; }
@@ -13768,11 +13777,11 @@ window.adminNav = async function(section) {
             ${prove.length ? `<ul style="margin:8px 0 0 18px;padding:0;font-size:.78rem;color:var(--text-muted)">${prove.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
               ${it.decisione
-                ? `<button class="btn-reject" onclick="window._omoAct('${esc(it.id)}','riapri')" style="padding:6px 14px;font-size:.8rem">Riapri</button>`
-                : `<button class="btn-approve" onclick="window._omoAct('${esc(it.id)}','stessa')" style="padding:6px 14px;font-size:.8rem">✓ Stessa persona</button>
+                ? `<button class="btn-reject" onclick="window._omoAct('${escJs(it.id)}','riapri')" style="padding:6px 14px;font-size:.8rem">Riapri</button>`
+                : `<button class="btn-approve" onclick="window._omoAct('${escJs(it.id)}','stessa')" style="padding:6px 14px;font-size:.8rem">✓ Stessa persona</button>
                    <span style="margin-left:auto;font-size:.78rem;color:var(--text-muted)">Separa le schede spuntate come persona nata nel</span>
                    <input id="omo-y-${esc(it.id)}" type="number" min="1940" max="2030" value="${(it.gruppi && anni.length ? it.schede.find(s => sep.has(s.cid) && s.anno)?.anno : '') || ''}" placeholder="anno" style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit">
-                   <button class="btn-reject" onclick="window._omoDividi('${esc(it.id)}')" style="padding:6px 14px;font-size:.8rem">Separa</button>`}
+                   <button class="btn-reject" onclick="window._omoDividi('${escJs(it.id)}')" style="padding:6px 14px;font-size:.8rem">Separa</button>`}
             </div></div>`;
         };
         window._omoRender = (keepFocus) => {
@@ -13854,7 +13863,7 @@ window.adminNav = async function(section) {
             const items = status === 'pending' && window._ftFilt === 'omo' ? allItems.filter(p => p.omonimo) : status === 'pending' && window._ftFilt === 'safe' ? allItems.filter(p => !p.omonimo) : allItems;
             if (status === 'pending') { const b = document.getElementById('badge-foto-tag'); if (b) b.textContent = allItems.length || ''; }
             if (!items.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun tag in attesa.' : 'Nessun elemento.'}</div>`; return; }
-            const fb = (k, t) => `<button class="tab-btn${window._ftFilt === k ? ' active-cat' : ''}" onclick="window._ftSetFilt('${k}')" style="font-size:.76rem;padding:5px 12px">${t}</button>`;
+            const fb = (k, t) => `<button class="tab-btn${window._ftFilt === k ? ' active-cat' : ''}" onclick="window._ftSetFilt('${escJs(k)}')" style="font-size:.76rem;padding:5px 12px">${t}</button>`;
             body.innerHTML = `${status === 'pending' ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">${fb('all', 'Tutte ' + allItems.length)}${fb('safe', 'Nome unico ' + (allItems.length - nOmo))}${fb('omo', '⚠ Possibili omonimi ' + nOmo)}</div>` : ''}<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} foto</div>
               <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
               ${items.map(p => `<div id="ft-card-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
@@ -14114,7 +14123,7 @@ window.adminNav = async function(section) {
               </div>
               <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
                 <button onclick="document.getElementById('admin-atleta-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
-                <button onclick="window.adminSaveAtleta('${esc(String(a.atleta_id))}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva modifiche</button>
+                <button onclick="window.adminSaveAtleta('${escJs(String(a.atleta_id))}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva modifiche</button>
               </div>
             </div>
           </div>`);
@@ -14133,7 +14142,7 @@ window.adminNav = async function(section) {
           if (!matches.length) { drop.style.display = 'none'; return; }
           drop.innerHTML = matches.map(t => `
             <div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-              onmousedown="event.preventDefault();window._aeTeamSelect('${esc(String(t.id))}','${esc(t.nome||'')}')">
+              onmousedown="event.preventDefault();window._aeTeamSelect('${escJs(String(t.id))}','${escJs(t.nome||'')}')">
               <span style="font-weight:600">${esc(t.nome||t.id)}</span>
             </div>`).join('');
           drop.style.display = 'block';
@@ -14237,7 +14246,7 @@ window.adminNav = async function(section) {
                   <td style="padding:9px 10px">
                     <div style="display:flex;gap:6px">
                       <a href="#/atleta/${esc(String(a.atleta_id))}" title="Vai al profilo" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem;text-decoration:none">👁</a>
-                      <button onclick="window.adminEditAtleta('${esc(String(a.atleta_id))}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                      <button onclick="window.adminEditAtleta('${escJs(String(a.atleta_id))}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
                     </div>
                   </td>
                 </tr>`).join('')}
@@ -14340,7 +14349,7 @@ window.adminNav = async function(section) {
               </div>
               <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
                 <button onclick="document.getElementById('admin-gara-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
-                <button onclick="window.adminSaveGara('${esc(gid)}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva</button>
+                <button onclick="window.adminSaveGara('${escJs(gid)}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva</button>
               </div>
             </div>
           </div>`);
@@ -14422,7 +14431,7 @@ window.adminNav = async function(section) {
               ${results.length>30?`<div style="font-size:.75rem;color:var(--text-muted);margin-top:8px">+${results.length-30} altri risultati</div>`:''}
               <div style="margin-top:16px;display:flex;gap:10px">
                 <a href="#/gara/${esc(gid)}" onclick="document.getElementById('admin-gara-res-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">🔗 Pagina pubblica →</a>
-                <button onclick="window.adminDeleteGara('${esc(gid)}','${esc(nome.replace(/'/g,''))}');document.getElementById('admin-gara-res-modal').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina gara</button>
+                <button onclick="window.adminDeleteGara('${escJs(gid)}','${escJs(nome)}');document.getElementById('admin-gara-res-modal').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina gara</button>
               </div>
             </div>
           </div>`);
@@ -14461,9 +14470,9 @@ window.adminNav = async function(section) {
                   <td style="padding:9px 10px;color:var(--text-muted);font-size:.8rem">${g.km ? `${g.km} km` : '—'}${g.media ? ` · ${g.media} km/h` : ''}</td>
                   <td style="padding:9px 10px">
                     <div style="display:flex;gap:6px">
-                      <button onclick="window.adminViewGaraRisultati('${esc(g.gara_id||'')}')" title="Vedi risultati" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">📋</button>
-                      <button onclick="window.adminEditGara('${esc(g.gara_id||'')}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
-                      <button onclick="window.adminDeleteGara('${esc(g.gara_id||'')}','${esc((g.nome||'').slice(0,30).replace(/'/g,''))}')" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
+                      <button onclick="window.adminViewGaraRisultati('${escJs(g.gara_id||'')}')" title="Vedi risultati" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">📋</button>
+                      <button onclick="window.adminEditGara('${escJs(g.gara_id||'')}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                      <button onclick="window.adminDeleteGara('${escJs(g.gara_id||'')}','${escJs((g.nome||'').slice(0,30))}')" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
                     </div>
                   </td>
                 </tr>`).join('')}
@@ -14728,9 +14737,9 @@ window.adminNav = async function(section) {
                 ? `<textarea id="sq-cap-${p.id}" style="width:100%;box-sizing:border-box;height:80px;padding:7px 9px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary);resize:vertical;margin-bottom:8px">${esc(p.caption)}</textarea>
                    <div id="sq-err-${p.id}" style="color:#ef4444;font-size:.76rem;margin-bottom:6px;display:none"></div>
                    <div style="display:flex;gap:6px;flex-wrap:wrap">
-                     <button onclick="window._sqApprove('${p.id}')" style="background:#22c55e;color:#fff;border:none;padding:6px 14px;border-radius:var(--r-sm);font-size:.8rem;font-weight:600;cursor:pointer">✅ Pubblica su Facebook</button>
-                     <button onclick="window._sqRegenerate('${p.id}')" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer;color:var(--text-primary)">🔄 Rigenera</button>
-                     <button onclick="window._sqReject('${p.id}')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer">❌ Rifiuta</button>
+                     <button onclick="window._sqApprove('${escJs(p.id)}')" style="background:#22c55e;color:#fff;border:none;padding:6px 14px;border-radius:var(--r-sm);font-size:.8rem;font-weight:600;cursor:pointer">✅ Pubblica su Facebook</button>
+                     <button onclick="window._sqRegenerate('${escJs(p.id)}')" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer;color:var(--text-primary)">🔄 Rigenera</button>
+                     <button onclick="window._sqReject('${escJs(p.id)}')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer">❌ Rifiuta</button>
                    </div>`
                 : `<div style="font-size:.82rem;color:var(--text-muted);white-space:pre-wrap;margin-bottom:6px">${esc(p.caption)}</div>
                    ${statusBadge(p.status)}
@@ -14940,7 +14949,7 @@ async function loadPendingRacePhotos() {
     }
     container.innerHTML = `<div class="admin-photo-grid">${photos.map(p => `
       <div class="admin-photo-card" id="admin-photo-${p.id}">
-        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in" />
+        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="openPhotoLightbox('${escJs(PHOTOS_BASE)}/photos/${escJs(p.filename)}')" style="cursor:zoom-in" />
         <div class="admin-photo-card-body">
           <div class="admin-photo-meta">
             <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.8rem">${esc(p.gara_id)}</a>
@@ -15017,7 +15026,7 @@ async function loadAdminPendingVideos() {
       return `
       <div id="apv-${v.id}" style="display:flex;gap:12px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px">
         ${thumb
-          ? `<img src="${thumb}" style="width:110px;height:62px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />`
+          ? `<img src="${thumb}" style="width:110px;height:62px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover;cursor:pointer" onclick="window.open('${escJs(v.url)}','_blank')" />`
           : `<div style="width:110px;height:62px;background:var(--bg-elevated);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">🎬</div>`}
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;font-size:.875rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
@@ -15029,8 +15038,8 @@ async function loadAdminPendingVideos() {
             <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:600">${esc(raceName)}</a>
           </div>
           <div style="display:flex;gap:8px">
-            <button onclick="window.adminVideoAction('${esc(v.id)}','approve')" class="btn-approve">✓ Approva</button>
-            <button onclick="window.adminVideoAction('${esc(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
+            <button onclick="window.adminVideoAction('${escJs(v.id)}','approve')" class="btn-approve">✓ Approva</button>
+            <button onclick="window.adminVideoAction('${escJs(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
           </div>
         </div>
       </div>`;
@@ -15236,7 +15245,7 @@ function renderYTQueue() {
     <div id="ytq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
       <!-- Thumbnail -->
       <img src="${esc(item.thumbnail||'')}" alt="" style="width:100px;height:60px;border-radius:5px;object-fit:cover;flex-shrink:0;cursor:pointer"
-        onerror="this.style.display='none'" onclick="window.open('${esc(item.url)}','_blank')" />
+        onerror="this.style.display='none'" onclick="window.open('${escJs(item.url)}','_blank')" />
       <!-- Info -->
       <div style="flex:1;min-width:0">
         <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.title)}">${esc(item.title)}</div>
@@ -15247,7 +15256,7 @@ function renderYTQueue() {
         </div>
         <!-- Tipo contenuto: Video/Diretta gara richiedono una gara, Presentazione/Programma TV no -->
         <div style="margin-bottom:6px">
-          <select id="ytq-tipo-${esc(item.id)}" onchange="window.ytSetTipo('${esc(item.id)}', this.value)"
+          <select id="ytq-tipo-${esc(item.id)}" onchange="window.ytSetTipo('${escJs(item.id)}', this.value)"
             style="width:100%;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
             <option value="gara">🏁 Video di una gara</option>
             <option value="presentazione">🎤 Presentazione</option>
@@ -15262,7 +15271,7 @@ function renderYTQueue() {
         <!-- Selezione gara (nascosta per Presentazione/Programma TV) -->
         <div id="ytq-gara-wrap-${esc(item.id)}">
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
-          <select id="ytq-gara-sel-${esc(item.id)}" onchange="window.ytSetGara('${esc(item.id)}', this.value)"
+          <select id="ytq-gara-sel-${esc(item.id)}" onchange="window.ytSetGara('${escJs(item.id)}', this.value)"
             style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
             <option value="">— Seleziona gara —</option>
             ${optionsHtml}
@@ -15270,7 +15279,7 @@ function renderYTQueue() {
           </select>
         </div>
         <div id="ytq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
-          <input type="text" placeholder="Cerca gara per nome…" oninput="window.ytSearchGara('${esc(item.id)}',this.value)"
+          <input type="text" placeholder="Cerca gara per nome…" oninput="window.ytSearchGara('${escJs(item.id)}',this.value)"
             style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
           <div id="ytq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
         </div>
@@ -15282,11 +15291,11 @@ function renderYTQueue() {
         </div>
         <!-- Azioni -->
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button onclick="window.ytApprove('${esc(item.id)}')"
+          <button onclick="window.ytApprove('${escJs(item.id)}')"
             style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
             ✓ Pubblica
           </button>
-          <button onclick="window.ytDismiss('${esc(item.id)}')"
+          <button onclick="window.ytDismiss('${escJs(item.id)}')"
             style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
             ✗ Scarta
           </button>
@@ -15440,7 +15449,7 @@ window.ytSearchGara = (id, q) => {
 
   resultsEl.innerHTML = matches.map(r => {
     const label = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
-    return `<div onclick="window.ytPickGara('${esc(id)}','${esc(r.gara_id)}')"
+    return `<div onclick="window.ytPickGara('${escJs(id)}','${escJs(r.gara_id)}')"
       style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle);hover:background:var(--bg-elevated)">
       ${esc(label)}
     </div>`;
@@ -15726,16 +15735,16 @@ function renderXpixQueue() {
               Gara: <strong>${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'—')}</strong>
             </div>
           </div>
-          <button onclick="window.xpixRestore('${esc(item.id)}',this)"
+          <button onclick="window.xpixRestore('${escJs(item.id)}',this)"
             style="flex:0 0 auto;background:transparent;border:1px solid #16a34a;color:#16a34a;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap"
             title="Rimetti in coda per ri-pubblicare (anche su un'altra gara) e taggare il corridore">
             ↩ Rimetti in coda
           </button>
-          <button onclick="window.xpixRelinkGara('${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this,'${esc(item.album_slug||'')}')"
+          <button onclick="window.xpixRelinkGara('${escJs(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this,'${escJs(item.album_slug||'')}')"
             style="flex:0 0 auto;background:transparent;border:1px solid #6366f1;color:#6366f1;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
             🔗 Cambia gara
           </button>
-          <button onclick="window.xpixRemoveFromGara('${esc(item.id)}','${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
+          <button onclick="window.xpixRemoveFromGara('${escJs(item.id)}','${escJs(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
             style="flex:0 0 auto;background:transparent;border:1px solid #ef4444;color:#ef4444;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
             🗑 Rimuovi
           </button>
@@ -15755,7 +15764,7 @@ function renderXpixQueue() {
             <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.album_name)}</div>
             <div style="font-size:.72rem;color:var(--text-muted)">Scartato — clicca per rimettere in coda</div>
           </div>
-          <button onclick="window.xpixRestore('${esc(item.id)}',this)"
+          <button onclick="window.xpixRestore('${escJs(item.id)}',this)"
             style="flex:0 0 auto;background:transparent;border:1px solid #16a34a;color:#16a34a;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
             ↩ Ripristina
           </button>
@@ -15790,7 +15799,7 @@ function renderXpixQueue() {
     const photosGridHtml = allPhotos.map((url, pi) => {
       const isSelected = (url === (item.photo_url || allPhotos[0]));
       return `<img src="${esc(url)}" data-url="${esc(url)}" data-id="${esc(item.id)}"
-        onclick="window.xpixSelectPhoto('${esc(item.id)}',this)"
+        onclick="window.xpixSelectPhoto('${escJs(item.id)}',this)"
         style="width:80px;height:54px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid ${isSelected ? '#0ea5e9' : 'transparent'};transition:border-color .15s;flex-shrink:0"
         onerror="this.style.display='none'" title="Clicca per selezionare" />`;
     }).join('');
@@ -15811,7 +15820,7 @@ function renderXpixQueue() {
       </div>
       <!-- Selezione gara + azioni -->
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
-        <select onchange="window.xpixSetGara('${esc(item.id)}', this.value)"
+        <select onchange="window.xpixSetGara('${escJs(item.id)}', this.value)"
           style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
           <option value="">— Seleziona gara —</option>
           ${optionsHtml}
@@ -15819,7 +15828,7 @@ function renderXpixQueue() {
         </select>
       </div>
       <div id="xpixq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
-        <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${esc(item.id)}',this.value)"
+        <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${escJs(item.id)}',this.value)"
           style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
         <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
@@ -15831,23 +15840,23 @@ function renderXpixQueue() {
       <div style="margin-bottom:8px">
         <div style="position:relative">
           <input type="text" id="xpixr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
-            autocomplete="off" oninput="window.xpixSearchRider('${esc(item.id)}',this.value)"
+            autocomplete="off" oninput="window.xpixSearchRider('${escJs(item.id)}',this.value)"
             style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
           <div id="xpixr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="xpixr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="window.xpixApprove('${esc(item.id)}')"
+        <button onclick="window.xpixApprove('${escJs(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
           ✓ Pubblica foto selezionata
         </button>
-        <button onclick="window.xpixRefreshPhotos('${esc(item.id)}')"
+        <button onclick="window.xpixRefreshPhotos('${escJs(item.id)}')"
           style="background:transparent;border:1px solid #0ea5e9;color:#0ea5e9;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem"
           title="Ricarica tutte le foto dell'album dal sito xpix.it">
           🔄 Ricarica foto
         </button>
-        <button onclick="window.xpixDismiss('${esc(item.id)}')"
+        <button onclick="window.xpixDismiss('${escJs(item.id)}')"
           style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
           ✗ Scarta album
         </button>
@@ -15950,7 +15959,7 @@ window.xpixSearchRider = (id, q) => {
     .slice(0, 8);
   dd.innerHTML = matches.map(([aid, a]) => {
     const label = `${a.cognome||''} ${a.nome||''}`.trim();
-    return `<div onclick="window.xpixAddRider('${esc(id)}','${esc(aid)}','${esc(label)}')"
+    return `<div onclick="window.xpixAddRider('${escJs(id)}','${escJs(aid)}','${escJs(label)}')"
       style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">${esc(label)}</div>`;
   }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>';
   dd.style.display = 'block';
@@ -15972,7 +15981,7 @@ function _xpixRenderRiderChips(id) {
   box.innerHTML = (_xpixItemAtletaMap[id] || []).map(t =>
     `<span style="display:inline-flex;align-items:center;gap:4px;background:#16a34a22;border:1px solid #16a34a;border-radius:12px;padding:2px 8px;font-size:.72rem;color:#16a34a">
       ${esc(t.label)}
-      <span onclick="window.xpixRemoveRider('${esc(id)}','${esc(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
+      <span onclick="window.xpixRemoveRider('${escJs(id)}','${escJs(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
     </span>`).join('');
 }
 
@@ -16015,7 +16024,7 @@ window.xpixSearchGara = (id, q) => {
     .slice(0, 8);
   resultsEl.innerHTML = matches.map(r => {
     const label = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
-    return `<div onclick="window.xpixPickGara('${esc(id)}','${esc(r.gara_id)}')"
+    return `<div onclick="window.xpixPickGara('${escJs(id)}','${escJs(r.gara_id)}')"
       style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">
       ${esc(label)}
     </div>`;
@@ -16211,7 +16220,7 @@ window.icSearchRider = (id, q) => {
     .slice(0, 8);
   dd.innerHTML = matches.map(([aid, a]) => {
     const label = `${a.cognome||''} ${a.nome||''}`.trim();
-    return `<div onclick="window.icAddRider('${esc(id)}','${esc(aid)}','${esc(label)}')"
+    return `<div onclick="window.icAddRider('${escJs(id)}','${escJs(aid)}','${escJs(label)}')"
       style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">${esc(label)}</div>`;
   }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>';
   dd.style.display = 'block';
@@ -16233,7 +16242,7 @@ function _icRenderRiderChips(id) {
   box.innerHTML = (_icItemAtletaMap[id] || []).map(t =>
     `<span style="display:inline-flex;align-items:center;gap:4px;background:#16a34a22;border:1px solid #16a34a;border-radius:12px;padding:2px 8px;font-size:.72rem;color:#16a34a">
       ${esc(t.label)}
-      <span onclick="window.icRemoveRider('${esc(id)}','${esc(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
+      <span onclick="window.icRemoveRider('${escJs(id)}','${escJs(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
     </span>`).join('');
 }
 
@@ -16302,7 +16311,7 @@ function renderICQueue() {
     const allPhotos  = item.photos?.length ? item.photos : (item.photo_url ? [item.photo_url] : []);
     const photosGrid = allPhotos.map(url => `
       <img src="${esc(icProxy(url))}" data-url="${esc(url)}" data-id="${esc(item.id)}"
-        onclick="window.icSelectPhoto('${esc(item.id)}',this)"
+        onclick="window.icSelectPhoto('${escJs(item.id)}',this)"
         style="width:80px;height:54px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid ${url===(item.photo_url||allPhotos[0])?'#8b5cf6':'transparent'};transition:border-color .15s;flex-shrink:0"
         onerror="this.style.display='none'" />`).join('');
 
@@ -16319,7 +16328,7 @@ function renderICQueue() {
         ${photosGrid || '<span style="font-size:.8rem;color:var(--text-muted)">Nessuna foto</span>'}
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
-        <select onchange="window.icSetGara('${esc(item.id)}',this.value)"
+        <select onchange="window.icSetGara('${escJs(item.id)}',this.value)"
           style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
           <option value="">— Seleziona gara —</option>
           ${optionsHtml}
@@ -16327,7 +16336,7 @@ function renderICQueue() {
         </select>
       </div>
       <div id="icq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
-        <input type="text" placeholder="Cerca gara per nome…" oninput="window.icSearchGara('${esc(item.id)}',this.value)"
+        <input type="text" placeholder="Cerca gara per nome…" oninput="window.icSearchGara('${escJs(item.id)}',this.value)"
           style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
         <div id="icq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
@@ -16339,18 +16348,18 @@ function renderICQueue() {
       <div style="margin-bottom:8px">
         <div style="position:relative">
           <input type="text" id="icr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
-            autocomplete="off" oninput="window.icSearchRider('${esc(item.id)}',this.value)"
+            autocomplete="off" oninput="window.icSearchRider('${escJs(item.id)}',this.value)"
             style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
           <div id="icr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="icr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="window.icApprove('${esc(item.id)}')"
+        <button onclick="window.icApprove('${escJs(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">✓ Pubblica foto</button>
-        <button onclick="window.icRefreshPhotos('${esc(item.id)}')"
+        <button onclick="window.icRefreshPhotos('${escJs(item.id)}')"
           style="background:transparent;border:1px solid #f59e0b;color:#f59e0b;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">🔄 Ricarica foto</button>
-        <button onclick="window.icDismiss('${esc(item.id)}')"
+        <button onclick="window.icDismiss('${escJs(item.id)}')"
           style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">✗ Scarta</button>
       </div>
     </div>`;
@@ -16412,7 +16421,7 @@ window.icSearchGara = (id, q) => {
   const matches = (globalData?.resultsRaw||[]).filter(r => { if(seen.has(r.gara_id))return false; seen.add(r.gara_id);
     return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase()) || r.gara_id.toLowerCase().includes(q.toLowerCase());
   }).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,8);
-  el.innerHTML = matches.map(r => `<div onclick="window.icPickGara('${esc(id)}','${esc(r.gara_id)}')"
+  el.innerHTML = matches.map(r => `<div onclick="window.icPickGara('${escJs(id)}','${escJs(r.gara_id)}')"
     style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">
     ${esc(r.nome_gara)} — ${esc(r.categoria||'')} ${esc(r.genere||'')} (${esc(r.data||'')})
   </div>`).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun risultato</div>';
@@ -16522,14 +16531,14 @@ function renderAdminVideosAll() {
 
       return `
       <div class="admin-video-row" id="avr-${esc(calId)}-${idx}" style="display:flex;gap:12px;align-items:flex-start;padding:10px;border-bottom:1px solid var(--border-subtle)">
-        ${thumb ? `<img src="${thumb}" alt="thumb" style="width:90px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />` : `<div style="width:90px;height:60px;background:var(--bg-elevated,rgba(128,128,128,.1));border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem">🎬</div>`}
+        ${thumb ? `<img src="${thumb}" alt="thumb" style="width:90px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;cursor:pointer" onclick="window.open('${escJs(v.url)}','_blank')" />` : `<div style="width:90px;height:60px;background:var(--bg-elevated,rgba(128,128,128,.1));border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem">🎬</div>`}
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;font-size:.85rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
           <div style="font-size:.75rem;color:var(--text-muted)">${esc(v.channel||'')} &nbsp;•&nbsp; ${esc(v.published_at||'')}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
-          <button onclick="window.adminVideoEdit('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
-          <button onclick="window.adminVideoDelete('${esc(calId)}',${idx})" style="background:transparent;border:1px solid #ef4444;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:#ef4444">🗑️ Elimina</button>
+          <button onclick="window.adminVideoEdit('${escJs(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
+          <button onclick="window.adminVideoDelete('${escJs(calId)}',${idx})" style="background:transparent;border:1px solid #ef4444;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:#ef4444">🗑️ Elimina</button>
         </div>
       </div>`;
     }).join('');
@@ -16543,7 +16552,7 @@ function renderAdminVideosAll() {
           ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:4px">${fmtDate(raceDate)}</span>` : ''}
           <span style="color:var(--text-muted);font-size:.75rem">•&nbsp;${vids.length} video</span>
         </div>
-        <button onclick="window.adminShowAddVideoForRace('${esc(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;flex-shrink:0">+ video</button>
+        <button onclick="window.adminShowAddVideoForRace('${escJs(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;flex-shrink:0">+ video</button>
       </div>
       ${videoRows}
     </div>`;
@@ -16589,7 +16598,7 @@ window.adminVideoEdit = (calId, idx) => {
       <input id="ave-channel" type="text" value="${esc(v.channel||'')}" placeholder="Autore o nome canale" style="${inpS}"/>
       <div id="ave-err" style="color:#EF4444;font-size:.8rem;margin-bottom:8px;display:none"></div>
       <div style="display:flex;gap:8px">
-        <button onclick="window._adminVideoEditSave('${esc(calId)}',${idx})"
+        <button onclick="window._adminVideoEditSave('${escJs(calId)}',${idx})"
           style="flex:1;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer">Salva</button>
         <button onclick="document.getElementById('admin-video-edit-overlay').remove()"
           style="padding:9px 16px;background:transparent;border:1px solid var(--border-subtle);border-radius:6px;cursor:pointer;color:var(--text-muted)">Annulla</button>
@@ -16723,7 +16732,7 @@ window.adminSearchCalRace = (q) => {
   res.innerHTML = matches.map(r => {
     const label = `${esc(r.nome||r.id)}`;
     const badge = r.categoria ? `<span style="background:var(--accent);color:#fff;border-radius:3px;padding:1px 5px;font-size:.7rem;margin-left:6px">${esc(r.categoria)} ${r.genere||''}</span>` : '';
-    return `<div onclick="window.adminSelectCalRace('${esc(r.id)}','${esc(r.nome||r.id)} — ${esc(r.categoria||'')} ${r.genere||''}')"
+    return `<div onclick="window.adminSelectCalRace('${escJs(r.id)}','${escJs(r.nome||r.id)} — ${escJs(r.categoria||'')} ${escJs(r.genere||'')}')"
       style="padding:8px 12px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:4px">
       <strong>${label}</strong>${badge}
       <span style="color:var(--text-muted);font-size:.75rem;margin-left:auto">${r.data||''}</span>
@@ -16782,7 +16791,7 @@ async function loadApprovedRacePhotos() {
     }
     container.innerHTML = `<div class="admin-photo-grid">${photos.map(p => `
       <div class="admin-photo-card" id="admin-approved-${p.id}">
-        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in" />
+        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${escJs(PHOTOS_BASE)}/photos/${escJs(p.filename)}')" style="cursor:zoom-in" />
         <div class="admin-photo-card-body">
           <div class="admin-photo-meta">
             <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.8rem">${esc(p.gara_id)}</a>
@@ -16791,7 +16800,7 @@ async function loadApprovedRacePhotos() {
             ${p.caption ? `<span style="font-size:0.8rem;font-style:italic">${esc(p.caption)}</span>` : ''}
           </div>
           <div class="admin-photo-actions">
-            <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${esc(p.caption||'')}','${esc(p.photographer||'')}')">✏️ Modifica</button>
+            <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${escJs(p.caption||'')}','${escJs(p.photographer||'')}')">✏️ Modifica</button>
             <button class="btn-reject"  onclick="window.adminPanelDeletePhoto(${p.id})">🗑 Elimina</button>
           </div>
         </div>
@@ -16906,13 +16915,13 @@ function renderAdminRows(races) {
       </td>
       <td class="r">
         <div class="tab-group" style="justify-content:flex-end">
-          <button class="tab-btn ${r.mult===1?'active-cat':''}" onclick="setOverride('${r.id}', 1, '${r.tipo}')">x1</button>
-          <button class="tab-btn ${r.mult===2?'active-cat':''}" onclick="setOverride('${r.id}', 2, '${r.tipo}')">x2</button>
-          <button class="tab-btn ${r.mult===3?'active-cat':''}" onclick="setOverride('${r.id}', 3, '${r.tipo}')">x3</button>
+          <button class="tab-btn ${r.mult===1?'active-cat':''}" onclick="setOverride('${escJs(r.id)}', 1, '${escJs(r.tipo)}')">x1</button>
+          <button class="tab-btn ${r.mult===2?'active-cat':''}" onclick="setOverride('${escJs(r.id)}', 2, '${escJs(r.tipo)}')">x2</button>
+          <button class="tab-btn ${r.mult===3?'active-cat':''}" onclick="setOverride('${escJs(r.id)}', 3, '${escJs(r.tipo)}')">x3</button>
         </div>
       </td>
       <td>
-        <select class="cal-filter-select" style="padding:4px 8px;font-size:0.8rem" onchange="setOverride('${r.id}', null, this.value)">
+        <select class="cal-filter-select" style="padding:4px 8px;font-size:0.8rem" onchange="setOverride('${escJs(r.id)}', null, this.value)">
           <option value="regionale" ${r.tipo==='regionale'?'selected':''}>Regionale</option>
           <option value="nazionale" ${r.tipo==='nazionale'?'selected':''}>Nazionale</option>
           <option value="internazionale" ${r.tipo==='internazionale'?'selected':''}>Internazionale</option>
@@ -17287,7 +17296,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const _photoSrc = photo.url ? icProxy(photo.url) : (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '');
     const ath = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
-    return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(_photoSrc)}')">
+    return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${escJs(_photoSrc)}')">
       <div class="profile-media-thumb">
         <img src="${esc(_photoSrc)}" alt="${esc(r.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
         <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
@@ -17346,7 +17355,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       byGara.get(k).items.push({ w, s });
     }
     const groups = [...byGara.values()];
-    const thumb = (s, nome) => `<button type="button" class="pm-thumb" onclick="openPhotoLightbox('${esc(s)}')"><img src="${esc(s)}" alt="${esc(nome)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></button>`;
+    const thumb = (s, nome) => `<button type="button" class="pm-thumb" onclick="openPhotoLightbox('${escJs(s)}')"><img src="${esc(s)}" alt="${esc(nome)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></button>`;
     const raceRow = g => {
       // griglia a 3 colonne: al massimo 2 righe piene, l'ultima cella è il "+N"
       const n = g.items.length, show = n > 6 ? 5 : n;
@@ -17379,7 +17388,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       // stessa intestazione delle sezioni (es. "RISULTATI"); lo span nascosto evita
       // la regola .section-header:first-child (banda scura da titolo di pagina)
       return `<div class="pm-tier"><span style="display:none"></span><div class="section-header" style="margin:${i ? 26 : 6}px 0 14px"><span class="section-title">${x.t} · ${x.list.length}</span><span class="section-line"></span></div></div>
-        <div class="pm-races">${asGrid ? `<div class="pm-vgrid">${first.map(rowFn).join('')}</div>` : first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest${asGrid ? ' pm-vgrid' : ''}" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${rest.length})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
+        <div class="pm-races">${asGrid ? `<div class="pm-vgrid">${first.map(rowFn).join('')}</div>` : first.map(rowFn).join('')}${rest.length ? `<div class="pm-rest${asGrid ? ' pm-vgrid' : ''}" hidden>${rest.map(rowFn).join('')}</div><button type="button" class="pm-showall" onclick="const r=this.previousElementSibling;r.hidden=!r.hidden;this.textContent=r.hidden?'Mostra tutte le gare (+${escJs(rest.length)})':'Mostra meno'">Mostra tutte le gare (+${rest.length})</button>` : ''}</div>`;
     }).join('');
   }
   const groupedVideosHtml = () => {
@@ -18079,7 +18088,7 @@ function profileYearRow(kind, id, selYear, yearsOverride) {
     <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.04em;margin-right:4px">STAGIONE</span>
     ${years.map(y => {
       const on = String(y) === String(selYear);
-      return `<button class="year-pill" data-year="${esc(y)}" onclick="window.${fn}('${esc(id)}','${y}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
+      return `<button class="year-pill" data-year="${esc(y)}" onclick="window.${fn}('${escJs(id)}','${escJs(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
     }).join('')}
   </div>`;
 }
@@ -18751,8 +18760,8 @@ async function renderAtleta(atleta_id, opts = {}) {
   const _actionsHtml = `
           <div class="ath-hero-actions">
             <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
-            <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')" aria-label="Compara"><span class="ath-btn-lbl">Compara</span></button>
-            <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            <button class="btn-share" onclick="window.openComparatore('${escJs(atleta_id)}','atleta')" aria-label="Compara"><span class="ath-btn-lbl">Compara</span></button>
+            <button class="watch-btn ${isWatched(atleta_id) ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${escJs(atleta_id)}','${escJs(displayCognome)}','${escJs(displayNome)}')">${isWatched(atleta_id) ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
             ${/^(ELI|JUN)_/.test(rCode || displayCategoria || '') ? `<a class="btn-share" href="https://www.procyclingstats.com/search.php?term=${encodeURIComponent(displayNome + ' ' + displayCognome)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="ath-btn-lbl">PCS ↗</span></a>` : ''}
@@ -18982,7 +18991,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // I chip dei titoli regionali stanno in alto accanto al nome (vedi
   // regionalChampionChipsHtml nell'header); qui resta solo il pulsante admin.
   const _rcAdminHtml = (authUser()?.role === 'admin') ? `
-    <span class="ath-badge ath-badge--default" style="cursor:pointer" onclick="window.adminAddRegionalTitle('${esc(atleta_id)}','${esc(rCode||'')}')" title="Aggiungi titolo di Campione Regionale">🥇 + Titolo Regionale</span>` : '';
+    <span class="ath-badge ath-badge--default" style="cursor:pointer" onclick="window.adminAddRegionalTitle('${escJs(atleta_id)}','${escJs(rCode||'')}')" title="Aggiungi titolo di Campione Regionale">🥇 + Titolo Regionale</span>` : '';
   const _badgeStripHtml = `
     <div class="ath-badge-strip">
       ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
@@ -19163,7 +19172,7 @@ async function _injectFollowBtn(spanId, type, id) {
   if (!user) return;
   const isFollowing = type === 'atleta' ? _userFollows.atleti.has(id) : _userFollows.teams.has(id);
   const render = (following) => {
-    span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
+    span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${escJs(type)}','${escJs(id)}','${escJs(spanId)}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
   };
   render(isFollowing);
 }
@@ -19179,7 +19188,7 @@ window.toggleFollow = async function(type, id, spanId) {
     else { following ? _userFollows.teams.add(id) : _userFollows.teams.delete(id); }
     const span = document.getElementById(spanId);
     if (span) {
-      span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
+      span.innerHTML = `<button id="follow-btn-${spanId}" class="follow-pill ${following ? 'is-on' : ''}" onclick="window.toggleFollow('${escJs(type)}','${escJs(id)}','${escJs(spanId)}')">${following ? '★ Seguito' : '☆ Segui'}</button>`;
     }
     showToast(following ? '★ Ora segui questo ' + (type === 'atleta' ? 'atleta' : 'team') : 'Non segui più');
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
@@ -19869,7 +19878,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     // Modale interna invece di un link esterno a PCS: il traffico resta sul
     // sito, con tutti i nostri atleti scrapati per quella stessa gara.
     const raceHtml = r.pcs_race_slug
-      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${esc(r.pcs_race_slug)}',${season},'${esc((r.gara_name||'').replace(/'/g,"\\'"))}')">${esc(r.gara_name)}</a>`
+      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${escJs(r.pcs_race_slug)}',${season},'${escJs((r.gara_name||''))}')">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
@@ -20185,7 +20194,7 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
     const isPcs = !emptyYears.has(String(y)) && !ciclismoOnlyYears.includes(y);
     const attr = isPcs ? 'data-pcs="1"' : 'data-ciclismo="1"';
     const handler = isPcs ? 'setAtletaPcsYear' : 'setAtletaCiclismoYear';
-    return `<button class="year-pill" data-year="${esc(y)}" ${attr} onclick="window.${handler}('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`;
+    return `<button class="year-pill" data-year="${esc(y)}" ${attr} onclick="window.${handler}('${escJs(atletaId)}','${escJs(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`;
   }).join('');
   freshYearRow.insertAdjacentHTML('beforeend', pillsHtml);
 
@@ -20712,7 +20721,7 @@ window.openCiclismoAddResult = (ciclismoGaraId) => {
       <input type="text" id="car-nome" placeholder="Nome completo (es. MARIO ROSSI)" style="${inpStyle}"/>
       <input type="text" id="car-team" placeholder="Team (opzionale)" style="${inpStyle}"/>
       <div id="car-err" style="color:#EF4444;font-size:.8rem;margin-bottom:8px;display:none"></div>
-      <button id="car-submit" onclick="window._submitCiclismoAddResult('${esc(ciclismoGaraId)}')" style="width:100%;padding:10px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva</button>
+      <button id="car-submit" onclick="window._submitCiclismoAddResult('${escJs(ciclismoGaraId)}')" style="width:100%;padding:10px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva</button>
     </div>`;
   document.body.appendChild(overlay);
 };
@@ -20972,8 +20981,8 @@ async function renderGaraStorica(ciclismoGaraId) {
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
   };
   const _vAdminBtns = (i) => _isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-    <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_mKey)}',${i},${!!garaVideos[i]?.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
-    <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_mKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
+    <button onclick="event.stopPropagation();window.adminEditVideo('${escJs(_mKey)}',${i},${!!garaVideos[i]?.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
+    <button onclick="event.stopPropagation();window.adminDeleteVideo('${escJs(_mKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
   </div>` : '';
   const _buildVideoElStorico = (v, i, cls = 'gara-media-half gara-media-video') => `<div class="${cls}" onclick="${_vClickStorico(v)}">
     ${_vThumbStorico(v)}
@@ -21052,10 +21061,10 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>` : '';
 
   const uploadBtnHtml = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(_mKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${escJs(_mKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
     : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
   const addVideoBtnHtml = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(_mKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${escJs(_mKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
     : '';
   const mediaSectionHtml = (_heroMedia || _gallery || extraVideosHtml || uploadBtnHtml || addVideoBtnHtml) ? `
     <div class="comp-section" style="margin-top:16px">
@@ -21069,10 +21078,10 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>` : '';
   const adminBtnsHtml = (_isAdmin && isPro) ? adminEditBtn('gara', garaKey) : (_isAdmin && !isPro) ? `
       ${adminEditBtn('gara', garaKey)}
-      <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(garaKey)}')">⬇ Importa PCS</button>
-      <button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(garaKey)}')">↺ Rimatch Atleti PCS</button>
-      <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openCiclismoAddResult('${esc(ciclismoGaraId)}')">➕ Aggiungi risultato mancante</button>
-      <button class="admin-edit-btn" style="background:#ea580c" onclick="window.ciclismoRimatchGara('${esc(ciclismoGaraId)}')">↺ Rimatch atleti mancanti</button>` : '';
+      <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${escJs(garaKey)}')">⬇ Importa PCS</button>
+      <button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${escJs(garaKey)}')">↺ Rimatch Atleti PCS</button>
+      <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openCiclismoAddResult('${escJs(ciclismoGaraId)}')">➕ Aggiungi risultato mancante</button>
+      <button class="admin-edit-btn" style="background:#ea580c" onclick="window.ciclismoRimatchGara('${escJs(ciclismoGaraId)}')">↺ Rimatch atleti mancanti</button>` : '';
 
   setPage(`
     <div class="hx-wrap gara-wrap">
@@ -21623,7 +21632,7 @@ function _renderCiclismoMedia(containerId, mediaList, rows) {
   const posLabel = p => { p = Number(p); if (!p) return ''; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
   const posColor = p => { p = Number(p); return p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)'; };
   const cards = mediaList.map(m => `
-    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
+    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${escJs(mediaUrl(m.photo_url))}')">
       <div class="profile-media-thumb">
         <img src="${esc(mediaUrl(m.photo_url))}" alt="${esc(m.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
         ${m.posizione ? `<div class="profile-media-badge" style="color:${posColor(m.posizione)}">${posLabel(m.posizione)}</div>` : ''}
@@ -21739,7 +21748,7 @@ async function _loadTeamCiclismoStorico(teamId, teamNome, nativeCount) {
   const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
   if (!ciclismoOnlyYears.length) return;
 
-  const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setTeamCiclismoYear('${esc(teamId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
+  const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setTeamCiclismoYear('${escJs(teamId)}','${escJs(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
   yearRow.insertAdjacentHTML('beforeend', pillsHtml);
 
   // Stessa logica del profilo atleta: se il team non ha nemmeno un atleta
@@ -21780,7 +21789,7 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
 
   const catTabsHtml = cats.length > 1 ? `
     <div class="tab-group" role="tablist" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
-      ${cats.map(c => `<button class="tab-btn ${c === curCat ? 'active-cat' : ''}" onclick="window.setTeamCiclismoYear('${esc(teamId)}','${esc(anno)}','${esc(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
+      ${cats.map(c => `<button class="tab-btn ${c === curCat ? 'active-cat' : ''}" onclick="window.setTeamCiclismoYear('${escJs(teamId)}','${escJs(anno)}','${escJs(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
     </div>` : '';
 
   // Nasconde il contenuto nativo (sempre della stagione ATTUALE) — l'intero
@@ -21878,7 +21887,7 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
 
   const mediaList = (window._ciclismoTeamMediaCache[teamId] || {})[anno] || [];
   const mediaCards = mediaList.map(m => `
-    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
+    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${escJs(mediaUrl(m.photo_url))}')">
       <div class="profile-media-thumb">
         <img src="${esc(mediaUrl(m.photo_url))}" alt="${esc(m.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
         ${m.posizione ? `<div class="profile-media-badge" style="color:${posColor(m.posizione)}">${m.posizione === 1 ? '🥇 1°' : m.posizione === 2 ? '🥈 2°' : m.posizione === 3 ? '🥉 3°' : m.posizione + '°'}</div>` : ''}
@@ -22175,7 +22184,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     // Modale interna invece di un link esterno a PCS: il traffico resta sul
     // sito, con tutti i nostri atleti scrapati per quella stessa gara.
     const raceHtml = r.pcs_race_slug
-      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${esc(r.pcs_race_slug)}',${season},'${esc((r.gara_name||'').replace(/'/g,"\\'"))}')">${esc(r.gara_name)}</a>`
+      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${escJs(r.pcs_race_slug)}',${season},'${escJs((r.gara_name||''))}')">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
     insertChrono(r.data, `e:${r.pcs_race_slug || r.gara_name}:${r.data}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
@@ -22368,7 +22377,7 @@ window.toggleAiChat = function() {
         'Ultime gare disputate',
         'Chi sta salendo in classifica?',
         'Top team della stagione',
-      ].map(q=>`<button onclick="window._vezzAsk('${q}')" style="padding:5px 10px;background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:14px;font-size:.72rem;color:var(--text-secondary);cursor:pointer;white-space:nowrap">${q}</button>`).join('')}</div>
+      ].map(q=>`<button onclick="window._vezzAsk('${escJs(q)}')" style="padding:5px 10px;background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:14px;font-size:.72rem;color:var(--text-secondary);cursor:pointer;white-space:nowrap">${q}</button>`).join('')}</div>
     </div>
     <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px;flex-shrink:0">
       <input id="ai-input" type="text" placeholder="Chiedi a VEZZ…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
@@ -22410,7 +22419,7 @@ window.toggleAiChat = function() {
         `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55;white-space:pre-wrap">${linkifyAthletes(answer)}</div>`);
       if (suggestions && suggestions.length > 0) {
         const btns = suggestions.map(s =>
-          `<button onclick="window._vezzAsk('dimmi i risultati di ${esc(s.nome)}')"
+          `<button onclick="window._vezzAsk('dimmi i risultati di ${escJs(s.nome)}')"
             style="text-align:left;padding:6px 10px;background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:20px;font-size:.75rem;color:var(--text-primary);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">
             <span style="color:var(--red-hot);font-weight:700;margin-right:4px">▸</span>${esc(s.nome)}<span style="color:var(--text-muted);margin-left:5px">${s.data}</span>
           </button>`
@@ -22452,7 +22461,7 @@ async function _injectMsgBtn(spanId, atleta_id, team_name, media_profile_id) {
     if (media_profile_id) params.set('media_profile_id', media_profile_id);
     const d = await apiCall(`/users/lookup?${params}`);
     if (!d.user || d.user.id === loggedUser.id) return; // stesso utente o non trovato
-    span.innerHTML = `<button class="btn-msg-write" onclick="window.startConversation(${d.user.id},'${esc(d.user.display_name || 'Utente')}')">
+    span.innerHTML = `<button class="btn-msg-write" onclick="window.startConversation(${d.user.id},'${escJs(d.user.display_name || 'Utente')}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       Contatta
     </button>`;
@@ -22749,7 +22758,7 @@ async function renderTeam(team_id, opts = {}) {
   const catTabsHtml = teamCats.length > 1 ? `
     <div class="tab-group" role="tablist" style="margin-top:24px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 8px;">
       ${teamCats.map(c => `
-        <button class="tab-btn ${teamViewCat===c?'active-cat':''}" onclick="setTeamDetailCat('${c}')">${catLabel(c)}</button>
+        <button class="tab-btn ${teamViewCat===c?'active-cat':''}" onclick="setTeamDetailCat('${escJs(c)}')">${catLabel(c)}</button>
       `).join('')}
     </div>
   ` : '';
@@ -23045,12 +23054,12 @@ async function renderTeam(team_id, opts = {}) {
           <div class="ath-hero-pills">${_tmPillsHtml}</div>
     <div class="ath-hero-actions">
             <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span class="ath-btn-lbl">Condividi</span></button>
-            <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')"><span class="ath-btn-lbl">Compara</span></button>
-            <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
+            <button class="btn-share" onclick="window.openComparatore('${escJs(team_id)}','team')"><span class="ath-btn-lbl">Compara</span></button>
+            <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${escJs(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
             <span id="team-msg-btn"></span>
             <span id="team-follow-btn"></span>
             ${adminEditBtn('team', team_id)}
-            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${esc(team_id)}','${esc((t.nome||'').replace(/'/g,"\\'"))}')">➕ Aggiungi corridore</button>` : ''}
+            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openAdminAddAthlete('${escJs(team_id)}','${escJs((t.nome||''))}')">➕ Aggiungi corridore</button>` : ''}
           </div>
           ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
           </div>
@@ -23202,7 +23211,7 @@ function openPhotoLightbox(src, opts = {}) {
       const myId = user.atleta_id;
       const iAmTagged = myId && String(opts.current || '').split(',').map(s => s.trim()).includes(String(myId));
       const removeBtn = iAmTagged ? `<button onclick="event.stopPropagation();window.selfUntagPhoto(${opts.photoId})" style="${redStyle}">✕ Rimuovi il mio tag</button>` : '';
-      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
+      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${escJs(String(opts.garaId))}',current:'${escJs(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
         <span style="${hintStyle}">${isAdmin ? 'Cerca e tagga i corridori presenti nella foto' : 'Sei tu o conosci chi è ritratto? Cerca e taggalo'}</span>
         ${removeBtn}`);
     } else {
@@ -23213,8 +23222,8 @@ function openPhotoLightbox(src, opts = {}) {
     if (user) {
       const myId = user.atleta_id;
       const iAmTagged = myId && String(opts.ext.current || '').split(',').map(s => s.trim()).includes(String(myId));
-      const removeBtn = iAmTagged ? `<button onclick="event.stopPropagation();window.extUntagPhoto('${esc(opts.ext.source)}','${esc(opts.ext.garaId)}','${esc(opts.ext.url)}')" style="${redStyle}">✕ Rimuovi il mio tag</button>` : '';
-      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'extphoto',source:'${esc(opts.ext.source)}',garaId:'${esc(opts.ext.garaId)}',photoUrl:'${esc(opts.ext.url)}',current:'${esc(opts.ext.current||'')}'})" style="${btnStyle}">🏷 Tagga corridori</button>
+      const removeBtn = iAmTagged ? `<button onclick="event.stopPropagation();window.extUntagPhoto('${escJs(opts.ext.source)}','${escJs(opts.ext.garaId)}','${escJs(opts.ext.url)}')" style="${redStyle}">✕ Rimuovi il mio tag</button>` : '';
+      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'extphoto',source:'${escJs(opts.ext.source)}',garaId:'${escJs(opts.ext.garaId)}',photoUrl:'${escJs(opts.ext.url)}',current:'${escJs(opts.ext.current||'')}'})" style="${btnStyle}">🏷 Tagga corridori</button>
         <span style="${hintStyle}">Sei tu o conosci chi è ritratto? Cerca e taggalo</span>
         ${removeBtn}`);
     } else {
@@ -23573,7 +23582,7 @@ function _mrDeriveMeta(garaId, sampleRow) {
 function _mrEsordientiAnnoPicker(idPrefix) {
   const cur = window._mrMeta?.categoria || '';
   const g = window._mrMeta?.genere || 'M';
-  const btn = (code, label) => `<button type="button" id="${idPrefix}-${code}" onclick="window._mrSetEsordientiAnno('${code}_${g}','${idPrefix}')" style="flex:1;padding:9px 0;border-radius:var(--r-sm);font-size:0.82rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
+  const btn = (code, label) => `<button type="button" id="${idPrefix}-${code}" onclick="window._mrSetEsordientiAnno('${escJs(code)}_${escJs(g)}','${escJs(idPrefix)}')" style="flex:1;padding:9px 0;border-radius:var(--r-sm);font-size:0.82rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
   return `
     <div style="margin-bottom:12px;padding:10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:var(--r-sm)">
       <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-primary);margin-bottom:6px">Questo ordine d'arrivo è di 1° o 2° anno? <span style="color:var(--red-hot)">*</span></label>
@@ -23629,7 +23638,7 @@ const _MR_CAT_OPTIONS = [['ES1','Esordienti 1° Anno'],['ES2','Esordienti 2° An
 function _mrCategoriaPicker(idPrefix) {
   const cur = window._mrMeta?.categoria || '';
   const g = window._mrMeta?.genere || 'M';
-  const btn = (code, label) => `<button type="button" id="${idPrefix}-cat-${code}" onclick="window._mrSetCategoria('${code}_${g}','${idPrefix}')" style="padding:8px 10px;border-radius:var(--r-sm);font-size:0.8rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
+  const btn = (code, label) => `<button type="button" id="${idPrefix}-cat-${code}" onclick="window._mrSetCategoria('${escJs(code)}_${escJs(g)}','${escJs(idPrefix)}')" style="padding:8px 10px;border-radius:var(--r-sm);font-size:0.8rem;font-weight:700;cursor:pointer;border:1px solid ${cur === code + '_' + g ? 'var(--accent)' : 'var(--border-subtle)'};background:${cur === code + '_' + g ? 'var(--accent)' : 'var(--bg-primary)'};color:${cur === code + '_' + g ? '#fff' : 'var(--text-primary)'}">${label}</button>`;
   return `
     <div style="margin-bottom:12px;padding:10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:var(--r-sm)">
       <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--text-primary);margin-bottom:6px">Questa gara ha più categorie (es. "Open"): a quale appartiene questo ordine d'arrivo? <span style="color:var(--red-hot)">*</span></label>
@@ -23772,10 +23781,10 @@ window.openManualResultForm = (garaId, posizione, forceAdd) => {
       <input type="text" id="mr-tempo" placeholder="es. 1'23&quot;" value="${esc(existing?.tempo || (forceAdd && sample ? sample.tempo||'' : ''))}" style="${inpStyle}"/>
       <div id="mr-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
       <div style="display:flex;gap:8px">
-        <button id="mr-submit" onclick="window.submitManualResult('${esc(garaId)}')" style="flex:1;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">${existing ? 'Salva' : 'Aggiungi'}</button>
-        ${existing?._manual ? `<button onclick="window.deleteManualResult(${existing._manualId},'${esc(garaId)}')" style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🗑</button>` : ''}
+        <button id="mr-submit" onclick="window.submitManualResult('${escJs(garaId)}')" style="flex:1;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">${existing ? 'Salva' : 'Aggiungi'}</button>
+        ${existing?._manual ? `<button onclick="window.deleteManualResult(${existing._manualId},'${escJs(garaId)}')" style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🗑</button>` : ''}
       </div>
-      ${existing ? `<button onclick="this.closest('[style*=fixed]').remove();window.openManualResultForm('${esc(garaId)}',${existing.posizione},true)" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--border-subtle);border-radius:var(--r-sm);color:var(--text-secondary);font-size:0.8rem;cursor:pointer">➕ Aggiungi un altro corridore a questa posizione (gara a squadre)</button>` : ''}
+      ${existing ? `<button onclick="this.closest('[style*=fixed]').remove();window.openManualResultForm('${escJs(garaId)}',${existing.posizione},true)" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--border-subtle);border-radius:var(--r-sm);color:var(--text-secondary);font-size:0.8rem;cursor:pointer">➕ Aggiungi un altro corridore a questa posizione (gara a squadre)</button>` : ''}
       ${forceAdd ? `<button onclick="window._mrCloseModal()" style="width:100%;margin-top:10px;padding:8px;background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;text-decoration:underline">Ho finito, chiudi e aggiorna la pagina</button>` : ''}
     </div>`;
   document.body.appendChild(overlay);
@@ -23819,7 +23828,7 @@ window._mrBindRiderSearch = () => {
     }
     dd.innerHTML = out.length
       ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-            onclick="window._mrPickRider('${esc(o.cognome.replace(/'/g,"\\'"))}','${esc(o.nome.replace(/'/g,"\\'"))}','${esc(o.team.replace(/'/g,"\\'"))}')">
+            onclick="window._mrPickRider('${escJs(o.cognome)}','${escJs(o.nome)}','${escJs(o.team)}')">
             <div style="font-size:.82rem;font-weight:600">${esc(o.cognome)} ${esc(o.nome)}</div>
             <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.team)}</div>
           </div>`).join('')
@@ -24045,7 +24054,7 @@ window.openManualResultBulkForm = (garaId, prefilledRows, catHint) => {
       <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.${prefilledRows && prefilledRows.length ? ' <strong style="color:var(--accent)">Righe estratte dalla foto — controlla nomi e team prima di salvare, l\'OCR può sbagliare su scritte poco chiare o tagliate.</strong>' : ''}</p>
       ${window._mrMeta?.esordientiAmbiguous ? _mrEsordientiAnnoPicker('mr-bulk-anno') : ''}
       ${window._mrMeta?.categoriaUnresolved ? _mrCategoriaPicker('mr-bulk-cat') : ''}
-      ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${esc(garaId)}','${esc(window._mrBulkCatHint || '')}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
+      ${!prefilledRows ? `<button onclick="document.getElementById('modal-overlay').remove();window.openOcrArrivoUpload('${escJs(garaId)}','${escJs(window._mrBulkCatHint || '')}')" style="margin-bottom:10px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">📷 Compila da foto dell'ordine d'arrivo</button>` : ''}
       <div id="mr-bulk-rows"></div>
       <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
       <div id="mr-bulk-err" style="color:#EF4444;font-size:0.8rem;margin:8px 0;display:none"></div>
@@ -24149,7 +24158,7 @@ window._mrBulkSearch = (idx, val) => {
     ? out.map(o => {
         const catWarn = meta.categoria && o.categoria && o.categoria !== meta.categoria;
         return `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
-          onclick="window._mrBulkPick(${idx},'${esc(o.cognome.replace(/'/g,"\\'"))}','${esc(o.nome.replace(/'/g,"\\'"))}','${esc(o.team.replace(/'/g,"\\'"))}')">
+          onclick="window._mrBulkPick(${idx},'${escJs(o.cognome)}','${escJs(o.nome)}','${escJs(o.team)}')">
           <strong>${esc(o.cognome)}</strong> ${esc(o.nome)} <span style="color:var(--text-muted);font-size:.72rem">— ${esc(o.team)}</span>
           ${catWarn ? `<div style="color:#F59E0B;font-size:.68rem">⚠ a database come "${esc(catLabel(o.categoria) || o.categoria)}", diversa da questa gara — scegli solo se è la stessa persona</div>` : ''}
         </div>`; }).join('')
@@ -24186,7 +24195,7 @@ window._mrBulkTeamSearch = (idx, val) => {
   }
   if (!out.length) { dd.style.display = 'none'; return; }
   dd.innerHTML = out.map(nome => `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
-        onclick="window._mrBulkTeamPick(${idx},'${esc(nome.replace(/'/g,"\\'"))}')">${esc(nome)}</div>`).join('');
+        onclick="window._mrBulkTeamPick(${idx},'${escJs(nome)}')">${esc(nome)}</div>`).join('');
   dd.style.display = 'block';
 };
 window._mrBulkTeamPick = (idx, nome) => {
@@ -24756,7 +24765,7 @@ async function renderMediaProfile(profileId, _keepPage) {
     const isOwner = loggedUser && profile.user_id && loggedUser.id === profile.user_id;
     const canMsg  = loggedUser && profile.user_id && !isOwner;
     const msgBtn  = canMsg
-      ? `<button class="btn-msg-write" onclick="window.startConversation(${profile.user_id},'${esc(profile.display_name)}')">
+      ? `<button class="btn-msg-write" onclick="window.startConversation(${profile.user_id},'${escJs(profile.display_name)}')">
            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
            Scrivi messaggio
          </button>` : '';
@@ -24823,10 +24832,10 @@ window._renderMediaAlbum = async function(albumId, profileId) {
             const ttl = (p.caption || album?.title || 'Foto gara').replace(/'/g,'');
             const gid = (album?.gara_id || '').replace(/'/g,'');
             return `<div class="media-photo-item">
-              <img src="${esc(src)}" loading="lazy" alt="${esc(ttl)}" onclick="window.openPhotoLightbox('${esc(src)}')" style="cursor:zoom-in"/>
+              <img src="${esc(src)}" loading="lazy" alt="${esc(ttl)}" onclick="window.openPhotoLightbox('${escJs(src)}')" style="cursor:zoom-in"/>
               <button id="collect-btn-${uid}" class="collect-btn ${inColl?'collect-btn--active':''}" title="${inColl?'Nella tua raccolta':'Salva nella raccolta'}"
                 style="position:absolute;top:6px;right:6px;z-index:2"
-                onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${esc(src)}','${esc(ttl)}','${esc(gid)}')">${inColl?'✓':'＋'}</button>
+                onclick="event.stopPropagation();window.toggleMediaCollect('${escJs(uid)}','foto','${escJs(src)}','${escJs(ttl)}','${escJs(gid)}')">${inColl?'✓':'＋'}</button>
               ${p.caption ? `<div class="media-photo-caption">${esc(p.caption)}</div>` : ''}
             </div>`;
           }).join('')}</div>`
@@ -24883,7 +24892,7 @@ window._loadMediaCreatorArea = async function() {
     const profilesHtml = profiles.length ? `
       <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
         ${profiles.map(p => `
-          <button onclick="window.mediaCreatorSetProfile(${p.id},'${esc(p.slug||'').replace(/'/g,"&#39;")}')" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
+          <button onclick="window.mediaCreatorSetProfile(${p.id},'${escJs(p.slug||'').replace(/'/g,"&#39;")}')" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
             <div style="position:relative;width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${liveProfileIds.has(p.id) ? 'var(--red-hot)' : (_mediaCreatorProfileId===p.id ? 'var(--accent)' : 'var(--border-subtle)')};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
               ${p.cover_url ? `<img src="${esc(mediaUrl(p.cover_url))}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬'}
               ${liveProfileIds.has(p.id) ? `<span style="position:absolute;bottom:-1px;right:-1px;background:var(--red-hot);color:#fff;font-size:.55rem;font-weight:700;padding:1px 4px;border-radius:4px;line-height:1.3">LIVE</span>` : ''}
@@ -24945,7 +24954,7 @@ window._loadMediaCreatorArea = async function() {
     const seriesChipsHtml = seriesList.length > 1 ? `
       <div class="yt-chips" style="margin:0 0 10px">
         <button class="yt-chip ${!_mediaCreatorSeries ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetSeries('')">Tutte le rubriche</button>
-        ${seriesList.map(s => `<button class="yt-chip ${_mediaCreatorSeries===s ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetSeries('${esc(s).replace(/'/g,"&#39;")}')">${esc(s)}</button>`).join('')}
+        ${seriesList.map(s => `<button class="yt-chip ${_mediaCreatorSeries===s ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetSeries('${escJs(s).replace(/'/g,"&#39;")}')">${esc(s)}</button>`).join('')}
       </div>` : '';
 
     area.innerHTML = `
@@ -25077,7 +25086,7 @@ function _initGaraMediaModals() {
         </div>
         <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
         <div id="rp-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
-        <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
+        <button id="rp-submit" onclick="window.submitRacePhoto('${escJs(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
       </div>`;
     document.body.appendChild(overlay);
 
@@ -25141,7 +25150,7 @@ function _initGaraMediaModals() {
       }
       _riderDd.innerHTML = out.length
         ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-              onclick="window._rpAddRider('${esc(o.id)}','${esc(o.label.replace(/'/g,'’'))}')">
+              onclick="window._rpAddRider('${escJs(o.id)}','${escJs(o.label)}')">
               <div style="font-size:.82rem;font-weight:600">${esc(o.label)}</div>
               <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.sub)}</div>
             </div>`).join('')
@@ -25171,7 +25180,7 @@ function _initGaraMediaModals() {
     box.innerHTML = tags.map(t => `
       <span style="display:inline-flex;align-items:center;gap:5px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:3px 6px 3px 10px;font-size:.75rem">
         ${esc(t.label)}
-        <button onclick="window._rpRemoveRider('${esc(t.id)}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;line-height:1;padding:0">✕</button>
+        <button onclick="window._rpRemoveRider('${escJs(t.id)}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;line-height:1;padding:0">✕</button>
       </span>`).join('');
   };
 
@@ -25253,7 +25262,7 @@ function _initGaraMediaModals() {
           <input type="checkbox" id="vp-islive" style="width:auto;margin:0"/> 🔴 È una diretta
         </label>
         <div id="vsubmit-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
-        <button id="vsubmit-btn" onclick="window._submitVideo('${esc(garaId)}','${esc(calId)}')"
+        <button id="vsubmit-btn" onclick="window._submitVideo('${escJs(garaId)}','${escJs(calId)}')"
           style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
           Invia
         </button>
@@ -25597,18 +25606,18 @@ async function renderGara(gara_id) {
         <div style="color:var(--text-muted);font-size:.88rem">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           ${adminEditBtn('gara', primaryGaraId)}
-          ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
-          ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">➕ Aggiungi risultati</button>` : ''}
-          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">📷 Da foto ordine d'arrivo</button>` : ''}
+          ${authUser()?.role === 'admin' ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${escJs(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
+          ${authUser()?.role === 'admin' ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${escJs(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${escJs(_calBareId)}',null,'${escJs(_pageCatHint)}')">➕ Aggiungi risultati</button>` : ''}
+          ${authUser() ? `<button class="admin-edit-btn" style="background:#ea580c" onclick="window.openOcrArrivoUpload('${escJs(_calBareId)}','${escJs(_pageCatHint)}')">📷 Da foto ordine d'arrivo</button>` : ''}
         </div>
       </div>
       <div class="card" style="padding:20px 24px;margin-top:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
           <strong style="font-size:1rem">Foto & Video</strong>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(primaryGaraId)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>` : ''}
-            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(primaryGaraId)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>` : ''}
+            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${escJs(primaryGaraId)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>` : ''}
+            ${authUser() ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${escJs(primaryGaraId)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>` : ''}
           </div>
         </div>
         <div id="pre-race-media-grid" style="color:var(--text-muted);font-size:.85rem">Caricamento…</div>
@@ -25664,8 +25673,8 @@ async function renderGara(gara_id) {
           <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)">▶</div>
           ${v.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 DIRETTA</div>` : ''}
           ${_isAdminPre ? `<div style="position:absolute;top:4px;left:4px;display:flex;gap:3px">
-            <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${i},${!!v.is_live})" style="${_preAdminBtnStyle};background:#2563eb">✏️</button>
-            <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${i})" style="${_preAdminBtnStyle};background:#dc2626">🗑</button>
+            <button onclick="event.stopPropagation();window.adminEditVideo('${escJs(primaryGaraId)}',${i},${!!v.is_live})" style="${_preAdminBtnStyle};background:#2563eb">✏️</button>
+            <button onclick="event.stopPropagation();window.adminDeleteVideo('${escJs(primaryGaraId)}',${i})" style="${_preAdminBtnStyle};background:#dc2626">🗑</button>
           </div>` : ''}
         </div>`;
       }).join('');
@@ -25743,7 +25752,7 @@ async function renderGara(gara_id) {
     .sort((a, b) => _CAT_TAB_ORDER.indexOf(a.code) - _CAT_TAB_ORDER.indexOf(b.code));
   const _catTabsHtml = _catList.length > 1 ? `
     <div class="tab-group" role="tablist" aria-label="Categorie della gara" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
-      ${_catList.map(c => `<button class="tab-btn ${c.code === _curCode ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(c.gid)}'">${esc(c.label)}</button>`).join('')}
+      ${_catList.map(c => `<button class="tab-btn ${c.code === _curCode ? 'active-cat' : ''}" onclick="location.hash='#/gara/${escJs(c.gid)}'">${esc(c.label)}</button>`).join('')}
     </div>` : '';
 
   // ── Schede TAPPA di una gara a tappe (stesso giro, date diverse) ──
@@ -25808,7 +25817,7 @@ async function renderGara(gara_id) {
   const _curStageId = (globalData?.garaToCalId || {})[primaryGaraId] || primaryGaraId;
   const _stageTabsHtml = _stageList.length > 1 ? `
     <div class="tab-group" role="tablist" aria-label="Tappe del giro" style="display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px">
-      ${_stageList.map(s => `<button class="tab-btn ${s.id === _curStageId ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(s.id)}'">${esc(s.label)}</button>`).join('')}
+      ${_stageList.map(s => `<button class="tab-btn ${s.id === _curStageId ? 'active-cat' : ''}" onclick="location.hash='#/gara/${escJs(s.id)}'">${esc(s.label)}</button>`).join('')}
     </div>` : '';
 
   // ── Gare "a squadre" (es. cronometro a squadre): la FCI pubblica UNA sola
@@ -25850,16 +25859,16 @@ async function renderGara(gara_id) {
       const riderRows = realRiders.map(r => `
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 4px 5px 38px;font-size:.84rem;border-bottom:1px solid var(--border-subtle)">
           <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(r.cognome)} ${esc(r.nome)}</a>
-          ${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(garaId)}',${pos})" title="Modifica corridore" style="background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6">✏️</button>` : ''}
+          ${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${escJs(garaId)}',${pos})" title="Modifica corridore" style="background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6">✏️</button>` : ''}
         </div>`).join('');
       const addBtn = _rowIsAdmin ? `
         <div style="padding:6px 4px 8px 38px">
-          <button onclick="window.openManualResultForm('${esc(garaId)}',${pos}${realRiders.length ? ',true' : ''})" style="padding:5px 10px;background:none;border:1px dashed var(--border-subtle);border-radius:6px;font-size:.74rem;color:var(--text-muted);cursor:pointer">➕ ${realRiders.length ? 'Aggiungi un altro corridore' : 'Aggiungi i corridori di questo team'}</button>
+          <button onclick="window.openManualResultForm('${escJs(garaId)}',${pos}${realRiders.length ? ',true' : ''})" style="padding:5px 10px;background:none;border:1px dashed var(--border-subtle);border-radius:6px;font-size:.74rem;color:var(--text-muted);cursor:pointer">➕ ${realRiders.length ? 'Aggiungi un altro corridore' : 'Aggiungi i corridori di questo team'}</button>
         </div>` : '';
       return `<tr><td colspan="7" style="padding:0;border:none">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;${pos === 1 ? 'background:rgba(245,196,0,.06);' : ''}border-bottom:1px solid var(--border-subtle)">
           <div style="display:flex;align-items:center;gap:10px;min-width:0">
-            <span class="td-pos ${posClass(pos)}" style="font-weight:800;flex-shrink:0">${pos}°${_rowIsAdmin ? `<button onclick="window.openManualResultForm('${esc(garaId)}',${pos})" title="Modifica posizione/squadra/distacco" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.65rem;opacity:.55;vertical-align:middle">✏️</button>` : ''}</span>
+            <span class="td-pos ${posClass(pos)}" style="font-weight:800;flex-shrink:0">${pos}°${_rowIsAdmin ? `<button onclick="window.openManualResultForm('${escJs(garaId)}',${pos})" title="Modifica posizione/squadra/distacco" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.65rem;opacity:.55;vertical-align:middle">✏️</button>` : ''}</span>
             <a href="#/team/${esc(teamId)}" style="font-weight:700;font-family:var(--font-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(teamName)}</a>
           </div>
           <div style="display:flex;align-items:center;gap:16px;font-size:.85rem;color:var(--text-secondary);flex-shrink:0">
@@ -25919,12 +25928,12 @@ async function renderGara(gara_id) {
       const _isRegChamp = !!_rcTitle;
       const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${FASCIA_LABEL[_rcTitle.fascia] ? ' ' + FASCIA_LABEL[_rcTitle.fascia].toUpperCase() : ''}${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
       const _rcBtn = (_rowIsAdmin && r.atleta_id && !_isRegChamp)
-        ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${esc(r.gara_id)}','${esc(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
+        ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${escJs(r.gara_id)}','${escJs(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
       // Gara promiscua: se l'atleta appartiene a un'altra fascia d'età lo si
       // segnala con le iniziali della sua categoria (il risultato conta lì).
       const _intr = _catIntruderBadge(r.atleta_id, r.gara_id);
       return `<tr${_isRegChamp ? ' class="rc-row"' : ''}>
-        <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
+        <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${escJs(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
         <td style="font-family:var(--font-heading);font-weight:700">
           <div style="display:flex;align-items:center">
             <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
@@ -26042,7 +26051,7 @@ async function renderGara(gara_id) {
 
   // Pulsante "Aggiungi Video" (sempre, se loggato)
   const _addVideoBtn = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(primaryGaraId)}','${esc(_calId)}')">
+    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${escJs(primaryGaraId)}','${escJs(_calId)}')">
          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
          Aggiungi Video
        </button>`
@@ -26074,9 +26083,9 @@ async function renderGara(gara_id) {
       ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-        <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷 Tag</button>
-        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
-        <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
+        <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${escJs(_k)}',srcIdx:${_i},garaId:'${escJs(_k)}',current:'${escJs(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷 Tag</button>
+        <button onclick="event.stopPropagation();window.adminEditVideo('${escJs(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+        <button onclick="event.stopPropagation();window.adminDeleteVideo('${escJs(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
       </div>` : ''}
       ${v.title ? `<div class="gara-video-hero-caption">${esc(v.title)}</div>` : ''}
     </div>`;
@@ -26111,10 +26120,10 @@ async function renderGara(gara_id) {
                   <div class="gara-video-meta">${esc(v.channel)}</div>
                 </div>
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
-                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i},'${esc(primaryGaraId)}')" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
-                  <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷</button>
-                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
-                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
+                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${escJs(_k)}',${_i},'${escJs(primaryGaraId)}')" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
+                  <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${escJs(_k)}',srcIdx:${_i},garaId:'${escJs(_k)}',current:'${escJs(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷</button>
+                  <button onclick="event.stopPropagation();window.adminEditVideo('${escJs(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
+                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${escJs(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
               </div>`;
           }).join('')}
@@ -26126,7 +26135,7 @@ async function renderGara(gara_id) {
   let _heroPhotoEl = '';
   let _gallery     = '';
   let _uploadBtn   = _user
-    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(primaryGaraId)}')">
+    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${escJs(primaryGaraId)}')">
          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
          Carica foto
        </button>`
@@ -26181,7 +26190,7 @@ async function renderGara(gara_id) {
       .filter(Boolean).join(' — ');
     const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
     _heroPhotoEl = featuredPhoto
-      ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}',{photoId:${featuredPhoto.id},garaId:'${esc(featuredPhoto._gkey||primaryGaraId)}',current:'${esc(featuredPhoto.atleta_ids||'')}',caption:'${esc((featuredPhoto.caption||'').replace(/'/g,''))}',credit:'${esc(((featuredPhoto.photographer||featuredPhoto.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in">
+      ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${escJs(PHOTOS_BASE)}/photos/${escJs(featuredPhoto.filename)}',{photoId:${featuredPhoto.id},garaId:'${escJs(featuredPhoto._gkey||primaryGaraId)}',current:'${escJs(featuredPhoto.atleta_ids||'')}',caption:'${escJs((featuredPhoto.caption||''))}',credit:'${escJs(((featuredPhoto.photographer||featuredPhoto.display_name)||''))}'})" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption || _photoAltBase)}" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}${_heroTagNames ? `<div style="margin-top:3px">🏷 ${_heroTagNames}</div>` : ''}</div>` : (_heroTagNames ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px">🏷 ${_heroTagNames}</div>` : '')}
@@ -26199,11 +26208,11 @@ async function renderGara(gara_id) {
             data-caption="${esc(p.caption||'')}"
             data-photographer="${esc(p.photographer||'')}"
             data-atleta-ids="${esc(p.atleta_ids||'')}">
-            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption || _photoAltBase)}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}',caption:'${esc((p.caption||'').replace(/'/g,''))}',credit:'${esc(((p.photographer||p.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in"/>
-            <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
+            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption || _photoAltBase)}" loading="lazy" onclick="window.openPhotoLightbox('${escJs(PHOTOS_BASE)}/photos/${escJs(p.filename)}',{photoId:${p.id},garaId:'${escJs(p._gkey||primaryGaraId)}',current:'${escJs(p.atleta_ids||'')}',caption:'${escJs((p.caption||''))}',credit:'${escJs(((p.photographer||p.display_name)||''))}'})" style="cursor:zoom-in"/>
+            <div class="race-gallery-caption">${esc([p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — '))}</div>
             ${(() => { const nm = String(p.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', '); return nm ? `<div style="position:absolute;bottom:4px;left:6px;right:6px;font-size:.62rem;color:#fff;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;z-index:8">🏷 ${nm}</div>` : ''; })()}
             ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${p.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:4px;right:4px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer;white-space:nowrap">🏷 Sono io</button>` : ''}
-            ${(() => { const uid='ph_'+String(p.id||p.filename).replace(/[^a-z0-9]/gi,'').slice(-24); const ic=isInCollection(uid); return `<button id="collect-btn-${uid}" class="collect-btn ${ic?'collect-btn--active':''}" title="${ic?'Nella tua raccolta':'Salva nella raccolta'}" style="position:absolute;top:4px;left:4px;z-index:10;width:26px;height:26px;font-size:.85rem" onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${PHOTOS_BASE}/photos/${esc(p.filename)}','${esc((p.caption||'Foto gara').replace(/'/g,''))}','${esc((primaryGaraId||'').replace(/'/g,''))}')">${ic?'✓':'＋'}</button>`; })()}
+            ${(() => { const uid='ph_'+String(p.id||p.filename).replace(/[^a-z0-9]/gi,'').slice(-24); const ic=isInCollection(uid); return `<button id="collect-btn-${uid}" class="collect-btn ${ic?'collect-btn--active':''}" title="${ic?'Nella tua raccolta':'Salva nella raccolta'}" style="position:absolute;top:4px;left:4px;z-index:10;width:26px;height:26px;font-size:.85rem" onclick="event.stopPropagation();window.toggleMediaCollect('${escJs(uid)}','foto','${escJs(PHOTOS_BASE)}/photos/${escJs(p.filename)}','${escJs((p.caption||'Foto gara'))}','${escJs((primaryGaraId||''))}')">${ic?'✓':'＋'}</button>`; })()}
             ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
               <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#9999;&#65039; Modifica</button>
               <button onclick="event.stopPropagation();window.adminDeletePhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#128465; Elimina</button>
@@ -26254,9 +26263,9 @@ async function renderGara(gara_id) {
         const _albumGridHtml = `
           <div class="profile-media-grid" style="margin-top:12px">
             ${_allPics.map((u, idx) => `
-              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}',{credit:'${esc(_srcLabel)}',ext:{source:'${esc(_photoSource)}',garaId:'${esc(_xpixKey)}',url:'${esc(u.replace(/'/g,"\\'"))}',albumPage:'${esc((_extPhoto.album_page||'').replace(/'/g,"\\'"))}',srcLabel:'${esc(_srcLabel)}',current:'${esc(((_extPhoto.tags||{})[u]||''))}'}})" style="cursor:zoom-in;position:relative">
+              <div class="profile-media-card" onclick="window.openPhotoLightbox('${escJs(icProxy(u))}',{credit:'${escJs(_srcLabel)}',ext:{source:'${escJs(_photoSource)}',garaId:'${escJs(_xpixKey)}',url:'${escJs(u)}',albumPage:'${escJs((_extPhoto.album_page||''))}',srcLabel:'${escJs(_srcLabel)}',current:'${escJs(((_extPhoto.tags||{})[u]||''))}'}})" style="cursor:zoom-in;position:relative">
                 <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
-                ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
+                ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${escJs(_photoSource)}','${escJs(_xpixKey)}','${escJs(u)}')"
                   style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
               </div>`).join('')}
           </div>
@@ -26272,11 +26281,11 @@ async function renderGara(gara_id) {
           }
           const _removeBtn = _isAdminPhoto
             ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
-                 ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
-                 <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
-                 <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
+                 ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${escJs(_photoSource)}','${escJs(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
+                 <button onclick="window.adminPhotoMove('${escJs(_photoSource)}','${escJs(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
+                 <button onclick="window.adminPhotoRemove('${escJs(_photoSource)}','${escJs(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
                </div>` : '';
-          _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}',{ext:{source:'${esc(_photoSource)}',garaId:'${esc(_xpixKey)}',url:'${esc(_extPhoto.url.replace(/'/g,"\\'"))}',albumPage:'${esc((_extPhoto.album_page||'').replace(/'/g,"\\'"))}',srcLabel:'${esc(_srcLabel)}',current:'${esc(((_extPhoto.tags||{})[_extPhoto.url]||''))}'}})" style="cursor:zoom-in;position:relative">
+          _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${escJs(_src)}',{ext:{source:'${escJs(_photoSource)}',garaId:'${escJs(_xpixKey)}',url:'${escJs(_extPhoto.url)}',albumPage:'${escJs((_extPhoto.album_page||''))}',srcLabel:'${escJs(_srcLabel)}',current:'${escJs(((_extPhoto.tags||{})[_extPhoto.url]||''))}'}})" style="cursor:zoom-in;position:relative">
              <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
              <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
              <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}${_yearTag}</div>
@@ -26287,8 +26296,8 @@ async function renderGara(gara_id) {
         } else {
           // C'è già una foto caricata, oppure è un secondo album (altra annata) → sotto la gallery
           const _albumAdminBtns = _isAdminPhoto
-            ? ` <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer;margin-left:6px">🔀 Sposta</button>`
-              + ` <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer">🗑 Rimuovi album</button>`
+            ? ` <button onclick="window.adminPhotoMove('${escJs(_photoSource)}','${escJs(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer;margin-left:6px">🔀 Sposta</button>`
+              + ` <button onclick="window.adminPhotoRemove('${escJs(_photoSource)}','${escJs(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer">🗑 Rimuovi album</button>`
             : '';
           _gallery = (_gallery || '') + `
             <div style="margin-top:16px">
@@ -26437,13 +26446,13 @@ async function renderGara(gara_id) {
     </div>
       <div class="gr-actions">
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
-        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openManualResultBulkForm('${esc(_calBareId)}',null,'${esc(_pageCatHint)}')">Aggiungi risultati</button>` : ''}
-        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openOcrArrivoUpload('${esc(_calBareId)}','${esc(_pageCatHint)}')">Da foto ordine d'arrivo</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openManualResultBulkForm('${escJs(_calBareId)}',null,'${escJs(_pageCatHint)}')">Aggiungi risultati</button>` : ''}
+        ${_user ? `<button class="admin-edit-btn gr-ab" onclick="window.openOcrArrivoUpload('${escJs(_calBareId)}','${escJs(_pageCatHint)}')">Da foto ordine d'arrivo</button>` : ''}
         ${_isAdmin ? `<span class="gr-adm-lbl">Admin</span>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
-        ${_isAdmin && results.length ? `<button class="admin-edit-btn gr-ab gr-fb" onclick="window.adminFbPublish('${esc(primaryGaraId)}')">Pubblica su Facebook</button>` : ''}
-        ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">Importa PCS</button>` : ''}
-        ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">Rimatch atleti</button>` : ''}
+        ${_isAdmin && results.length ? `<button class="admin-edit-btn gr-ab gr-fb" onclick="window.adminFbPublish('${escJs(primaryGaraId)}')">Pubblica su Facebook</button>` : ''}
+        ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsImport('${escJs(primaryGaraId)}')">Importa PCS</button>` : ''}
+        ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn gr-ab" onclick="window.adminPcsRematch('${escJs(primaryGaraId)}')">Rimatch atleti</button>` : ''}
         ${_isAdmin && results.length && !isSquadre ? `<button class="admin-edit-btn gr-ab" onclick="window.openRegionalChampionPicker()">Campione regionale…</button>` : ''}
       </div>
     ${_catTabsHtml}
@@ -26624,9 +26633,9 @@ async function renderGara(gara_id) {
                     ${authUser()?.role === 'admin' ? `<button onclick="window.adminDeleteGalleryAlbum(${a.id},this)" style="margin-left:8px;background:transparent;border:1px solid #ef4444;color:#ef4444;padding:2px 8px;border-radius:4px;font-size:.7rem;cursor:pointer">🗑 Elimina</button>` : ''}
                   </div>
                   <div class="media-gallery-strip-wrap">
-                    <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)">‹</button>
+                    <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${escJs(stripId)}',-1)">‹</button>
                     <div class="media-gallery-strip" id="${stripId}">${thumbsHtml}</div>
-                    <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${stripId}',1)">›</button>
+                    <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${escJs(stripId)}',1)">›</button>
                   </div>
                 </div>`;
             }).join('')}
@@ -26930,7 +26939,7 @@ async function renderCalendario(highlightId) {
       const multTag = g.campionato_italiano ? '<span class="rs-bd ci">CAMP. ITALIANO</span>' : g.campionato_regionale ? '<span class="rs-bd cr">CAMP. REGIONALE</span>'
         : mult >= 3 ? '<span class="rs-bd m3">Internazionale ×3</span>' : mult === 2 ? '<span class="rs-bd m2">Nazionale ×2</span>' : '<span class="rs-bd">Regionale ×1</span>';
       const star = (!isPast && typeof authUser==='function' && authUser())
-        ? `<button id="myrace-btn-${esc(g.id)}" class="cal-follow-btn ${isMyRace(g.id)?'active':''}" title="Aggiungi al mio calendario" onclick="event.stopPropagation();window.toggleMyRace('${esc(g.id)}','${esc((g.nome||'').replace(/'/g,''))}','${esc(g.data||'')}')">★</button>` : '';
+        ? `<button id="myrace-btn-${esc(g.id)}" class="cal-follow-btn ${isMyRace(g.id)?'active':''}" title="Aggiungi al mio calendario" onclick="event.stopPropagation();window.toggleMyRace('${escJs(g.id)}','${escJs((g.nome||''))}','${escJs(g.data||'')}')">★</button>` : '';
 
       return `<div id="cal-${esc(g.id)}" class="cr ${isPast ? 'cal-item-past' : ''} ${hasResults ? 'cal-item-has-results' : ''}" style="--sp:${_sp(g.categoria)}">
         <span class="sp"></span>
@@ -27017,7 +27026,7 @@ async function renderCalendario(highlightId) {
           <div class="hx-seg" role="group" aria-label="Vista"><button type="button" id="cal-view-lista" class="cal-view-btn ${calView==='lista'?'active':''}" onclick="window.calSetView('lista')" aria-pressed="${calView==='lista'}">Lista</button><button type="button" id="cal-view-mappa" class="cal-view-btn ${calView==='mappa'?'active':''}" onclick="window.calSetView('mappa')" aria-pressed="${calView==='mappa'}">Mappa</button></div></div></div>
       <div class="rs-bar" role="search">
         <div class="hx-seg" id="cal-seg-genere" role="group" aria-label="Genere"><button type="button" data-g="" onclick="calSetGenere('')" aria-pressed="${calQGenere===''}">Tutti</button><button type="button" data-g="M" onclick="calSetGenere('M')" aria-pressed="${calQGenere==='M'}">Uomini</button><button type="button" data-g="F" onclick="calSetGenere('F')" aria-pressed="${calQGenere==='F'}">Donne</button></div>
-        <div class="cls-cats" id="cal-cats" role="group" aria-label="Categoria">${CAL_CAT_GROUPS.map(g => `<button type="button" data-c="${g.value}" onclick="calSetCat(calQCat==='${g.value}'?'':'${g.value}')" aria-pressed="${calQCat===g.value}">${g.label}</button>`).join('')}</div>
+        <div class="cls-cats" id="cal-cats" role="group" aria-label="Categoria">${CAL_CAT_GROUPS.map(g => `<button type="button" data-c="${g.value}" onclick="calSetCat(calQCat==='${escJs(g.value)}'?'':'${escJs(g.value)}')" aria-pressed="${calQCat===g.value}">${g.label}</button>`).join('')}</div>
         <input type="search" class="rs-search" id="cal-search" placeholder="Cerca gara…" oninput="calSetSearch(this.value)" aria-label="Cerca gara" autocomplete="off" value="${calQSearch.replace(/"/g, '&quot;')}"/>
         ${_calSel('cal-month', 'window.calSetMonth', 'Tutti i mesi', _calMonths.map((n, i) => { const v = String(i + 1).padStart(2, '0'); return `<option value="${v}" ${calQMonth===v?'selected':''}>${n}</option>`; }).join(''))}
         ${_calSel('cal-regione', 'calSetRegione', 'Tutte le regioni', allRegions.map(r => `<option value="${r}" ${r === calQRegione ? 'selected' : ''}>${esc(r)}</option>`).join(''))}
@@ -27403,11 +27412,11 @@ async function renderAtletiList() {
   const currentCats = atlGender === 'M' ? catsM : catsF;
 
   const genderTabs = ['M','F'].map(g => `
-    <button class="tab-btn ${atlGender===g?'active-gender':''}" onclick="setAtlGender('${g}')">${g==='M'?'UOMINI':'DONNE'}</button>
+    <button class="tab-btn ${atlGender===g?'active-gender':''}" onclick="setAtlGender('${escJs(g)}')">${g==='M'?'UOMINI':'DONNE'}</button>
   `).join('');
   
   const catTabs = currentCats.map(c => `
-    <button class="tab-btn ${atlCat===c?'active-cat':''}" onclick="setAtlCat('${c}')">${catLabel(c)}</button>
+    <button class="tab-btn ${atlCat===c?'active-cat':''}" onclick="setAtlCat('${escJs(c)}')">${catLabel(c)}</button>
   `).join('');
 
   setPageMeta('Atleti', 'Elenco atleti del ciclismo agonistico italiano: Esordienti, Allievi, Juniores, Under23, Elite — uomini e donne.');
@@ -27500,7 +27509,7 @@ function _gareListHtml() {
     const winCode = cats.find(([c]) => e.win && e.win[c]);
     const winner = winCode ? _gtc(e.win[winCode[0]]) : '';
     const catBtns = cats.map(([code, gid]) => `<a class="gr-cat" href="#/gara/${esc(gid)}" onclick="event.stopPropagation()">${esc(catLabel(code))}</a>`).join('');
-    html += `<div class="gr-row" onclick="location.hash='#/gara/${esc(mainGid)}'">
+    html += `<div class="gr-row" onclick="location.hash='#/gara/${escJs(mainGid)}'">
       <div class="gr-main"><b>${esc(e.base)}</b><small>${e.regione && isRealRegion(e.regione) ? esc(_gtc(e.regione)) : ''}</small></div>
       <div class="gr-win">${winner ? `<span class="k">Ultima edizione · ${esc(dTxt)}</span><span class="v">🥇 ${esc(winner)}</span>` : `<span class="k">${esc(dTxt)}</span>`}</div>
       <div class="gr-cats">${catBtns}<a class="gr-hist" href="#/gara-storia/${encodeURIComponent(e.base)}" onclick="event.stopPropagation()">Storico →</a></div>
@@ -27565,11 +27574,11 @@ async function renderTeamList() {
   const currentCats = teamGender === 'M' ? catsM : catsF;
 
   const genderTabs = ['M','F'].map(g => `
-    <button class="tab-btn ${teamGender===g?'active-gender':''}" onclick="setTeamGender('${g}')">${g==='M'?'UOMINI':'DONNE'}</button>
+    <button class="tab-btn ${teamGender===g?'active-gender':''}" onclick="setTeamGender('${escJs(g)}')">${g==='M'?'UOMINI':'DONNE'}</button>
   `).join('');
   
   const catTabs = currentCats.map(c => `
-    <button class="tab-btn ${teamCat===c?'active-cat':''}" onclick="setTeamCat('${c}')">${catLabel(c)}</button>
+    <button class="tab-btn ${teamCat===c?'active-cat':''}" onclick="setTeamCat('${escJs(c)}')">${catLabel(c)}</button>
   `).join('');
 
   setPageMeta('Team', 'Elenco team e squadre del ciclismo agonistico italiano, con punti e corridori per categoria.');
@@ -27970,7 +27979,7 @@ async function renderStatistiche(selectedCatKey) {
   const _maxGareCat = Math.max(..._catRows.map(r=>r.gare), 1);
   const _maxAtlCat  = Math.max(..._catRows.map(r=>r.atleti), 1);
   const _catCompareHtml = _catRows.map(r => `
-    <div onclick="location.hash='#/statistiche/${encodeURIComponent(r.key)}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+    <div onclick="location.hash='#/statistiche/${escJs(encodeURIComponent(r.key))}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
       <div style="font-family:var(--font-heading);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em">${r.label}</div>
       <div title="${r.gare} gare"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.gare/_maxGareCat*100)}%;background:var(--accent);border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.gare} gare</div></div>
       <div title="${r.atleti} atleti"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.atleti/_maxAtlCat*100)}%;background:#6366f1;border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.atleti} atleti</div></div>
@@ -28081,7 +28090,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   const _maxGareCatAll = Math.max(..._catRowsAll.map(r=>r.gare), 1);
   const _maxAtlCatAll  = Math.max(..._catRowsAll.map(r=>r.atleti), 1);
   const catCompareHtml = _catRowsAll.map(r => `
-    <div onclick="location.hash='#/statistiche/${encodeURIComponent(r.key)}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;background:${r.key===catKey?'var(--bg-elevated)':''};transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background='${r.key===catKey?'var(--bg-elevated)':''}'">
+    <div onclick="location.hash='#/statistiche/${escJs(encodeURIComponent(r.key))}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;background:${r.key===catKey?'var(--bg-elevated)':''};transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background='${escJs(r.key===catKey?'var(--bg-elevated)':'')}'">
       <div style="font-family:var(--font-heading);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;${r.key===catKey?'color:var(--red-hot)':''}">${r.label}${r.key===catKey?' •':''}</div>
       <div title="${r.gare} gare"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.gare/_maxGareCatAll*100)}%;background:var(--accent);border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.gare} gare</div></div>
       <div title="${r.atleti} atleti"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.atleti/_maxAtlCatAll*100)}%;background:#6366f1;border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.atleti} atleti</div></div>
@@ -28476,9 +28485,9 @@ function buildCompAc(side, items, selectedId) {
   return `<div class="comp-ac" id="comp-ac-${side}">
     <input type="text" id="comp-ac-input-${side}" class="comp-ac-input cal-filter-select"
       placeholder="Cerca nome…" value="${String(selLabel).replace(/"/g,'&quot;')}" autocomplete="off"
-      oninput="window.compAcFilter('${side}',this.value)"
-      onfocus="window.compAcOpen('${side}')"
-      onblur="setTimeout(()=>{var l=document.getElementById('comp-ac-list-${side}');if(l)l.style.display='none';},200)"
+      oninput="window.compAcFilter('${escJs(side)}',this.value)"
+      onfocus="window.compAcOpen('${escJs(side)}')"
+      onblur="setTimeout(()=>{var l=document.getElementById('comp-ac-list-${escJs(side)}');if(l)l.style.display='none';},200)"
     />
     <div class="comp-ac-dropdown" id="comp-ac-list-${side}" onmousedown="event.preventDefault()"></div>
   </div>`;
@@ -28502,7 +28511,7 @@ function _compRender(side, q) {
   const all = [...items, ...hist].filter(i => !seen.has(i.id) && seen.add(i.id));
   const res = all.map(i => [score(i), i]).filter(x => x[0] > 0).sort((a, b) => b[0] - a[0]).slice(0, 30).map(x => x[1]);
   list.innerHTML = res.length
-    ? res.map(item => `<div class="comp-ac-item" data-id="${esc(item.id)}" data-label="${String(item.label).replace(/"/g, '&quot;')}" onclick="window.compAcPick('${side}',this)"><span class="comp-ac-name">${esc(item.label)}</span>${item.sub ? `<span class="comp-ac-sub">${esc(item.sub)}</span>` : ''}</div>`).join('')
+    ? res.map(item => `<div class="comp-ac-item" data-id="${esc(item.id)}" data-label="${String(item.label).replace(/"/g, '&quot;')}" onclick="window.compAcPick('${escJs(side)}',this)"><span class="comp-ac-name">${esc(item.label)}</span>${item.sub ? `<span class="comp-ac-sub">${esc(item.sub)}</span>` : ''}</div>`).join('')
     : '<div class="comp-ac-empty">Nessun risultato</div>';
   list.style.display = 'block';
 }
@@ -28986,7 +28995,7 @@ async function renderComparatore() {
           </div>
           <div class="cvs-verdict-lbl">METRICHE</div>
           <div class="cvs-verdict-val" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
-          <button class="cvs-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)},${JSON.stringify(shareTitle)})">
+          <button class="cvs-share-btn" onclick="window.shareBattle(${esc(JSON.stringify(shareUrl))},${esc(JSON.stringify(shareTitle))})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Condividi
           </button>
@@ -29149,7 +29158,7 @@ async function renderComparatore() {
           </div>
           <div class="cvs-verdict-lbl">METRICHE</div>
           <div class="cvs-verdict-val" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
-          <button class="cvs-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)},${JSON.stringify(shareTitle)})">
+          <button class="cvs-share-btn" onclick="window.shareBattle(${esc(JSON.stringify(shareUrl))},${esc(JSON.stringify(shareTitle))})">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Condividi
           </button>
@@ -29270,7 +29279,7 @@ function _openShareAppModal(url, text) {
         <a class="share-app-btn wa" href="https://wa.me/?text=${enc}" target="_blank" rel="noopener">WhatsApp</a>
         <a class="share-app-btn tg" href="https://t.me/share/url?url=${encUrl}&text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Telegram</a>
         <a class="share-app-btn em" href="mailto:?subject=${encodeURIComponent('ICS — Italia Cycling Stats')}&body=${enc}">Email</a>
-        <button class="share-app-btn cp" onclick="window._copyShareLink('${url}')">Copia link</button>
+        <button class="share-app-btn cp" onclick="window._copyShareLink('${escJs(url)}')">Copia link</button>
       </div>
     </div>`;
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -29608,7 +29617,7 @@ function doSearch(q, dropdown) {
       dropdown.innerHTML = list.map(r => {
         const lbl = r.type === 'atleta' ? 'ATLETA' : r.type === 'media' ? '📷 FOTOGRAFO' : r.type === 'gara' ? '🏁 GARA' : 'TEAM';
         return `
-        <div class="search-result-item" onclick="goTo('#/${r.type === 'media' ? 'media' : r.type}/${encodeURIComponent(r.id)}'); window.closeAllSearchDropdowns()">
+        <div class="search-result-item" onclick="goTo('#/${escJs(r.type === 'media' ? 'media' : r.type)}/${escJs(encodeURIComponent(r.id))}'); window.closeAllSearchDropdowns()">
           <div>
             <div class="search-result-label">${lbl}</div>
             <div class="search-result-name">${esc(r.display)}</div>
@@ -31043,7 +31052,7 @@ async function renderRisultati() {
             ${impactStrip}
             <div class="ris-full-link" style="display:flex;gap:8px;align-items:stretch">
               <a href="/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
-              ${catGaraId ? `<button class="btn-action" title="Condividi risultati" aria-label="Condividi risultati" onclick="window.quickShareGara('${esc(catGaraId)}')" style="flex:0 0 auto;padding:0 12px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>` : ''}
+              ${catGaraId ? `<button class="btn-action" title="Condividi risultati" aria-label="Condividi risultati" onclick="window.quickShareGara('${escJs(catGaraId)}')" style="flex:0 0 auto;padding:0 12px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>` : ''}
             </div>
           </div>`;
       }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
@@ -31389,7 +31398,7 @@ window._maddSearchGara = (q) => {
   dd.innerHTML = matches.map(r => {
     const isStage = /tappe/i.test(r.categoria || '');
     const label = `${r.nome_gara}${isStage ? ' 🚵 A TAPPE' : ''} — ${r.categoria || ''} ${r.genere || ''} (${r.data || ''})`;
-    return `<div style="padding:7px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border-subtle)" onmousedown="window._maddPickGara('${esc(r.gara_id)}','${esc(label.replace(/'/g,"\\'"))}',${isStage})">${esc(label)}</div>`;
+    return `<div style="padding:7px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border-subtle)" onmousedown="window._maddPickGara('${escJs(r.gara_id)}','${escJs(label)}',${isStage})">${esc(label)}</div>`;
   }).join('');
   dd.style.display = 'block';
 };
@@ -31790,7 +31799,7 @@ async function renderMedia(openOpts) {
     const url = esc(_mediaShareUrl(x, bucketKey));
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     return `<button class="yt-share-btn" title="Condividi"
-      onclick="event.preventDefault();event.stopPropagation();window.shareBattle('${url}','${t}')">
+      onclick="event.preventDefault();event.stopPropagation();window.shareBattle('${escJs(url)}','${escJs(t)}')">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
         <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
@@ -31838,7 +31847,7 @@ async function renderMedia(openOpts) {
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
         ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
-          onclick="event.preventDefault();event.stopPropagation();window._mediaToggleSel('${esc(selKey)}',this.checked)"
+          onclick="event.preventDefault();event.stopPropagation();window._mediaToggleSel('${escJs(selKey)}',this.checked)"
           aria-label="Seleziona per correggere destinazione"/>` : ''}
         ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>`
           : isFacebookVideoUrl(x.video.url) ? fbThumbHtml(x.video.url)
@@ -31874,7 +31883,7 @@ async function renderMedia(openOpts) {
           : `<div class="yt-thumb-fallback">▶</div>`}
         <span class="yt-play">▶</span>
         ${shareBtnHtml(x, bucketKey)}
-        ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${bucketKey}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
+        ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${escJs(bucketKey)}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
       </div>
       <div class="yt-card-body">
         ${_avatarHtml(x.video)}
@@ -31903,7 +31912,7 @@ async function renderMedia(openOpts) {
   };
   const [_mediaMetaTitle, _mediaMetaDesc] = MEDIA_TAB_META[mediaTab] || ['Media', 'Video, dirette, presentazioni e programmi TV delle gare di ciclismo agonistico italiano.'];
   setPageMeta(_mediaMetaTitle, _mediaMetaDesc);
-  const _mTab = (key, label, count) => `<button type="button" onclick="window.mediaSetTab('${key}')" aria-pressed="${mediaTab === key}">${label}${count != null ? `<i>${count}</i>` : ''}</button>`;
+  const _mTab = (key, label, count) => `<button type="button" onclick="window.mediaSetTab('${escJs(key)}')" aria-pressed="${mediaTab === key}">${label}${count != null ? `<i>${count}</i>` : ''}</button>`;
   const _mMonths = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   setPage(`
     <div class="hx-wrap media-wrap">
@@ -33436,7 +33445,7 @@ async function _updateIgShareBtn(){
     const done=a[kind];
     const chk = done ? false : (a.key in prevSel ? prevSel[a.key] : a.suggested);
     const ini = a.key==='toscana' ? 'TC' : 'ICS';
-    const logo = a.logo ? `<img src="${esc(a.logo)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'${ini}'}))">` : `<b>${ini}</b>`;
+    const logo = a.logo ? `<img src="${esc(a.logo)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'${escJs(ini)}'}))">` : `<b>${ini}</b>`;
     return `<span class="ig-acc-wrap"><label class="ig-acc ${chk?'on':''} ${done?'done':''}" title="${esc(a.label)}${a.username?' · @'+esc(a.username):''}${done?' — già pubblicato':''}"><input type="checkbox" value="${a.key}" data-label="${esc(a.label)}" ${chk?'checked':''} ${done?'disabled':''}>${logo}${done?'<i>✓</i>':''}</label>${done?`<button type="button" class="share-action-btn" style="font-size:.64rem;padding:1px 7px" data-unlock="${a.key}" title="Da usare solo dopo aver eliminato il post da Instagram">Ripubblica…</button>`:''}</span>`;
   }).join('');
   box.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{ i.parentElement.classList.toggle('on',i.checked); _refreshIgBtn(); }));
@@ -33628,7 +33637,7 @@ function _clRenderPhotos() {
   const nm = r => _clTitleCase(`${r.nome || ''} ${r.cognome || ''}`.trim());
   const ordine = [...(_clN < 10 ? ['<b>1</b> Grafica classifica'] : []), ...rows.slice(0, _clN).map((r, i) => `<b>${(_clN < 10 ? 2 : 1) + i}</b> ${esc(nm(r))}`)];
   const id = rows[_clPrevIdx].atleta_id, adj = _clAdj[id] || { scale: 1 }, ho = !!_clCands[id];
-  const rd = (v, l) => `<label style="display:block;font-size:.78rem;margin:2px 0"><input type="radio" name="cl-mode" ${_clMode === v ? 'checked' : ''} onchange="window._clSetMode('${v}')"> ${l}</label>`;
+  const rd = (v, l) => `<label style="display:block;font-size:.78rem;margin:2px 0"><input type="radio" name="cl-mode" ${_clMode === v ? 'checked' : ''} onchange="window._clSetMode('${escJs(v)}')"> ${l}</label>`;
   box.innerHTML = `<div style="font-size:.8rem;font-weight:700;margin-bottom:4px">🎴 Carosello Instagram: come lo vuoi</div>
     ${rd('mix', `La grafica della classifica come prima immagine, poi le schede dei primi <select onchange="window._clSetK(this.value)" style="margin:0 3px">${[3, 5, 9].filter(k => k <= Math.max(3, n)).map(k => `<option value="${k}" ${_clK === k ? 'selected' : ''}>${Math.min(k, n)}</option>`).join('')}</select>`)}
     ${n >= 10 ? rd('schede', 'Solo le schede dei primi 10, senza la grafica (Instagram accetta al massimo 10 immagini)') : ''}
@@ -34250,7 +34259,7 @@ function renderResetPassword() {
           ${!token ? `<div class="auth-error" style="display:block">Link non valido: manca il codice di reset. Richiedine uno nuovo dalla pagina di accesso.</div>` : `
           <div id="reset-error" class="auth-error" style="display:none"></div>
           <div id="reset-success" class="auth-error" style="display:none;background:var(--bg-success,rgba(46,158,91,.12));color:var(--success,#2e9e5b);border-color:var(--success,#2e9e5b)"></div>
-          <form id="reset-form" class="auth-form" onsubmit="window.submitResetPassword(event,'${esc(token)}')" style="display:flex;flex-direction:column;gap:0">
+          <form id="reset-form" class="auth-form" onsubmit="window.submitResetPassword(event,'${escJs(token)}')" style="display:flex;flex-direction:column;gap:0">
             <div class="auth-field">
               <label class="auth-label" for="reset-pwd">Nuova password</label>
               <div class="auth-input-wrap">
@@ -34544,7 +34553,7 @@ function _regTrovaAtleta(testo) {
 // Passo 1: chi sei
 function _regPasso1() {
   const cards = _REG_RUOLI.map(([k, ico, t, d]) => `
-    <button type="button" onclick="window._regScegliRuolo('${k}')" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-family:inherit">
+    <button type="button" onclick="window._regScegliRuolo('${escJs(k)}')" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-family:inherit">
       <span style="font-size:1.6rem;flex:none">${ico}</span>
       <span><b style="display:block;font-size:.97rem">${t}</b><span style="font-size:.8rem;color:var(--text-muted)">${d}</span></span>
     </button>`).join('');
@@ -34842,7 +34851,7 @@ window._regAtletaSearch = function(q) {
     results.style.display = 'block';
     results.innerHTML = matches.map(([id, a]) =>
       `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-            onmousedown="window._regSelectAtleta('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}','${esc(a.team_attuale||'')}')">
+            onmousedown="window._regSelectAtleta('${escJs(id)}','${escJs(a.cognome)} ${escJs(a.nome)}','${escJs(a.team_attuale||'')}')">
         <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
         <span style="color:var(--text-muted);font-size:.78rem;margin-left:8px">${esc(a.team_attuale||a.categoria||'')}</span>
       </div>`
@@ -34896,7 +34905,7 @@ window._regTeamSearch = function(q) {
   results.style.display = 'block';
   results.innerHTML = (matches.length ? matches.map(([id, t]) =>
     `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-          onmousedown="window._regSelectTeam('${esc(id)}','${esc((t.nome||'').replace(/'/g,''))}')">
+          onmousedown="window._regSelectTeam('${escJs(id)}','${escJs((t.nome||''))}')">
       <strong>${esc(t.nome||id)}</strong>
     </div>`).join('') : '') +
     `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem;cursor:pointer"
@@ -34927,7 +34936,7 @@ window._regFollowSearch = function(q) {
   results.style.display = 'block';
   results.innerHTML = matches.length ? matches.map(([id, a]) =>
     `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-          onmousedown="window._regSelectFollow('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}')">
+          onmousedown="window._regSelectFollow('${escJs(id)}','${escJs(a.cognome)} ${escJs(a.nome)}')">
       <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
       <span style="color:var(--text-muted);font-size:.78rem;margin-left:8px">${esc(a.team_attuale||a.categoria||'')}</span>
     </div>`).join('') : `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem">Nessun atleta trovato con questo cognome.</div>`;
@@ -35101,7 +35110,7 @@ function _cpDisegna(user, comp, det, famiglia) {
           <span style="color:var(--text-muted)">${has ? 'Se ti va bene, vai avanti: resta così. Altrimenti puoi cambiarla.' : 'Si vede nei risultati e sulla tua pagina.'}</span>
         </div>
       </div>
-      <input type="file" id="cp-file" accept="image/*" style="display:none" onchange="handlePhotoUpload(event,'${esc(ent.type)}','${esc(ent.id)}')">
+      <input type="file" id="cp-file" accept="image/*" style="display:none" onchange="handlePhotoUpload(event,'${escJs(ent.type)}','${escJs(ent.id)}')">
       <button type="button" class="auth-btn auth-btn-secondary" style="margin-bottom:16px" onclick="document.getElementById('cp-file').click()">${has ? 'Cambia ' + cosa : 'Scegli ' + cosa}</button>`;
   } else if (role === 'media') {
     // Lo spazio media non esiste ancora: si crea qui, poi si può mettere la foto
@@ -35578,7 +35587,7 @@ function _collectionInner(items) {
         ${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener"><img src="${esc(m.url)}" loading="lazy" alt="${esc(m.title)}"/></a>`
                 : `<div class="dash-collect-ph">${m.type==='video'?'▶':'📷'}</div>`}
         ${m.type==='video'?`<span class="dash-collect-badge">▶</span>`:''}
-        <button class="dash-collect-rm" title="Rimuovi" onclick="window.removeFromCollection('${esc(m.uid)}')">✕</button>
+        <button class="dash-collect-rm" title="Rimuovi" onclick="window.removeFromCollection('${escJs(m.uid)}')">✕</button>
       </div>`).join('')}
   </div>
   ${items.length > 8 ? `<div class="dash-skill-more">+${items.length-8} altri elementi salvati</div>` : ''}`;
@@ -35598,7 +35607,7 @@ function _skillCalendario() {
           <div class="dash-cal-row">
             <div class="dash-cal-date">${(r.data||'').slice(5)||'—'}</div>
             <div style="flex:1"><div class="dash-cal-name">${esc((r.nome||r.id).slice(0,32))}</div></div>
-            <button class="dash-collect-rm" style="position:static" title="Rimuovi" onclick="window.toggleMyRace('${esc(r.id)}');renderMyProfile()">✕</button>
+            <button class="dash-collect-rm" style="position:static" title="Rimuovi" onclick="window.toggleMyRace('${escJs(r.id)}');renderMyProfile()">✕</button>
           </div>`).join('')}
         <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm">Aggiungi gare →</a>` :
       `<p class="dash-skill-empty">Nessuna gara seguita. Vai al calendario e clicca ＋ sulle gare di interesse.</p>
@@ -35625,7 +35634,7 @@ function _skillNotifiche(role) {
             <div class="dash-toggle-label">${o.label}</div>
             <div class="dash-toggle-desc">${o.desc}</div>
           </div>
-          <input type="checkbox" class="dash-toggle" ${p[o.key]?'checked':''} onchange="window.setNotifPref('${o.key}', this.checked)" />
+          <input type="checkbox" class="dash-toggle" ${p[o.key]?'checked':''} onchange="window.setNotifPref('${escJs(o.key)}', this.checked)" />
         </label>`).join('')}
     </div>`;
 }
@@ -35799,9 +35808,9 @@ async function _dashAtleta(el, user, profile) {
               <div style="font-size:.72rem;color:var(--text-muted)">${esc(g.cat||g.categoria||'')}</div>
             </div>
             <div style="display:flex;gap:4px;flex-shrink:0">
-              <button style="${btnBase} var(--border-subtle);${st==='yes'?'background:var(--green-pos,#16a34a);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','yes',this)">✓ Ci sono</button>
-              <button style="${btnBase} var(--border-subtle);${st==='maybe'?'background:#f59e0b;color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','maybe',this)">? Forse</button>
-              <button style="${btnBase} var(--border-subtle);${st==='no'?'background:var(--red-hot);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','no',this)">✗ No</button>
+              <button style="${btnBase} var(--border-subtle);${st==='yes'?'background:var(--green-pos,#16a34a);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${escJs(gid)}','yes',this)">✓ Ci sono</button>
+              <button style="${btnBase} var(--border-subtle);${st==='maybe'?'background:#f59e0b;color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${escJs(gid)}','maybe',this)">? Forse</button>
+              <button style="${btnBase} var(--border-subtle);${st==='no'?'background:var(--red-hot);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${escJs(gid)}','no',this)">✗ No</button>
             </div>
           </div>`;
         }).join('')}
@@ -37028,7 +37037,7 @@ window.searchAtletaForLink = function(q) {
     .slice(0, 8);
   container.innerHTML = matches.length
     ? matches.map(([id, a]) => `
-        <div class="link-result-row" onclick="selectAtletaLink('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}')">
+        <div class="link-result-row" onclick="selectAtletaLink('${escJs(id)}','${escJs(a.cognome)} ${escJs(a.nome)}')">
           <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
           <span style="color:var(--text-muted);font-size:0.8rem">${esc(a.team || '')}</span>
         </div>`).join('')
@@ -37126,7 +37135,7 @@ window.openAdminAddAthlete = function(teamId, teamName) {
       <select id="aaa-categoria" style="${inpStyle}"><option value="">— categoria —</option>${catOpts}</select>
       <select id="aaa-genere" style="${inpStyle}"><option value="M">Uomini</option><option value="F">Donne</option></select>
       <div id="aaa-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
-      <button id="aaa-submit" onclick="window.submitAdminAddAthlete('${esc(teamId)}','${esc((teamName||'').replace(/'/g,"\\'"))}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Aggiungi</button>
+      <button id="aaa-submit" onclick="window.submitAdminAddAthlete('${escJs(teamId)}','${escJs((teamName||''))}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Aggiungi</button>
     </div>`;
   document.body.appendChild(overlay);
   document.getElementById('aaa-cognome')?.focus();

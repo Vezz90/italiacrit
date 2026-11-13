@@ -174,6 +174,11 @@ try {
   webpush = require('web-push');
   if (VAPID_PUBLIC && VAPID_PRIVATE) {
     webpush.setVapidDetails('mailto:info@italiacyclingstats.com', VAPID_PUBLIC, VAPID_PRIVATE);
+    // anche le iscrizioni gia' nel database: si invia solo ai servizi push dei browser (isAllowedPushEndpoint, definita piu' sotto)
+    const _wpSend = webpush.sendNotification.bind(webpush);
+    webpush.sendNotification = (sub, ...a) => isAllowedPushEndpoint(sub && sub.endpoint)
+      ? _wpSend(sub, ...a)
+      : Promise.reject(Object.assign(new Error('endpoint push non ammesso'), { statusCode: 410 }));
     console.log('[push] Web Push attivo');
   } else {
     console.log('[push] VAPID keys mancanti — imposta VAPID_PUBLIC/VAPID_PRIVATE su Render');
@@ -317,7 +322,7 @@ const upload = multer({
     destination: UPLOADS_DIR,
     filename: (req, file, cb) => cb(null, makeFilename(req, path.extname(file.originalname).toLowerCase() || '.jpg')),
   }),
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024, files: 10, parts: 60 },
   fileFilter: (req, file, cb) => {
     if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error('Solo immagini JPEG, PNG, WebP o GIF'));
@@ -4193,7 +4198,32 @@ function triggerScrapeWorkflow() {
 }
 
 // Test manuale: triggera lo scrape SUBITO e riporta lo status GitHub (diagnostica token)
-app.get('/api/cron/test-scrape', async (req, res) => {
+// ── Protezioni: limite di richieste e indirizzi push ammessi ────────────────
+function rateLimit({ windowMs, max, key }) {
+  const hits = new Map();
+  setInterval(() => { const n = Date.now(); for (const [k, v] of hits) if (v.reset <= n) hits.delete(k); }, Math.max(windowMs, 60000)).unref();
+  return (req, res, next) => {
+    const k = (key ? key(req) : _clientIp(req)), n = Date.now();
+    let h = hits.get(k);
+    if (!h || h.reset <= n) { h = { c: 0, reset: n + windowMs }; hits.set(k, h); }
+    if (++h.c > max) { res.set('Retry-After', String(Math.ceil((h.reset - n) / 1000))); return res.status(429).json({ error: 'Troppe richieste: riprova tra poco.' }); }
+    next();
+  };
+}
+// Le notifiche push vanno solo ai servizi dei browser: un indirizzo qualsiasi farebbe contattare al server un sito scelto da chi si iscrive.
+const _PUSH_HOSTS = [/(^|\.)fcm\.googleapis\.com$/i, /^android\.googleapis\.com$/i, /(^|\.)push\.services\.mozilla\.(com|org)$/i, /(^|\.)push\.apple\.com$/i, /(^|\.)notify\.windows\.com$/i];
+function isAllowedPushEndpoint(ep) {
+  try {
+    if (typeof ep !== 'string' || ep.length > 1500) return false;
+    const u = new URL(ep);
+    return u.protocol === 'https:' && !u.port && !u.username && !u.password && _PUSH_HOSTS.some(r => r.test(u.hostname));
+  } catch { return false; }
+}
+const _b64url = /^[A-Za-z0-9_\-+/=]{8,200}$/;
+const _pushLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 20 });
+const _tickLimiter = rateLimit({ windowMs: 60 * 1000, max: 30 });
+
+app.get('/api/cron/test-scrape', requireAdmin, async (req, res) => {
   const token = process.env.GH_DISPATCH_TOKEN;
   const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
   if (!token) return res.json({ ok: false, error: 'GH_DISPATCH_TOKEN non impostato su Render' });
@@ -4251,7 +4281,8 @@ app.post('/api/admin/scraper/trigger', requireAdmin, async (req, res) => {
   res.json({ ok: true, message: 'Dispatch inviato a GitHub Actions — controlla lo stato tra 1-2 minuti' });
 });
 
-app.get('/api/cron/tick', (req, res) => {
+app.get('/api/cron/tick', _tickLimiter, (req, res) => {
+  if (process.env.CRON_TOKEN && req.query.t !== process.env.CRON_TOKEN && req.headers['x-cron-token'] !== process.env.CRON_TOKEN) return res.status(401).json({ error: 'non autorizzato' });
   res.json({ ok: true, ts: new Date().toISOString() });
   const now = Date.now();
   // Tiene calde le cache più lente del caricamento iniziale (se sono ancora
@@ -4305,10 +4336,13 @@ app.get('/api/push/public-key', (req, res) => {
 });
 
 // Registra una subscription (utente anche anonimo)
-app.post('/api/push/subscribe', async (req, res) => {
+app.post('/api/push/subscribe', _pushLimiter, async (req, res) => {
   try {
     const { subscription } = req.body;
     if (!subscription?.endpoint || !subscription.keys) return res.status(400).json({ error: 'subscription non valida' });
+    if (!isAllowedPushEndpoint(subscription.endpoint) || !_b64url.test(String(subscription.keys.p256dh || '')) || !_b64url.test(String(subscription.keys.auth || ''))) {
+      return res.status(400).json({ error: 'subscription non valida' });
+    }
     let userId = null;
     const auth = req.headers.authorization;
     if (auth?.startsWith('Bearer ')) {
@@ -5069,7 +5103,7 @@ const videoUpload = multer({
     destination: UPLOADS_DIR,
     filename: (req, file, cb) => cb(null, 'vid_' + Date.now() + path.extname(file.originalname).toLowerCase()),
   }),
-  limits: { fileSize: 500 * 1024 * 1024 },
+  limits: { fileSize: 500 * 1024 * 1024, files: 2, parts: 30 },
   fileFilter: (req, file, cb) => {
     if (/^video\/(mp4|quicktime|x-msvideo|webm|x-matroska)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error('Solo file video MP4, MOV, AVI, WebM, MKV'));
@@ -10678,7 +10712,7 @@ const uploadMedia = multer({
       cb(null, `media_${Date.now()}_${Math.random().toString(36).slice(2,7)}${ext}`);
     },
   }),
-  limits: { fileSize: 25 * 1024 * 1024, files: 20 },
+  limits: { fileSize: 25 * 1024 * 1024, files: 20, parts: 80 },
   fileFilter: (req, file, cb) => {
     if (/^image\/(jpeg|png|webp)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error('Solo immagini JPEG, PNG, WebP'));

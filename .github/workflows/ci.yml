@@ -1,0 +1,22 @@
+name: Controlli
+
+# Controlla sintassi e test ad ogni push e pull request. Non blocca il deploy
+# (che parte da deploy.yml), ma segna in rosso il commit se qualcosa non va.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Sintassi e test
+        run: npm test

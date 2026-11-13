@@ -7,6 +7,12 @@ name: Trigger Render Deploy
 # e verificabile (log dello step con lo status HTTP di risposta) ad ogni push
 # su main, tramite il Deploy Hook di Render (Settings -> Deploy Hook del
 # servizio), salvato come secret RENDER_DEPLOY_HOOK.
+#
+# Eccezione: il push dello scraper dei risultati (messaggio "update: ..." che
+# tocca solo data/) NON riavvia Render — il backend rilegge i dati da solo —
+# ma la cache Cloudflare viene comunque svuotata, cosi' i risultati nuovi si
+# vedono subito. Ogni altro push (codice, pagine, dati scritti dal server)
+# continua a fare il deploy completo.
 on:
   push:
     branches: [main]
@@ -15,7 +21,32 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cosa è cambiato
+        id: chg
+        env:
+          BEFORE: ${{ github.event.before }}
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          backend=true
+          if [ -n "$BEFORE" ] && ! echo "$BEFORE" | grep -qE '^0+$' && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            files=$(git diff --name-only "$BEFORE" "${{ github.sha }}")
+            echo "$files" | head -20
+            solo_dati=true
+            while IFS= read -r f; do
+              case "$f" in data/*) ;; *) solo_dati=false ;; esac
+            done <<< "$files"
+            case "$MSG" in "update: "*) scrape=true ;; *) scrape=false ;; esac
+            if [ "$solo_dati" = true ] && [ "$scrape" = true ]; then backend=false; fi
+          fi
+          echo "backend=$backend" >> "$GITHUB_OUTPUT"
+          echo "Serve il deploy del backend: $backend"
+
       - name: Trigger Render deploy hook
+        if: steps.chg.outputs.backend == 'true'
         run: |
           code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}")
           echo "Render deploy hook risposta HTTP: $code"
