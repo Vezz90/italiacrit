@@ -19272,7 +19272,7 @@ async function _injectTeamClubHistory(team_id) {
   const idsByYear = {};
   for (const n of nodes) { const y = Number(n.season); if (y && y < curYear) (idsByYear[y] = idsByYear[y] || new Set()).add(n.team_id); }
   const hasChain = nodes.length > 0;
-  if (!hasChain) for (let y = curYear - 1; y >= curYear - 6; y--) idsByYear[y] = new Set([team_id]);
+  if (!hasChain) for (let y = curYear - 1; y >= 2007; y--) idsByYear[y] = new Set([team_id]);   // tutto l'archivio: un club che ha corso solo nel 2007-2011 deve comparire
   else {
     // un nome vale per tutti gli anni in cui il club l'ha usato (non solo quelli a ridosso del cambio): ogni anno cerca tutti i nomi della catena
     const allIds = new Set(nodes.map(n => n.team_id));
@@ -19348,6 +19348,55 @@ async function _injectTeamClubHistory(team_id) {
     </summary><div class="club-hist-det">${det || '<small>Nessun atleta in classifica.</small>'}<small class="src">Dati: classifica ${r.y} di ciclismo.info, atleti con la squadra indicata.</small></div></details>`;
     }).join('')}</div>
   </section>`;
+
+  // Selettore di stagione (come nei profili atleta): si vede una stagione alla volta, con roster e l'elenco gara per gara
+  {
+    const items = [...host.querySelectorAll('.club-hist-item')];
+    const list = host.querySelector('.club-hist-list');
+    if (list && items.length === rows.length) {
+      const bar = document.createElement('div');
+      bar.className = 'profile-year-row';
+      bar.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 14px';
+      bar.innerHTML = rows.map((r, i) => `<button class="year-pill" data-i="${i}" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${r.y}</button>`).join('');
+      list.parentNode.insertBefore(bar, list);
+      const garePerAnno = {};
+      const gareDelClub = async (y) => {
+        if (garePerAnno[y]) return garePerAnno[y];
+        const d = await loadJson(`data/ciclismo-storico/${y}/races.json`).catch(() => null);
+        const ids = idsByYear[y] || new Set(), out = [];
+        for (const g of ((d && d.races) || [])) {
+          for (const [cat, res] of Object.entries(g.categorie || {})) for (const r of res) {
+            if (!ids.has(_teamIdFromName(r.team))) continue;
+            out.push({ data: g.data || '', nome: g.nome || '', gid: g.id, luogo: [g.regione, g.luogo].filter(Boolean).join(' · '), cat, pos: r.posizione, atleta: r.nome_completo, aid: r.atleta_id });
+          }
+        }
+        out.sort((a, b) => b.data.localeCompare(a.data) || (a.pos - b.pos));
+        return (garePerAnno[y] = out);
+      };
+      const fmt = s => { const m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}` : ''; };
+      const pick = async (i) => {
+        bar.querySelectorAll('.year-pill').forEach(b => { const on = Number(b.dataset.i) === i; b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'; b.style.color = on ? '#fff' : 'var(--text-secondary)'; });
+        items.forEach((it, k) => { it.style.display = k === i ? '' : 'none'; if (k === i) it.open = true; });
+        const det = items[i].querySelector('.club-hist-det'); if (!det) return;
+        let box = det.querySelector('.club-gare');
+        if (!box) { box = document.createElement('div'); box.className = 'club-gare'; box.style.cssText = 'margin-top:14px'; det.prepend(box); }
+        if (box.dataset.ok) return;
+        box.innerHTML = '<small>Carico le gare…</small>';
+        const g = await gareDelClub(rows[i].y);
+        box.dataset.ok = '1';
+        if (!g.length) { box.innerHTML = '<small>Nessun piazzamento di questo club nelle gare archiviate di quest’anno (l’archivio riporta i primi classificati di ogni gara).</small>'; return; }
+        box.innerHTML = `<div style="font-weight:700;margin-bottom:6px">GARE ${rows[i].y} · ${g.length} piazzament${g.length === 1 ? 'o' : 'i'}</div>
+          <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.84rem">
+          <thead><tr style="text-align:left;color:var(--text-muted);font-size:.72rem"><th style="padding:4px 8px 4px 0">DATA</th><th style="padding:4px 8px">POS</th><th style="padding:4px 8px">GARA</th><th style="padding:4px 8px">ATLETA</th><th style="padding:4px 8px">CATEGORIA</th></tr></thead><tbody>
+          ${g.map(x => `<tr style="border-top:1px solid var(--border-subtle)"><td style="padding:5px 8px 5px 0;white-space:nowrap">${esc(fmt(x.data))}</td><td style="padding:5px 8px;font-weight:700">${esc(x.pos)}°</td>
+            <td style="padding:5px 8px"><a href="#/gara/CIC_${esc(x.gid)}${_slugify(`${x.nome} ${rows[i].y}`) ? '-' + _slugify(`${x.nome} ${rows[i].y}`) : ''}">${esc(x.nome)}</a><br><small style="color:var(--text-muted)">${esc(x.luogo)}</small></td>
+            <td style="padding:5px 8px">${x.aid ? `<a href="#/atleta/${esc(x.aid)}">${esc(tcs(x.atleta))}</a>` : esc(tcs(x.atleta))}</td><td style="padding:5px 8px">${esc(_ciclismoCatLabel(x.cat))}</td></tr>`).join('')}
+          </tbody></table></div>`;
+      };
+      bar.addEventListener('click', e => { const b = e.target.closest('.year-pill'); if (b) pick(Number(b.dataset.i)); });
+      pick(0);
+    }
+  }
 }
 
 async function _injectTeamLineageBar(team_id) {
@@ -19971,11 +20020,26 @@ function athleteCategoryPath(rows, nowYear, nowCode, birthYear) {
 function _athBirthYear(text) { const m = String(text || '').match(/(19|20)\d{2}(?!.*(19|20)\d{2})/); return m ? Number(m[0]) : null; }
 window._athCatPath = window._athCatPath || {};
 
+// una sola richiesta per atleta anche se piu parti della pagina la chiedono insieme (era la richiesta piu lenta e partiva due volte)
+const _ciclismoResOnce = new Map();
+function _ciclismoResultsOnce(atletaId) {
+  let p = _ciclismoResOnce.get(atletaId);
+  if (!p) { p = apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`); _ciclismoResOnce.set(atletaId, p); p.catch(() => _ciclismoResOnce.delete(atletaId)); }
+  return p;
+}
 async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow) return;
+  // media e PCS partono subito, in parallelo ai risultati ciclismo.info (prima si aspettavano uno dopo l'altro: il profilo con solo storico sembrava vuoto per molti secondi)
+  const _pMedia = apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`);
+  const _pPcs = Promise.all([
+    apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
+    apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
+  ]);
+  _pMedia.catch(() => {}); _pPcs.catch(() => {});
+  if (!nativeCount) { const _td = document.querySelector('main tbody td.empty-state'); if (_td) _td.textContent = 'Carico lo storico dell’atleta…'; }
   let payload;
-  try { payload = await apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`); }
+  try { payload = await _ciclismoResultsOnce(atletaId); }
   catch { return; }
   const risultati = payload?.risultati || [];
   // Data di nascita completa (gg/mm/aaaa da ciclismo.info) sotto il nome,
@@ -20002,13 +20066,7 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y));
 
   let mediaPerAnno = {}, pcsPerAnno = {}, teamByYear = {}, pcsOnlyYears = [];
-  const [mediaResult, pcsResult] = await Promise.allSettled([
-    apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`),
-    Promise.all([
-      apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
-      apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
-    ]),
-  ]);
+  const [mediaResult, pcsResult] = await Promise.allSettled([_pMedia, _pPcs]);
   if (mediaResult.status === 'fulfilled') {
     for (const m of (mediaResult.value?.media || [])) (mediaPerAnno[m.stagione] = mediaPerAnno[m.stagione] || []).push(m);
   }
@@ -20111,7 +20169,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   if (!el) return;
 
   const [ciclismoPayload, pcsRows, pcsTeamHistory] = await Promise.all([
-    apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => null),
+    _ciclismoResultsOnce(atletaId).catch(() => null),
     apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
     apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
   ]);
@@ -22975,6 +23033,8 @@ async function renderTeam(team_id, opts = {}) {
     </div>
   `);
   window._tmClubId = team_id; window._tmClubLoaded = false;
+  // un club senza risultati nella stagione aperta (es. una squadra che esiste solo nell'archivio storico) si apre direttamente sulla Carriera
+  if (_isLoadedYear && !(t.risultati || []).length) window._tmTab('c');
 
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);

@@ -6231,8 +6231,13 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
 // Storico ciclismo.info per un atleta: tutte le stagioni/gare/posizioni/team
 // importate (vedi server/ciclismo-import-single.js), raggruppabile per anno
 // lato frontend.
+const _cicResCache = new Map();   // atletaId -> { ts, json }: la risposta richiede 4 giri verso Supabase (anche 5 s a freddo), i dati storici cambiano di rado
 app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
   try {
+    const _hit = _cicResCache.get(req.params.atletaId);
+    if (_hit && Date.now() - _hit.ts < 2 * 60000) return res.json(_hit.json);
+    const _send = res.json.bind(res);
+    res.json = (body) => { if (body && Array.isArray(body.risultati)) { if (_cicResCache.size > 400) _cicResCache.delete(_cicResCache.keys().next().value); _cicResCache.set(req.params.atletaId, { ts: Date.now(), json: body }); } return _send(body); };
     const { data, error } = await supabase
       .from('ciclismo_results')
       .select('stagione, categoria, team, posizione, data, regione, luogo, nome_gara, gara_ciclismo_url, km, punti_stagione')
