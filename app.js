@@ -18072,8 +18072,8 @@ function _availableSeasonYears() {
   return [...set].filter(Boolean).sort().reverse();
 }
 // Riga di bottoni-anno da mettere SOTTO al riepilogo del profilo.
-function profileYearRow(kind, id, selYear) {
-  const years = _availableSeasonYears();
+function profileYearRow(kind, id, selYear, yearsOverride) {
+  const years = yearsOverride || _availableSeasonYears();
   const fn = kind === 'team' ? 'setTeamYear' : 'setAtletaYear';
   return `<div class="profile-year-row" id="profile-year-row" data-kind="${esc(kind)}" data-id="${esc(id)}" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 2px">
     <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.04em;margin-right:4px">STAGIONE</span>
@@ -19251,6 +19251,81 @@ function _teamLineageChain(team_id, links, currentNome) {
 // atleti presenti in classifica, quindi i punti sono quelli degli atleti a punti.
 function _teamIdFromName(s) {
   return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+// ── Stagioni storiche di un club (archivio ciclismo.info): stessi dati della stagione in corso, cosi' la pagina team e' identica per ogni anno ──
+const _HIST_CODE = { ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M', DONNE_ESORDIENTI: 'ES_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F' };
+async function _histAthCl(y) {
+  let p = _classStoricoCache[y];
+  if (!p) { p = await loadJson(`data/ciclismo-storico/${y}/classifica.json`).catch(() => null); if (p) _classStoricoCache[y] = p; }
+  return (p && p.classifica) || {};
+}
+async function _histTeamCl(y) {
+  if (_classStoricoTeamCache[y] === undefined) {
+    const tp = await loadJson(`data/ciclismo-storico/${y}/classifica_team.json`).catch(() => null);
+    _classStoricoTeamCache[y] = (tp && tp.classifica) || null;
+  }
+  return _classStoricoTeamCache[y] || {};
+}
+async function _histClubIds(team_id) {
+  const s = new Set(_teamLineageNodes(team_id, await _loadTeamLineage()).map(n => n.team_id));
+  s.add(team_id);
+  return s;
+}
+const _histYearsCache = {}, _histSeasonCache = {};
+async function _histClubYears(team_id) {
+  if (_histYearsCache[team_id]) return _histYearsCache[team_id];
+  const ids = await _histClubIds(team_id), cur = Number(_loadedSeasonYear()), ys = [];
+  const has = cl => Object.values(cl).some(l => (l || []).some(r => ids.has(_teamIdFromName(r.team))));
+  await Promise.all(Array.from({ length: Math.max(0, cur - 2007) }, (_, i) => cur - 1 - i).map(async y => {
+    if (has(await _histTeamCl(y)) || has(await _histAthCl(y))) ys.push(y);
+  }));
+  return (_histYearsCache[team_id] = ys.sort((a, b) => b - a));
+}
+async function _histSeason(team_id, year) {
+  const ck = team_id + '|' + year;
+  if (_histSeasonCache[ck]) return _histSeasonCache[ck];
+  const ids = await _histClubIds(team_id);
+  const [rd, cl, tcl] = await Promise.all([loadJson(`data/ciclismo-storico/${year}/races.json`).catch(() => null), _histAthCl(year), _histTeamCl(year)]);
+  const mine = r => ids.has(_teamIdFromName(r.team));
+  const athletes = {}, rows = [], rank = {}, athPts = {}, codes = new Set();
+  let nome = '';
+  const ensure = (aid, full, code) => {
+    if (!athletes[aid]) {
+      const parts = String(full || '').trim().split(/\s+/);
+      const f = fixCompoundSurname(parts[0] || '', parts.slice(1).join(' '));
+      athletes[aid] = { atleta_id: aid, cognome: f.cognome, nome: f.nome, team_id, categoria: code, genere: code.endsWith('_F') ? 'F' : 'M', punti_totali: 0, risultati: [] };
+    }
+    return athletes[aid];
+  };
+  for (const [cat, list] of Object.entries(tcl)) {
+    const code = _HIST_CODE[cat]; if (!code) continue;
+    rank[code] = list.map(r => { const id = _teamIdFromName(r.team); return { pos: r.pos, team_id: ids.has(id) ? team_id : id, team_nome: r.team, punti: r.punti || 0 }; });
+    const m = list.find(mine); if (m) { codes.add(code); nome = nome || m.team; }
+  }
+  for (const [cat, list] of Object.entries(cl)) {
+    const code = _HIST_CODE[cat]; if (!code) continue;
+    for (const r of list) {
+      if (!mine(r)) continue;
+      codes.add(code); nome = nome || r.team;
+      const aid = r.atleta_id || _teamIdFromName(r.nome_completo);
+      ensure(aid, r.nome_completo, code); athPts[aid + '|' + code] = r.punti || 0;
+    }
+  }
+  for (const g of ((rd && rd.races) || [])) {
+    for (const [cat, res] of Object.entries(g.categorie || {})) {
+      const code = _HIST_CODE[cat]; if (!code) continue;
+      for (const r of res) {
+        if (!mine(r)) continue;
+        codes.add(code); nome = nome || r.team;
+        const aid = r.atleta_id || _teamIdFromName(r.nome_completo), a = ensure(aid, r.nome_completo, code);
+        const slug = _slugify(`${g.nome} ${year}`);
+        const row = { gara_id: `CIC_${g.id}${slug ? '-' + slug : ''}`, nome_gara: g.nome, data: g.data || '', posizione: r.posizione, atleta_id: aid, atleta_cognome: a.cognome, atleta_nome: a.nome, cognome: a.cognome, nome: a.nome, categoria: code, genere: a.genere, tipo: 'strada', team_id, punti_effettivi: 0, moltiplicatore: 1, storico: true };
+        rows.push(row); a.risultati.push(row);
+      }
+    }
+  }
+  if (!codes.size && !rows.length) return (_histSeasonCache[ck] = null);
+  return (_histSeasonCache[ck] = { t: { id: team_id, nome: nome || team_id, atleti: Object.keys(athletes), risultati: rows, punti_totali: 0 }, athletes, rows, rank, athPts, codes: [...codes] });
 }
 function _teamLineageNodes(team_id, links) {
   const key = (id, s) => id + '|' + s;
@@ -22559,15 +22634,22 @@ async function renderTeam(team_id, opts = {}) {
 
   // ── Anno selezionato (storicità): default = stagione caricata ──
   await loadSeasonsIndex();
-  const selYear       = String(opts.year || _loadedSeasonYear());
+  // anni storici del club dall'archivio ciclismo.info: si aprono con la stessa pagina della stagione in corso
+  const _histYears = await _histClubYears(team_id).catch(() => []);
+  let selYear         = String(opts.year || _loadedSeasonYear());
+  // un club senza risultati nella stagione in corso (es. esiste solo nell'archivio) si apre sull'ultimo anno con dati
+  if (!opts.year && _histYears.length && !(tLive.risultati || []).length) selYear = String(_histYears[0]);
   const _isLoadedYear = selYear === _loadedSeasonYear();
-  const teams         = _isLoadedYear ? globalData.teams    : await loadSeasonTeams(selYear);
-  const athletes      = _isLoadedYear ? globalData.athletes : await loadSeasonAthletes(selYear);
+  const hist          = (!_isLoadedYear && _histYears.includes(Number(selYear))) ? await _histSeason(team_id, selYear).catch(() => null) : null;
+  const teams         = hist ? { [team_id]: hist.t } : (_isLoadedYear ? globalData.teams    : await loadSeasonTeams(selYear));
+  const athletes      = hist ? hist.athletes         : (_isLoadedYear ? globalData.athletes : await loadSeasonAthletes(selYear));
   const t = teams[team_id] || tLive;
   // resultsRaw equivalente per l'anno selezionato (loaded → globalData; passato → dai record archiviati)
   let seasonRaw;
   if (_isLoadedYear) {
     seasonRaw = globalData.resultsRaw;
+  } else if (hist) {
+    seasonRaw = hist.rows;
   } else {
     seasonRaw = [];
     for (const [id, ath] of Object.entries(athletes)) {
@@ -22602,6 +22684,7 @@ async function renderTeam(team_id, opts = {}) {
     const ac = getRankingFileCode({ categoria: ath.categoria, genere: ath.genere }) || ath.categoria;
     if (ac && !(ac in catPoints)) catPoints[ac] = 0;
   }
+  if (hist) hist.codes.forEach(c => { if (!(c in catPoints)) catPoints[c] = 0; });
   const SORT_ORDER = ['ES1_M','ES1_F','ES2_M','ES2_F','AL_M','AL_F','JUN_M','JUN_F','ELI_M','ELI_F'];
   const teamCats = Object.keys(catPoints).sort((a,b) => {
     let ia = SORT_ORDER.indexOf(a);
@@ -22653,7 +22736,10 @@ async function renderTeam(team_id, opts = {}) {
     catRisultati.push(r);
   }
   const catRisultatiStrada = catRisultati.filter(r => r.tipo !== 'pista');
-  const catPuntiTotali = catRisultatiStrada.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
+  const catPuntiTotali = hist
+    ? (((hist.rank[teamViewCat] || []).find(x => x.team_id === team_id) || {}).punti
+       || Object.entries(hist.athPts).filter(([k]) => k.endsWith('|' + teamViewCat)).reduce((s, [, v]) => s + v, 0))
+    : catRisultatiStrada.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
 
   window.setTeamDetailCat = (cat) => {
     teamViewCat = cat;
@@ -22692,6 +22778,14 @@ async function renderTeam(team_id, opts = {}) {
     const ac = getRankingFileCode({ categoria: athletes[aid]?.categoria, genere: athletes[aid]?.genere }) || athletes[aid]?.categoria;
     if (atletiMap[aid] && ac) atletiMap[aid].cats.add(ac);
   }
+  if (hist) for (const [k, pts] of Object.entries(hist.athPts)) {
+    const [aid, code] = k.split('|');
+    if (!atletiMap[aid] && athletes[aid]) atletiMap[aid] = { id: aid, ...athletes[aid], puntiCat: 0, puntiTot: 0, cats: new Set() };
+    if (!atletiMap[aid]) continue;
+    atletiMap[aid].cats.add(code);
+    atletiMap[aid].puntiTot += pts;
+    if (code === teamViewCat) atletiMap[aid].puntiCat = pts;
+  }
   const atletiList = Object.values(atletiMap)
     .sort((a,b) => b.puntiTot - a.puntiTot || (a.cognome||'').localeCompare(b.cognome||''));
   // Roster filtrato alla categoria/genere del tab selezionato (teamViewCat include il genere, es. JUN_M)
@@ -22727,7 +22821,7 @@ async function renderTeam(team_id, opts = {}) {
             <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${atletaLabel}</a>
           </div>
         </td>
-        <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
+        <td class="td-hide-mobile" style="text-align:center">${r.storico ? '—' : badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
         <td class="td-hide-mobile" style="text-align:right">${rankVal ? `<span style="font-size:0.75rem;color:var(--text-muted)">${rankVal}°</span>` : ''}</td>
@@ -22736,17 +22830,18 @@ async function renderTeam(team_id, opts = {}) {
     }).join('');
 
   // Caricamento classifiche team + override foto in parallelo (per l'anno selezionato)
-  const _loadTRank = (c) => _isLoadedYear
+  const _rkCodes = hist ? hist.codes : RANKING_CODES;
+  const _loadTRank = (c) => hist ? Promise.resolve(hist.rank[c] || []) : _isLoadedYear
     ? loadTeamRanking(c)
     : loadJson(`data/seasons/${selYear}/team_rankings/${c}.json`).catch(() => []);
   const [teamRankings, teamOv, teamPhotosMap] = await Promise.all([
-    Promise.all(RANKING_CODES.map(_loadTRank)),
+    Promise.all(_rkCodes.map(_loadTRank)),
     getEntityOverrides('team', team_id),
     loadRisPhotos(),
   ]);
   const tCatRanks = [];
   teamRankings.forEach((rlist, idx) => {
-    const code = RANKING_CODES[idx];
+    const code = _rkCodes[idx];
     const rk = (rlist || []).find(x => x.team_id === team_id);
     if (rk) tCatRanks.push({ cat: code, pos: rk.pos, pts: rk.punti });
   });
@@ -22805,6 +22900,12 @@ async function renderTeam(team_id, opts = {}) {
     if (r.posizione >= 1 && r.posizione <= 10) c.placements++;
     if (r.posizione && r.posizione < c.best) c.best = r.posizione;
   }
+  if (hist) for (const [k, pts] of Object.entries(hist.athPts)) {
+    const [aid, code] = k.split('|');
+    if (code !== teamViewCat) continue;
+    if (!catPerfMap[aid]) { const ath = athletes[aid] || {}; catPerfMap[aid] = { id: aid, cognome: ath.cognome || '', nome: ath.nome || '', pts: 0, wins: 0, podi: 0, races: new Set(), placements: 0, best: 999 }; }
+    catPerfMap[aid].pts = pts;
+  }
   // Includi anche chi ha vittorie/piazzamenti pur con 0 punti (es. gare senza punti campionato)
   const topPerformers = Object.values(catPerfMap)
     .filter(p => p.pts > 0 || p.wins > 0 || p.placements > 0)
@@ -22862,7 +22963,7 @@ async function renderTeam(team_id, opts = {}) {
 
   // Header stats
   const currentRank = tCatRanks.find(rk => rk.cat === teamViewCat);
-  const _tmRankList = teamRankings[RANKING_CODES.indexOf(teamViewCat)] || [];
+  const _tmRankList = teamRankings[_rkCodes.indexOf(teamViewCat)] || [];
   const _tmNm = e => `<a href="#/team/${encodeURIComponent(e.team_id)}">${esc(e.team_nome || '')}</a>`;
   const _tmGap = (() => {
     if (!currentRank) return '';
@@ -22969,7 +23070,7 @@ async function renderTeam(team_id, opts = {}) {
     </div>
     <div id="tm-panel-c" role="tabpanel" aria-labelledby="tm-tab-c" hidden><div id="team-club-history"></div></div>
     <div id="tm-panel-s" role="tabpanel" aria-labelledby="tm-tab-s">
-    ${profileYearRow('team', team_id, selYear)}
+    ${profileYearRow('team', team_id, selYear, _histYears.length ? [...((tLive.risultati || []).length || (tLive.atleti || []).length ? [_loadedSeasonYear()] : []), ..._histYears.map(String)] : null)}
 
     <div id="team-native-content">
     <span style="display:none"></span>
@@ -23033,9 +23134,6 @@ async function renderTeam(team_id, opts = {}) {
     </div>
   `);
   window._tmClubId = team_id; window._tmClubLoaded = false;
-  // un club senza risultati nella stagione aperta (es. una squadra che esiste solo nell'archivio storico) si apre direttamente sulla Carriera
-  if (_isLoadedYear && !risultatiRows) window._tmTab('c');
-
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
@@ -23043,8 +23141,8 @@ async function renderTeam(team_id, opts = {}) {
   _athSafe(() => _athWatchRows('team-results-tbody'));
   _injectTeamLineageBar(team_id);
   if (window.Titoli) window.Titoli.mountTeam(team_id, 'team-titles', teamViewCat);
-  _loadTeamPcsExtra(team_id, selYear, teamViewCat);
-  _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
+  if (!hist) _loadTeamPcsExtra(team_id, selYear, teamViewCat);
+  if (!_histYears.length) _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-roster-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
