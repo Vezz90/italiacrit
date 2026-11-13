@@ -95,6 +95,10 @@ test('decidi: la soglia di sicurezza si puo abbassare (calibrata dall esame) ma 
   assert.strictEqual(decidi(prove(2, 0.5), a, b, 75).decisione, 'stessa', 'con soglia 75 e conferma del web decide');
   assert.strictEqual(decidi(prove(2, 0.5), esito('stessa', 78, 'contraddice'), b, 75).decisione, 'difficile', 'il web contrario blocca sempre');
   assert.strictEqual(decidi(prove(2, 0.5), esito('stessa', 78, 'no'), esito('stessa', 80, 'no'), 75).decisione, 'difficile', 'senza web e senza continuita forte non decide');
+  // «diversa» + «contraddice» da entrambi = il web smentisce il legame: si decide solo con al massimo 2 atleti in comune
+  assert.strictEqual(decidi(prove(2, 0.5), esito('diversa', 80, 'contraddice'), esito('diversa', 80, 'contraddice'), 75).decisione, 'diversa');
+  assert.strictEqual(decidi(prove(3, 0.5), esito('diversa', 80, 'contraddice'), esito('diversa', 80, 'contraddice'), 75).decisione, 'difficile', 'con 3 atleti in comune resta all admin');
+  assert.strictEqual(decidi(prove(2, 0.5), esito('diversa', 80, 'contraddice'), esito('diversa', 80, 'no'), 75).decisione, 'difficile', 'serve che lo dicano entrambi');
 });
 
 test('giro automatico: spento non fa nulla; senza esame lo avvia; con esame non superato si ferma; rispetta il tetto giornaliero', async () => {

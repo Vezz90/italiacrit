@@ -121,9 +121,12 @@ function decidi(prove, a, b, soglia = SOGLIA_SICUREZZA) {
   if (a.verdetto !== b.verdetto) return { decisione: 'difficile', perche: 'i due esaminatori non sono d\'accordo' };
   if (a.verdetto === 'incerto') return { decisione: 'difficile', perche: 'entrambi gli esaminatori sono incerti' };
   if (Math.min(a.sicurezza, b.sicurezza) < soglia) return { decisione: 'difficile', perche: `sicurezza sotto ${soglia}` };
-  if (a.fonte_conferma === 'contraddice' || b.fonte_conferma === 'contraddice') return { decisione: 'difficile', perche: 'la ricerca web sostiene il verdetto opposto' };
   const ic = prove.atleti_in_comune || {}, esiste = prove.la_squadra_prima_esiste_ancora_dopo;
-  const webSi = a.fonte_conferma === 'si' && b.fonte_conferma === 'si';
+  // Per il verdetto «diversa» gli esaminatori scrivono spesso «contraddice» intendendo che il web smentisce il COLLEGAMENTO proposto (cioè conferma «diversa»).
+  // Lo si accetta solo se entrambi dicono così e gli atleti in comune sono pochi (al massimo 2); in tutti gli altri casi «contraddice» blocca.
+  const smentisceIlLegame = a.verdetto === 'diversa' && a.fonte_conferma === 'contraddice' && b.fonte_conferma === 'contraddice' && (ic.numero || 0) <= 2;
+  if (!smentisceIlLegame && (a.fonte_conferma === 'contraddice' || b.fonte_conferma === 'contraddice')) return { decisione: 'difficile', perche: 'la ricerca web sostiene il verdetto opposto' };
+  const webSi = smentisceIlLegame || (a.fonte_conferma === 'si' && b.fonte_conferma === 'si');
   if (a.verdetto === 'stessa') {
     if (esiste && esiste.atleti >= 3) return { decisione: 'difficile', perche: 'la vecchia squadra esiste ancora con una rosa propria: potrebbe non essere una rinomina' };
     const forte = (ic.numero || 0) >= 5 && (ic.sul_totale_della_rosa_piu_piccola || 0) >= 0.6;

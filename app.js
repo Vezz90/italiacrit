@@ -13381,6 +13381,10 @@ window.adminNav = async function(section) {
           <button class="tab-btn" data-tl-status="confirmed" onclick="window._tlLoad('confirmed')">CONFERMATI</button>
           <button class="tab-btn" data-tl-status="rejected" onclick="window._tlLoad('rejected')">RIFIUTATI</button>
         </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+          <input id="tl-search" type="search" placeholder="🔍 Cerca una squadra (es. Zalf, Colpack, Brilla…)" autocomplete="off" oninput="window._tlFiltra(this.value)" style="flex:1;min-width:240px;max-width:460px;padding:9px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:var(--text-primary);font-size:.9rem">
+          <span id="tl-count" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
         <div id="admin-tl-body"><div class="admin-loading">Caricamento…</div></div>`;
       (async () => {
         window._tlLoad = async (status) => {
@@ -13390,17 +13394,30 @@ window.adminNav = async function(section) {
           body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
           try {
             const d = await fetch(`${API_BASE}/admin/team-lineage?status=${status}`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
-            const items = d.items || [];
-            if (status === 'pending') {
-              const badge = document.getElementById('badge-team-lineage');
-              if (badge) badge.textContent = items.length || '';
-            }
-            if (!items.length) {
-              body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${status === 'pending' ? '✅ Nessun collegamento in attesa.' : 'Nessun elemento.'}</div>`;
-              return;
-            }
+            _tl.status = status; _tl.items = d.items || [];
+            window._tlRender();
+          } catch(e) {
+            body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+          }
+        };
+        // ricerca per nome (senza accenti/maiuscole, tutte le parole devono comparire in uno dei due nomi); la lista si ridisegna senza ricaricare dal server
+        const _tl = { status: 'pending', items: [], q: '' };
+        const _norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+        window._tlFiltra = (v) => { _tl.q = _norm(v); window._tlRender(); };
+        window._tlRender = () => {
+          const body = document.getElementById('admin-tl-body'); if (!body) return;
+          const status = _tl.status, tutti = _tl.items;
+          if (status === 'pending') { const badge = document.getElementById('badge-team-lineage'); if (badge) badge.textContent = tutti.length || ''; }
+          const parole = _tl.q ? _tl.q.split(' ') : [];
+          const items = parole.length ? tutti.filter(t => { const h = _norm(t.team_from + ' ' + t.team_to); return parole.every(p => h.includes(p)); }) : tutti;
+          const cnt = document.getElementById('tl-count');
+          if (cnt) cnt.textContent = parole.length ? `${items.length} su ${tutti.length}` : `${tutti.length} collegament${tutti.length !== 1 ? 'i' : 'o'}`;
+          if (!items.length) {
+            body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">${parole.length ? 'Nessun collegamento con questo nome.' : (status === 'pending' ? '✅ Nessun collegamento in attesa.' : 'Nessun elemento.')}</div>`;
+            return;
+          }
+          {
             body.innerHTML = `
-              <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${items.length} collegament${items.length !== 1 ? 'i' : 'o'}</div>
               <div style="display:flex;flex-direction:column;gap:12px">
               ${items.map(t => `
                 <div id="tl-card-${t.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
@@ -13424,8 +13441,6 @@ window.adminNav = async function(section) {
                 </div>
               `).join('')}
               </div>`;
-          } catch(e) {
-            body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
           }
         };
         window._tlAction = async (id, action) => {
@@ -13436,7 +13451,13 @@ window.adminNav = async function(section) {
               method: 'POST', headers: { Authorization: `Bearer ${authToken()}` },
             });
             if (!res.ok) throw new Error((await res.json()).error || 'Errore');
-            await window._tlLoad('pending');
+            // niente ricarica: la scheda decisa sparisce, la ricerca e la posizione nella pagina restano com'erano
+            _tl.items = _tl.items.filter(t => t.id !== id);
+            if (card) card.remove();
+            const badge = document.getElementById('badge-team-lineage'); if (badge) badge.textContent = _tl.items.length || '';
+            const cnt = document.getElementById('tl-count');
+            if (cnt) cnt.textContent = _tl.q ? `${document.querySelectorAll('#admin-tl-body [id^="tl-card-"]').length} su ${_tl.items.length}` : `${_tl.items.length} collegament${_tl.items.length !== 1 ? 'i' : 'o'}`;
+            if (!document.querySelector('#admin-tl-body [id^="tl-card-"]')) window._tlRender();
           } catch(e) {
             if (card) { card.style.opacity = ''; card.style.pointerEvents = ''; }
             alert('Errore: ' + e.message);
