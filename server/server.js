@@ -227,6 +227,18 @@ async function notifyAdminsReview(kind, added, pending) {
   });
 }
 
+// Qualcuno chiede un profilo (atleta, squadra, media) che ha gia' un proprietario:
+// il collegamento diretto vale solo per il primo, al secondo arriva l'avviso all'admin.
+function notifyProfileContention(kind, profileName, user, ownerName) {
+  const chi = (user && (user.display_name || user.email)) || 'Un utente';
+  const etichetta = { athlete: 'atleta', team: 'squadra', media: 'profilo media' }[kind] || 'profilo';
+  return sendPushToAdmins({
+    title: `⚠️ Richiesta su ${etichetta} già collegato`,
+    body: `${chi} chiede «${profileName || '?'}»${ownerName ? `, già di ${ownerName}` : ''}`,
+    url: '/#/admin?tab=utenti-pending',
+  }).catch(e => console.warn('[profili] avviso admin:', e.message));
+}
+
 // Invia una push alle sole subscription di un utente specifico
 async function sendPushToUser(userId, { title, body, url }) {
   if (!webpush || !VAPID_PUBLIC || !VAPID_PRIVATE || !userId) return { sent: 0 };
@@ -2740,6 +2752,16 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
       }
     }
 
+    // Diretto per il primo che lo chiede; se l'atleta ha gia' un account collegato, resta
+    // in attesa e arriva l'avviso all'admin (niente furto di profilo).
+    let status = 'active';
+    if (atleta_id && !generatedId) {
+      const gia = await queries.getActiveAthleteOwners(atleta_id, req.user.id);
+      if (gia.length) {
+        status = 'pending';
+        notifyProfileContention('athlete', `${first_name || ''} ${last_name || ''}`.trim() || atleta_id, req.user, gia[0].display_name);
+      }
+    }
     await queries.createAthleteProfile({
       user_id: req.user.id,
       atleta_id: atleta_id || null,
@@ -2748,9 +2770,9 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
       last_name: last_name || null,
       team: team || null,
       birth_year: birth_year || null,
-      status: 'active',
+      status,
     });
-    res.status(201).json({ ok: true, status: 'active', atleta_id: atleta_id || null, generated: generatedId });
+    res.status(201).json({ ok: true, status, atleta_id: atleta_id || null, generated: generatedId });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il collegamento' });
   }
@@ -2862,13 +2884,22 @@ app.post('/api/profile/link-team', requireAuth, async (req, res) => {
     const existing = await queries.getTeamProfile(req.user.id);
     if (existing) return res.status(409).json({ error: 'Profilo già presente' });
 
+    // Diretto per il primo; se la squadra ha gia' un account attivo resta in attesa + avviso all'admin.
+    let status = team_id ? 'active' : 'pending';
+    if (team_id) {
+      const gia = await queries.getActiveTeamOwners(team_id, req.user.id);
+      if (gia.length) {
+        status = 'pending';
+        notifyProfileContention('team', team_name || team_id, req.user, gia[0].display_name);
+      }
+    }
     await queries.createTeamProfile({
       user_id: req.user.id,
       team_id: team_id || null,
       team_name: team_name || null,
-      status: team_id ? 'active' : 'pending',
+      status,
     });
-    res.status(201).json({ ok: true, status: team_id ? 'active' : 'pending' });
+    res.status(201).json({ ok: true, status });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il collegamento' });
   }
@@ -10069,6 +10100,9 @@ app.post('/api/profile/media', requireAuth, async (req, res) => {
       facebook: facebook?.trim() || '',
       media_type,
     });
+    // Pubblicazione diretta (nov 2026): niente approvazione, l'admin puo' sempre rifiutarlo dopo.
+    await queries.approveMediaProfile(profile.id);
+    profile.status = 'active';
     res.status(201).json({ ok: true, profile });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -10179,7 +10213,11 @@ app.post('/api/media/profile/:id/claim', requireAuth, async (req, res) => {
     const existing = await queries.getMediaProfileByUser(req.user.id);
     if (existing) return res.status(409).json({ error: 'Hai già un profilo media collegato' });
     const claimed = await queries.claimMediaProfile(parseInt(req.params.id, 10), req.user.id);
-    if (!claimed) return res.status(409).json({ error: 'Profilo non disponibile o già rivendicato' });
+    if (!claimed) {
+      const p = await queries.getMediaProfileOwner(parseInt(req.params.id, 10)).catch(() => null);
+      if (p && p.user_id) notifyProfileContention('media', p.display_name, req.user, p.owner_name);
+      return res.status(409).json({ error: 'Profilo già collegato a un altro account: ho avvisato l\'amministratore.' });
+    }
     res.json({ ok: true, profile: claimed });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

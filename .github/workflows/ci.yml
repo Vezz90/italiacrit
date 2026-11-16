@@ -18,5 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Installa le dipendenze
+        run: npm ci
       - name: Sintassi e test
         run: npm test

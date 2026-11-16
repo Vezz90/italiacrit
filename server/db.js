@@ -1093,9 +1093,24 @@ const queries = {
          FROM media_profiles WHERE user_id IS NULL ORDER BY display_name`),
 
   // Rivendica un profilo libero collegandolo a un utente (va approvato dall'admin)
+  // Collegamento diretto (nov 2026): niente conferma dell'admin. Se il profilo e' gia' di
+  // un altro utente la UPDATE non trova righe e il server avvisa l'admin (vedi notifyProfileContention).
   claimMediaProfile: (id, user_id) =>
-    one(`UPDATE media_profiles SET user_id = $2, status = 'pending'
+    one(`UPDATE media_profiles SET user_id = $2, status = 'active'
          WHERE id = $1 AND user_id IS NULL RETURNING *`, [id, user_id]),
+
+  getMediaProfileOwner: (id) =>
+    one(`SELECT mp.id, mp.display_name, mp.user_id, u.display_name AS owner_name
+         FROM media_profiles mp LEFT JOIN users u ON u.id = mp.user_id WHERE mp.id = $1`, [id]),
+
+  // Chi ha gia' il collegamento attivo a questo atleta / squadra (altri utenti oltre a quello che chiede)
+  getActiveAthleteOwners: (atleta_id, except_user) =>
+    all(`SELECT ap.user_id, u.display_name FROM athlete_profiles ap JOIN users u ON u.id = ap.user_id
+         WHERE ap.atleta_id = $1 AND ap.status = 'active' AND ap.user_id <> $2`, [atleta_id, except_user]),
+
+  getActiveTeamOwners: (team_id, except_user) =>
+    all(`SELECT tp.user_id, u.display_name FROM team_profiles tp JOIN users u ON u.id = tp.user_id
+         WHERE tp.team_id = $1 AND tp.status = 'active' AND tp.user_id <> $2`, [team_id, except_user]),
 
   updateMediaProfileCover: (id, cover_url) =>
     run(`UPDATE media_profiles SET cover_url = $2 WHERE id = $1`, [id, cover_url]),

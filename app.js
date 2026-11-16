@@ -36269,7 +36269,7 @@ async function _dashMedia(el, user, profile) {
           <div class="dash-card-title"><span>🔗</span>Aggancia un profilo già esistente</div>
           <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
             Se le tue foto sono già presenti su Italia Cycling Stats (importate da xpix.it o italiaciclismo.net),
-            puoi rivendicare quel profilo invece di crearne uno nuovo. La richiesta sarà verificata dall'admin.
+            puoi collegare quel profilo al tuo account invece di crearne uno nuovo: il collegamento è immediato.
           </p>
           <div id="dash-media-claim-list"><div class="admin-loading">Caricamento profili disponibili…</div></div>
         </div>
@@ -36677,13 +36677,13 @@ window.submitMediaProfile = async function(e) {
     btn.disabled = false; btn.textContent = 'CREA PROFILO';
     const wantsClaim = confirm(
       `Esiste già un profilo simile: "${similar.display_name}".\n\n` +
-      `Se è il tuo canale/account, premi OK per agganciarlo (va comunque approvato dall'admin).\n` +
+      `Se è il tuo canale/account, premi OK per agganciarlo (subito attivo).\n` +
       `Premi Annulla per crearne comunque uno nuovo.`
     );
     if (wantsClaim) {
       try {
         await apiCall(`/media/profile/${similar.id}/claim`, { method: 'POST' });
-        showToast('✓ Richiesta inviata — in attesa di approvazione');
+        showToast('✓ Profilo collegato');
         renderMyProfile();
       } catch (err) {
         showToast('Errore: ' + err.message, 'error');
@@ -36704,7 +36704,7 @@ window.submitMediaProfile = async function(e) {
       facebook:     document.getElementById('mp-fb')?.value.trim(),
     }});
     if (coverFile) { try { await window._uploadMediaCover(coverFile); } catch { /* il profilo è comunque creato, la foto si può aggiungere dopo */ } }
-    showToast('✓ Profilo inviato — in attesa di approvazione');
+    showToast('✓ Profilo creato');
     renderMyProfile();
   } catch(err) {
     btn.disabled = false; btn.textContent = 'CREA PROFILO';
@@ -36714,11 +36714,11 @@ window.submitMediaProfile = async function(e) {
 
 // Rivendica un profilo media già esistente (scrapato)
 window.submitClaimMediaProfile = async function(profileId, btn) {
-  if (!confirm('Vuoi rivendicare questo profilo come tuo? La richiesta verrà verificata dall\'amministratore.')) return;
+  if (!confirm('Vuoi collegare questo profilo al tuo account?')) return;
   if (btn) { btn.disabled = true; btn.textContent = 'Invio…'; }
   try {
     await apiCall(`/media/profile/${profileId}/claim`, { method: 'POST' });
-    showToast('✓ Richiesta inviata — in attesa di approvazione');
+    showToast('✓ Profilo collegato');
     renderMyProfile();
   } catch(err) {
     if (btn) { btn.disabled = false; btn.textContent = 'Aggancia'; }
@@ -37061,7 +37061,9 @@ window.submitLinkAthlete = async function(e) {
   const last_name  = document.getElementById('link-lname')?.value.trim() || null;
   try {
     const r = await apiCall('/profile/link-athlete', { method: 'POST', body: { atleta_id, fci_code, first_name, last_name } });
-    alert(r.generated
+    alert(r.status === 'pending'
+      ? "Questo atleta ha già un account collegato: l'amministratore è stato avvisato e verificherà la tua richiesta."
+      : r.generated
       ? `Profilo creato e attivo subito! Il tuo atleta_id è ${r.atleta_id} — non avendo ancora risultati FCI, il profilo parte da 0 punti.`
       : 'Profilo collegato! Attivo immediatamente.');
     renderMyProfile();
@@ -37076,8 +37078,8 @@ window.submitLinkTeam = async function(e) {
     (t.nome || '').toLowerCase() === team_name.toLowerCase()
   );
   try {
-    await apiCall('/profile/link-team', { method: 'POST', body: { team_id: match ? match[0] : null, team_name } });
-    alert('Team collegato! ' + (match ? 'Attivo immediatamente.' : 'In attesa di verifica admin.'));
+    const r = await apiCall('/profile/link-team', { method: 'POST', body: { team_id: match ? match[0] : null, team_name } });
+    alert(r && r.status === 'active' ? 'Team collegato! Attivo subito.' : "Richiesta inviata: questa squadra ha già un account collegato (o non è nell'elenco). L'amministratore è stato avvisato.");
     renderMyProfile();
   } catch (err) { alert('Errore: ' + err.message); }
 };
