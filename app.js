@@ -17211,6 +17211,17 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const taggedIds = opts.atletaIds || [];
   // Filtro per anno (storicità): mostra solo i media della stagione selezionata.
   const _yfilter = opts.year ? String(opts.year) : null;
+  // Filtro per categoria (pagina team con tab categoria): le foto/video
+  // taggati vanno mostrati solo se la gara è della categoria selezionata,
+  // altrimenti sotto ogni tab comparivano i media di tutte le categorie.
+  const _cfilter = opts.catCode || null;
+  const _catOk = (rr, gid, aid) => {
+    if (!_cfilter) return true;
+    let c = rr ? (getRankingFileCode(rr) || rr.categoria) : null;
+    if (!c && gid) c = getRankingFileCode({ gara_id: gid, atleta_id: aid });
+    if ((!c || c === gid) && aid && typeof _athleteHomeCat !== 'undefined') c = _athleteHomeCat[aid] || null;
+    return !c || c === _cfilter;
+  };
   // Le gare storiche ciclismo.info hanno un gara_id sintetico "CIC_<numero>"
   // senza data incorporata: senza ciclismo_stagione (aggiunta lato server via
   // JOIN su ciclismo_results) l'anno non si leggeva mai e la foto restava
@@ -17231,6 +17242,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         if (p.id) seenTag.add(p.id);
         const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid)
                 || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id);
+        if (!_catOk(rr, p.gara_id, aid)) { if (p.id) seenTag.delete(p.id); continue; }
         winPhotos.push({
           tagged: true,
           photo: p,
@@ -17260,10 +17272,11 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         const vids2 = String(v.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
         if (!vids2.some(id => tagSet.has(id))) continue;
         if (v.url && seenVidUrl.has(v.url)) continue;
-        if (v.url) seenVidUrl.add(v.url);
         const aid = vids2.find(id => tagSet.has(id));
         const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey && x.atleta_id === aid)
                 || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey);
+        if (!_catOk(rr, gkey, aid)) continue;
+        if (v.url) seenVidUrl.add(v.url);
         top10Vids.push({
           video: v,
           r: {
@@ -21885,7 +21898,8 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
       </div>`;
   }
 
-  const mediaList = (window._ciclismoTeamMediaCache[teamId] || {})[anno] || [];
+  const mediaList = ((window._ciclismoTeamMediaCache[teamId] || {})[anno] || [])
+    .filter(m => cats.length <= 1 || !m.categoria || m.categoria === curCat);
   const mediaCards = mediaList.map(m => `
     <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${escJs(mediaUrl(m.photo_url))}')">
       <div class="profile-media-thumb">
@@ -23120,8 +23134,9 @@ async function renderTeam(team_id, opts = {}) {
         {
           showAthleteName: true,
           year: selYear,
+          catCode: teamViewCat,
           atletaIds: [...new Set(seasonRaw
-            .filter(r => _belongsToTeam(r) && r.atleta_id)
+            .filter(r => _belongsToTeam(r) && r.atleta_id && (getRankingFileCode(r) || r.categoria) === teamViewCat)
             .map(r => r.atleta_id))],
         }
       );
