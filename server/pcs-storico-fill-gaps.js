@@ -303,6 +303,12 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
           page = await context.newPage();
         }
         const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { onLog: msg => { if (/sfida|challenge/i.test(msg)) prog.challenges++; } });
+        if (nav.blocked) {
+          // PCS ha bloccato: niente va segnato (ne vuoto ne fallito), si lascia il file di blocco e si esce con codice 3 (il wrapper non riparte)
+          try { fs.writeFileSync(path.join(__dirname, 'pcs-blocked.flag'), new Date().toISOString()); } catch (_) {}
+          console.error('PCS BLOCCATO: mi fermo senza segnare nulla. Riprovare solo dopo aver controllato che PCS si apra.');
+          process.exitCode = 3; stop = true; break;
+        }
         prog.yearsDone++;
         if (!nav.ok) { if (nav.notFound) { markYear(g.atletaId, y, 'empty'); prog.yearsEmpty++; } else { markYear(g.atletaId, y, 'fail'); prog.yearsFailed++; } continue; }
         if (photoRef) { try { await photoRef.check(page, g.atletaId, g.slug); } catch (_) {} }   // la pagina anno mostra la foto attuale

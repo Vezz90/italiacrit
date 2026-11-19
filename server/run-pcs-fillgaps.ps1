@@ -11,6 +11,7 @@ for ($giro = 1; $giro -le 200; $giro++) {
   $logFile = Join-Path $logDir "pcs-fillgaps-run-$stamp.log"
   & node "pcs-storico-fill-gaps.js" "--workers=$Workers" *> $logFile
   $codice = $LASTEXITCODE
+  if ($codice -eq 3 -or (Test-Path (Join-Path $PSScriptRoot 'pcs-blocked.flag'))) { Write-Host 'PCS ha bloccato: wrapper fermo'; break }   # blocco: non insistere
   $ultima = Get-Content $logFile -Tail 3 -ErrorAction SilentlyContinue | Out-String
   if ($codice -eq 0 -and $ultima -match "Completato" -and $ultima -match "atleti: 0/0") { break }
   Start-Sleep -Seconds 20

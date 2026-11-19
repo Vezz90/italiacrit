@@ -48,3 +48,6 @@ scripts/.cache_gare/
 
 server/logs/
 server/pcs-fillgaps-state.json
+
+# segnale locale di blocco PCS (scraper)
+server/pcs-blocked.flag

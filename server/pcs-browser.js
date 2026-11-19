@@ -63,7 +63,7 @@ async function isChallengePage(page) {
  * @param {string} opts.readySelector — selettore CSS che indica pagina caricata (default 'h1')
  * @param {number} opts.challengeTimeoutMs — quanto attendere al massimo una sfida (default 120000)
  * @param {function} opts.onLog — callback(msg) per log
- * @returns {{ ok: boolean, notFound: boolean, timedOut: boolean }}
+ * @returns {{ ok: boolean, notFound: boolean, timedOut: boolean, blocked?: boolean }}  (blocked: PCS ha bloccato l'IP: fermarsi, non segnare nulla)
  */
 async function gotoPcsPage(page, url, opts = {}) {
   const {
@@ -80,14 +80,30 @@ async function gotoPcsPage(page, url, opts = {}) {
   // al chiamante "serve un browser nuovo", non "corridore non trovato".
   if (page.isClosed()) return { ok: false, notFound: false, timedOut: false, closed: true };
 
+  let httpStatus = 0;
   try {
-    await withTimeout(page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }), 25000, 'goto');
+    const resp = await withTimeout(page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }), 25000, 'goto');
+    httpStatus = resp && resp.status ? resp.status() : 0;
   } catch (e) {
     const closed = page.isClosed() || /closed/i.test(e.message || '');
     return { ok: false, notFound: false, timedOut: false, closed, error: e.message };
   }
 
   if (page.isClosed()) return { ok: false, notFound: false, timedOut: false, closed: true };
+
+  // BLOCCO (non e una sfida da risolvere): Cloudflare risponde 403/429/503 oppure mostra "Sorry, you have been blocked". Prima la pagina
+  // di blocco veniva letta come "nessun risultato" e gli anni finivano segnati come vuoti (15-16/10/2026: ~13.000 anni falsi).
+  // Il chiamante deve FERMARSI e non segnare nulla.
+  let blockedPage = [403, 429, 503].includes(httpStatus);
+  if (!blockedPage) {
+    try {
+      blockedPage = await withTimeout(page.evaluate(() => {
+        const t = (document.body?.innerText || '').toLowerCase(), ti = (document.title || '').toLowerCase();
+        return /sorry, you have been blocked|you are unable to access|error 1020|access denied|too many requests/.test(t) || /attention required|access denied|blocked/.test(ti);
+      }), 8000, 'blockedCheck');
+    } catch (_) { blockedPage = false; }
+  }
+  if (blockedPage) { onLog('  ⛔ PCS ha bloccato la richiesta (blocco, non sfida)'); return { ok: false, notFound: false, timedOut: false, blocked: true, status: httpStatus }; }
 
   if (page.url().includes('pagenotfound') || page.url().includes('404')) {
     return { ok: false, notFound: true, timedOut: false };
