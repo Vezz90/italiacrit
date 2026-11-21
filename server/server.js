@@ -13705,6 +13705,10 @@ function _readIndexHtmlTemplate() {
 function _injectHeadTags(html, { title, desc, canonical, ogImage, noscript, jsonld }) {
   const t = _ogHtmlEsc(title), d = _ogHtmlEsc(desc), c = _ogHtmlEsc(canonical), img = _ogHtmlEsc(ogImage);
   if (noscript) html = html.replace(/<body([^>]*)>/i, (m) => `${m}<noscript>${noscript}</noscript>`);
+  // Testo vero gia' nella prima risposta, DENTRO #app (il sito lo sostituisce appena parte): Google "fotografa" la pagina presto,
+  // e senza questo vedeva solo menu e piè di pagina -> soft 404. Nascosto agli occhi (clip), ma presente nel testo.
+  const seo = `<div id="seo-static" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"><h1>${t.replace(/ \| ICS$/, '')}</h1><p>${d}</p>${noscript || ''}</div>`;
+  html = html.replace(/<div id="app">/, () => `<div id="app">${seo}`);
   if (jsonld && jsonld.length) html = html.replace('</head>', () => jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n') + '\n</head>');
   return html
     .replace(/<title>[^<]*<\/title>/, `<title>${t}</title>`)
@@ -13865,28 +13869,51 @@ async function _getHeadMetaFor(type, id) {
       const { data: pr } = await supabase.from('entity_overrides').select('new_value').eq('entity_type', 'pcs_atleta').eq('entity_id', id).eq('field', 'profile').maybeSingle();
       if (pr && pr.new_value) { try { const j = JSON.parse(pr.new_value); ath = { cognome: j.cognome, nome: j.nome, team_attuale: j.team_nome, categoria: j.categoria }; } catch (_) {} }
     }
+    // ultimi risultati dell'archivio (ciclismo.info): servono sia per riconoscere gli atleti storici sia come testo della pagina
+    let recent = [];
+    if (supabase) {
+      const { data: rr } = await supabase.from('ciclismo_results').select('data, posizione, categoria, team, nome_gara').eq('atleta_id', id).order('data', { ascending: false }).limit(12);
+      recent = rr || [];
+    }
+    if (!ath && recent.length) {
+      // atleta dell'archivio (anni passati): non e' in athletes.json ma ha la sua pagina vera
+      const last = recent[0];
+      ath = { cognome: '', nome: '', _nome: _cicName(id), team_attuale: _titleWords(last.team || ''), categoria: last.categoria };
+    }
+    if (!ath && supabase) {
+      // atleta aggiunto a mano (roster team o auto-iscrizione)
+      const man = await queries.getManualAthlete(id).catch(() => null);
+      if (man) ath = { cognome: _titleWords(man.cognome), nome: _titleWords(man.nome), team_attuale: man.team || '', categoria: man.categoria };
+    }
     if (!ath) return null;
-    const title = `${ath.cognome || ''} ${ath.nome || ''}`.trim() || id;
+    const title = ath._nome || `${ath.cognome || ''} ${ath.nome || ''}`.trim() || id;
     const cat = _OG_CAT_MAP[ath.categoria] || ath.categoria || '';
     const parts = [cat, ath.team_attuale].filter(Boolean);
     if (ath.punti_totali) parts.push(`${ath.punti_totali} pt`);
     if (ath.vittorie) parts.push(`${ath.vittorie} vitt.`);
-    const desc = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
+    if (recent.length) parts.push(`${recent.length >= 12 ? 'ultimi ' : ''}${recent.length} risultati in archivio`);
+    const desc = (parts.join(' · ') || 'Ciclista') + ' — Italia Cycling Stats';
+    const e = _ogHtmlEsc;
+    const list = recent.slice(0, 10).map(r => `<li>${e(String(r.data || '').slice(0, 10))} — ${e(_titleWords(r.nome_gara || ''))}: ${r.posizione ? r.posizione + '°' : 'n.d.'}${r.team ? ' (' + e(_titleWords(r.team)) + ')' : ''}</li>`).join('');
     return {
       title: `${title} | ICS`, desc,
       canonical: `${SITE_URL}/atleta/${encodeURIComponent(id)}`,
       ogImage: `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+      noscript: list ? `<h1>${e(title)}</h1><p>${e(desc)}</p><ul>${list}</ul>` : undefined,
     };
   }
   if (type === 'team') {
     const [teams, athletes] = await Promise.all([
       readDataJsonFromGH('teams.json'), readDataJsonFromGH('athletes.json'),
     ]);
-    const team = (teams || {})[id];
+    let team = (teams || {})[id];
+    // squadra dell'archivio (anni passati): non e' in teams.json ma la sua pagina c'e'. Un id ben formato basta per non
+    // servire la home come canonical (era la causa delle "pagine alternative" in Search Console).
+    if (!team && /^[A-Z0-9][A-Z0-9_]{2,90}$/.test(id)) team = { nome: _titleWords(id.replace(/_[MF]$/, '').replace(/_/g, ' ')), _archivio: true };
     if (!team) return null;
     const title = team.nome || id.replace(/_/g, ' ');
     const rosterCount = Object.values(athletes || {}).filter(a => a.team_id === id).length;
-    const desc = rosterCount ? `${rosterCount} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
+    const desc = rosterCount ? `${rosterCount} corridori — Italia Cycling Stats` : 'Squadra ciclistica: risultati, corridori e storico stagione per stagione — Italia Cycling Stats';
     return {
       title: `${title} | ICS`, desc,
       canonical: `${SITE_URL}/team/${encodeURIComponent(id)}`,
@@ -14180,7 +14207,8 @@ app.get('*', async (req, res, next) => {
     // gare dell'archivio: l'indirizzo vero e' quello con il nome (301 dal vecchio /gara/CIC_<id> o da uno slug diverso)
     try {
       const raw = decodeURIComponent(m[2]);
-      const cic = raw.match(/^CIC_(\d+)$/) || (raw === raw.toLowerCase() ? raw.match(_CIC_SLUG_RE) : null);
+      // anche /gara/CIC_<id>-<nome> (vecchi link con il nome attaccato): stessa gara, 301 all'indirizzo vero
+      const cic = raw.match(/^CIC_(\d+)(?:-.*)?$/) || (raw === raw.toLowerCase() ? raw.match(_CIC_SLUG_RE) : null);
       if (cic) {
         const race = await _cicRaceById(cic[1]);
         if (race) {
@@ -14194,6 +14222,8 @@ app.get('*', async (req, res, next) => {
     try {
       const meta = await _getHeadMetaFor(m[1], decodeURIComponent(m[2]));
       if (meta) return res.send(_injectHeadTags(_readIndexHtmlTemplate(), meta));
+      // Gara che non esiste (ne' risultati ne' calendario): vero 404 invece di un 200 con la pagina vuota (= soft 404 per Google)
+      if (m[1] === 'gara') return res.status(404).send(_readIndexHtmlTemplate());
     } catch (e) { console.warn('[head-inject] fallito per', p, ':', e.message); }
   }
 

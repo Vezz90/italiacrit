@@ -12,7 +12,7 @@ const grab = (src, re) => { const m = src.match(re); assert.ok(m, 'funzione non 
 
 const ctx = { window: {} };
 vm.createContext(ctx);
-vm.runInContext(grab(appSrc, /function esc\(s\) \{[\s\S]*?\n\}\n/) + grab(appSrc, /function escJs\(s\) \{[\s\S]*?\n\}\n/), ctx);
+vm.runInContext(grab(appSrc, /function esc\(s\) \{[\s\S]*?\r?\n\}\r?\n/) + grab(appSrc, /function escJs\(s\) \{[\s\S]*?\r?\n\}\r?\n/), ctx);
 
 // come fa il browser: legge l'attributo HTML, ne decodifica le entita', poi esegue il JavaScript
 const decode = h => h.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
@@ -38,7 +38,7 @@ test('escJs: un nome malevolo resta un semplice testo', () => {
 
 const ctxS = { URL };
 vm.createContext(ctxS);
-vm.runInContext(grab(srvSrc, /const _PUSH_HOSTS = [\s\S]*?\nfunction isAllowedPushEndpoint[\s\S]*?\n\}\n/).replace(/^const /gm, 'var '), ctxS);
+vm.runInContext(grab(srvSrc, /const _PUSH_HOSTS = [\s\S]*?\r?\nfunction isAllowedPushEndpoint[\s\S]*?\r?\n\}\r?\n/).replace(/^const /gm, 'var '), ctxS);
 const ok = ep => vm.runInContext('isAllowedPushEndpoint', ctxS)(ep);
 
 test('push: solo i servizi dei browser, solo https', () => {
