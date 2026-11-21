@@ -4972,6 +4972,7 @@ function route() {
   }
 
   updateNavActive(hash);
+  if (hash !== '#/cerca') document.getElementById('cerca-robots')?.remove();   // il noindex vale solo per la pagina di ricerca
 
   // Gara dell'archivio aperta con il vecchio id (CIC_<n>) da navigazione interna: l'indirizzo mostrato diventa quello con il nome
   const _cm = hash.match(/^#\/gara\/CIC_(\d+)\/?$/);
@@ -5087,6 +5088,7 @@ function route() {
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
   if (match('/gare')) return renderGare();
+  if (match('/cerca')) return renderCerca();
   // Risultati filtrati per categoria con URL dedicato (SEO: "risultati esordienti"
   // ecc. sono ricerche comuni) — es. #/risultati/ES1_M.
   const _mRisCat = match('/risultati/:cat');
@@ -29508,12 +29510,16 @@ function bindSearch(inputId, dropdownId) {
   input.addEventListener('blur', () => {
     setTimeout(() => { dropdown.style.display = 'none'; }, 200);
   });
-  // Invio → apre il risultato più rilevante (il primo della lista, ora
-  // ordinata per vicinanza alla query) invece di non fare nulla.
+  // Invio → pagina con TUTTI i risultati della ricerca (/cerca?q=…), invece di aprire a caso il primo.
   input.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
-    const first = dropdown.querySelector('.search-result-item[onclick]');
-    if (first) { e.preventDefault(); first.click(); }
+    const q = input.value.trim();
+    if (!q) return;
+    e.preventDefault();
+    clearTimeout(timer);
+    dropdown.style.display = 'none';
+    window.cercaVai(q);
+    input.blur();
   });
 }
 
@@ -29639,7 +29645,7 @@ function doSearch(q, dropdown) {
             <div class="search-result-sub">${esc(r.sub)}</div>
           </div>
         </div>`;
-      }).join('');
+      }).join('') + `<div class="search-result-item" onclick="window.cercaVai('${escJs(q.trim())}'); window.closeAllSearchDropdowns()"><div><div class="search-result-name" style="color:var(--red-hot)">🔍 Vedi tutti i risultati per «${esc(q.trim())}»</div></div></div>`;
     }
     dropdown.style.display = 'block';
   };
@@ -29713,6 +29719,95 @@ function doSearch(q, dropdown) {
 }
 
 window.goTo = (hash) => { window.location.hash = hash; };
+
+// ── PAGINA RISULTATI DELLA RICERCA (/cerca?q=...) ─────────────────────────
+// Invio nella barra di ricerca porta qui: tutti i risultati raggruppati (atleti, squadre, gare, fotografi),
+// non solo i primi del menu a tendina. Non va indicizzata da Google (noindex, tolto da route() alla pagina dopo).
+window.cercaVai = function (q) {
+  q = String(q || '').trim();
+  if (!q) return;
+  navTo('/cerca?q=' + encodeURIComponent(q));
+};
+
+async function renderCerca() {
+  const q = (() => { try { return (new URLSearchParams(location.search).get('q') || '').trim(); } catch { return ''; } })();
+  setPageMeta(q ? `Cerca «${q}»` : 'Cerca', 'Risultati della ricerca su Italia Cycling Stats: atleti, squadre, gare e fotografi.');
+  if (!document.getElementById('cerca-robots')) { const m = document.createElement('meta'); m.id = 'cerca-robots'; m.name = 'robots'; m.content = 'noindex,follow'; document.head.appendChild(m); }
+  setPage(`
+    <div class="page-section" style="max-width:860px;margin:0 auto">
+      <h1 style="margin:0 0 12px;font-size:1.5rem">${q ? `Risultati per «${esc(q)}»` : 'Cerca'}</h1>
+      <form onsubmit="event.preventDefault();window.cercaVai(document.getElementById('cerca-q').value)" style="display:flex;gap:8px;margin-bottom:18px">
+        <input id="cerca-q" type="search" value="${esc(q)}" placeholder="Atleta, squadra, gara, fotografo…" autocomplete="off" style="flex:1;min-width:0;padding:11px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-card);color:var(--text-primary);font-size:1rem">
+        <button type="submit" style="padding:0 20px;border:0;border-radius:var(--r-sm);background:var(--red-hot,#e8001d);color:#fff;font-weight:700;cursor:pointer">Cerca</button>
+      </form>
+      <div id="cerca-out"></div>
+    </div>`);
+  const out = document.getElementById('cerca-out');
+  if (!q) { out.innerHTML = '<p style="color:var(--text-muted)">Scrivi un nome o una parola: ti mostro atleti, squadre, gare e fotografi che corrispondono.</p>'; return; }
+  const gd = globalData || { athletes: {}, teams: {} };   // route() parte dopo il caricamento dei dati
+  const ql = q.toLowerCase(), toks = ql.split(/\s+/).filter(Boolean);
+  const fuzzy = hay => toks.every(t => hay.includes(t) || (t.length >= 4 && hay.includes(t.slice(0, -1))));
+  const S = { atleti: [], team: [], gare: [], media: [] };
+  const seen = { atleti: new Set(), team: new Set(), gare: new Set(), media: new Set() };
+  const add = (sec, key, item) => { if (seen[sec].has(key)) return false; seen[sec].add(key); S[sec].push(item); return true; };
+  const score = (cognome, nome) => {
+    const c = (cognome || '').toLowerCase(), n = (nome || '').toLowerCase(), f = `${c} ${n}`;
+    return c === ql ? 0 : f === ql ? 1 : c.startsWith(ql) ? 2 : n.startsWith(ql) ? 3 : f.startsWith(ql) ? 4 : c.includes(ql) ? 5 : f.includes(ql) ? 6 : 9;
+  };
+  for (const [id, a] of Object.entries(gd.athletes || {})) {
+    const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
+    if (fuzzy(name)) add('atleti', id, { id, display: `${a.cognome || ''} ${a.nome || ''}`.trim(), sub: a.team_attuale || '', s: score(a.cognome, a.nome) });
+  }
+  for (const [id, t] of Object.entries(gd.teams || {})) {
+    if (fuzzy((t.nome || '').toLowerCase())) add('team', id, { id, display: t.nome, sub: `${t.atleti?.length || 0} atleti`, s: (t.nome || '').toLowerCase().startsWith(ql) ? 0 : 1 });
+  }
+  try {
+    for (const ev of getRacesIndex()) {
+      const base = _raceBaseName(ev.nome); if (!base) continue;
+      if (fuzzy((base + ' ' + ev.nome + ' ' + (ev.regione || '')).toLowerCase())) add('gare', base, { id: ev.gara_id, display: base, sub: [ev.regione, (ev.data || '').slice(0, 4)].filter(Boolean).join(' · '), s: base.toLowerCase().startsWith(ql) ? 0 : 1 });
+    }
+  } catch (_) {}
+  const cap = { atleti: 25, team: 25, gare: 25, media: 25 };
+  const meta = { atleti: ['Atleti', '/atleta/'], team: ['Squadre', '/team/'], gare: ['Gare', '/gara/'], media: ['Fotografi e media', '/media/'] };
+  const attesa = new Set(['storico', 'gare-storiche', 'media']);
+  const paint = () => {
+    const sezioni = Object.keys(meta).filter(k => S[k].length).map(k => {
+      const list = [...S[k]].sort((a, b) => (a.s ?? 5) - (b.s ?? 5) || a.display.localeCompare(b.display));
+      const shown = list.slice(0, cap[k]);
+      const rows = shown.map(r => `<a href="#${meta[k][1]}${esc(encodeURIComponent(r.id))}" style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:10px 14px;border-top:1px solid var(--border-subtle);text-decoration:none;color:inherit"><b style="overflow-wrap:anywhere">${esc(r.display)}</b><span style="font-size:.82rem;color:var(--text-muted);text-align:right">${esc(r.sub || '')}</span></a>`).join('');
+      const piu = list.length > shown.length ? `<button onclick="window._cercaPiu('${k}')" style="width:100%;padding:10px;border:0;border-top:1px solid var(--border-subtle);background:transparent;color:var(--red-hot);font-weight:600;cursor:pointer">Mostra tutti i ${list.length}</button>` : '';
+      return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;margin-bottom:16px;overflow:hidden"><h2 style="margin:0;padding:12px 14px;font-size:1rem">${meta[k][0]} <span style="color:var(--text-muted);font-weight:400">· ${list.length}</span></h2>${rows}${piu}</section>`;
+    }).join('');
+    const nota = attesa.size ? '<p style="font-size:.8rem;color:var(--text-muted)">Sto cercando anche nell’archivio storico…</p>' : '';
+    out.innerHTML = sezioni ? sezioni + nota : (attesa.size ? nota : `<p style="color:var(--text-muted);line-height:1.6">Nessun risultato per «${esc(q)}».<br>Prova con il solo cognome, con meno lettere, oppure con una parte del nome della gara.</p>`);
+  };
+  window._cercaPiu = k => { cap[k] = 1e6; paint(); };
+  paint();
+  const fine = k => { attesa.delete(k); paint(); };
+  if (q.length >= 2) {
+    fetch(`${API_BASE}/search-storico?q=${encodeURIComponent(q)}`).then(r => r.json()).then(d => {
+      for (const a of (d.results || [])) {
+        const [cognome, ...r] = (a.nome_completo || '').trim().split(/\s+/);
+        const sub = [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean).join(' · ');
+        const ex = S.atleti.find(x => x.id === a.atleta_id);
+        if (ex) { if (sub) ex.sub = sub; } else add('atleti', a.atleta_id, { id: a.atleta_id, display: `${cognome || ''} ${r.join(' ')}`.trim(), sub, s: score(cognome, r.join(' ')) });
+      }
+    }).catch(() => {}).finally(() => fine('storico'));
+    fetch(`${API_BASE}/ciclismo-results/search-races?q=${encodeURIComponent(q)}`).then(r => r.json()).then(d => {
+      for (const ev of (d.results || [])) {
+        const base = _raceBaseName(ev.nome_gara); if (!base) continue;
+        const sub = [ev.regione, ev.stagione].filter(Boolean).join(' · ');
+        const ex = S.gare.find(x => x.display === base);
+        if (ex) { if (!ex.sub) ex.sub = sub; continue; }
+        const cid = _ciclismoGaraId(ev.gara_ciclismo_url); if (!cid) continue;
+        add('gare', base, { id: 'CIC_' + cid, display: base, sub, s: base.toLowerCase().startsWith(ql) ? 0 : 1 });
+      }
+    }).catch(() => {}).finally(() => fine('gare-storiche'));
+  } else { attesa.delete('storico'); attesa.delete('gare-storiche'); }
+  _loadMediaProfiles().then(ps => {
+    for (const p of ps) if ((p.display_name || '').toLowerCase().includes(ql)) add('media', p.id, { id: p.id, display: p.display_name, sub: p.bio || 'Fotografo', s: 1 });
+  }).catch(() => {}).finally(() => fine('media'));
+}
 
 // ── SELETTORE LINGUA (traduzione automatica Google) ──────────────
 // Pilota il widget Google Translate tramite il cookie `googtrans`, così la
