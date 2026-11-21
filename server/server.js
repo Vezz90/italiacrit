@@ -649,7 +649,7 @@ app.get('/sitemap.xml', async (req, res) => {
     const all = await _cicAllRaces();
     const parts = Math.ceil(all.length / _CIC_CHUNK);
     const today = new Date().toISOString().slice(0, 10);
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=pagine</loc><lastmod>${today}</lastmod></sitemap>\n${
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=pagine</loc><lastmod>${today}</lastmod></sitemap>\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=video</loc><lastmod>${today}</lastmod></sitemap>\n${
       Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=archivio-${i + 1}</loc></sitemap>`).join('\n')
     }\n</sitemapindex>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
@@ -9460,8 +9460,32 @@ async function _videoHeadMeta(kind, id) {
   if (!section && gid && !gid.startsWith('__') && !gid.startsWith('CIC_')) { const cal = _findCalEntryForNativeGaraId((await readDataJsonFromGH('calendar.json').catch(() => null)) || [], gid); nome = cal && cal.nome || ''; }
   const live = !!hit.is_live;
   const desc = [live ? 'Diretta' : (section ? section.label : 'Video'), hit.channel, nome].filter(Boolean).join(' · ') + ' — guardalo su Italia Cycling Stats.';
-  return { title: `${live ? '🔴 ' : ''}${title} | ICS`, desc, canonical: `${SITE_URL}/media/${kind}/${id}`, ogImage: await _ytThumb(id) };
+  const canonical = `${SITE_URL}/media/${kind}/${id}`, thumb = await _ytThumb(id);
+  const up = new Date(hit.published_at || '');
+  // pagina del video = "pagina di visualizzazione": il video e' il contenuto principale, con i suoi dati strutturati (Search Console: "il video non si trova su una pagina di visualizzazione")
+  const jsonld = [{ '@context': 'https://schema.org', '@type': 'VideoObject', name: title.slice(0, 110), description: desc.slice(0, 300),
+    thumbnailUrl: [thumb, `https://i.ytimg.com/vi/${id}/hqdefault.jpg`], uploadDate: (isNaN(up) ? new Date() : up).toISOString(),
+    embedUrl: `https://www.youtube.com/embed/${id}`, contentUrl: `https://www.youtube.com/watch?v=${id}`, url: canonical }];
+  return { title: `${live ? '🔴 ' : ''}${title} | ICS`, desc, canonical, ogImage: thumb, jsonld,
+    noscript: `<h1>${_ogHtmlEsc(title)}</h1><p>${_ogHtmlEsc(desc)}</p><iframe src="https://www.youtube.com/embed/${id}" title="${_ogHtmlEsc(title)}" width="560" height="315"></iframe>` };
 }
+// sitemap dedicata ai video: una voce per ogni pagina di visualizzazione /media/video/<id>
+app.get('/sitemap-video.xml', async (req, res) => {
+  try {
+    const X = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const videos = await readVideos(), seen = new Set(); let out = '';
+    for (const arr of Object.values(videos || {})) {
+      if (!Array.isArray(arr)) continue;
+      for (const v of arr) {
+        const y = v && _ytIdOf(v.url); if (!y || seen.has(y) || v.is_live) continue; seen.add(y);
+        const t = _decodeEntities(v.title) || 'Video';
+        out += `  <url><loc>${SITE_URL}/media/video/${y}</loc><video:video><video:thumbnail_loc>https://i.ytimg.com/vi/${y}/hqdefault.jpg</video:thumbnail_loc><video:title>${X(t.slice(0, 100))}</video:title><video:description>${X(String(v.description || `${t} — Italia Cycling Stats`).slice(0, 300))}</video:description><video:player_loc>https://www.youtube.com/embed/${y}</video:player_loc>${/^\d{4}-\d{2}-\d{2}/.test(v.published_at || '') ? `<video:publication_date>${String(v.published_at).slice(0, 10)}</video:publication_date>` : ''}</video:video></url>\n`;
+      }
+    }
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8'); res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${out}</urlset>`);
+  } catch (e) { res.status(500).send('<!-- sitemap error -->'); }
+});
 let _videoPostRunning = false, _videoPostAgain = null, _nextLiveDue = null;
 async function publishNewVideosToFacebook(videos) {
   if (!supabase || !_fbConfigured()) return { skipped: 'facebook non configurato' };
@@ -13784,7 +13808,7 @@ function _mediaNoscript(media, titleBase, pageUrl) {
   const e = _ogHtmlEsc;
   return media.photos.slice(0, 12).map(p => `<figure><img src="${_photoUrl(pageUrl, p.filename)}" alt="${e(p.caption || titleBase + ' — foto')}"/>${(p.photographer || p.display_name) ? `<figcaption>Foto: ${e(p.photographer || p.display_name)}</figcaption>` : ''}</figure>`).join('')
     + (media.ext || []).slice(0, 6).map(e => `<figure><img src="${_ogHtmlEsc(e.url)}" alt="${_ogHtmlEsc((e.caption || titleBase) + ' — foto ' + e.credit)}"/><figcaption>Foto: <a href="${_ogHtmlEsc(e.page)}">${_ogHtmlEsc(e.credit)}</a></figcaption></figure>`).join('')
-    + media.videos.slice(0, 6).map(v => `<p>Video: <a href="https://www.youtube.com/watch?v=${v.yt}">${e(v.title || titleBase)}</a></p>`).join('');
+    + media.videos.slice(0, 6).map(v => `<p>Video: <a href="/media/video/${v.yt}">${e(v.title || titleBase)}</a></p>`).join('');
 }
 // id calendario di una gara pro (i media sono salvati con quello): stesso giorno e nome simile
 function _proCalIdForServer(cal, r) {
@@ -13802,6 +13826,32 @@ function _proCalIdForServer(cal, r) {
 // /og/.../:id, qui riusata per iniettarli nella pagina VERA invece che in
 // una pagina "di servizio" a parte. Ritorna null se l'id non esiste (in tal
 // caso si serve la pagina normale, che mostrerà "non trovata" via JS).
+// Indice delle squadre d'archivio dalle classifiche storiche (data/ciclismo-storico/<anno>/classifica_team.json): id squadra -> stagioni e piazzamenti.
+// L'id e' il nome normalizzato (maiuscolo, ogni gruppo di simboli = "_"), lo stesso usato dalle pagine /team/.
+const _CAT_TEAM_LABEL = { ESORDIENTI1: 'Esordienti 1° anno', ESORDIENTI2: 'Esordienti 2° anno', ALLIEVI: 'Allievi', JUNIORES: 'Juniores', ELITE_UNDER23: 'Elite/Under 23', DONNE_ESORDIENTI: 'Donne Esordienti', DONNE_ALLIEVE: 'Donne Allieve', DONNE_JUNIORES: 'Donne Juniores' };
+let _teamArch = { ts: 0, idx: null, busy: null };
+async function _teamArchiveIndex() {
+  if (_teamArch.idx && Date.now() - _teamArch.ts < 12 * 3600e3) return _teamArch.idx;
+  if (_teamArch.busy) return _teamArch.idx || _teamArch.busy;
+  _teamArch.busy = (async () => {
+    const idx = {};
+    for (let y = 2007; y <= 2025; y++) {
+      const d = await readDataJsonFromGH(`ciclismo-storico/${y}/classifica_team.json`).catch(() => null);
+      for (const [cat, rows] of Object.entries((d && d.classifica) || {})) {
+        for (const r of (rows || [])) {
+          const id = String(r.team || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+          if (!id) continue;
+          const t = idx[id] || (idx[id] = { nome: _titleWords(String(r.team).toLowerCase()), anni: {}, best: null });
+          (t.anni[y] = t.anni[y] || []).push({ cat: _CAT_TEAM_LABEL[cat] || cat, pos: r.pos, punti: r.punti });
+          if (!t.best || r.pos < t.best.pos) t.best = { pos: r.pos, cat: _CAT_TEAM_LABEL[cat] || cat, y };
+        }
+      }
+    }
+    _teamArch = { ts: Date.now(), idx, busy: null };
+    return idx;
+  })().catch(e => { _teamArch.busy = null; console.warn('[team-archivio] indice:', e.message); return {}; });
+  return _teamArch.busy;
+}
 async function _getHeadMetaFor(type, id) {
   if (type === 'gara') {
     const proM = id.match(/^PRO_(.+)_(\d{4})$/);
@@ -13907,11 +13957,28 @@ async function _getHeadMetaFor(type, id) {
       readDataJsonFromGH('teams.json'), readDataJsonFromGH('athletes.json'),
     ]);
     let team = (teams || {})[id];
-    // squadra dell'archivio (anni passati): non e' in teams.json ma la sua pagina c'e'. Un id ben formato basta per non
-    // servire la home come canonical (era la causa delle "pagine alternative" in Search Console).
-    if (!team && /^[A-Z0-9][A-Z0-9_]{2,90}$/.test(id)) team = { nome: _titleWords(id.replace(/_[MF]$/, '').replace(/_/g, ' ')), _archivio: true };
+    let arch = null;
+    if (!team) {
+      // squadra dell'archivio (anni passati): non e' in teams.json ma la sua pagina c'e'. Il testo viene dall'indice delle classifiche storiche.
+      const ai = await _teamArchiveIndex();
+      arch = ai[id] || ai[id.replace(/_[MF]$/, '')] || null;
+      if (arch) team = { nome: arch.nome };
+      else if (/^[A-Z0-9][A-Z0-9_]{2,90}$/.test(id)) team = { nome: _titleWords(id.replace(/_[MF]$/, '').replace(/_/g, ' ')), _archivio: true };
+    }
     if (!team) return null;
     const title = team.nome || id.replace(/_/g, ' ');
+    if (arch) {
+      const e = _ogHtmlEsc, anni = Object.keys(arch.anni).sort();
+      const righe = anni.map(y => { const c = arch.anni[y]; return `<li>${y} — ${c.map(x => `${e(x.cat)}: ${x.pos}° (${x.punti} pt)`).join('; ')}</li>`; }).join('');
+      const best = arch.best ? ` Miglior piazzamento: ${arch.best.pos}° in ${arch.best.cat} (${arch.best.y}).` : '';
+      const descA = `Squadra ciclistica, stagioni ${anni[0]}–${anni[anni.length - 1]} (${anni.length} in classifica).${best} Classifiche, corridori e storico — Italia Cycling Stats`.slice(0, 300);
+      return {
+        title: `${title} | ICS`, desc: descA,
+        canonical: `${SITE_URL}/team/${encodeURIComponent(id)}`,
+        ogImage: `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+        noscript: `<h1>${e(title)}</h1><p>${e(descA)}</p><ul>${righe}</ul>`,
+      };
+    }
     const rosterCount = Object.values(athletes || {}).filter(a => a.team_id === id).length;
     const desc = rosterCount ? `${rosterCount} corridori — Italia Cycling Stats` : 'Squadra ciclistica: risultati, corridori e storico stagione per stagione — Italia Cycling Stats';
     return {
@@ -14233,6 +14300,7 @@ app.get('*', async (req, res, next) => {
 init()
   .then(async () => {
     await ensureScraperMediaProfiles();
+    _teamArchiveIndex().catch(() => {});   // riscalda l'indice delle squadre d'archivio
     // Prima sync dopo 2 minuti dal boot (Render si sveglia), poi ogni 30 minuti
     const SYNC_INTERVAL = 30 * 60 * 1000;
     setTimeout(() => {
