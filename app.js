@@ -5256,6 +5256,8 @@ function updateNavActive(hash) {
 }
 
 function setPage(html) {
+  // sulla pagina dei risultati di ricerca un caricamento in ritardo (es. la home ancora in corso) non deve riscriverla
+  try { if (/^\/cerca\/?$/.test(location.pathname) && !String(html).includes('cerca-page')) return; } catch (_) {}
   if (window.homeHeroInterval) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
@@ -29734,7 +29736,7 @@ async function renderCerca() {
   setPageMeta(q ? `Cerca «${q}»` : 'Cerca', 'Risultati della ricerca su Italia Cycling Stats: atleti, squadre, gare e fotografi.');
   if (!document.getElementById('cerca-robots')) { const m = document.createElement('meta'); m.id = 'cerca-robots'; m.name = 'robots'; m.content = 'noindex,follow'; document.head.appendChild(m); }
   setPage(`
-    <div class="page-section" style="max-width:860px;margin:0 auto">
+    <div class="page-section cerca-page" style="max-width:860px;margin:0 auto">
       <h1 style="margin:0 0 12px;font-size:1.5rem">${q ? `Risultati per «${esc(q)}»` : 'Cerca'}</h1>
       <form onsubmit="event.preventDefault();window.cercaVai(document.getElementById('cerca-q').value)" style="display:flex;gap:8px;margin-bottom:18px">
         <input id="cerca-q" type="search" value="${esc(q)}" placeholder="Atleta, squadra, gara, fotografo…" autocomplete="off" style="flex:1;min-width:0;padding:11px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-card);color:var(--text-primary);font-size:1rem">
