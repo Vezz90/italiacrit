@@ -29490,6 +29490,7 @@ function renderNotFound() {
 // di una gara), risultando confuso ("deve andare via dalla barra appena
 // apre la selezione").
 window.closeAllSearchDropdowns = () => {
+  window._searchGen = (window._searchGen || 0) + 1;
   ['search-results-dropdown','drawer-search-dropdown','m-search-dropdown'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -29519,6 +29520,7 @@ function bindSearch(inputId, dropdownId) {
     if (!q) return;
     e.preventDefault();
     clearTimeout(timer);
+    window._searchGen = (window._searchGen || 0) + 1;   // scarta le risposte lente ancora in arrivo: il menu non deve riaprirsi
     dropdown.style.display = 'none';
     window.cercaVai(q);
     input.blur();
@@ -29571,6 +29573,7 @@ function doSearch(q, dropdown) {
   const { athletes, teams } = globalData;
   const ql = q.toLowerCase();
   const results = [];
+  const _gen = window._searchGen || 0;
 
   // Fuzzy match: ogni token >= 4 chars prova anche senza l'ultima lettera
   // es. "loren" → prova "loren" poi "lore" → trova "lorello"
@@ -29634,6 +29637,7 @@ function doSearch(q, dropdown) {
 
   // Mostra subito quello che abbiamo, poi aggiunge media in async
   const renderDropdown = (list) => {
+    if ((window._searchGen || 0) !== _gen) return;   // ricerca superata da Invio o chiusura: non riaprire il menu
     if (!list.length) {
       dropdown.innerHTML = '<div class="search-result-item"><span class="search-result-sub">Nessun risultato</span></div>';
     } else {

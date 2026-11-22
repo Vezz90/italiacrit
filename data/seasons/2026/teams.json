@@ -11032,8 +11032,7 @@
       "RICCAMBONI_LORENZO",
       "BOTTICCHIO_NICOLAS",
       "CRISTOFORETTI_GIULIO",
-      "PELANDA_SIMONE",
-      "RICCAMBONI_LORENZO_6_EXEQUO"
+      "PELANDA_SIMONE"
     ],
     "risultati": [
       {
@@ -12495,7 +12494,7 @@
         "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
         "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
         "data": "2026-04-25",
-        "atleta_id": "RICCAMBONI_LORENZO_6_EXEQUO",
+        "atleta_id": "RICCAMBONI_LORENZO",
         "atleta_cognome": "RICCAMBONI",
         "atleta_nome": "LORENZO (6° - EXEQUO)",
         "posizione": 7,
@@ -95737,8 +95736,7 @@
       "VEZZARI_NICOLO",
       "NORDERA_LUCA",
       "GAMBA_TOMMASO",
-      "MONTEBIANCO_ALESSANDRO",
-      "FASOLI_TOMMASO_6_EXEQUO"
+      "MONTEBIANCO_ALESSANDRO"
     ],
     "risultati": [
       {
@@ -96630,7 +96628,7 @@
         "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
         "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
         "data": "2026-04-25",
-        "atleta_id": "FASOLI_TOMMASO_6_EXEQUO",
+        "atleta_id": "FASOLI_TOMMASO",
         "atleta_cognome": "FASOLI",
         "atleta_nome": "TOMMASO (6° - EXEQUO)",
         "posizione": 6,

@@ -31850,7 +31850,7 @@
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 167,
+    "punti_totali": 172,
     "risultati": [
       {
         "gara_id": "9_TROFEO_COMUNE_DI_MARCARIA_2026-10-11_ES2_M",
@@ -32124,6 +32124,19 @@
         "regione": "VENETO",
         "km": "36.800",
         "media": "39.312"
+      },
+      {
+        "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
+        "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
+        "data": "2026-04-25",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "OFF.ALBERTI U.C. VAL D'ILLASI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "38.200",
+        "media": "38.499"
       }
     ]
   },
@@ -173680,7 +173693,7 @@
     "team_id": "C_C_FORTI_E_VELOCI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 110,
+    "punti_totali": 114,
     "risultati": [
       {
         "gara_id": "14_TROFEO_G_MIORI_E_G_GIRARDI_GARA_UNICA_2026-08-02_ES2_M",
@@ -173837,6 +173850,19 @@
         "regione": "LOMBARDIA",
         "km": "30.100",
         "media": "39.620"
+      },
+      {
+        "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
+        "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
+        "data": "2026-04-25",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "C.C. FORTI E VELOCI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "38.200",
+        "media": "38.499"
       }
     ]
   },
@@ -211523,56 +211549,6 @@
         "regione": "LOMBARDIA",
         "km": "34.500",
         "media": "36.551"
-      }
-    ]
-  },
-  "FASOLI_TOMMASO_6_EXEQUO": {
-    "id": "FASOLI_TOMMASO_6_EXEQUO",
-    "nome": "TOMMASO (6° - EXEQUO)",
-    "cognome": "FASOLI",
-    "team_attuale": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
-    "categoria": "ES2_M",
-    "genere": "M",
-    "punti_totali": 5,
-    "risultati": [
-      {
-        "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
-        "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
-        "data": "2026-04-25",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "OFF.ALBERTI U.C. VAL D'ILLASI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "38.200",
-        "media": "38.499"
-      }
-    ]
-  },
-  "RICCAMBONI_LORENZO_6_EXEQUO": {
-    "id": "RICCAMBONI_LORENZO_6_EXEQUO",
-    "nome": "LORENZO (6° - EXEQUO)",
-    "cognome": "RICCAMBONI",
-    "team_attuale": "C.C. FORTI E VELOCI",
-    "team_id": "C_C_FORTI_E_VELOCI",
-    "categoria": "ES2_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "11_TROFEO_IMPRESA_COSTRUZIONI_BASSO_SARCA_I_C_B_2026-04-25_ES2_M",
-        "nome_gara": "11 TROFEO IMPRESA COSTRUZIONI BASSO SARCA I C B",
-        "data": "2026-04-25",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "C.C. FORTI E VELOCI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "38.200",
-        "media": "38.499"
       }
     ]
   },

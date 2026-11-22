@@ -619,7 +619,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             if not cognome: continue
 
             # Pulizia ex-aequo: rimuove annotazioni tipo "(6° - EXEQUO)", "(1 - EX AEQUO)", ecc.
-            _exaeq_re = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
+            _exaeq_re = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?(?:AEQUO|EQUO)\s*\)', re.IGNORECASE)
             cognome = _exaeq_re.sub('', cognome).strip()
             nome    = _exaeq_re.sub('', nome).strip()
             cognome, nome = canonical_athlete_name(cognome, nome)
@@ -1178,7 +1178,7 @@ async def run_cycle():
             # Riapplica le regole di moltiplicatore e normalizza ID (unificazione doppioni)
             for r in all_results:
                 # Pulizia ex-aequo dai dati storici (annotazioni tipo "(6° - EXEQUO)")
-                _exaeq = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
+                _exaeq = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?(?:AEQUO|EQUO)\s*\)', re.IGNORECASE)
                 r["cognome"] = _exaeq.sub('', r.get("cognome","")).strip()
                 r["nome"]    = _exaeq.sub('', r.get("nome","")).strip()
                 r["cognome"], r["nome"] = canonical_athlete_name(r["cognome"], r["nome"])
