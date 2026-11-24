@@ -295,6 +295,8 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
   const imgEl  = photoUrl
     ? `<img data-photo-id="${esc(entityId)}" src="${esc(mediaUrl(photoUrl))}"
            alt="Foto" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:${radius};display:block">`
+    : (portrait && entityType === 'atleta')
+    ? `<div data-photo-id="${esc(entityId)}" class="ap-sil" style="width:100%;height:100%;border-radius:${radius}"><svg viewBox="0 0 100 120" fill="currentColor" aria-hidden="true"><circle cx="50" cy="34" r="20"/><path d="M8 120c0-26 18-44 42-44s42 18 42 44z"/></svg></div>`
     : `<div data-photo-id="${esc(entityId)}" style="width:100%;height:100%;border-radius:${radius};
            background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;
            font-family:var(--font-display);font-size:${shape==='circle'?'1.8':'1.6'}rem;

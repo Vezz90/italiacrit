@@ -1,0 +1,57 @@
+/* ════════════════════════════════════════════════════════════════
+   SCHEDA ATLETA v2 — testata ampia: ritratto · nome · riquadro numeri
+   (Vittorie · Podi · 4°–10° · Punti · Posizione). Sovrascrive la testata esistente; vedi profile-v2.js.
+   ════════════════════════════════════════════════════════════════ */
+.athlete-header.ath-hero.ap { padding: 34px 32px 30px; background: linear-gradient(120deg, #0c1626 0%, #13233b 60%, #17304f 100%) !important; border-radius: 18px; overflow: hidden; }
+.ap .ath-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 460px) !important; gap: 36px; align-items: center; }
+/* l'aside originale resta nel DOM (l'app lo aggiorna) ma non si vede */
+.ap .ath-hero-standing { display: none !important; }
+
+/* ritratto: più grande, ancorato in basso, sagoma scura se manca la foto */
+.athlete-header.ap .ath-hero-left { gap: 30px; align-items: flex-end; }
+.athlete-header.ap .ath-hero-left > .photo-area--portrait {
+  width: 240px !important; flex: 0 0 240px; min-height: 290px; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.1)); border: 1px solid rgba(255,255,255,.08);
+}
+.ap .photo-area--portrait > img { object-fit: cover; object-position: top center; }
+.ap .photo-area--portrait > img.is-cutout { object-fit: contain; object-position: bottom center; }
+.ap .ap-sil { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; background: linear-gradient(180deg, #162338, #0e1a2c); }
+.ap .ap-sil svg { width: 78%; height: 88%; color: #2a3b55; }
+
+/* nome più grande */
+.ap .athlete-cognome { font-size: clamp(2.4rem, 4.6vw, 4rem) !important; line-height: .95; }
+.ap .athlete-nome { font-size: 1.35rem !important; color: rgba(255,255,255,.6) !important; }
+.ap .ath-hero-main { align-self: center; }
+
+/* riquadro numeri */
+.ap-kpis-wrap { min-width: 0; }
+.ap-kpis { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid rgba(255,255,255,.14); border-radius: 16px; background: rgba(255,255,255,.04); overflow: hidden; }
+.ap-k { padding: 20px 8px 16px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); min-width: 0; }
+.ap-k:first-child { border-left: 0; }
+.ap-k b { display: block; font-family: var(--font-display, inherit); font-size: 2.1rem; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.ap-k span { display: block; margin-top: 8px; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.ap-k i { display: block; margin-top: 4px; font-style: normal; font-size: .6rem; color: rgba(255,255,255,.4); white-space: nowrap; }
+.ap-k.ap-gold b { color: var(--gold, #f5c542); }
+.ap-k.ap-pos b { color: var(--accent, #e8001d); }
+.ap-kfoot { margin-top: 12px; font-size: .74rem; color: rgba(255,255,255,.55); display: flex; flex-direction: column; gap: 4px; }
+.ap-klbl { letter-spacing: .06em; font-weight: 700; text-transform: uppercase; }
+.ap-kfoot .ath-gap-line { color: rgba(255,255,255,.6); }
+.ap-kfoot .ath-gap-line b { color: #fff; }
+.ap-kfoot .ath-gap-line a { color: rgba(255,255,255,.85); }
+
+@media (max-width: 1100px) {
+  .ap .ath-hero-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 22px; }
+}
+@media (max-width: 640px) {
+  .athlete-header.ath-hero.ap { padding: 20px 14px 18px; border-radius: 14px; }
+  .athlete-header.ap .ath-hero-left > .photo-area--portrait { width: 96px !important; flex: 0 0 96px; min-height: 124px; border-radius: 12px; }
+  .athlete-header.ap .ath-hero-left { gap: 12px 14px; align-items: center; flex-direction: row !important; flex-wrap: wrap; }
+  .ap .ath-hero-main { display: contents; }
+  .ap .ath-hero-main .profile-photo-row { flex: 1 1 0; min-width: 0; margin: 0 !important; }
+  .ap .ath-hero-main > .ath-hero-pills, .ap .ath-hero-main > .ath-hero-actions, .ap .ath-hero-main > .profile-social-links, .ap .ath-hero-main > .media-profile-links, .ap .ath-hero-main > div:not(.profile-photo-row) { flex: 1 1 100%; }
+  .ap .athlete-cognome { font-size: clamp(1.9rem, 9vw, 2.6rem) !important; }
+  .ap-k b { font-size: 1.45rem; }
+  .ap-k { padding: 14px 4px 12px; }
+  .ap-k span { font-size: .56rem; letter-spacing: .03em; }
+  .ap-k i { display: none; }
+}
