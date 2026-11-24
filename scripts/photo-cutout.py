@@ -11,9 +11,11 @@ Uso:
   --only-cx     solo atleti presenti nei risultati ciclocross della stagione in corso (data/ciclocross/*/results.json)
   --ids A,B     solo questi atleta_id
   --dry-run     scarica e scontorna ma non carica ne' scrive nel database (salva i PNG in --out)
+  --redo        rielabora anche le foto gia scontornate (sovrascrive)
   --revert      cancella tutti i campi photo_cutout dal database (le foto originali restano)
 """
 import argparse, hashlib, io, json, os, random, re, sys, time, urllib.parse, urllib.request
+from PIL import Image
 
 BASE = 'https://aqqsstsbgpapzoxllosh.supabase.co'
 PUB = BASE + '/storage/v1/object/public'
@@ -56,6 +58,66 @@ def safe_name(aid):
     return s if s == aid else s + '_' + hashlib.sha1(aid.encode('utf-8')).hexdigest()[:6]
 
 
+
+def process(orig_bytes, sess):
+    """Scontorno pulito: ingrandimento (se piccola) -> maschera -> via lo sfondo uniforme rimasto nei vuoti (tra braccio e busto)
+    -> bordo ristretto e ammorbidito -> colori del bordo ricalcolati dal primo piano (niente alone chiaro)."""
+    import numpy as np
+    from PIL import ImageFilter
+    from rembg import remove
+    from pymatting import estimate_foreground_ml
+    from scipy import ndimage as ndi
+    img = Image.open(io.BytesIO(orig_bytes)).convert('RGB')
+    if min(img.size) < 500:                       # foto piccola (es. PCS 160x240): ingrandita 2x con filtro migliore + nitidezza
+        img = img.resize((img.width * 2, img.height * 2), Image.LANCZOS)
+        img = img.filter(ImageFilter.UnsharpMask(radius=1.6, percent=70, threshold=2))
+    if max(img.size) > 1100:                      # troppo grande: si riduce (il ritratto e' mostrato a ~300px)
+        k = 1100.0 / max(img.size); img = img.resize((int(img.width * k), int(img.height * k)), Image.LANCZOS)
+    buf = io.BytesIO(); img.save(buf, 'PNG')
+    mask = Image.open(io.BytesIO(remove(buf.getvalue(), session=sess, only_mask=True, post_process_mask=True))).convert('L')
+    rgb = np.asarray(img, dtype=np.float64)
+    al = np.asarray(mask, dtype=np.float64) / 255.0
+    lab0, n0 = ndi.label(al > 0.5)
+    if n0 > 1:
+        sizes = ndi.sum(np.ones_like(al), lab0, index=np.arange(1, n0 + 1))
+        big = sizes.max()
+        if sorted(sizes)[-2] >= 0.25 * big:
+            return None                                   # piu' persone nella foto: non si sa chi e' l'atleta -> dubbia
+        keep = [i + 1 for i, s in enumerate(sizes) if s >= 0.03 * big]
+        al = np.where(np.isin(lab0, keep) | (ndi.binary_dilation(np.isin(lab0, keep), iterations=4) & (al > 0.02)), al, 0.0)
+
+    # sfondo uniforme (studio): lo si toglie anche dove il modello l'ha lasciato dentro (vuoti tra braccia e busto)
+    bgpix = rgb[al < 0.02]
+    if bgpix.shape[0] > 0.08 * al.size:
+        med = np.median(bgpix, axis=0)
+        if np.std(bgpix, axis=0).max() < 40:
+            dist = np.sqrt(((rgb - med) ** 2).sum(axis=2))
+            cand = (dist < 42) & (al > 0.02)
+            lab, n = ndi.label(cand)
+            if n:
+                outside = ndi.binary_dilation(al < 0.02, iterations=3)
+                outside[0, :] = outside[-1, :] = outside[:, 0] = outside[:, -1] = True
+                touch = np.unique(lab[outside & cand])
+                kill = np.isin(lab, touch[touch > 0])
+                if kill.sum() <= 0.12 * (al > 0.02).sum():     # tolto poco = vuoti tra braccio e busto; tanto = maglia simile allo sfondo, si lascia stare
+                    al[kill] = 0.0
+    a = Image.fromarray((al * 255).astype(np.uint8), 'L')
+    for _ in range(2):
+        a = a.filter(ImageFilter.MinFilter(3))
+    a = a.filter(ImageFilter.GaussianBlur(0.9))
+    al = np.asarray(a, dtype=np.float64) / 255.0
+    fg = estimate_foreground_ml(rgb / 255.0, al)
+    out = np.dstack([np.clip(fg, 0, 1), al])
+    return Image.fromarray((out * 255).astype(np.uint8), 'RGBA')
+
+
+def drop_old(aid, done, key, dry):
+    """foto ora giudicata dubbia: se in un giro precedente era stata caricata una versione, la si toglie (resta l'originale)"""
+    if aid in done and not dry:
+        req('DELETE', BASE + '/rest/v1/entity_overrides?entity_type=eq.atleta&field=eq.photo_cutout&entity_id=eq.' + urllib.parse.quote(aid, safe=''), key)
+        print('    (tolta la vecchia versione scontornata)')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--env', required=True)
@@ -64,6 +126,7 @@ def main():
     ap.add_argument('--ids', default='')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--revert', action='store_true')
+    ap.add_argument('--redo', action='store_true', help='rielabora anche le foto gia scontornate')
     ap.add_argument('--out', default='')
     ap.add_argument('--seed', type=int, default=7)
     a = ap.parse_args()
@@ -77,14 +140,13 @@ def main():
         print('rimossi tutti i photo_cutout (le foto originali non sono state toccate)')
         return
 
-    from PIL import Image
     from rembg import remove, new_session
 
     photos = fetch_all('photo_url', key)
     done = fetch_all('photo_cutout', key)
     print('foto atleti: %d, gia scontornate: %d' % (len(photos), len(done)))
 
-    ids = [i for i in photos if i not in done]
+    ids = [i for i in photos if a.redo or i not in done]
     if a.ids:
         want = set(x for x in a.ids.split(',') if x)
         ids = [i for i in photos if i in want]
@@ -126,14 +188,19 @@ def main():
                     stats['gia_trasparente'] += 1
                     print('[%d/%d] %s gia trasparente (%.0f%%)' % (n, len(ids), aid, transp * 100))
                     continue
-            res = remove(orig, session=sess, post_process_mask=True)
-            cut = Image.open(io.BytesIO(res)).convert('RGBA')
+            cut = process(orig, sess)
+            if cut is None:
+                stats['dubbia'] += 1
+                print('[%d/%d] %s DUBBIA (piu persone nella foto): non caricata' % (n, len(ids), aid))
+                drop_old(aid, done, key, a.dry_run)
+                continue
             hist = cut.getchannel('A').histogram()
             transp = sum(hist[:20]) / float(cut.width * cut.height)
             if transp < 0.10 or transp > 0.85:
                 stats['dubbia'] += 1
                 print('[%d/%d] %s DUBBIA (trasparente %.0f%%): non caricata' % (n, len(ids), aid, transp * 100))
                 cut.save(os.path.join(out_dir, 'dubbia_' + safe_name(aid) + '.png'))
+                drop_old(aid, done, key, a.dry_run)
                 continue
             buf = io.BytesIO(); cut.save(buf, 'PNG', optimize=True); png = buf.getvalue()
             name = safe_name(aid)
