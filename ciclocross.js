@@ -70,12 +70,12 @@
     const resultsRaw = [];
     const athletes = {}, teams = {};
     let seq = 0;
-    // Gare congiunte: la FCI dà la posizione della classifica GENERALE (es. un Esordiente 1° anno può essere 11° assoluto perché davanti
-    // ci sono altre categorie). Ogni atleta prende la posizione (e quindi i punti) che gli spetta nella SUA categoria.
+    // Gare congiunte, SOLO ESORDIENTI: la FCI dà la posizione della classifica GENERALE (un Esordiente 1° anno può essere 11° assoluto perché davanti
+    // ci sono altre categorie). Ogni esordiente prende la posizione (e i punti) della SUA categoria.
     // Se i gruppi della stessa categoria sono fette della stessa generale (posizioni mai ripetute) si riordinano insieme;
     // se ognuno parte da 1 (classifiche separate) si riordina ciascuno per conto suo.
     const byKey = {};
-    for (const r of res) { const q = parseInt(r.pos, 10); if (q >= 1) ((byKey[r.gara + '|' + r.cat] ||= {})[r.gruppo] ||= []).push(r); }
+    for (const r of res) { const q = parseInt(r.pos, 10); if (q >= 1 && /^ES[12]_/.test(r.cat)) ((byKey[r.gara + '|' + r.cat] ||= {})[r.gruppo] ||= []).push(r); }   // solo Esordienti: Allievi, Juniores ed Elite/U23 tengono la posizione 1-10 della gara, qualunque sia l'anno
     for (const grp of Object.values(byKey)) {
       const gs = Object.values(grp);
       const all = gs.flat();

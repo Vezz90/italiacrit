@@ -25241,6 +25241,11 @@ function _initGaraMediaModals() {
             style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--bg-elevated);color:var(--text-secondary)">
             📁 Carica File
           </button>
+          ${isAdmin ? `<button id="vtab-exist" onclick="window._openVideoPicker('${escJs(garaId)}')"
+            style="flex:1;padding:8px;border:none;border-left:1px solid var(--border-subtle);cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--bg-elevated);color:var(--text-secondary)">
+            📚 Già caricato
+          </button>` : ''}
+
         </div>
 
         <div id="vpanel-url">
@@ -25339,6 +25344,62 @@ function _initGaraMediaModals() {
     });
   };
 
+  // ── Video GIÀ caricato sul sito → mettilo in questa gara (solo admin) ──
+  // Elenco di tutti i video salvati (/admin/videos, per gara); si cerca per titolo/canale/gara e si sposta qui (o si copia).
+  window._openVideoPicker = async (garaId) => {
+    if (authUser()?.role !== 'admin') return;
+    document.getElementById('modal-overlay')?.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.innerHTML = `<div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:560px;max-height:86vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <strong>Video già caricato → questa gara</strong>
+        <button onclick="document.getElementById('modal-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <input type="search" id="vpick-q" placeholder="Cerca per titolo, canale o gara…" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px"/>
+      <div id="vpick-list" style="overflow:auto;flex:1;min-height:120px;font-size:.85rem;color:var(--text-muted)">Caricamento…</div></div>`;
+    document.body.appendChild(overlay);
+    let all = {};
+    try { all = await apiCall('/admin/videos', { method: 'GET' }); } catch (e) { document.getElementById('vpick-list').textContent = 'Errore: ' + e.message; return; }
+    const garaName = (k) => {
+      const r = (globalData?.resultsRaw || []).find(x => x.gara_id === k);
+      if (r) return `${r.nome_gara} · ${r.categoria || ''}`.trim();
+      const c = (globalData?.calendar || []).find(x => x.id === k);
+      return c ? c.nome : k;
+    };
+    const items = [];
+    for (const [key, list] of Object.entries(all || {})) (list || []).forEach((v, idx) => { if (key !== garaId) items.push({ key, idx, v, where: garaName(key) }); });
+    const box = document.getElementById('vpick-list');
+    const draw = () => {
+      const q = (document.getElementById('vpick-q').value || '').toLowerCase().trim();
+      const rows = items.filter(i => !q || `${i.v.title} ${i.v.channel} ${i.v.url} ${i.where}`.toLowerCase().includes(q)).slice(0, 40);
+      box.innerHTML = rows.length ? rows.map(i => {
+        const id = (typeof ytId === 'function') ? ytId(i.v.url) : null;
+        const th = id ? `<img src="https://img.youtube.com/vi/${id}/default.jpg" style="width:72px;height:54px;object-fit:cover;border-radius:6px;flex-shrink:0"/>` : `<div style="width:72px;height:54px;border-radius:6px;background:var(--bg-elevated);flex-shrink:0"></div>`;
+        return `<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)">${th}
+          <div style="flex:1;min-width:0"><div style="color:var(--text-primary);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.v.title || i.v.url)}</div>
+          <div style="font-size:.75rem">${esc(i.v.channel || '')} · ora in: ${esc(i.where)}</div></div>
+          <div style="display:flex;flex-direction:column;gap:4px"><button data-act="move" data-k="${esc(i.key)}" data-i="${i.idx}" style="padding:5px 10px;border:none;border-radius:6px;background:var(--red-hot);color:#fff;cursor:pointer;font-size:.78rem">Sposta qui</button>
+          <button data-act="copy" data-k="${esc(i.key)}" data-i="${i.idx}" style="padding:4px 10px;border:1px solid var(--border-subtle);border-radius:6px;background:none;color:var(--text-secondary);cursor:pointer;font-size:.75rem">Copia</button></div></div>`;
+      }).join('') : 'Nessun video trovato.';
+    };
+    draw();
+    document.getElementById('vpick-q').addEventListener('input', draw);
+    box.addEventListener('click', async (e) => {
+      const b = e.target.closest('button[data-act]'); if (!b) return;
+      const it = items.find(x => x.key === b.dataset.k && String(x.idx) === b.dataset.i); if (!it) return;
+      b.disabled = true; b.textContent = '…';
+      try {
+        if (b.dataset.act === 'move') await apiCall(`/admin/videos/${encodeURIComponent(it.key)}/${it.idx}/move`, { method: 'POST', body: { newCalId: garaId } });
+        else await apiCall(`/admin/videos/${encodeURIComponent(garaId)}`, { method: 'POST', body: { url: it.v.url, title: it.v.title, channel: it.v.channel, description: it.v.description || '' } });
+        document.getElementById('modal-overlay')?.remove();
+        showToast(b.dataset.act === 'move' ? 'Video spostato in questa gara' : 'Video copiato in questa gara', 'success');
+        try { await refreshVideos(); } catch (_) {}
+        route();
+      } catch (err) { b.disabled = false; b.textContent = b.dataset.act === 'move' ? 'Sposta qui' : 'Copia'; showToast('Errore: ' + err.message, 'error'); }
+    });
+  };
   window._switchVideoTab = (tab) => {
     const isUrl = tab === 'url';
     document.getElementById('vpanel-url').style.display = isUrl ? '' : 'none';
