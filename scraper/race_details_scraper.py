@@ -519,6 +519,12 @@ def scrape_all_details():
                     fci_races_map[data_iso] = []
                 fci_races_map[data_iso].append((norm_n, raceid, nome))
 
+            # Il sito ripete l'ultima pagina oltre la fine: ci si ferma a "Pagina X di X".
+            summ = soup.select_one('.fci-race-summary')
+            mp = re.search(r'Pagina\s+(\d+)\s+di\s+(\d+)', summ.get_text(' ', strip=True)) if summ else None
+            if mp and int(mp.group(1)) >= int(mp.group(2)):
+                break
+
     # 3. Match races and fetch details
     print("Match e download dettagli...")
     details_map = {}

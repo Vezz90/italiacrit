@@ -130,6 +130,15 @@ def scrape_calendar_fci(year=2026):
                             "luogo": luogo
                         })
                         
+                    # Oltre l'ultima pagina il sito RIPETE l'ultima invece di
+                    # restituire una pagina vuota: senza questo controllo il
+                    # ciclo non finirebbe mai. Il riepilogo dice "Pagina X di Y".
+                    summ = soup.select_one('.fci-race-summary')
+                    mp = re.search(r'Pagina\s+(\d+)\s+di\s+(\d+)', summ.get_text(' ', strip=True)) if summ else None
+                    if mp and int(mp.group(1)) >= int(mp.group(2)):
+                        break
+                    if pagina >= 60:  # rete di sicurezza assoluta
+                        break
                     # print(f"Mese {mese:02d} | Geo {geo} | Pagina {pagina} -> Trovate {len(races)} gare.")
                     pagina += 1
                     time.sleep(0.1) # Pausa gentile
