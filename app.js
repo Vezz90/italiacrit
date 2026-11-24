@@ -18780,7 +18780,11 @@ async function renderAtleta(atleta_id, opts = {}) {
   })();
 
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
-  const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'portrait');
+  let photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'portrait');
+  // Foto scontornata (se c'e'): si mostra al posto dell'originale, che resta intatta (modifica/ritaglio lavorano sull'originale)
+  if (atletaOv.photo_cutout && atletaOv.photo_url) {
+    photoHtml = photoHtml.replace(/<img data-photo-id="([^"]*)"\s+src="[^"]*"/, (m0, id) => `<img class="is-cutout" data-photo-id="${id}" src="${esc(mediaUrl(atletaOv.photo_cutout))}"`);
+  }
 
   // Pulsanti azione: stesso contenuto di prima, ora dentro l'intestazione
   const _actionsHtml = `
