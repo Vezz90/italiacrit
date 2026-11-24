@@ -267,6 +267,7 @@
   // Chiamata da renderAtleta: scarica le righe, e se ce ne sono abbastanza mostra la scheda "Forma" e il richiamo nella scheda "Stagione".
   window.Forma = {
     mountAthlete: function (id) {
+      if (document.body.classList.contains('disc-cx')) return Promise.resolve();   // la scheda Forma e' calcolata sui risultati della strada
       state.id = id; state.rows = null; state.mode = 'all'; state.cat = 'all';
       var base = (typeof API_BASE !== 'undefined') ? API_BASE : '/api';
       if (!basePromise) basePromise = fetch(base + '/forma/baseline').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });

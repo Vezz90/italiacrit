@@ -20147,6 +20147,7 @@ function _ciclismoResultsOnce(atletaId) {
 async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow) return;
+  if (globalData?.meta?.disciplina === 'ciclocross') return;   // ciclocross: nessuno storico della strada
   // media e PCS partono subito, in parallelo ai risultati ciclismo.info (prima si aspettavano uno dopo l'altro: il profilo con solo storico sembrava vuoto per molti secondi)
   const _pMedia = apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`);
   const _pPcs = Promise.all([
@@ -22017,6 +22018,7 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;
+  if (globalData?.meta?.disciplina === 'ciclocross') return;   // ciclocross: PCS/ciclismo.info sono dati della strada
 
   // Solo risultati gare circuito (pos 11+) dal DB pcs_gara_results
   let pcsGareRaw;
