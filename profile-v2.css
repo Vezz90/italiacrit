@@ -23,6 +23,15 @@
 .ap .athlete-nome { font-size: 1.35rem !important; color: rgba(255,255,255,.6) !important; }
 .ap .ath-hero-main { align-self: center; }
 
+/* selettori nel riquadro */
+.ap-ctl { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 12px; }
+.ap-seg { display: inline-flex; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.04); }
+.ap-seg button { appearance: none; border: 0; background: none; color: rgba(255,255,255,.75); font: 600 .76rem/1 inherit; font-family: inherit; padding: 8px 14px; cursor: pointer; }
+.ap-seg button + button { border-left: 1px solid rgba(255,255,255,.14); }
+.ap-seg button[aria-pressed="true"] { background: #fff; color: #0c1626; }
+.ap-seg button:not([aria-pressed="true"]):hover { background: rgba(255,255,255,.1); color: #fff; }
+.ap-note { font-size: .68rem; color: rgba(255,255,255,.4); }
+
 /* riquadro numeri */
 .ap-kpis-wrap { min-width: 0; }
 .ap-kpis { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid rgba(255,255,255,.14); border-radius: 16px; background: rgba(255,255,255,.04); overflow: hidden; }

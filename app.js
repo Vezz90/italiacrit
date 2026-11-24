@@ -20328,6 +20328,23 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   const dedupedMerged = [...seen.values()];
 
+  // Totali di carriera (1°, 2°, 3°, 4°-10°, gare) per la testata della scheda: tutte le fonti unite e senza doppioni.
+  // Strada: tutto; ciclocross: solo i risultati nativi del dataset ciclocross.
+  try {
+    const _cxm = globalData?.meta?.disciplina === 'ciclocross';
+    const _rows = _cxm ? dedupedMerged.filter(r => r.source === 'ics') : dedupedMerged;
+    const c = { p1: 0, p2: 0, p3: 0, pout: 0, n: 0, from: null, to: null, by: {} };
+    for (const r of _rows) {
+      const y = String(r.anno || String(r.data || '').slice(0, 4)); const b = (c.by[y] ||= { p1: 0, p2: 0, p3: 0, pout: 0, n: 0 });
+      b.n++; c.n++;
+      const ps = r.posizione;
+      if (ps === 1) { c.p1++; b.p1++; } else if (ps === 2) { c.p2++; b.p2++; } else if (ps === 3) { c.p3++; b.p3++; } else if (ps >= 4 && ps <= 10) { c.pout++; b.pout++; }
+    }
+    const _ys = Object.keys(c.by).sort(); c.from = _ys[0] || null; c.to = _ys[_ys.length - 1] || null;
+    (window._athCareer = window._athCareer || {})[atletaId + '|' + (_cxm ? 'cx' : 'road')] = c;
+    document.dispatchEvent(new CustomEvent('ics-career', { detail: { id: atletaId } }));
+  } catch (_) {}
+
   // Badge "Campione Italiano" — qualunque vittoria di una gara il cui nome
   // contenga "Campionato Italiano", su tutta la carriera (fonti native +
   // ciclismo.info + PCS, già unite sopra), non solo la stagione selezionata.
