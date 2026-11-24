@@ -1,6 +1,6 @@
 /* Testata v2 — SOLO MOBILE (≤640px): riorganizza la navbar esistente (nessun markup duplicato: gli handler dell'app restano agganciati
    agli stessi elementi). menu a sinistra · logo al centro · lingua + ricerca (lente cliccabile) a destra · menu con icone.
-   Su desktop tutto torna esattamente come prima (gli elementi spostati vengono rimessi al loro posto). */
+   Desktop: testata a una riga con menu a tendine. Passando da un formato all'altro gli elementi spostati vengono rimessi al loro posto. */
 (function () {
   'use strict';
   var mq = window.matchMedia('(max-width: 640px)');
@@ -47,7 +47,7 @@
     if (st) return;
     var row = document.getElementById('navbar-row1'), drawer = document.getElementById('nav-drawer'), burger = document.getElementById('nav-hamburger');
     if (!row || !drawer || !burger) return;
-    st = { moved: [], created: [] };
+    st = { moved: [], created: [], mode: 'mob' };
     // sposta ricordando dove stava (per rimetterlo a posto su desktop)
     function move(el, parent, before) {
       if (!el) return;
@@ -76,8 +76,10 @@
     st.obs.observe(drawer, { childList: true, subtree: true });
   }
 
-  function toDesktop() {
+  function restore() {
     if (!st) return;
+    if (st.timer) clearInterval(st.timer);
+    var nb0 = document.getElementById('navbar'); if (nb0) nb0.classList.remove('hv2-logged');
     document.body.classList.remove('hv2-search');
     if (st.obs) st.obs.disconnect();
     for (var i = st.moved.length - 1; i >= 0; i--) { var m = st.moved[i]; m.parent.insertBefore(m.el, m.next && m.next.parentNode === m.parent ? m.next : null); }
@@ -86,13 +88,94 @@
     st = null;
   }
 
-  function sync() { if (mq.matches) toMobile(); else toDesktop(); }
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+  var GROUPS = [
+    ['Gare', ['nav-risultati', 'nav-cal', 'nav-gare']],
+    ['Atleti', ['nav-atleti', 'nav-team']],
+    ['Classifiche', ['nav-class', 'nav-albo']],
+    ['Statistiche', ['nav-stats', 'nav-comp']]
+  ];
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function closeAll() { document.querySelectorAll('.hv2-grp.open, .hv2-acct.open').forEach(function (e) { e.classList.remove('open'); }); }
+
+  function toDesk() {
+    if (st) return;
+    var row = document.getElementById('navbar-row1'), nb = document.getElementById('navbar');
+    if (!row || !nb) return;
+    st = { moved: [], created: [], mode: 'desk' };
+    function move(el, parent, before) {
+      if (!el) return;
+      st.moved.push({ el: el, parent: el.parentNode, next: el.nextSibling });
+      parent.insertBefore(el, before || null);
+    }
+    // menu con tendine: gli STESSI link della seconda riga (id e handler invariati: evidenziazione e navigazione restano quelle dell'app)
+    var menu = document.createElement('nav'); menu.className = 'hv2-menu'; menu.setAttribute('aria-label', 'Menu principale'); st.created.push(menu);
+    var grpEls = [];
+    GROUPS.forEach(function (g) {
+      var grp = document.createElement('div'); grp.className = 'hv2-grp';
+      grp.innerHTML = '<button type="button" class="hv2-top" aria-haspopup="true">' + g[0] + CHEV + '</button><div class="hv2-dd"><div class="hv2-dd-in"></div></div>';
+      var inn = grp.querySelector('.hv2-dd-in');
+      g[1].forEach(function (id) { move(document.getElementById(id), inn); });
+      grp.querySelector('.hv2-top').addEventListener('click', function (e) {
+        e.stopPropagation();
+        var was = grp.classList.contains('open');
+        closeAll(); if (!was) grp.classList.add('open');
+      });
+      grp.addEventListener('click', function (e) { if (e.target.closest('a')) closeAll(); });
+      menu.appendChild(grp); grpEls.push(grp);
+    });
+    move(document.getElementById('nav-media'), menu);
+    move(document.getElementById('nav-home'), menu);
+    move(document.getElementById('nav-msg'), menu);
+    var logo = document.getElementById('nav-logo-link');
+    row.insertBefore(menu, logo ? logo.nextSibling : row.firstChild);
+    function markActive() { grpEls.forEach(function (g) { g.classList.toggle('has-active', !!g.querySelector('.nav-link.active')); }); }
+    markActive();
+    st.obs = new MutationObserver(markActive);
+    st.obs.observe(menu, { attributes: true, attributeFilter: ['class'], subtree: true });
+
+    // lente (apre la barra di ricerca) prima delle campanelle/lingua
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'hv2-search-btn'; btn.setAttribute('aria-label', 'Cerca');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+    btn.addEventListener('click', function (e) { e.stopPropagation(); setSearch(!document.body.classList.contains('hv2-search')); });
+    st.created.push(btn);
+    row.insertBefore(btn, document.getElementById('badge-live') || document.getElementById('lang-select') || null);
+
+    // blocco account (solo se collegato): avatar, nome, ruolo e tendina
+    var acct = document.createElement('div'); acct.className = 'hv2-acct'; acct.style.display = 'none'; st.created.push(acct);
+    row.appendChild(acct);
+    function user() { try { return JSON.parse(localStorage.getItem('italiacrit-user') || 'null'); } catch (e) { return null; } }
+    var lastSig = '';
+    function refreshAcct() {
+      var u = user(), sig = u ? (u.display_name || '') + '|' + (u.role || '') : '';
+      if (sig === lastSig) return; lastSig = sig;
+      nb.classList.toggle('hv2-logged', !!u);
+      if (!u) { acct.style.display = 'none'; acct.innerHTML = ''; return; }
+      var name = u.display_name || 'Profilo', role = u.role === 'admin' ? 'Admin' : 'Membro';
+      acct.style.display = '';
+      acct.innerHTML = '<button type="button" class="hv2-acct-btn" aria-haspopup="true"><span class="hv2-av">' + esc(name.charAt(0).toUpperCase()) + '</span><span class="hv2-meta"><b>' + esc(name) + '</b><small>' + role + '</small></span>' + CHEV + '</button>' +
+        '<div class="hv2-dd"><div class="hv2-dd-in"><a href="#/profilo">Il mio profilo</a><a href="#/messaggi">Messaggi</a><button type="button" data-out="1">Esci</button></div></div>';
+      acct.querySelector('.hv2-acct-btn').addEventListener('click', function (e) { e.stopPropagation(); var was = acct.classList.contains('open'); closeAll(); if (!was) acct.classList.add('open'); });
+      acct.querySelector('[data-out]').addEventListener('click', function () { closeAll(); if (typeof window.doLogout === 'function') window.doLogout(); });
+      acct.addEventListener('click', function (e) { if (e.target.closest('a')) closeAll(); });
+    }
+    refreshAcct();
+    st.timer = setInterval(refreshAcct, 1500);
+  }
+
+  function sync() {
+    var want = mq.matches ? 'mob' : 'desk';
+    if (st && st.mode === want) return;
+    restore();
+    if (want === 'mob') toMobile(); else toDesk();
+  }
 
   function init() {
     sync();
     if (mq.addEventListener) mq.addEventListener('change', sync); else if (mq.addListener) mq.addListener(sync);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setSearch(false); });
-    window.addEventListener('hashchange', function () { setSearch(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setSearch(false); closeAll(); } });
+    document.addEventListener('click', closeAll);
+    window.addEventListener('hashchange', function () { setSearch(false); closeAll(); });
     window.addEventListener('popstate', function () { setSearch(false); });
     document.addEventListener('click', function (e) {
       if (!document.body.classList.contains('hv2-search')) return;
