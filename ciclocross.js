@@ -74,6 +74,7 @@
     // ci sono altre categorie). Ogni esordiente prende la posizione (e i punti) della SUA categoria.
     // Se i gruppi della stessa categoria sono fette della stessa generale (posizioni mai ripetute) si riordinano insieme;
     // se ognuno parte da 1 (classifiche separate) si riordina ciascuno per conto suo.
+    for (const r of res) r._pc = 0;
     const byKey = {};
     for (const r of res) { const q = parseInt(r.pos, 10); if (q >= 1 && /^ES[12]_/.test(r.cat)) ((byKey[r.gara + '|' + r.cat] ||= {})[r.gruppo] ||= []).push(r); }   // solo Esordienti: Allievi, Juniores ed Elite/U23 tengono la posizione 1-10 della gara, qualunque sia l'anno
     for (const grp of Object.values(byKey)) {
@@ -85,6 +86,16 @@
         const rank = {}; ps.forEach((v, i) => { rank[v] = i + 1; });
         for (const x of unit) x._pc = rank[parseInt(x.pos, 10)];
       }
+    }
+    // Allievi, Juniores, Elite/U23: 1° e 2° anno sono UNA sola classifica (un solo 1°, 2°, 3°...). Se la FCI le pubblica come due
+    // classifiche separate (ognuna parte da 1) le si intreccia per posizione, con l'anno più alto davanti a parità, senza doppioni.
+    const byKey2 = {};
+    for (const r of res) { const q = parseInt(r.pos, 10); if (q >= 1 && !/^ES[12]_/.test(r.cat)) ((byKey2[r.gara + '|' + r.cat] ||= {})[r.gruppo] ||= []).push(r); }
+    for (const grp of Object.values(byKey2)) {
+      const gs = Object.values(grp), all = gs.flat();
+      if (gs.length < 2 || new Set(all.map(x => parseInt(x.pos, 10))).size === all.length) continue;   // una sola classifica, o già fette di una generale: posizioni della gara
+      const yr = (x) => parseInt((String(x.gruppo).match(/(\d)\s*$/) || [0, 0])[1], 10) || 0;
+      all.slice().sort((a, b) => (parseInt(a.pos, 10) - parseInt(b.pos, 10)) || (yr(b) - yr(a))).forEach((x, i) => { x._pc = i + 1; });
     }
     for (const r of res) {
       const g = gare[r.gara]; if (!g) continue;
