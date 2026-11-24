@@ -223,7 +223,7 @@
   const otherHas = (kind, id) => {
     if (mode === 'strada') return kind === 'atleta' ? !!(cxAth && cxAth.has(id)) : !!(cxTeams && cxTeams.has(id));
     const g = live || {};
-    return kind === 'atleta' ? !!(g.athletes && g.athletes[id] && (g.athletes[id].risultati || []).length) : !!(g.teams && g.teams[id] && (g.teams[id].risultati || []).length);
+    return kind === 'atleta' ? !!(g.athletes && g.athletes[id]) : !!(g.teams && g.teams[id]);   // dal ciclocross si deve poter sempre tornare alla strada (i risultati della strada stanno anche negli anni passati)
   };
 
 

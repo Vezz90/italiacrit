@@ -20533,7 +20533,8 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     // render quando un team non ha una foto caricata — mai un logo
     // indovinato a caso, ma nemmeno un vuoto senza spiegazione.
     const photoWrap = document.getElementById('atleta-team-photo-wrap');
-    if (photoWrap) {
+    // stessa squadra (cambia solo come è scritto il nome): la foto già caricata non va sostituita col segnaposto
+    if (photoWrap && !(nowTid && nowTid === currentTeamId && photoWrap.querySelector('img'))) {
       const _phIcon = `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`;
       const _phLabel = `<span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nowTeamEntry.team)}</span>`;
       photoWrap.innerHTML = nowTid
