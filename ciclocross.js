@@ -323,6 +323,12 @@
       const top = ((isTeam ? cxRank.team : cxRank.ath)[code] || []).slice(0, 3).map(x => ({ ...x }));
       return top.length ? [{ year: cxData ? String(cxData.key).replace('-', '/') : '2026/27', isCur: true, podium: top }] : [];
     });
+    // Gare professionistiche (PCS, solo strada): nel ciclocross non ci sono
+    if (window.ProRaces && typeof window.ProRaces.events === 'function' && !window.ProRaces.events.__cx) {
+      const oe = window.ProRaces.events;
+      window.ProRaces.events = function () { return isCxGd() ? Promise.resolve([]) : oe.apply(this, arguments); };
+      window.ProRaces.events.__cx = true;
+    }
     sw('_alboIndex', (o) => function () { return isCxGd() ? Promise.resolve(null) : o.apply(this, arguments); });
     document.addEventListener('click', onLinkClick, true);
     window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live) };
