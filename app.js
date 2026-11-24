@@ -18396,14 +18396,14 @@ window._pmSel = function(btn, k) {
   if (hist) hist.style.display = k === 'foto' ? '' : 'none';
 };
 window._athTab = function(k) {
-  const on = (k === 'c' || k === 'f' || k === 'm') ? k : 's';
-  ['s', 'c', 'f', 'm'].forEach(x => {
+  const on = (k === 'c' || k === 'f' || k === 'm' || k === 'r') ? k : 's';
+  ['s', 'r', 'c', 'f', 'm'].forEach(x => {
     const t = document.getElementById('ath-tab-' + x), p = document.getElementById('ath-panel-' + x);
     if (t) t.setAttribute('aria-selected', x === on ? 'true' : 'false');
     if (p) p.hidden = x !== on;
   });
   // le pillole stagione valgono per Stagione e Media, non per Carriera/Forma
-  const yw = document.getElementById('ath-year-wrap'); if (yw) yw.hidden = !(on === 's' || on === 'm');
+  const yw = document.getElementById('ath-year-wrap'); if (yw) yw.hidden = !(on === 's' || on === 'm' || on === 'r');
   window._athActiveTab = on;
 };
 // ── Pagina atleta: blocchi "Il momento", "Ultimi / Migliori", "Rivalità" ──
@@ -19054,7 +19054,8 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${headerHtml}
     <div id="atleta-titles"></div>
     <div class="ath-tabs" role="tablist" aria-label="Sezioni della pagina atleta">
-      <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Stagione</button>
+      <button class="ath-tab" role="tab" id="ath-tab-s" aria-selected="true" aria-controls="ath-panel-s" onclick="window._athTab('s')">Panoramica</button>
+      <button class="ath-tab" role="tab" id="ath-tab-r" aria-selected="false" aria-controls="ath-panel-r" onclick="window._athTab('r')">Risultati</button>
       <button class="ath-tab" role="tab" id="ath-tab-c" aria-selected="false" aria-controls="ath-panel-c" onclick="window._athTab('c')">Carriera</button>
       <button class="ath-tab" role="tab" id="ath-tab-f" aria-selected="false" aria-controls="ath-panel-f" onclick="window._athTab('f')" hidden>Forma</button>
       <button class="ath-tab" role="tab" id="ath-tab-m" aria-selected="false" aria-controls="ath-panel-m" onclick="window._athTab('m')" hidden>Media</button>
@@ -19090,6 +19091,9 @@ async function renderAtleta(atleta_id, opts = {}) {
       });
       return '';
     })()}
+    <div id="atleta-pcs-widget"></div>
+    </div>
+    <div id="ath-panel-r" role="tabpanel" aria-labelledby="ath-tab-r" hidden>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
       <span class="section-line"></span>
@@ -19107,7 +19111,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       </table>
     </div>
     <div id="ath-panel-c" role="tabpanel" aria-labelledby="ath-tab-c" hidden>
-      <div id="atleta-pcs-widget"></div>
+      <div id="atleta-career-stats"><div class="ap-loading">Statistiche di carriera in caricamento…</div></div>
     </div>
     <div id="ath-panel-f" role="tabpanel" aria-labelledby="ath-tab-f" hidden>
       <div id="ath-forma"></div>
