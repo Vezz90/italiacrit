@@ -1,9 +1,10 @@
 /* ════════════════════════════════════════════════════════════════
-   TESTATA v2 — riga unica su tutti gli schermi:
+   TESTATA v2 — solo MOBILE (≤640px), riga unica:
    menu (☰) a sinistra · logo al centro · lingua + ricerca a destra.
    Il menu si apre come pannello scuro con le icone (stesso #nav-drawer).
    Caricato DOPO design.css: sovrascrive la navbar a due righe.
    ════════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
 :root { --nav-h: 56px !important; }
 
 #navbar {
@@ -105,4 +106,5 @@ body.hv2-search #m-search-dropdown {
 #nav-drawer .hv2-tools .theme-toggle { margin: 0 !important; }
 body:has(#nav-drawer.open) { overflow: hidden; }
 
-@media (max-width: 480px) { #nav-drawer { width: 100vw !important; } }
+#nav-drawer { width: 100vw !important; }
+}
