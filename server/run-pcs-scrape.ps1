@@ -17,7 +17,19 @@ $logDir  = Join-Path $PSScriptRoot "logs"
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 $logFile = Join-Path $logDir "pcs-scrape-$stamp.log"
 
-& node "pcs-athlete-import.js" --include-phantoms *> $logFile
+# Di norma solo gli atleti attivi (--only-active: salta i verosimilmente
+# ritirati, vedi classifyActivity in pcs-athlete-import.js). Ogni ~180 giorni
+# giro COMPLETO senza filtro, come rete di sicurezza per chi fosse sfuggito
+# (data dell'ultimo giro completo in logs\last-full-scrape.txt).
+$fullMarker = Join-Path $PSScriptRoot "logs\last-full-scrape.txt"
+$fullDue = $false
+if (Test-Path $fullMarker) { $fullDue = ((Get-Date) - (Get-Item $fullMarker).LastWriteTime).TotalDays -ge 180 }
+if ($fullDue) {
+    & node "pcs-athlete-import.js" --include-phantoms *> $logFile
+    Set-Content -Path $fullMarker -Value (Get-Date -Format "o")
+} else {
+    & node "pcs-athlete-import.js" --include-phantoms --only-active *> $logFile
+}
 
 # Tiene solo gli ultimi 20 log (circa 40 giorni di storico con cadenza 2gg)
 Get-ChildItem $logDir -Filter "pcs-scrape-*.log" | Sort-Object LastWriteTime -Descending | Select-Object -Skip 20 | Remove-Item -Force
