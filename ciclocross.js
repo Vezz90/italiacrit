@@ -30,6 +30,7 @@
   let live = null;              // globalData della strada (live) mentre si guarda il ciclocross
   let cxData = null;            // dati ciclocross grezzi { key, cal, res }
   let cxAth = null;             // atleta_id con risultati ciclocross
+  let cxGd = null;              // globalData costruito dal ciclocross
   let cxTeams = null;           // team_id con risultati ciclocross
 
   async function getJson(url) { const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
@@ -102,7 +103,7 @@
     for (const a of Object.values(athletes)) delete a._last;
     cxAth = new Set(Object.keys(athletes)); cxTeams = new Set(Object.keys(teams));
     const meta = { ...((liveGd && liveGd.meta) || {}), disciplina: 'ciclocross' };
-    return processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails: (liveGd && liveGd.raceDetails) || {}, videos: (liveGd && liveGd.videos) || {}, extraRoster: {} });
+    return cxGd = processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails: (liveGd && liveGd.raceDetails) || {}, videos: (liveGd && liveGd.videos) || {}, extraRoster: {} });
   }
 
   // ── Cambio di specialità ─────────────────────────────────────────
@@ -121,28 +122,31 @@
     mode = m;
     try { localStorage.setItem(MODE_KEY, m); } catch (e) {}
     document.body.classList.toggle('disc-cx', m === 'ciclocross');
-    renderNavSwitch();
     if (typeof invalidatePhotoCache === 'function') invalidatePhotoCache();
     if (opts.go) location.hash = '#' + opts.go;
     route();
   }
   window.cxSetMode = setMode;
 
-  // ── Interruttore nel menu ────────────────────────────────────────
-  function renderNavSwitch() {
-    document.querySelectorAll('.nav-links').forEach(box => {
-      let el = box.querySelector('.cx-nav-switch');
-      if (!isAdmin()) { if (el) el.remove(); return; }
-      if (!el) {
-        el = document.createElement('span');
-        el.className = 'cx-nav-switch'; el.style.cssText = 'display:inline-flex;gap:2px;margin-left:14px;padding-left:14px;border-left:1px solid rgba(128,128,128,.4);align-items:center';
-        el.innerHTML = '<a href="#" class="nav-link" data-m="strada">Strada</a><a href="#" class="nav-link" data-m="ciclocross">Ciclocross</a>';
-        el.onclick = (e) => { const b = e.target.closest('a[data-m]'); if (!b) return; e.preventDefault(); setMode(b.dataset.m, { go: '/' }); };
-        box.appendChild(el);
-      }
-      el.querySelectorAll('a').forEach(b => b.classList.toggle('active', b.dataset.m === mode));
+  // ── Selettore "Strada | Ciclocross" nelle pagine, prima di Uomini/Donne ──
+  // Stesso componente del sito (.hx-seg): sta nella barra dei filtri, quindi si vede anche da mobile.
+  function addSegs() {
+    if (!isAdmin()) return;
+    document.querySelectorAll('.hx-seg').forEach(g => {
+      if (g.dataset.cx || g.classList.contains('cx-seg')) return;
+      const lab = (g.getAttribute('aria-label') || '') + ' ' + g.textContent;
+      if (!/(Uomini|Donne)/i.test(lab) || /Specialit/i.test(lab)) return;
+      g.dataset.cx = '1';
+      const prev = g.previousElementSibling;
+      if (prev && prev.classList.contains('cx-seg')) return;
+      const s = document.createElement('div');
+      s.className = 'hx-seg cx-seg'; s.setAttribute('role', 'group'); s.setAttribute('aria-label', 'Specialità'); s.style.marginRight = '8px';
+      s.innerHTML = `<button type="button" data-m="strada" aria-pressed="${mode === 'strada'}">Strada</button><button type="button" data-m="ciclocross" aria-pressed="${mode === 'ciclocross'}">Ciclocross</button>`;
+      s.onclick = (e) => { const b = e.target.closest('button[data-m]'); if (b && b.dataset.m !== mode) setMode(b.dataset.m); };
+      g.parentElement.insertBefore(s, g);
     });
   }
+  function renderNavSwitch() { addSegs(); }
 
   // ── Selettore dentro scheda atleta / team (prima dei risultati) ──
   function selectorHtml() {
@@ -163,6 +167,36 @@
     const g = live || {};
     return kind === 'atleta' ? !!(g.athletes && g.athletes[id] && (g.athletes[id].risultati || []).length) : !!(g.teams && g.teams[id] && (g.teams[id].risultati || []).length);
   };
+
+
+  // ── Striscia in alto: posizione e punti in entrambe le specialità ──
+  function statOf(D, kind, id) {
+    if (!D) return null;
+    if (kind === 'atleta') {
+      const a = D.athletes && D.athletes[id]; if (!a || !(a.risultati || []).length) return null;
+      const pts = a.punti_totali || 0;
+      const pos = 1 + Object.values(D.athletes).filter(x => x.categoria === a.categoria && (x.punti_totali || 0) > pts).length;
+      return { pts, pos, label: typeof catLabel === 'function' ? catLabel(a.categoria) : a.categoria };
+    }
+    const t = D.teams && D.teams[id]; if (!t || !(t.risultati || []).length) return null;
+    const pts = t.punti_totali || 0;
+    return { pts, pos: 1 + Object.values(D.teams).filter(x => (x.punti_totali || 0) > pts).length, label: '' };
+  }
+  function placeStrip(kind, id, anchor) {
+    if (!anchor || document.querySelector('.cx-strip')) return;
+    const road = statOf(mode === 'strada' ? globalData : live, kind, id), cx = statOf(mode === 'ciclocross' ? globalData : cxGd, kind, id);
+    if (!road || !cx) return;
+    const season = (cxData && String(cxData.key).replace('-', '/')) || '';
+    const chip = (m, name, s, on) => `<button type="button" data-m="${m}" class="cx-chip" style="flex:1 1 200px;text-align:left;cursor:pointer;padding:10px 14px;border-radius:12px;border:1px solid ${on ? 'var(--red-hot,#e8001d)' : 'var(--border-subtle,#ccc)'};background:var(--bg-card,transparent);color:inherit;font:inherit">
+      <span style="display:block;font-size:.7rem;font-weight:800;letter-spacing:.06em;opacity:.7">${name}</span>
+      <span style="font-size:1.15rem;font-weight:800">${s.pos}°</span> <span style="opacity:.8">${s.label ? E(s.label) + ' · ' : ''}${s.pts} punti</span></button>`;
+    const el = document.createElement('div');
+    el.className = 'cx-strip'; el.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;margin:12px 0';
+    el.innerHTML = chip('strada', 'STRADA ' + (typeof _loadedSeasonYear === 'function' ? _loadedSeasonYear() : ''), road, mode === 'strada') + chip('ciclocross', 'CICLOCROSS ' + season, cx, mode === 'ciclocross');
+    el.onclick = (e) => { const b = e.target.closest('button[data-m]'); if (b && b.dataset.m !== mode) setMode(b.dataset.m, { force: true }); };
+    anchor.insertAdjacentElement('afterend', el);
+  }
+  const E = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function wrap(name, after) {
     const orig = window[name];
@@ -196,12 +230,14 @@
       if (!otherHas('atleta', id)) return;
       const t = document.getElementById('atleta-results-title');
       placePicker(t && t.closest('.section-header'));
+      placeStrip('atleta', id, document.querySelector('.athlete-header'));
     });
     wrap('renderTeam', async (tid) => {
       if (mode === 'strada' && !(await ensureIds())) return;
       if (!otherHas('team', tid)) return;
       const h = [...document.querySelectorAll('#app .section-header')].find(x => /RISULTATI TEAM/i.test(x.textContent));
       placePicker(h);
+      placeStrip('team', tid, document.querySelector('.team-header'));
     });
     // Link diretto #/ciclocross → entra nella specialità e apre la classifica
     window.cxRenderClassifica = () => { if (!isAdmin()) return undefined; setMode('ciclocross', { go: '/classifica' }); return Promise.resolve(); };
@@ -216,9 +252,8 @@
     st.textContent = 'body.disc-cx .season-bar{display:none!important}';
     document.head.appendChild(st);
 
-    window.addEventListener('hashchange', () => setTimeout(renderNavSwitch, 120)); // l'app azzera 'active' sui link a ogni cambio pagina
-    renderNavSwitch();
-    new MutationObserver(() => { if (isAdmin() && !document.querySelector('.cx-nav-switch')) renderNavSwitch(); }).observe(document.body, { childList: true, subtree: true });
+    let _t = null;
+    new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); }, 60); }).observe(document.body, { childList: true, subtree: true });
 
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
     let saved = 'strada'; try { saved = localStorage.getItem(MODE_KEY) || 'strada'; } catch (e) {}
