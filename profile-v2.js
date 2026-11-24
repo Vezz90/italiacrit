@@ -369,8 +369,9 @@
     new MutationObserver(function () { refresh(); }).observe(aside, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['data-base'] });
   }
 
-  function teamRows(id) {
-    var t = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null; if (!t) return [];
+  function teamRows(id) { return teamRowsFrom((typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null); }
+  function teamRowsFrom(t) {
+    if (!t) return [];
     return (t.risultati || []).filter(function (r) { return r.data && r.posizione; }).map(function (r) {
       var who = ((r.atleta_cognome || '') + ' ' + (r.atleta_nome || '')).trim();
       return { d: r.data, y: String(r.data).slice(0, 4), p: r.posizione, n: String(r.nome_gara || '') + (who ? ' · ' + who : ''), h: '#/gara/' + r.gara_id, m: r.moltiplicatore || 0, a: r.atleta_id || '', who: who, pts: r.punti_effettivi || 0 };
@@ -383,7 +384,7 @@
     if (!list.length) return '';
     var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
     return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti</h3></div><p class="apc-sub">I più incisivi della stagione, per punti</p><div class="apc-list">' + list.map(function (x) {
-      return '<a class="apc-row" href="#/atleta/' + encodeURIComponent(x.a) + '"><span class="apc-rav apc-rav-s" data-aid="' + esc3(x.a) + '">' + sil + '</span><span class="apc-rn"><strong>' + esc3(x.who) + '</strong><small>' + x.w + (x.w === 1 ? ' vittoria' : ' vittorie') + ' · ' + x.p + (x.p === 1 ? ' podio' : ' podi') + ' · ' + x.n + (x.n === 1 ? ' piazzamento' : ' piazzamenti') + '</small></span><b class="apc-val">' + x.pts + ' pt</b>' + CHEV3 + '</a>';
+      return '<a class="apc-row" href="#/atleta/' + encodeURIComponent(x.a) + '"><span class="apc-rav apc-rav-s" data-aid="' + esc3(x.a) + '">' + sil + '</span><span class="apc-rn"><strong>' + esc3(x.who) + '</strong><small>' + x.w + (x.w === 1 ? ' vittoria' : ' vittorie') + ' · ' + x.p + (x.p === 1 ? ' podio' : ' podi') + ' · ' + x.n + (x.n === 1 ? ' piazzamento' : ' piazzamenti') + '</small></span>' + (x.pts ? '<b class="apc-val">' + x.pts + ' pt</b>' : '') + CHEV3 + '</a>';
     }).join('') + '</div></section>';
   }
   function teamCareerCard(cr, team) {
@@ -417,15 +418,41 @@
     var ptsTxt = String((aside.querySelector('.ath-pts-block .athlete-pts-value') || {}).textContent || '0').trim();
     var posEl = aside.querySelector('.ath-rank-block .athlete-pts-value'), livePos = posEl ? parseInt(posEl.textContent, 10) || 0 : 0;
     var K = '__team__' + id + (cx ? '|cx' : '|road');
-    window._athRows = window._athRows || {}; window._athRows[K] = isCur ? teamRows(id) : [];
+    window._athRows = window._athRows || {};
+    var rowsNow = [];
+    if (isCur) rowsNow = teamRows(id);
+    else {
+      // stagione passata: prima i dati nativi di quella stagione (stesso formato di quella in corso), poi l'archivio storico
+      var pk = id + '|' + selYear; window._tmPast = window._tmPast || {};
+      if (window._tmPast[pk] === undefined && typeof loadSeasonTeams === 'function') {
+        window._tmPast[pk] = null;
+        // la squadra di quell'anno puo' avere un altro nome/id (storia della squadra): prima la storia, poi la stagione nativa
+        var prH = (typeof _histSeason === 'function') ? _histSeason(id, selYear).then(function (h) { return h && h.t ? h.t : null; }).catch(function () { return null; }) : Promise.resolve(null);
+        prH.then(function (t0) { return t0 || loadSeasonTeams(selYear).then(function (m) { return m && m[id]; }); })
+          .then(function (t) { window._tmPast[pk] = { rows: teamRowsFrom(t), pts: t ? (t.punti_totali || 0) : 0 }; fillTeamCards(); })
+          .catch(function () { window._tmPast[pk] = { rows: [], pts: 0 }; fillTeamCards(); });
+      }
+      var pastN = window._tmPast[pk];
+      if (pastN && pastN.rows.length) { rowsNow = pastN.rows; ptsTxt = String(pastN.pts); isCur = true; }
+    }
+    if (!isCur) {
+      // nessun dato nativo: archivio storico della squadra (anche con i nomi precedenti), per la categoria scelta
+      var arc = (window._ciclismoTeamStoricoCache || {})[id], arr = (arc && arc[selYear]) || [];
+      var cats = arr.map(function (r) { return r.categoria; }).filter(function (v, i, a) { return v && a.indexOf(v) === i; });
+      var cc = (window._teamCiclismoCurCat || {})[id + '_' + selYear] || cats[0];
+      rowsNow = arr.filter(function (r) { return !cc || cats.length < 2 || r.categoria === cc; }).filter(function (r) { return r.posizione; }).map(function (r) {
+        var who = r.nome_completo || ''; return { d: r.data || (selYear + '-01-01'), y: String(selYear), p: r.posizione, n: String(r.nome_gara || '') + (who ? ' · ' + who : ''), h: '', m: 0, a: r.atleta_id || '', who: who, pts: 0 };
+      }).sort(function (a, b) { return b.d.localeCompare(a.d); });
+    }
+    window._athRows[K] = rowsNow;
     var year = cx ? (window.CX && window.CX.season ? window.CX.season() : selYear) : selYear;
     var rows = window._athRows[K];
     var seasonKey = cx ? K : K;
     // Stagione/Ultimi usano il formato degli atleti: l'anno delle righe e' quello della data
     var yearForRows = cx ? (rows[0] ? rows[0].y : '') : selYear;
     var parts = [];
-    if (isCur && rows.length) {
-      parts.push(seasonCard(K, yearForRows, ptsTxt).replace('Stagione ' + yearForRows, 'Stagione ' + year));
+    if (rows.length) {
+      parts.push(seasonCard(K, yearForRows, isCur ? ptsTxt : '—').replace('Stagione ' + yearForRows, 'Stagione ' + year));
       parts.push(latestCard(K));
       parts.push(squadCard(rows));
       var cr = cx ? null : carrCache;
@@ -441,7 +468,16 @@
     }
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); fillTeamCards(); }
+
+  // ── Storia della squadra: le "vecchie squadre" (nomi precedenti) stanno nella scheda Storia, non sopra le schede ──
+  function markTeamHistory() {
+    var bar = document.getElementById('team-lineage-bar'), panel = document.getElementById('tm-panel-c'), tab = document.getElementById('tm-tab-c');
+    if (tab && tab.textContent.trim() !== 'Storia') tab.textContent = 'Storia';
+    var st = document.getElementById('tm-tab-s'); if (st && st.textContent.trim() === 'Stagione') st.textContent = 'Panoramica';
+    if (bar && panel && bar.parentNode !== panel) panel.insertBefore(bar, panel.firstChild);
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); markTeamHistory(); fillTeamCards(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();
