@@ -300,7 +300,7 @@
   // in modalità strada serve conoscere chi ha risultati ciclocross (un solo calcolo)
   async function ensureIds() {
     if (cxAth) return true;
-    try { await loadRaw(); cxGd = build(globalData); syncGlobals(); return true; } catch (e) { return false; }
+    try { await loadRaw(); cxGd = build(globalData); syncGlobals(); document.dispatchEvent(new CustomEvent('ics-cx-ready')); return true; } catch (e) { return false; }
   }
 
   function init() {
@@ -344,7 +344,22 @@
     }
     sw('_alboIndex', (o) => function () { return isCxGd() ? Promise.resolve(null) : o.apply(this, arguments); });
     document.addEventListener('click', onLinkClick, true);
-    window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live) };
+    // true/false: l'atleta ha (o no) risultati nell'altra specialità; null: non si sa ancora (dati in caricamento)
+    const hasIn = (kind, id, forMode) => {
+      if (forMode === 'ciclocross') { if (mode === 'ciclocross') return !!(globalData.athletes && globalData.athletes[id] && (globalData.athletes[id].risultati || []).length); return cxAth ? cxAth.has(id) : null; }
+      if (mode === 'strada') return !!(globalData && globalData.athletes && globalData.athletes[id]);
+      return !!(live && live.athletes && live.athletes[id]);
+    };
+    window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada') };
+    // Scheda atleta aperta in ciclocross per chi non ha mai fatto ciclocross: si torna alla strada (non esistono gare da mostrare)
+    const oRA = window.renderAtleta;
+    if (typeof oRA === 'function' && !oRA.__cxpre) {
+      const pre = async function (id) {
+        if (mode === 'ciclocross' && cxAth && !cxAth.has(id) && live && live.athletes && live.athletes[id]) { await setMode('strada'); return; }
+        return oRA.apply(this, arguments);
+      };
+      pre.__cxpre = true; window.renderAtleta = pre;
+    }
     wrap('renderAtleta', async (id) => {
       if (mode === 'strada' && !(await ensureIds())) return;
       if (!otherHas('atleta', id)) return;

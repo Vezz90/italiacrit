@@ -20287,9 +20287,10 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
     apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
   ]);
-  const ciclismoRows = ciclismoPayload?.risultati || [];
-  const teamHistoryRows = Array.isArray(pcsTeamHistory) ? pcsTeamHistory : [];
-  if (!ciclismoRows.length && !(Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length && !teamHistoryRows.length) return;
+  const _cxWidget = globalData?.meta?.disciplina === 'ciclocross';   // ciclocross: ciclismo.info/PCS sono dati della strada, non si mescolano
+  const ciclismoRows = _cxWidget ? [] : (ciclismoPayload?.risultati || []);
+  const teamHistoryRows = (!_cxWidget && Array.isArray(pcsTeamHistory)) ? pcsTeamHistory : [];
+  if (!ciclismoRows.length && !(!_cxWidget && Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length && !teamHistoryRows.length) return;
 
   const merged = [];
   for (const r of (nativeRisultati || [])) {
@@ -20300,7 +20301,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (!r.data || !r.posizione) continue;
     merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: _ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione), external: false, team: r.team, source: 'ciclismo' });
   }
-  for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
+  for (const r of ((!_cxWidget && Array.isArray(pcsRows)) ? pcsRows : [])) {
     if (!r.data || !r.posizione) continue;
     merged.push({ data: r.data, anno: String(r.season || r.data.slice(0, 4)), posizione: r.posizione, nome_gara: r.gara_name, url: r.pcs_url, external: true, team: null, source: 'pcs' });
   }

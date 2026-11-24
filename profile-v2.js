@@ -50,7 +50,7 @@
       var podi = (typeof w === 'number') ? w + s + b : '…';
       var html =
         '<div class="ap-ctl">' +
-        (typeof window.cxSetMode === 'function' ? seg('disc', [['strada', 'Strada'], ['ciclocross', 'Ciclocross']], cx ? 'ciclocross' : 'strada') : '') +
+        (typeof window.cxSetMode === 'function' && window.CX && window.CX.hasCx(id) === true && window.CX.hasRoad(id) === true ? seg('disc', [['strada', 'Strada'], ['ciclocross', 'Ciclocross']], cx ? 'ciclocross' : 'strada') : '') +
         seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione' + (year ? ' ' + year : '')]], sc) +
         '</div>' +
         '<div class="ap-kpis">' +
@@ -70,6 +70,7 @@
       else if (k === 'disc' && typeof window.cxSetMode === 'function' && (v === 'ciclocross') !== isCx()) window.cxSetMode(v, { force: true });
     });
     document.addEventListener('ics-career', refresh);
+    document.addEventListener('ics-cx-ready', refresh);
     refresh();
     new MutationObserver(function () { refresh(); }).observe(aside, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['data-base'] });
   }
