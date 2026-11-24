@@ -51,6 +51,11 @@ if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea serve
 const args      = process.argv.slice(2);
 const FORCE     = args.includes('--force');
 const INCLUDE_PHANTOMS = args.includes('--include-phantoms');
+// --only-active: salta chi è verosimilmente ritirato (vedi classifyActivity).
+// --dry-run: stampa quanti atleti verrebbero processati/saltati e si ferma,
+// senza nessuna richiesta a PCS.
+const ONLY_ACTIVE = args.includes('--only-active');
+const DRY_RUN     = args.includes('--dry-run');
 const SINGLE_ID = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const IDS_FILE  = (args.find(a => a.startsWith('--ids-file=')) || '').split('=')[1] || null;
 const LIMIT     = parseInt((args.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '') || null;
@@ -749,6 +754,80 @@ function shouldSkipNotFound(atletaId, { notFoundMap, lastYearMap, fciAll, season
   return daysSinceCheck < RECHECK_AFTER_DAYS;
 }
 
+// ─── Regola "solo attivi" (--only-active) ───────────────────────────────────
+// Tutto RELATIVO alla stagione del giro (SEASON = anno corrente, o --season):
+// nel 2026 la finestra "apparsi" parte dal 2022, nel 2027 dal 2023, ecc.
+//   Fase 1: l'atleta deve comparire nei nostri risultati (ciclismo_results o
+//           pcs_results) da SEASON-APPEARED_YEARS+1 in poi, oppure essere nel
+//           nucleo del giro (ranking FCI / fantasmi della stagione).
+//   Fase 2: sull'ultimo team salvato da PCS (pcs_team_history):
+//           - nessun team salvato            -> si processa (non si può giudicare)
+//           - ultima stagione >= SEASON-1    -> si processa ad ogni giro
+//           - team professionistico con ultima stagione >= SEASON-PRO_RECHECK_YEARS
+//                                            -> ricontrollo ogni RECHECK_AFTER_DAYS
+//           - altro (club, o pro fermo da più)-> saltato
+const APPEARED_YEARS = 3;   // finestra "apparsi": SEASON-2 .. SEASON (2026 -> dal 2024)
+const PRO_RECHECK_YEARS = 2; // pro con ultimo team entro SEASON-2: ricontrollo periodico
+const PRO_TIERS = new Set(['WT', 'WTW', 'PRT', 'PRW', 'CT', 'CTW']);
+async function getActivityContext(sb, season) {
+  const PAGE = 1000;
+  const minYear = season - APPEARED_YEARS + 1;
+  const appeared = new Map(); // atleta_id -> ultimo anno visto (>= minYear)
+  const bump = (id, y) => { if (id && !isNaN(y) && y >= minYear && (!appeared.has(id) || y > appeared.get(id))) appeared.set(id, y); };
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione')
+      .not('atleta_id', 'is', null).gte('stagione', String(minYear)).order('id').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) bump(r.atleta_id, parseInt(r.stagione, 10));
+    if (data.length < PAGE) break;
+  }
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('pcs_results').select('atleta_id, season')
+      .gte('season', minYear).order('id').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) bump(r.atleta_id, parseInt(r.season, 10));
+    if (data.length < PAGE) break;
+  }
+  // Ultimo team (stagione più recente, fino a season+1 per i contratti già noti)
+  // e ultimo aggiornamento della cronologia (serve al ricontrollo periodico).
+  const team = new Map(); // atleta_id -> { season, tier, updated }
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('pcs_team_history').select('atleta_id, season, tier, updated_at')
+      .order('atleta_id').order('season').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) {
+      const t = team.get(r.atleta_id) || { season: -1, tier: null, updated: 0 };
+      const u = r.updated_at ? new Date(r.updated_at).getTime() : 0;
+      if (u > t.updated) t.updated = u;
+      if (r.season <= season + 1 && r.season >= t.season) { t.season = r.season; t.tier = r.tier; }
+      team.set(r.atleta_id, t);
+    }
+    if (data.length < PAGE) break;
+  }
+  return { appeared, team, season };
+}
+// Ritorna 'active' | 'recheck' | 'skip'. Chi è nel nucleo del giro (FCI/fantasmi)
+// è sempre 'active'.
+function classifyActivity(atletaId, ctx, coreIds) {
+  if (coreIds.has(atletaId)) return 'active';
+  if (!ctx.appeared.has(atletaId)) return 'skip';
+  // Ricomparso di recente nei nostri risultati (stagione corrente o precedente):
+  // sempre attivo, anche se l'ultimo team salvato su PCS è vecchio — copre chi
+  // torna a correre dopo anni di stop.
+  if (ctx.appeared.get(atletaId) >= ctx.season - 1) return 'active';
+  const t = ctx.team.get(atletaId);
+  if (!t || t.season < 0) return 'active';
+  if (t.season >= ctx.season - 1) return 'active';
+  if (PRO_TIERS.has(t.tier) && t.season >= ctx.season - PRO_RECHECK_YEARS) {
+    const days = (Date.now() - t.updated) / 86400000;
+    return days >= RECHECK_AFTER_DAYS ? 'active' : 'recheck';
+  }
+  return 'skip';
+}
+
 async function getAthletesWithResults(sb, season) {
   // Paginato come getPhantomAthletes: pcs_results ha già oltre 27000 righe
   // (molti risultati per atleta), un limit(5000) fisso ne perdeva la
@@ -998,6 +1077,7 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   // avendo spesso già il pcs_slug risolto quando il roster è stato caricato.
   // Bug reale osservato: MAGAGNOTTI_ALESSIO, slug "alessio-magagnotti" già
   // noto in extra_roster.json, zero righe in pcs_results — mai processato.
+  const coreIds = new Set(athMap.keys()); // ranking FCI + fantasmi della stagione: per --only-active sono sempre attivi
   const rosterPcsSlugs = new Map(); // atleta_id -> pcs_slug (per saltare la ricerca per nome sotto)
   // Bug reale trovato dal vivo: questo blocco girava SEMPRE, anche in
   // modalità --atleta-id/--ids-file — un run mirato su UN solo atleta si
@@ -1083,6 +1163,22 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
         ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id) && withTeam.has(a.atleta_id)))
         : athletes
       ).filter(a => savedSlugs.has(a.atleta_id) || !shouldSkipNotFound(a.atleta_id, { notFoundMap, lastYearMap, fciAll, season: SEASON }));
+  if (ONLY_ACTIVE && !idsFileSlugs && !SINGLE_ID) {
+    const ctx = await getActivityContext(sb, SEASON);
+    const cls = { active: [], recheck: [], skip: [] };
+    for (const a of toProcess) cls[classifyActivity(a.atleta_id, ctx, coreIds)].push(a);
+    console.log(`--only-active (stagione ${SEASON}, apparsi dal ${SEASON - APPEARED_YEARS + 1}): ${cls.active.length} da processare, ${cls.recheck.length} in attesa di ricontrollo (<${RECHECK_AFTER_DAYS} gg), ${cls.skip.length} saltati`);
+    if (DRY_RUN) {
+      const sample = l => l.slice(0, 8).map(a => a.atleta_id).join(', ');
+      console.log(`  esempi saltati:   ${sample(cls.skip)}`);
+      console.log(`  esempi ricontrollo: ${sample(cls.recheck)}`);
+      process.exit(0);
+    }
+    toProcess = cls.active;
+  } else if (DRY_RUN) {
+    console.log(`--dry-run senza --only-active: ${toProcess.length} da processare`);
+    process.exit(0);
+  }
   if (LIMIT) toProcess = toProcess.slice(0, LIMIT);
   if (!idsFileSlugs) {
     const totalSkippedByNotFound = athletes.filter(a => !savedSlugs.has(a.atleta_id) && shouldSkipNotFound(a.atleta_id, { notFoundMap, lastYearMap, fciAll, season: SEASON })).length;
