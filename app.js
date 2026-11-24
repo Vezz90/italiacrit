@@ -2098,9 +2098,10 @@ function _applyAtletaTeamOverrides(gd, overrides) {
 // cognomi composti, rank_dopo_gara, indici, garaToCalId, merge roster).
 function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster }) {
 
-  // Applica correzioni genere
+  // Applica correzioni genere (solo strada: nel ciclocross genere e categoria vengono dalle gare ciclocross)
+  const _cxData = !!(meta && meta.disciplina === 'ciclocross');
   if (athletes) {
-    for (const [id, fix] of Object.entries(ATHLETE_GENDER_FIXES)) {
+    if (!_cxData) for (const [id, fix] of Object.entries(ATHLETE_GENDER_FIXES)) {
       if (athletes[id]) Object.assign(athletes[id], fix);
     }
     // Ricostruisci i cognomi composti spezzati dallo scraper.
@@ -2112,7 +2113,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       ath.nome    = fixed.nome;
     }
   }
-  if (resultsRaw) {
+  if (resultsRaw && !_cxData) {
     for (const r of resultsRaw) {
       const fix = ATHLETE_GENDER_FIXES[r.atleta_id];
       if (fix) { r.genere = fix.genere; if (r.categoria?.endsWith('_M')) r.categoria = r.categoria.replace('_M','_F'); }
@@ -3418,7 +3419,7 @@ function getRankingFileCode(obj) {
       return `${base}_${gender}`;
     }
   }
-  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
+  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id] && !(globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross')) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
   const gender = obj.genere === 'F' ? 'F' : 'M';
   // Fallback: usa categoria (già corretta al caricamento)
   if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;

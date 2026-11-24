@@ -51,7 +51,7 @@
       var html =
         '<div class="ap-ctl">' +
         (typeof window.cxSetMode === 'function' && window.CX && window.CX.hasCx(id) === true && window.CX.hasRoad(id) === true ? seg('disc', [['strada', 'Strada'], ['ciclocross', 'Ciclocross']], cx ? 'ciclocross' : 'strada') : '') +
-        seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione' + (year ? ' ' + year : '')]], sc) +
+        seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione' + (cx && window.CX && window.CX.season ? ' ' + window.CX.season() : (year ? ' ' + year : ''))]], sc) +
         '</div>' +
         '<div class="ap-kpis">' +
         '<div class="ap-k ap-gold"><b>' + w + '</b><span>Vittorie</span></div>' +

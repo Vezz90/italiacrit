@@ -350,7 +350,17 @@
       if (mode === 'strada') return !!(globalData && globalData.athletes && globalData.athletes[id]);
       return !!(live && live.athletes && live.athletes[id]);
     };
-    window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada') };
+    // Riga "STAGIONE" di atleta/team: nel ciclocross c'e' una sola stagione, scritta 2026/27 (gli anni della strada non c'entrano)
+    const oYR = window.profileYearRow;
+    if (typeof oYR === 'function' && !oYR.__cx) {
+      const w = function (kind, id) {
+        if (!isCxGd()) return oYR.apply(this, arguments);
+        const season = (cxData && String(cxData.key).replace('-', '/')) || '';
+        return `<div class="profile-year-row" id="profile-year-row" data-kind="${E(kind)}" data-id="${E(id)}" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 2px"><span style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.04em;margin-right:4px">STAGIONE</span><button type="button" class="year-pill" data-year="${E(season)}" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:default;font-size:.82rem;font-weight:700;background:var(--accent,#e8001d);color:#fff">${E(season)}</button></div>`;
+      };
+      w.__cx = true; window.profileYearRow = w;
+    }
+    window.CX = { season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada') };
     // Scheda atleta aperta in ciclocross per chi non ha mai fatto ciclocross: si torna alla strada (non esistono gare da mostrare)
     const oRA = window.renderAtleta;
     if (typeof oRA === 'function' && !oRA.__cxpre) {
@@ -361,6 +371,12 @@
       pre.__cxpre = true; window.renderAtleta = pre;
     }
     wrap('renderAtleta', async (id) => {
+      if (isCxGd() && cxData) {   // etichette di stagione: nel ciclocross e' 2026/27, non 2026
+        const sn = String(cxData.key).replace('-', '/');
+        for (const el of [document.getElementById('atleta-results-title'), document.getElementById('atleta-stats-italia-label')]) {
+          if (el) el.textContent = el.textContent.replace(/(\d{4})(?!\/)/, sn);
+        }
+      }
       if (mode === 'strada' && !(await ensureIds())) return;
       if (!otherHas('atleta', id)) return;
       const t = document.getElementById('atleta-results-title');
