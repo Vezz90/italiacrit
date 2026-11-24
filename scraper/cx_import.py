@@ -84,6 +84,10 @@ FEMM_CAT = {'DA', 'DJ', 'DU', 'DE', 'ED', 'G6F', 'G5F', 'G4F', 'G3F', 'G2F', 'G1
 
 
 def genere(gruppo_n, cat):
+    # Gruppi con sigla compatta (ES1, ES2, ED1, ED2): in alcune gare la FCI scambia le sigle del 2° anno (es. Legnago: "ED2" con
+    # soli maschi, "ES2" con sole donne). Qui il genere lo dice la colonna Cat. (ED / G6F... = donne, ES / G6M... = uomini).
+    if re.fullmatch(r'E[DS]\d?', (gruppo_n or '').strip()) and (cat or '').strip():
+        return 'F' if (cat or '').upper() in FEMM_CAT else 'M'
     if FEMM_GRUPPO_RE.search(gruppo_n):
         return 'F'
     if (cat or '').upper() in FEMM_CAT:

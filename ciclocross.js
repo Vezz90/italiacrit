@@ -1,7 +1,7 @@
 /* ============================================================
    Italia Cycling Stats — ciclocross.js
    Specialità Ciclocross (stagione ottobre→gennaio, es. "2026/27").
-   VISIBILE SOLO ALL'ADMIN finché non è pronta (stesso criterio della pista).
+   Aperto a tutti (CX_PUBLIC): per tornare a "solo admin" basta mettere CX_PUBLIC = false.
 
    Come funziona: i dati ciclocross (data/ciclocross/<stagione>/, creati da
    scraper/cx_import.py) vengono convertiti al formato della stagione su strada
@@ -17,7 +17,9 @@
 (function () {
   'use strict';
 
-  const isAdmin = () => { try { return (JSON.parse(localStorage.getItem('italiacrit-user') || 'null') || {}).role === 'admin'; } catch (e) { return false; } };
+  // Visibilità: true = ciclocross aperto a tutti gli utenti; false = solo admin (come la pista quando era in lavorazione)
+  const CX_PUBLIC = true;
+  const isAdmin = () => { if (CX_PUBLIC) return true; try { return (JSON.parse(localStorage.getItem('italiacrit-user') || 'null') || {}).role === 'admin'; } catch (e) { return false; } };
   const MULT = { regionale: 1, nazionale: 2, internazionale: 3 };
   const CAT_LABEL = { ELI: 'Elite-Under23', JUN: 'Juniores', AL: 'Allievi', ES1: 'Esordienti 1° Anno', ES2: 'Esordienti 2° Anno' };
   const MODE_KEY = 'ics-disciplina';
@@ -373,7 +375,7 @@
     let _t = null;
     new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); }, 60); }).observe(document.body, { childList: true, subtree: true });
 
-    if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); if (mode === 'strada') ensureIds(); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
+    if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); setTimeout(() => { if (mode === 'strada') ensureIds(); }, 3500); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
     let saved = 'strada'; try { saved = localStorage.getItem(MODE_KEY) || 'strada'; } catch (e) {}
     if (saved === 'ciclocross' && isAdmin()) {
