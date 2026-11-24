@@ -31,7 +31,8 @@
   let cxData = null;            // dati ciclocross grezzi { key, cal, res }
   let cxAth = null;             // atleta_id con risultati ciclocross
   let cxGd = null;              // globalData costruito dal ciclocross
-  let cxTeams = null;           // team_id con risultati ciclocross
+  let cxTeams = null;
+  let cxRank = { ath: {}, team: {} };   // classifiche ciclocross per categoria           // team_id con risultati ciclocross
 
   async function getJson(url) { const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
   async function loadRaw() {
@@ -54,6 +55,18 @@
     const roadAth = (liveGd && liveGd.athletes) || {};
 
     const calendar = [], seenCal = {};
+    const isSoc = (n) => /societ/i.test(n);                       // "Campionato italiano di società": non è un titolo individuale
+    const flags = (g) => ({ cr: /campionato regionale/i.test(g.nome), ci: /campionato italiano/i.test(g.nome) && !isSoc(g.nome) });
+    const calEntry = (g) => {
+      const tipo = String(g.geo || 'Regionale').toLowerCase(), f = flags(g), calId = `${slug(g.nome)}_${g.data}`;
+      if (!seenCal[calId]) {
+        seenCal[calId] = 1;
+        calendar.push({ id: calId, nome: g.nome, data: g.data, tipo, moltiplicatore: MULT[tipo] || 1, campionato_regionale: f.cr, campionato_italiano: f.ci,
+          regione: String(g.regione || '').toUpperCase(), categoria: g.categorie_ammesse || g.classe || '', luogo: g.luogo || '', fci_id: g.fci_id });
+      }
+      return calId;
+    };
+    for (const g of cal) if (g.data) calEntry(g);                  // tutto il calendario, anche le gare future senza risultati
     const resultsRaw = [];
     const athletes = {}, teams = {};
     let seq = 0;
@@ -65,12 +78,8 @@
       const calId = `${slug(g.nome)}_${g.data}`;
       const code = r.cat;                                   // es. ES2_M
       const base = code.replace(/_[MF]$/, ''), gen = code.endsWith('_F') ? 'F' : 'M';
-      const isCR = /campionato regionale/i.test(g.nome), isCI = /campionato italiano/i.test(g.nome);
-      if (!seenCal[calId]) {
-        seenCal[calId] = 1;
-        calendar.push({ id: calId, nome: g.nome, data: g.data, tipo, moltiplicatore: mult, campionato_regionale: isCR, campionato_italiano: isCI,
-          regione: String(g.regione || '').toUpperCase(), categoria: g.categorie_ammesse || g.classe || '', luogo: g.luogo || '', fci_id: g.fci_id });
-      }
+      const isCR = flags(g).cr, isCI = flags(g).ci;
+      calEntry(g);
       // "COGNOME NOME" → cognome/nome (riusa la scheda su strada se c'è)
       const known = roadAth[r.atleta_id];
       let cognome, nome;
@@ -101,10 +110,29 @@
       t.punti_per_cat[code] = (t.punti_per_cat[code] || 0) + row.punti_effettivi;
     }
     for (const a of Object.values(athletes)) delete a._last;
+    // classifiche per categoria nel formato dei file data/rankings e data/team_rankings della strada
+    const rk = { ath: {}, team: {} };
+    for (const r of resultsRaw) {
+      const code = r.gara_id.match(/_([A-Z0-9]+_[MF])$/)[1];
+      const A = ((rk.ath[code] ||= {})[r.atleta_id] ||= { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team_id: r.team_id, team_nome: r.team, punti: 0, vittorie: 0, gare: 0, p1: 0, p2: 0, p3: 0, pout: 0, trend: 0 });
+      const T = ((rk.team[code] ||= {})[r.team_id] ||= { team_id: r.team_id, team_nome: r.team, punti: 0, vittorie: 0, p1: 0, p2: 0, p3: 0, pout: 0, _a: new Set() });
+      for (const X of [A, T]) { X.punti += r.punti_effettivi; if (r.posizione === 1) { X.vittorie++; X.p1++; } else if (r.posizione === 2) X.p2++; else if (r.posizione === 3) X.p3++; else if (r.posizione <= 10) X.pout++; }
+      A.gare++; A.team_id = r.team_id; A.team_nome = r.team; T._a.add(r.atleta_id);
+    }
+    const fin = (m, team) => Object.fromEntries(Object.entries(m).map(([code, o]) => {
+      const l = Object.values(o).sort((x, y) => y.punti - x.punti || y.vittorie - x.vittorie || y.p2 - x.p2 || y.p3 - x.p3);
+      l.forEach((x, i) => { x.pos = i + 1; if (team) { x.n_atleti = x._a.size; delete x._a; } });
+      return [code, l];
+    }));
+    cxRank = { ath: fin(rk.ath, false), team: fin(rk.team, true) };
     cxAth = new Set(Object.keys(athletes)); cxTeams = new Set(Object.keys(teams));
     const meta = { ...((liveGd && liveGd.meta) || {}), disciplina: 'ciclocross' };
     return cxGd = processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails: (liveGd && liveGd.raceDetails) || {}, videos: (liveGd && liveGd.videos) || {}, extraRoster: {} });
   }
+
+  // processLoadedData() lascia in variabili dell'app lo stato dell'ULTIMO dataset elaborato (categoria di appartenenza
+  // degli atleti): dopo ogni cambio va riallineato a quello che si sta guardando, altrimenti la strada perde la posizione.
+  function syncGlobals() { try { if (typeof _buildAthleteHomeCats === 'function' && globalData) _buildAthleteHomeCats(globalData.resultsRaw); } catch (e) {} }
 
   // ── Cambio di specialità ─────────────────────────────────────────
   async function setMode(m, opts) {
@@ -120,6 +148,7 @@
       live = null;
     }
     mode = m;
+    syncGlobals(); setAlboProve();
     try { localStorage.setItem(MODE_KEY, m); } catch (e) {}
     document.body.classList.toggle('disc-cx', m === 'ciclocross');
     if (typeof invalidatePhotoCache === 'function') invalidatePhotoCache();
@@ -170,22 +199,31 @@
 
 
   // ── Striscia in alto: posizione e punti in entrambe le specialità ──
-  function statOf(D, kind, id) {
+  async function statOf(D, kind, id, isCx) {
     if (!D) return null;
     if (kind === 'atleta') {
       const a = D.athletes && D.athletes[id]; if (!a || !(a.risultati || []).length) return null;
-      const pts = a.punti_totali || 0;
-      const pos = 1 + Object.values(D.athletes).filter(x => x.categoria === a.categoria && (x.punti_totali || 0) > pts).length;
-      return { pts, pos, label: typeof catLabel === 'function' ? catLabel(a.categoria) : a.categoria };
+      const pts = a.punti_totali || 0, code = a.categoria;
+      let pos = 0;
+      try {
+        // stessa fonte della scheda: classifica per categoria (strada: file precalcolato; ciclocross: calcolata)
+        const code2 = (typeof getRankingFileCode === 'function' && getRankingFileCode(code)) || code;
+        const list = isCx ? (cxRank.ath[code2] || []) : await window.__roadLoadRanking(code2);
+        const f = list.find(x => x.atleta_id === id); if (f) pos = f.pos;
+      } catch (e) {}
+      if (!pos) pos = 1 + Object.values(D.athletes).filter(x => x.categoria === code && (x.punti_totali || 0) > pts).length;
+      return { pts, pos, label: typeof catLabel === 'function' ? catLabel(code) : code };
     }
     const t = D.teams && D.teams[id]; if (!t || !(t.risultati || []).length) return null;
-    const pts = t.punti_totali || 0;
-    return { pts, pos: 1 + Object.values(D.teams).filter(x => (x.punti_totali || 0) > pts).length, label: '' };
+    const ppc = t.punti_per_cat || {}; const cat = Object.keys(ppc).sort((x, y) => ppc[y] - ppc[x])[0];
+    const pts = cat ? ppc[cat] : (t.punti_totali || 0);
+    const pos = cat ? 1 + Object.values(D.teams).filter(x => ((x.punti_per_cat || {})[cat] || 0) > pts).length : 1 + Object.values(D.teams).filter(x => (x.punti_totali || 0) > pts).length;
+    return { pts, pos, label: cat && typeof catLabel === 'function' ? catLabel(cat) : '' };
   }
-  function placeStrip(kind, id, anchor) {
+  async function placeStrip(kind, id, anchor) {
     if (!anchor || document.querySelector('.cx-strip')) return;
-    const road = statOf(mode === 'strada' ? globalData : live, kind, id), cx = statOf(mode === 'ciclocross' ? globalData : cxGd, kind, id);
-    if (!road || !cx) return;
+    const road = await statOf(mode === 'strada' ? globalData : live, kind, id, false), cx = await statOf(mode === 'ciclocross' ? globalData : cxGd, kind, id, true);
+    if (!road || !cx || document.querySelector('.cx-strip') || !anchor.isConnected) return;
     const season = (cxData && String(cxData.key).replace('-', '/')) || '';
     const chip = (m, name, s, on) => `<button type="button" data-m="${m}" class="cx-chip" style="flex:1 1 200px;text-align:left;cursor:pointer;padding:10px 14px;border-radius:12px;border:1px solid ${on ? 'var(--red-hot,#e8001d)' : 'var(--border-subtle,#ccc)'};background:var(--bg-card,transparent);color:inherit;font:inherit">
       <span style="display:block;font-size:.7rem;font-weight:800;letter-spacing:.06em;opacity:.7">${name}</span>
@@ -197,6 +235,28 @@
     anchor.insertAdjacentElement('afterend', el);
   }
   const E = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+
+  const isCxGd = () => !!(typeof globalData !== 'undefined' && globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
+  // Albo d'oro, scheda "Campioni": in ciclocross esiste solo la specialità Ciclocross
+  const PROVE_STRADA = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
+  function setAlboProve() {
+    try { if (typeof ALBO_PROVE === 'undefined') return; ALBO_PROVE.length = 0; (mode === 'ciclocross' ? ['CICLOCROSS'] : PROVE_STRADA).forEach(x => ALBO_PROVE.push(x)); } catch (e) {}
+  }
+  const hasRace = (gd, id) => !!(gd && ((gd.garaToCalId && gd.garaToCalId[id] != null) || (gd.resultsRaw || []).some(r => r.gara_id === id) || (gd.calendar || []).some(g => g.id === id)));
+  // Un link a una gara dell'altra specialità (titoli, ecc.): prima si passa a quella specialità, poi si apre la gara
+  function onLinkClick(e) {
+    if (!isAdmin()) return;
+    const a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    const m = (a.getAttribute('href') || '').match(/\/gara\/([^?#]+)/); if (!m) return;
+    const id = decodeURIComponent(m[1]);
+    let to = null;
+    if (mode === 'ciclocross') { if (/^CIC_/.test(id) || (!hasRace(globalData, id) && hasRace(live, id))) to = 'strada'; }
+    else if (!hasRace(globalData, id) && cxGd && hasRace(cxGd, id)) to = 'ciclocross';
+    if (!to) return;
+    e.preventDefault(); e.stopPropagation();
+    setMode(to, { go: '/gara/' + id });
+  }
 
   function wrap(name, after) {
     const orig = window[name];
@@ -211,7 +271,7 @@
   // in modalità strada serve conoscere chi ha risultati ciclocross (un solo calcolo)
   async function ensureIds() {
     if (cxAth) return true;
-    try { await loadRaw(); build(globalData); return true; } catch (e) { return false; }
+    try { await loadRaw(); cxGd = build(globalData); syncGlobals(); return true; } catch (e) { return false; }
   }
 
   function init() {
@@ -225,6 +285,31 @@
       };
       w.__cx = true; window.loadAll = w;
     }
+
+    // Funzioni dell'app che nel ciclocross devono dare risposte diverse
+    window.__roadLoadRanking = window.loadRanking;
+    const sw = (name, fn) => { const o = window[name]; if (typeof o === 'function' && !o.__cx) { const w = fn(o); w.__cx = true; window[name] = w; } };
+    sw('championDisciplina', (o) => function (n) { return isCxGd() ? 'CICLOCROSS' : o.apply(this, arguments); });
+    sw('collectChampions', (o) => function () {
+      const out = o.apply(this, arguments);
+      return isCxGd() ? out.filter(c => !(c.kind === 'it' && /societ/i.test(c.nome_gara || ''))) : out;   // niente "Campionato italiano di società" come titolo
+    });
+    sw('loadRanking', (o) => async function (code) { return isCxGd() ? (cxRank.ath[code] || []).map(x => ({ ...x })) : o.apply(this, arguments); });
+    sw('loadTeamRanking', (o) => async function (code) { return isCxGd() ? (cxRank.team[code] || []).map(x => ({ ...x })) : o.apply(this, arguments); });
+    // Albo e statistiche del ciclocross partono da quest'anno: niente storico della strada
+    sw('loadJson', (o) => function (path) {
+      if (isCxGd() && /^data\/(almanacco|carriere|ciclismo-storico|albo|titoli_stagioni|seasons\/\d)/.test(String(path))) return Promise.reject(new Error('non disponibile per il ciclocross'));
+      return o.apply(this, arguments);
+    });
+    // Albo d'oro: solo la stagione ciclocross in corso (podio della classifica), nessuno storico
+    sw('_alboDoroRows', (o) => async function (code, isTeam) {
+      if (!isCxGd()) return o.apply(this, arguments);
+      const top = ((isTeam ? cxRank.team : cxRank.ath)[code] || []).slice(0, 3).map(x => ({ ...x }));
+      return top.length ? [{ year: cxData ? String(cxData.key).replace('-', '/') : '2026/27', isCur: true, podium: top }] : [];
+    });
+    sw('_alboIndex', (o) => function () { return isCxGd() ? Promise.resolve(null) : o.apply(this, arguments); });
+    document.addEventListener('click', onLinkClick, true);
+    window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live) };
     wrap('renderAtleta', async (id) => {
       if (mode === 'strada' && !(await ensureIds())) return;
       if (!otherHas('atleta', id)) return;
@@ -255,6 +340,7 @@
     let _t = null;
     new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); }, 60); }).observe(document.body, { childList: true, subtree: true });
 
+    if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); if (mode === 'strada') ensureIds(); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
     let saved = 'strada'; try { saved = localStorage.getItem(MODE_KEY) || 'strada'; } catch (e) {}
     if (saved === 'ciclocross' && isAdmin()) {

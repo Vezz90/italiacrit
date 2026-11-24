@@ -8796,12 +8796,13 @@ async function _hdRenderReal(myRenderId) {
   // ── Contatori reali (hero) ──────────────────────────────────────
   const atletiNativi = Object.keys(globalData.athletes || {}).length;
   const teamNativi   = Object.keys(teams || {}).length;
-  const s = stats?.storico || {};
+  const _cx = globalData?.meta?.disciplina === 'ciclocross'; // ciclocross: i numeri partono da quest'anno, senza lo storico della strada
+  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id)).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
   const heroStats = [
-    { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: '2007–oggi' },
+    { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: _cx ? 'stagione 2026/27' : '2007–oggi' },
     { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
-    { val: s.gare_storiche != null ? s.gare_storiche.toLocaleString('it-IT') : '…', lbl: 'GARE', sub: '2007–oggi' },
-    { val: s.risultati_storici != null ? s.risultati_storici.toLocaleString('it-IT') : '…', lbl: 'RISULTATI', sub: 'in archivio' },
+    { val: s.gare_storiche != null ? s.gare_storiche.toLocaleString('it-IT') : '…', lbl: 'GARE', sub: _cx ? 'stagione 2026/27' : '2007–oggi' },
+    { val: s.risultati_storici != null ? s.risultati_storici.toLocaleString('it-IT') : '…', lbl: 'RISULTATI', sub: _cx ? 'stagione 2026/27' : 'in archivio' },
     { val: s.stagioni_storiche != null ? s.stagioni_storiche.toLocaleString('it-IT') : '…', lbl: 'STAGIONI', sub: `dal ${s.prima_stagione || '2007'}` },
   ];
 
@@ -9185,15 +9186,16 @@ function _hdArchiveHtml(stats) {
 function _hdApplyStats(stats) {
   const heroEl = document.getElementById('hd-hero-stats');
   if (heroEl) {
-    const s = stats?.storico || {};
+    const _cx = globalData?.meta?.disciplina === 'ciclocross'; // ciclocross: i numeri partono da quest'anno, senza lo storico della strada
+  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id)).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
     const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
     const atletiNativi = Object.keys(globalData.athletes || {}).length;
     const teamNativi = Object.keys(globalData.teams || {}).length;
     const heroStats = [
-      { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: '2007–oggi' },
+      { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: _cx ? 'stagione 2026/27' : '2007–oggi' },
       { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
-      { val: (s.gare_storiche||0).toLocaleString('it-IT'), lbl: 'GARE', sub: '2007–oggi' },
-      { val: (s.risultati_storici||0).toLocaleString('it-IT'), lbl: 'RISULTATI', sub: 'in archivio' },
+      { val: (s.gare_storiche||0).toLocaleString('it-IT'), lbl: 'GARE', sub: _cx ? 'stagione 2026/27' : '2007–oggi' },
+      { val: (s.risultati_storici||0).toLocaleString('it-IT'), lbl: 'RISULTATI', sub: _cx ? 'stagione 2026/27' : 'in archivio' },
       { val: (s.stagioni_storiche||0).toLocaleString('it-IT'), lbl: 'STAGIONI', sub: `dal ${s.prima_stagione||'2007'}` },
     ];
     heroEl.innerHTML = heroStats.map(st => `<div class="hd-stat"><span class="hd-stat-icon">${heroIcons[st.lbl]||'●'}</span><div><div class="hd-stat-val">${esc(st.val)}</div><div class="hd-stat-lbl">${esc(st.lbl)}</div><div class="hd-stat-sub">${esc(st.sub)}</div></div></div>`).join('');
@@ -20332,7 +20334,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // visibile ... con una maglia tricolore").
   const _ciBadgeHost = document.getElementById('atleta-ci-badge-host');
   if (_ciBadgeHost) {
-    const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || ''));
+    const _ciWins = dedupedMerged.filter(r => r.posizione === 1 && /campionato\s+italiano/i.test(r.nome_gara || '') && !(globalData?.meta?.disciplina === 'ciclocross' && /societ/i.test(r.nome_gara || ''))); // ciclocross: il campionato italiano di società non assegna un titolo individuale
     // I titoli non si mostrano piu' accanto al nome (troppo ingombro): finiscono nella sezione compatta
     // "Titoli e medaglie" (titoli.js). Qui si passano solo i campionati italiani trovati nelle fonti PCS/ciclismo.info.
     const _ciSeen = new Set();

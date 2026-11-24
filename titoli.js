@@ -69,11 +69,21 @@
     return out;
   }
   const mapNative = (c, id) => ({ y: +c.anno, kind: c.kind, cat: null, catCode: c.categoria, reg: String(c.regione || '').toUpperCase(), aid: id || c.atleta_id || '', n: c.nome, team: c.team || '', gid: c.gara_id, gara: c.nome_gara || '', pos: 1, prova: c.disciplina || 'STRADA', fascia: c.fascia, native: true, did: c.id });
+  // titoli presenti nei dati della strada E del ciclocross (l'altro dataset si legge scambiando per un attimo globalData)
+  function bothModes(fn) {
+    let out = [];
+    try { out = fn() || []; } catch (_) {}
+    try {
+      const o = window.CX && window.CX.otherGd && window.CX.otherGd();
+      if (o && typeof globalData !== 'undefined') { const g = globalData; globalData = o; try { out = out.concat(fn() || []); } finally { globalData = g; } }
+    } catch (_) {}
+    return out;
+  }
   function nativeFor(id) {
-    try { return nativeMedals(r => r.atleta_id === id).concat(collectChampions().filter(c => c.atleta_id === id).map(c => mapNative(c, id))); } catch (_) { return []; }
+    return bothModes(() => nativeMedals(r => r.atleta_id === id).concat(collectChampions().filter(c => c.atleta_id === id).map(c => mapNative(c, id))));
   }
   function nativeForTeam(teamId) {
-    try { return nativeMedals(r => r.team_id === teamId).concat(collectChampions({ teamId }).map(c => mapNative(c))); } catch (_) { return []; }
+    return bothModes(() => nativeMedals(r => r.team_id === teamId).concat(collectChampions({ teamId }).map(c => mapNative(c))));
   }
 
   function catLabelOf(t) { return t.cat != null ? SHORT[t.cat] : (typeof catLabel === 'function' ? catLabel(t.catCode) : ''); }
@@ -138,16 +148,18 @@
     { label: 'CAMPIONE REGIONALE', cls: 'reg', icon: JERSEY(J_REG, 15), test: t => !t.medal && t.kind === 'reg' },
   ];
   // strada, cronometro e cronoscalata sono titoli diversi: etichette separate
-  const PROVE = [['STRADA', ''], ['CRONOMETRO', ' · CRONOMETRO'], ['CRONOSCALATA', ' · CRONOSCALATA']];
-  const provaKey = t => (t.prova === 'CRONOMETRO' || t.prova === 'CRONOSCALATA') ? t.prova : 'STRADA';
-  const GROUPS = BASE.flatMap(g => PROVE.map(([pv, suf]) => ({ ...g, label: g.label + suf, test: t => g.test(t) && provaKey(t) === pv })));
+  const PROVE = [['STRADA', ''], ['CRONOMETRO', ' · CRONOMETRO'], ['CRONOSCALATA', ' · CRONOSCALATA'], ['CICLOCROSS', ' · CICLOCROSS']];
+  const provaKey = t => (t.prova === 'CRONOMETRO' || t.prova === 'CRONOSCALATA' || t.prova === 'CICLOCROSS') ? t.prova : 'STRADA';
+  const GROUPS = BASE.flatMap(g => PROVE.map(([pv, suf]) => ({ ...g, pv, label: g.label + suf, test: t => g.test(t) && provaKey(t) === pv })));
+  // se il profilo ha titoli anche nel ciclocross, quelli su strada riportano "· STRADA" (si deve sempre capire dove è stato preso)
+  let _hasCx = false;
   const raceHref = t => (t.arch && t.gid ? `/gara/CIC_${encodeURIComponent(t.gid)}` : (t.gid ? `/gara/${encodeURIComponent(t.gid)}` : ''));
-  function provaOf(t) { return t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : '')); }
+  function provaOf(t) { return t.prova === 'CICLOCROSS' ? 'Ciclocross' : t.prova === 'CRONOMETRO' ? 'Cronometro' : (t.prova === 'CRONOSCALATA' ? 'Cronoscalata' : (t.prova === 'CRONOMETRO A SQUADRE' ? 'Crono squadre' : '')); }
   function tipText(t, withName) { return [t.gara ? tc(t.gara) : '', provaOf(t), catLabelOf(t), t.reg ? tc(t.reg) : '', t.y, withName ? tc(t.n) : ''].filter(Boolean).join(' · '); }
   function chipHtml(t, g, withName) {
     const sup = '';
     const surname = withName && t.n ? ` <small>${esc(tc(String(t.n).split(/\s+/)[0]))}</small>` : '';
-    const body = `<i>${g.icon}</i>${g.label}${sup ? `<sup>${sup}</sup>` : ''}${surname}`;
+    const body = `<i>${g.icon}</i>${g.label}${_hasCx && g.pv === 'STRADA' ? ' · STRADA' : ''}${sup ? `<sup>${sup}</sup>` : ''}${surname}`;
     const href = withName && t.aid ? '' : raceHref(t);
     const x = t.did != null && authUser()?.role === 'admin' ? `<button class="ttl-x" title="Rimuovi il titolo" onclick="event.preventDefault();event.stopPropagation();window.adminDeleteRegionalTitle(${t.did})">✕</button>` : '';
     const link = raceHref(t);
@@ -155,6 +167,7 @@
   }
   // un titolo per riga di anno, dal piu' recente al piu' vecchio
   function yearRowsHtml(list, withName) {
+    _hasCx = list.some(t => provaKey(t) === 'CICLOCROSS') || !!(typeof globalData !== 'undefined' && globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
     const years = [...new Set(list.map(t => t.y))].sort((a, b) => b - a);
     return years.map(y => {
       const seenK = new Set();
