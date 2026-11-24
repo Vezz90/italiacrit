@@ -69,7 +69,7 @@
       if (k === 'scope') { setScope(v); refresh(); }
       else if (k === 'disc' && typeof window.cxSetMode === 'function' && (v === 'ciclocross') !== isCx()) window.cxSetMode(v, { force: true });
     });
-    document.addEventListener('ics-career', function () { refresh(); fillCareer(); });
+    document.addEventListener('ics-career', function () { refresh(); fillCareer(); fillKey(); });
     document.addEventListener('ics-cx-ready', refresh);
     refresh();
     new MutationObserver(function () { refresh(); }).observe(aside, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['data-base'] });
@@ -78,8 +78,10 @@
 
   // ── Scheda "Carriera": totali, grafico per anno (1° · 2° · 3° · 4°–10°) e tabella stagione per stagione ──
   function fillCareer() {
-    var host = document.getElementById('atleta-career-stats'); if (!host) return;
-    var put = function (h) { if (host.dataset.sig !== h) { host.dataset.sig = h; host.innerHTML = h; } };
+    var host = document.getElementById('atleta-career-stats'), mini = document.getElementById('atleta-career-mini');
+    var putIn = function (el, h) { if (el && el.dataset.sig !== h) { el.dataset.sig = h; el.innerHTML = h; } };
+    var put = function (h) { putIn(host, h); };
+    if (!host && !mini) return;
     var id = athId(), cx = isCx();
     var c = (window._athCareer || {})[id + '|' + (cx ? 'cx' : 'road')];
     if (!c || !c.n) { put('<div class="ap-loading">' + (c ? 'Nessun piazzamento registrato.' : 'Statistiche di carriera in caricamento…') + '</div>'); return; }
@@ -103,6 +105,10 @@
     var rows = years.slice().reverse().filter(function (y) { return c.by[y]; }).map(function (y) {
       var b = c.by[y]; return '<tr><th>' + y + (cx ? '/' + String(y + 1).slice(2) : '') + '</th><td>' + b.n + '</td><td>' + b.p1 + '</td><td>' + b.p2 + '</td><td>' + b.p3 + '</td><td>' + b.pout + '</td></tr>';
     }).join('');
+    var head = '<div class="ap-cs-head"><h3>Statistiche di carriera · ' + (cx ? 'ciclocross' : 'strada') + '</h3><span>' + y0 + (y1 > y0 ? '–' + y1 : '') + '</span></div>';
+    var totHtml = '<div class="ap-cs-tot"><div><b>' + c.n + '</b><span>Gare</span></div><div><b>' + c.p1 + '</b><span>1°</span></div><div><b>' + c.p2 + '</b><span>2°</span></div><div><b>' + c.p3 + '</b><span>3°</span></div><div><b>' + c.pout + '</b><span>4°–10°</span></div></div>';
+    var chartHtml = '<div class="ap-cs-chart"><div class="ap-cs-leg">' + legend + '</div><svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Piazzamenti per anno">' + grid + bars + '</svg></div>';
+    putIn(mini, '<div class="ap-mini">' + head + totHtml + chartHtml + '<button type="button" class="ap-more" onclick="window._athTab(\'c\')">Tutte le stagioni ›</button></div>');
     put(
       '<div class="ap-cs-head"><h3>Statistiche di carriera · ' + (cx ? 'ciclocross' : 'strada') + '</h3><span>' + y0 + (y1 > y0 ? '–' + y1 : '') + '</span></div>' +
       '<div class="ap-cs-tot"><div><b>' + c.n + '</b><span>Gare</span></div><div><b>' + c.p1 + '</b><span>1°</span></div><div><b>' + c.p2 + '</b><span>2°</span></div><div><b>' + c.p3 + '</b><span>3°</span></div><div><b>' + c.pout + '</b><span>4°–10°</span></div></div>' +
@@ -118,7 +124,27 @@
     });
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); markNil(); }
+
+  // ── Risultati chiave: le gare vinte (o i podi) raggruppate per corsa, con conteggio e anni ──
+  function fillKey() {
+    var host = document.getElementById('atleta-key-results'); if (!host) return;
+    var id = athId(), cx = isCx();
+    var k = (window._athKey || {})[id + '|' + (cx ? 'cx' : 'road')];
+    var html = '';
+    if (k) {
+      var items = k.w, title = 'Risultati chiave', sub = 'Vittorie';
+      if (!items.length) { items = k.p2.concat(k.p3).sort(function (a, b) { return b.count - a.count; }).slice(0, 8); sub = 'Podi'; }
+      if (items.length) {
+        var esc2 = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+        var yy = function (ys) { return ys.map(function (y) { return cx ? y + '/' + String(+y + 1).slice(2) : y; }).join(' · '); };
+        html = '<div class="ap-key"><div class="ap-key-head"><h3>' + title + '</h3><span>' + sub + '</span></div><div class="ap-key-grid">' +
+          items.map(function (g) { return '<div class="ap-key-card"><b>' + g.count + '</b><div><strong>' + esc2(g.n) + '</strong><span>' + esc2(yy(g.years)) + '</span></div></div>'; }).join('') + '</div></div>';
+      }
+    }
+    if (host.dataset.sig !== html) { host.dataset.sig = html; host.innerHTML = html; }
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); markNil(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();

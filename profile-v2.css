@@ -124,3 +124,21 @@
   .atleta-results tr[data-date] > td.ap-nil { display: none; }
   .atleta-results tr.ath-sub[data-date] { padding-left: 28px; }
 }
+
+
+/* ── La scheda Forma non si vede (i dati restano calcolati in background) ── */
+#ath-tab-f, #ath-panel-f, #ath-forma-teaser { display: none !important; }
+
+/* ── Risultati chiave ── */
+.ap-key { margin: 4px 0 22px; }
+.ap-key-head, .ap-mini .ap-cs-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.ap-key-head h3 { margin: 0; font-size: 1.15rem; }
+.ap-key-head span { color: var(--text-muted); font-size: .82rem; }
+.ap-key-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.ap-key-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: 14px; background: var(--bg-card); min-width: 0; }
+.ap-key-card > b { flex: 0 0 auto; min-width: 38px; text-align: center; font-size: 1.9rem; line-height: 1; color: var(--gold, #d6a319); font-variant-numeric: tabular-nums; }
+.ap-key-card strong { display: block; font-size: .92rem; line-height: 1.25; overflow-wrap: anywhere; }
+.ap-key-card span { display: block; margin-top: 3px; font-size: .74rem; color: var(--text-muted); }
+.ap-mini { margin: 6px 0 22px; }
+.ap-more { margin-top: 12px; background: none; border: 0; color: var(--accent, #e8001d); font: 700 .85rem inherit; font-family: inherit; cursor: pointer; padding: 6px 0; }
+@media (max-width: 640px) { .ap-key-grid { grid-template-columns: 1fr; } }

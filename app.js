@@ -19062,6 +19062,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
     <div id="ath-year-wrap">${profileYearRow('atleta', atleta_id, selYear)}</div>
     <div id="ath-panel-s" role="tabpanel" aria-labelledby="ath-tab-s">
+    <div id="atleta-key-results"></div>
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${_athSafe(() => athleteMomentHtml(risultatiStrada, aiStreak, _isLoadedYear))}
@@ -19091,6 +19092,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       });
       return '';
     })()}
+    <div id="atleta-career-mini"></div>
     <div id="atleta-pcs-widget"></div>
     </div>
     <div id="ath-panel-r" role="tabpanel" aria-labelledby="ath-tab-r" hidden>
@@ -20423,6 +20425,28 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (cls === 'NC') return 5;
     return 3; // altre vittorie senza classe riconosciuta (es. ciclismo.info)
   };
+  try {
+    const _cxm = globalData?.meta?.disciplina === 'ciclocross';
+    const _rows = _cxm ? dedupedMerged.filter(r => r.source === 'ics') : dedupedMerged;
+    // Risultati chiave: le gare vinte (o, se mancano, i podi) raggruppate per corsa, con conteggio e anni — come "Key results" di CyclingDB
+    const _serie = (nome) => String(nome || '').replace(/_/g, ' ').replace(/\s+[—–-]\s+(?:Stage|Tappa)\b.*$/i, '').replace(/\((?:[12]\.[A-Za-z0-9]+|NAT|WC|CC|CM|NC)\)/g, '')
+      .replace(/^\s*\d+\s*[°ªA^º]?\s+/, '').replace(/\b(1|2|3|4|5|6|7|8|9)\s*[°ª^º]\s+(prova|tappa|trofeo)\b/i, '$2').replace(/\s+/g, ' ').trim();
+    const _keyOf = (r) => _serie(r.nome_gara).toUpperCase().replace(/[^A-Z0-9 ]/g, '').replace(/\b(DEL|DELLA|DI|DE|IL|LA|LE|DEI|DELLE)\b/g, '').replace(/\s+/g, ' ').trim();
+    const _group = (pp) => {
+      const m = new Map();
+      for (const r of _rows) {
+        if (r.posizione !== pp) continue;
+        const k = _keyOf(r); if (!k) continue;
+        const g = m.get(k) || { n: _serie(r.nome_gara), count: 0, years: new Set(), tier: 0, last: '' };
+        g.count++; g.years.add(String(r.anno || String(r.data || '').slice(0, 4))); g.tier = Math.max(g.tier, tier(r)); if ((r.data || '') > g.last) g.last = r.data || '';
+        m.set(k, g);
+      }
+      return [...m.values()].sort((a, b) => b.tier - a.tier || b.count - a.count || b.last.localeCompare(a.last)).slice(0, 8)
+        .map(g => ({ n: g.n, count: g.count, years: [...g.years].sort() }));
+    };
+    (window._athKey = window._athKey || {})[atletaId + '|' + (_cxm ? 'cx' : 'road')] = { w: _group(1), p2: _group(2), p3: _group(3) };
+    document.dispatchEvent(new CustomEvent('ics-career', { detail: { id: atletaId } }));
+  } catch (_) {}
   // Raggruppa vittorie ripetute della STESSA gara (es. 5 Tour de France
   // vinti su anni diversi) in una riga sola — stile "palmarès" (PCS: "5x GC
   // Tour de France ('26, '25, '24, '21, '20)"), richiesto esplicitamente
