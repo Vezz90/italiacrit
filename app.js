@@ -8797,7 +8797,7 @@ async function _hdRenderReal(myRenderId) {
   const atletiNativi = Object.keys(globalData.athletes || {}).length;
   const teamNativi   = Object.keys(teams || {}).length;
   const _cx = globalData?.meta?.disciplina === 'ciclocross'; // ciclocross: i numeri partono da quest'anno, senza lo storico della strada
-  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id)).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
+  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id.replace(/_(?:ELI|JUN|AL|ES1|ES2)_[MF]$/, ''))).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
   const heroStats = [
     { val: (s.atleti_storici || atletiNativi).toLocaleString('it-IT'), lbl: 'ATLETI', sub: _cx ? 'stagione 2026/27' : '2007–oggi' },
     { val: teamNativi.toLocaleString('it-IT'), lbl: 'TEAM', sub: 'stagione in corso' },
@@ -9187,7 +9187,7 @@ function _hdApplyStats(stats) {
   const heroEl = document.getElementById('hd-hero-stats');
   if (heroEl) {
     const _cx = globalData?.meta?.disciplina === 'ciclocross'; // ciclocross: i numeri partono da quest'anno, senza lo storico della strada
-  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id)).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
+  const s = _cx ? { atleti_storici: Object.keys(globalData.athletes || {}).length, gare_storiche: new Set((globalData.resultsRaw || []).map(r => r.gara_id.replace(/_(?:ELI|JUN|AL|ES1|ES2)_[MF]$/, ''))).size, risultati_storici: (globalData.resultsRaw || []).length, stagioni_storiche: 1, prima_stagione: '2026/27' } : (stats?.storico || {});
     const heroIcons = { ATLETI:'👤', TEAM:'🚴', GARE:'🏁', RISULTATI:'🏆', STAGIONI:'📅' };
     const atletiNativi = Object.keys(globalData.athletes || {}).length;
     const teamNativi = Object.keys(globalData.teams || {}).length;

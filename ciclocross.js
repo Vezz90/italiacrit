@@ -342,6 +342,8 @@
       window.ProRaces.events = function () { return isCxGd() ? Promise.resolve([]) : oe.apply(this, arguments); };
       window.ProRaces.events.__cx = true;
     }
+    // Pagina Statistiche/almanacco: è lo storico 2007-2025 della strada. Nel ciclocross si usa la pagina dei numeri della stagione (dai dati ciclocross)
+    sw('renderAlmanacco', (o) => function () { return (isCxGd() && typeof window.renderHomeDashboard === 'function') ? window.renderHomeDashboard() : o.apply(this, arguments); });
     sw('_alboIndex', (o) => function () { return isCxGd() ? Promise.resolve(null) : o.apply(this, arguments); });
     document.addEventListener('click', onLinkClick, true);
     window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live) };
@@ -379,7 +381,7 @@
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
     let saved = 'strada'; try { saved = localStorage.getItem(MODE_KEY) || 'strada'; } catch (e) {}
     if (saved === 'ciclocross' && isAdmin()) {
-      const t = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t); setMode('ciclocross'); } }, 250);
+      const t = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t); setMode('ciclocross').then(() => { /* la pagina Statistiche può essere già in caricamento con i dati della strada: la si ridisegna */ if (/^\/(statistiche|record)/.test(location.pathname + location.hash.replace(/^#/, ''))) setTimeout(() => { if (mode === 'ciclocross') route(); }, 2500); }); } }, 250);
       setTimeout(() => clearInterval(t), 60000);
     }
   }
