@@ -111,7 +111,14 @@
       '<p class="ap-note2">Piazzamenti dalle fonti disponibili (FCI, ciclismo.info, PCS), senza doppioni. Dove una gara non ha la classifica completa, i piazzamenti oltre il 3° possono mancare.</p>');
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); }
+  // celle senza valore ("—") nelle schede dei risultati su mobile: si nascondono
+  function markNil() {
+    document.querySelectorAll('.atleta-results tr[data-date] > td:nth-child(5):not([data-nil]), .atleta-results tr[data-date] > td:nth-child(6):not([data-nil])').forEach(function (td) {
+      var t = td.textContent.trim(); td.dataset.nil = '1'; if (t === '' || t === '—' || t === '-') td.classList.add('ap-nil');
+    });
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); markNil(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();

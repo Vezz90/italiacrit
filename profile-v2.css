@@ -96,3 +96,31 @@
 .ap-cs-table th:first-child, .ap-cs-table td:first-child { text-align: left; }
 .ap-note2 { margin: 12px 2px 0; font-size: .72rem; color: var(--text-muted); }
 @media (max-width: 640px) { .ap-cs-tot b { font-size: 1.3rem; } .ap-cs-table th, .ap-cs-table td { padding: 9px 10px; } .ath-page .ath-tab { padding: 13px 14px; } }
+
+/* ════════════════════════════════════════════════════════════════
+   Risultati dell'atleta su MOBILE: da tabella a schede leggibili
+   gara (grande) · posizione a destra · data, moltiplicatore, punti · km e media. Stessi dati di prima.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .atleta-results, .atleta-results tbody { display: block; width: 100%; }
+  .atleta-results thead { display: none; }
+  .atleta-results tr[data-date] {
+    display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; column-gap: 12px; row-gap: 5px;
+    padding: 14px 14px 12px; border-top: 1px solid var(--border-subtle);
+  }
+  .atleta-results tr[data-date]:nth-child(odd) { background: rgba(127,127,127,.06); }
+  .atleta-results tr[data-date] > td { display: block; padding: 0 !important; border: 0 !important; background: none !important; min-width: 0; white-space: nowrap; }
+  .atleta-results tr[data-date] > td.td-race { grid-column: 1 / 4; grid-row: 1; white-space: normal; font-size: 1rem; font-weight: 700; line-height: 1.25; padding-right: 8px !important; }
+  .atleta-results tr[data-date] > td.td-race a { overflow-wrap: anywhere; font-weight: 700; }
+  .atleta-results tr[data-date] > td.td-pos { grid-column: 4; grid-row: 1; justify-self: end; font-size: 1.35rem !important; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .atleta-results tr[data-date] > td.td-date { grid-column: 1; grid-row: 2; font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; }
+  .atleta-results tr[data-date] > td:nth-child(4) { grid-column: 2; grid-row: 2; font-size: .78rem; }
+  .atleta-results tr[data-date] > td.td-pts { grid-column: 4; grid-row: 2; justify-self: end; font-size: .85rem; font-weight: 700; }
+  .atleta-results tr[data-date] > td.td-pts::after { content: ' pt'; font-weight: 500; color: var(--text-muted); }
+  .atleta-results tr[data-date] > td:nth-child(5) { grid-column: 1 / 3; grid-row: 3; font-size: .76rem; color: var(--text-muted); text-align: left !important; }
+  .atleta-results tr[data-date] > td:nth-child(6) { grid-column: 3; grid-row: 3; font-size: .76rem; color: var(--text-muted); text-align: left !important; }
+  .atleta-results tr[data-date] > td:nth-child(5):not(.ap-nil)::after { content: ' km'; }
+  .atleta-results tr[data-date] > td:nth-child(6):not(.ap-nil)::after { content: ' km/h'; }
+  .atleta-results tr[data-date] > td.ap-nil { display: none; }
+  .atleta-results tr.ath-sub[data-date] { padding-left: 28px; }
+}
