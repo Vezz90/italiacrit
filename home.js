@@ -37,7 +37,9 @@
   function raceTitle(n) {
     let s = String(n || '').replace(/\s+/g, ' ').trim();
     s = s.replace(/^(\d+)\s*[°^º]?\s+/, '$1° ');
-    s = s.replace(/\s+\d+\s*[°^º]?\s+(TROFEO|MEMORIAL|GRAN PREMIO|GP|COPPA)\b.*$/i, '');
+    // Se prima di "2° Trofeo ..." resta solo un'indicazione generica (es. "GARA NAZIONALE -"), il nome vero è proprio la parte dopo: non tagliarla
+    const _cut = s.replace(/\s+\d+\s*[°^º]?\s+(TROFEO|MEMORIAL|GRAN PREMIO|GP|COPPA)\b.*$/i, '');
+    s = /^(gara|prova)?\s*(nazionale|regionale|internazionale|open)?\s*(ciclocross)?\s*[-–]?\s*$/i.test(_cut) ? s.replace(/(\d)\^/g, '$1°') : _cut;
     s = tc(s).replace(/\b(Di|Del|Della|Delle|Dei|Degli|Da|De|E|In)\b/g, m => m.toLowerCase()).replace(/\bGp\b/g, 'GP');
     return s.replace(/^(\d+)° /, '$1° ');
   }
