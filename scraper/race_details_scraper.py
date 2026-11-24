@@ -479,19 +479,26 @@ def scrape_all_details():
             if not html: break
             
             soup = BeautifulSoup(html, 'html.parser')
-            races_divs = soup.find_all('div', class_='wp-race-info')
+            # Markup nuovo (novembre 2026): <a class="wp-race-info" href="...raceid=N">
+            # al posto di <div onclick="...raceid=N">. Il selettore di classe e la
+            # lettura sia di onclick sia di href valgono per entrambi.
+            races_divs = soup.select('.wp-race-info')
             if not races_divs:
+                summ = soup.select_one('.fci-race-summary')
+                mm = re.search(r'(\d+)\s+gare', summ.get_text(' ', strip=True)) if summ else None
+                if mm and int(mm.group(1)) > 0:
+                    print(f"  ATTENZIONE: il sito dichiara {mm.group(1)} gare per il mese {mese:02d} ma ne ho lette 0 (markup cambiato?)")
                 break
-                
+
             for race in races_divs:
-                onclick = race.get('onclick', '')
+                onclick = race.get('onclick', '') + ' ' + race.get('href', '')
                 m_id = re.search(r'raceid=(\d+)', onclick)
                 if not m_id: continue
                 raceid = m_id.group(1)
-                
-                date_div = race.find('div', class_='wp-race-date')
+
+                date_div = race.find(class_='wp-race-date')
                 if not date_div: continue
-                date_str = date_div.get_text(strip=True).lower()
+                date_str = date_div.get_text(' ', strip=True).lower()
                 
                 mesi_ita = {"gennaio": "01", "febbraio": "02", "marzo": "03", "aprile": "04", "maggio": "05", "giugno": "06", "luglio": "07", "agosto": "08", "settembre": "09", "ottobre": "10", "novembre": "11", "dicembre": "12"}
                 for m_ita, m_num in mesi_ita.items():
@@ -504,7 +511,7 @@ def scrape_all_details():
                 else:
                     continue
                     
-                name_span = race.find('span', class_='wp-race-details')
+                name_span = race.find(class_='wp-race-details')
                 nome = name_span.get_text(strip=True) if name_span else ""
                 norm_n = robust_norm(nome)
                 

@@ -43,6 +43,7 @@ def scrape_calendar_fci(year=2026):
         3: ("regionale", 1)
     }
     
+    markup_problems = []
     print("--- INIZIO SCRAPING CALENDARIO FCI ---")
     for mese in range(1, 13):
         for geo, (tipo, mult) in geo_map.items():
@@ -52,24 +53,36 @@ def scrape_calendar_fci(year=2026):
                 try:
                     r = session.get(url, timeout=15)
                     soup = BeautifulSoup(r.text, 'html.parser')
-                    races = soup.find_all('div', class_='wp-race-info')
+                    # Il sito ha cambiato markup (novembre 2026): le gare non
+                    # sono più <div class="wp-race-info"> ma
+                    # <a class="wp-race-info fci-race-result">. Il selettore di
+                    # classe vale per entrambi (e per la data le parti sono
+                    # ora <span> separati: serve il separatore).
+                    races = soup.select('.wp-race-info')
                     if not races:
+                        # Se il riepilogo del sito dice che ci sono gare ma non
+                        # ne leggiamo nessuna, il markup è cambiato di nuovo:
+                        # meglio fermarsi che concludere "zero gare".
+                        summ = soup.select_one('.fci-race-summary')
+                        mm = re.search(r'(\d+)\s+gare', summ.get_text(' ', strip=True)) if summ else None
+                        if mm and int(mm.group(1)) > 0:
+                            markup_problems.append(f"{mese:02d}/geo{geo}: il sito dichiara {mm.group(1)} gare ma ne ho lette 0")
                         break # Fine pagine per questo mese/geo
-                        
+
                     for race in races:
-                        date_div = race.find('div', class_='wp-race-date')
-                        date_str = date_div.get_text(strip=True) if date_div else ""
+                        date_div = race.find(class_='wp-race-date')
+                        date_str = date_div.get_text(' ', strip=True) if date_div else ""
                         data_iso = parse_date(date_str)
                         if not data_iso: continue
-                        
-                        details_span = race.find('span', class_='wp-race-details')
+
+                        details_span = race.find(class_='wp-race-details')
                         nome = details_span.get_text(strip=True) if details_span else ""
-                        
-                        id_class_div = race.find('div', class_='wp-race-id-class')
+
+                        id_class_div = race.find(class_='wp-race-id-class')
                         categoria = ""
                         fci_id = ""
                         if id_class_div:
-                            text = id_class_div.get_text(strip=True)
+                            text = id_class_div.get_text(' ', strip=True)
                             m = re.search(r"Classe:\s*(?:\([^)]+\))?\s*(.*)", text)
                             if m: categoria = m.group(1).strip()
                             # ID numerico interno FCI (es. "ID Gara: 179880 -
@@ -86,11 +99,11 @@ def scrape_calendar_fci(year=2026):
                             m2 = re.search(r"ID\s*Gara:\s*(\d+)", text)
                             if m2: fci_id = m2.group(1)
                             
-                        loc_div = race.find('div', class_='wp-race-location')
+                        loc_div = race.find(class_='wp-race-location')
                         regione = ""
                         luogo = ""
                         if loc_div:
-                            b_tag = loc_div.find('b')
+                            b_tag = loc_div.find(['b', 'strong'])
                             if b_tag:
                                 regione = b_tag.get_text(strip=True).upper()
                             full_text = loc_div.get_text(strip=True)
@@ -123,6 +136,9 @@ def scrape_calendar_fci(year=2026):
                 except Exception as e:
                     print(f"Errore scraping calendario URL {url}: {e}")
                     break
+
+    if markup_problems:
+        raise RuntimeError("Markup del calendario FCI non riconosciuto, nessun dato scritto: " + "; ".join(markup_problems[:5]))
 
     # La FCI a volte pubblica PIU' righe calendario con nome+data identici ma
     # categoria diversa (es. "14° TROFEO A. COMBERLATO" il 06/09/2026: una
