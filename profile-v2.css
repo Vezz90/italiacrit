@@ -231,3 +231,27 @@ a.apc-row:hover .apc-rn { color: var(--accent, #e8001d); }
   .apc-team .apc-d { width: 78px; font-size: .8rem; }
   .apc-rivals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+
+/* rivali: foto */
+.apc-rav.has-img { background: #e9edf2; }
+.apc-rav img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+/* Titoli e medaglie: stessa grafica delle schede */
+#atleta-titles .ttl-sec, #team-titles .ttl-sec { background: var(--bg-card, #fff); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 22px; margin: 16px 0; box-shadow: 0 1px 2px rgba(14,34,51,.04); }
+#atleta-titles .ath-block-h, #team-titles .ath-block-h { display: block; margin: 0 0 8px; }
+#atleta-titles .ath-block-h span, #team-titles .ath-block-h span { font: 700 1.3rem/1.2 Inter, system-ui, sans-serif; letter-spacing: -.01em; text-transform: none; color: var(--text-primary); }
+#atleta-titles .ath-block-h i, #team-titles .ath-block-h i { display: none; }
+.ttl-rows { display: flex; flex-direction: column; }
+.ttl-row { display: flex; align-items: center; gap: 18px; padding: 14px 0; border-top: 1px solid var(--border-subtle); }
+.ttl-rows > .ttl-row:first-child { border-top: 0; }
+.ttl-row > b { flex: 0 0 auto; min-width: 54px; font: 700 1.1rem Inter, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.ttl-chips2 { display: flex; flex-wrap: wrap; gap: 8px; }
+.ttl-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 12px; background: rgba(127,127,127,.1); border: 1px solid var(--border-subtle); color: var(--text-primary); font: 600 .92rem Inter, system-ui, sans-serif; letter-spacing: 0; text-transform: none; text-decoration: none; }
+.ttl-chip:hover { border-color: var(--accent, #e8001d); }
+.ttl-chip i { display: inline-flex; }
+
+/* filtro stagione */
+.ap-yrsel { display: flex; align-items: center; gap: 10px; margin: 6px 0 14px; }
+.ap-yrsel label { font: 600 .85rem Inter, system-ui, sans-serif; color: var(--text-muted); }
+.ap-yrsel select { padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-card, #fff); color: var(--text-primary); font: 600 .92rem Inter, system-ui, sans-serif; min-width: 110px; }

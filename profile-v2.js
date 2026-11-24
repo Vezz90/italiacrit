@@ -257,7 +257,7 @@
     var h = window._athH2H; if (!h || h.id !== id || !h.list || !h.list.length) return '';
     var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
     var cards = h.list.slice(0, 6).map(function (v) {
-      return '<div class="apc-rival"><a class="apc-rav" href="#/atleta/' + encodeURIComponent(v.atleta_id) + '">' + sil + '</a><a class="apc-rname" href="#/atleta/' + encodeURIComponent(v.atleta_id) + '">' + esc3((v.cognome || '') + ' ' + (v.nome || '')) + '</a><span class="apc-rsub">' + v.n + ' gare insieme nei primi 10</span><small>davanti ' + v.ahead + ' · dietro ' + v.behind + '</small><button type="button" class="apc-lnk" onclick="window.openComparatoreVs ? window.openComparatoreVs(\'' + String(id).replace(/'/g, "\\'") + '\',\'' + String(v.atleta_id).replace(/'/g, "\\'") + '\',\'atleta\') : window.openComparatore(\'' + String(id).replace(/'/g, "\\'") + '\')">Confronta ' + ARROW + '</button></div>';
+      return '<div class="apc-rival"><a class="apc-rav" data-aid="' + esc3(v.atleta_id) + '" href="#/atleta/' + encodeURIComponent(v.atleta_id) + '">' + sil + '</a><a class="apc-rname" href="#/atleta/' + encodeURIComponent(v.atleta_id) + '">' + esc3((v.cognome || '') + ' ' + (v.nome || '')) + '</a><span class="apc-rsub">' + v.n + ' gare insieme nei primi 10</span><small>davanti ' + v.ahead + ' · dietro ' + v.behind + '</small><button type="button" class="apc-lnk" onclick="window.openComparatoreVs ? window.openComparatoreVs(\'' + String(id).replace(/'/g, "\\'") + '\',\'' + String(v.atleta_id).replace(/'/g, "\\'") + '\',\'atleta\') : window.openComparatore(\'' + String(id).replace(/'/g, "\\'") + '\')">Confronta ' + ARROW + '</button></div>';
     }).join('');
     return '<section class="apc apc-wide"><div class="apc-h"><h3>Rivali frequenti</h3></div><p class="apc-sub">Gli atleti più spesso nei primi dieci della stessa gara: confrontali testa a testa.</p><div class="apc-rivals">' + cards + '</div></section>';
   }
@@ -293,6 +293,11 @@
     var html = parts.join('');
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;
+      // foto dei rivali (quelle caricate sulle loro schede), se ci sono
+      host.querySelectorAll('.apc-rav[data-aid]').forEach(function (el) {
+        var aid = el.getAttribute('data-aid'); if (!aid || typeof getEntityOverrides !== 'function') return;
+        getEntityOverrides('atleta', aid).then(function (ov) { if (ov && ov.photo_url && el.isConnected && typeof mediaUrl === 'function') { el.innerHTML = '<img alt="" src="' + esc3(mediaUrl(ov.photo_url)) + '">'; el.classList.add('has-img'); } }).catch(function () {});
+      });
       // loghi delle squadre (foto caricata sulla scheda team), se esistono
       host.querySelectorAll('.apc-logo[data-tid]').forEach(function (el) {
         var tid = el.getAttribute('data-tid'); if (!tid || typeof getEntityOverrides !== 'function') return;
@@ -301,7 +306,36 @@
     }
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); }
+
+  // ── Titoli e medaglie: stessa grafica delle schede (testi in "frase", non tutto maiuscolo) ──
+  function sentence(s) { s = String(s || '').toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function markTitles() {
+    document.querySelectorAll('#atleta-titles .ath-block-h span, #atleta-titles .ttl-chip, #team-titles .ath-block-h span').forEach(function (el) {
+      if (el.dataset.ap) return;
+      el.dataset.ap = '1';
+      if (el.classList.contains('ttl-chip')) {
+        for (var n = el.lastChild; n; n = n.previousSibling) { if (n.nodeType === 3 && n.nodeValue.trim()) { n.nodeValue = sentence(n.nodeValue.trim()); break; } }
+      } else el.textContent = sentence(el.textContent);
+    });
+  }
+  // ── Stagione: un filtro (menu a tendina) al posto della fila di pillole ──
+  function markYears() {
+    var row = document.getElementById('profile-year-row');
+    if (!row || row.dataset.ap) return;
+    row.dataset.ap = '1';
+    var pills = [].slice.call(row.querySelectorAll('.year-pill')); if (!pills.length) return;
+    var cur = pills.filter(function (b) { return /var\(--accent/.test(b.getAttribute('style') || '') && /#fff/.test(b.getAttribute('style') || ''); })[0] || pills[0];
+    var wrap = document.createElement('div'); wrap.className = 'ap-yrsel';
+    wrap.innerHTML = '<label>Stagione</label><select aria-label="Stagione">' + pills.map(function (b) { var y = b.getAttribute('data-year') || b.textContent.trim(); return '<option value="' + esc3(y) + '"' + (b === cur ? ' selected' : '') + '>' + esc3(b.textContent.trim()) + '</option>'; }).join('') + '</select>';
+    if (pills.length < 2) wrap.querySelector('select').disabled = true;
+    wrap.querySelector('select').addEventListener('change', function (e) {
+      var v = e.target.value, p = pills.filter(function (b) { return (b.getAttribute('data-year') || b.textContent.trim()) === v; })[0]; if (p) p.click();
+    });
+    row.parentNode.insertBefore(wrap, row);
+    row.style.display = 'none';
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();
