@@ -359,6 +359,23 @@
       placePicker(h);
       placeStrip('team', tid, document.querySelector('.team-header'));
     });
+    // Righe "STAGIONE" di atleta/team: nel ciclocross i bottoni-anno sono quelli della strada. La stagione ciclocross è evidenziata a parte
+    // e un anno della strada (anche lo stesso anno solare) riporta alla strada, invece di restare sul ciclocross.
+    sw('profileYearRow', (o) => function () {
+      const h = o.apply(this, arguments);
+      if (!isCxGd() || typeof h !== 'string') return h;
+      const season = (cxData && String(cxData.key).replace('-', '/')) || '';
+      const off = h.replace(/background:var\(--accent,#e8001d\);color:#fff/g, 'background:var(--bg-elevated);color:var(--text-secondary)');
+      const pill = `<button type="button" class="year-pill" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:default;font-size:.82rem;font-weight:700;background:var(--accent,#e8001d);color:#fff">${season} ciclocross</button>`;
+      return off.replace(/(<span[^>]*>STAGIONE<\/span>)/, '$1' + pill);
+    });
+    for (const fn of ['setAtletaYear', 'setTeamYear']) {
+      const o = window[fn];
+      if (typeof o === 'function' && !o.__cx) {
+        const w = async function () { const a = arguments, self = this; if (mode === 'ciclocross') await setMode('strada'); return o.apply(self, a); };
+        w.__cx = true; window[fn] = w;
+      }
+    }
     // Link diretto #/ciclocross → entra nella specialità e apre la classifica
     window.cxRenderClassifica = () => { if (!isAdmin()) return undefined; setMode('ciclocross', { go: '/classifica' }); return Promise.resolve(); };
 
