@@ -774,29 +774,38 @@ async function getActivityContext(sb, season) {
   const minYear = season - APPEARED_YEARS + 1;
   const appeared = new Map(); // atleta_id -> ultimo anno visto (>= minYear)
   const bump = (id, y) => { if (id && !isNaN(y) && y >= minYear && (!appeared.has(id) || y > appeared.get(id))) appeared.set(id, y); };
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione')
-      .not('atleta_id', 'is', null).gte('stagione', String(minYear)).order('id').range(from, from + PAGE - 1);
-    if (error) throw error;
-    if (!data || !data.length) break;
-    for (const r of data) bump(r.atleta_id, parseInt(r.stagione, 10));
-    if (data.length < PAGE) break;
-  }
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('pcs_results').select('atleta_id, season')
-      .gte('season', minYear).order('id').range(from, from + PAGE - 1);
-    if (error) throw error;
-    if (!data || !data.length) break;
-    for (const r of data) bump(r.atleta_id, parseInt(r.season, 10));
-    if (data.length < PAGE) break;
-  }
+  // Paginazione per chiave (id > ultimo visto): con offset profondi su tabelle
+  // da ~1M righe (pcs_results) ogni pagina rilegge tutto ciò che la precede e
+  // va in timeout. Qui ogni pagina costa uguale. Con retry e errore leggibile.
+  const keyset = async (label, build, onRows) => {
+    let last = 0;
+    for (;;) {
+      let rows = null;
+      for (let i = 0; rows === null; i++) {
+        const { data, error } = await build().gt('id', last).order('id').limit(PAGE);
+        if (!error) { rows = data || []; break; }
+        if (i >= 3) throw new Error(`Supabase (${label}, id>${last}): ${error.message || JSON.stringify(error)}`);
+        await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+      }
+      if (!rows.length) break;
+      onRows(rows);
+      last = rows[rows.length - 1].id;
+      if (rows.length < PAGE) break;
+    }
+  };
+  await keyset('ciclismo_results',
+    () => sb.from('ciclismo_results').select('id, atleta_id, stagione').not('atleta_id', 'is', null).gte('stagione', String(minYear)),
+    rows => { for (const r of rows) bump(r.atleta_id, parseInt(r.stagione, 10)); });
+  await keyset('pcs_results',
+    () => sb.from('pcs_results').select('id, atleta_id, season').gte('season', minYear),
+    rows => { for (const r of rows) bump(r.atleta_id, parseInt(r.season, 10)); });
   // Ultimo team (stagione più recente, fino a season+1 per i contratti già noti)
   // e ultimo aggiornamento della cronologia (serve al ricontrollo periodico).
   const team = new Map(); // atleta_id -> { season, tier, updated }
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await sb.from('pcs_team_history').select('atleta_id, season, tier, updated_at')
       .order('atleta_id').order('season').range(from, from + PAGE - 1);
-    if (error) throw error;
+    if (error) throw new Error(`Supabase (pcs_team_history, offset ${from}): ${error.message || JSON.stringify(error)}`);
     if (!data || !data.length) break;
     for (const r of data) {
       const t = team.get(r.atleta_id) || { season: -1, tier: null, updated: 0 };
@@ -813,14 +822,17 @@ async function getActivityContext(sb, season) {
 // è sempre 'active'.
 function classifyActivity(atletaId, ctx, coreIds) {
   if (coreIds.has(atletaId)) return 'active';
-  if (!ctx.appeared.has(atletaId)) return 'skip';
   // Ricomparso di recente nei nostri risultati (stagione corrente o precedente):
   // sempre attivo, anche se l'ultimo team salvato su PCS è vecchio — copre chi
   // torna a correre dopo anni di stop.
   if (ctx.appeared.get(atletaId) >= ctx.season - 1) return 'active';
   const t = ctx.team.get(atletaId);
+  // Team della stagione corrente o precedente su PCS: attivo, anche se non
+  // compare nei nostri risultati (corre all'estero / con un team che noi non
+  // seguiamo: Pritchard, Merino, Solomon).
+  if (t && t.season >= ctx.season - 1) return 'active';
+  if (!ctx.appeared.has(atletaId)) return 'skip';
   if (!t || t.season < 0) return 'active';
-  if (t.season >= ctx.season - 1) return 'active';
   if (PRO_TIERS.has(t.tier) && t.season >= ctx.season - PRO_RECHECK_YEARS) {
     const days = (Date.now() - t.updated) / 86400000;
     return days >= RECHECK_AFTER_DAYS ? 'active' : 'recheck';
