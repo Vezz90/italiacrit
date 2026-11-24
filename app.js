@@ -18530,7 +18530,7 @@ function athleteH2H(atleta_id, resultsRaw, rCode) {
   }
   return Object.values(rivals).filter(v => v.n >= 2)
     .sort((a, b) => b.n - a.n || Math.abs(a.ahead - a.behind) - Math.abs(b.ahead - b.behind))
-    .slice(0, 3);
+    .slice(0, 6);
 }
 // Andamento della POSIZIONE IN CLASSIFICA dopo ogni gara (rank_dopo_gara,
 // calcolato in loadAll sulla categoria), con asse temporale reale e tooltip.
@@ -19071,7 +19071,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${_athSafe(() => athleteLastBestHtml(risultatiStrada))}
     ${_rankChartHtml}
     <div id="atleta-cumul-chart-wrap"${_rankChartHtml ? ' style="display:none"' : ''}>${cumulHtml}</div>
-    ${_athSafe(() => athleteRivalsHtml(athleteH2H(atleta_id, _siRaw, rCode)))}
+    ${_athSafe(() => { const _h2h = athleteH2H(atleta_id, _siRaw, rCode); window._athH2H = { id: atleta_id, list: _h2h }; return athleteRivalsHtml(_h2h.slice(0, 3)); })}
     <div id="atleta-articoli"></div>${(() => { setTimeout(() => { if (typeof window._caricaArticoliAtleta === 'function') window._caricaArticoliAtleta(atleta_id); }, 0); return ''; })()}
     <div id="atleta-media-anchor"></div>
     ${(() => {
@@ -20306,7 +20306,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const merged = [];
   for (const r of (nativeRisultati || [])) {
     if (!r.data || !r.posizione) continue;
-    merged.push({ data: r.data, anno: r.data.slice(0, 4), posizione: r.posizione, nome_gara: r.nome_gara, url: `#/gara/${r.gara_id}`, external: false, team: currentTeam, source: 'ics' });
+    merged.push({ data: r.data, anno: r.data.slice(0, 4), posizione: r.posizione, nome_gara: r.nome_gara, url: `#/gara/${r.gara_id}`, external: false, team: currentTeam, source: 'ics', mult: r.moltiplicatore || 1, tipo: r.tipo || '' });
   }
   for (const r of ciclismoRows) {
     if (!r.data || !r.posizione) continue;
@@ -20339,6 +20339,13 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (!prev || sourceRank[r.source] < sourceRank[prev.source]) seen.set(key, r);
   }
   const dedupedMerged = [...seen.values()];
+  try {   // dati per le schede della Panoramica (ultimi risultati, stagione, ...): stesse fonti del widget, senza doppioni
+    const _cxr = globalData?.meta?.disciplina === 'ciclocross';
+    (window._athRows = window._athRows || {})[atletaId + '|' + (_cxr ? 'cx' : 'road')] = dedupedMerged
+      .filter(r => !_cxr || r.source === 'ics')
+      .map(r => ({ d: r.data || '', y: String(r.anno || String(r.data || '').slice(0, 4)), p: r.posizione, n: r.nome_gara || '', h: r.url || '', s: r.source, m: r.mult || 0, ext: !!r.external }))
+      .sort((a, b) => b.d.localeCompare(a.d));
+  } catch (_) {}
 
   // Totali di carriera (1°, 2°, 3°, 4°-10°, gare) per la testata della scheda: tutte le fonti unite e senza doppioni.
   // Strada: tutto; ciclocross: solo i risultati nativi del dataset ciclocross.
@@ -20607,6 +20614,13 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     window._athCatPath[atletaId] = Object.assign({}, window._athCatPath[atletaId] || {}, _catPathW);
   } catch (_) {}
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
+  try {
+    (window._athTeams = window._athTeams || {})[atletaId + '|' + (globalData?.meta?.disciplina === 'ciclocross' ? 'cx' : 'road')] = teamYears.map(y => {
+      const e = teamsByYear.get(y);
+      return { y: String(y), team: e.team || '', cat: e.categoria || '', tid: (y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(e.team, currentTeamId)) : (e.pcs ? null : _resolveHistoricalTeamId(e.team, currentTeamId))) || '' };
+    });
+    document.dispatchEvent(new CustomEvent('ics-career', { detail: { id: atletaId } }));
+  } catch (_) {}
   const teamsHtml = teamYears.map(y => {
     const { team, categoria, pcs } = teamsByYear.get(y);
     const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team, currentTeamId)) : (pcs ? null : _resolveHistoricalTeamId(team, currentTeamId));
