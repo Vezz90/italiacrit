@@ -17253,8 +17253,11 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         if (_yfilter && _yearOf(p) && _yearOf(p) !== _yfilter) continue;
         if (p.id && seenTag.has(p.id)) continue;
         if (p.id) seenTag.add(p.id);
-        const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid)
-                || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id);
+        // rrOwn = il risultato di QUESTO atleta in quella gara (se non ha corso/non e' in classifica non c'e').
+        // rr serve solo per nome/data/categoria della gara: la posizione e il nome NON vanno mai presi dal primo risultato
+        // della gara (era il vincitore: un atleta solo taggato in una foto risultava "1°" in una gara che non ha vinto).
+        const rrOwn = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid);
+        const rr = rrOwn || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id);
         if (!_catOk(rr, p.gara_id, aid)) { if (p.id) seenTag.delete(p.id); continue; }
         winPhotos.push({
           tagged: true,
@@ -17263,10 +17266,10 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
             gara_id: p.gara_id,
             nome_gara: (rr && rr.nome_gara) || p.caption || 'Foto gara',
             data: (rr && rr.data) || '',
-            posizione: rr ? rr.posizione : null,
+            posizione: rrOwn ? rrOwn.posizione : null,
             atleta_id: aid,
-            atleta_cognome: rr ? rr.cognome : '',
-            atleta_nome:    rr ? rr.nome    : '',
+            atleta_cognome: rrOwn ? rrOwn.cognome : '',
+            atleta_nome:    rrOwn ? rrOwn.nome    : '',
           },
         });
       }
@@ -17286,8 +17289,8 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         if (!vids2.some(id => tagSet.has(id))) continue;
         if (v.url && seenVidUrl.has(v.url)) continue;
         const aid = vids2.find(id => tagSet.has(id));
-        const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey && x.atleta_id === aid)
-                || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey);
+        const rrOwn = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey && x.atleta_id === aid);
+        const rr = rrOwn || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === gkey);   // rr solo per nome/data/categoria gara
         if (!_catOk(rr, gkey, aid)) continue;
         if (v.url) seenVidUrl.add(v.url);
         top10Vids.push({
@@ -17296,10 +17299,10 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
             gara_id: gkey,
             nome_gara: (rr && rr.nome_gara) || v.title || 'Video',
             data: (rr && rr.data) || v.published_at || '',
-            posizione: rr ? rr.posizione : null,
+            posizione: rrOwn ? rrOwn.posizione : null,
             atleta_id: aid,
-            atleta_cognome: rr ? rr.cognome : '',
-            atleta_nome:    rr ? rr.nome    : '',
+            atleta_cognome: rrOwn ? rrOwn.cognome : '',
+            atleta_nome:    rrOwn ? rrOwn.nome    : '',
           },
         });
       }
