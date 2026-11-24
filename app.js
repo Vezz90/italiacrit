@@ -5084,6 +5084,11 @@ function route() {
   // 'strada' di default, il ramo 'pista' in renderClassifica/updateRankTable
   // è codice morto finché non riprendiamo il progetto (nessuna rotta punta
   // più a #/classifica-pista, nessun link nel menu).
+  if (match('/ciclocross')) { // solo admin: vedi ciclocross.js (caricato dopo app.js: da link diretto si aspetta)
+    if (window.cxRenderClassifica) return window.cxRenderClassifica() === undefined ? renderNotFound() : undefined;
+    window.addEventListener('icsReady', () => { if (!window.cxRenderClassifica || window.cxRenderClassifica() === undefined) renderNotFound(); }, { once: true });
+    return;
+  }
   if (match('/albo')) return renderAlboDoro();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
