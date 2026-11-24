@@ -155,7 +155,7 @@
     }));
     cxRank = { ath: fin(rk.ath, false), team: fin(rk.team, true) };
     cxAth = new Set(Object.keys(athletes)); cxTeams = new Set(Object.keys(teams));
-    const meta = { ...((liveGd && liveGd.meta) || {}), disciplina: 'ciclocross' };
+    const meta = { ...((liveGd && liveGd.meta) || {}), disciplina: 'ciclocross', stagione: String(cxData.key).replace('-', '/') };
     return cxGd = processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails: (liveGd && liveGd.raceDetails) || {}, videos: (liveGd && liveGd.videos) || {}, extraRoster: {} });
   }
 
@@ -342,8 +342,6 @@
       window.ProRaces.events = function () { return isCxGd() ? Promise.resolve([]) : oe.apply(this, arguments); };
       window.ProRaces.events.__cx = true;
     }
-    // Pagina Statistiche/almanacco: è lo storico 2007-2025 della strada. Nel ciclocross si usa la pagina dei numeri della stagione (dai dati ciclocross)
-    sw('renderAlmanacco', (o) => function () { return (isCxGd() && typeof window.renderHomeDashboard === 'function') ? window.renderHomeDashboard() : o.apply(this, arguments); });
     sw('_alboIndex', (o) => function () { return isCxGd() ? Promise.resolve(null) : o.apply(this, arguments); });
     document.addEventListener('click', onLinkClick, true);
     window.CX = { otherGd: () => (mode === 'strada' ? cxGd : live) };

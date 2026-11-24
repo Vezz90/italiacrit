@@ -290,9 +290,42 @@
     return `<section class="am-sec">${head}<div class="am-scards">${cards}</div><p class="am-note">Scegli una categoria per vederne i numeri, i record e le classifiche della stagione.</p></section>`;
   }
 
+  // ---- Ciclocross: stessa pagina e stessa grafica, ma solo i numeri della stagione ciclocross (nessuno storico) ----
+  const isCx = () => !!(globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
+  function renderCx() {
+    const season = (globalData.meta && globalData.meta.stagione) || '';
+    const cols = st.sex === 'M' ? MEN : WOMEN_NOW;
+    if (st.cat != null && !cols.includes(st.cat)) st.cat = null;
+    const paint = () => {
+      const colsNow = st.sex === 'M' ? MEN : WOMEN_NOW;
+      const rows = (globalData.resultsRaw || []).filter(r => { const ci = CODE_CI[getRankingFileCode(r)]; return ci != null && (st.cat != null ? ci === st.cat : colsNow.includes(ci)); });
+      const races = new Set(rows.map(r => String(r.gara_id).replace(/_(?:ELI|JUN|AL|ES1|ES2)_[MF]$/, ''))).size;
+      const tiles = [
+        [1, 'stagione', season],
+        [fmt(races), 'gare con risultati', selLabel()],
+        [fmt(new Set(rows.map(r => r.atleta_id)).size), 'atleti con risultati', selLabel()],
+        [fmt(new Set(rows.map(r => r.team_id)).size), 'squadre con risultati', selLabel()],
+      ];
+      const kp = `<div class="am-kpis">${tiles.map(t => `<div class="am-kpi"><b>${t[0]}</b><span>${t[1]}</span><small>${t[2]}</small></div>`).join('')}</div>`;
+      setPageMeta('Statistiche del ciclocross italiano', 'Numeri, record e classifiche della stagione di ciclocross del ciclismo agonistico italiano.');
+      setPage(`<div class="hx-wrap am-wrap">
+        <div class="rs-head"><h1>Statistiche · Ciclocross</h1><span class="rs-cnt">stagione ${esc(season)}</span>
+          <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div></div></div>
+        <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${colsNow.map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
+        ${kp}
+        ${seasonView(null, season)}
+        <p class="am-note">Fonte: risultati FCI. La stagione di ciclocross va da settembre a gennaio: lo storico parte da questa stagione.</p>
+      </div>`);
+      document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
+      document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });
+    };
+    paint();
+  }
+
   async function render(opts) {
     if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
     setPage('<div class="hx-wrap"><div class="hd-skel-hero"></div></div>');
+    if (isCx()) return renderCx();
     let d;
     try { d = await loadData(); } catch (_) { d = null; }
     if (!d) return typeof window.renderHomeDashboard === 'function' ? window.renderHomeDashboard() : setPage('<div class="hx-wrap"><div class="hx-none">Dati non disponibili.</div></div>');
