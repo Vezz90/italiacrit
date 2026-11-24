@@ -360,7 +360,20 @@
       };
       w.__cx = true; window.profileYearRow = w;
     }
-    window.CX = { season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada') };
+    const hasInT = (id, forMode) => {
+      if (forMode === 'ciclocross') { if (mode === 'ciclocross') return !!(globalData.teams && globalData.teams[id] && (globalData.teams[id].risultati || []).length); return cxTeams ? cxTeams.has(id) : null; }
+      if (mode === 'strada') return !!(globalData && globalData.teams && globalData.teams[id]);
+      return !!(live && live.teams && live.teams[id]);
+    };
+    window.CX = { season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
+    const oRT = window.renderTeam;
+    if (typeof oRT === 'function' && !oRT.__cxpre) {
+      const preT = async function (id) {
+        if (mode === 'ciclocross' && cxTeams && !cxTeams.has(id) && live && live.teams && live.teams[id]) { await setMode('strada'); return; }
+        return oRT.apply(this, arguments);
+      };
+      preT.__cxpre = true; window.renderTeam = preT;
+    }
     // Scheda atleta aperta in ciclocross per chi non ha mai fatto ciclocross: si torna alla strada (non esistono gare da mostrare)
     const oRA = window.renderAtleta;
     if (typeof oRA === 'function' && !oRA.__cxpre) {
