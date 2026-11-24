@@ -175,3 +175,6 @@ body:has(#nav-drawer.open) { overflow: hidden; }
   #navbar .hv2-top, #navbar .hv2-menu > .nav-link { padding: 0 9px; font-size: .86rem; }
   #navbar .hv2-meta, #navbar .hv2-acct-btn svg { display: none; }
 }
+
+/* Campanella delle notifiche: tolta dalla testata (desktop e mobile) */
+#navbar #notif-bell { display: none !important; }
