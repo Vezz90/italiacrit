@@ -70,9 +70,25 @@
     const resultsRaw = [];
     const athletes = {}, teams = {};
     let seq = 0;
+    // Gare congiunte: la FCI dà la posizione della classifica GENERALE (es. un Esordiente 1° anno può essere 11° assoluto perché davanti
+    // ci sono altre categorie). Ogni atleta prende la posizione (e quindi i punti) che gli spetta nella SUA categoria.
+    // Se i gruppi della stessa categoria sono fette della stessa generale (posizioni mai ripetute) si riordinano insieme;
+    // se ognuno parte da 1 (classifiche separate) si riordina ciascuno per conto suo.
+    const byKey = {};
+    for (const r of res) { const q = parseInt(r.pos, 10); if (q >= 1) ((byKey[r.gara + '|' + r.cat] ||= {})[r.gruppo] ||= []).push(r); }
+    for (const grp of Object.values(byKey)) {
+      const gs = Object.values(grp);
+      const all = gs.flat();
+      const disjoint = gs.length > 1 && new Set(all.map(x => parseInt(x.pos, 10))).size === all.length;
+      for (const unit of (disjoint ? [all] : gs)) {
+        const ps = [...new Set(unit.map(x => parseInt(x.pos, 10)))].sort((a, b) => a - b);
+        const rank = {}; ps.forEach((v, i) => { rank[v] = i + 1; });
+        for (const x of unit) x._pc = rank[parseInt(x.pos, 10)];
+      }
+    }
     for (const r of res) {
       const g = gare[r.gara]; if (!g) continue;
-      const pos = parseInt(r.pos, 10); if (!(pos >= 1)) continue;
+      const pos = r._pc || parseInt(r.pos, 10); if (!(pos >= 1)) continue;
       const tipo = String(g.geo || 'Regionale').toLowerCase();
       const mult = MULT[tipo] || 1;
       const calId = `${slug(g.nome)}_${g.data}`;
