@@ -19444,6 +19444,23 @@ async function _injectTeamClubHistory(team_id) {
     rows.push({ y, nome, tmCats, list, bestByCat, cats: [...cats].sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99)), n: new Set(list.map(a => a.id || a.nome)).size, pts: tmVals.length ? tmVals.reduce((s, v) => s + v.punti, 0) : list.reduce((s, a) => s + a.punti, 0), best });
   }));
   rows.sort((a, b) => b.y - a.y);
+  // La storia segue la categoria che si sta guardando (non tutte insieme)
+  const _ARCH_CAT = { ES1_M: ['ESORDIENTI1'], ES2_M: ['ESORDIENTI2'], AL_M: ['ALLIEVI'], JUN_M: ['JUNIORES'], ELI_M: ['ELITE_UNDER23'], ES1_F: ['DONNE_ESORDIENTI'], ES2_F: ['DONNE_ESORDIENTI'], AL_F: ['DONNE_ALLIEVE'], JUN_F: ['DONNE_JUNIORES'], ELI_F: ['DONNE_ELITE', 'DONNE_ELITE_UNDER23', 'DONNE_UNDER23'] };
+  const _wantCat = (teamViewCat && _ARCH_CAT[teamViewCat]) ? new Set(_ARCH_CAT[teamViewCat]) : null;
+  if (_wantCat) {
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const r = rows[i];
+      const list2 = r.list.filter(a => _wantCat.has(a.cat));
+      const tm2 = {}; for (const [c, v] of Object.entries(r.tmCats)) if (_wantCat.has(c)) tm2[c] = v;
+      if (!list2.length && !Object.keys(tm2).length) { rows.splice(i, 1); continue; }
+      const bestBy = {}; for (const a of list2) { const cur = bestBy[a.cat]; if (!cur || a.punti > cur.punti || (a.punti === cur.punti && a.pos < cur.pos)) bestBy[a.cat] = a; }
+      const tmV = Object.values(tm2);
+      r.list = list2; r.tmCats = tm2; r.bestByCat = bestBy; r.cats = r.cats.filter(c => _wantCat.has(c));
+      r.n = new Set(list2.map(a => a.id || a.nome)).size;
+      r.pts = tmV.length ? tmV.reduce((s, v) => s + v.punti, 0) : list2.reduce((s, a) => s + a.punti, 0);
+      r.best = list2.length ? list2.slice().sort((a, b) => (b.punti - a.punti) || (a.pos - b.pos))[0] : null;
+    }
+  }
   const host = document.getElementById('team-club-history');
   if (!host) return;
   if (!rows.length) { host.innerHTML = '<div class="hx-none" style="padding:10px 0">Nessuna stagione nell’archivio storico per questo club.</div>'; return; }
@@ -19451,7 +19468,7 @@ async function _injectTeamClubHistory(team_id) {
   const totPts = rows.reduce((s, r) => s + r.pts, 0);
   const catLine = r => r.cats.map(c => { const v = r.tmCats[c]; return `${esc(_ciclismoCatLabel(c))}${v ? ` ${v.pos}° (${v.punti} pt)` : ''}`; }).join(' · ');
   host.innerHTML = `<section class="ath-block club-hist">
-    <div class="ath-block-h"><span>STORIA DEL CLUB</span><i></i></div>
+    <div class="ath-block-h"><span>STORIA DEL CLUB${_wantCat ? ' · ' + esc(catLabel(teamViewCat)) : ''}</span><i></i></div>
     <p class="ath-moment-note" style="margin:0 0 10px">${rows.length} stagion${rows.length === 1 ? 'e' : 'i'} nell’archivio storico${hasChain ? ', seguendo i cambi di nome del club' : ''} · ${totPts} punti complessivi nelle classifiche a squadre. Clicca un anno per vedere gli atleti.</p>
     <div class="club-hist-list">${rows.map(r => {
       const byCat = {};
