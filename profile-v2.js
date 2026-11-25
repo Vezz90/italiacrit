@@ -477,7 +477,72 @@
     if (bar && panel && bar.parentNode !== panel) panel.insertBefore(bar, panel.firstChild);
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); markTeamHistory(); fillTeamCards(); }
+
+  // ════════════════════════════════════════════════════════════════
+  // SCHEDA TEAM: categoria in alto + scheda "Atleti" a griglia (foto, nome, categoria)
+  // ════════════════════════════════════════════════════════════════
+  function markTeamCats() {
+    var hero = document.querySelector('.team-header.tm-hero'); if (!hero) return;
+    var tg = [].slice.call(document.querySelectorAll('#team-native-content .tab-group')).filter(function (g) { return g.querySelector('button[onclick*="setTeamDetailCat"]'); })[0];
+    var host = document.getElementById('ap-teamcats');
+    if (!tg) return;
+    if (!host) { host = document.createElement('div'); host.id = 'ap-teamcats'; host.className = 'ap-segbar'; hero.insertAdjacentElement('afterend', host); }
+    host.appendChild(tg); tg.style.margin = '0';
+  }
+  var ridersSort = 'pts';
+  function activeCatCode() {
+    var b = document.querySelector('#ap-teamcats .active-cat, #ap-teamcats button.active-cat');
+    var m = b && (b.getAttribute('onclick') || '').match(/setTeamDetailCat\('([^']+)'\)/); return m ? m[1] : '';
+  }
+  function ridersHtml(id) {
+    var t = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null; if (!t) return '';
+    var code = activeCatCode(), cx = isCx();
+    var list = (t.atleti || []).map(function (aid) { return globalData.athletes[aid]; }).filter(Boolean).filter(function (a) {
+      if (!code) return true; var c = (typeof getRankingFileCode === 'function' ? getRankingFileCode(a.categoria) : a.categoria) || a.categoria; return c === code || a.categoria === code;
+    });
+    var n = list.length;
+    list.sort(function (a, b) { return ridersSort === 'name' ? String(a.cognome + a.nome).localeCompare(String(b.cognome + b.nome)) : (b.punti_totali || 0) - (a.punti_totali || 0); });
+    var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
+    var cards = list.map(function (a) {
+      var aid = a.id || a.atleta_id, res = (a.risultati || []), w = res.filter(function (r) { return r.posizione === 1; }).length;
+      return '<a class="apc-rider" href="#/atleta/' + encodeURIComponent(aid) + '"><span class="apc-rph" data-aid="' + esc3(aid) + '">' + sil + '</span><b>' + esc3((a.cognome || '') + ' ' + (a.nome || '')) + '</b><small>' + esc3(typeof catLabel === 'function' ? catLabel(a.categoria) : a.categoria) + '</small><em>' + (a.punti_totali || 0) + ' pt' + (w ? ' · ' + w + (w === 1 ? ' vittoria' : ' vittorie') : '') + '</em></a>';
+    }).join('');
+    return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti (' + n + ')</h3><div class="ap-seg ap-seg-blue" data-k="rsort"><button type="button" data-v="pts" aria-pressed="' + (ridersSort === 'pts') + '">Per punti</button><button type="button" data-v="name" aria-pressed="' + (ridersSort === 'name') + '">Per nome</button></div></div>' +
+      (n ? '<div class="apc-riders">' + cards + '</div>' : '<p class="apc-sub">Nessun atleta in questa categoria.</p>') + '</section>';
+  }
+  function fillRiders() {
+    var panel = document.getElementById('tm-panel-a'); if (!panel) return;
+    var html = ridersHtml(teamId());
+    if (panel.dataset.sig === html) return;
+    panel.dataset.sig = html; panel.innerHTML = html;
+    panel.querySelectorAll('.apc-rph[data-aid]').forEach(function (el) {
+      var aid = el.getAttribute('data-aid'); if (!aid || typeof getEntityOverrides !== 'function') return;
+      getEntityOverrides('atleta', aid).then(function (ov) { if (ov && ov.photo_url && el.isConnected && typeof mediaUrl === 'function') { el.innerHTML = '<img alt="" src="' + esc3(mediaUrl(ov.photo_url)) + '">'; el.classList.add('has-img'); } }).catch(function () {});
+    });
+    var sg = panel.querySelector('.ap-seg[data-k="rsort"]');
+    if (sg) sg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; ridersSort = b.getAttribute('data-v'); fillRiders(); });
+  }
+  function markTeamTabs() {
+    var tabs = document.querySelector('.ath-tabs[aria-label*="team"]'), sP = document.getElementById('tm-panel-s'); if (!tabs || !sP || document.getElementById('tm-tab-a')) return;
+    var btn = document.createElement('button'); btn.className = 'ath-tab'; btn.setAttribute('role', 'tab'); btn.id = 'tm-tab-a'; btn.setAttribute('aria-selected', 'false'); btn.textContent = 'Atleti';
+    btn.addEventListener('click', function () { window._tmTab('a'); });
+    var cTab = document.getElementById('tm-tab-c'); tabs.insertBefore(btn, cTab);
+    var pa = document.createElement('div'); pa.id = 'tm-panel-a'; pa.setAttribute('role', 'tabpanel'); pa.hidden = true; sP.insertAdjacentElement('afterend', pa);
+    var orig = window._tmTab;
+    if (typeof orig === 'function' && !orig.__ap) {
+      var w = function (k) {
+        var s = document.getElementById('tm-panel-s'), c = document.getElementById('tm-panel-c'), a = document.getElementById('tm-panel-a');
+        var ts = document.getElementById('tm-tab-s'), tc = document.getElementById('tm-tab-c'), ta = document.getElementById('tm-tab-a');
+        if (k === 'a') { if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = false; if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', 'true'); fillRiders(); return; }
+        if (a) a.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false');
+        return orig.apply(this, arguments);
+      };
+      w.__ap = true; window._tmTab = w;
+    }
+    fillRiders();
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();
