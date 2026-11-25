@@ -178,3 +178,6 @@ body:has(#nav-drawer.open) { overflow: hidden; }
 
 /* Campanella delle notifiche: tolta dalla testata (desktop e mobile) */
 #navbar #notif-bell { display: none !important; }
+
+/* Assistente AI (VEZZ) spento per ora — per riattivarlo togliere queste righe e mettere AI_WIDGET_ENABLED = true in app.js */
+#ai-widget-btn, #ai-chat-panel { display: none !important; }

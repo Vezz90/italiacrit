@@ -22456,7 +22456,10 @@ function linkifyAthletes(text) {
   return html;
 }
 
+// Assistente AI (VEZZ): spento per ora. Per riattivarlo basta mettere true qui sotto (e togliere la regola CSS in header-v2.css).
+const AI_WIDGET_ENABLED = false;
 function _initAiWidget() {
+  if (!AI_WIDGET_ENABLED) return;
   if (document.getElementById('ai-widget-btn')) return;
   const btn = document.createElement('button');
   btn.id = 'ai-widget-btn';
