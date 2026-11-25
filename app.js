@@ -23234,6 +23234,7 @@ async function renderTeam(team_id, opts = {}) {
         globalData.videos,
         {
           showAthleteName: true,
+          grouped: true,   // stessa organizzazione dei media dell'atleta (per gara, a fasce: vittorie, podi, altre gare)
           year: selYear,
           catCode: teamViewCat,
           atletaIds: [...new Set(seasonRaw
