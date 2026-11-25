@@ -7,7 +7,7 @@
   function apiBase() { return (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : 'https://italiacrit.onrender.com/api'; }
   // ── Elenco a riquadri per squadra (stile start list) ──
   var NAT = { ITA: 'it', SUI: 'ch', SLO: 'si', NED: 'nl', GER: 'de', FRA: 'fr', ESP: 'es', GBR: 'gb', BEL: 'be', AUT: 'at', POL: 'pl', UKR: 'ua', CZE: 'cz', SVK: 'sk', CRO: 'hr', HUN: 'hu', ROU: 'ro', POR: 'pt', IRL: 'ie', NOR: 'no', LUX: 'lu', LTU: 'lt', LAT: 'lv', BLR: 'by', RUS: 'ru', GRE: 'gr', ALB: 'al', BIH: 'ba', SMR: 'sm', USA: 'us', CAN: 'ca', MEX: 'mx', COL: 'co', VEN: 've', BRA: 'br', AUS: 'au', NZL: 'nz', JPN: 'jp', KAZ: 'kz', RSA: 'za', ETH: 'et', CPV: 'cv' };
-  var LOGO_SG = '<img class="sl-logo" src="/assets/logo-segreteriagare.png" alt="SegreteriaGare.it" width="95" height="30">';
+  var LOGO_SG = '<img class="sl-logo" src="/assets/logo-segreteriagare.png" alt="SegreteriaGare.it" width="139" height="44">';
   var COLORI = ['#e8001d', '#1565c0', '#2e7d32', '#f59e0b', '#6a1b9a', '#00838f', '#ad1457', '#37474f', '#ef6c00', '#283593'];
   function flag(nat) { var c = NAT[nat || 'ITA']; return c ? '<img src="https://flagcdn.com/16x12/' + c + '.png" width="16" height="12" alt="' + esc(nat || 'ITA') + '" loading="lazy">' : '<i></i>'; }
   // I nomi squadra letti dai PDF hanno spesso code: regione tra parentesi, sigla di categoria o nazione, trattini
@@ -104,7 +104,7 @@
   function stile() {
     if (document.getElementById('sl-style')) return;
     var st = document.createElement('style'); st.id = 'sl-style';
-    st.textContent = '.sl-nota{font-size:.75rem;color:var(--text-muted);margin:10px 0 0}.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem;display:inline-flex;align-items:center;gap:6px;margin-top:-6px}.sl-logo{height:30px;width:auto;vertical-align:middle;background:#fff;border-radius:6px;padding:2px 4px}' +
+    st.textContent = '.sl-nota{font-size:.75rem;color:var(--text-muted);margin:10px 0 0}.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem;display:inline-flex;align-items:center;gap:6px;margin-top:-14px}.sl-logo{height:44px;width:auto;vertical-align:middle;background:#fff;border-radius:6px;padding:2px 4px}' +
       '.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}' +
       '.sl-team{background:var(--bg-card,#fff);border:1px solid var(--border-subtle,#dde2ea);border-top:3px solid var(--sl-c);border-radius:6px;overflow:hidden;min-width:0}' +
       '.sl-noteam{grid-column:1/-1}.sl-noteam ul{columns:3 220px;column-gap:24px}' +
