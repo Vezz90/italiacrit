@@ -5138,6 +5138,9 @@ function route() {
   if (m_calCat) {
     calQGenere = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
     calQCat = decodeURIComponent(m_calCat[1]);
+    // dal menu: codici categoria (AL_M, ELI_F...) → gruppo del filtro calendario + genere
+    const _cc = /^(ES1|ES2|AL|JUN|ELI)_([MF])$/.exec(calQCat);
+    if (_cc) { calQCat = { ES1: 'esordient', ES2: 'esordient', AL: 'alliev', JUN: 'junior', ELI: 'elite' }[_cc[1]]; calQGenere = _cc[2]; }
     if (activeHub) applyHubFilters(activeHub);
     return renderCalendario();
   }

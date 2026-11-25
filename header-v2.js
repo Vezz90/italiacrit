@@ -65,7 +65,7 @@
         sub.innerHTML = MEDIA_SEC.map(function (m) { return '<a href="#/media/' + m[1] + '" class="hv2-subl" data-k="' + m[1] + '">' + m[0] + '</a>'; }).join('');
       } else {
         sub.innerHTML = [['M', 'Uomini'], ['F', 'Donne']].map(function (g) {
-          return '<div class="hv2-subh">' + g[1] + '</div>' + CATS.map(function (c) {
+          return '<div class="hv2-subh">' + g[1] + '</div>' + catsFor(seg).map(function (c) {
             var code = c[0] + '_' + g[0];
             return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="hv2-subl" data-k="' + code + '">' + c[1] + '</a>';
           }).join('');
@@ -157,9 +157,11 @@
   ];
   // elenco categorie per le tendine Classifiche / Atleti / Team: prima uomini, poi donne
   var CATS = [['ES1', 'Esordienti 1° anno'], ['ES2', 'Esordienti 2° anno'], ['AL', 'Allievi'], ['JUN', 'Juniores'], ['ELI', 'Elite · Under 23']];
+  // Calendario: il filtro ha un solo gruppo Esordienti (niente 1°/2° anno)
+  function catsFor(seg) { return seg === 'calendario' ? CATS.filter(function (c) { return c[0] !== 'ES2'; }).map(function (c) { return c[0] === 'ES1' ? ['ES1', 'Esordienti'] : c; }) : CATS; }
   function catList(seg) {
     function col(sx, title) {
-      return '<div class="hv2-col"><div class="hv2-ch">' + title + '</div>' + CATS.map(function (c) {
+      return '<div class="hv2-col"><div class="hv2-ch">' + title + '</div>' + catsFor(seg).map(function (c) {
         var code = c[0] + '_' + sx;
         return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="nav-link hv2-cat" data-cat="' + code + '">' + c[1] + '</a>';
       }).join('') + '</div>';
