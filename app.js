@@ -21975,15 +21975,29 @@ window._teamCiclismoRidersView = function(v) {
 async function _loadTeamCiclismoStorico(teamId, teamNome, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow || !teamNome) return;
+  // stato dello storico per la testata della scheda (profile-v2): la richiesta puo' durare diversi secondi
+  const _stato = (v) => { (window._ciclismoTeamStato = window._ciclismoTeamStato || {})[teamId] = v; document.dispatchEvent(new CustomEvent('ics-team-storico', { detail: { id: teamId } })); };
+  const _msg = (testo) => { const el = document.getElementById('team-ciclismo-content'); if (el && !nativeCount && yearRow.isConnected) el.innerHTML = testo ? `<div class="empty-state">${testo}</div>` : ''; };
+  delete (window._ciclismoTeamAnno = window._ciclismoTeamAnno || {})[teamId];
+  _stato('carico'); _msg('Carico lo storico della squadra…');
   let payload;
   try { payload = await apiCall(`/ciclismo-results/team?team=${encodeURIComponent(teamNome)}`); }
-  catch { return; }
-  const risultati = payload?.risultati || [];
-  if (!risultati.length) return;
+  catch { _stato('errore'); _msg('Storico non disponibile in questo momento: riprova tra poco.'); return; }
+  _msg('');
+  // il server cerca per una sola parola del nome (es. "PEDALE"): se ci sono righe con il nome del club (o di un nome
+  // collegato nella sua storia) si tengono solo quelle, per non mescolare i corridori di altre squadre
+  const _chiave = (s) => String(s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\./g, '').split(/[^A-Z0-9]+/).filter(w => w && w !== 'ASD' && w !== 'SSD').join('');
+  const _ids = await _histClubIds(teamId).catch(() => new Set([teamId]));
+  const _chiavi = new Set([teamNome, teamId, ..._ids].map(_chiave));
+  const tutte = payload?.risultati || [];
+  const proprie = tutte.filter(r => _chiavi.has(_chiave(r.team)));
+  const risultati = proprie.length ? proprie : tutte;
+  if (!risultati.length) { window._ciclismoTeamStoricoCache[teamId] = {}; _stato('pronto'); return; }
 
   const perAnno = {};
   for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
   window._ciclismoTeamStoricoCache[teamId] = perAnno;
+  _stato('pronto');
 
   try {
     const mediaPayload = await apiCall(`/ciclismo-media/team?team=${encodeURIComponent(teamNome)}`);
@@ -22050,6 +22064,8 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
   const seasonCompare = document.getElementById('season-compare-inject');
   if (seasonCompare) seasonCompare.style.display = 'none';
 
+  (window._ciclismoTeamAnno = window._ciclismoTeamAnno || {})[teamId] = String(anno);
+  document.dispatchEvent(new CustomEvent('ics-team-storico', { detail: { id: teamId } }));
   const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
 
   // Risultati gara-per-gara di quell'anno — STESSE colonne/classi della

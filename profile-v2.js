@@ -380,7 +380,9 @@
       var gap = aside.querySelector('.ath-gap-line');
       var showDisc = typeof window.cxSetMode === 'function' && window.CX && window.CX.hasCxTeam(id) === true && window.CX.hasRoadTeam(id) === true;
       var sc = scope(), code = activeCatCode(), catTxt = ((aside.querySelector('.ath-stand-lbl') || {}).textContent || '').replace(/^CLASSIFICA\s*/i, '');
-      var seasonTxt = (cx && window.CX && window.CX.season) ? window.CX.season() : ((typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : '');
+      var annoSto = cx ? '' : ((window._ciclismoTeamAnno || {})[id] || '');   // anno dell'archivio aperto
+      var seasonTxt = (cx && window.CX && window.CX.season) ? window.CX.season() : (annoSto || ((typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : ''));
+      if (annoSto) { pts = '—'; pos = '—'; gap = null; }
       var ctl = '<div class="ap-ctl">' + (showDisc ? seg('disc', [['strada', 'Strada'], ['ciclocross', 'Ciclocross']], cx ? 'ciclocross' : 'strada') : '') + seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione ' + seasonTxt]], sc) + '</div>';
       var cells, foot;
       if (sc === 'carriera') {
@@ -391,6 +393,19 @@
           var ny = Object.keys(yy).length;
           cells = '<div class="ap-k"><b>' + ny + '</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>' + tit + '</b><span>Titoli di classifica</span></div><div class="ap-k"><b>' + (bestP === 999 ? '—' : bestP + '°') + '</b><span>Miglior posizione</span></div><div class="ap-k"><b>' + pp + '</b><span>Punti in archivio</span></div><div class="ap-k"><b>' + at + '</b><span>Atleti oggi</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
           foot = '<span class="ap-klbl">Carriera · ' + esc3(catTxt) + ' · ' + Math.min.apply(null, Object.keys(yy)) + '–' + Math.max.apply(null, Object.keys(yy)) + '</span><span class="ap-note">Dai dati dell\'archivio (classifiche finali). Il ranking assoluto arriverà.</span>';
+        } else if (!cx && (window._ciclismoTeamStato || {})[id] === 'errore') {
+          cells = '<div class="ap-k"><b>—</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>—</b><span>Vittorie</span></div><div class="ap-k"><b>—</b><span>Podi</span></div><div class="ap-k"><b>—</b><span>Piazzamenti</span></div><div class="ap-k"><b>—</b><span>Atleti in archivio</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
+          foot = '<span class="ap-klbl">Storico non disponibile in questo momento: riprova tra poco</span>';
+        } else if (!cx && carrCache && carrCache !== 'loading' && (window._ciclismoTeamStato || {})[id] !== 'carico') {
+          // nessuna classifica finale in archivio: si contano i risultati disponibili, anno per anno
+          var arch = (window._ciclismoTeamStoricoCache || {})[id] || {}, per = {}, chi = {}, cur = String(typeof _loadedSeasonYear === 'function' ? _loadedSeasonYear() : '');
+          Object.keys(arch).forEach(function (y) { per[y] = arch[y].map(function (r) { chi[r.atleta_id || r.ciclismo_id] = 1; return r.posizione; }); });
+          var ora = teamRows(id); if (ora.length) per[cur] = ora.map(function (r) { if (r.a) chi[r.a] = 1; return r.p; });
+          var anni = Object.keys(per).sort(), tutti = [].concat.apply([], anni.map(function (y) { return per[y]; }));
+          var n1 = tutti.filter(function (p) { return p === 1; }).length, n3 = tutti.filter(function (p) { return p >= 1 && p <= 3; }).length;
+          cells = '<div class="ap-k"><b>' + anni.length + '</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>' + n1 + '</b><span>Vittorie</span></div><div class="ap-k"><b>' + n3 + '</b><span>Podi</span></div><div class="ap-k"><b>' + tutti.length + '</b><span>Piazzamenti</span></div><div class="ap-k"><b>' + Object.keys(chi).length + '</b><span>Atleti in archivio</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
+          foot = anni.length ? '<span class="ap-klbl">Carriera · ' + (anni.length === 1 ? anni[0] : anni[0] + '–' + anni[anni.length - 1]) + (per[cur] ? '' : ' · nessuna attività su strada nel ' + cur) + '</span><span class="ap-note">Dai risultati disponibili in archivio. Per i singoli anni usa il menu «Stagione».</span>'
+            : '<span class="ap-klbl">Nessun risultato su strada in archivio</span>';
         } else {
           cells = '<div class="ap-k"><b>' + (cx ? '1' : '…') + '</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>' + (cx ? w : '…') + '</b><span>Vittorie</span></div><div class="ap-k"><b>' + (cx ? (w + s + b) : '…') + '</b><span>Podi</span></div><div class="ap-k"><b>' + (cx ? pts : '…') + '</b><span>Punti</span></div><div class="ap-k"><b>' + at + '</b><span>Atleti oggi</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
           foot = '<span class="ap-klbl">Carriera · ' + esc3(catTxt) + (cx ? ' · ciclocross' : ' · in caricamento…') + '</span>';
@@ -408,7 +423,7 @@
       if (kk === 'scope') { setScope(bt.getAttribute('data-v')); refresh(); }
       else if (kk === 'disc' && typeof window.cxSetMode === 'function' && (bt.getAttribute('data-v') === 'ciclocross') !== isCx()) window.cxSetMode(bt.getAttribute('data-v'), { force: true });
     });
-    document.addEventListener('ics-cx-ready', refresh); document.addEventListener('ics-carr', refresh);
+    document.addEventListener('ics-cx-ready', refresh); document.addEventListener('ics-carr', refresh); document.addEventListener('ics-team-storico', refresh);
     refresh();
     new MutationObserver(function () { refresh(); }).observe(aside, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['data-base'] });
   }
