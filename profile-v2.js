@@ -611,9 +611,53 @@
     return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti (' + n + ')</h3><div class="ap-seg ap-seg-blue" data-k="rsort"><button type="button" data-v="pts" aria-pressed="' + (ridersSort === 'pts') + '">Per punti</button><button type="button" data-v="name" aria-pressed="' + (ridersSort === 'name') + '">Per nome</button></div></div>' +
       (n ? '<div class="apc-riders">' + cards + '</div>' : '<p class="apc-sub">Nessun atleta in questa categoria.</p>') + '</section>';
   }
+  // ── Stagioni dell'archivio (ciclismo.info): schede Atleti, Risultati e Storia ──
+  function archRows(id, anno) { return (((window._ciclismoTeamStoricoCache || {})[id] || {})[anno] || []); }
+  function archRiders(list) {
+    var by = {};
+    list.forEach(function (r) {
+      var k = r.atleta_id || r.ciclismo_id, x = by[k] || (by[k] = { a: r.atleta_id || '', who: r.nome_completo || '', cat: String(r.categoria || '').replace(/_/g, ' '), n: 0, w: 0, best: 999 });
+      x.n++; if (r.posizione === 1) x.w++; if (r.posizione && r.posizione < x.best) x.best = r.posizione;
+    });
+    return Object.keys(by).map(function (k) { return by[k]; });
+  }
+  function archRidersHtml(id, anno) {
+    var list = archRiders(archRows(id, anno)).sort(function (a, b) { return ridersSort === 'name' ? a.who.localeCompare(b.who) : (b.w - a.w || a.best - b.best || b.n - a.n); });
+    var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
+    var cards = list.map(function (x) {
+      return '<' + (x.a ? 'a href="#/atleta/' + encodeURIComponent(x.a) + '"' : 'span') + ' class="apc-rider"><span class="apc-rph" data-aid="' + esc3(x.a) + '">' + sil + '</span><b>' + esc3(x.who) + '</b><small>' + esc3(x.cat) + '</small><em>' + x.n + (x.n === 1 ? ' piazzamento' : ' piazzamenti') + (x.w ? ' · ' + x.w + (x.w === 1 ? ' vittoria' : ' vittorie') : (x.best < 999 ? ' · miglior ' + x.best + '°' : '')) + '</em></' + (x.a ? 'a' : 'span') + '>';
+    }).join('');
+    return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti ' + esc3(anno) + ' (' + list.length + ')</h3><div class="ap-seg ap-seg-blue" data-k="rsort"><button type="button" data-v="pts" aria-pressed="' + (ridersSort === 'pts') + '">Per risultati</button><button type="button" data-v="name" aria-pressed="' + (ridersSort === 'name') + '">Per nome</button></div></div><p class="apc-sub">Chi ha corso con la squadra nel ' + esc3(anno) + ' (risultati disponibili in archivio).</p><div class="apc-riders">' + cards + '</div></section>';
+  }
+  function archTabs() {
+    var id = teamId(); if (!id || isCx()) return;
+    var anno = (window._ciclismoTeamAnno || {})[id], arc = (window._ciclismoTeamStoricoCache || {})[id] || {};
+    var pr = document.getElementById('tm-panel-r');
+    if (pr && anno) {
+      var rows = archRows(id, anno).slice().sort(function (a, b) { return String(b.data || '').localeCompare(String(a.data || '')); });
+      var html = '<div class="section-header"><span class="section-title">RISULTATI TEAM ' + esc3(anno) + '</span><span class="section-line"></span></div><div class="results-table-wrap"><table class="results-table team-results"><thead><tr><th>DATA</th><th>POS</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th></tr></thead><tbody>' + rows.map(function (r) {
+        var who = r.atleta_id ? '<a href="#/atleta/' + encodeURIComponent(r.atleta_id) + '">' + esc3(r.nome_completo) + '</a>' : esc3(r.nome_completo);
+        return '<tr><td class="td-date">' + esc3(typeof fmtDateShort === 'function' ? fmtDateShort(r.data) : r.data) + '</td><td class="td-pos">' + (r.posizione ? r.posizione + '°' : '—') + '</td><td class="td-race">' + esc3(r.nome_gara) + '<div class="td-team-mobile">' + who + '</div></td><td class="td-hide-mobile">' + who + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+      var box = document.getElementById('tm-arch-r');
+      if (!box) { box = document.createElement('div'); box.id = 'tm-arch-r'; pr.appendChild(box); }
+      [].forEach.call(pr.children, function (c) { if (c !== box) c.style.display = 'none'; });
+      if (box.dataset.sig !== html) { box.dataset.sig = html; box.innerHTML = html; }
+    }
+    if (anno) fillRiders();
+    var pc = document.getElementById('tm-panel-c'), anni = Object.keys(arc).sort().reverse();
+    if (pc && anni.length && !pc.querySelector('#tm-arch-c') && /Nessuna stagione/.test(pc.textContent)) {
+      pc.innerHTML = '<section class="apc apc-wide" id="tm-arch-c"><div class="apc-h"><h3>Stagione per stagione</h3></div><p class="apc-sub">Dai risultati disponibili in archivio.</p><div class="apc-list">' + anni.map(function (y) {
+        var l = arc[y], n = archRiders(l).length;
+        return '<div class="apc-row"><span class="apc-rn"><strong>' + esc3(y) + '</strong><small>' + esc3(archRiders(l).map(function (x) { return x.who; }).join(', ')) + '</small></span><b class="apc-val">' + n + (n === 1 ? ' atleta · ' : ' atleti · ') + l.length + (l.length === 1 ? ' piazzamento' : ' piazzamenti') + '</b></div>';
+      }).join('') + '</div></section>';
+    }
+  }
+  document.addEventListener('ics-team-storico', function () { setTimeout(archTabs, 0); });
   function fillRiders() {
     var panel = document.getElementById('tm-panel-a'); if (!panel) return;
-    var html = ridersHtml(teamId());
+    var tid = teamId(), anno = isCx() ? '' : (window._ciclismoTeamAnno || {})[tid];
+    var html = anno ? archRidersHtml(tid, anno) : ridersHtml(tid);
     if (panel.dataset.sig === html) return;
     panel.dataset.sig = html; panel.innerHTML = html;
     panel.querySelectorAll('.apc-rph[data-aid]').forEach(function (el) {
@@ -655,14 +699,15 @@
         if (k === 'a' || k === 'r' || k === 'm') {
           if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = k !== 'a'; if (r) r.hidden = k !== 'r'; if (m) m.hidden = k !== 'm'; if (tm) tm.setAttribute('aria-selected', k === 'm' ? 'true' : 'false');
           if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', k === 'a' ? 'true' : 'false'); if (tr) tr.setAttribute('aria-selected', k === 'r' ? 'true' : 'false');
-          if (k === 'a') fillRiders(); yrVis(k); return;
+          if (k === 'a') fillRiders(); if (k === 'r') archTabs(); yrVis(k); return;
         }
         if (a) a.hidden = true; if (r) r.hidden = true; if (m) m.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false'); if (tr) tr.setAttribute('aria-selected', 'false'); if (tm) tm.setAttribute('aria-selected', 'false');
-        var res = orig.apply(this, arguments); yrVis(k); return res;
+        var res = orig.apply(this, arguments); yrVis(k); if (k === 'c') setTimeout(archTabs, 0); return res;
       };
       w.__ap = true; window._tmTab = w;
     }
-    fillRiders();
+    var pc = document.getElementById('tm-panel-c'); if (pc) new MutationObserver(archTabs).observe(pc, { childList: true, subtree: true });
+    fillRiders(); archTabs();
   }
 
 
