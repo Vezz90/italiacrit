@@ -17225,6 +17225,9 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const taggedIds = opts.atletaIds || [];
   // Filtro per anno (storicità): mostra solo i media della stagione selezionata.
   const _yfilter = opts.year ? String(opts.year) : null;
+  // Media separati per specialita': in ciclocross solo le gare di ciclocross, su strada solo quelle di strada
+  const _cxMedia = globalData?.meta?.disciplina === 'ciclocross';
+  const _isCxGara = (g) => /^\d{4,}_(?:ES1|ES2|AL|JUN|ELI)_[MF]$/.test(String(g || ''));
   // Filtro per categoria (pagina team con tab categoria): le foto/video
   // taggati vanno mostrati solo se la gara è della categoria selezionata,
   // altrimenti sotto ogni tab comparivano i media di tutte le categorie.
@@ -17252,6 +17255,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     for (const aid of taggedIds) {
       for (const p of (_risPhotosByAtleta[aid] || [])) {
         if (_yfilter && _yearOf(p) && _yearOf(p) !== _yfilter) continue;
+        if (_isCxGara(p.gara_id) !== _cxMedia) continue;
         if (p.id && seenTag.has(p.id)) continue;
         if (p.id) seenTag.add(p.id);
         // rrOwn = il risultato di QUESTO atleta in quella gara (se non ha corso/non e' in classifica non c'e').
@@ -17285,6 +17289,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const seenVidUrl = new Set(top10Vids.map(t => t.video && t.video.url).filter(Boolean));
     for (const [gkey, list] of Object.entries(_vids)) {
       if (_yfilter && _yearOf(gkey) && _yearOf(gkey) !== _yfilter) continue;
+      if (_isCxGara(gkey) !== _cxMedia) continue;
       for (const v of (list || [])) {
         const vids2 = String(v.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
         if (!vids2.some(id => tagSet.has(id))) continue;

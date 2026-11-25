@@ -429,7 +429,7 @@
 
     if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); setTimeout(() => { if (mode === 'strada') ensureIds(); }, 3500); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
-    let saved = 'strada'; try { saved = localStorage.getItem(MODE_KEY) || 'strada'; } catch (e) {}
+    let saved = 'strada'; try { localStorage.removeItem(MODE_KEY); } catch (e) {}   // all'apertura: sempre strada (la specialita' non viene ricordata)
     if (saved === 'ciclocross' && isAdmin()) {
       const t = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t); setMode('ciclocross').then(() => { /* la pagina Statistiche può essere già in caricamento con i dati della strada: la si ridisegna */ if (/^\/(statistiche|record)/.test(location.pathname + location.hash.replace(/^#/, ''))) setTimeout(() => { if (mode === 'ciclocross') route(); }, 2500); }); } }, 250);
       setTimeout(() => clearInterval(t), 60000);
