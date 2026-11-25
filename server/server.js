@@ -2834,10 +2834,64 @@ app.post('/api/admin/team/:teamId/add-athlete', requireAdmin, async (req, res) =
 // Cache in memoria 30 s con stale-while-revalidate: la query costava 1,3-1,9 s a
 // OGNI caricamento del sito (336 KB). Un atleta aggiunto compare entro ~30 s.
 let _manualAthletesCache = null, _manualAthletesTs = 0, _manualAthletesInflight = null;
+// ── Rose dagli elenchi iscritti / partenti ─────────────────────────────────
+// Chi compare negli elenchi della stagione con una squadra riconosciuta fa parte della sua rosa, anche senza piazzamenti.
+// Chi ha risultati su strada nella stagione ha gia' la squadra presa dai risultati e non viene toccato.
+let _slRosterCache = null, _slRosterTs = 0;
+const _PREF_COGNOME = new Set(['DE', 'DI', 'DA', 'DAL', 'DEL', 'DELLA', 'DALLA', 'LA', 'LO', 'LI', 'LE', 'VAN', 'VON', 'D', 'SAN', 'SANTA', 'EL']);
+function _slDividiNome(s) {
+  const p = String(s || '').trim().toUpperCase().split(/\s+/);
+  let n = 1;
+  while (n < p.length - 1 && _PREF_COGNOME.has(p[n - 1])) n++;
+  return { cognome: p.slice(0, n).join(' '), nome: p.slice(n).join(' ') };
+}
+async function _startlistRoster(manualRows) {
+  if (_slRosterCache && (Date.now() - _slRosterTs) < 600000) return _slRosterCache;
+  const [lists, athletes, teams, aliases] = await Promise.all([
+    _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).order('id')),
+    readDataJsonFromGH('athletes.json'),
+    readDataJsonFromGH('teams.json'),
+    _iqAll(() => supabase.from('team_aliases').select('alias,team_id,team_name').order('alias')),
+  ]);
+  const nomi = new Map(), byName = new Map();
+  const nota = (id, nome) => { if (!id) return; if (!nomi.has(id)) nomi.set(id, nome || id); const k = _iqNorm(nome); if (k && !byName.has(k)) byName.set(k, id); };
+  for (const [id, t] of Object.entries(teams || {})) nota(id, t.nome);
+  for (const a of aliases) { byName.set(a.alias, a.team_id); if (!nomi.has(a.team_id)) nomi.set(a.team_id, a.team_name || a.team_id); }
+  for (const r of manualRows) if (r.source !== 'ciclismo_info') nota(r.team_id, r.team);
+  for (const r of manualRows) if (r.team_id && !nomi.has(r.team_id)) nomi.set(r.team_id, r.team || r.team_id);
+  const stagione = lists.reduce((m, r) => (String(r.race_date || '') > m ? String(r.race_date) : m), '').slice(0, 4);
+  const best = new Map();
+  for (const r of lists) {
+    if (!String(r.race_date || '').startsWith(stagione) || (r.nat && r.nat !== 'ITA')) continue;
+    if (((athletes || {})[r.athlete_id]?.risultati || []).length) continue;
+    const tid = r.team_id || _iqKeys(r.team_name).map(k => byName.get(k)).find(Boolean);
+    if (!tid) continue;
+    // vale l'elenco su strada piu' recente; il ciclocross (id gara numerico) solo se non ce ne sono
+    const voto = (/^\d+_/.test(String(r.gara_id)) ? '0' : '1') + r.race_date;
+    const prima = best.get(r.athlete_id);
+    if (!prima || voto > prima.voto) best.set(r.athlete_id, { voto, team_id: tid, team: nomi.get(tid) || r.team_name || tid, categoria: r.category, nome_elenco: r.athlete_name });
+  }
+  _slRosterCache = best; _slRosterTs = Date.now();
+  return best;
+}
 async function _manualAthletesMapNow() {
   const rows = await queries.getAllManualAthletes();
   const result = {};
-  for (const r of rows) {
+  const daElenchi = await _startlistRoster(rows).catch(e => { console.warn('rose dagli elenchi:', e.message); return new Map(); });
+  const visti = new Set();
+  const righe = rows.map(r => {
+    visti.add(r.atleta_id);
+    const e = daElenchi.get(r.atleta_id);
+    if (!e || (e.team_id === r.team_id && r.source !== 'ciclismo_info')) return r;
+    // la pagina della squadra precedente resta (storico), l'atleta passa nella rosa attuale
+    if (r.team_id && !result[r.team_id]) result[r.team_id] = { nome: r.team || r.team_id, atleti: [], senzaTeam: false };
+    return { ...r, team_id: e.team_id, team: e.team, categoria: e.categoria || r.categoria, source: 'segreteriagare' };
+  });
+  for (const [id, e] of daElenchi) {
+    if (visti.has(id)) continue;
+    righe.push({ atleta_id: id, ..._slDividiNome(e.nome_elenco), team_id: e.team_id, team: e.team, categoria: e.categoria, genere: String(e.categoria || '').endsWith('_F') ? 'F' : 'M', source: 'segreteriagare' });
+  }
+  for (const r of righe) {
     const tid = r.team_id || '_SENZA_TEAM_';
     if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [], senzaTeam: !r.team_id };
     result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M', fonte: r.source || '' });
