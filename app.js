@@ -13796,6 +13796,27 @@ window.adminNav = async function(section) {
           }
           return out.sort((x, y) => y.score - x.score).slice(0, 3);
         };
+        // corridori della squadra: chi sono, categoria, squadra nel nostro DB (se hanno già un profilo) e PDF di provenienza
+        const riders = i => {
+          const L = i.riders || [];
+          if (!L.length) return `<div style="margin-top:6px;color:var(--text-muted);font-size:.78rem">Nomi non disponibili negli elenchi caricati.</div>`;
+          const A = (typeof globalData !== 'undefined' && globalData && globalData.athletes) || {};
+          return `<div style="margin:8px 0 4px;padding:2px 12px;border-left:2px solid var(--border-subtle)">` + L.map(r => {
+            const a = r.athlete_id && A[r.athlete_id];
+            const nome = r.athlete_id ? `<a href="/atleta/${encodeURIComponent(r.athlete_id)}" target="_blank" rel="noopener" style="text-decoration:underline">${esc(r.name)}</a>` : esc(r.name);
+            const db = r.athlete_id ? `nel sito${a && a.team_attuale ? ': ' + esc(a.team_attuale) : ''}` : 'non ha ancora un profilo';
+            // un elenco per riga di data: link al PDF (iscritti/partenti) e, una volta sola, alla gara del sito
+            const seen = new Set();
+            const pdf = [...(r.gare || [])].sort((x, y) => String(x.data).localeCompare(String(y.data)) || String(x.file).localeCompare(String(y.file))).map(g => {
+              const url = `https://www.segreteriagare.it/gare/${encodeURIComponent(String(g.file).slice(0, 4))}/${encodeURIComponent(g.file)}`;
+              const lab = `${g.kind === 'partenti' ? 'partenti' : 'iscritti'} ${String(g.data || '').split('-').reverse().slice(0, 2).join('/')}`;
+              let h = `<a href="${url}" target="_blank" rel="noopener" style="text-decoration:underline">${lab}</a>`;
+              if (g.gara_id && !seen.has(g.gara_id)) { seen.add(g.gara_id); h += ` (<a href="/gara/${encodeURIComponent(g.gara_id)}" target="_blank" rel="noopener" style="text-decoration:underline">gara</a>)`; }
+              return h;
+            }).join(' · ');
+            return `<div style="display:flex;gap:4px 12px;flex-wrap:wrap;padding:3px 0;font-size:.82rem"><span style="min-width:200px">${nome}</span><span style="min-width:60px">${esc(String(r.category || '').replace('_', ' '))}</span><span style="color:var(--text-muted)">${db}</span><span style="color:var(--text-muted)">${pdf}</span></div>`;
+          }).join('') + `</div>`;
+        };
         window._iqLink = async (qid, tid, tnm) => {
           if (!confirm(`Collegare questa squadra a «${tnm}»?\nGli elenchi e gli atleti in attesa di questa squadra useranno quella esistente.`)) return;
           const r = await fetch(`${API_BASE}/admin/import-queue/link-team`, { method: 'POST', headers: H(), body: JSON.stringify({ id: qid, team_id: tid, team_name: tnm }) });
@@ -13816,14 +13837,15 @@ window.adminNav = async function(section) {
           const row = i => { const p = i.payload || {}; return S.tab === 'atleta_nuovo'
             ? `<label style="display:grid;grid-template-columns:24px 1.3fr 1fr 1.6fr;gap:8px;align-items:baseline;padding:8px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem;cursor:pointer"><input type="checkbox" class="iq-ck" value="${i.id}"><b>${esc(p.pdf_name || p.name || '')}</b><span>${esc(p.categoria || '')}</span><span style="color:var(--text-muted)">${esc(p.pdf_team || '—')} · ${esc(p.why || '')}</span></label>`
             : (() => { const sg = suggest(p.name || ''); const bs = 'padding:5px 10px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;font-size:.8rem;cursor:pointer';
-                return `<div style="padding:10px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:baseline"><b>${esc(p.name || '')}</b><span style="color:var(--text-muted)">${p.athletes || 0} atleti negli elenchi</span></div>
+                return `<div style="padding:10px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:baseline"><b>${esc(p.name || '')}</b><span style="color:var(--text-muted)">${(i.riders || []).length || p.athletes || 0} atleti negli elenchi</span></div>
+                ${riders(i)}
                 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px">
                   ${sg.length ? `<span style="color:var(--text-muted);font-size:.78rem">Forse è:</span>` + sg.map(s => `<button style="${bs}" title="${esc(s.id)} · ${Math.round(s.score * 100)}%" onclick="window._iqLink(${i.id},'${escJs(s.id)}','${escJs(s.nome)}')">${esc(s.nome)}</button>`).join('') : `<span style="color:var(--text-muted);font-size:.78rem">Nessuna squadra simile trovata.</span>`}
                   <input list="iq-teams" placeholder="Cerca altra squadra…" style="${bs};min-width:200px" onchange="window._iqLinkTyped(${i.id},this)">
                   <button style="${bs}" onclick="window._iqLinkNew(${i.id})">È davvero nuova</button><button style="${bs}" onclick="window._iqDiscardOne(${i.id})">Scarta</button>
                 </div></div>`; })(); };
           document.getElementById('iq-body').innerHTML = `
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+            <div style="display:${S.tab === 'atleta_nuovo' ? 'flex' : 'none'};gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
               <button class="admin-edit-btn" onclick="document.querySelectorAll('.iq-ck').forEach(c=>c.checked=true)">Seleziona tutti</button>
               <input id="iq-team" placeholder="ID squadra (facoltativo, es. ELBA_BIKE)" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;min-width:240px">
               <button class="admin-edit-btn" style="background:#22c55e;color:#fff" onclick="window._iqDecide('approve')">✔ Approva selezionati</button>

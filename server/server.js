@@ -2876,6 +2876,38 @@ app.get('/api/startlists/:gara_id', async (req, res) => {
 });
 
 // Coda di approvazione (atleti/squadre proposti dall'importazione SegreteriaGare).
+const _iqNorm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+// Nei PDF il nome può avere in coda la regione tra parentesi: "ASD X - (Toscana)" vale anche come "ASD X".
+const _iqKeys = s => [...new Set([_iqNorm(s), _iqNorm(String(s || '').replace(/\([^)]*\)/g, ''))])].filter(Boolean);
+// Supabase restituisce al massimo 1000 righe per richiesta: si legge a pagine.
+async function _iqAll(build) {
+  const all = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await build().range(from, from + 999);
+    if (error) throw error; all.push(...(data || [])); if (!data || data.length < 1000) return all;
+  }
+}
+// Per ogni "squadra nuova" aggiunge i corridori trovati negli elenchi (con gara e PDF), per poterla controllare.
+async function _iqAddRiders(items) {
+  const teams = items.filter(i => i.kind === 'squadra_nuova');
+  if (!teams.length) return;
+  const rows = await _iqAll(() => supabase.from('startlists').select('athlete_name,athlete_id,team_name,category,gara_id,race_date,source_file,kind').not('team_name', 'is', null).order('id'));
+  const by = new Map();
+  const add = (team, name, d) => {
+    if (!name) return;
+    for (const k of _iqKeys(team)) {
+    if (!by.has(k)) by.set(k, new Map());
+    const m = by.get(k), nk = _iqNorm(name).split(' ').sort().join(' ');
+    if (!m.has(nk)) m.set(nk, { name, athlete_id: null, category: null, gare: [] });
+    const r = m.get(nk);
+    r.athlete_id = r.athlete_id || d.athlete_id || null; r.category = r.category || d.category || null;
+    if (d.source_file && !r.gare.some(g => g.file === d.source_file)) r.gare.push({ file: d.source_file, gara_id: d.gara_id, data: d.race_date, kind: d.kind });
+    }
+  };
+  rows.forEach(r => add(r.team_name, r.athlete_name, r));
+  items.filter(i => i.kind === 'atleta_nuovo' && i.payload).forEach(i => add(i.payload.pdf_team, i.payload.pdf_name || i.payload.name, { category: i.payload.categoria }));
+  teams.forEach(t => { t.riders = [...(by.get(_iqNorm(t.payload && t.payload.name)) || new Map()).values()]; });
+}
 app.get('/api/admin/import-queue', requireAdmin, async (req, res) => {
   try {
     const status = req.query.status || 'da_approvare';
@@ -2884,6 +2916,7 @@ app.get('/api/admin/import-queue', requireAdmin, async (req, res) => {
       const { data, error } = await supabase.from('import_queue').select('*').eq('status', status).order('id').range(from, from + 999);
       if (error) throw error; all.push(...(data || [])); if (!data || data.length < 1000) break;
     }
+    if (status === 'da_approvare') await _iqAddRiders(all);
     res.json({ items: all });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -2928,13 +2961,13 @@ app.post('/api/admin/import-queue/link-team', requireAdmin, async (req, res) => 
     await supabase.from('team_aliases').upsert({ alias: key, team_id: tid, team_name: tnm, source: 'segreteriagare' }, { onConflict: 'alias' });
     // elenchi: tutte le righe con quella squadra e senza team_id
     let sl = 0;
-    const { data: sls } = await supabase.from('startlists').select('id,team_name').is('team_id', null).not('team_name', 'is', null).limit(10000);
-    const sids = (sls || []).filter(r => nrm(r.team_name) === key).map(r => r.id);
+    const sls = await _iqAll(() => supabase.from('startlists').select('id,team_name').is('team_id', null).not('team_name', 'is', null).order('id'));
+    const sids = sls.filter(r => _iqKeys(r.team_name).includes(key)).map(r => r.id);
     for (let i = 0; i < sids.length; i += 200) { await supabase.from('startlists').update({ team_id: tid }).in('id', sids.slice(i, i + 200)); sl += Math.min(200, sids.length - i); }
     // atleti in coda con questa squadra: ora la squadra è certa -> si creano
-    const { data: pend } = await supabase.from('import_queue').select('*').eq('kind', 'atleta_nuovo').eq('status', 'da_approvare').limit(5000);
+    const pend = await _iqAll(() => supabase.from('import_queue').select('*').eq('kind', 'atleta_nuovo').eq('status', 'da_approvare').order('id'));
     let created = 0;
-    for (const a of (pend || []).filter(a => a.payload && a.payload.atleta_id && nrm(a.payload.pdf_team) === key)) {
+    for (const a of pend.filter(a => a.payload && a.payload.atleta_id && nrm(a.payload.pdf_team) === key)) {
       const p = a.payload;
       const { error: e1 } = await supabase.from('manual_athletes').upsert({ atleta_id: p.atleta_id, cognome: p.cognome, nome: p.nome, team_id: tid, team: tnm, categoria: p.categoria || null, genere: p.genere || 'M', created_by: null, source: 'segreteriagare' }, { onConflict: 'atleta_id', ignoreDuplicates: true });
       if (e1) throw e1;
