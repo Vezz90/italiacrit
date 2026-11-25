@@ -13969,4 +13969,19 @@ body.light-mode .am-recs .hx-si-r .n { color: var(--text-muted); }
 .ar-t b { font-size: .95rem; line-height: 1.25; }
 .ar-t small { color: var(--text-muted); }
 .ar-s { font-size: .8rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ar-sec { margin-top: 18px; }
+.ar-sec { margin-top: 18px; }
+
+/* Selettori categoria: rettangolari, stesso aspetto degli altri (Uomini | Donne, Strada | Ciclocross) */
+.cls-cats, .am-filter { display: inline-flex; flex-wrap: nowrap; gap: 0; border: 1px solid var(--border-subtle); border-radius: 8px; overflow-x: auto; background: var(--bg-card); max-width: 100%; scrollbar-width: none; }
+.cls-cats::-webkit-scrollbar, .am-filter::-webkit-scrollbar { display: none; }
+.cls-cats button, .am-filter button { border: 0; border-radius: 0; background: transparent; color: var(--text-secondary); height: 40px; padding: 0 16px; white-space: nowrap; flex: 0 0 auto; font-weight: 600; }
+.am-filter button { height: 36px; padding: 0 14px; }
+.cls-cats button:hover, .am-filter button:hover { background: rgba(127,127,127,.1); color: var(--text-primary); border: 0; }
+.cls-cats button[aria-pressed="true"], .am-filter button[aria-pressed="true"] { background: var(--hx-navy); color: #fff; border: 0; }
+body:not(.light-mode) .cls-cats button[aria-pressed="true"], body:not(.light-mode) .am-filter button[aria-pressed="true"] { background: #2459E6; color: #fff; }
+.am-regsel select { border-radius: 8px; }
+@media (max-width: 640px) {
+  .cls-cats, .am-filter { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; border: 0; background: none; overflow: visible; width: 100%; }
+  .cls-cats button, .am-filter button { border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-card); white-space: normal; padding: 0 10px; height: auto; min-height: 40px; line-height: 1.2; }
+  .cls-cats button[aria-pressed="true"], .am-filter button[aria-pressed="true"] { border-color: transparent; }
+}
