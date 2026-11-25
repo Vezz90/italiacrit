@@ -342,6 +342,24 @@
     try { await loadRaw(); cxGd = build(globalData); syncGlobals(); document.dispatchEvent(new CustomEvent('ics-cx-ready')); return true; } catch (e) { return false; }
   }
 
+  // Link diretto (condiviso, cercato, dagli elenchi iscritti) a una gara, atleta o team che esiste SOLO nel ciclocross:
+  // la strada risponderebbe "pagina non trovata", quindi si apre il ciclocross.
+  async function openIfCxOnly(kind, id) {
+    if (!id || mode !== 'strada' || !isAdmin() || typeof globalData === 'undefined' || !globalData) return false;
+    if (kind === 'gara') { if (/^(CIC|PRO)_/.test(id) || hasRace(globalData, id)) return false; }
+    else {
+      const m = kind === 'atleta' ? 'athletes' : 'teams';
+      if (globalData[m] && globalData[m][id]) return false;
+      if (typeof _ensurePcsAthletesLoaded === 'function') await _ensurePcsAthletesLoaded();
+      if (globalData[m] && globalData[m][id]) return false;
+    }
+    if (!(await ensureIds()) || mode !== 'strada' || curId(kind) !== id) return false;
+    if (!(kind === 'gara' ? hasRace(cxGd, id) : (kind === 'atleta' ? cxAth : cxTeams).has(id))) return false;
+    autoCx = true;
+    await setMode('ciclocross', { force: true, auto: true });
+    return true;
+  }
+
   function init() {
     // Caricamenti di fondo (retry/aggiornamenti): la strada resta il "live", il ciclocross si ricostruisce da lì
     const origLoadAll = window.loadAll;
@@ -409,15 +427,25 @@
     const oRT = window.renderTeam;
     if (typeof oRT === 'function' && !oRT.__cxpre) {
       const preT = async function (id) {
+        if (await openIfCxOnly('team', id)) return;
         if (mode === 'ciclocross' && cxTeams && !cxTeams.has(id) && live && live.teams && live.teams[id]) { await setMode('strada'); return; }
         return oRT.apply(this, arguments);
       };
       preT.__cxpre = true; window.renderTeam = preT;
     }
     // Scheda atleta aperta in ciclocross per chi non ha mai fatto ciclocross: si torna alla strada (non esistono gare da mostrare)
+    const oRG = window.renderGara;
+    if (typeof oRG === 'function' && !oRG.__cxpre) {
+      const preG = async function (id) {
+        if (await openIfCxOnly('gara', id)) return;   // setMode ridisegna la pagina
+        return oRG.apply(this, arguments);
+      };
+      preG.__cxpre = true; window.renderGara = preG;
+    }
     const oRA = window.renderAtleta;
     if (typeof oRA === 'function' && !oRA.__cxpre) {
       const pre = async function (id) {
+        if (await openIfCxOnly('atleta', id)) return;
         if (mode === 'ciclocross' && cxAth && !cxAth.has(id) && live && live.athletes && live.athletes[id]) { await setMode('strada'); return; }
         return oRA.apply(this, arguments);
       };
@@ -467,6 +495,9 @@
     let _t = null;
     new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); leaveAutoCx(); }, 60); }).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('ics-career', onCareer);
+    // la prima pagina puo' essere gia' stata disegnata prima di questo script
+    const t1 = setInterval(() => { if (typeof globalData === 'undefined' || !globalData) return; clearInterval(t1); for (const k of ['gara', 'atleta', 'team']) openIfCxOnly(k, curId(k)); }, 400);
+    setTimeout(() => clearInterval(t1), 60000);
 
     if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); setTimeout(() => { if (mode === 'strada') ensureIds(); }, 3500); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
