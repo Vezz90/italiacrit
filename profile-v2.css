@@ -346,3 +346,37 @@ a.apc-row:hover .apc-rn { color: var(--accent, #e8001d); }
   .team-header.ap .photo-area--portrait.lg-wide { width: 190px !important; flex-basis: 190px !important; height: 96px !important; }
   .team-header.ap .photo-area--portrait.lg-tall { width: 100px !important; flex-basis: 100px !important; height: 140px !important; }
 }
+
+
+/* ── Risultati: intestazione ordinata su mobile (titolo sopra, selezione sotto) ── */
+#ath-panel-r > .section-header, #tm-panel-r > .section-header { margin-left: 0 !important; margin-right: 0 !important; width: auto; flex-wrap: wrap; gap: 10px 14px; }
+#ath-panel-r .section-header .section-line, #tm-panel-r .section-header .section-line { display: none; }
+@media (max-width: 640px) {
+  #ath-panel-r > .section-header, #tm-panel-r > .section-header { flex-direction: column; align-items: flex-start; }
+  #ath-panel-r .section-header .section-title { white-space: normal; }
+  #atleta-sort-btns { align-self: stretch; }
+  #atleta-sort-btns .tab-btn { flex: 1 1 0; text-align: center; }
+}
+
+/* ── Risultati della SQUADRA su mobile: stessa scheda dell'atleta ── */
+@media (max-width: 640px) {
+  #tm-panel-r table, #tm-panel-r tbody { display: block; width: 100%; }
+  #tm-panel-r thead { display: none; }
+  #tm-panel-r tr[data-date] { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; column-gap: 12px; row-gap: 5px; padding: 14px 14px 12px; border-top: 1px solid var(--border-subtle); }
+  #tm-panel-r tr[data-date]:nth-child(odd) { background: rgba(127,127,127,.06); }
+  #tm-panel-r tr[data-date] > td { display: block; padding: 0 !important; border: 0 !important; background: none !important; min-width: 0; white-space: nowrap; }
+  #tm-panel-r tr[data-date] > td.td-race { grid-column: 1 / 4; grid-row: 1; white-space: normal; font-size: 1rem; font-weight: 700; line-height: 1.25; padding-right: 8px !important; }
+  #tm-panel-r tr[data-date] > td.td-race a { overflow-wrap: anywhere; font-weight: 700; }
+  #tm-panel-r .td-team-mobile { display: block !important; margin-top: 3px; font-size: .86rem; font-weight: 500; }
+  #tm-panel-r tr[data-date] > td.td-pos { grid-column: 4; grid-row: 1; justify-self: end; font-size: 1.35rem; font-weight: 800; line-height: 1; }
+  #tm-panel-r tr[data-date] > td.td-date { grid-column: 1; grid-row: 2; font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; }
+  #tm-panel-r tr[data-date] > td:nth-child(4), #tm-panel-r tr[data-date] > td:nth-child(8) { display: none; }
+  #tm-panel-r tr[data-date] > td:nth-child(5) { grid-column: 2; grid-row: 2; font-size: .78rem; }
+  #tm-panel-r tr[data-date] > td:last-child { grid-column: 4; grid-row: 2; justify-self: end; font-size: .85rem; font-weight: 700; }
+  #tm-panel-r tr[data-date] > td:last-child::after { content: ' pt'; font-weight: 500; color: var(--text-muted); }
+  #tm-panel-r tr[data-date] > td:nth-child(6) { grid-column: 1 / 3; grid-row: 3; font-size: .76rem; color: var(--text-muted); text-align: left !important; }
+  #tm-panel-r tr[data-date] > td:nth-child(7) { grid-column: 3; grid-row: 3; font-size: .76rem; color: var(--text-muted); text-align: left !important; }
+  #tm-panel-r tr[data-date] > td:nth-child(6):not(.ap-nil)::after { content: ' km'; }
+  #tm-panel-r tr[data-date] > td:nth-child(7):not(.ap-nil)::after { content: ' km/h'; }
+  #tm-panel-r tr[data-date] > td.ap-nil { display: none; }
+}

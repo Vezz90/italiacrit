@@ -119,7 +119,7 @@
 
   // celle senza valore ("—") nelle schede dei risultati su mobile: si nascondono
   function markNil() {
-    document.querySelectorAll('.atleta-results tr[data-date] > td:nth-child(5):not([data-nil]), .atleta-results tr[data-date] > td:nth-child(6):not([data-nil])').forEach(function (td) {
+    document.querySelectorAll('.atleta-results tr[data-date] > td:nth-child(5):not([data-nil]), .atleta-results tr[data-date] > td:nth-child(6):not([data-nil]), #tm-panel-r tr[data-date] > td:nth-child(6):not([data-nil]), #tm-panel-r tr[data-date] > td:nth-child(7):not([data-nil])').forEach(function (td) {
       var t = td.textContent.trim(); td.dataset.nil = '1'; if (t === '' || t === '—' || t === '-') td.classList.add('ap-nil');
     });
   }
@@ -578,24 +578,31 @@
     var tbody = document.getElementById('team-results-tbody'), tbl = tbody && tbody.closest('table'), pr = document.createElement('div');
     pr.id = 'tm-panel-r'; pr.setAttribute('role', 'tabpanel'); pr.hidden = true;
     if (tbl) { var hd = tbl.previousElementSibling; while (hd && !hd.classList.contains('section-header')) hd = hd.previousElementSibling; if (hd) pr.appendChild(hd); pr.appendChild(tbl); }
+    // media (foto/video) della squadra: scheda a parte, visibile solo se c'e' qualcosa
+    var pm = document.createElement('div'); pm.id = 'tm-panel-m'; pm.setAttribute('role', 'tabpanel'); pm.hidden = true;
+    [].slice.call(document.querySelectorAll('#team-native-content .profile-media-section')).forEach(function (e) { pm.appendChild(e); });
+    var btnM = document.createElement('button'); btnM.className = 'ath-tab'; btnM.setAttribute('role', 'tab'); btnM.id = 'tm-tab-m'; btnM.setAttribute('aria-selected', 'false'); btnM.textContent = 'Media';
+    btnM.addEventListener('click', function () { window._tmTab('m'); });
     var btnR = document.createElement('button'); btnR.className = 'ath-tab'; btnR.setAttribute('role', 'tab'); btnR.id = 'tm-tab-r'; btnR.setAttribute('aria-selected', 'false'); btnR.textContent = 'Risultati';
     btnR.addEventListener('click', function () { window._tmTab('r'); });
     var btn = document.createElement('button'); btn.className = 'ath-tab'; btn.setAttribute('role', 'tab'); btn.id = 'tm-tab-a'; btn.setAttribute('aria-selected', 'false'); btn.textContent = 'Atleti';
     btn.addEventListener('click', function () { window._tmTab('a'); });
-    var cTab = document.getElementById('tm-tab-c'); tabs.insertBefore(btn, cTab); tabs.insertBefore(btnR, cTab);
-    var pa = document.createElement('div'); pa.id = 'tm-panel-a'; pa.setAttribute('role', 'tabpanel'); pa.hidden = true; sP.insertAdjacentElement('afterend', pa); pa.insertAdjacentElement('afterend', pr);
+    var cTab = document.getElementById('tm-tab-c'); tabs.insertBefore(btn, cTab); tabs.insertBefore(btnR, cTab); tabs.insertBefore(btnM, cTab);
+    var pa = document.createElement('div'); pa.id = 'tm-panel-a'; pa.setAttribute('role', 'tabpanel'); pa.hidden = true; sP.insertAdjacentElement('afterend', pa); pa.insertAdjacentElement('afterend', pr); pr.insertAdjacentElement('afterend', pm);
+    var syncM = function () { var has = [].some.call(pm.children, function (c) { return c.textContent.trim() !== '' || c.querySelector('img,video'); }); btnM.hidden = !has; if (!has && !pm.hidden && typeof window._tmTab === 'function') window._tmTab('s'); };
+    new MutationObserver(syncM).observe(pm, { childList: true, subtree: true }); syncM();
     var orig = window._tmTab;
     if (typeof orig === 'function' && !orig.__ap) {
       var w = function (k) {
         var s = document.getElementById('tm-panel-s'), c = document.getElementById('tm-panel-c'), a = document.getElementById('tm-panel-a');
         var ts = document.getElementById('tm-tab-s'), tc = document.getElementById('tm-tab-c'), ta = document.getElementById('tm-tab-a');
-        var r = document.getElementById('tm-panel-r'), tr = document.getElementById('tm-tab-r');
-        if (k === 'a' || k === 'r') {
-          if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = k !== 'a'; if (r) r.hidden = k !== 'r';
+        var r = document.getElementById('tm-panel-r'), tr = document.getElementById('tm-tab-r'), m = document.getElementById('tm-panel-m'), tm = document.getElementById('tm-tab-m');
+        if (k === 'a' || k === 'r' || k === 'm') {
+          if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = k !== 'a'; if (r) r.hidden = k !== 'r'; if (m) m.hidden = k !== 'm'; if (tm) tm.setAttribute('aria-selected', k === 'm' ? 'true' : 'false');
           if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', k === 'a' ? 'true' : 'false'); if (tr) tr.setAttribute('aria-selected', k === 'r' ? 'true' : 'false');
           if (k === 'a') fillRiders(); return;
         }
-        if (a) a.hidden = true; if (r) r.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false'); if (tr) tr.setAttribute('aria-selected', 'false');
+        if (a) a.hidden = true; if (r) r.hidden = true; if (m) m.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false'); if (tr) tr.setAttribute('aria-selected', 'false'); if (tm) tm.setAttribute('aria-selected', 'false');
         return orig.apply(this, arguments);
       };
       w.__ap = true; window._tmTab = w;
