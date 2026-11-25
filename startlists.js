@@ -7,6 +7,7 @@
   function apiBase() { return (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : 'https://italiacrit.onrender.com/api'; }
   // ── Elenco a riquadri per squadra (stile start list) ──
   var NAT = { ITA: 'it', SUI: 'ch', SLO: 'si', NED: 'nl', GER: 'de', FRA: 'fr', ESP: 'es', GBR: 'gb', BEL: 'be', AUT: 'at', POL: 'pl', UKR: 'ua', CZE: 'cz', SVK: 'sk', CRO: 'hr', HUN: 'hu', ROU: 'ro', POR: 'pt', IRL: 'ie', NOR: 'no', LUX: 'lu', LTU: 'lt', LAT: 'lv', BLR: 'by', RUS: 'ru', GRE: 'gr', ALB: 'al', BIH: 'ba', SMR: 'sm', USA: 'us', CAN: 'ca', MEX: 'mx', COL: 'co', VEN: 've', BRA: 'br', AUS: 'au', NZL: 'nz', JPN: 'jp', KAZ: 'kz', RSA: 'za', ETH: 'et', CPV: 'cv' };
+  var LOGO_SG = '<img class="sl-logo" src="/assets/logo-segreteriagare.png" alt="SegreteriaGare.it" width="95" height="30">';
   var COLORI = ['#e8001d', '#1565c0', '#2e7d32', '#f59e0b', '#6a1b9a', '#00838f', '#ad1457', '#37474f', '#ef6c00', '#283593'];
   function flag(nat) { var c = NAT[nat || 'ITA']; return c ? '<img src="https://flagcdn.com/16x12/' + c + '.png" width="16" height="12" alt="' + esc(nat || 'ITA') + '" loading="lazy">' : '<i></i>'; }
   // I nomi squadra letti dai PDF hanno spesso code: regione tra parentesi, sigla di categoria o nazione, trattini
@@ -98,12 +99,12 @@
       return '<section class="sl-team' + (senza ? ' sl-noteam' : '') + '" style="--sl-c:' + (senza ? '#9aa4b2' : COLORI[h % COLORI.length]) + '"><h4>' + (g.id ? '<a href="#/team/' + encodeURIComponent(g.id) + '">' + titolo + '</a>' : titolo) + '</h4><ul>' + g.atleti.map(riga).join('') + '</ul></section>';
     };
     var nota = daScheda ? '<p class="sl-nota">* L’elenco non riporta la squadra: è quella della scheda dell’atleta.</p>' : '';
-    return '<div class="sl-sum"><strong>' + rows.length + '</strong> ' + tipo + (nSq ? ' · <strong>' + nSq + '</strong> squadre' : '') + '<span>fonte SegreteriaGare.it</span></div><div class="sl-grid">' + lista.map(card).join('') + '</div>' + nota;
+    return '<div class="sl-sum"><strong>' + rows.length + '</strong> ' + tipo + (nSq ? ' · <strong>' + nSq + '</strong> squadre' : '') + '<span>fonte ' + LOGO_SG + '</span></div><div class="sl-grid">' + lista.map(card).join('') + '</div>' + nota;
   }
   function stile() {
     if (document.getElementById('sl-style')) return;
     var st = document.createElement('style'); st.id = 'sl-style';
-    st.textContent = '.sl-nota{font-size:.75rem;color:var(--text-muted);margin:10px 0 0}.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem}' +
+    st.textContent = '.sl-nota{font-size:.75rem;color:var(--text-muted);margin:10px 0 0}.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem;display:inline-flex;align-items:center;gap:6px;margin-top:-6px}.sl-logo{height:30px;width:auto;vertical-align:middle;background:#fff;border-radius:6px;padding:2px 4px}' +
       '.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}' +
       '.sl-team{background:var(--bg-card,#fff);border:1px solid var(--border-subtle,#dde2ea);border-top:3px solid var(--sl-c);border-radius:6px;overflow:hidden;min-width:0}' +
       '.sl-noteam{grid-column:1/-1}.sl-noteam ul{columns:3 220px;column-gap:24px}' +
@@ -183,11 +184,11 @@
         .then(function (d) { perAtleta[id] = d.righe || []; decorateAthlete(); }).catch(function () { delete perAtleta[id]; });
       return;
     }
-    var rr = perAtleta[id]; if (!rr || !rr.length) return;
+    var rr = perAtleta[id]; if (!rr || !rr.length) return; stile();
     var by = {}; rr.forEach(function (r) { var x = by[r.gara_id] || (by[r.gara_id] = r); if (r.kind === 'partenti') by[r.gara_id] = r; else by[r.gara_id] = x; });
     var list = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return String(b.race_date).localeCompare(String(a.race_date)); });
     var sec = document.createElement('section'); sec.id = 'sl-athlete'; sec.className = 'apc apc-wide'; sec.setAttribute('data-id', id);
-    sec.innerHTML = '<div class="apc-h"><h3>Gare in elenco (' + list.length + ')</h3></div><p class="apc-sub">Iscritto o partente, con o senza piazzamento · fonte SegreteriaGare.it</p><div class="results-table-wrap"><table class="results-table"><thead><tr><th>DATA</th><th>GARA</th><th>ELENCO</th></tr></thead><tbody>' +
+    sec.innerHTML = '<div class="apc-h"><h3>Gare in elenco (' + list.length + ')</h3></div><p class="apc-sub">Iscritto o partente, con o senza piazzamento · fonte ' + LOGO_SG + '</p><div class="results-table-wrap"><table class="results-table"><thead><tr><th>DATA</th><th>GARA</th><th>ELENCO</th></tr></thead><tbody>' +
       list.map(function (r) {
         var d = String(r.race_date || '').split('-');
         return '<tr><td class="td-date">' + esc(d[2] + '/' + d[1] + '/' + d[0]) + '</td><td class="td-race"><a href="#/gara/' + encodeURIComponent(r.gara_id) + '">' + esc(nomeGara(r)) + '</a></td><td>' + (r.kind === 'partenti' ? 'Partente' : 'Iscritto') + '</td></tr>';
