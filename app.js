@@ -5150,6 +5150,7 @@ function route() {
     return renderCalendario(decodeURIComponent(m_cal[1]));
   }
   if (match('/calendario')) {
+    calQCat = ''; calQGenere = '';   // "Tutti": nessun filtro categoria/genere residuo
     if (activeHub) applyHubFilters(activeHub);
     return renderCalendario();
   }

@@ -201,3 +201,4 @@ body:has(#nav-drawer.open) { overflow: hidden; }
   #nav-drawer .hv2-subl:active, #nav-drawer .hv2-subl:hover { background: rgba(255,255,255,.07); }
   #nav-drawer .hv2-subl.active { color: #fff; background: rgba(255,255,255,.1); box-shadow: inset 3px 0 0 var(--red-hot, #e8001d); }
 }
+@media (min-width: 641px) { #navbar .hv2-dd-in > .hv2-all { margin-bottom: 4px; } }

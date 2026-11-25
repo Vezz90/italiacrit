@@ -64,7 +64,7 @@
       if (seg === 'media') {
         sub.innerHTML = MEDIA_SEC.map(function (m) { return '<a href="#/media/' + m[1] + '" class="hv2-subl" data-k="' + m[1] + '">' + m[0] + '</a>'; }).join('');
       } else {
-        sub.innerHTML = [['M', 'Uomini'], ['F', 'Donne']].map(function (g) {
+        sub.innerHTML = ((seg === 'risultati' || seg === 'calendario') ? '<a href="#/' + seg + '" class="hv2-subl" data-k="">Tutti</a>' : '') + [['M', 'Uomini'], ['F', 'Donne']].map(function (g) {
           return '<div class="hv2-subh">' + g[1] + '</div>' + catsFor(seg).map(function (c) {
             var code = c[0] + '_' + g[0];
             return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="hv2-subl" data-k="' + code + '">' + c[1] + '</a>';
@@ -166,7 +166,8 @@
         return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="nav-link hv2-cat" data-cat="' + code + '">' + c[1] + '</a>';
       }).join('') + '</div>';
     }
-    return '<div class="hv2-cols">' + col('M', 'Uomini') + col('F', 'Donne') + '</div>';
+    var all = (seg === 'risultati' || seg === 'calendario') ? '<a href="#/' + seg + '" class="nav-link hv2-cat hv2-all" data-cat="">Tutti</a>' : '';
+    return all + '<div class="hv2-cols">' + col('M', 'Uomini') + col('F', 'Donne') + '</div>';
   }
   function curHash() { var h = (location.hash && location.hash.length > 1 ? location.hash : location.pathname).replace(/^#?\/?/, '').split('?')[0].split('/'); if (h[0] === 'calendario' && h[1] === 'cat') return { seg: 'calendario', cat: h[2] || '' };
     return { seg: h[0] || '', cat: h[1] || '' }; }
