@@ -5,15 +5,74 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function garaId() { var m = (location.pathname + location.hash).match(/\/gara\/([^\/?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
   function apiBase() { return (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : 'https://italiacrit.onrender.com/api'; }
-  function table(rows) {
+  // ── Elenco a riquadri per squadra (stile start list) ──
+  var NAT = { ITA: 'it', SUI: 'ch', SLO: 'si', NED: 'nl', GER: 'de', FRA: 'fr', ESP: 'es', GBR: 'gb', BEL: 'be', AUT: 'at', POL: 'pl', UKR: 'ua', CZE: 'cz', SVK: 'sk', CRO: 'hr', HUN: 'hu', ROU: 'ro', POR: 'pt', IRL: 'ie', NOR: 'no', LUX: 'lu', LTU: 'lt', LAT: 'lv', BLR: 'by', RUS: 'ru', GRE: 'gr', ALB: 'al', BIH: 'ba', SMR: 'sm', USA: 'us', CAN: 'ca', MEX: 'mx', COL: 'co', VEN: 've', BRA: 'br', AUS: 'au', NZL: 'nz', JPN: 'jp', KAZ: 'kz', RSA: 'za', ETH: 'et', CPV: 'cv' };
+  var COLORI = ['#e8001d', '#1565c0', '#2e7d32', '#f59e0b', '#6a1b9a', '#00838f', '#ad1457', '#37474f', '#ef6c00', '#283593'];
+  function flag(nat) { var c = NAT[nat || 'ITA']; return c ? '<img src="https://flagcdn.com/16x12/' + c + '.png" width="16" height="12" alt="' + esc(nat || 'ITA') + '" loading="lazy">' : '<i></i>'; }
+  // I nomi squadra letti dai PDF hanno spesso code: regione tra parentesi, sigla di categoria o nazione, trattini
+  var CODA = /\s+(?:ES[12]?|AL|JU|UN|EL|DJ|DA|DU|DE|ED|U23|ITA|NED|CZE|SUI|SLO|FRA|GBR|GER|ESP|BEL|AUT|POL|UKR|LAT|MEX|RSM)$/;
+  function pulisci(n) {
+    var s = String(n || '').replace(/\s+\d+\s+[A-Z]{3}\s+NAZIONALE.*$/, '');
+    if (/\b(?:ES[12]?|AL|JU|UN|EL)\s+\d{1,3}\s+[A-Z']{3,}/.test(s)) return '';   // riga letta male: contiene altri corridori
+    s = s.replace(/\([^)]*\)/g, ' ').replace(/\([^)]*$/, ' ').replace(/\b\d \d\b/g, ' ').replace(/\s+\d{1,3}\s+[A-Z']{3,}\s+[A-Z']{3,}$/, '').replace(/\s+/g, ' ').trim();
+    s = s.replace(/^(?:(?:ES[12]?|AL|JU|UN|EL)\s+)+/, '');
+    var prima; do { prima = s; s = s.replace(/[\s\-–]+$/, '').replace(CODA, ''); } while (s !== prima);
+    return s.length > 2 ? s : '';
+  }
+  function chiave(s) { return String(s || '').replace(/\./g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z0-9]+/).filter(function (w) { return w && w !== 'ASD' && w !== 'SSD'; }).join(''); }
+  function parole(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean).sort().join(' '); }
+  function gd(k) { return (typeof globalData !== 'undefined' && globalData && globalData[k]) || {}; }
+  function squadreSito() {
+    var m = {}, t = gd('teams');
+    Object.keys(t).forEach(function (id) { var k = chiave(t[id].nome); if (k && !m[k]) m[k] = id; });
+    return m;
+  }
+  function atletiSito() {   // nome (parole in qualsiasi ordine) -> scheda, solo se e' una sola
+    var m = {}, a = gd('athletes');
+    Object.keys(a).forEach(function (id) { var k = parole(id.replace(/_/g, ' ')); m[k] = k in m ? '' : id; });
+    return m;
+  }
+  function elenco(rows, tipo) {
     if (!rows.length) return '<div class="empty-state">Nessun elenco disponibile</div>';
-    return '<div class="results-table-wrap"><table class="results-table"><thead><tr><th>N°</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th class="td-hide-mobile">CAT.</th></tr></thead><tbody>' +
-      rows.map(function (r) {
-        var nm = r.athlete_id ? '<a href="#/atleta/' + encodeURIComponent(r.athlete_id) + '">' + esc(r.athlete_name) + '</a>' : esc(r.athlete_name);
-        var tn = (r.team_name && r.team_name.length <= 46 && !/(NAZIONALE|\(FRA\)|ITA|ACADEMY U19).*1/.test(r.team_name)) ? r.team_name : '';
-        var tm = r.team_id ? '<a href="#/team/' + encodeURIComponent(r.team_id) + '">' + esc(tn || r.team_id.replace(/_/g, ' ')) + '</a>' : esc(tn);
-        return '<tr><td>' + esc(r.bib) + '</td><td>' + nm + '</td><td class="td-hide-mobile">' + tm + '</td><td class="td-hide-mobile">' + esc(r.cat_code || '') + '</td></tr>';
-      }).join('') + '</tbody></table></div>';
+    var sito = squadreSito(), teams = gd('teams'), nomi = atletiSito(), gruppi = {};
+    rows.forEach(function (r) {
+      var nome = pulisci(r.team_name), id = r.team_id || sito[chiave(nome)] || '';
+      var k = id || chiave(nome) || '~';
+      var g = gruppi[k] || (gruppi[k] = { id: id, nome: (id && teams[id] && teams[id].nome) || nome || (id ? id.replace(/_/g, ' ') : ''), atleti: [] });
+      g.atleti.push(r);
+    });
+    // la stessa squadra scritta con e senza collegamento finisce nello stesso riquadro
+    Object.keys(gruppi).forEach(function (k) { var g = gruppi[k]; if (!g || g.id || k === '~') return; var altro = Object.keys(gruppi).filter(function (j) { return gruppi[j].id && chiave(gruppi[j].nome) === k; })[0]; if (altro) { gruppi[altro].atleti = gruppi[altro].atleti.concat(g.atleti); delete gruppi[k]; } });
+    var num = function (r) { return r.bib == null ? 9999 : +r.bib; };
+    var lista = Object.keys(gruppi).map(function (k) { var g = gruppi[k]; g.k = k; g.atleti.sort(function (a, b) { return num(a) - num(b); }); return g; })
+      .sort(function (a, b) { return (a.k === '~') - (b.k === '~') || num(a.atleti[0]) - num(b.atleti[0]); });
+    var nSq = lista.filter(function (g) { return g.k !== '~'; }).length;
+    var riga = function (r) {
+      var n = esc(r.athlete_name), id = r.athlete_id || nomi[parole(r.athlete_name)] || '';
+      return '<li><b>' + esc(r.bib) + '</b>' + flag(r.nat) + (id ? '<a href="#/atleta/' + encodeURIComponent(id) + '">' + n + '</a>' : '<span>' + n + '</span>') + '</li>';
+    };
+    var card = function (g) {
+      var h = 0; for (var i = 0; i < g.k.length; i++) h = (h * 31 + g.k.charCodeAt(i)) >>> 0;
+      var senza = g.k === '~', titolo = senza ? 'Squadra non indicata' : esc(g.nome);
+      return '<section class="sl-team' + (senza ? ' sl-noteam' : '') + '" style="--sl-c:' + (senza ? '#9aa4b2' : COLORI[h % COLORI.length]) + '"><h4>' + (g.id ? '<a href="#/team/' + encodeURIComponent(g.id) + '">' + titolo + '</a>' : titolo) + '</h4><ul>' + g.atleti.map(riga).join('') + '</ul></section>';
+    };
+    return '<div class="sl-sum"><strong>' + rows.length + '</strong> ' + tipo + (nSq ? ' · <strong>' + nSq + '</strong> squadre' : '') + '<span>fonte SegreteriaGare.it</span></div><div class="sl-grid">' + lista.map(card).join('') + '</div>';
+  }
+  function stile() {
+    if (document.getElementById('sl-style')) return;
+    var st = document.createElement('style'); st.id = 'sl-style';
+    st.textContent = '.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem}' +
+      '.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}' +
+      '.sl-team{background:var(--bg-card,#fff);border:1px solid var(--border-subtle,#dde2ea);border-top:3px solid var(--sl-c);border-radius:6px;overflow:hidden;min-width:0}' +
+      '.sl-noteam{grid-column:1/-1}.sl-noteam ul{columns:3 220px;column-gap:24px}' +
+      '.sl-team h4{margin:0;padding:8px 10px;font-size:.82rem;line-height:1.25;border-bottom:1px solid var(--border-subtle,#dde2ea)}' +
+      '.sl-team h4 a{color:var(--text-primary);text-decoration:none}.sl-team h4 a:hover{text-decoration:underline}' +
+      '.sl-team ul{list-style:none;margin:0;padding:6px 10px 8px}' +
+      '.sl-team li{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:.83rem;break-inside:avoid;min-width:0}' +
+      '.sl-team li b{min-width:26px;text-align:right;font-weight:600;font-size:.75rem;color:var(--text-muted);font-variant-numeric:tabular-nums}' +
+      '.sl-team li img,.sl-team li i{width:16px;height:12px;border-radius:2px;flex:none}' +
+      '.sl-team li a,.sl-team li span{color:var(--text-primary);text-decoration:none;min-width:0;overflow-wrap:anywhere;line-height:1.25}.sl-team li a{font-weight:600}.sl-team li a:hover{text-decoration:underline;color:var(--accent,#e8001d)}';
+    document.head.appendChild(st);
   }
   function setTab(which) {
     var res = document.getElementById('gara-results-panel'), albo = document.getElementById('race-albo-doro');
@@ -49,11 +108,11 @@
       [['iscritti', 'Iscritti', ai], ['partenti', 'Partenti', ap]].forEach(function (x) {
         if (!x[2].length) return;
         var b = document.createElement('button'); b.id = 'sl-tab-' + x[0]; b.className = 'tab-btn'; b.type = 'button';
-        b.innerHTML = (x[0] === 'iscritti' ? '📝 ' : '🏁 ') + x[1] + ' <span style="opacity:.7">' + x[2].length + '</span>';
+        b.textContent = (x[0] === 'iscritti' ? '📝 ' : '🏁 ') + x[1];
         b.onclick = function () { window._switchGaraTab(x[0]); };
         albo.parentNode.insertBefore(b, albo);
         var p = document.createElement('div'); p.id = 'sl-panel-' + x[0]; p.style.display = 'none'; p.style.marginTop = '8px';
-        p.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted);margin:6px 0 10px">Elenco ' + x[1].toLowerCase() + ' · fonte SegreteriaGare.it · ' + x[2].length + ' atleti</div>' + table(x[2]);
+        stile(); p.innerHTML = elenco(x[2], x[0]);
         holder.parentNode.insertBefore(p, holder.nextSibling);
       });
     }

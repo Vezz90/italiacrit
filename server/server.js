@@ -2872,7 +2872,8 @@ async function _startlistRoster(manualRows) {
   for (const r of manualRows) nota(r.team_id, r.team);
   const daNome = n => _iqKeys(n).map(k => byName.get(_rosterKey(k))).find(Boolean);
   const idDaNome = n => String(n || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-  const best = new Map();
+  const best = new Map(), senza = new Map();
+  for (const r of lists) if (!((athletes || {})[r.athlete_id]?.risultati || []).length) senza.set(r.athlete_id, { nome_elenco: r.athlete_name, categoria: r.category });
   // vale la prova piu' recente; il ciclocross (id gara numerico) solo se non ce ne sono altre
   const prova = (id, voto, tid, nomeTeam, categoria, nomeElenco) => {
     if (!id || !tid || ((athletes || {})[id]?.risultati || []).length) return;
@@ -2893,6 +2894,7 @@ async function _startlistRoster(manualRows) {
     const g = gareCic.get(r.gara_id);
     prova(r.atleta_id, '1' + (g?.data || stagione), daNome(r.team_name) || idDaNome(r.team_name), r.team_name, _ROSTER_CAT[g?.categoria], r.rider_name);
   }
+  best.senzaSquadra = senza;
   _slRosterCache = best; _slRosterTs = Date.now();
   return best;
 }
@@ -2912,6 +2914,10 @@ async function _manualAthletesMapNow() {
   for (const [id, e] of daElenchi) {
     if (visti.has(id)) continue;
     righe.push({ atleta_id: id, ..._slDividiNome(e.nome_elenco || id.replace(/_/g, ' ')), team_id: e.team_id, team: e.team, categoria: e.categoria, genere: String(e.categoria || '').endsWith('_F') ? 'F' : 'M', source: 'segreteriagare' });
+  }
+  for (const [id, e] of daElenchi.senzaSquadra || []) {
+    if (visti.has(id) || daElenchi.has(id)) continue;
+    righe.push({ atleta_id: id, ..._slDividiNome(e.nome_elenco), team_id: null, team: null, categoria: e.categoria, genere: String(e.categoria || '').endsWith('_F') ? 'F' : 'M', source: 'segreteriagare' });
   }
   for (const r of righe) {
     const tid = r.team_id || '_SENZA_TEAM_';
