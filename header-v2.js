@@ -43,6 +43,59 @@
     });
   }
 
+  // MOBILE: Risultati, Classifiche, Atleti, Team, Calendario e Media diventano voci a fisarmonica con le categorie (Uomini, poi Donne)
+  var MEDIA_SEC = [['Creator', 'creator'], ['Dirette', 'dirette'], ['Video', 'video'], ['Presentazioni', 'presentazioni'], ['Programmi TV', 'programmi-tv'], ['Altro', 'altro']];
+  function buildAccordions(drawer, burger) {
+    var defs = [
+      ['drawer-risultati', 'Risultati', 'risultati', 'risultati'],
+      ['drawer-class', 'Classifiche', 'classifica', 'class'],
+      ['drawer-atleti', 'Atleti', 'atleti', 'atleti'],
+      ['drawer-team', 'Team', 'team', 'team'],
+      ['drawer-cal', 'Calendario', 'calendario', 'cal'],
+      ['drawer-media', 'Media', 'media', 'media']
+    ];
+    var accs = [];
+    defs.forEach(function (d) {
+      var orig = document.getElementById(d[0]); if (!orig) return;
+      var seg = d[2];
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'nav-link hv2-acc'; btn.setAttribute('aria-expanded', 'false');
+      btn.innerHTML = icon(d[3]) + '<span>' + d[1] + '</span>' + CHEV;
+      var sub = document.createElement('div'); sub.className = 'hv2-sub'; sub.hidden = true;
+      if (seg === 'media') {
+        sub.innerHTML = MEDIA_SEC.map(function (m) { return '<a href="#/media/' + m[1] + '" class="hv2-subl" data-k="' + m[1] + '">' + m[0] + '</a>'; }).join('');
+      } else {
+        sub.innerHTML = [['M', 'Uomini'], ['F', 'Donne']].map(function (g) {
+          return '<div class="hv2-subh">' + g[1] + '</div>' + CATS.map(function (c) {
+            var code = c[0] + '_' + g[0];
+            return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="hv2-subl" data-k="' + code + '">' + c[1] + '</a>';
+          }).join('');
+        }).join('');
+      }
+      btn.addEventListener('click', function () {
+        var open = sub.hidden; sub.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); btn.classList.toggle('open', open);
+      });
+      sub.addEventListener('click', function (e) {
+        if (!e.target.closest('a')) return;
+        drawer.classList.remove('open'); burger.setAttribute('aria-expanded', 'false');
+      });
+      orig.style.display = 'none';
+      st.moved.push({ el: orig, parent: orig.parentNode, next: orig.nextSibling, restoreStyle: true });
+      orig.parentNode.insertBefore(btn, orig); orig.parentNode.insertBefore(sub, orig);
+      st.created.push(btn); st.created.push(sub);
+      accs.push({ seg: seg, btn: btn, sub: sub });
+    });
+    function mark() {
+      var h = curHash();
+      accs.forEach(function (a) {
+        var on = h.seg === a.seg || (a.seg === 'risultati' && h.seg === 'gara');
+        a.btn.classList.toggle('active', on);
+        var key = a.seg === 'media' ? (h.cat || 'video') : h.cat;
+        a.sub.querySelectorAll('.hv2-subl').forEach(function (l) { l.classList.toggle('active', on && l.getAttribute('data-k') === key); });
+      });
+    }
+    mark(); st.timer = setInterval(mark, 800);
+  }
+
   function toMobile() {
     if (st) return;
     var row = document.getElementById('navbar-row1'), drawer = document.getElementById('nav-drawer'), burger = document.getElementById('nav-hamburger');
@@ -66,6 +119,7 @@
     move(document.getElementById('lang-select'), right);
 
     addIcons(drawer);
+    buildAccordions(drawer, burger);
     var login = document.getElementById('drawer-login');
     if (login) { var sep = document.createElement('div'); sep.className = 'hv2-sep'; login.parentNode.insertBefore(sep, login); st.created.push(sep); }
     var tools = document.createElement('div'); tools.className = 'hv2-tools'; tools.innerHTML = '<span>Tema chiaro / scuro</span>';
@@ -85,7 +139,7 @@
     var nb0 = document.getElementById('navbar'); if (nb0) nb0.classList.remove('hv2-logged');
     document.body.classList.remove('hv2-search');
     if (st.obs) st.obs.disconnect();
-    for (var i = st.moved.length - 1; i >= 0; i--) { var m = st.moved[i]; m.parent.insertBefore(m.el, m.next && m.next.parentNode === m.parent ? m.next : null); }
+    for (var i = st.moved.length - 1; i >= 0; i--) { var m = st.moved[i]; m.parent.insertBefore(m.el, m.next && m.next.parentNode === m.parent ? m.next : null); if (m.restoreStyle) m.el.style.display = ''; }
     st.created.forEach(function (e) { if (e.parentNode) e.parentNode.removeChild(e); });
     var drawer = document.getElementById('nav-drawer'); if (drawer) drawer.querySelectorAll('.hv2-ic').forEach(function (e) { e.remove(); });
     st = null;

@@ -189,3 +189,15 @@ body:has(#nav-drawer.open) { overflow: hidden; }
   #navbar .hv2-ch { padding: 8px 14px 6px; font: 700 .68rem Inter, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; }
   #navbar .hv2-grp.hv2-wide .hv2-dd-in > .nav-link { border-top: 1px solid rgba(255,255,255,.08); border-radius: 0 0 8px 8px; margin-top: 6px; }
 }
+
+/* MOBILE: voci a fisarmonica nel menu (Risultati, Classifiche, Atleti, Team, Calendario, Media) */
+@media (max-width: 640px) {
+  #nav-drawer .hv2-acc svg:last-child { margin-left: auto; width: 14px; height: 14px; opacity: .7; transition: transform .15s; }
+  #nav-drawer .hv2-acc.open svg:last-child { transform: rotate(180deg); }
+  #nav-drawer .hv2-sub { background: rgba(0,0,0,.18); padding: 4px 0 8px; }
+  #nav-drawer .hv2-sub[hidden] { display: none; }
+  #nav-drawer .hv2-subh { padding: 10px 20px 4px 54px; font: 700 .68rem Inter, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; }
+  #nav-drawer .hv2-subl { display: block; padding: 11px 20px 11px 54px; color: #e5e7eb; font: 600 .95rem Inter, system-ui, sans-serif; text-decoration: none; }
+  #nav-drawer .hv2-subl:active, #nav-drawer .hv2-subl:hover { background: rgba(255,255,255,.07); }
+  #nav-drawer .hv2-subl.active { color: #fff; background: rgba(255,255,255,.1); box-shadow: inset 3px 0 0 var(--red-hot, #e8001d); }
+}
