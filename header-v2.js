@@ -79,6 +79,7 @@
   function restore() {
     if (!st) return;
     if (st.timer) clearInterval(st.timer);
+    if (st.mediaFn) window.removeEventListener('hashchange', st.mediaFn);
     var nb0 = document.getElementById('navbar'); if (nb0) nb0.classList.remove('hv2-logged');
     document.body.classList.remove('hv2-search');
     if (st.obs) st.obs.disconnect();
@@ -90,7 +91,8 @@
 
   var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
   var GROUPS = [
-    ['Gare', ['nav-risultati', 'nav-cal', 'nav-gare']],
+    ['Gare', ['nav-risultati', 'nav-gare']],
+    ['__cal'],
     ['Atleti', ['nav-atleti', 'nav-team']],
     ['Classifiche', ['nav-class', 'nav-albo']],
     ['Statistiche', ['nav-stats', 'nav-comp']]
@@ -112,6 +114,7 @@
     var menu = document.createElement('nav'); menu.className = 'hv2-menu'; menu.setAttribute('aria-label', 'Menu principale'); st.created.push(menu);
     var grpEls = [];
     GROUPS.forEach(function (g) {
+      if (g[0] === '__cal') { move(document.getElementById('nav-cal'), menu); return; }   // Calendario: voce a se', accanto a Gare
       var grp = document.createElement('div'); grp.className = 'hv2-grp';
       grp.innerHTML = '<button type="button" class="hv2-top" aria-haspopup="true">' + g[0] + CHEV + '</button><div class="hv2-dd"><div class="hv2-dd-in"></div></div>';
       var inn = grp.querySelector('.hv2-dd-in');
@@ -124,7 +127,21 @@
       grp.addEventListener('click', function (e) { if (e.target.closest('a')) closeAll(); });
       menu.appendChild(grp); grpEls.push(grp);
     });
-    move(document.getElementById('nav-media'), menu);
+    // Media: tendina con le sezioni della pagina Media
+    var mg = document.createElement('div'); mg.className = 'hv2-grp'; st.created.push(mg);
+    var MSEC = [['Creator', 'creator'], ['Dirette', 'dirette'], ['Video', 'video'], ['Presentazioni', 'presentazioni'], ['Programmi TV', 'programmi-tv'], ['Altro', 'altro']];
+    mg.innerHTML = '<button type="button" class="hv2-top" aria-haspopup="true">Media' + CHEV + '</button><div class="hv2-dd"><div class="hv2-dd-in">' +
+      MSEC.map(function (m) { return '<a href="#/media/' + m[1] + '" class="nav-link hv2-msec" data-ms="' + m[1] + '">' + m[0] + '</a>'; }).join('') + '</div></div>';
+    mg.querySelector('.hv2-top').addEventListener('click', function (e) { e.stopPropagation(); var was = mg.classList.contains('open'); closeAll(); if (!was) mg.classList.add('open'); });
+    mg.addEventListener('click', function (e) { if (e.target.closest('a')) closeAll(); });
+    menu.appendChild(mg); grpEls.push(mg);
+    function markMedia() {
+      var h = (location.hash || '').replace(/^#\/?/, '').split('?')[0].split('/');
+      var on = h[0] === 'media', sec = on ? (h[1] || 'video') : '';
+      mg.querySelectorAll('.hv2-msec').forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-ms') === sec); });
+    }
+    markMedia(); window.addEventListener('hashchange', markMedia);
+    st.mediaFn = markMedia;
     move(document.getElementById('nav-home'), menu);
     move(document.getElementById('nav-msg'), menu);
     var logo = document.getElementById('nav-logo-link');
