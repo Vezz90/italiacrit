@@ -79,7 +79,9 @@
   function restore() {
     if (!st) return;
     if (st.timer) clearInterval(st.timer);
+    if (st.mediaTimer) clearInterval(st.mediaTimer); if (st.catTimer) clearInterval(st.catTimer);
     if (st.mediaFn) window.removeEventListener('hashchange', st.mediaFn);
+    if (st.catFn) window.removeEventListener('hashchange', st.catFn);
     var nb0 = document.getElementById('navbar'); if (nb0) nb0.classList.remove('hv2-logged');
     document.body.classList.remove('hv2-search');
     if (st.obs) st.obs.disconnect();
@@ -93,10 +95,23 @@
   var GROUPS = [
     ['Gare', ['nav-risultati', 'nav-gare']],
     ['__cal'],
-    ['Atleti', ['nav-atleti', 'nav-team']],
-    ['Classifiche', ['nav-class', 'nav-albo']],
+    ['Classifiche', ['@cat:classifica', 'nav-albo']],
+    ['Atleti', ['@cat:atleti']],
+    ['Team', ['@cat:team']],
     ['Statistiche', ['nav-stats', 'nav-comp']]
   ];
+  // elenco categorie per le tendine Classifiche / Atleti / Team: prima uomini, poi donne
+  var CATS = [['ES1', 'Esordienti 1° anno'], ['ES2', 'Esordienti 2° anno'], ['AL', 'Allievi'], ['JUN', 'Juniores'], ['ELI', 'Elite · Under 23']];
+  function catList(seg) {
+    function col(sx, title) {
+      return '<div class="hv2-col"><div class="hv2-ch">' + title + '</div>' + CATS.map(function (c) {
+        var code = c[0] + '_' + sx;
+        return '<a href="#/' + seg + '/' + code + '" class="nav-link hv2-cat" data-cat="' + code + '">' + c[1] + '</a>';
+      }).join('') + '</div>';
+    }
+    return '<div class="hv2-cols">' + col('M', 'Uomini') + col('F', 'Donne') + '</div>';
+  }
+  function curHash() { var h = (location.hash && location.hash.length > 1 ? location.hash : location.pathname).replace(/^#?\/?/, '').split('?')[0].split('/'); return { seg: h[0] || '', cat: h[1] || '' }; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function closeAll() { document.querySelectorAll('.hv2-grp.open, .hv2-acct.open').forEach(function (e) { e.classList.remove('open'); }); }
 
@@ -118,7 +133,10 @@
       var grp = document.createElement('div'); grp.className = 'hv2-grp';
       grp.innerHTML = '<button type="button" class="hv2-top" aria-haspopup="true">' + g[0] + CHEV + '</button><div class="hv2-dd"><div class="hv2-dd-in"></div></div>';
       var inn = grp.querySelector('.hv2-dd-in');
-      g[1].forEach(function (id) { move(document.getElementById(id), inn); });
+      g[1].forEach(function (id) {
+        if (id.indexOf('@cat:') === 0) { var sg = id.slice(5); grp.setAttribute('data-seg', sg); inn.insertAdjacentHTML('beforeend', catList(sg)); grp.classList.add('hv2-wide'); }
+        else move(document.getElementById(id), inn);
+      });
       grp.querySelector('.hv2-top').addEventListener('click', function (e) {
         e.stopPropagation();
         var was = grp.classList.contains('open');
@@ -136,17 +154,25 @@
     mg.addEventListener('click', function (e) { if (e.target.closest('a')) closeAll(); });
     menu.appendChild(mg); grpEls.push(mg);
     function markMedia() {
-      var h = (location.hash || '').replace(/^#\/?/, '').split('?')[0].split('/');
+      var h = (location.hash && location.hash.length > 1 ? location.hash : location.pathname).replace(/^#?\/?/, '').split('?')[0].split('/');
       var on = h[0] === 'media', sec = on ? (h[1] || 'video') : '';
       mg.querySelectorAll('.hv2-msec').forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-ms') === sec); });
     }
-    markMedia(); window.addEventListener('hashchange', markMedia);
+    markMedia(); window.addEventListener('hashchange', markMedia); window.addEventListener('popstate', markMedia); st.mediaTimer = setInterval(markMedia, 800);
     st.mediaFn = markMedia;
     move(document.getElementById('nav-home'), menu);
     move(document.getElementById('nav-msg'), menu);
     var logo = document.getElementById('nav-logo-link');
     row.insertBefore(menu, logo ? logo.nextSibling : row.firstChild);
-    function markActive() { grpEls.forEach(function (g) { g.classList.toggle('has-active', !!g.querySelector('.nav-link.active')); }); }
+    function markCats() {
+      var h = curHash();
+      grpEls.forEach(function (g) {
+        var sg = g.getAttribute('data-seg'); if (!sg) return;
+        g.querySelectorAll('.hv2-cat').forEach(function (a) { a.classList.toggle('active', h.seg === sg && a.getAttribute('data-cat') === h.cat); });
+      });
+    }
+    function markActive() { markCats(); grpEls.forEach(function (g) { var sg = g.getAttribute('data-seg'); g.classList.toggle('has-active', !!g.querySelector('.nav-link.active') || (!!sg && curHash().seg === sg)); }); }
+    window.addEventListener('hashchange', markActive); window.addEventListener('popstate', markActive); st.catTimer = setInterval(markActive, 800); st.catFn = markActive;
     markActive();
     st.obs = new MutationObserver(markActive);
     st.obs.observe(menu, { attributes: true, attributeFilter: ['class'], subtree: true });

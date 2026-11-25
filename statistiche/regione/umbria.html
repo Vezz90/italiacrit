@@ -56,10 +56,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=22" />
   <link rel="stylesheet" href="design.css?v=273" />
-  <link rel="stylesheet" href="/header-v2.css?v=6" />
+  <link rel="stylesheet" href="/header-v2.css?v=7" />
   <link rel="stylesheet" href="/profile-v2.css?v=13" />
   <script src="/profile-v2.js?v=17" defer></script>
-  <script src="/header-v2.js?v=5" defer></script>
+  <script src="/header-v2.js?v=7" defer></script>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
   <!-- Il sito ha il suo tema chiaro/scuro: dichiararlo impedisce a Chrome/Samsung/Xiaomi di "scurire" la pagina da soli invertendo i colori (titoli gialli su nero). Lo aggiorna lo script del tema. -->
@@ -241,7 +241,7 @@
 /* Caricatore degli script dell'app. Dal dominio (Cloudflare, nodo di Zurigo) i file pesanti arrivano a ~150 KB/s, da Render a ~600 KB/s.
    Se Render risponde e serve le stesse versioni di questa pagina, gli script si prendono da li; altrimenti (o al primo errore) dal dominio. */
 (function () {
-  var L = ['app.js?v=1115', 'home.js?v=29', 'procorse.js?v=4', 'forma.js?v=11', 'risultati.js?v=12', 'elenchi.js?v=5', 'almanacco.js?v=13', 'carriere.js?v=1', 'titoli.js?v=13', 'redazione.js?v=45', 'ciclocross.js?v=21', 'articoli.js?v=1'];
+  var L = ['app.js?v=1116', 'home.js?v=29', 'procorse.js?v=4', 'forma.js?v=11', 'risultati.js?v=12', 'elenchi.js?v=5', 'almanacco.js?v=13', 'carriere.js?v=1', 'titoli.js?v=13', 'redazione.js?v=45', 'ciclocross.js?v=21', 'articoli.js?v=1'];
   var R = 'https://italiacrit.onrender.com/';
   function load(base) {
     L.forEach(function (f) {

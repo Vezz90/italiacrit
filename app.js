@@ -5095,6 +5095,13 @@ function route() {
   if (match('/albo')) return renderAlboDoro();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
+  // Elenchi per categoria da menu: #/atleti/JUN_M · #/team/ELI_F
+  const _mElCat = match('/(atleti|team)/:cat');
+  if (_mElCat && /^(ES1|ES2|AL|JUN|ELI)_[MF]$/.test(_mElCat[2])) {
+    const _c = _mElCat[2], _g = _c.endsWith('_F') ? 'F' : 'M';
+    if (_mElCat[1] === 'atleti') { atlGender = _g; atlCat = _c; atlSearch = ''; return renderAtletiList(); }
+    teamGender = _g; teamCat = _c; teamSearch = ''; return renderTeamList();
+  }
   if (match('/gare')) return renderGare();
   if (match('/cerca')) return renderCerca();
   // Risultati filtrati per categoria con URL dedicato (SEO: "risultati esordienti"

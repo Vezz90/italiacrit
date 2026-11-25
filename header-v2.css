@@ -181,3 +181,11 @@ body:has(#nav-drawer.open) { overflow: hidden; }
 
 /* Assistente AI (VEZZ) spento per ora — per riattivarlo togliere queste righe e mettere AI_WIDGET_ENABLED = true in app.js */
 #ai-widget-btn, #ai-chat-panel { display: none !important; }
+
+/* tendine Classifiche / Atleti / Team: due colonne (Uomini | Donne) con le categorie */
+@media (min-width: 641px) {
+  #navbar .hv2-dd-in .hv2-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+  #navbar .hv2-grp.hv2-wide .hv2-dd { min-width: 440px; }
+  #navbar .hv2-ch { padding: 8px 14px 6px; font: 700 .68rem Inter, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; }
+  #navbar .hv2-grp.hv2-wide .hv2-dd-in > .nav-link { border-top: 1px solid rgba(255,255,255,.08); border-radius: 0 0 8px 8px; margin-top: 6px; }
+}
