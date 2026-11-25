@@ -44,22 +44,46 @@
   function elenco(rows, tipo) {
     if (!rows.length) return '<div class="empty-state">Nessun elenco disponibile</div>';
     var sito = squadreSito(), teams = gd('teams'), atleti = gd('athletes'), nomi = atletiSito(), gruppi = {}, daScheda = 0;
+    var senzaNome = [];
+    // un riquadro per ogni squadra scritta nell'elenco: mai unire squadre con nomi diversi
     rows.forEach(function (r) {
       var scritto = String(r.team_name || ''), nome = pulisci(scritto);
       var aid = r.athlete_id || nomi[parole(r.athlete_name)] || '', a = atleti[aid];
       var scheda = a && a.team_id && teams[a.team_id] ? a.team_id : '';
-      // il riquadro segue quello che c'e' scritto nell'elenco: mai unire squadre con nomi diversi
+      var x = { bib: r.bib, athlete_name: r.athlete_name, nat: r.nat, aid: aid, presa: false };
+      if (!nome) { senzaNome.push({ x: x, scheda: scheda }); return; }
+      // pagina della squadra: nome identico nel sito, oppure quella (compatibile col nome) che ha il corridore o la riga
       var id = sito[chiave(nome)] || '';
-      if (!id && scritto && scheda && stessaSquadra(scritto, teams[scheda].nome)) id = scheda;
-      if (!id && scritto && r.team_id && teams[r.team_id] && stessaSquadra(scritto, teams[r.team_id].nome)) id = r.team_id;
-      var presa = false;
-      if (!id && !nome && scheda) { id = scheda; presa = true; daScheda++; }   // elenco senza squadra: quella della scheda dell'atleta
-      var k = id || chiave(nome) || '~';
-      var g = gruppi[k] || (gruppi[k] = { id: id, nome: (id && teams[id] && teams[id].nome) || nome, atleti: [] });
-      g.atleti.push({ bib: r.bib, athlete_name: r.athlete_name, nat: r.nat, aid: aid, presa: presa });
+      if (!id && scheda && stessaSquadra(scritto, teams[scheda].nome)) id = scheda;
+      if (!id && r.team_id && teams[r.team_id] && stessaSquadra(scritto, teams[r.team_id].nome)) id = r.team_id;
+      var k = chiave(nome);
+      var g = gruppi[k] || (gruppi[k] = { id: '', scritto: nome, voti: {}, atleti: [] });
+      if (id) g.voti[id] = (g.voti[id] || 0) + 1;
+      g.atleti.push(x);
     });
-    // la stessa squadra scritta con e senza collegamento finisce nello stesso riquadro
-    Object.keys(gruppi).forEach(function (k) { var g = gruppi[k]; if (!g || g.id || k === '~') return; var altro = Object.keys(gruppi).filter(function (j) { return gruppi[j].id && chiave(gruppi[j].nome) === k; })[0]; if (altro) { gruppi[altro].atleti = gruppi[altro].atleti.concat(g.atleti); delete gruppi[k]; } });
+    var unisci = function (da, a) { gruppi[a].atleti = gruppi[a].atleti.concat(gruppi[da].atleti); Object.keys(gruppi[da].voti).forEach(function (i) { gruppi[a].voti[i] = (gruppi[a].voti[i] || 0) + gruppi[da].voti[i]; }); delete gruppi[da]; };
+    var scelta = function (g) { return Object.keys(g.voti).sort(function (x, y) { return g.voti[y] - g.voti[x]; })[0] || ''; };
+    // la stessa squadra scritta in due modi: stessa pagina squadra, oppure un nome che e' l'inizio dell'altro
+    Object.keys(gruppi).sort(function (x, y) { return gruppi[y].atleti.length - gruppi[x].atleti.length; }).forEach(function (k) {
+      if (!gruppi[k]) return;
+      Object.keys(gruppi).forEach(function (j) {
+        if (j === k || !gruppi[j] || !gruppi[k]) return;
+        var stessa = scelta(gruppi[k]) && scelta(gruppi[k]) === scelta(gruppi[j]);
+        var inizio = j.length >= 12 && (k.indexOf(j) === 0 || j.indexOf(k) === 0);
+        if (stessa || inizio) unisci(j, k);
+      });
+    });
+    Object.keys(gruppi).forEach(function (k) { var g = gruppi[k]; g.id = scelta(g); g.nome = (g.id && teams[g.id] && teams[g.id].nome) || g.scritto; });
+    // elenco senza squadra: quella della scheda dell'atleta (segnata con l'asterisco)
+    senzaNome.forEach(function (v) {
+      var k = '~';
+      if (v.scheda) {
+        v.x.presa = true; daScheda++;
+        k = Object.keys(gruppi).filter(function (j) { return gruppi[j].id === v.scheda; })[0] || v.scheda;
+      }
+      var g = gruppi[k] || (gruppi[k] = { id: v.scheda, nome: v.scheda ? teams[v.scheda].nome : '', atleti: [] });
+      g.atleti.push(v.x);
+    });
     var num = function (r) { return r.bib == null ? 9999 : +r.bib; };
     var lista = Object.keys(gruppi).map(function (k) { var g = gruppi[k]; g.k = k; g.atleti.sort(function (a, b) { return num(a) - num(b); }); return g; })
       .sort(function (a, b) { return (a.k === '~') - (b.k === '~') || num(a.atleti[0]) - num(b.atleti[0]); });
