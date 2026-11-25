@@ -22,6 +22,15 @@
   function chiave(s) { return String(s || '').replace(/\./g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z0-9]+/).filter(function (w) { return w && w !== 'ASD' && w !== 'SSD'; }).join(''); }
   function parole(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean).sort().join(' '); }
   function gd(k) { return (typeof globalData !== 'undefined' && globalData && globalData[k]) || {}; }
+  // stessa squadra solo se i nomi coincidono davvero (non basta una parola come "AVIS" o un termine generico)
+  var GENERICHE = /^(ASD|SSD|USD|POL|TEAM|CLUB|GRUPPO|SPORTIVO|SPORTIVA|SPORT|SPORTING|UNIONE|CICLISMO|CICLISTICA|CICLISTICO|CICLI|CYCLING|BIKE|MTB|RACING|PEDALE|VELO|ACADEMY|SQUADRA|CORSE|SCUOLA|POLISPORTIVA|COSTRUZIONI|DEL|DELLA|SAN|SANTA|TOSCANA|VENETO|EMILIA|ROMAGNA|LOMBARDIA|UMBRIA|LAZIO|LIGURIA|PIEMONTE|MARCHE|FRIULI|TRENTINO)$/;
+  function distintive(s) { return parole(String(s || '').replace(/\([^)]*\)?/g, ' ')).split(' ').filter(function (w) { return w.length > 2 && !GENERICHE.test(w) && !/^\d+$/.test(w); }); }
+  function stessaSquadra(a, b) {
+    var ca = chiave(pulisci(a) || a), cb = chiave(b);
+    if (ca.length > 5 && cb.length > 5 && (ca.indexOf(cb) >= 0 || cb.indexOf(ca) >= 0)) return true;
+    var pa = distintive(a), pb = distintive(b), com = pa.filter(function (w) { return pb.indexOf(w) >= 0; });
+    return com.length >= 2 || (com.length === 1 && (Math.min(pa.length, pb.length) === 1 || com[0].length >= 8));
+  }
   function squadreSito() {
     var m = {}, t = gd('teams');
     Object.keys(t).forEach(function (id) { var k = chiave(t[id].nome); if (k && !m[k]) m[k] = id; });
@@ -34,12 +43,20 @@
   }
   function elenco(rows, tipo) {
     if (!rows.length) return '<div class="empty-state">Nessun elenco disponibile</div>';
-    var sito = squadreSito(), teams = gd('teams'), nomi = atletiSito(), gruppi = {};
+    var sito = squadreSito(), teams = gd('teams'), atleti = gd('athletes'), nomi = atletiSito(), gruppi = {}, daScheda = 0;
     rows.forEach(function (r) {
-      var nome = pulisci(r.team_name), id = r.team_id || sito[chiave(nome)] || '';
+      var scritto = String(r.team_name || ''), nome = pulisci(scritto);
+      var aid = r.athlete_id || nomi[parole(r.athlete_name)] || '', a = atleti[aid];
+      var scheda = a && a.team_id && teams[a.team_id] ? a.team_id : '';
+      // il riquadro segue quello che c'e' scritto nell'elenco: mai unire squadre con nomi diversi
+      var id = sito[chiave(nome)] || '';
+      if (!id && scritto && scheda && stessaSquadra(scritto, teams[scheda].nome)) id = scheda;
+      if (!id && scritto && r.team_id && teams[r.team_id] && stessaSquadra(scritto, teams[r.team_id].nome)) id = r.team_id;
+      var presa = false;
+      if (!id && !nome && scheda) { id = scheda; presa = true; daScheda++; }   // elenco senza squadra: quella della scheda dell'atleta
       var k = id || chiave(nome) || '~';
-      var g = gruppi[k] || (gruppi[k] = { id: id, nome: (id && teams[id] && teams[id].nome) || nome || (id ? id.replace(/_/g, ' ') : ''), atleti: [] });
-      g.atleti.push(r);
+      var g = gruppi[k] || (gruppi[k] = { id: id, nome: (id && teams[id] && teams[id].nome) || nome, atleti: [] });
+      g.atleti.push({ bib: r.bib, athlete_name: r.athlete_name, nat: r.nat, aid: aid, presa: presa });
     });
     // la stessa squadra scritta con e senza collegamento finisce nello stesso riquadro
     Object.keys(gruppi).forEach(function (k) { var g = gruppi[k]; if (!g || g.id || k === '~') return; var altro = Object.keys(gruppi).filter(function (j) { return gruppi[j].id && chiave(gruppi[j].nome) === k; })[0]; if (altro) { gruppi[altro].atleti = gruppi[altro].atleti.concat(g.atleti); delete gruppi[k]; } });
@@ -48,20 +65,21 @@
       .sort(function (a, b) { return (a.k === '~') - (b.k === '~') || num(a.atleti[0]) - num(b.atleti[0]); });
     var nSq = lista.filter(function (g) { return g.k !== '~'; }).length;
     var riga = function (r) {
-      var n = esc(r.athlete_name), id = r.athlete_id || nomi[parole(r.athlete_name)] || '';
-      return '<li><b>' + esc(r.bib) + '</b>' + flag(r.nat) + (id ? '<a href="#/atleta/' + encodeURIComponent(id) + '">' + n + '</a>' : '<span>' + n + '</span>') + '</li>';
+      var n = esc(r.athlete_name), stella = r.presa ? '<sup title="Squadra presa dalla scheda atleta">*</sup>' : '';
+      return '<li><b>' + esc(r.bib) + '</b>' + flag(r.nat) + (r.aid ? '<a href="#/atleta/' + encodeURIComponent(r.aid) + '">' + n + stella + '</a>' : '<span>' + n + '</span>') + '</li>';
     };
     var card = function (g) {
       var h = 0; for (var i = 0; i < g.k.length; i++) h = (h * 31 + g.k.charCodeAt(i)) >>> 0;
       var senza = g.k === '~', titolo = senza ? 'Squadra non indicata' : esc(g.nome);
       return '<section class="sl-team' + (senza ? ' sl-noteam' : '') + '" style="--sl-c:' + (senza ? '#9aa4b2' : COLORI[h % COLORI.length]) + '"><h4>' + (g.id ? '<a href="#/team/' + encodeURIComponent(g.id) + '">' + titolo + '</a>' : titolo) + '</h4><ul>' + g.atleti.map(riga).join('') + '</ul></section>';
     };
-    return '<div class="sl-sum"><strong>' + rows.length + '</strong> ' + tipo + (nSq ? ' · <strong>' + nSq + '</strong> squadre' : '') + '<span>fonte SegreteriaGare.it</span></div><div class="sl-grid">' + lista.map(card).join('') + '</div>';
+    var nota = daScheda ? '<p class="sl-nota">* L’elenco non riporta la squadra: è quella della scheda dell’atleta.</p>' : '';
+    return '<div class="sl-sum"><strong>' + rows.length + '</strong> ' + tipo + (nSq ? ' · <strong>' + nSq + '</strong> squadre' : '') + '<span>fonte SegreteriaGare.it</span></div><div class="sl-grid">' + lista.map(card).join('') + '</div>' + nota;
   }
   function stile() {
     if (document.getElementById('sl-style')) return;
     var st = document.createElement('style'); st.id = 'sl-style';
-    st.textContent = '.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem}' +
+    st.textContent = '.sl-nota{font-size:.75rem;color:var(--text-muted);margin:10px 0 0}.sl-sum{font-size:.85rem;color:var(--text-muted);margin:10px 0 14px}.sl-sum strong{color:var(--text-primary)}.sl-sum span{float:right;font-size:.75rem}' +
       '.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}' +
       '.sl-team{background:var(--bg-card,#fff);border:1px solid var(--border-subtle,#dde2ea);border-top:3px solid var(--sl-c);border-radius:6px;overflow:hidden;min-width:0}' +
       '.sl-noteam{grid-column:1/-1}.sl-noteam ul{columns:3 220px;column-gap:24px}' +
