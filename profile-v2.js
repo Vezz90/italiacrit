@@ -178,6 +178,24 @@
   function shown(p) { return p ? p : '—'; }
   function posCell(p) { return p === 1 ? '<span class="apc-pos apc-p1">1</span>' : p === 2 ? '<span class="apc-pos apc-p2">2</span>' : p === 3 ? '<span class="apc-pos apc-p3">3</span>' : '<span class="apc-pos">' + shown(p) + '</span>'; }
 
+
+  // ── Ciambella: ripartizione dei piazzamenti (vittorie · podi · 4°–10° · oltre) ──
+  var donutScope = 'car';
+  function donutCard(rows, withScope, year) {
+    var all = rows.filter(function (r) { return r.p; });
+    var use = (withScope && donutScope === 'sta') ? all.filter(function (r) { return r.y === year; }) : all;
+    if (!all.length) return '';
+    var c = [use.filter(function (r) { return r.p === 1; }).length, use.filter(function (r) { return r.p === 2 || r.p === 3; }).length, use.filter(function (r) { return r.p >= 4 && r.p <= 10; }).length, use.filter(function (r) { return r.p > 10; }).length];
+    var tot = c[0] + c[1] + c[2] + c[3];
+    var COL = ['#e0a800', '#9aa4b2', '#e8601c', '#cdd3dc'], LAB = ['Vittorie', 'Podi (2°–3°)', '4°–10°', 'Oltre il 10°'];
+    var R = 52, C = 2 * Math.PI * R, off = 0, segs = '';
+    if (tot) c.forEach(function (v, i) { if (!v) return; var len = v / tot * C; segs += '<circle cx="70" cy="70" r="' + R + '" fill="none" stroke="' + COL[i] + '" stroke-width="18" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 70 70)"/>'; off += len; });
+    else segs = '<circle cx="70" cy="70" r="' + R + '" fill="none" stroke="' + COL[3] + '" stroke-width="18"/>';
+    var sel = withScope ? '<select class="apc-sel apc-dsel" aria-label="Periodo"><option value="car"' + (donutScope === 'car' ? ' selected' : '') + '>Carriera</option><option value="sta"' + (donutScope === 'sta' ? ' selected' : '') + '>Stagione ' + esc3(year) + '</option></select>' : '';
+    return '<section class="apc"><div class="apc-h"><h3>Piazzamenti per tipo</h3>' + sel + '</div><div class="apc-donut"><svg viewBox="0 0 140 140" role="img" aria-label="Ripartizione dei piazzamenti">' + segs + '<text x="70" y="68" text-anchor="middle" class="apc-dn">' + tot + '</text><text x="70" y="86" text-anchor="middle" class="apc-dt">piazzamenti</text></svg><ul>' +
+      c.map(function (v, i) { return '<li><i style="background:' + COL[i] + '"></i><span>' + LAB[i] + '</span><b>' + v + '</b></li>'; }).join('') + '</ul></div></section>';
+  }
+
   function seasonCard(K, year, ptsTxt) {
     var all = (window._athRows || {})[K] || [], rows = all.filter(function (r) { return r.y === year; });
     if (!rows.length) return '';
@@ -282,14 +300,14 @@
     var panel = document.getElementById('ath-panel-s'); if (!panel) return;
     var id = athId(), cx = isCx(), K = id + '|' + (cx ? 'cx' : 'road');
     var host = document.getElementById('ap-cards');
-    if (!host) { host = document.createElement('div'); host.id = 'ap-cards'; var kr = document.getElementById('atleta-key-results'); if (kr && kr.parentNode === panel) kr.insertAdjacentElement('afterend', host); else panel.insertBefore(host, panel.firstChild); host.addEventListener('change', function (e) { if (e.target.classList.contains('apc-sel')) { byMode = e.target.value; fillCards(); } }); }
+    if (!host) { host = document.createElement('div'); host.id = 'ap-cards'; var kr = document.getElementById('atleta-key-results'); if (kr && kr.parentNode === panel) kr.insertAdjacentElement('afterend', host); else panel.insertBefore(host, panel.firstChild); host.addEventListener('change', function (e) { if (e.target.classList.contains('apc-dsel')) { donutScope = e.target.value; fillCards(); } else if (e.target.classList.contains('apc-sel')) { byMode = e.target.value; fillCards(); } }); }
     var aside = document.querySelector('.ath-hero-standing') || document;
     var yrM = ((aside.querySelector('#atleta-stats-italia-label') || {}).textContent || '').match(/\d{4}/), year = yrM ? yrM[0] : '';
     var ptsTxt = ((aside.querySelector('#atleta-pts-value') || {}).textContent || '0').trim();
     var posEl = aside.querySelector('.ath-rank-block .athlete-pts-value'), livePos = posEl ? parseInt(posEl.textContent, 10) || 0 : 0;
     var c = (window._athCareer || {})[K];
     if (!cx) loadCarr();
-    var parts = [seasonCard(K, year, ptsTxt), latestCard(K), careerCard(c, cx), winsCard(c, cx), teamsCard(K, id), cx ? '' : rankCard(rankPoints(id, +year, livePos)), rivalsCard(id)];
+    var parts = [seasonCard(K, year, ptsTxt), latestCard(K), careerCard(c, cx), donutCard((window._athRows || {})[K] || [], true, year), winsCard(c, cx), teamsCard(K, id), cx ? '' : rankCard(rankPoints(id, +year, livePos)), rivalsCard(id)];
     var html = parts.join('');
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;
@@ -454,11 +472,12 @@
     if (rows.length) {
       parts.push(seasonCard(K, yearForRows, isCur ? ptsTxt : '—').replace('Stagione ' + yearForRows, 'Stagione ' + year));
       parts.push(latestCard(K));
+      parts.push(donutCard(rows, false, yearForRows));
       parts.push(squadCard(rows));
       var cr = cx ? null : carrCache;
       if (cr) { parts.push(teamCareerCard(cr, team)); parts.push(rankCard(teamRank(cr, team, +yearForRows, livePos))); }
     }
-    var html = parts.join('').split("window._athTab('r')").join("(document.getElementById('team-results-tbody')||document.body).scrollIntoView({behavior:'smooth',block:'center'})");
+    var html = parts.join('').split("window._athTab('r')").join("window._tmTab('r')");
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;
       host.querySelectorAll('.apc-rav[data-aid]').forEach(function (el) {
@@ -524,17 +543,31 @@
   }
   function markTeamTabs() {
     var tabs = document.querySelector('.ath-tabs[aria-label*="team"]'), sP = document.getElementById('tm-panel-s'); if (!tabs || !sP || document.getElementById('tm-tab-a')) return;
+    // vecchi elenchi (corridori chiave / roster): ora c'e' la scheda Atleti
+    var oldRid = document.getElementById('team-riders-tab-chiave'); if (oldRid && oldRid.closest('.section-header')) oldRid.closest('.section-header').style.display = 'none';
+    ['team-riders-chiave', 'team-riders-roster'].forEach(function (i) { var e = document.getElementById(i); if (e) e.style.display = 'none'; });
+    // tabella dei risultati: scheda a parte
+    var tbody = document.getElementById('team-results-tbody'), tbl = tbody && tbody.closest('table'), pr = document.createElement('div');
+    pr.id = 'tm-panel-r'; pr.setAttribute('role', 'tabpanel'); pr.hidden = true;
+    if (tbl) { var hd = tbl.previousElementSibling; while (hd && !hd.classList.contains('section-header')) hd = hd.previousElementSibling; if (hd) pr.appendChild(hd); pr.appendChild(tbl); }
+    var btnR = document.createElement('button'); btnR.className = 'ath-tab'; btnR.setAttribute('role', 'tab'); btnR.id = 'tm-tab-r'; btnR.setAttribute('aria-selected', 'false'); btnR.textContent = 'Risultati';
+    btnR.addEventListener('click', function () { window._tmTab('r'); });
     var btn = document.createElement('button'); btn.className = 'ath-tab'; btn.setAttribute('role', 'tab'); btn.id = 'tm-tab-a'; btn.setAttribute('aria-selected', 'false'); btn.textContent = 'Atleti';
     btn.addEventListener('click', function () { window._tmTab('a'); });
-    var cTab = document.getElementById('tm-tab-c'); tabs.insertBefore(btn, cTab);
-    var pa = document.createElement('div'); pa.id = 'tm-panel-a'; pa.setAttribute('role', 'tabpanel'); pa.hidden = true; sP.insertAdjacentElement('afterend', pa);
+    var cTab = document.getElementById('tm-tab-c'); tabs.insertBefore(btn, cTab); tabs.insertBefore(btnR, cTab);
+    var pa = document.createElement('div'); pa.id = 'tm-panel-a'; pa.setAttribute('role', 'tabpanel'); pa.hidden = true; sP.insertAdjacentElement('afterend', pa); pa.insertAdjacentElement('afterend', pr);
     var orig = window._tmTab;
     if (typeof orig === 'function' && !orig.__ap) {
       var w = function (k) {
         var s = document.getElementById('tm-panel-s'), c = document.getElementById('tm-panel-c'), a = document.getElementById('tm-panel-a');
         var ts = document.getElementById('tm-tab-s'), tc = document.getElementById('tm-tab-c'), ta = document.getElementById('tm-tab-a');
-        if (k === 'a') { if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = false; if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', 'true'); fillRiders(); return; }
-        if (a) a.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false');
+        var r = document.getElementById('tm-panel-r'), tr = document.getElementById('tm-tab-r');
+        if (k === 'a' || k === 'r') {
+          if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = k !== 'a'; if (r) r.hidden = k !== 'r';
+          if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', k === 'a' ? 'true' : 'false'); if (tr) tr.setAttribute('aria-selected', k === 'r' ? 'true' : 'false');
+          if (k === 'a') fillRiders(); return;
+        }
+        if (a) a.hidden = true; if (r) r.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false'); if (tr) tr.setAttribute('aria-selected', 'false');
         return orig.apply(this, arguments);
       };
       w.__ap = true; window._tmTab = w;
@@ -542,7 +575,21 @@
     fillRiders();
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); }
+
+  // ── Logo/maglia della squadra: la cornice si adatta alla forma (tondo, quadrato, orizzontale) ──
+  function fitLogos() {
+    document.querySelectorAll('.team-header.ap .photo-area--portrait img:not([data-fit]), .athlete-header.ap #atleta-team-photo-wrap img:not([data-fit])').forEach(function (img) {
+      img.setAttribute('data-fit', '1');
+      var apply = function () {
+        var w = img.naturalWidth, h = img.naturalHeight; if (!w || !h) return;
+        var r = w / h, box = img.closest('.photo-area') || img.parentElement, shape = r > 1.45 ? 'wide' : (r < 0.8 ? 'tall' : (Math.abs(r - 1) < 0.12 ? 'round' : 'sq'));
+        box.classList.remove('lg-wide', 'lg-tall', 'lg-round', 'lg-sq'); box.classList.add('lg-' + shape, 'lg-fit');
+      };
+      if (img.complete) apply(); else img.addEventListener('load', apply);
+    });
+  }
+
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); fitLogos(); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();
