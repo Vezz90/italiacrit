@@ -632,7 +632,31 @@
     });
   }
 
-  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); fitLogos(); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); }
+  // Selettori categoria (Classifica, Calendario, Albo, Statistiche): menu a tendina come in Risultati. I pulsanti originali restano (nascosti) e ricevono il clic.
+  function catSelects() {
+    document.querySelectorAll('.cls-cats:not([data-cs]), .am-filter:not([data-cs])').forEach(function (box) {
+      var btns = [].slice.call(box.querySelectorAll('button')); if (!btns.length || !box.parentNode) return;
+      box.setAttribute('data-cs', '1');
+      var isCal = box.id === 'cal-cats';
+      var lab = document.createElement('label'); lab.className = 'hx-sel cs-sel';
+      var sel = document.createElement('select'); sel.setAttribute('aria-label', 'Categoria');
+      if (isCal) { var o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Tutte le categorie'; sel.appendChild(o0); }
+      btns.forEach(function (b, i) { var o = document.createElement('option'); o.value = String(i); o.textContent = b.textContent.trim(); sel.appendChild(o); });
+      sel.addEventListener('change', function () {
+        if (sel.value === '') { var p = btns.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0]; if (p) p.click(); }
+        else btns[+sel.value].click();
+      });
+      lab.appendChild(sel); box.parentNode.insertBefore(lab, box);
+      box._csSel = sel; box._csBtns = btns; box._csCal = isCal;
+    });
+    document.querySelectorAll('.cls-cats[data-cs], .am-filter[data-cs]').forEach(function (box) {
+      if (!box._csSel) return;
+      var i = box._csBtns.findIndex(function (b) { return b.getAttribute('aria-pressed') === 'true'; });
+      var v = i < 0 ? (box._csCal ? '' : '0') : String(i);
+      if (box._csSel.value !== v) box._csSel.value = v;
+    });
+  }
+  function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); fitLogos(); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); catSelects(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
     scan();

@@ -379,4 +379,8 @@ a.apc-row:hover .apc-rn { color: var(--accent, #e8001d); }
   #tm-panel-r tr[data-date] > td:nth-child(6):not(.ap-nil)::after { content: ' km'; }
   #tm-panel-r tr[data-date] > td:nth-child(7):not(.ap-nil)::after { content: ' km/h'; }
   #tm-panel-r tr[data-date] > td.ap-nil { display: none; }
-}
+}
+
+/* categoria: tendina al posto dei pulsanti */
+.cls-cats[data-cs], .am-filter[data-cs] { display: none !important; }
+.cs-sel { min-width: 190px; }
