@@ -2851,14 +2851,22 @@ const _rosterKey = s => String(s || '').replace(/\./g, '').normalize('NFD').repl
 async function _startlistRoster(manualRows) {
   if (_slRosterCache && (Date.now() - _slRosterTs) < 600000) return _slRosterCache;
   const stagione = String(((await readDataJsonFromGH('results_raw.json').catch(() => null)) || []).reduce((m, r) => (String(r.data || '') > m ? String(r.data) : m), '').slice(0, 4) || new Date().getFullYear());
-  const [lists, athletes, teams, aliases, storico, pcs] = await Promise.all([
-    _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).order('id')),
-    readDataJsonFromGH('athletes.json'),
-    readDataJsonFromGH('teams.json'),
-    _iqAll(() => supabase.from('team_aliases').select('alias,team_id,team_name').order('alias')),
-    _iqAll(() => supabase.from('ciclismo_results').select('atleta_id,team,categoria,data').eq('stagione', stagione).not('atleta_id', 'is', null).order('id')),
-    _iqAll(() => supabase.from('pcs_gara_results').select('atleta_id,rider_name,team_name,gara_id').eq('season', stagione).like('gara_id', 'CIC_%').not('atleta_id', 'is', null).order('id')),
-  ]);
+  // Ogni fonte per conto suo: se una non risponde (timeout del database) le altre valgono lo stesso.
+  // Prima bastava un errore per perdere in silenzio tutte le rose (schede tornate alle squadre vecchie).
+  const mancate = [];
+  const fonte = async (nome, leggi, vuoto) => {
+    for (let prova = 1; ; prova++) {
+      try { return await leggi(); }
+      catch (e) { if (prova >= 3) { mancate.push(nome); console.warn(`[rose] fonte ${nome} non letta: ${e.message}`); return vuoto; } await new Promise(r => setTimeout(r, 1500 * prova)); }
+    }
+  };
+  const athletes = await readDataJsonFromGH('athletes.json');
+  const teams = await readDataJsonFromGH('teams.json');
+  // una alla volta, per non sommare le attese sul database
+  const lists = await fonte('elenchi', () => _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).order('id')), []);
+  const aliases = await fonte('nomi collegati', () => _iqAll(() => supabase.from('team_aliases').select('alias,team_id,team_name').order('alias')), []);
+  const storico = await fonte('risultati ciclismo.info', () => _perId(() => supabase.from('ciclismo_results').select('id,atleta_id,team,categoria,data').eq('stagione', stagione).not('atleta_id', 'is', null)), []);
+  const pcs = await fonte('risultati PCS', () => _iqAll(() => supabase.from('pcs_gara_results').select('atleta_id,rider_name,team_name,gara_id').eq('season', stagione).like('gara_id', 'CIC_%').not('atleta_id', 'is', null).order('id')), []);
   const gareCic = new Map(), idCic = [...new Set(pcs.map(r => r.gara_id.slice(4)))];
   for (let i = 0; i < idCic.length; i += 300) {
     const { data } = await supabase.from('cic_races').select('id,data,categoria').in('id', idCic.slice(i, i + 300));
@@ -2895,7 +2903,10 @@ async function _startlistRoster(manualRows) {
     prova(r.atleta_id, '1' + (g?.data || stagione), daNome(r.team_name) || idDaNome(r.team_name), r.team_name, _ROSTER_CAT[g?.categoria], r.rider_name);
   }
   best.senzaSquadra = senza;
-  _slRosterCache = best; _slRosterTs = Date.now();
+  best.mancate = mancate;
+  // lettura incompleta: se ce n'e' una completa precedente resta quella, e si riprova fra un minuto
+  if (mancate.length && _slRosterCache && !_slRosterCache.mancate.length) { _slRosterTs = Date.now() - 540000; return _slRosterCache; }
+  _slRosterCache = best; _slRosterTs = mancate.length ? Date.now() - 540000 : Date.now();
   return best;
 }
 async function _manualAthletesMapNow() {
@@ -2939,7 +2950,11 @@ function _manualAthletesMap() {
   return _manualAthletesInflight;
 }
 app.get('/api/data/manual-athletes', async (req, res) => {
-  try { res.json(await _manualAthletesMap()); }
+  try {
+    const mappa = await _manualAthletesMap();
+    res.set('X-Rose', _slRosterCache ? `${_slRosterCache.size} dagli elenchi; mancate: ${(_slRosterCache.mancate || []).join(', ') || 'nessuna'}` : 'non calcolate');
+    res.json(mappa);
+  }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2988,6 +3003,17 @@ async function _iqAll(build) {
   for (let from = 0; ; from += 1000) {
     const { data, error } = await build().range(from, from + 999);
     if (error) throw error; all.push(...(data || [])); if (!data || data.length < 1000) return all;
+  }
+}
+// Lettura a pagine "dall'ultimo id letto": veloce anche in fondo a tabelle grandi (a differenza di range/offset).
+async function _perId(build) {
+  const all = [];
+  for (let ultimo = 0; ;) {
+    const { data, error } = await build().gt('id', ultimo).order('id').limit(1000);
+    if (error) throw error;
+    all.push(...(data || []));
+    if (!data || data.length < 1000) return all;
+    ultimo = data[data.length - 1].id;
   }
 }
 // Per ogni "squadra nuova" aggiunge i corridori trovati negli elenchi (con gara e PDF), per poterla controllare.
