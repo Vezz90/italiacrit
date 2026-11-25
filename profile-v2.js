@@ -530,7 +530,7 @@
       // stagione in corso senza risultati (squadra nuova o atleti appena inseriti): si mostra comunque la rosa
       var cxCards = cxTeamCards(id, catCode);
       if (cxCards) parts.push(cxCards);
-      parts.push(rosterCard(id, catCode, !!cxCards));
+      parts.push(rosterCard(id, '', !!cxCards));
     }
     var html = parts.join('').split("window._athTab('r')").join("window._tmTab('r')");
     if (host.dataset.sig !== html) {
@@ -597,12 +597,13 @@
   }
   function ridersHtml(id) {
     var t = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null; if (!t) return '';
-    var code = activeCatCode(), cx = isCx();
+    var code = '', cx = isCx();   // la rosa si vede tutta: la categoria e' scritta su ogni atleta
     var list = (t.atleti || []).map(function (aid) { return globalData.athletes[aid]; }).filter(Boolean).filter(function (a) {
       if (!code) return true; var c = (typeof getRankingFileCode === 'function' ? getRankingFileCode(a.categoria) : a.categoria) || a.categoria; return c === code || a.categoria === code;
     });
     var n = list.length;
-    list.sort(function (a, b) { return ridersSort === 'name' ? String(a.cognome + a.nome).localeCompare(String(b.cognome + b.nome)) : (b.punti_totali || 0) - (a.punti_totali || 0); });
+    var ordine = function (a) { return NATCAT[a.categoria] != null ? NATCAT[a.categoria] : 9; };
+    list.sort(function (a, b) { return ridersSort === 'name' ? String(a.cognome + a.nome).localeCompare(String(b.cognome + b.nome)) : ((b.punti_totali || 0) - (a.punti_totali || 0)) || (ordine(a) - ordine(b)) || String(a.cognome).localeCompare(String(b.cognome)); });
     var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
     var cards = list.map(function (a) {
       var aid = a.id || a.atleta_id, res = (a.risultati || []), w = res.filter(function (r) { return r.posizione === 1; }).length;
@@ -657,15 +658,15 @@
   function fillRiders() {
     var panel = document.getElementById('tm-panel-a'); if (!panel) return;
     var tid = teamId(), anno = isCx() ? '' : (window._ciclismoTeamAnno || {})[tid];
-    var html = anno ? archRidersHtml(tid, anno) : ridersHtml(tid);
+    var arch = anno ? Object.keys((window._ciclismoTeamStoricoCache || {})[tid] || {}).sort().reverse() : [];
+    var html = anno ? arch.map(function (y) { return archRidersHtml(tid, y); }).join('') : ridersHtml(tid);
     if (panel.dataset.sig === html) return;
     panel.dataset.sig = html; panel.innerHTML = html;
     panel.querySelectorAll('.apc-rph[data-aid]').forEach(function (el) {
       var aid = el.getAttribute('data-aid'); if (!aid || typeof getEntityOverrides !== 'function') return;
       getEntityOverrides('atleta', aid).then(function (ov) { if (ov && ov.photo_url && el.isConnected && typeof mediaUrl === 'function') { el.innerHTML = '<img alt="" src="' + esc3(mediaUrl(ov.photo_url)) + '">'; el.classList.add('has-img'); } }).catch(function () {});
     });
-    var sg = panel.querySelector('.ap-seg[data-k="rsort"]');
-    if (sg) sg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; ridersSort = b.getAttribute('data-v'); fillRiders(); });
+    [].forEach.call(panel.querySelectorAll('.ap-seg[data-k="rsort"]'), function (sg) { sg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; ridersSort = b.getAttribute('data-v'); fillRiders(); }); });
   }
   function yrVis(k) { var w = document.querySelector('.ap-yrsel'); if (w) w.style.display = (k === 'c') ? 'none' : ''; }
   function markTeamTabs() {

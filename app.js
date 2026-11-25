@@ -20383,6 +20383,15 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   }).join('');
   freshYearRow.insertAdjacentHTML('beforeend', pillsHtml);
 
+  // anno in corso senza gare nostre ma con risultati in archivio: si apre quello, non l'anno precedente
+  const _anno = String(nativeSelYear);
+  if (!nativeCount && (perAnno[_anno] || []).length) {
+    const pill = freshYearRow.querySelector(`.year-pill[data-year="${_anno}"]`);
+    if (pill) { pill.setAttribute('data-ciclismo', '1'); pill.setAttribute('onclick', `window.setAtletaCiclismoYear('${escJs(atletaId)}','${escJs(_anno)}')`); }
+    window.setAtletaCiclismoYear(atletaId, _anno);
+    return;
+  }
+
   if (!ciclismoOnlyYears.length) return;
 
   // La stagione nativa caricata (di default, es. 2026) è SEMPRE mostrata come
@@ -22973,7 +22982,10 @@ async function renderTeam(team_id, opts = {}) {
   });
   
   if (!teamViewCat || !teamCats.includes(teamViewCat)) {
-    teamViewCat = teamCats[0] || '';
+    // si apre sulla categoria con piu' punti; a parita', quella con piu' atleti
+    const _nCat = {};
+    for (const aid of (t.atleti || [])) { const x = athletes[aid]; const c = x && (getRankingFileCode({ categoria: x.categoria, genere: x.genere }) || x.categoria); if (c) _nCat[c] = (_nCat[c] || 0) + 1; }
+    teamViewCat = teamCats.slice().sort((a, b) => (catPoints[b] - catPoints[a]) || ((_nCat[b] || 0) - (_nCat[a] || 0)))[0] || '';
   }
 
   // tipo:'pista' (velodromo) resta nella stessa tabella risultati (il badge

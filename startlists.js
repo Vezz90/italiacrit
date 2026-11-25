@@ -62,6 +62,37 @@
     fetch(apiBase() + '/startlists/' + encodeURIComponent(id)).then(function (r) { return r.ok ? r.json() : { iscritti: [], partenti: [] }; })
       .then(function (d) { cache[id] = d; busy[id] = 0; if (garaId() === id) build(d); }).catch(function () { busy[id] = 0; });
   }
-  function init() { new MutationObserver(function () { clearTimeout(init._t); init._t = setTimeout(decorate, 80); }).observe(document.body, { childList: true, subtree: true }); decorate(); }
+  // Scheda atleta: tutte le gare in cui compare negli elenchi, anche senza piazzamento
+  var perAtleta = {};
+  function atletaId() { var m = (location.pathname + location.hash).match(/\/atleta\/([^\/?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
+  function nomeGara(r) {
+    var g = (typeof globalData !== 'undefined' && globalData && globalData.calendar || []).filter(function (c) { return c.id === r.gara_id; })[0];
+    var res = !g && (typeof globalData !== 'undefined' && globalData && globalData.resultsRaw || []).filter(function (c) { return c.gara_id === r.gara_id; })[0];
+    if (g) return g.nome || g.nome_gara; if (res) return res.nome_gara;
+    var n = String(r.gara_id || '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
+    if (/^\d+_/.test(n) || /^\d+$/.test(n)) n = String(r.source_event || '').replace(/-/g, ' ');
+    return n.replace(/_/g, ' ').toUpperCase();
+  }
+  function decorateAthlete() {
+    var id = atletaId(), host = document.getElementById('ap-cards'); if (!id || !host) return;
+    var old = document.getElementById('sl-athlete'); if (old && old.getAttribute('data-id') === id) return; if (old) old.remove();
+    if (perAtleta[id] === undefined) {
+      perAtleta[id] = null;
+      fetch(apiBase() + '/startlists/atleta/' + encodeURIComponent(id)).then(function (r) { return r.ok ? r.json() : { righe: [] }; })
+        .then(function (d) { perAtleta[id] = d.righe || []; decorateAthlete(); }).catch(function () { delete perAtleta[id]; });
+      return;
+    }
+    var rr = perAtleta[id]; if (!rr || !rr.length) return;
+    var by = {}; rr.forEach(function (r) { var x = by[r.gara_id] || (by[r.gara_id] = r); if (r.kind === 'partenti') by[r.gara_id] = r; else by[r.gara_id] = x; });
+    var list = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return String(b.race_date).localeCompare(String(a.race_date)); });
+    var sec = document.createElement('section'); sec.id = 'sl-athlete'; sec.className = 'apc apc-wide'; sec.setAttribute('data-id', id);
+    sec.innerHTML = '<div class="apc-h"><h3>Gare in elenco (' + list.length + ')</h3></div><p class="apc-sub">Iscritto o partente, con o senza piazzamento · fonte SegreteriaGare.it</p><div class="results-table-wrap"><table class="results-table"><thead><tr><th>DATA</th><th>GARA</th><th>ELENCO</th></tr></thead><tbody>' +
+      list.map(function (r) {
+        var d = String(r.race_date || '').split('-');
+        return '<tr><td class="td-date">' + esc(d[2] + '/' + d[1] + '/' + d[0]) + '</td><td class="td-race"><a href="#/gara/' + encodeURIComponent(r.gara_id) + '">' + esc(nomeGara(r)) + '</a></td><td>' + (r.kind === 'partenti' ? 'Partente' : 'Iscritto') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    host.parentNode.insertBefore(sec, host.nextSibling);
+  }
+  function init() { new MutationObserver(function () { clearTimeout(init._t); init._t = setTimeout(function () { decorate(); decorateAthlete(); }, 80); }).observe(document.body, { childList: true, subtree: true }); decorate(); decorateAthlete(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

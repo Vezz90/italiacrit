@@ -2845,31 +2845,53 @@ function _slDividiNome(s) {
   while (n < p.length - 1 && _PREF_COGNOME.has(p[n - 1])) n++;
   return { cognome: p.slice(0, n).join(' '), nome: p.slice(n).join(' ') };
 }
+const _ROSTER_CAT = { ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F' };
+// "A.S.D. Black Sheeps", "ASD BLACKSHEEPS" e "BLACKSHEEPS ASD" sono la stessa squadra
+const _rosterKey = s => String(s || '').replace(/\./g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().split(/[^A-Z0-9]+/).filter(w => w && w !== 'ASD' && w !== 'SSD').join('');
 async function _startlistRoster(manualRows) {
   if (_slRosterCache && (Date.now() - _slRosterTs) < 600000) return _slRosterCache;
-  const [lists, athletes, teams, aliases] = await Promise.all([
+  const stagione = String(((await readDataJsonFromGH('results_raw.json').catch(() => null)) || []).reduce((m, r) => (String(r.data || '') > m ? String(r.data) : m), '').slice(0, 4) || new Date().getFullYear());
+  const [lists, athletes, teams, aliases, storico, pcs] = await Promise.all([
     _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).order('id')),
     readDataJsonFromGH('athletes.json'),
     readDataJsonFromGH('teams.json'),
     _iqAll(() => supabase.from('team_aliases').select('alias,team_id,team_name').order('alias')),
+    _iqAll(() => supabase.from('ciclismo_results').select('atleta_id,team,categoria,data').eq('stagione', stagione).not('atleta_id', 'is', null).order('id')),
+    _iqAll(() => supabase.from('pcs_gara_results').select('atleta_id,rider_name,team_name,gara_id').eq('season', stagione).like('gara_id', 'CIC_%').not('atleta_id', 'is', null).order('id')),
   ]);
+  const gareCic = new Map(), idCic = [...new Set(pcs.map(r => r.gara_id.slice(4)))];
+  for (let i = 0; i < idCic.length; i += 300) {
+    const { data } = await supabase.from('cic_races').select('id,data,categoria').in('id', idCic.slice(i, i + 300));
+    for (const g of data || []) gareCic.set('CIC_' + g.id, g);
+  }
   const nomi = new Map(), byName = new Map();
-  const nota = (id, nome) => { if (!id) return; if (!nomi.has(id)) nomi.set(id, nome || id); const k = _iqNorm(nome); if (k && !byName.has(k)) byName.set(k, id); };
+  const nota = (id, nome) => { if (!id) return; if (!nomi.has(id)) nomi.set(id, nome || id); const k = _rosterKey(nome); if (k && !byName.has(k)) byName.set(k, id); };
+  for (const a of aliases) { byName.set(_rosterKey(a.alias), a.team_id); if (a.team_name) nomi.set(a.team_id, a.team_name); }
   for (const [id, t] of Object.entries(teams || {})) nota(id, t.nome);
-  for (const a of aliases) { byName.set(a.alias, a.team_id); if (!nomi.has(a.team_id)) nomi.set(a.team_id, a.team_name || a.team_id); }
   for (const r of manualRows) if (r.source !== 'ciclismo_info') nota(r.team_id, r.team);
-  for (const r of manualRows) if (r.team_id && !nomi.has(r.team_id)) nomi.set(r.team_id, r.team || r.team_id);
-  const stagione = lists.reduce((m, r) => (String(r.race_date || '') > m ? String(r.race_date) : m), '').slice(0, 4);
+  for (const r of manualRows) nota(r.team_id, r.team);
+  const daNome = n => _iqKeys(n).map(k => byName.get(_rosterKey(k))).find(Boolean);
+  const idDaNome = n => String(n || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   const best = new Map();
+  // vale la prova piu' recente; il ciclocross (id gara numerico) solo se non ce ne sono altre
+  const prova = (id, voto, tid, nomeTeam, categoria, nomeElenco) => {
+    if (!id || !tid || ((athletes || {})[id]?.risultati || []).length) return;
+    const prima = best.get(id);
+    if (!prima || voto > prima.voto) best.set(id, { voto, team_id: tid, team: nomi.get(tid) || nomeTeam || tid, categoria: categoria || prima?.categoria || '', nome_elenco: nomeElenco || prima?.nome_elenco || '' });
+  };
   for (const r of lists) {
     if (!String(r.race_date || '').startsWith(stagione) || (r.nat && r.nat !== 'ITA')) continue;
-    if (((athletes || {})[r.athlete_id]?.risultati || []).length) continue;
-    const tid = r.team_id || _iqKeys(r.team_name).map(k => byName.get(k)).find(Boolean);
-    if (!tid) continue;
-    // vale l'elenco su strada piu' recente; il ciclocross (id gara numerico) solo se non ce ne sono
-    const voto = (/^\d+_/.test(String(r.gara_id)) ? '0' : '1') + r.race_date;
-    const prima = best.get(r.athlete_id);
-    if (!prima || voto > prima.voto) best.set(r.athlete_id, { voto, team_id: tid, team: nomi.get(tid) || r.team_name || tid, categoria: r.category, nome_elenco: r.athlete_name });
+    prova(r.athlete_id, (/^\d+_/.test(String(r.gara_id)) ? '0' : '1') + r.race_date, r.team_id || daNome(r.team_name), r.team_name, r.category, r.athlete_name);
+  }
+  const SELEZIONE = /NAZIONALE|RAPPRESENTATIVA|SELEZIONE|COMITATO/i;
+  for (const r of storico) {
+    if (!r.team || SELEZIONE.test(r.team)) continue;
+    prova(r.atleta_id, '1' + (r.data || stagione), daNome(r.team) || idDaNome(r.team), r.team, _ROSTER_CAT[r.categoria], '');
+  }
+  for (const r of pcs) {
+    if (!r.team_name || SELEZIONE.test(r.team_name)) continue;
+    const g = gareCic.get(r.gara_id);
+    prova(r.atleta_id, '1' + (g?.data || stagione), daNome(r.team_name) || idDaNome(r.team_name), r.team_name, _ROSTER_CAT[g?.categoria], r.rider_name);
   }
   _slRosterCache = best; _slRosterTs = Date.now();
   return best;
@@ -2882,14 +2904,14 @@ async function _manualAthletesMapNow() {
   const righe = rows.map(r => {
     visti.add(r.atleta_id);
     const e = daElenchi.get(r.atleta_id);
-    if (!e || (e.team_id === r.team_id && r.source !== 'ciclismo_info')) return r;
+    if (!e || r.source !== 'ciclismo_info') return r;   // squadre decise da team, admin o coda import restano
     // la pagina della squadra precedente resta (storico), l'atleta passa nella rosa attuale
     if (r.team_id && !result[r.team_id]) result[r.team_id] = { nome: r.team || r.team_id, atleti: [], senzaTeam: false };
     return { ...r, team_id: e.team_id, team: e.team, categoria: e.categoria || r.categoria, source: 'segreteriagare' };
   });
   for (const [id, e] of daElenchi) {
     if (visti.has(id)) continue;
-    righe.push({ atleta_id: id, ..._slDividiNome(e.nome_elenco), team_id: e.team_id, team: e.team, categoria: e.categoria, genere: String(e.categoria || '').endsWith('_F') ? 'F' : 'M', source: 'segreteriagare' });
+    righe.push({ atleta_id: id, ..._slDividiNome(e.nome_elenco || id.replace(/_/g, ' ')), team_id: e.team_id, team: e.team, categoria: e.categoria, genere: String(e.categoria || '').endsWith('_F') ? 'F' : 'M', source: 'segreteriagare' });
   }
   for (const r of righe) {
     const tid = r.team_id || '_SENZA_TEAM_';
@@ -2926,6 +2948,17 @@ app.get('/api/startlists/:gara_id', async (req, res) => {
     for (const r of data || []) (out[r.kind] || (out[r.kind] = [])).push(r);
     res.set('Cache-Control', 'public, max-age=120');
     res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Pubblico: le gare in cui un atleta compare tra gli iscritti o i partenti (anche senza piazzamento).
+app.get('/api/startlists/atleta/:atletaId', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('startlists').select('kind, gara_id, race_date, category, team_name, team_id, source_event')
+      .eq('athlete_id', req.params.atletaId).order('race_date', { ascending: false }).limit(500);
+    if (error) throw error;
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json({ righe: data || [] });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
