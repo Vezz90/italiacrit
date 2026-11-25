@@ -42,7 +42,9 @@
     const idx = await getJson('/data/ciclocross/index.json');
     const key = idx.current;
     const [cal, res] = await Promise.all([getJson(`/data/ciclocross/${key}/calendar.json`), getJson(`/data/ciclocross/${key}/results.json`)]);
-    return (cxData = { key, cal, res });
+    // nomi alternativi delle squadre decisi dall'admin (se il server non risponde si prosegue senza)
+    const aliases = await Promise.race([getJson(`${typeof API_BASE !== 'undefined' ? API_BASE : '/api'}/data/team-aliases`), new Promise(r => setTimeout(() => r({}), 4000))]).catch(() => ({}));
+    return (cxData = { key, cal, res, aliases });
   }
 
   // ── Conversione nel formato della stagione su strada ─────────────
@@ -53,7 +55,16 @@
     // team del ciclocross → id del team su strada quando il nome coincide
     const roadTeamByNorm = {};
     for (const t of Object.values((liveGd && liveGd.teams) || {})) { const n = normClub(t.nome); if (n && !roadTeamByNorm[n]) roadTeamByNorm[n] = t; }
-    const teamOf = (club) => { const t = roadTeamByNorm[normClub(club)]; return t ? { id: t.id, nome: t.nome } : { id: slug(club) || 'SENZA_TEAM', nome: club || '' }; };
+    // stesso nome scritto con spazi/punti diversi ("SC Pedale Senese" = "S.C.PEDALE SENESE"): a parita' vince la squadra con atleti o risultati
+    const roadTeamByCompact = {};
+    const weight = (t) => ((t.atleti || []).length ? 1 : 0) + ((t.risultati || []).length ? 2 : 0);
+    for (const t of Object.values((liveGd && liveGd.teams) || {})) { const n = normClub(t.nome).replace(/ /g, ''); if (n && (!roadTeamByCompact[n] || weight(t) > weight(roadTeamByCompact[n]))) roadTeamByCompact[n] = t; }
+    const aliasKey = (s) => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, ' ').trim();
+    const teamOf = (club) => {
+      const al = cxData.aliases && cxData.aliases[aliasKey(club)];
+      const t = (al && liveGd && liveGd.teams && liveGd.teams[al]) || roadTeamByNorm[normClub(club)] || roadTeamByCompact[normClub(club).replace(/ /g, '')];
+      return t ? { id: t.id, nome: t.nome } : { id: slug(club) || 'SENZA_TEAM', nome: club || '' };
+    };
     const roadAth = (liveGd && liveGd.athletes) || {};
 
     const calendar = [], seenCal = {};

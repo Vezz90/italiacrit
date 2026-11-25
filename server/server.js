@@ -2875,6 +2875,16 @@ app.get('/api/startlists/:gara_id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Nomi con cui una squadra compare nelle fonti esterne (decisi dall'admin in coda import): servono ad agganciare i risultati ciclocross.
+app.get('/api/data/team-aliases', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('team_aliases').select('alias, team_id').limit(1000);
+    if (error) throw error;
+    res.set('Cache-Control', 'public, max-age=60');
+    res.json(Object.fromEntries((data || []).map(r => [r.alias, r.team_id])));
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Coda di approvazione (atleti/squadre proposti dall'importazione SegreteriaGare).
 const _iqNorm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
 // Nei PDF il nome può avere in coda la regione tra parentesi: "ASD X - (Toscana)" vale anche come "ASD X".

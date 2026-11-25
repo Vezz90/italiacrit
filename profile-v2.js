@@ -513,7 +513,9 @@
       if (cr) { parts.push(teamCareerCard(cr, team, catCode)); parts.push(rankCard(teamRank(cr, team, +yearForRows, livePos, catCode))); }
     } else if (isCur && !cx) {
       // stagione in corso senza risultati (squadra nuova o atleti appena inseriti): si mostra comunque la rosa
-      parts.push(rosterCard(id, catCode));
+      var cxCards = cxTeamCards(id, catCode);
+      if (cxCards) parts.push(cxCards);
+      parts.push(rosterCard(id, catCode, !!cxCards));
     }
     var html = parts.join('').split("window._athTab('r')").join("window._tmTab('r')");
     if (host.dataset.sig !== html) {
@@ -547,7 +549,21 @@
     host.appendChild(tg); tg.style.margin = '0';
   }
   var ridersSort = 'pts';
-  function rosterCard(id, code) {
+  // statistiche del ciclocross mostrate nella Panoramica di una squadra che su strada non ha ancora risultati
+  function cxTeamCards(id, code) {
+    var gd = window.CX && window.CX.otherGd ? window.CX.otherGd() : null, t = gd && gd.teams ? gd.teams[id] : null;
+    if (!t) return '';
+    var season = window.CX.season(), K = '__team__' + id + '|cxsum';
+    var rows = teamRowsFrom(t).filter(function (r) { return !code || !r.c || r.c === code; });
+    if (!rows.length) return '';
+    rows.forEach(function (r) { r.y = season; });
+    window._athRows = window._athRows || {}; window._athRows[K] = rows;
+    var pts = rows.reduce(function (s, r) { return s + (r.pts || 0); }, 0);
+    var go = "window.cxSetMode('ciclocross',{force:true})";
+    return [seasonCard(K, season, String(pts)).replace('Stagione ' + season, 'Ciclocross ' + season), latestCard(K), donutCard(rows, false, season), squadCard(rows)]
+      .join('').split("window._athTab('r')").join(go);
+  }
+  function rosterCard(id, code, hasCx) {
     var t = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null; if (!t) return '';
     var list = (t.atleti || []).map(function (aid) { return globalData.athletes[aid]; }).filter(Boolean).filter(function (a) {
       if (!code) return true; var c = (typeof getRankingFileCode === 'function' ? getRankingFileCode(a.categoria) : a.categoria) || a.categoria; return c === code || a.categoria === code;
@@ -555,7 +571,7 @@
     if (!list.length) return '';
     list.sort(function (a, b) { return String(a.cognome + a.nome).localeCompare(String(b.cognome + b.nome)); });
     var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
-    return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti (' + list.length + ')</h3></div><p class="apc-sub">Nessun risultato in questa stagione per ora: ecco la rosa.</p><div class="apc-riders">' + list.map(function (a) {
+    return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti (' + list.length + ')</h3></div><p class="apc-sub">' + (hasCx ? 'La rosa della squadra.' : 'Nessun risultato in questa stagione per ora: ecco la rosa.') + '</p><div class="apc-riders">' + list.map(function (a) {
       var aid = a.id || a.atleta_id;
       return '<a class="apc-rider" href="#/atleta/' + encodeURIComponent(aid) + '"><span class="apc-rph" data-aid="' + esc3(aid) + '">' + sil + '</span><b>' + esc3((a.cognome || '') + ' ' + (a.nome || '')) + '</b><small>' + esc3(typeof catLabel === 'function' ? catLabel(a.categoria) : a.categoria) + '</small></a>';
     }).join('') + '</div></section>';
@@ -672,6 +688,7 @@
       if (box._csSel.value !== v) box._csSel.value = v;
     });
   }
+  document.addEventListener('ics-cx-ready', function () { setTimeout(function () { scan(); }, 0); });
   function scan() { T = null; document.querySelectorAll('.athlete-header.ath-hero:not([data-ap])').forEach(decorate); fillCareer(); fillKey(); fillCards(); markNil(); markTitles(); markYears(); document.querySelectorAll('.team-header.tm-hero:not([data-ap])').forEach(decorateTeam); fitLogos(); markTeamHistory(); markTeamCats(); markTeamTabs(); fillRiders(); fillTeamCards(); catSelects(); }
   function init() {
     new MutationObserver(function () { if (T) return; T = setTimeout(scan, 60); }).observe(document.body, { childList: true, subtree: true });
