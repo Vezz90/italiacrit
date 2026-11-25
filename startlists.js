@@ -10,7 +10,8 @@
     return '<div class="results-table-wrap"><table class="results-table"><thead><tr><th>N°</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th class="td-hide-mobile">CAT.</th></tr></thead><tbody>' +
       rows.map(function (r) {
         var nm = r.athlete_id ? '<a href="#/atleta/' + encodeURIComponent(r.athlete_id) + '">' + esc(r.athlete_name) + '</a>' : esc(r.athlete_name);
-        var tm = r.team_id ? '<a href="#/team/' + encodeURIComponent(r.team_id) + '">' + esc(r.team_name || r.team_id) + '</a>' : esc(r.team_name || '');
+        var tn = (r.team_name && r.team_name.length <= 46 && !/(NAZIONALE|\(FRA\)|ITA|ACADEMY U19).*1/.test(r.team_name)) ? r.team_name : '';
+        var tm = r.team_id ? '<a href="#/team/' + encodeURIComponent(r.team_id) + '">' + esc(tn || r.team_id.replace(/_/g, ' ')) + '</a>' : esc(tn);
         return '<tr><td>' + esc(r.bib) + '</td><td>' + nm + '</td><td class="td-hide-mobile">' + tm + '</td><td class="td-hide-mobile">' + esc(r.cat_code || '') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
