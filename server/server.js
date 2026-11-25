@@ -2861,6 +2861,58 @@ app.get('/api/data/manual-athletes', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Elenchi iscritti / partenti (SegreteriaGare) ────────────────────────────
+// Pubblico: gli elenchi collegati a una gara (tabella startlists, caricata da segreteriagare-load.js).
+app.get('/api/startlists/:gara_id', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('startlists').select('kind, bib, athlete_name, athlete_id, team_name, team_id, nat, cat_code, source_event')
+      .eq('gara_id', req.params.gara_id).order('bib', { ascending: true }).limit(2000);
+    if (error) throw error;
+    const out = { iscritti: [], partenti: [] };
+    for (const r of data || []) (out[r.kind] || (out[r.kind] = [])).push(r);
+    res.set('Cache-Control', 'public, max-age=120');
+    res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Coda di approvazione (atleti/squadre proposti dall'importazione SegreteriaGare).
+app.get('/api/admin/import-queue', requireAdmin, async (req, res) => {
+  try {
+    const status = req.query.status || 'da_approvare';
+    const all = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await supabase.from('import_queue').select('*').eq('status', status).order('id').range(from, from + 999);
+      if (error) throw error; all.push(...(data || [])); if (!data || data.length < 1000) break;
+    }
+    res.json({ items: all });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/import-queue/decide', requireAdmin, async (req, res) => {
+  try {
+    const { ids, action, team_id, team_name } = req.body || {};
+    if (!Array.isArray(ids) || !ids.length || !['approve', 'discard'].includes(action)) return res.status(400).json({ error: 'ids e action (approve|discard) obbligatori' });
+    const { data: rows, error } = await supabase.from('import_queue').select('*').in('id', ids).eq('status', 'da_approvare');
+    if (error) throw error;
+    const idPart = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/['’`´]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    let created = 0;
+    for (const r of rows || []) {
+      if (action === 'approve' && r.kind === 'atleta_nuovo' && r.payload && r.payload.atleta_id) {
+        const p = r.payload;
+        const tid = team_id || p.team_id || (p.pdf_team ? idPart(p.pdf_team) : null);
+        const tnm = team_name || p.team || p.pdf_team || null;
+        const { error: e1 } = await supabase.from('manual_athletes').upsert({ atleta_id: p.atleta_id, cognome: p.cognome, nome: p.nome, team_id: tid, team: tnm, categoria: p.categoria || null, genere: p.genere || 'M', created_by: null, source: 'segreteriagare' }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+        if (e1) throw e1;
+        if (p.pdf_name) await supabase.from('startlists').update({ athlete_id: p.atleta_id, team_id: tid }).eq('athlete_name', p.pdf_name).is('athlete_id', null);
+        created++;
+      }
+      await supabase.from('import_queue').update({ status: action === 'approve' ? 'approvato' : 'scartato', decided_at: new Date().toISOString() }).eq('id', r.id);
+    }
+    if (created) { _manualAthletesCache = null; }
+    res.json({ ok: true, decisi: (rows || []).length, creati: created });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Storico squadre confermato (vedi team_lineage / pannello admin "Storico
 // Team") — pubblico, sola lettura: usato dalla pagina team per mostrare la
 // catena di nomi passati. Solo ~80-100 righe attese, cache 10 min così una

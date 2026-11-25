@@ -12570,6 +12570,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🔗</span> <span class="admin-nav-lbl">Storico Team</span>
           <span class="admin-nav-badge" id="badge-team-lineage"></span>
         </div>
+        <div class="admin-nav-item" data-section="import-coda" onclick="adminNav('import-coda')">
+          <span class="admin-nav-icon">📥</span> <span class="admin-nav-lbl">Coda import</span>
+          <span class="admin-nav-badge" id="badge-import-coda"></span>
+        </div>
         <div class="admin-nav-item" data-section="omonimi" onclick="adminNav('omonimi')">
           <span class="admin-nav-icon">🧬</span> <span class="admin-nav-lbl">Omonimi</span>
           <span class="admin-nav-badge" id="badge-omonimi"></span>
@@ -12663,7 +12667,7 @@ async function renderAdmin() {
   // dall'utente: click sulla notifica non porta alla pagina giusta).
   const ADMIN_SECTIONS = ['overview','sync','foto-pending','foto-xpix','foto-ic','pcs-fix',
     'video-pending','video-yt','video-tutti','foto-tutti','media-profiles','media-seed',
-    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','novita-profili','iscrizioni','analytics','foto-tag','albo-review',
+    'utenti-lista','utenti-pending','atleti-gestione','gare-gestione','team-lineage','omonimi','import-coda','novita-profili','iscrizioni','analytics','foto-tag','albo-review',
     'social-queue','manual-gara','instagram','scraper'];
   const hashQuery = (window.location.hash.split('?')[1] || '');
   const tabParam = new URLSearchParams(hashQuery).get('tab') || new URLSearchParams(window.location.search).get('tab');
@@ -13758,6 +13762,52 @@ window.adminNav = async function(section) {
       break;
     }
 
+    case 'import-coda': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📥 Coda import (SegreteriaGare)</h1>
+          <p class="admin-page-sub">Atleti e squadre trovati negli elenchi iscritti/partenti che il sito non ha ancora. Gli atleti con squadra certa sono già stati creati; qui restano i dubbi. «Approva» crea il profilo (con la squadra indicata, oppure quella del PDF); «Scarta» lo ignora.</p>
+        </div>
+        <div id="iq-bar" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px"></div>
+        <div id="iq-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const H = () => ({ Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' });
+        const S = window._iq = { items: [], tab: 'atleta_nuovo', q: '', n: 80 };
+        const load = async () => { const r = await fetch(`${API_BASE}/admin/import-queue`, { headers: H() }); const d = await r.json(); S.items = d.items || []; render(); };
+        const render = () => {
+          const cnt = k => S.items.filter(i => i.kind === k).length;
+          const b = document.getElementById('badge-import-coda'); if (b) { b.textContent = S.items.length || ''; b.style.display = S.items.length ? '' : 'none'; }
+          document.getElementById('iq-bar').innerHTML = [['atleta_nuovo', 'Atleti nuovi'], ['squadra_nuova', 'Squadre nuove']].map(([k, t]) => `<button class="tab-btn ${S.tab === k ? 'active-cat' : ''}" onclick="window._iq.tab='${escJs(k)}';window._iq.n=80;window._iqRender()">${t} ${cnt(k)}</button>`).join('') +
+            `<input id="iq-q" type="search" placeholder="Cerca…" value="${esc(S.q)}" oninput="window._iq.q=this.value;window._iq.n=80;window._iqRender(true)" style="margin-left:auto;padding:7px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit">`;
+          const q = S.q.trim().toLowerCase();
+          const list = S.items.filter(i => i.kind === S.tab && (!q || JSON.stringify(i.payload).toLowerCase().includes(q)));
+          const row = i => { const p = i.payload || {}; return S.tab === 'atleta_nuovo'
+            ? `<label style="display:grid;grid-template-columns:24px 1.3fr 1fr 1.6fr;gap:8px;align-items:baseline;padding:8px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem;cursor:pointer"><input type="checkbox" class="iq-ck" value="${i.id}"><b>${esc(p.pdf_name || p.name || '')}</b><span>${esc(p.categoria || '')}</span><span style="color:var(--text-muted)">${esc(p.pdf_team || '—')} · ${esc(p.why || '')}</span></label>`
+            : `<label style="display:grid;grid-template-columns:24px 1.6fr 1fr;gap:8px;align-items:baseline;padding:8px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem;cursor:pointer"><input type="checkbox" class="iq-ck" value="${i.id}"><b>${esc(p.name || '')}</b><span style="color:var(--text-muted)">${p.athletes || 0} atleti negli elenchi</span></label>`; };
+          document.getElementById('iq-body').innerHTML = `
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+              <button class="admin-edit-btn" onclick="document.querySelectorAll('.iq-ck').forEach(c=>c.checked=true)">Seleziona tutti</button>
+              <input id="iq-team" placeholder="ID squadra (facoltativo, es. ELBA_BIKE)" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;min-width:240px">
+              <button class="admin-edit-btn" style="background:#22c55e;color:#fff" onclick="window._iqDecide('approve')">✔ Approva selezionati</button>
+              <button class="admin-edit-btn" onclick="window._iqDecide('discard')">✖ Scarta selezionati</button>
+              <span style="color:var(--text-muted);font-size:.8rem">${list.length} voci</span>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:6px 16px">${list.slice(0, S.n).map(row).join('') || '<div class="empty-state">Nessuna voce</div>'}</div>
+            ${list.length > S.n ? `<button class="admin-edit-btn" style="margin-top:10px" onclick="window._iq.n+=80;window._iqRender()">Mostra altri</button>` : ''}`;
+        };
+        window._iqRender = (keep) => { const f = keep && document.activeElement && document.activeElement.id === 'iq-q'; render(); if (f) { const e = document.getElementById('iq-q'); e.focus(); e.setSelectionRange(e.value.length, e.value.length); } };
+        window._iqDecide = async (action) => {
+          const ids = [...document.querySelectorAll('.iq-ck:checked')].map(c => +c.value); if (!ids.length) return alert('Seleziona almeno una voce');
+          const team_id = (document.getElementById('iq-team') || {}).value || undefined;
+          if (action === 'approve' && !confirm(`Approvare ${ids.length} voci?`)) return;
+          const r = await fetch(`${API_BASE}/admin/import-queue/decide`, { method: 'POST', headers: H(), body: JSON.stringify({ ids, action, team_id }) });
+          const d = await r.json(); if (!r.ok) return alert(d.error || 'Errore');
+          await load();
+        };
+        load();
+      })();
+      break;
+    }
     case 'omonimi': {
       main.innerHTML = `
         <div class="admin-page-header">
