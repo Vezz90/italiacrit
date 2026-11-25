@@ -20437,15 +20437,23 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const el = document.getElementById('atleta-pcs-widget');
   if (!el) return;
 
+  let _srcErr = false;   // una fonte non ha risposto: non si puo' dire che l'atleta non ha risultati
+  const _src = (p, vuoto) => p.catch(() => { _srcErr = true; return vuoto; });
   const [ciclismoPayload, pcsRows, pcsTeamHistory] = await Promise.all([
-    _ciclismoResultsOnce(atletaId).catch(() => null),
-    apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
-    apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
+    _src(_ciclismoResultsOnce(atletaId), null),
+    _src(apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`), []),
+    _src(apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`), []),
   ]);
   const _cxWidget = globalData?.meta?.disciplina === 'ciclocross';   // ciclocross: ciclismo.info/PCS sono dati della strada, non si mescolano
   const ciclismoRows = _cxWidget ? [] : (ciclismoPayload?.risultati || []);
   const teamHistoryRows = (!_cxWidget && Array.isArray(pcsTeamHistory)) ? pcsTeamHistory : [];
-  if (!ciclismoRows.length && !(!_cxWidget && Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length && !teamHistoryRows.length) return;
+  // nessun risultato in nessuna fonte: la carriera e' zero (prima la scheda restava su "calcolo in corso")
+  const _noCareer = () => {
+    if (_srcErr) return;
+    (window._athCareer = window._athCareer || {})[atletaId + '|' + (_cxWidget ? 'cx' : 'road')] = { p1: 0, p2: 0, p3: 0, pout: 0, n: 0, from: null, to: null, by: {} };
+    document.dispatchEvent(new CustomEvent('ics-career', { detail: { id: atletaId } }));
+  };
+  if (!ciclismoRows.length && !(!_cxWidget && Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length && !teamHistoryRows.length) { _noCareer(); return; }
 
   const merged = [];
   for (const r of (nativeRisultati || [])) {
@@ -20460,7 +20468,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (!r.data || !r.posizione) continue;
     merged.push({ data: r.data, anno: String(r.season || r.data.slice(0, 4)), posizione: r.posizione, nome_gara: r.gara_name, url: r.pcs_url, external: true, team: null, source: 'pcs' });
   }
-  if (!merged.length) return;
+  if (!merged.length) { _noCareer(); return; }
 
   // Dedup: la stessa gara può comparire in più fonti con nomi diversi (es.
   // "64 GRAN PREMIO LA TORRE" su ICS/ciclismo.info vs "GP La Torre (NAT)" su

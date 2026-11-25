@@ -179,6 +179,7 @@
     opts = opts || {};
     if (!isAdmin()) m = 'strada';
     if (m === mode && !opts.force) return;
+    if (!opts.auto) autoCx = false;   // scelta esplicita (o ritorno alla strada)
     if (m === 'ciclocross') {
       try { await loadRaw(); } catch (e) { console.warn('[ciclocross] dati non disponibili', e); return; }
       if (mode !== 'ciclocross') live = globalData;
@@ -231,7 +232,34 @@
     const p = document.querySelector('.cx-pick');
     p.onclick = (e) => { const b = e.target.closest('button[data-m]'); if (b && b.dataset.m !== mode) setMode(b.dataset.m, { force: true }); };
   }
+  // ── Atleti solo ciclocross: scheda strada senza risultati, né quest'anno né in carriera ──
+  const roadNone = new Set();   // accertati
+  let autoCx = false;           // ciclocross aperto da solo: uscendo da quelle pagine si torna alla strada
+  const curPath = () => (location.hash.startsWith('#/') ? location.hash.slice(1) : location.pathname);
+  const curId = (kind) => { const m = curPath().match(new RegExp('^/' + kind + '/([^/?#]+)')); return m ? decodeURIComponent(m[1]) : ''; };
+  const emptyEntry = (e) => !!e && !(e.risultati || []).length;
+  async function onCareer(ev) {
+    const id = ev.detail && ev.detail.id;
+    if (!id || mode !== 'strada' || !isAdmin() || curId('atleta') !== id) return;
+    const zero = () => { const c = (window._athCareer || {})[id + '|road']; return !!c && c.n === 0; };
+    if (!zero() || !emptyEntry(globalData && globalData.athletes && globalData.athletes[id])) return;
+    if (document.querySelectorAll('#profile-year-row .year-pill').length > 1) return;   // ci sono altre stagioni su strada
+    if (!(await ensureIds()) || !cxAth.has(id) || mode !== 'strada' || curId('atleta') !== id) return;
+    roadNone.add(id); autoCx = true;
+    await setMode('ciclocross', { force: true, auto: true });
+  }
+  // true se la pagina aperta appartiene al ciclocross appena aperto (gara, atleta o team senza nulla su strada)
+  function keepCx() {
+    const road = live || {}, g = curId('gara'), a = curId('atleta'), t = curId('team');
+    if (g) return (globalData.resultsRaw || []).some(r => r.gara_id === g || String(r.gara_id).startsWith(g + '_'));
+    if (a) return !!(cxAth && cxAth.has(a)) && (roadNone.has(a) || !(road.athletes && road.athletes[a]));
+    if (t) return !!(cxTeams && cxTeams.has(t)) && !((road.teams && road.teams[t] && road.teams[t].risultati) || []).length;
+    return false;
+  }
+  function leaveAutoCx() { if (autoCx && mode === 'ciclocross' && !keepCx()) { autoCx = false; setMode('strada'); } }
+
   const otherHas = (kind, id) => {
+    if (mode !== 'strada' && kind === 'atleta' && roadNone.has(id)) return false;
     if (mode === 'strada') return kind === 'atleta' ? !!(cxAth && cxAth.has(id)) : !!(cxTeams && cxTeams.has(id));
     const g = live || {};
     return kind === 'atleta' ? !!(g.athletes && g.athletes[id]) : !!(g.teams && g.teams[id]);   // dal ciclocross si deve poter sempre tornare alla strada (i risultati della strada stanno anche negli anni passati)
@@ -358,6 +386,7 @@
     // true/false: l'atleta ha (o no) risultati nell'altra specialità; null: non si sa ancora (dati in caricamento)
     const hasIn = (kind, id, forMode) => {
       if (forMode === 'ciclocross') { if (mode === 'ciclocross') return !!(globalData.athletes && globalData.athletes[id] && (globalData.athletes[id].risultati || []).length); return cxAth ? cxAth.has(id) : null; }
+      if (roadNone.has(id)) return false;
       if (mode === 'strada') return !!(globalData && globalData.athletes && globalData.athletes[id]);
       return !!(live && live.athletes && live.athletes[id]);
     };
@@ -436,7 +465,8 @@
     document.head.appendChild(st);
 
     let _t = null;
-    new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); }, 60); }).observe(document.body, { childList: true, subtree: true });
+    new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); leaveAutoCx(); }, 60); }).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('ics-career', onCareer);
 
     if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); setTimeout(() => { if (mode === 'strada') ensureIds(); }, 3500); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
     // Ripristina la specialità scelta (dopo che l'app ha caricato i dati)
