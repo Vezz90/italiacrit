@@ -13773,7 +13773,39 @@ window.adminNav = async function(section) {
       (async () => {
         const H = () => ({ Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' });
         const S = window._iq = { items: [], tab: 'atleta_nuovo', q: '', n: 80 };
-        const load = async () => { const r = await fetch(`${API_BASE}/admin/import-queue`, { headers: H() }); const d = await r.json(); S.items = d.items || []; render(); };
+        const load = async () => { const r = await fetch(`${API_BASE}/admin/import-queue`, { headers: H() }); const d = await r.json(); S.items = d.items || []; await loadTeams(); render(); };
+        // squadre esistenti (stesso elenco usato dal sito) e proposte per somiglianza di nome
+        const STOP = new Set(['A','S','D','C','G','SC','GS','ASD','SSD','USD','POL','TEAM','CLUB','CICLISMO','CICLISTICA','BIKE','BIKES','RACING','CYCLING','DI','DEL','DELLA','E','IL','LA','ASS','DIL','PEDALE','ACADEMY','MTB','AVIS','SAN','TOSCANA','VENETO','EMILIA','ROMAGNA','LOMBARDIA','UMBRIA','LAZIO','LIGURIA','PIEMONTE','MARCHE','CAMPANIA','PUGLIA','SICILIA','SARDEGNA','ES','ROU','SUI','SVIZZERA','FRA','FRANCIA']);
+        const nz = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+        const toks = s => { const t = nz(s).split(' ').filter(x => x.length > 1); const k = t.filter(x => !STOP.has(x)); return new Set(k.length ? k : t); };
+        const loadTeams = async () => {
+          if (S.teams) return;
+          let t = (typeof globalData !== 'undefined' && globalData && globalData.teams) || null;
+          if (!t) { try { t = await loadJson('data/teams.json'); } catch (e) { t = {}; } }
+          S.teams = Object.entries(t).map(([id, v]) => ({ id, nome: (v && v.nome) || id, tk: toks((v && v.nome) || id) }));
+          S.byLabel = {}; S.teams.forEach(x => { S.byLabel[`${x.nome} (${x.id})`] = x; });
+        };
+        const suggest = name => {
+          const a = toks(name); if (!a.size || !S.teams) return [];
+          const out = [];
+          for (const t of S.teams) {
+            let inter = 0; a.forEach(x => { if (t.tk.has(x)) inter++; });
+            if (!inter) continue;
+            const score = 0.6 * inter / Math.min(a.size, t.tk.size) + 0.4 * inter / (a.size + t.tk.size - inter);
+            if (score >= 0.5 && inter / a.size >= 0.5) out.push({ id: t.id, nome: t.nome, score });
+          }
+          return out.sort((x, y) => y.score - x.score).slice(0, 3);
+        };
+        window._iqLink = async (qid, tid, tnm) => {
+          if (!confirm(`Collegare questa squadra a «${tnm}»?\nGli elenchi e gli atleti in attesa di questa squadra useranno quella esistente.`)) return;
+          const r = await fetch(`${API_BASE}/admin/import-queue/link-team`, { method: 'POST', headers: H(), body: JSON.stringify({ id: qid, team_id: tid, team_name: tnm }) });
+          const d = await r.json(); if (!r.ok) return alert(d.error || 'Errore');
+          alert(`Fatto: ${d.elenchi} righe di elenco collegate, ${d.atleti_creati} atleti creati.`); await load();
+        };
+        window._iqLinkTyped = (qid, el) => { const x = S.byLabel[el.value]; if (!x) { el.value = ''; return alert('Scegli una squadra dall\'elenco proposto'); } window._iqLink(qid, x.id, x.nome); };
+        window._iqDiscardOne = async (qid) => { const r = await fetch(`${API_BASE}/admin/import-queue/decide`, { method: 'POST', headers: H(), body: JSON.stringify({ ids: [qid], action: 'discard' }) }); if (r.ok) await load(); };
+        window._iqLinkNew = (qid) => { const it = S.items.find(i => i.id === qid); const nm = it && it.payload && it.payload.name; if (!nm) return;
+          const id = nz(nm).replace(/ /g, '_'); window._iqLink(qid, id, nm); };
         const render = () => {
           const cnt = k => S.items.filter(i => i.kind === k).length;
           const b = document.getElementById('badge-import-coda'); if (b) { b.textContent = S.items.length || ''; b.style.display = S.items.length ? '' : 'none'; }
@@ -13783,7 +13815,13 @@ window.adminNav = async function(section) {
           const list = S.items.filter(i => i.kind === S.tab && (!q || JSON.stringify(i.payload).toLowerCase().includes(q)));
           const row = i => { const p = i.payload || {}; return S.tab === 'atleta_nuovo'
             ? `<label style="display:grid;grid-template-columns:24px 1.3fr 1fr 1.6fr;gap:8px;align-items:baseline;padding:8px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem;cursor:pointer"><input type="checkbox" class="iq-ck" value="${i.id}"><b>${esc(p.pdf_name || p.name || '')}</b><span>${esc(p.categoria || '')}</span><span style="color:var(--text-muted)">${esc(p.pdf_team || '—')} · ${esc(p.why || '')}</span></label>`
-            : `<label style="display:grid;grid-template-columns:24px 1.6fr 1fr;gap:8px;align-items:baseline;padding:8px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem;cursor:pointer"><input type="checkbox" class="iq-ck" value="${i.id}"><b>${esc(p.name || '')}</b><span style="color:var(--text-muted)">${p.athletes || 0} atleti negli elenchi</span></label>`; };
+            : (() => { const sg = suggest(p.name || ''); const bs = 'padding:5px 10px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-card);color:inherit;font-size:.8rem;cursor:pointer';
+                return `<div style="padding:10px 0;border-top:1px dashed var(--border-subtle);font-size:.84rem"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:baseline"><b>${esc(p.name || '')}</b><span style="color:var(--text-muted)">${p.athletes || 0} atleti negli elenchi</span></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px">
+                  ${sg.length ? `<span style="color:var(--text-muted);font-size:.78rem">Forse è:</span>` + sg.map(s => `<button style="${bs}" title="${esc(s.id)} · ${Math.round(s.score * 100)}%" onclick="window._iqLink(${i.id},'${escJs(s.id)}','${escJs(s.nome)}')">${esc(s.nome)}</button>`).join('') : `<span style="color:var(--text-muted);font-size:.78rem">Nessuna squadra simile trovata.</span>`}
+                  <input list="iq-teams" placeholder="Cerca altra squadra…" style="${bs};min-width:200px" onchange="window._iqLinkTyped(${i.id},this)">
+                  <button style="${bs}" onclick="window._iqLinkNew(${i.id})">È davvero nuova</button><button style="${bs}" onclick="window._iqDiscardOne(${i.id})">Scarta</button>
+                </div></div>`; })(); };
           document.getElementById('iq-body').innerHTML = `
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
               <button class="admin-edit-btn" onclick="document.querySelectorAll('.iq-ck').forEach(c=>c.checked=true)">Seleziona tutti</button>
@@ -13792,6 +13830,7 @@ window.adminNav = async function(section) {
               <button class="admin-edit-btn" onclick="window._iqDecide('discard')">✖ Scarta selezionati</button>
               <span style="color:var(--text-muted);font-size:.8rem">${list.length} voci</span>
             </div>
+            <datalist id="iq-teams">${(S.teams || []).map(t => `<option value="${esc(`${t.nome} (${t.id})`)}"></option>`).join('')}</datalist>
             <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:6px 16px">${list.slice(0, S.n).map(row).join('') || '<div class="empty-state">Nessuna voce</div>'}</div>
             ${list.length > S.n ? `<button class="admin-edit-btn" style="margin-top:10px" onclick="window._iq.n+=80;window._iqRender()">Mostra altri</button>` : ''}`;
         };

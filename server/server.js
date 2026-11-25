@@ -2913,6 +2913,41 @@ app.post('/api/admin/import-queue/decide', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Collega una "squadra nuova" della coda a una squadra già esistente (o ne conferma una nuova):
+// salva l'alias (riusato dalla sincronizzazione), aggiorna gli elenchi e crea gli atleti in attesa di quella squadra.
+app.post('/api/admin/import-queue/link-team', requireAdmin, async (req, res) => {
+  try {
+    const { id, team_id, team_name } = req.body || {};
+    if (!id || !team_id) return res.status(400).json({ error: 'id e team_id obbligatori' });
+    const { data: row, error } = await supabase.from('import_queue').select('*').eq('id', id).eq('status', 'da_approvare').maybeSingle();
+    if (error) throw error;
+    if (!row || row.kind !== 'squadra_nuova') return res.status(404).json({ error: 'Voce non trovata' });
+    const nrm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+    const pname = row.payload.name, key = nrm(pname);
+    const tid = String(team_id).trim(), tnm = team_name || tid;
+    await supabase.from('team_aliases').upsert({ alias: key, team_id: tid, team_name: tnm, source: 'segreteriagare' }, { onConflict: 'alias' });
+    // elenchi: tutte le righe con quella squadra e senza team_id
+    let sl = 0;
+    const { data: sls } = await supabase.from('startlists').select('id,team_name').is('team_id', null).not('team_name', 'is', null).limit(10000);
+    const sids = (sls || []).filter(r => nrm(r.team_name) === key).map(r => r.id);
+    for (let i = 0; i < sids.length; i += 200) { await supabase.from('startlists').update({ team_id: tid }).in('id', sids.slice(i, i + 200)); sl += Math.min(200, sids.length - i); }
+    // atleti in coda con questa squadra: ora la squadra è certa -> si creano
+    const { data: pend } = await supabase.from('import_queue').select('*').eq('kind', 'atleta_nuovo').eq('status', 'da_approvare').limit(5000);
+    let created = 0;
+    for (const a of (pend || []).filter(a => a.payload && a.payload.atleta_id && nrm(a.payload.pdf_team) === key)) {
+      const p = a.payload;
+      const { error: e1 } = await supabase.from('manual_athletes').upsert({ atleta_id: p.atleta_id, cognome: p.cognome, nome: p.nome, team_id: tid, team: tnm, categoria: p.categoria || null, genere: p.genere || 'M', created_by: null, source: 'segreteriagare' }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+      if (e1) throw e1;
+      if (p.pdf_name) await supabase.from('startlists').update({ athlete_id: p.atleta_id, team_id: tid }).eq('athlete_name', p.pdf_name).is('athlete_id', null);
+      await supabase.from('import_queue').update({ status: 'approvato', decided_at: new Date().toISOString() }).eq('id', a.id);
+      created++;
+    }
+    await supabase.from('import_queue').update({ status: 'approvato', decided_at: new Date().toISOString() }).eq('id', row.id);
+    if (created) _manualAthletesCache = null;
+    res.json({ ok: true, elenchi: sl, atleti_creati: created });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Storico squadre confermato (vedi team_lineage / pannello admin "Storico
 // Team") — pubblico, sola lettura: usato dalla pagina team per mostrare la
 // catena di nomi passati. Solo ~80-100 righe attese, cache 10 min così una
