@@ -338,19 +338,26 @@
   }
   // ── Stagione: un filtro (menu a tendina) al posto della fila di pillole ──
   function markYears() {
-    var row = document.getElementById('profile-year-row');
-    if (!row || row.dataset.ap) return;
-    row.dataset.ap = '1';
+    var row = document.getElementById('profile-year-row'); if (!row) return;
     var pills = [].slice.call(row.querySelectorAll('.year-pill')); if (!pills.length) return;
     var cur = pills.filter(function (b) { return /var\(--accent/.test(b.getAttribute('style') || '') && /#fff/.test(b.getAttribute('style') || ''); })[0] || pills[0];
-    var wrap = document.createElement('div'); wrap.className = 'ap-yrsel';
-    wrap.innerHTML = '<label>Stagione</label><select aria-label="Stagione">' + pills.map(function (b) { var y = b.getAttribute('data-year') || b.textContent.trim(); return '<option value="' + esc3(y) + '"' + (b === cur ? ' selected' : '') + '>' + esc3(b.textContent.trim()) + '</option>'; }).join('') + '</select>';
-    if (pills.length < 2) wrap.querySelector('select').disabled = true;
-    wrap.querySelector('select').addEventListener('change', function (e) {
-      var v = e.target.value, p = pills.filter(function (b) { return (b.getAttribute('data-year') || b.textContent.trim()) === v; })[0]; if (p) p.click();
-    });
-    row.parentNode.insertBefore(wrap, row);
+    var wrap = document.querySelector('.ap-yrsel');
+    if (!wrap) {
+      wrap = document.createElement('div'); wrap.className = 'ap-yrsel'; wrap.innerHTML = '<label>Stagione</label><select aria-label="Stagione"></select>';
+      var teamTabs = document.querySelector('.ath-tabs[aria-label*="team"]');
+      if (teamTabs) teamTabs.insertAdjacentElement('afterend', wrap);   // squadra: il filtro vale per Panoramica, Atleti, Risultati e Media
+      else row.parentNode.insertBefore(wrap, row);
+      wrap.querySelector('select').addEventListener('change', function (e) {
+        var v = e.target.value, r = document.getElementById('profile-year-row'); if (!r) return;
+        var p = [].slice.call(r.querySelectorAll('.year-pill')).filter(function (b) { return (b.getAttribute('data-year') || b.textContent.trim()) === v; })[0]; if (p) p.click();
+      });
+    }
     row.style.display = 'none';
+    // le pillole degli anni storici arrivano dopo (caricamento asincrono): il filtro si riallinea ogni volta
+    var sel = wrap.querySelector('select');
+    var html = pills.map(function (b) { var y = b.getAttribute('data-year') || b.textContent.trim(); return '<option value="' + esc3(y) + '"' + (b === cur ? ' selected' : '') + '>' + esc3(b.textContent.trim()) + '</option>'; }).join('');
+    if (sel.dataset.sig !== html) { sel.dataset.sig = html; sel.innerHTML = html; }
+    sel.disabled = pills.length < 2;
   }
 
 
@@ -569,6 +576,7 @@
     var sg = panel.querySelector('.ap-seg[data-k="rsort"]');
     if (sg) sg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; ridersSort = b.getAttribute('data-v'); fillRiders(); });
   }
+  function yrVis(k) { var w = document.querySelector('.ap-yrsel'); if (w) w.style.display = (k === 'c') ? 'none' : ''; }
   function markTeamTabs() {
     var tabs = document.querySelector('.ath-tabs[aria-label*="team"]'), sP = document.getElementById('tm-panel-s'); if (!tabs || !sP || document.getElementById('tm-tab-a')) return;
     // vecchi elenchi (corridori chiave / roster): ora c'e' la scheda Atleti
@@ -600,10 +608,10 @@
         if (k === 'a' || k === 'r' || k === 'm') {
           if (s) s.hidden = true; if (c) c.hidden = true; if (a) a.hidden = k !== 'a'; if (r) r.hidden = k !== 'r'; if (m) m.hidden = k !== 'm'; if (tm) tm.setAttribute('aria-selected', k === 'm' ? 'true' : 'false');
           if (ts) ts.setAttribute('aria-selected', 'false'); if (tc) tc.setAttribute('aria-selected', 'false'); if (ta) ta.setAttribute('aria-selected', k === 'a' ? 'true' : 'false'); if (tr) tr.setAttribute('aria-selected', k === 'r' ? 'true' : 'false');
-          if (k === 'a') fillRiders(); return;
+          if (k === 'a') fillRiders(); yrVis(k); return;
         }
         if (a) a.hidden = true; if (r) r.hidden = true; if (m) m.hidden = true; if (ta) ta.setAttribute('aria-selected', 'false'); if (tr) tr.setAttribute('aria-selected', 'false'); if (tm) tm.setAttribute('aria-selected', 'false');
-        return orig.apply(this, arguments);
+        var res = orig.apply(this, arguments); yrVis(k); return res;
       };
       w.__ap = true; window._tmTab = w;
     }
