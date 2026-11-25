@@ -93,8 +93,9 @@
 
   var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
   var GROUPS = [
-    ['Gare', ['nav-risultati', 'nav-gare']],
-    ['__cal'],
+    ['Risultati', ['@cat:risultati']],
+    ['Calendario', ['@cat:calendario']],
+    ['__gare'],
     ['Classifiche', ['@cat:classifica', 'nav-albo']],
     ['Atleti', ['@cat:atleti']],
     ['Team', ['@cat:team']],
@@ -106,12 +107,13 @@
     function col(sx, title) {
       return '<div class="hv2-col"><div class="hv2-ch">' + title + '</div>' + CATS.map(function (c) {
         var code = c[0] + '_' + sx;
-        return '<a href="#/' + seg + '/' + code + '" class="nav-link hv2-cat" data-cat="' + code + '">' + c[1] + '</a>';
+        return '<a href="#/' + (seg === 'calendario' ? 'calendario/cat' : seg) + '/' + code + '" class="nav-link hv2-cat" data-cat="' + code + '">' + c[1] + '</a>';
       }).join('') + '</div>';
     }
     return '<div class="hv2-cols">' + col('M', 'Uomini') + col('F', 'Donne') + '</div>';
   }
-  function curHash() { var h = (location.hash && location.hash.length > 1 ? location.hash : location.pathname).replace(/^#?\/?/, '').split('?')[0].split('/'); return { seg: h[0] || '', cat: h[1] || '' }; }
+  function curHash() { var h = (location.hash && location.hash.length > 1 ? location.hash : location.pathname).replace(/^#?\/?/, '').split('?')[0].split('/'); if (h[0] === 'calendario' && h[1] === 'cat') return { seg: 'calendario', cat: h[2] || '' };
+    return { seg: h[0] || '', cat: h[1] || '' }; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function closeAll() { document.querySelectorAll('.hv2-grp.open, .hv2-acct.open').forEach(function (e) { e.classList.remove('open'); }); }
 
@@ -129,7 +131,7 @@
     var menu = document.createElement('nav'); menu.className = 'hv2-menu'; menu.setAttribute('aria-label', 'Menu principale'); st.created.push(menu);
     var grpEls = [];
     GROUPS.forEach(function (g) {
-      if (g[0] === '__cal') { move(document.getElementById('nav-cal'), menu); return; }   // Calendario: voce a se', accanto a Gare
+      if (g[0] === '__gare') { move(document.getElementById('nav-gare'), menu); return; }   // Gare: voce singola
       var grp = document.createElement('div'); grp.className = 'hv2-grp';
       grp.innerHTML = '<button type="button" class="hv2-top" aria-haspopup="true">' + g[0] + CHEV + '</button><div class="hv2-dd"><div class="hv2-dd-in"></div></div>';
       var inn = grp.querySelector('.hv2-dd-in');
@@ -171,7 +173,7 @@
         g.querySelectorAll('.hv2-cat').forEach(function (a) { a.classList.toggle('active', h.seg === sg && a.getAttribute('data-cat') === h.cat); });
       });
     }
-    function markActive() { markCats(); grpEls.forEach(function (g) { var sg = g.getAttribute('data-seg'); g.classList.toggle('has-active', !!g.querySelector('.nav-link.active') || (!!sg && curHash().seg === sg)); }); }
+    function markActive() { markCats(); grpEls.forEach(function (g) { var sg = g.getAttribute('data-seg'); g.classList.toggle('has-active', !!g.querySelector('.nav-link.active') || (!!sg && (curHash().seg === sg || (sg === 'risultati' && curHash().seg === 'gara')))); }); }
     window.addEventListener('hashchange', markActive); window.addEventListener('popstate', markActive); st.catTimer = setInterval(markActive, 800); st.catFn = markActive;
     markActive();
     st.obs = new MutationObserver(markActive);
