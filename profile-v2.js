@@ -312,7 +312,7 @@
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;
       // foto dei rivali (quelle caricate sulle loro schede), se ci sono
-      host.querySelectorAll('.apc-rav[data-aid]').forEach(function (el) {
+      host.querySelectorAll('.apc-rav[data-aid], .apc-rph[data-aid]').forEach(function (el) {
         var aid = el.getAttribute('data-aid'); if (!aid || typeof getEntityOverrides !== 'function') return;
         getEntityOverrides('atleta', aid).then(function (ov) { if (ov && ov.photo_url && el.isConnected && typeof mediaUrl === 'function') { el.innerHTML = '<img alt="" src="' + esc3(mediaUrl(ov.photo_url)) + '">'; el.classList.add('has-img'); } }).catch(function () {});
       });
@@ -511,6 +511,9 @@
       parts.push(squadCard(rows));
       var cr = cx ? null : carrCache;
       if (cr) { parts.push(teamCareerCard(cr, team, catCode)); parts.push(rankCard(teamRank(cr, team, +yearForRows, livePos, catCode))); }
+    } else if (isCur && !cx) {
+      // stagione in corso senza risultati (squadra nuova o atleti appena inseriti): si mostra comunque la rosa
+      parts.push(rosterCard(id, catCode));
     }
     var html = parts.join('').split("window._athTab('r')").join("window._tmTab('r')");
     if (host.dataset.sig !== html) {
@@ -544,6 +547,19 @@
     host.appendChild(tg); tg.style.margin = '0';
   }
   var ridersSort = 'pts';
+  function rosterCard(id, code) {
+    var t = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null; if (!t) return '';
+    var list = (t.atleti || []).map(function (aid) { return globalData.athletes[aid]; }).filter(Boolean).filter(function (a) {
+      if (!code) return true; var c = (typeof getRankingFileCode === 'function' ? getRankingFileCode(a.categoria) : a.categoria) || a.categoria; return c === code || a.categoria === code;
+    });
+    if (!list.length) return '';
+    list.sort(function (a, b) { return String(a.cognome + a.nome).localeCompare(String(b.cognome + b.nome)); });
+    var sil = '<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="38" r="20"/><path d="M10 120c0-24 18-40 40-40s40 16 40 40z"/></svg>';
+    return '<section class="apc apc-wide"><div class="apc-h"><h3>Atleti (' + list.length + ')</h3></div><p class="apc-sub">Nessun risultato in questa stagione per ora: ecco la rosa.</p><div class="apc-riders">' + list.map(function (a) {
+      var aid = a.id || a.atleta_id;
+      return '<a class="apc-rider" href="#/atleta/' + encodeURIComponent(aid) + '"><span class="apc-rph" data-aid="' + esc3(aid) + '">' + sil + '</span><b>' + esc3((a.cognome || '') + ' ' + (a.nome || '')) + '</b><small>' + esc3(typeof catLabel === 'function' ? catLabel(a.categoria) : a.categoria) + '</small></a>';
+    }).join('') + '</div></section>';
+  }
   function activeCatCode() {
     var b = document.querySelector('#ap-teamcats .active-cat, #ap-teamcats button.active-cat');
     var m = b && (b.getAttribute('onclick') || '').match(/setTeamDetailCat\('([^']+)'\)/); return m ? m[1] : '';

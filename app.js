@@ -22892,7 +22892,7 @@ async function renderTeam(team_id, opts = {}) {
   const _histYears = await _histClubYears(team_id).catch(() => []);
   let selYear         = String(opts.year || _loadedSeasonYear());
   // un club senza risultati nella stagione in corso (es. esiste solo nell'archivio) si apre sull'ultimo anno con dati
-  if (!opts.year && _histYears.length && !(tLive.risultati || []).length) selYear = String(_histYears[0]);
+  if (!opts.year && _histYears.length && !(tLive.risultati || []).length && !(tLive.atleti || []).length) selYear = String(_histYears[0]);
   const _isLoadedYear = selYear === _loadedSeasonYear();
   const hist          = (!_isLoadedYear && _histYears.includes(Number(selYear))) ? await _histSeason(team_id, selYear).catch(() => null) : null;
   const teams         = hist ? { [team_id]: hist.t } : (_isLoadedYear ? globalData.teams    : await loadSeasonTeams(selYear));
