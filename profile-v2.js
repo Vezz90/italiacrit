@@ -31,6 +31,8 @@
 
     function refresh() {
       var sc = scope(), id = athId(), cx = isCx();
+      var tot = (window._athCareer || {})[id + '|' + (cx ? 'cx' : 'road')], vuoto = !!tot && !tot.n;   // nessun risultato registrato, nemmeno oltre il 10°
+      if (vuoto) sc = 'stagione';
       var vals = aside.querySelectorAll('#atleta-stats-italia-bar .athlete-stat-val');
       var yrTxt = ((aside.querySelector('#atleta-stats-italia-label') || {}).textContent || '').match(/\d{4}/);
       var year = yrTxt ? yrTxt[0] : '';
@@ -56,7 +58,7 @@
       var html =
         '<div class="ap-ctl">' +
         discSeg(typeof window.cxSetMode === 'function' && window.CX && window.CX.hasCx(id) === true && window.CX.hasRoad(id) === true, cx) +
-        seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione' + (cx && window.CX && window.CX.season ? ' ' + window.CX.season() : (year ? ' ' + year : ''))]], sc) +
+        (vuoto ? seg('scope', [['stagione', 'Stagione attuale']], 'stagione') : seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione' + (cx && window.CX && window.CX.season ? ' ' + window.CX.season() : (year ? ' ' + year : ''))]], sc)) +
         '</div>' +
         '<div class="ap-kpis">' +
         '<div class="ap-k ap-gold"><b>' + w + '</b><span>Vittorie</span></div>' +
@@ -71,7 +73,7 @@
     box.addEventListener('click', function (e) {
       var bt = e.target.closest('.ap-seg button'); if (!bt) return;
       var k = bt.parentNode.getAttribute('data-k'), v = bt.getAttribute('data-v');
-      if (k === 'scope') { setScope(v); refresh(); }
+      if (k === 'scope') { if (bt.parentNode.children.length > 1) { setScope(v); refresh(); } }
       else if (k === 'disc' && typeof window.cxSetMode === 'function' && (v === 'ciclocross') !== isCx()) window.cxSetMode(v, { force: true });
     });
     document.addEventListener('ics-career', function () { refresh(); fillCareer(); fillKey(); fillCards(); });
@@ -189,7 +191,7 @@
   function donutCard(rows, withScope, year) {
     var all = rows.filter(function (r) { return r.p; });
     var use = (withScope && donutScope === 'sta') ? all.filter(function (r) { return r.y === year; }) : all;
-    if (!all.length) return '';
+    if (!all.length && !(window._apZero)) return '';
     var c = [use.filter(function (r) { return r.p === 1; }).length, use.filter(function (r) { return r.p === 2 || r.p === 3; }).length, use.filter(function (r) { return r.p >= 4 && r.p <= 10; }).length, use.filter(function (r) { return r.p > 10; }).length];
     var tot = c[0] + c[1] + c[2] + c[3];
     var COL = ['#e0a800', '#9aa4b2', '#e8601c', '#cdd3dc'], LAB = ['Vittorie', 'Podi (2°–3°)', '4°–10°', 'Oltre il 10°'];
@@ -203,7 +205,7 @@
 
   function seasonCard(K, year, ptsTxt) {
     var all = (window._athRows || {})[K] || [], rows = all.filter(function (r) { return r.y === year; });
-    if (!rows.length) return '';
+    if (!rows.length && !window._apZero) return '';
     var w = rows.filter(function (r) { return r.p === 1; }).length, pod = rows.filter(function (r) { return r.p && r.p <= 3; }).length;
     var top = rows.slice().sort(function (a, b) { return (a.p - b.p) || (b.m - a.m) || b.d.localeCompare(a.d); }).slice(0, 8);
     var list = top.map(function (r) {
@@ -212,12 +214,12 @@
     }).join('');
     return '<section class="apc apc-wide"><div class="apc-h"><h3>Stagione ' + esc3(year) + '</h3><button type="button" class="apc-lnk" onclick="window._athTab(\'r\')">Vedi stagione ' + ARROW + '</button></div>' +
       '<div class="apc-stats"><div>' + ico('gar') + '<b>' + rows.length + '</b><span>Gare</span></div><div>' + ico('win') + '<b>' + w + '</b><span>Vittorie</span></div><div>' + ico('pod') + '<b>' + pod + '</b><span>Podi</span></div><div>' + '<svg class="apc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 21V10M12 21V4M19 21v-8"/></svg>' + '<b>' + esc3(ptsTxt || '0') + '</b><span>Punti</span></div></div>' +
-      '<div class="apc-list">' + list + '</div><button type="button" class="apc-btn" onclick="window._athTab(\'r\')">Tutti i risultati ' + esc3(year) + ' ' + ARROW + '</button></section>';
+      (rows.length ? '<div class="apc-list">' + list + '</div><button type="button" class="apc-btn" onclick="window._athTab(\'r\')">Tutti i risultati ' + esc3(year) + ' ' + ARROW + '</button>' : '<p class="apc-sub">Nessun risultato in questa stagione.</p>') + '</section>';
   }
 
   function latestCard(K) {
     var rows = ((window._athRows || {})[K] || []).slice(0, 9);
-    if (!rows.length) return '';
+    if (!rows.length) return window._apZero ? '<section class="apc"><div class="apc-h"><h3>Ultimi risultati</h3></div><p class="apc-sub">Nessun risultato registrato.</p></section>' : '';
     var body = rows.map(function (r) {
       var ch = chipOf(r);
       return rowLink(r, '<span class="apc-d">' + esc3(fmtD(r.d)) + '</span><span class="apc-rn">' + cleanName(r.n) + '</span>' + (ch ? '<span class="apc-chip">' + esc3(ch) + '</span>' : '<span></span>') + '<b class="apc-val">' + shown(r.p) + '</b>' + CHEV3);
@@ -226,9 +228,9 @@
   }
 
   function careerCard(c, cx) {
-    if (!c || !c.n) return '';
-    var top10 = c.p1 + c.p2 + c.p3 + c.pout, years = Object.keys(c.by).length, n = c.n;
-    var rows = [['win', 'Vittorie', c.p1, c.p1 / n], ['pod', 'Podi', c.p1 + c.p2 + c.p3, (c.p1 + c.p2 + c.p3) / n], ['top', 'Top 10', top10, top10 / n], ['gar', 'Gare', n, 1], ['sta', 'Stagioni', years, Math.min(1, years / 19)]];
+    if (!c || (!c.n && !window._apZero)) return '';
+    var top10 = c.p1 + c.p2 + c.p3 + c.pout, years = Object.keys(c.by).length, n = c.n || 1;
+    var rows = [['win', 'Vittorie', c.p1, c.p1 / n], ['pod', 'Podi', c.p1 + c.p2 + c.p3, (c.p1 + c.p2 + c.p3) / n], ['top', 'Top 10', top10, top10 / n], ['gar', 'Gare', c.n, c.n ? 1 : 0], ['sta', 'Stagioni', years, Math.min(1, years / 19)]];
     return '<section class="apc"><div class="apc-h"><h3>Statistiche di carriera</h3></div><div class="apc-tabs"><span class="on">Riepilogo</span></div><div class="apc-list">' +
       rows.map(function (r) { return '<div class="apc-row apc-bar-row">' + ico(r[0]) + '<span class="apc-rn">' + r[1] + '</span><i class="apc-bar"><b style="width:' + Math.max(3, Math.round(r[3] * 100)) + '%"></b></i><b class="apc-val">' + r[2] + '</b></div>'; }).join('') +
       '</div><p class="apc-note">Dati delle fonti disponibili' + (c.from ? ' (' + c.from + (c.to && c.to !== c.from ? '–' + c.to : '') + ')' : '') + (cx ? ' per il ciclocross' : '') + '.</p></section>';
@@ -236,8 +238,10 @@
 
   var byMode = 'win';
   function winsCard(c, cx) {
-    if (!c || !c.n) return '';
-    var ys = Object.keys(c.by).map(Number).sort(function (a, b) { return a - b; }), y0 = ys[0], y1 = ys[ys.length - 1], yrs = [];
+    if (!c || (!c.n && !window._apZero)) return '';
+    var ys = Object.keys(c.by).map(Number).sort(function (a, b) { return a - b; });
+    if (!ys.length) ys = [Number(typeof _loadedSeasonYear === 'function' ? _loadedSeasonYear() : new Date().getFullYear())];
+    var y0 = ys[0], y1 = ys[ys.length - 1], yrs = [];
     for (var y = y0; y <= y1; y++) yrs.push(y);
     var val = function (b) { if (!b) return 0; return byMode === 'win' ? b.p1 : byMode === 'pod' ? b.p1 + b.p2 + b.p3 : b.p1 + b.p2 + b.p3 + b.pout; };
     var max = Math.max.apply(null, yrs.map(function (y) { return val(c.by[y]); })) || 1;
@@ -252,6 +256,10 @@
 
   function teamsCard(K, id) {
     var t = (window._athTeams || {})[K] || [];
+    if (!t.length && window._apZero) {   // senza risultati: almeno la squadra di quest'anno
+      var a = (typeof globalData !== 'undefined' && globalData && globalData.athletes) ? globalData.athletes[id] : null;
+      if (a && a.team_attuale) t = [{ team: a.team_attuale, y: String(typeof _loadedSeasonYear === 'function' ? _loadedSeasonYear() : ''), tid: a.team_id }];
+    }
     if (!t.length) return '';
     var rows = ((window._athRows || {})[K] || []);
     var groups = [];
@@ -312,7 +320,9 @@
     var posEl = aside.querySelector('.ath-rank-block .athlete-pts-value'), livePos = posEl ? parseInt(posEl.textContent, 10) || 0 : 0;
     var c = (window._athCareer || {})[K];
     if (!cx) loadCarr();
+    window._apZero = !!c;   // a calcolo finito le schede si mostrano comunque, anche a zero
     var parts = [seasonCard(K, year, ptsTxt), latestCard(K), careerCard(c, cx), donutCard((window._athRows || {})[K] || [], true, year), winsCard(c, cx), teamsCard(K, id), cx ? '' : rankCard(rankPoints(id, +year, livePos)), rivalsCard(id)];
+    window._apZero = false;
     var html = parts.join('');
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;
@@ -384,11 +394,14 @@
       var posEl = aside.querySelector('.ath-rank-block .athlete-pts-value'), pos = posEl ? posEl.textContent.trim() : '—';
       var gap = aside.querySelector('.ath-gap-line');
       var showDisc = typeof window.cxSetMode === 'function' && window.CX && window.CX.hasCxTeam(id) === true && window.CX.hasRoadTeam(id) === true;
-      var sc = scope(), code = activeCatCode(), catTxt = ((aside.querySelector('.ath-stand-lbl') || {}).textContent || '').replace(/^CLASSIFICA\s*/i, '');
+      var storico = (window._ciclismoTeamStoricoCache || {})[id] || {}, stato = (window._ciclismoTeamStato || {})[id];
+      var anniSito = document.querySelectorAll('#profile-year-row .year-pill').length;
+      var vuoto = !teamRows(id).length && (cx || (stato !== 'carico' && stato !== 'errore' && anniSito <= 1 && !Object.keys(storico).length && !!carrCache && carrCache !== 'loading' && !teamSeasons(carrCache, (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null, '').length));
+      var sc = vuoto ? 'stagione' : scope(), code = activeCatCode(), catTxt = ((aside.querySelector('.ath-stand-lbl') || {}).textContent || '').replace(/^CLASSIFICA\s*/i, '');
       var annoSto = cx ? '' : ((window._ciclismoTeamAnno || {})[id] || '');   // anno dell'archivio aperto
       var seasonTxt = (cx && window.CX && window.CX.season) ? window.CX.season() : (annoSto || ((typeof _loadedSeasonYear === 'function') ? _loadedSeasonYear() : ''));
       if (annoSto) { pts = '—'; pos = '—'; gap = null; }
-      var ctl = '<div class="ap-ctl">' + discSeg(showDisc, cx) + seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione ' + seasonTxt]], sc) + '</div>';
+      var ctl = '<div class="ap-ctl">' + discSeg(showDisc, cx) + (vuoto ? seg('scope', [['stagione', 'Stagione attuale']], 'stagione') : seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione ' + seasonTxt]], sc)) + '</div>';
       var cells, foot;
       if (sc === 'carriera') {
         var ss = cx ? [] : teamSeasons(carrCache, (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null, code);
@@ -425,7 +438,7 @@
     box.addEventListener('click', function (e) {
       var bt = e.target.closest('.ap-seg button'); if (!bt) return;
       var kk = bt.parentNode.getAttribute('data-k');
-      if (kk === 'scope') { setScope(bt.getAttribute('data-v')); refresh(); }
+      if (kk === 'scope') { if (bt.parentNode.children.length > 1) { setScope(bt.getAttribute('data-v')); refresh(); } }
       else if (kk === 'disc' && typeof window.cxSetMode === 'function' && (bt.getAttribute('data-v') === 'ciclocross') !== isCx()) window.cxSetMode(bt.getAttribute('data-v'), { force: true });
     });
     document.addEventListener('ics-cx-ready', refresh); document.addEventListener('ics-carr', refresh); document.addEventListener('ics-team-storico', refresh);
@@ -524,6 +537,7 @@
     // Stagione/Ultimi usano il formato degli atleti: l'anno delle righe e' quello della data
     var yearForRows = cx ? (rows[0] ? rows[0].y : '') : selYear;
     var parts = [];
+    window._apZero = true;
     if (rows.length) {
       parts.push(seasonCard(K, yearForRows, isCur ? ptsTxt : '—').replace('Stagione ' + yearForRows, 'Stagione ' + year));
       parts.push(latestCard(K));
@@ -531,12 +545,15 @@
       parts.push(squadCard(rows));
       var cr = cx ? null : carrCache;
       if (cr) { parts.push(teamCareerCard(cr, team, catCode)); parts.push(rankCard(teamRank(cr, team, +yearForRows, livePos, catCode))); }
-    } else if (isCur && !cx) {
-      // stagione in corso senza risultati (squadra nuova o atleti appena inseriti): si mostra comunque la rosa
-      var cxCards = cxTeamCards(id, catCode);
-      if (cxCards) parts.push(cxCards);
-      parts.push(rosterCard(id, '', !!cxCards));
+    } else {
+      // nessun risultato in questa stagione: le schede restano, a zero, con la rosa
+      var yz = cx ? year : selYear;
+      parts.push(seasonCard(K, yz, '0'), latestCard(K), donutCard(rows, false, yz));
+      if (cx || !carrCache || carrCache === 'loading' || !teamSeasons(carrCache, team, catCode).length) parts.push(careerCard({ p1: 0, p2: 0, p3: 0, pout: 0, n: 0, by: {} }, cx));
+      else parts.push(teamCareerCard(carrCache, team, catCode));
+      if (isCur) parts.push(rosterCard(id, '', true));
     }
+    window._apZero = false;
     var html = parts.join('').split("window._athTab('r')").join("window._tmTab('r')");
     if (host.dataset.sig !== html) {
       host.dataset.sig = html; host.innerHTML = html;

@@ -179,7 +179,11 @@
     opts = opts || {};
     if (!isAdmin()) m = 'strada';
     if (m === mode && !opts.force) return;
-    if (!opts.auto) autoCx = false;   // scelta esplicita (o ritorno alla strada)
+    if (!opts.auto) {                 // scelta esplicita (o ritorno alla strada)
+      autoCx = false;
+      const pag = curId('atleta') ? '/atleta/' + curId('atleta') : (curId('team') ? '/team/' + curId('team') : '');
+      if (pag && pag === autoPag) sceltaStrada[m === 'strada' ? 'add' : 'delete'](pag);
+    }
     if (m === 'ciclocross') {
       try { await loadRaw(); } catch (e) { console.warn('[ciclocross] dati non disponibili', e); return; }
       if (mode !== 'ciclocross') live = globalData;
@@ -235,6 +239,8 @@
   // ── Atleti solo ciclocross: scheda strada senza risultati, né quest'anno né in carriera ──
   const roadNone = new Set();   // accertati
   let autoCx = false;           // ciclocross aperto da solo: uscendo da quelle pagine si torna alla strada
+  let autoPag = '';             // pagina atleta/team per cui si e' aperto da solo
+  const sceltaStrada = new Set();   // pagine in cui il visitatore ha scelto la strada: non si ricambia
   const curPath = () => (location.hash.startsWith('#/') ? location.hash.slice(1) : location.pathname);
   const curId = (kind) => { const m = curPath().match(new RegExp('^/' + kind + '/([^/?#]+)')); return m ? decodeURIComponent(m[1]) : ''; };
   const emptyEntry = (e) => !!e && !(e.risultati || []).length;
@@ -242,17 +248,30 @@
     const id = ev.detail && ev.detail.id;
     if (!id || mode !== 'strada' || !isAdmin() || curId('atleta') !== id) return;
     const zero = () => { const c = (window._athCareer || {})[id + '|road']; return !!c && c.n === 0; };
-    if (!zero() || !emptyEntry(globalData && globalData.athletes && globalData.athletes[id])) return;
-    if (document.querySelectorAll('#profile-year-row .year-pill').length > 1) return;   // ci sono altre stagioni su strada
+    // nessun risultato su strada in questa stagione (anche se ce ne sono di anni passati) ma ne ha nel ciclocross
+    const c = (window._athCareer || {})[id + '|road'], anno = String(typeof _loadedSeasonYear === 'function' ? _loadedSeasonYear() : '');
+    if (!c || (c.by && c.by[anno] && c.by[anno].n) || !emptyEntry(globalData && globalData.athletes && globalData.athletes[id])) return;
+    if (sceltaStrada.has('/atleta/' + id)) return;
+    const altriAnni = document.querySelectorAll('#profile-year-row .year-pill').length > 1;
     if (!(await ensureIds()) || !cxAth.has(id) || mode !== 'strada' || curId('atleta') !== id) return;
-    roadNone.add(id); autoCx = true;
+    if (zero() && !altriAnni) roadNone.add(id);   // la strada e' del tutto vuota: non si propone
+    autoCx = true; autoPag = '/atleta/' + id;
+    await setMode('ciclocross', { force: true, auto: true });
+  }
+  // squadra senza risultati su strada in questa stagione ma attiva nel ciclocross: si apre il ciclocross
+  async function autoTeam(id) {
+    if (!id || mode !== 'strada' || !isAdmin() || sceltaStrada.has('/team/' + id) || typeof globalData === 'undefined' || !globalData) return;
+    const t = globalData.teams && globalData.teams[id];
+    if (!t || (t.risultati || []).length) return;
+    if (!(await ensureIds()) || !cxTeams.has(id) || mode !== 'strada' || curId('team') !== id || (globalData.teams[id].risultati || []).length) return;
+    autoCx = true; autoPag = '/team/' + id;
     await setMode('ciclocross', { force: true, auto: true });
   }
   // true se la pagina aperta appartiene al ciclocross appena aperto (gara, atleta o team senza nulla su strada)
   function keepCx() {
     const road = live || {}, g = curId('gara'), a = curId('atleta'), t = curId('team');
     if (g) return (globalData.resultsRaw || []).some(r => r.gara_id === g || String(r.gara_id).startsWith(g + '_'));
-    if (a) return !!(cxAth && cxAth.has(a)) && (roadNone.has(a) || !(road.athletes && road.athletes[a]));
+    if (a) return !!(cxAth && cxAth.has(a)) && (autoPag === '/atleta/' + a || roadNone.has(a) || !(road.athletes && road.athletes[a]));
     if (t) return !!(cxTeams && cxTeams.has(t)) && !((road.teams && road.teams[t] && road.teams[t].risultati) || []).length;
     return false;
   }
@@ -466,6 +485,7 @@
     });
     wrap('renderTeam', async (tid) => {
       if (mode === 'strada' && !(await ensureIds())) return;
+      if (mode === 'strada') { autoTeam(tid); }
       if (!otherHas('team', tid)) return;
       const h = [...document.querySelectorAll('#app .section-header')].find(x => /RISULTATI TEAM/i.test(x.textContent));
       placePicker(h);
@@ -496,7 +516,7 @@
     new MutationObserver(() => { if (_t) return; _t = setTimeout(() => { _t = null; addSegs(); leaveAutoCx(); }, 60); }).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('ics-career', onCareer);
     // la prima pagina puo' essere gia' stata disegnata prima di questo script
-    const t1 = setInterval(() => { if (typeof globalData === 'undefined' || !globalData) return; clearInterval(t1); for (const k of ['gara', 'atleta', 'team']) openIfCxOnly(k, curId(k)); }, 400);
+    const t1 = setInterval(() => { if (typeof globalData === 'undefined' || !globalData) return; clearInterval(t1); for (const k of ['gara', 'atleta', 'team']) openIfCxOnly(k, curId(k)); autoTeam(curId('team')); }, 400);
     setTimeout(() => clearInterval(t1), 60000);
 
     if (isAdmin()) { const t0 = setInterval(() => { if (typeof globalData !== 'undefined' && globalData) { clearInterval(t0); setTimeout(() => { if (mode === 'strada') ensureIds(); }, 3500); } }, 300); setTimeout(() => clearInterval(t0), 60000); }
