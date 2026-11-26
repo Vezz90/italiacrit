@@ -21163,7 +21163,9 @@ async function renderGaraStorica(ciclismoGaraId) {
         nome_completo: (p.rider_name || p.gara_name || '').toUpperCase(), team: (p.team_name || '').toUpperCase(),
         categoria: rows[0]?.categoria, data: rows[0]?.data,
         regione: rows[0]?.regione, luogo: rows[0]?.luogo, nome_gara: rows[0]?.nome_gara,
-        distacco: p.distacco && !/^0:00$/.test(p.distacco) ? '+' + String(p.distacco).replace(/^\+/, '') : (p.distacco ? 'S.T.' : null),
+        // come nelle gare native: il distacco al primo del gruppo, poi S.T.
+        distacco: !p.distacco ? null : (/^0:00$/.test(p.distacco) || (Array.isArray(pcsRows) && pcsRows.some(q => q.posizione === p.posizione - 1 && q.distacco === p.distacco))) ? 'S.T.'
+          : '+' + String(p.distacco).replace(/^\+/, '').replace(/^(\d+):(\d\d)$/, "$1'$2\""),
       });
     }
   } catch { /* nessun import PCS per questa gara, non bloccare */ }
