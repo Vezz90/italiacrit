@@ -490,6 +490,38 @@ app.use((req, res, next) => {
   if (req.path === '/sitemap.xml' && req.query.p) req.url = '/sitemap-' + String(req.query.p).replace(/[^a-z0-9-]/gi, '') + '.xml';
   next();
 });
+// Atleti dello storico ciclismo.info: solo chi ha anche la scheda in manual_athletes (fallback di /api/pcs-athlete, quindi la pagina si apre),
+// esclusi quelli con risultati in athletes.json, gia' in sitemap-pagine
+let _cicSmAth = { ts: 0, ids: null };
+async function _cicSitemapAthletes() {
+  if (_cicSmAth.ids && Date.now() - _cicSmAth.ts < 12 * 3600 * 1000) return _cicSmAth.ids;
+  if (!supabase) return [];
+  const conId = q => q.not('atleta_id', 'is', null);
+  const [storici, manuali, athletes] = await Promise.all([
+    omoFetchAll('ciclismo_athletes', 'atleta_id', 'ciclismo_id', conId),
+    omoFetchAll('manual_athletes', 'atleta_id', 'atleta_id', conId),
+    readDataJsonFromGH('athletes.json'),
+  ]);
+  const conScheda = new Set(manuali.map(r => r.atleta_id));
+  const ids = [...new Set(storici.map(r => r.atleta_id))]
+    .filter(id => id && conScheda.has(id) && !(athletes?.[id]?.risultati || []).length).sort();
+  if (ids.length) _cicSmAth = { ts: Date.now(), ids };
+  return ids;
+}
+app.get('/sitemap-atleti-:n.xml', async (req, res) => {
+  try {
+    const all = await _cicSitemapAthletes();
+    const n = Math.max(1, parseInt(req.params.n, 10) || 1);
+    const slice = all.slice((n - 1) * _CIC_CHUNK, n * _CIC_CHUNK);
+    if (!slice.length) return res.status(404).send('<!-- vuoto -->');
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
+      slice.map(id => `  <url><loc>https://italiacyclingstats.com/atleta/${encodeURIComponent(id)}</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`).join('\n')
+    }\n</urlset>`;
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=21600');
+    res.send(xml);
+  } catch (e) { res.status(500).send('<!-- errore -->'); }
+});
 app.get('/sitemap-archivio-:n.xml', async (req, res) => {
   try {
     const all = await _cicAllRaces();
@@ -646,11 +678,13 @@ app.get('/api/cic-race/:id', async (req, res) => {
 // indice: pagine principali (sitemap-pagine.xml) + archivio gare a blocchi
 app.get('/sitemap.xml', async (req, res) => {
   try {
-    const all = await _cicAllRaces();
+    const [all, atleti] = await Promise.all([_cicAllRaces(), _cicSitemapAthletes().catch(() => [])]);
     const parts = Math.ceil(all.length / _CIC_CHUNK);
+    const partiAtleti = Math.ceil(atleti.length / _CIC_CHUNK);
     const today = new Date().toISOString().slice(0, 10);
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=pagine</loc><lastmod>${today}</lastmod></sitemap>\n  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=video</loc><lastmod>${today}</lastmod></sitemap>\n${
-      Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=archivio-${i + 1}</loc></sitemap>`).join('\n')
+      [...Array.from({ length: parts }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=archivio-${i + 1}</loc></sitemap>`),
+       ...Array.from({ length: partiAtleti }, (_, i) => `  <sitemap><loc>https://italiacyclingstats.com/sitemap.xml?p=atleti-${i + 1}</loc></sitemap>`)].join('\n')
     }\n</sitemapindex>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=3600');
