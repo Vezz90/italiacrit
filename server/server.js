@@ -2925,7 +2925,8 @@ async function _startlistRoster(manualRows) {
   const athletes = await readDataJsonFromGH('athletes.json');
   const teams = await readDataJsonFromGH('teams.json');
   // una alla volta, per non sommare le attese sul database
-  const lists = await fonte('elenchi', () => _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).order('id')), []);
+  // solo gli elenchi dall'autunno scorso: quelli degli anni passati servono alle pagine gara, non alle rose di oggi
+  const lists = await fonte('elenchi', () => _iqAll(() => supabase.from('startlists').select('athlete_id,athlete_name,team_id,team_name,category,race_date,gara_id,nat').not('athlete_id', 'is', null).gte('race_date', `${stagione - 1}-09-01`).order('id')), []);
   const aliases = await fonte('nomi collegati', () => _iqAll(() => supabase.from('team_aliases').select('alias,team_id,team_name').order('alias')), []);
   const storico = await fonte('risultati ciclismo.info', () => _perId(() => supabase.from('ciclismo_results').select('id,atleta_id,team,categoria,data').eq('stagione', stagione).not('atleta_id', 'is', null)), []);
   const pcs = await fonte('risultati PCS', () => _iqAll(() => supabase.from('pcs_gara_results').select('atleta_id,rider_name,team_name,gara_id').eq('season', stagione).like('gara_id', 'CIC_%').not('atleta_id', 'is', null).order('id')), []);
