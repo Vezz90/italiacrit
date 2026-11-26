@@ -3677,16 +3677,18 @@ function _normTitleRegion(txt) {
   if (/TRENT/.test(t)) return 'TRENTO';
   return normalizeRegion(t) || t;
 }
-async function _postRegionalChampion(garaRow, atletaId, nome) {
+async function _postRegionalChampion(garaRow, atletaId, nome, fasciaScelta) {
   const disciplina = championDisciplina(garaRow.nome_gara);
   // Una gara senza la dicitura "campionato regionale" (nome/calendario) lo
   // diventa nel momento in cui le si assegna un campione: lo scraper la
   // ricalcola a x2 al giro successivo (vedi FORCED_CR_GARA_IDS).
   // Elite e Under 23 corrono insieme e il titolo regionale è doppio: va
   // indicato a quale fascia appartiene (non sostituisce il campione dell'altra).
-  let fascia = null;
-  if (/^ELI_/.test(getRankingFileCode(garaRow) || '')) {
-    const f = window.prompt('Gara Elite / Under 23: per quale titolo? 1 = Under 23, 2 = Elite', '1');
+  let fascia = fasciaScelta || null;
+  if (!fascia && /^ELI_/.test(getRankingFileCode(garaRow) || '')) {
+    // Si propone il titolo che in questa gara manca ancora
+    const haU23 = (_regionalChampionByGara[garaRow.gara_id] || []).some(t => t.fascia === 'UNDER23');
+    const f = window.prompt('Gara Elite / Under 23: per quale titolo? 1 = Under 23, 2 = Elite', haU23 ? '2' : '1');
     if (!f) return;
     fascia = f.trim() === '2' ? 'ELITE' : 'UNDER23';
   }
@@ -3719,10 +3721,10 @@ async function _postRegionalChampion(garaRow, atletaId, nome) {
     route();
   } catch (e) { alert('Errore: ' + e.message); }
 }
-window.adminSetRegionalChampion = function(garaId, atletaId) {
+window.adminSetRegionalChampion = function(garaId, atletaId, fascia) {
   const row = (globalData.resultsRaw || []).find(r => r.gara_id === garaId && r.atleta_id === atletaId);
   if (!row) { alert('Risultato non trovato per questo atleta.'); return; }
-  return _postRegionalChampion(row, atletaId, `${row.cognome || ''} ${row.nome || ''}`.trim());
+  return _postRegionalChampion(row, atletaId, `${row.cognome || ''} ${row.nome || ''}`.trim(), fascia);
 };
 // Selettore per proclamare un atleta che non è tra i risultati mostrati.
 window.openRegionalChampionPicker = function() {
@@ -26271,8 +26273,10 @@ async function renderGara(gara_id) {
       const _rcTitle = (_regionalChampionByGara[r.gara_id] || []).find(t => t.atleta_id === r.atleta_id);
       const _isRegChamp = !!_rcTitle;
       const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${FASCIA_LABEL[_rcTitle.fascia] ? ' ' + FASCIA_LABEL[_rcTitle.fascia].toUpperCase() : ''}${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
+      // Elite e Under 23 corrono insieme ma i titoli sono due: un pulsante per ciascuno.
+      const _rcFasce = /^ELI_/.test(getRankingFileCode(r) || '') ? [['UNDER23', ' U23'], ['ELITE', ' Elite']] : [['', '']];
       const _rcBtn = (_rowIsAdmin && r.atleta_id && !_isRegChamp)
-        ? `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${escJs(r.gara_id)}','${escJs(r.atleta_id)}')" title="Proclama Campione Regionale" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.</button>` : '';
+        ? _rcFasce.map(([f, txt]) => `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${escJs(r.gara_id)}','${escJs(r.atleta_id)}','${f}')" title="Proclama Campione Regionale${txt}" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.${txt}</button>`).join('') : '';
       // Gara promiscua: se l'atleta appartiene a un'altra fascia d'età lo si
       // segnala con le iniziali della sua categoria (il risultato conta lì).
       const _intr = _catIntruderBadge(r.atleta_id, r.gara_id);

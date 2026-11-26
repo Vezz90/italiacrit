@@ -3651,7 +3651,7 @@ app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
   try {
     const { atleta_id, anno, categoria, disciplina, regione, note, gara_id, atleta_nome, fascia } = req.body || {};
     if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
-    const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA'];
+    const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA', 'CICLOCROSS'];
     const disc = DISCIPLINE.includes(String(disciplina || '').toUpperCase()) ? String(disciplina).toUpperCase() : 'STRADA';
     // Assegnato dalla pagina gara: un solo campione per gara, il nuovo
     // sostituisce l'eventuale precedente (es. correzione di un errore).
