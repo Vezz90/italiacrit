@@ -12711,20 +12711,28 @@ window._pcScraperPanel = async function () {
   const esito = r => r === 0 ? '' : r === 267009 ? '' : r === 267011 ? '' : r === 267014 ? 'interrotta' : 'errore ' + r;
   const att = (s && s.attivita) || [], attivi = (s && s.attivi) || [];
   const aMano = attivi.filter(a => !att.some(t => t.stato === 'in corso' && (t.scripts || []).includes(a.script)));
+  // barra di avanzamento: conteggio se lo script lo comunica, altrimenti barra che scorre
+  const barra = a => {
+    const p = a && a.totale > 0 ? Math.min(100, Math.round(a.fatto / a.totale * 100)) : null;
+    const testo = !a ? 'avanzamento non disponibile per questo script' : `${esc(a.fase || '')}${p === null ? '' : `${a.fase ? ' · ' : ''}${Number(a.fatto)} di ${Number(a.totale)} (${p}%)`}`;
+    return `<div role="progressbar" ${p === null ? '' : `aria-valuenow="${p}"`} style="height:8px;background:var(--border-subtle);border-radius:9px;overflow:hidden;margin:8px 0 3px"><div class="${p === null ? 'pc-bar-ind' : ''}" style="height:100%;width:${p === null ? 35 : p}%;background:#2563eb;border-radius:9px"></div></div><div style="font-size:.76rem;color:var(--text-muted)">${testo}</div>`;
+  };
   const riga = t => `<div style="display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 14px;border-top:1px solid var(--border-subtle)">
       <div style="flex:1 1 260px;min-width:0"><div style="font-weight:700">${esc(t.titolo)} ${t.stato === 'in corso' ? pill('in corso', '#2563eb') : t.stato === 'acceso' ? pill('programmato', '#16a34a') : pill('spento', '#64748b')}</div>
         <div style="font-size:.78rem;color:var(--text-muted)">${esc(t.cosa)} · ${esc(t.quando)}</div>
         <div style="font-size:.78rem;color:var(--text-muted)">Ultima: ${quando(t.ultima)}${t.ultima && esito(t.esito) ? ` <b style="color:#ef4444">${esc(esito(t.esito))}</b>` : ''} · Prossima: ${quando(t.prossima)}</div>
+        ${t.stato === 'in corso' ? barra(t.avanz) : ''}
         ${t.log ? `<details data-pclog="${esc(t.id)}" ${(window._pcAperti || (window._pcAperti = new Set())).has(t.id) ? 'open' : ''}><summary style="cursor:pointer;font-size:.75rem;color:var(--text-muted)">ultime righe del registro (${quando(t.log.quando)})</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:.72rem;color:var(--text-muted);margin:4px 0 0">${esc((t.log.righe || []).join('\n'))}</pre></details>` : ''}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">${attesa.has(t.id) ? '<span style="font-size:.78rem;color:var(--text-muted);align-self:center">in attesa del PC…</span>' : ''}
         ${t.stato === 'in corso' ? bt(t.id, 'ferma', '■ Ferma', t.titolo, true) : bt(t.id, 'avvia', '▶ Avvia ora', t.titolo, false)}
         ${t.stato === 'spento' ? bt(t.id, 'accendi', 'Accendi programma', t.titolo, false) : bt(t.id, 'spegni', 'Spegni programma', t.titolo, false)}</div></div>`;
   const NOMI = { avvia: 'Avvia', ferma: 'Ferma', accendi: 'Accendi', spegni: 'Spegni' };
   const titoloDi = id => att.find(t => t.id === id)?.titolo || id.replace(/^script:/, '');
+  if (!document.getElementById('pc-bar-stile')) { const st = document.createElement('style'); st.id = 'pc-bar-stile'; st.textContent = '.pc-bar-ind{animation:pcva 1.4s ease-in-out infinite}@keyframes pcva{from{transform:translateX(-100%)}to{transform:translateX(290%)}}'; document.head.appendChild(st); }
   host.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:10px"><h2 style="font-size:1.05rem;margin:0">💻 Scraper sul PC</h2>
       ${vivo ? pill('PC collegato', '#16a34a') : pill('PC non collegato', '#ef4444')}<span style="font-size:.76rem;color:var(--text-muted)">${s ? 'ultimo segnale ' + quando(s.battito) : 'nessun segnale ricevuto'}</span></div>
     ${s && s.bloccoPCS ? '<div style="color:#ef4444;font-weight:700;margin-bottom:8px">PCS ha bloccato di recente: gli script PCS restano in pausa.</div>' : ''}
-    ${vivo && aMano.length ? `<div style="background:var(--bg-card);border:1px solid #2563eb;border-radius:var(--r-lg);padding:10px 14px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">Avviati a mano, in corso adesso</div>${aMano.map(a => `<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:4px 0"><span style="font-size:.85rem">${esc(a.nome)} <span style="color:var(--text-muted)">(${esc(a.script)}, da ${quando(a.da)})</span></span>${bt('script:' + a.script, 'ferma', '■ Ferma', a.nome, true)}</div>`).join('')}</div>` : ''}
+    ${vivo && aMano.length ? `<div style="background:var(--bg-card);border:1px solid #2563eb;border-radius:var(--r-lg);padding:10px 14px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:6px">Avviati a mano, in corso adesso</div>${aMano.map(a => `<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:4px 0"><div style="flex:1;min-width:0"><span style="font-size:.85rem">${esc(a.nome)} <span style="color:var(--text-muted)">(${esc(a.script)}, da ${quando(a.da)})</span></span>${barra(a.avanz)}</div>${bt('script:' + a.script, 'ferma', '■ Ferma', a.nome, true)}</div>`).join('')}</div>` : ''}
     <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);overflow:hidden">${att.length ? att.map(riga).join('') : '<div style="padding:14px;color:var(--text-muted)">Nessun dato dal PC.</div>'}</div>
     ${(d.comandi || []).length ? `<div style="font-size:.76rem;color:var(--text-muted);margin-top:8px">Ultimi comandi: ${d.comandi.slice(-4).reverse().map(c => `${quando(c.quando)} ${NOMI[c.azione]} ${esc(titoloDi(c.id))} → ${c.esito ? (c.esito.ok ? '✅ ' : '❌ ') + esc(c.esito.msg) : (d.ora - c.quando > 600000 ? 'scaduto' : 'in attesa')}`).join(' · ')}</div>` : ''}`;
   host.querySelectorAll('details[data-pclog]').forEach(x => { x.ontoggle = () => x.open ? window._pcAperti.add(x.dataset.pclog) : window._pcAperti.delete(x.dataset.pclog); });
@@ -12737,7 +12745,7 @@ window._pcScraperPanel = async function () {
     catch (e) { showToast(e.message, 'error'); }
     window._pcScraperPanel();
   }; });
-  window._pcScraperTimer = setTimeout(window._pcScraperPanel, attesa.size ? 4000 : 15000);
+  window._pcScraperTimer = setTimeout(window._pcScraperPanel, attesa.size ? 4000 : attivi.length ? 7000 : 15000);
 };
 
 window.adminNav = async function(section) {

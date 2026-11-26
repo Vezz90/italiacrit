@@ -52,6 +52,15 @@ def get(url, tries=3):
     return None
 
 
+def avanza(fase, fatto, totale):
+    """Avanzamento per il pannello scraper (server/logs/, fuori da git)."""
+    try:
+        d = ROOT / 'server' / 'logs'; d.mkdir(parents=True, exist_ok=True)
+        (d / 'avanzamento-cx_import.py.json').write_text(json.dumps({'fase': fase, 'fatto': fatto, 'totale': totale, 'quando': time.time()}), encoding='utf-8')
+    except Exception:
+        pass
+
+
 # ── Stagione ─────────────────────────────────────────────────────────────────
 def season_start(data_iso):
     y, m = int(data_iso[:4]), int(data_iso[5:7])
@@ -225,7 +234,8 @@ def main():
     # 1. calendario: luglio N .. giugno N+1
     mesi = [(start, m) for m in range(7, 13)] + [(start + 1, m) for m in range(1, 7)]
     gare = {}
-    for anno, mese in mesi:
+    for n_mese, (anno, mese) in enumerate(mesi, 1):
+        avanza('1 di 2 · lettura calendario', n_mese, len(mesi))
         c = calendario_mese(anno, mese)
         print(f'calendario {anno}-{mese:02d}: {len(c)} gare', flush=True)
         gare.update(c)
@@ -238,7 +248,8 @@ def main():
     non_rec = collections.Counter()
     calendario = []
     scaricate = 0
-    for rid, g in sorted(gare.items(), key=lambda kv: (kv[1]['data'], kv[0])):
+    for n_gara, (rid, g) in enumerate(sorted(gare.items(), key=lambda kv: (kv[1]['data'], kv[0])), 1):
+        avanza('2 di 2 · risultati gara per gara', n_gara, len(gare))
         old = prev_cal.get(rid)
         passata = g['data'] <= oggi
         riusa = bool(old) and rid in prev_results and g['data'] < limite and old.get('n_righe', 0) > 0
