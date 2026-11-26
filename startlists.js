@@ -3,7 +3,12 @@
   'use strict';
   var cache = {}, busy = {};
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function garaId() { var m = (location.pathname + location.hash).match(/\/gara\/([^\/?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
+  // le gare dell'archivio hanno indirizzi leggibili (/gara/nome-gara-33472 o CIC_33472-nome): l'elenco e' salvato come CIC_33472
+  function garaId() {
+    var m = (location.pathname + location.hash).match(/\/gara\/([^\/?#]+)/); if (!m) return null;
+    var id = decodeURIComponent(m[1]), a = id.match(/^CIC_(\d+)/) || id.match(/^[a-z0-9][a-z0-9-]*-(\d{3,})$/);
+    return a ? 'CIC_' + a[1] : id;
+  }
   function apiBase() { return (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : 'https://italiacrit.onrender.com/api'; }
   // ── Elenco a riquadri per squadra (stile start list) ──
   var NAT = { ITA: 'it', SUI: 'ch', SLO: 'si', NED: 'nl', GER: 'de', FRA: 'fr', ESP: 'es', GBR: 'gb', BEL: 'be', AUT: 'at', POL: 'pl', UKR: 'ua', CZE: 'cz', SVK: 'sk', CRO: 'hr', HUN: 'hu', ROU: 'ro', POR: 'pt', IRL: 'ie', NOR: 'no', LUX: 'lu', LTU: 'lt', LAT: 'lv', BLR: 'by', RUS: 'ru', GRE: 'gr', ALB: 'al', BIH: 'ba', SMR: 'sm', USA: 'us', CAN: 'ca', MEX: 'mx', COL: 'co', VEN: 've', BRA: 'br', AUS: 'au', NZL: 'nz', JPN: 'jp', KAZ: 'kz', RSA: 'za', ETH: 'et', CPV: 'cv' };
@@ -172,7 +177,7 @@
     var res = !g && (typeof globalData !== 'undefined' && globalData && globalData.resultsRaw || []).filter(function (c) { return c.gara_id === r.gara_id; })[0];
     if (g) return g.nome || g.nome_gara; if (res) return res.nome_gara;
     var n = String(r.gara_id || '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
-    if (/^\d+_/.test(n) || /^\d+$/.test(n)) n = String(r.source_event || '').replace(/-/g, ' ');
+    if (/^\d+_/.test(n) || /^\d+$/.test(n) || /^CIC_\d+$/.test(n)) n = String(r.source_event || '').replace(/-/g, ' ');
     return n.replace(/_/g, ' ').toUpperCase();
   }
   function decorateAthlete() {

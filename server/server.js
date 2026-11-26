@@ -6592,7 +6592,19 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
       rows.push(...data);
       if (data.length < PAGE) break;
     }
-    res.json(rows);
+    // Piazzamenti nelle gare del sito oltre quelli ufficiali (pcs_gara_results): contano nelle gare della stagione e della carriera.
+    // Le gare d'archivio (CIC_) arrivano gia' da /ciclismo-results/atleta.
+    const { data: nostre } = await supabase.from('pcs_gara_results').select('gara_id, posizione, distacco')
+      .eq('atleta_id', req.params.atletaId).not('gara_id', 'like', 'CIC\\_%').limit(500);
+    const viste = new Set();
+    const extra = [];
+    for (const r of nostre || []) {
+      const m = String(r.gara_id || '').match(/^(.*?)_(\d{4}-\d{2}-\d{2})/);
+      if (!m || !r.posizione || viste.has(r.gara_id)) continue;
+      viste.add(r.gara_id);
+      extra.push({ gara_name: m[1].replace(/_/g, ' '), data: m[2], posizione: r.posizione, distacco: r.distacco, pcs_race_slug: null, pcs_url: null, gara_id: r.gara_id, country: 'it', season: +m[2].slice(0, 4), sito: true });
+    }
+    res.json([...extra, ...rows]);
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 

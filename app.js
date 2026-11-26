@@ -19784,7 +19784,7 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
     return `+${h > 0 ? h + 'h ' : ''}${m}'${String(s).padStart(2,'0')}"`;
   };
 
-  const pcsSlug = data.find(r => r.pcs_race_slug)?.pcs_race_slug || '';
+  const pcsSlug = data.find(r => r.pcs_race_slug && !r.pcs_race_slug.startsWith('sg:'))?.pcs_race_slug || '';
   if (pcsSlug) {
     const extEl = document.getElementById('gara-pcs-ext');
     if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:4px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/${esc(pcsSlug)}" target="_blank" style="color:var(--text-muted)">procyclingstats.com →</a></div>`;
@@ -20482,7 +20482,9 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   for (const r of ((!_cxWidget && Array.isArray(pcsRows)) ? pcsRows : [])) {
     if (!r.data || !r.posizione) continue;
-    merged.push({ data: r.data, anno: String(r.season || r.data.slice(0, 4)), posizione: r.posizione, nome_gara: r.gara_name, url: r.pcs_url, external: true, team: null, source: 'pcs' });
+    const _nostra = r.sito && r.gara_id;
+    const _info = _nostra ? (globalData?.resultsRaw || []).find(x => x.gara_id === r.gara_id) : null;
+    merged.push({ data: r.data, anno: String(r.season || r.data.slice(0, 4)), posizione: r.posizione, nome_gara: _info?.nome_gara || r.gara_name, url: _nostra ? `#/gara/${r.gara_id}` : r.pcs_url, external: !_nostra, team: null, source: 'pcs' });
   }
   if (!merged.length) { _noCareer(); return; }
 
@@ -21161,6 +21163,7 @@ async function renderGaraStorica(ciclismoGaraId) {
         nome_completo: (p.rider_name || p.gara_name || '').toUpperCase(), team: (p.team_name || '').toUpperCase(),
         categoria: rows[0]?.categoria, data: rows[0]?.data,
         regione: rows[0]?.regione, luogo: rows[0]?.luogo, nome_gara: rows[0]?.nome_gara,
+        distacco: p.distacco && !/^0:00$/.test(p.distacco) ? '+' + String(p.distacco).replace(/^\+/, '') : (p.distacco ? 'S.T.' : null),
       });
     }
   } catch { /* nessun import PCS per questa gara, non bloccare */ }
@@ -22458,7 +22461,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts" title="${r._isProTier ? 'Gara di livello professionistico (World Tour/ProSeries) — non assegna punti stagione' : 'Da PCS, in attesa dello scraper ufficiale FCI'}">${r._isProTier ? '—' : `${r.punti_effettivi || 0}<span style="color:var(--text-muted);font-weight:400">*</span>`}</td>`);
+      ${r.posizione > 10 ? '<td class="td-pts">—</td>' : `<td class="td-pts" title="${r._isProTier ? 'Gara di livello professionistico (World Tour/ProSeries) — non assegna punti stagione' : 'Da PCS, in attesa dello scraper ufficiale FCI'}">${r._isProTier ? '—' : `${r.punti_effettivi || 0}<span style="color:var(--text-muted);font-weight:400">*</span>`}</td>`}`);
   }
 
   for (const r of esteroExtra) {
