@@ -1742,7 +1742,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
       // esplicitamente (supportato su questo modello) evita il problema
       // senza dover aggiornare l'SDK in produzione.
       thinking: { type: 'disabled' },
-      max_tokens: 700,
+      max_tokens: 1200,
       messages: [{
         role: 'user',
         content: `Sei il social media manager di un sito italiano di statistiche di ciclismo amatoriale (italiacyclingstats.com). Scrivi un post per Facebook/Instagram in italiano su questo risultato di ${garaCx ? 'ciclocross' : 'ciclismo su strada'}, con lo stile entusiasta e narrativo tipico della Gazzetta dello Sport.
@@ -2058,7 +2058,7 @@ function _stripSocialExtrasForPage(text) {
   const lines = (text || '').split('\n').filter(l => {
     const t = l.trim();
     if (t === SITE_URL) return false;
-    if (/^#\S+(\s+#\S+)*$/.test(t)) return false; // riga di soli hashtag
+    if (/^#\S*(\s+#\S*)*$/.test(t)) return false; // riga di soli hashtag
     return true;
   });
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
