@@ -38,8 +38,10 @@
     let s = String(n || '').replace(/\s+/g, ' ').trim();
     s = s.replace(/^(\d+)\s*[°^º]?\s+/, '$1° ');
     // Se prima di "2° Trofeo ..." resta solo un'indicazione generica (es. "GARA NAZIONALE -"), il nome vero è proprio la parte dopo: non tagliarla
-    const _cut = s.replace(/\s+\d+\s*[°^º]?\s+(TROFEO|MEMORIAL|GRAN PREMIO|GP|COPPA)\b.*$/i, '');
-    s = /^(gara|prova)?\s*(nazionale|regionale|internazionale|open)?\s*(ciclocross)?\s*[-–]?\s*$/i.test(_cut) ? s.replace(/(\d)\^/g, '$1°') : _cut;
+    // Nel ciclocross il nome si mostra sempre intero; su strada si toglie il secondo trofeo (con il trattino che resterebbe appeso)
+    const cx = typeof globalData !== 'undefined' && !!(globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
+    const _cut = cx ? s : s.replace(/\s+\d+\s*[°^º]?\s+(TROFEO|MEMORIAL|GRAN PREMIO|GP|COPPA)\b.*$/i, '').replace(/\s*[-–\/,:]+\s*$/, '');
+    s = (/^(gara|prova)?\s*(nazionale|regionale|internazionale|open)?\s*(ciclocross)?$/i.test(_cut) ? s : _cut).replace(/(\d)\^/g, '$1°');
     s = tc(s).replace(/\b(Di|Del|Della|Delle|Dei|Degli|Da|De|E|In)\b/g, m => m.toLowerCase()).replace(/\bGp\b/g, 'GP');
     return s.replace(/^(\d+)° /, '$1° ');
   }
