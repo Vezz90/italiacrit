@@ -51,3 +51,8 @@ server/pcs-fillgaps-state.json
 
 # segnale locale di blocco PCS (scraper)
 server/pcs-blocked.flag
+
+# SegreteriaGare e date di nascita PCS: script, PDF e copie del database restano solo sul PC
+server/segreteriagare/
+server/segreteriagare-*
+server/pcs-birth-*

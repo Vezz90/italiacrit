@@ -651,6 +651,10 @@ async function loadAtletiStorici(sb) {
       i--; continue;
     }
     if (nav.timedOut) { process.stdout.write('sfida non superata, riprovo al prossimo giro\n'); challengeFails++; await humanDelay(i); continue; }
+    if (!nav.ok && !nav.notFound) {
+      process.stdout.write(`pagina non caricata (${nav.error || 'errore'}), riprovo al prossimo giro\n`);
+      await humanDelay(i); continue;
+    }
     if (!nav.ok) {
       process.stdout.write('non trovato su PCS\n'); notFound++;
       // Marcatore persistente: senza, chi risulta "non trovato" (mai un

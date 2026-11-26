@@ -14,6 +14,18 @@
  */
 
 const fs = require('fs');
+const path = require('path');
+
+// Blocco di PCS: si lascia un file con l'orario e per 6 ore nessuno script riapre il sito.
+const BLOCK_FLAG = path.join(__dirname, 'pcs-blocked.flag');
+const BLOCK_PAUSE_MS = 6 * 3600e3;
+function stopIfRecentBlock() {
+  let age;
+  try { age = Date.now() - fs.statSync(BLOCK_FLAG).mtimeMs; } catch { return; }
+  if (age >= BLOCK_PAUSE_MS) { try { fs.unlinkSync(BLOCK_FLAG); } catch {} return; }
+  console.error(`PCS ha bloccato ${Math.round(age / 60000)} minuti fa: non parto (pausa di 6 ore). Controlla prima che il sito si apra dal browser.`);
+  process.exit(3);
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -63,6 +75,7 @@ async function isChallengePage(page) {
  * @param {string} opts.readySelector — selettore CSS che indica pagina caricata (default 'h1')
  * @param {number} opts.challengeTimeoutMs — quanto attendere al massimo una sfida (default 120000)
  * @param {function} opts.onLog — callback(msg) per log
+ * @param {boolean} opts.returnOnBlock — se PCS blocca, restituisce {blocked:true} invece di chiudere lo script (solo per chi lo gestisce)
  * @returns {{ ok: boolean, notFound: boolean, timedOut: boolean, blocked?: boolean }}  (blocked: PCS ha bloccato l'IP: fermarsi, non segnare nulla)
  */
 async function gotoPcsPage(page, url, opts = {}) {
@@ -70,6 +83,7 @@ async function gotoPcsPage(page, url, opts = {}) {
     readySelector = 'h1',
     challengeTimeoutMs = 600000, // 10 min — dà tempo a un utente non sempre presente di cliccare
     onLog = () => {},
+    returnOnBlock = false,
   } = opts;
 
   // Finestra chiusa a mano (es. dall'utente, per errore) mentre lo script
@@ -103,7 +117,14 @@ async function gotoPcsPage(page, url, opts = {}) {
       }), 8000, 'blockedCheck');
     } catch (_) { blockedPage = false; }
   }
-  if (blockedPage) { onLog('  ⛔ PCS ha bloccato la richiesta (blocco, non sfida)'); return { ok: false, notFound: false, timedOut: false, blocked: true, status: httpStatus }; }
+  if (blockedPage) {
+    onLog('  ⛔ PCS ha bloccato la richiesta (blocco, non sfida)');
+    if (/procyclingstats\.com/i.test(url)) { try { fs.writeFileSync(BLOCK_FLAG, new Date().toISOString()); } catch {} }
+    if (returnOnBlock) return { ok: false, notFound: false, timedOut: false, blocked: true, status: httpStatus };
+    // Fermarsi qui vale per tutti gli script: chi proseguiva segnava atleti e anni come "non trovati"
+    console.error('\nPCS BLOCCATO: mi fermo senza segnare nulla.');
+    process.exit(3);
+  }
 
   if (page.url().includes('pagenotfound') || page.url().includes('404')) {
     return { ok: false, notFound: true, timedOut: false };
@@ -208,6 +229,7 @@ function findBravePath() {
  * navigator.webdriver, user-agent realistico).
  */
 async function launchPcsBrowser() {
+  stopIfRecentBlock();
   const { chromium } = require('playwright');
 
   let browser;

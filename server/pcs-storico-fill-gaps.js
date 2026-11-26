@@ -302,7 +302,7 @@ const WORKERS = Math.max(1, parseInt((args.find(a => a.startsWith('--workers='))
           if (browser.isConnected?.() === false) { stop = true; console.error('Browser chiuso: esco, il wrapper riparte'); break; }
           page = await context.newPage();
         }
-        const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { onLog: msg => { if (/sfida|challenge/i.test(msg)) prog.challenges++; } });
+        const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${g.slug}/${y}`, { returnOnBlock: true, onLog: msg => { if (/sfida|challenge/i.test(msg)) prog.challenges++; } });
         if (nav.blocked) {
           // PCS ha bloccato: niente va segnato (ne vuoto ne fallito), si lascia il file di blocco e si esce con codice 3 (il wrapper non riparte)
           try { fs.writeFileSync(path.join(__dirname, 'pcs-blocked.flag'), new Date().toISOString()); } catch (_) {}

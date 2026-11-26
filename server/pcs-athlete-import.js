@@ -1294,6 +1294,12 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
       await humanDelay(i);
       continue;
     }
+    if (!nav.ok && !nav.notFound) {
+      process.stdout.write(`pagina non caricata (${nav.error || 'errore'}), riprovo al prossimo giro\n`);
+      errors++;
+      await humanDelay(i);
+      continue;
+    }
     if (!nav.ok) {
       process.stdout.write('non trovato su PCS\n');
       notFound++;
