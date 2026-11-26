@@ -30001,6 +30001,17 @@ function doSearch(q, dropdown) {
     if (mediaResults.length) renderDropdown([...results, ...mediaResults]);
   });
 
+  // Atleti del ciclocross (tutte le stagioni) che non sono gia' in elenco
+  if (q.trim().length >= 3 && window.CX && window.CX.people) {
+    window.CX.people().then(lista => {
+      const nuovi = lista.filter(p => !results.some(r => r.type === 'atleta' && r.id === p.id) && fuzzyIncludes(String(p.nome || '').toLowerCase(), ql))
+        .slice(0, 4).map(p => ({ type: 'atleta', id: p.id, display: p.nome, sub: `${p.club ? p.club + ' · ' : ''}Ciclocross ${p.stagione}` }));
+      if (!nuovi.length) return;
+      nuovi.forEach(n => results.splice(results.filter(r => r.type === 'atleta').length, 0, n));
+      renderDropdown(results);
+    }).catch(() => {});
+  }
+
   // Arricchisci con atleti "storici" (ciclismo.info, 2007-2025) — non sono
   // MAI nel roster nativo (athletes.json = solo stagione in corso), quindi
   // senza questa chiamata chi ha gareggiato solo negli anni storici non

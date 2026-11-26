@@ -36,6 +36,7 @@
   let cxAth = null;             // atleta_id con risultati ciclocross
   let cxGd = null;              // globalData costruito dal ciclocross
   let cxTeams = null;
+  let cxEver = null;            // atleta_id con risultati ciclocross in una stagione qualunque
   let cxRank = { ath: {}, team: {} };   // classifiche ciclocross per categoria           // team_id con risultati ciclocross
 
   async function getJson(url) { const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
@@ -76,6 +77,31 @@
     }
     if (typeof invalidatePhotoCache === 'function') invalidatePhotoCache();
     route();
+  }
+  // elenco di tutti i corridori del ciclocross (stagione piu' recente di ciascuno), per la ricerca
+  let _cxPersone = null;
+  function people() {
+    return _cxPersone || (_cxPersone = (async () => {
+      if (!cxIdx) cxIdx = await getJson('/data/ciclocross/index.json');
+      const out = {};
+      for (const s of seasons()) {
+        const a = await getJson(`/data/ciclocross/${s}/athletes.json`).catch(() => ({}));
+        for (const v of Object.values(a)) if (v.atleta_id && !out[v.atleta_id]) out[v.atleta_id] = { id: v.atleta_id, nome: v.nome, club: v.club || '', stagione: label(s) };
+      }
+      return Object.values(out);
+    })().catch(() => { _cxPersone = null; return []; }));
+  }
+  // porta il ciclocross sulla stagione (la piu' recente) in cui quell'atleta ha risultati
+  async function toSeasonOf(id) {
+    if (cxAth && cxAth.has(id)) return true;
+    if (!cxEver || !cxEver.has(id)) return false;
+    const prima = cxData.key;
+    for (const s of seasons()) {
+      if (s === prima) continue;
+      try { await useSeason(s); } catch (e) { continue; }
+      if (cxAth.has(id)) return true;
+    }
+    await useSeason(prima); return false;
   }
   function seasonSelect(id) {
     const sel = cxData && cxData.key, cur = cxIdx && cxIdx.current;
@@ -325,7 +351,7 @@
 
   const otherHas = (kind, id) => {
     if (mode !== 'strada' && kind === 'atleta' && roadNone.has(id)) return false;
-    if (mode === 'strada') return kind === 'atleta' ? !!(cxAth && cxAth.has(id)) : !!(cxTeams && cxTeams.has(id));
+    if (mode === 'strada') return kind === 'atleta' ? !!((cxAth && cxAth.has(id)) || (cxEver && cxEver.has(id))) : !!(cxTeams && cxTeams.has(id));
     const g = live || {};
     return kind === 'atleta' ? !!(g.athletes && g.athletes[id]) : !!(g.teams && g.teams[id]);   // dal ciclocross si deve poter sempre tornare alla strada (i risultati della strada stanno anche negli anni passati)
   };
@@ -404,7 +430,7 @@
   // in modalità strada serve conoscere chi ha risultati ciclocross (un solo calcolo)
   async function ensureIds() {
     if (cxAth) return true;
-    try { await loadRaw(); cxGd = build(globalData); syncGlobals(); document.dispatchEvent(new CustomEvent('ics-cx-ready')); return true; } catch (e) { return false; }
+    try { await loadRaw(); cxGd = build(globalData); syncGlobals(); cxEver = new Set((await people()).map(p => p.id)); document.dispatchEvent(new CustomEvent('ics-cx-ready')); return true; } catch (e) { return false; }
   }
 
   // Link diretto (condiviso, cercato, dagli elenchi iscritti) a una gara, atleta o team che esiste SOLO nel ciclocross:
@@ -419,9 +445,20 @@
       if (globalData[m] && globalData[m][id]) return false;
     }
     if (!(await ensureIds()) || mode !== 'strada' || curId(kind) !== id) return false;
-    const k = kind === 'gara' ? seasonOfGara(id) : '';
-    if (k && k !== cxData.key && seasons().includes(k)) { try { await useSeason(k); } catch (e) { return false; } if (mode !== 'strada' || curId(kind) !== id) return false; }
-    if (!(kind === 'gara' ? hasRace(cxGd, id) : (kind === 'atleta' ? cxAth : cxTeams).has(id))) return false;
+    const c_e = () => (kind === 'gara' ? hasRace(cxGd, id) : (kind === 'atleta' ? cxAth : cxTeams).has(id));
+    if (!c_e()) {
+      const k = kind === 'gara' ? seasonOfGara(id) : '';
+      const dove = kind === 'gara' ? (seasons().includes(k) ? [k] : []) : seasons();
+      const prima = cxData.key;
+      let trovata = false;
+      for (const s of dove) {
+        if (s === prima) continue;
+        try { await useSeason(s); } catch (e) { continue; }
+        if (mode !== 'strada' || curId(kind) !== id) return false;
+        if (c_e()) { trovata = true; break; }
+      }
+      if (!trovata) { if (cxData.key !== prima) await useSeason(prima); return false; }
+    }
     autoCx = true;
     await setMode('ciclocross', { force: true, auto: true });
     return true;
@@ -470,7 +507,7 @@
     document.addEventListener('click', onLinkClick, true);
     // true/false: l'atleta ha (o no) risultati nell'altra specialità; null: non si sa ancora (dati in caricamento)
     const hasIn = (kind, id, forMode) => {
-      if (forMode === 'ciclocross') { if (mode === 'ciclocross') return !!(globalData.athletes && globalData.athletes[id] && (globalData.athletes[id].risultati || []).length); return cxAth ? cxAth.has(id) : null; }
+      if (forMode === 'ciclocross') { if (cxEver && cxEver.has(id)) return true; if (mode === 'ciclocross') return !!(globalData.athletes && globalData.athletes[id] && (globalData.athletes[id].risultati || []).length); return cxAth ? cxAth.has(id) : null; }
       if (roadNone.has(id)) return false;
       if (mode === 'strada') return !!(globalData && globalData.athletes && globalData.athletes[id]);
       return !!(live && live.athletes && live.athletes[id]);
@@ -499,7 +536,7 @@
     };
     // i selettori "Stagione" di Classifica e Risultati nel ciclocross elencano le stagioni del ciclocross
     sw('seasonSelectHtml', (o) => function (id) { return isCxGd() && cxData ? seasonSelect(id) : o.apply(this, arguments); });
-    window.CX = { rebuild, setSeason: setCxSeason, label: () => (isCxGd() && cxData ? label(cxData.key) : ''), seasonSelect: (id) => (isCxGd() && cxData ? seasonSelect(id) : ''), season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
+    window.CX = { rebuild, people, setSeason: setCxSeason, label: () => (isCxGd() && cxData ? label(cxData.key) : ''), seasonSelect: (id) => (isCxGd() && cxData ? seasonSelect(id) : ''), season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
     const oRT = window.renderTeam;
     if (typeof oRT === 'function' && !oRT.__cxpre) {
       const preT = async function (id) {
@@ -522,7 +559,7 @@
     if (typeof oRA === 'function' && !oRA.__cxpre) {
       const pre = async function (id) {
         if (await openIfCxOnly('atleta', id)) return;
-        if (mode === 'ciclocross' && cxAth && !cxAth.has(id) && live && live.athletes && live.athletes[id]) { await setMode('strada'); return; }
+        if (mode === 'ciclocross' && cxAth && !cxAth.has(id) && !(await toSeasonOf(id)) && live && live.athletes && live.athletes[id]) { await setMode('strada'); return; }
         return oRA.apply(this, arguments);
       };
       pre.__cxpre = true; window.renderAtleta = pre;
