@@ -54,7 +54,8 @@ async function isChallengePage(page) {
     if (document.querySelector('iframe[src*="challenges.cloudflare.com"]')) return true;
     if (document.querySelector('#challenge-running, .cf-turnstile, #cf-challenge-running, #challenge-error-text')) return true;
     const bodyText = (document.body?.innerText || '').toLowerCase();
-    if (/verify you are human|checking your browser|attendere\.\.\.|please wait while we/.test(bodyText)) return true;
+    if (/verify you are human|checking your browser|attendere\.\.\.|please wait while we|performing security verification|verifying you are human/.test(bodyText)) return true;
+    if (/^(just a moment|un momento)/i.test(document.title.trim())) return true;
     // Stessa sfida, ma servita in italiano (osservato su it.firstcycling.com
     // — il rilevamento sopra è tutto in inglese e non la vedeva, lo script
     // pensava di aver caricato la pagina vera e continuava a vuoto).
@@ -82,7 +83,7 @@ async function gotoPcsPage(page, url, opts = {}) {
   const {
     readySelector = 'h1',
     challengeTimeoutMs = 600000, // 10 min — dà tempo a un utente non sempre presente di cliccare
-    onLog = () => {},
+    onLog = m => console.log(m),
     returnOnBlock = false,
   } = opts;
 
@@ -108,8 +109,14 @@ async function gotoPcsPage(page, url, opts = {}) {
   // BLOCCO (non e una sfida da risolvere): Cloudflare risponde 403/429/503 oppure mostra "Sorry, you have been blocked". Prima la pagina
   // di blocco veniva letta come "nessun risultato" e gli anni finivano segnati come vuoti (15-16/10/2026: ~13.000 anni falsi).
   // Il chiamante deve FERMARSI e non segnare nulla.
-  let blockedPage = [403, 429, 503].includes(httpStatus);
-  if (!blockedPage) {
+  // ATTENZIONE: anche la VERIFICA "non sono un robot" arriva con 403/503. Non e' un blocco: si aspetta che la persona la completi.
+  // Qualche secondo di attesa perche' la pagina di verifica si disegni, poi si distingue.
+  let sfida = false;
+  if ([403, 503].includes(httpStatus)) {
+    for (let i = 0; i < 6 && !sfida; i++) { await sleep(2000); sfida = await isChallengePage(page); }
+  }
+  let blockedPage = !sfida && [403, 429, 503].includes(httpStatus);
+  if (!blockedPage && !sfida) {
     try {
       blockedPage = await withTimeout(page.evaluate(() => {
         const t = (document.body?.innerText || '').toLowerCase(), ti = (document.title || '').toLowerCase();
@@ -171,7 +178,17 @@ async function gotoPcsPage(page, url, opts = {}) {
       return { ok: false, notFound: false, timedOut: true };
     }
     onLog('  ✓ verifica completata, continuo');
-    await sleep(500);
+    await sleep(1500);
+  }
+
+  // superata la verifica puo' comunque comparire la pagina di blocco: anche allora ci si ferma senza segnare nulla
+  const dopo = sfida && await withTimeout(page.evaluate(() => /sorry, you have been blocked|you are unable to access|error 1020|too many requests/i.test(document.body?.innerText || '')), 8000, 'blockedAfter').catch(() => false);
+  if (dopo) {
+    onLog('  ⛔ PCS ha bloccato la richiesta (blocco, non sfida)');
+    if (/procyclingstats\.com/i.test(url)) { try { fs.writeFileSync(BLOCK_FLAG, new Date().toISOString()); } catch {} }
+    if (returnOnBlock) return { ok: false, notFound: false, timedOut: false, blocked: true, status: httpStatus };
+    console.error('\nPCS BLOCCATO: mi fermo senza segnare nulla.');
+    process.exit(3);
   }
 
   // Attendi anche il contenuto reale (non solo l'assenza della sfida).
