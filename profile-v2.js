@@ -212,7 +212,7 @@
       var col = r.p === 1 ? '#e0a800' : r.p === 2 ? '#9aa4b2' : r.p === 3 ? '#c27a3a' : '#c9ced6', ch = chipOf(r);
       return rowLink(r, '<span class="apc-rn">' + cleanName(r.n) + '</span>' + (ch ? '<span class="apc-chip">' + esc3(ch) + '</span>' : '') + TROPHY(col) + '<b class="apc-val">' + shown(r.p) + '</b>' + CHEV3);
     }).join('');
-    return '<section class="apc apc-wide"><div class="apc-h"><h3>Stagione ' + esc3(year) + '</h3><button type="button" class="apc-lnk" onclick="window._athTab(\'r\')">Vedi stagione ' + ARROW + '</button></div>' +
+    return '<section class="apc apc-wide"><div class="apc-h"><h3>Stagione ' + esc3((window.CX && window.CX.label && window.CX.label()) || year) + '</h3><button type="button" class="apc-lnk" onclick="window._athTab(\'r\')">Vedi stagione ' + ARROW + '</button></div>' +
       '<div class="apc-stats"><div>' + ico('gar') + '<b>' + rows.length + '</b><span>Gare</span></div><div>' + ico('win') + '<b>' + w + '</b><span>Vittorie</span></div><div>' + ico('pod') + '<b>' + pod + '</b><span>Podi</span></div><div>' + '<svg class="apc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 21V10M12 21V4M19 21v-8"/></svg>' + '<b>' + esc3(ptsTxt || '0') + '</b><span>Punti</span></div></div>' +
       (rows.length ? '<div class="apc-list">' + list + '</div><button type="button" class="apc-btn" onclick="window._athTab(\'r\')">Tutti i risultati ' + esc3(year) + ' ' + ARROW + '</button>' : '<p class="apc-sub">Nessun risultato in questa stagione.</p>') + '</section>';
   }

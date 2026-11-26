@@ -287,6 +287,8 @@
   /* ---------- selettore stagione ---------- */
   const curYear = () => +_loadedSeasonYear() || new Date().getFullYear();
   function yearSel() {
+    const cx = window.CX && window.CX.seasonSelect ? window.CX.seasonSelect('hx-cx-year') : '';   // nel ciclocross: le sue stagioni
+    if (cx) return cx;
     const cy = curYear(), sel = hx.year || cy, ys = [];
     for (let y = cy; y >= 2007; y--) ys.push(y);
     return `<label class="hx-sel hx-yr"><span class="sr">Stagione</span><select id="hx-year" aria-label="Stagione">${ys.map(y => `<option value="${y}"${y === sel ? ' selected' : ''}>Stagione ${y}${y === cy ? ' (in corso)' : ''}</option>`).join('')}</select></label>`;

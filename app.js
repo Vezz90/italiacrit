@@ -17615,7 +17615,7 @@ function seasonSelectHtml(id, selected, handler) {
   return `<label class="hx-sel hx-yr"><span class="sr">Stagione</span><select id="${id}" aria-label="Stagione" onchange="window.${handler}(this.value)">${o.join('')}</select></label>`;
 }
 window.seasonSelectHtml = seasonSelectHtml;
-function _syncSeasonSelect(id, y) { const el = document.getElementById(id); if (el) el.value = String(Number(y)); }
+function _syncSeasonSelect(id, y) { const el = document.getElementById(id); if (el && !el.dataset.cx) el.value = String(Number(y)); }
 
 function _loadedSeasonYear() {
   return String(activeSeason || currentSeason || (_seasonsIndex && _seasonsIndex.current) || new Date().getFullYear());

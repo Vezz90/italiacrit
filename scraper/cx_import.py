@@ -79,7 +79,7 @@ def atleta_id(nome):
 FUORI_FORTE_RE = re.compile(r'MASTER|FASCIA|GIOVANISSIM|\bG[1-6]\b|G6|WOMEN|WOMAN|\bW\d\b|\bMW\b|\bMF\d\b|SUPERGENTLEMEN|ELMT|JMT|EWS|JWS|GENERALE|MISTA|COPPIA|STAFFETTA|RELAY|HANDBIKE|DISABIL|PARACIC|AMATORI|CICLOAMATORI|CICLOTURIST')
 FUORI_DEBOLE_RE = re.compile(r'\bF\d\b|\bM\d{1,2}\b|\bM\d-M\d')
 CAT_PAROLA_RE = re.compile(r'ESORDIENT|\bESO\b|\bED\d|\bES\d|ALLIEV|\bAL\d?\b|\bDA\d?\b|\bAM\d|\bALL\b|JUNIOR|\bJUN?\b|\bDJ\b|\bJM\b|OPEN|\bOPM\b|\bOPF\b|\bOM\b|\bOF\b|ELITE|UNDER')
-FEMM_GRUPPO_RE = re.compile(r'DONN|FEMM|\bED\d?\b|\bDA\d?\b|\bDJ\b|\bDU\b|\bDE\b|\bOPF\b|\bOF\b|\bAF\d?\b|\bEF\d?\b|\bJF\b|(ESORDIENTI|ALLIEVI|JUNIOR\w*|OPEN|ELITE|UNDER 23|ESO|ALL) ?F\b')
+FEMM_GRUPPO_RE = re.compile(r'DONN|FEMM|\bWJ\b|^OP F$|^ES ?\d.* F$|\bED\d?\b|\bDA\d?\b|\bDJ\b|\bDU\b|\bDE\b|\bOPF\b|\bOF\b|\bAF\d?\b|\bEF\d?\b|\bJF\b|(ESORDIENTI|ALLIEVI|JUNIOR\w*|OPEN|ELITE|UNDER 23|ESO|ALL) ?F\b')
 FEMM_CAT = {'DA', 'DJ', 'DU', 'DE', 'ED', 'G6F', 'G5F', 'G4F', 'G3F', 'G2F', 'G1F'}
 
 
@@ -103,11 +103,11 @@ def mappa_categoria(gruppo, cat):
     if FUORI_DEBOLE_RE.search(g) and not CAT_PAROLA_RE.search(g):
         return None, None
     s = genere(g, cat)
-    if re.search(r'ESORDIENT|\bESO\b|\bED\d|\bES\d', g):
+    if re.search(r'ESORDIENT|\bESO\b|\bED ?\d|\bES ?\d|^E[SD]$', g):
         y = None
         if re.search(r'\b1\s*E\s*2\b|\bI\s*E\s*II\b', g):
             return f'ES1_{s}', 'anno_incerto'  # un solo gruppo per entrambi gli anni: non separabile
-        m = (re.search(r'(?:ES|ED|ESO|ESORDIENTI?)\s*[MF]?\s*([12])\b', g) or re.search(r'\b([12])\s*ANNO', g)
+        m = (re.search(r'(?:ES|ED|ESO|ESORDIENT[IE]?)\s*[MF]?\s*([12])\b', g) or re.search(r'\b([12])\s*ANNO', g)
              or re.search(r'\b[MF]([12])\b', g) or re.search(r'\b(?:DONNA|DONNE|FEMMINILE|MASCHILE)\s*([12])\b', g))
         if m:
             y = int(m.group(1))
@@ -118,11 +118,11 @@ def mappa_categoria(gruppo, cat):
         if y is None:
             return f'ES1_{s}', 'anno_incerto'
         return f'ES{y}_{s}', None
-    if re.search(r'ALLIEV|\bAL\d?\b|\bDA\d?\b|\bAM\d|\bALL\b', g):
+    if re.search(r'ALLIEV|\bAL\d?\b|\bDA\d?\b|\bAM\d|\bALL\d?\b', g):
         return f'AL_{s}', None
-    if re.search(r'JUNIOR|\bJUN?\b|\bDJ\b|\bJM\b', g):
+    if re.search(r'JUNIOR|\bJUN?\b|\bDJ\b|\bJM\b|\bMJ\b|\bWJ\b|^J (UOMINI|DONNE)$', g):
         return f'JUN_{s}', None
-    if re.search(r'OPEN|\bOPM\b|\bOPF\b|\bOM\b|\bOF\b|ELITE|UNDER|\bDU\b|\bDE\b|\bDONNE\b|\bEL\b|\bUN\b', g):
+    if re.search(r'OPEN|\bOPM\b|\bOPF\b|\bOM\b|\bOF\b|ELITE|UNDER|\bDU\b|\bDE\b|\bDONNE\b|\bEL\b|\bUN\b|\bOP [MF]\b', g):
         return f'ELI_{s}', None
     return None, 'non_riconosciuto'
 

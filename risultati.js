@@ -276,7 +276,7 @@
     syncShell(o) {
       document.querySelectorAll('#ris-seg-genere button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.g || '') === (o.genere || ''))));
       const m = $('ris-missing-toggle'); if (m) m.setAttribute('aria-pressed', String(!!o.missing));
-      const _ys = $('ris-year-sel'); if (_ys && o.year) _ys.value = String(Number(o.year));
+      const _ys = $('ris-year-sel'); if (_ys && o.year && !_ys.dataset.cx) _ys.value = String(Number(o.year));
     },
     loadMoreHtml(n) { return n > 0 ? `<button class="rs-more" type="button" onclick="window.risLoadMore()">Carica altre gare (${n})</button>` : ''; },
     both() {
