@@ -35,14 +35,14 @@
       if (vuoto) sc = 'stagione';
       var vals = aside.querySelectorAll('#atleta-stats-italia-bar .athlete-stat-val');
       var yrTxt = ((aside.querySelector('#atleta-stats-italia-label') || {}).textContent || '').match(/\d{4}/);
-      var year = yrTxt ? yrTxt[0] : '';
+      var year = cx && window.CX && window.CX.anno ? window.CX.anno() : (yrTxt ? yrTxt[0] : '');
       var w, s, b, o, c4v, c4l, pos, sub, foot;
       if (sc === 'carriera') {
         var c = (window._athCareer || {})[id + '|' + (cx ? 'cx' : 'road')];
         if (c) {
           w = c.p1; s = c.p2; b = c.p3; o = c.pout; c4v = c.n; c4l = 'Gare';
           sub = s + ' × 2° · ' + b + ' × 3°';
-          foot = '<span class="ap-klbl">Carriera ' + (cx ? 'ciclocross' : 'strada') + (c.from ? ' · ' + (c.from === c.to ? c.from : c.from + '–' + c.to) : '') + '</span><span class="ap-note">Posizioni da tutte le fonti disponibili (FCI, ciclismo.info, PCS). Il ranking assoluto arriverà.</span>';
+          foot = '<span class="ap-klbl">Carriera ' + (cx ? 'ciclocross' : 'strada') + (c.from ? ' · ' + (c.from === c.to ? stg(c.from, cx) : stg(c.from, cx) + '–' + stg(c.to, cx)) : '') + '</span><span class="ap-note">' + (cx ? 'Dai risultati FCI del ciclocross, tutte le stagioni disponibili.' : 'Posizioni da tutte le fonti disponibili (FCI, ciclismo.info, PCS). Il ranking assoluto arriverà.') + '</span>';
         } else { w = s = b = o = c4v = '…'; c4l = 'Gare'; sub = ''; foot = '<span class="ap-klbl">Carriera: calcolo in corso…</span>'; }
         pos = 'x';
       } else {
@@ -156,6 +156,20 @@
   // Schede della Panoramica (stile CyclingDB): Stagione · Ultimi risultati · Statistiche di carriera · Vittorie per anno ·
   // Squadre · Posizione in classifica · Rivali frequenti. Tutti dati nostri (stesse fonti del resto della scheda).
   // ════════════════════════════════════════════════════════════════
+  // "2025" nel ciclocross e' la stagione 2025/26
+  function stg(y, cx) { return cx ? y + '/' + String(+y + 1).slice(2) : y; }
+  // classifiche delle stagioni del ciclocross nello stesso formato dell'archivio della strada: [anno, categoria, posizione, punti]
+  function cxPosAtleta(id) {
+    var st = (window.CX && window.CX.stagioni) ? window.CX.stagioni() : [], out = [];
+    st.forEach(function (s) { var best = 0; Object.keys(s.rank.ath).forEach(function (code) { s.rank.ath[code].forEach(function (x) { if (x.atleta_id === id && (!best || x.pos < best)) best = x.pos; }); }); if (best) out.push({ y: +s.anno, pos: best }); });
+    return out.sort(function (a, b) { return a.y - b.y; });
+  }
+  function cxCarr(id, team) {
+    var st = (window.CX && window.CX.stagioni) ? window.CX.stagioni() : [], s = [];
+    st.forEach(function (x) { Object.keys(x.rank.team).forEach(function (code) { x.rank.team[code].forEach(function (r) { if (r.team_id === id) s.push([+x.anno, NATCAT[code], r.pos, r.punti]); }); }); });
+    if (!team || !s.length) return null;
+    var t = {}; t[normT(team.nome)] = { s: s }; return { t: t, a: {} };
+  }
   var MULT = { 1: 'Reg.le', 2: 'Naz.le', 3: 'Int.le' };
   var carrCache = null;
   function esc3(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -198,7 +212,7 @@
     var R = 52, C = 2 * Math.PI * R, off = 0, segs = '';
     if (tot) c.forEach(function (v, i) { if (!v) return; var len = v / tot * C; segs += '<circle cx="70" cy="70" r="' + R + '" fill="none" stroke="' + COL[i] + '" stroke-width="18" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 70 70)"/>'; off += len; });
     else segs = '<circle cx="70" cy="70" r="' + R + '" fill="none" stroke="' + COL[3] + '" stroke-width="18"/>';
-    var sel = withScope ? '<select class="apc-sel apc-dsel" aria-label="Periodo"><option value="car"' + (donutScope === 'car' ? ' selected' : '') + '>Carriera</option><option value="sta"' + (donutScope === 'sta' ? ' selected' : '') + '>Stagione ' + esc3(year) + '</option></select>' : '';
+    var sel = withScope ? '<select class="apc-sel apc-dsel" aria-label="Periodo"><option value="car"' + (donutScope === 'car' ? ' selected' : '') + '>Carriera</option><option value="sta"' + (donutScope === 'sta' ? ' selected' : '') + '>Stagione ' + esc3((window.CX && window.CX.label && window.CX.label()) || year) + '</option></select>' : '';
     return '<section class="apc"><div class="apc-h"><h3>Piazzamenti per tipo</h3>' + sel + '</div><div class="apc-donut"><svg viewBox="0 0 140 140" role="img" aria-label="Ripartizione dei piazzamenti">' + segs + '<text x="70" y="68" text-anchor="middle" class="apc-dn">' + tot + '</text><text x="70" y="86" text-anchor="middle" class="apc-dt">piazzamenti</text></svg><ul>' +
       c.map(function (v, i) { return '<li><i style="background:' + COL[i] + '"></i><span>' + LAB[i] + '</span><b>' + v + '</b></li>'; }).join('') + '</ul></div></section>';
   }
@@ -214,7 +228,7 @@
     }).join('');
     return '<section class="apc apc-wide"><div class="apc-h"><h3>Stagione ' + esc3((window.CX && window.CX.label && window.CX.label()) || year) + '</h3><button type="button" class="apc-lnk" onclick="window._athTab(\'r\')">Vedi stagione ' + ARROW + '</button></div>' +
       '<div class="apc-stats"><div>' + ico('gar') + '<b>' + rows.length + '</b><span>Gare</span></div><div>' + ico('win') + '<b>' + w + '</b><span>Vittorie</span></div><div>' + ico('pod') + '<b>' + pod + '</b><span>Podi</span></div><div>' + '<svg class="apc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 21V10M12 21V4M19 21v-8"/></svg>' + '<b>' + esc3(ptsTxt || '0') + '</b><span>Punti</span></div></div>' +
-      (rows.length ? '<div class="apc-list">' + list + '</div><button type="button" class="apc-btn" onclick="window._athTab(\'r\')">Tutti i risultati ' + esc3(year) + ' ' + ARROW + '</button>' : '<p class="apc-sub">Nessun risultato in questa stagione.</p>') + '</section>';
+      (rows.length ? '<div class="apc-list">' + list + '</div><button type="button" class="apc-btn" onclick="window._athTab(\'r\')">Tutti i risultati ' + esc3((window.CX && window.CX.label && window.CX.label()) || year) + ' ' + ARROW + '</button>' : '<p class="apc-sub">Nessun risultato in questa stagione.</p>') + '</section>';
   }
 
   function latestCard(K) {
@@ -265,7 +279,7 @@
     var groups = [];
     t.forEach(function (e) { var g = groups[groups.length - 1]; if (g && g.team === e.team) { g.from = e.y; g.n += rows.filter(function (r) { return r.y === e.y; }).length; } else groups.push({ team: e.team, to: e.y, from: e.y, tid: e.tid, n: rows.filter(function (r) { return r.y === e.y; }).length }); });
     var list = groups.slice(0, 8).map(function (g) {
-      var yr = g.from === g.to ? g.from : g.from + ' – ' + g.to, ini = String(g.team || '?').replace(/[^A-Za-zÀ-ÿ0-9 ]/g, '').trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0); }).join('').toUpperCase();
+      var cxT = /\|cx$/.test(K), yr = g.from === g.to ? stg(g.from, cxT) : stg(g.from, cxT) + ' – ' + stg(g.to, cxT), ini = String(g.team || '?').replace(/[^A-Za-zÀ-ÿ0-9 ]/g, '').trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0); }).join('').toUpperCase();
       var inner = '<span class="apc-d">' + esc3(yr) + '</span><span class="apc-logo" data-tid="' + esc3(g.tid || '') + '">' + esc3(ini) + '</span><span class="apc-rn"><strong>' + esc3(g.team) + '</strong><small>' + (g.n ? g.n + (g.n === 1 ? ' gara' : ' gare') : '') + '</small></span>' + (g.tid ? CHEV3 : '');
       return g.tid ? '<a class="apc-row apc-team" href="#/team/' + encodeURIComponent(g.tid) + '">' + inner + '</a>' : '<div class="apc-row apc-team">' + inner + '</div>';
     }).join('');
@@ -315,13 +329,13 @@
     var host = document.getElementById('ap-cards');
     if (!host) { host = document.createElement('div'); host.id = 'ap-cards'; var kr = document.getElementById('atleta-key-results'); if (kr && kr.parentNode === panel) kr.insertAdjacentElement('afterend', host); else panel.insertBefore(host, panel.firstChild); host.addEventListener('change', function (e) { if (e.target.classList.contains('apc-dsel')) { donutScope = e.target.value; fillCards(); } else if (e.target.classList.contains('apc-sel')) { byMode = e.target.value; fillCards(); } }); }
     var aside = document.querySelector('.ath-hero-standing') || document;
-    var yrM = ((aside.querySelector('#atleta-stats-italia-label') || {}).textContent || '').match(/\d{4}/), year = yrM ? yrM[0] : '';
+    var yrM = ((aside.querySelector('#atleta-stats-italia-label') || {}).textContent || '').match(/\d{4}/), year = cx && window.CX && window.CX.anno ? window.CX.anno() : (yrM ? yrM[0] : '');
     var ptsTxt = ((aside.querySelector('#atleta-pts-value') || {}).textContent || '0').trim();
     var posEl = aside.querySelector('.ath-rank-block .athlete-pts-value'), livePos = posEl ? parseInt(posEl.textContent, 10) || 0 : 0;
     var c = (window._athCareer || {})[K];
     if (!cx) loadCarr();
     window._apZero = !!c;   // a calcolo finito le schede si mostrano comunque, anche a zero
-    var parts = [seasonCard(K, year, ptsTxt), latestCard(K), careerCard(c, cx), donutCard((window._athRows || {})[K] || [], true, year), winsCard(c, cx), teamsCard(K, id), cx ? '' : rankCard(rankPoints(id, +year, livePos)), rivalsCard(id)];
+    var parts = [seasonCard(K, year, ptsTxt), latestCard(K), careerCard(c, cx), donutCard((window._athRows || {})[K] || [], true, year), winsCard(c, cx), teamsCard(K, id), rankCard(cx ? cxPosAtleta(id).map(function (p) { return { y: stg(p.y, true), pos: p.pos }; }) : rankPoints(id, +year, livePos)), rivalsCard(id)];
     window._apZero = false;
     var html = parts.join('');
     if (host.dataset.sig !== html) {
@@ -404,13 +418,14 @@
       var ctl = '<div class="ap-ctl">' + discSeg(showDisc, cx) + (vuoto ? seg('scope', [['stagione', 'Stagione attuale']], 'stagione') : seg('scope', [['carriera', 'Carriera'], ['stagione', 'Stagione ' + seasonTxt]], sc)) + '</div>';
       var cells, foot;
       if (sc === 'carriera') {
-        var ss = cx ? [] : teamSeasons(carrCache, (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null, code);
+        var tOra = (typeof globalData !== 'undefined' && globalData && globalData.teams) ? globalData.teams[id] : null;
+        var ss = teamSeasons(cx ? cxCarr(id, tOra) : carrCache, tOra, code);
         if (!cx) loadCarr();
         if (ss.length) {
           var yy = {}, bestP = 999, tit = 0, pp = 0; ss.forEach(function (x) { yy[x[0]] = 1; if (x[2] > 0 && x[2] < bestP) bestP = x[2]; if (x[2] === 1) tit++; pp += x[3] || 0; });
           var ny = Object.keys(yy).length;
           cells = '<div class="ap-k"><b>' + ny + '</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>' + tit + '</b><span>Titoli di classifica</span></div><div class="ap-k"><b>' + (bestP === 999 ? '—' : bestP + '°') + '</b><span>Miglior posizione</span></div><div class="ap-k"><b>' + pp + '</b><span>Punti in archivio</span></div><div class="ap-k"><b>' + at + '</b><span>Atleti oggi</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
-          foot = '<span class="ap-klbl">Carriera strada · ' + esc3(catTxt) + ' · ' + Math.min.apply(null, Object.keys(yy)) + '–' + Math.max.apply(null, Object.keys(yy)) + '</span><span class="ap-note">Dai dati dell\'archivio (classifiche finali). Il ranking assoluto arriverà.</span>';
+          foot = '<span class="ap-klbl">Carriera ' + (cx ? 'ciclocross' : 'strada') + ' · ' + esc3(catTxt) + ' · ' + stg(Math.min.apply(null, Object.keys(yy)), cx) + '–' + stg(Math.max.apply(null, Object.keys(yy)), cx) + '</span><span class="ap-note">' + (cx ? 'Dalle classifiche di categoria delle stagioni di ciclocross (quella in corso è provvisoria).' : 'Dai dati dell\'archivio (classifiche finali). Il ranking assoluto arriverà.') + '</span>';
         } else if (!cx && (window._ciclismoTeamStato || {})[id] === 'errore') {
           cells = '<div class="ap-k"><b>—</b><span>Stagioni</span></div><div class="ap-k ap-gold"><b>—</b><span>Vittorie</span></div><div class="ap-k"><b>—</b><span>Podi</span></div><div class="ap-k"><b>—</b><span>Piazzamenti</span></div><div class="ap-k"><b>—</b><span>Atleti in archivio</span></div><div class="ap-k ap-pos"><b>x</b><span>Posizione</span></div>';
           foot = '<span class="ap-klbl">Storico non disponibile in questo momento: riprova tra poco</span>';
@@ -504,6 +519,7 @@
     window._athRows = window._athRows || {};
     var rowsNow = [];
     if (isCur) rowsNow = teamRows(id);
+    if (cx && window.CX && window.CX.anno) rowsNow.forEach(function (r) { r.y = window.CX.anno(); });
     else {
       // stagione passata: prima i dati nativi di quella stagione (stesso formato di quella in corso), poi l'archivio storico
       var pk = id + '|' + selYear; window._tmPast = window._tmPast || {};
@@ -535,16 +551,17 @@
     var rows = window._athRows[K];
     var seasonKey = cx ? K : K;
     // Stagione/Ultimi usano il formato degli atleti: l'anno delle righe e' quello della data
-    var yearForRows = cx ? (rows[0] ? rows[0].y : '') : selYear;
+    var yearForRows = cx ? (window.CX && window.CX.anno ? window.CX.anno() : '') : selYear;
     var parts = [];
     window._apZero = true;
     if (rows.length) {
-      parts.push(seasonCard(K, yearForRows, isCur ? ptsTxt : '—').replace('Stagione ' + yearForRows, 'Stagione ' + year));
+      var card = seasonCard(K, yearForRows, isCur ? ptsTxt : '—');
+      parts.push(cx ? card : card.replace('Stagione ' + yearForRows, 'Stagione ' + year));
       parts.push(latestCard(K));
       parts.push(donutCard(rows, false, yearForRows));
       parts.push(squadCard(rows));
-      var cr = cx ? null : carrCache;
-      if (cr) { parts.push(teamCareerCard(cr, team, catCode)); parts.push(rankCard(teamRank(cr, team, +yearForRows, livePos, catCode))); }
+      var cr = cx ? cxCarr(id, team) : carrCache;
+      if (cr) { parts.push(teamCareerCard(cr, team, catCode)); var punti = teamRank(cr, team, +yearForRows, cx ? 0 : livePos, catCode); parts.push(rankCard(cx && punti ? punti.map(function (p) { return { y: stg(p.y, true), pos: p.pos }; }) : punti)); }
     } else {
       // nessun risultato in questa stagione: le schede restano, a zero, con la rosa
       var yz = cx ? year : selYear;

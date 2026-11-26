@@ -292,16 +292,34 @@
 
   // ---- Ciclocross: stessa pagina e stessa grafica, ma solo i numeri della stagione ciclocross (nessuno storico) ----
   const isCx = () => !!(globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
-  function renderCx() {
-    const season = (globalData.meta && globalData.meta.stagione) || '';
+  async function renderCx() {
+    const storia = window.CX && window.CX.storia ? await window.CX.storia().catch(() => []) : [];
+    if (!isCx()) return;
+    const ora = (globalData.meta && globalData.meta.stagione) || '';
+    if (st.cxS !== 'tutte' && !storia.some(s => s.label === st.cxS)) st.cxS = ora;
     const cols = st.sex === 'M' ? MEN : WOMEN_NOW;
     if (st.cat != null && !cols.includes(st.cat)) st.cat = null;
     const paint = () => {
+      const scelte = storia.filter(s => st.cxS === 'tutte' || s.label === st.cxS);
+      const vero = globalData;
+      // i numeri si calcolano sulle stagioni scelte: per il tempo del disegno (senza attese) si usa quel gruppo di dati
+      if (scelte.length) {
+        const athletes = {}; for (const s of scelte.slice().reverse()) Object.assign(athletes, s.gd.athletes);
+        globalData = { ...scelte[0].gd, athletes, resultsRaw: [].concat(...scelte.map(s => s.gd.resultsRaw)), calendar: [].concat(...scelte.map(s => s.gd.calendar)) };
+      }
+      // le categorie si leggono dalle gare (quelle "di appartenenza" sono della stagione a schermo)
+      const catVere = (typeof _athleteHomeCat !== 'undefined') ? _athleteHomeCat : null;
+      if (catVere) _athleteHomeCat = {};
+      try { disegna(); } finally { globalData = vero; if (catVere) _athleteHomeCat = catVere; }
+    };
+    const disegna = () => {
+      const season = st.cxS === 'tutte' ? 'tutte' : st.cxS;
       const colsNow = st.sex === 'M' ? MEN : WOMEN_NOW;
       const rows = (globalData.resultsRaw || []).filter(r => { const ci = CODE_CI[getRankingFileCode(r)]; return ci != null && (st.cat != null ? ci === st.cat : colsNow.includes(ci)); });
+      const stagioni = [...storia.map(s => [s.label, s.label]), ['tutte', 'Tutte le stagioni']];
       const races = new Set(rows.map(r => String(r.gara_id).replace(/_(?:ELI|JUN|AL|ES1|ES2)_[MF]$/, ''))).size;
       const tiles = [
-        [1, 'stagione', season],
+        [st.cxS === 'tutte' ? storia.length : 1, st.cxS === 'tutte' ? 'stagioni' : 'stagione', st.cxS === 'tutte' && storia.length ? `${storia[storia.length - 1].label} – ${storia[0].label}` : season],
         [fmt(races), 'gare con risultati', selLabel()],
         [fmt(new Set(rows.map(r => r.atleta_id)).size), 'atleti con risultati', selLabel()],
         [fmt(new Set(rows.map(r => r.team_id)).size), 'squadre con risultati', selLabel()],
@@ -309,15 +327,17 @@
       const kp = `<div class="am-kpis">${tiles.map(t => `<div class="am-kpi"><b>${t[0]}</b><span>${t[1]}</span><small>${t[2]}</small></div>`).join('')}</div>`;
       setPageMeta('Statistiche del ciclocross italiano', 'Numeri, record e classifiche della stagione di ciclocross del ciclismo agonistico italiano.');
       setPage(`<div class="hx-wrap am-wrap">
-        <div class="rs-head"><h1>Statistiche · Ciclocross</h1><span class="rs-cnt">stagione ${esc(season)}</span>
+        <div class="rs-head"><h1>Statistiche · Ciclocross</h1><span class="rs-cnt">${st.cxS === 'tutte' ? 'tutte le stagioni' : `stagione ${esc(season)}`}</span>
           <div class="rs-right"><div class="hx-seg" role="group" aria-label="Uomini o donne"><button type="button" data-sex="M" aria-pressed="${st.sex === 'M'}">Uomini</button><button type="button" data-sex="F" aria-pressed="${st.sex === 'F'}">Donne</button></div></div></div>
         <div class="am-filter" role="group" aria-label="Categoria"><button type="button" data-cat="" aria-pressed="${st.cat == null}">Tutte le categorie</button>${colsNow.map(c => `<button type="button" data-cat="${c}" aria-pressed="${st.cat === c}">${SHORT[c]}</button>`).join('')}</div>
+        <div class="am-filter" role="group" aria-label="Stagione">${stagioni.map(([k, t]) => `<button type="button" data-cxs="${esc(k)}" aria-pressed="${st.cxS === k}">${esc(t)}</button>`).join('')}</div>
         ${kp}
-        ${seasonView(null, season)}
-        <p class="am-note">Fonte: risultati FCI. La stagione di ciclocross va da settembre a gennaio: lo storico parte da questa stagione.</p>
+        ${seasonView(null, st.cxS === 'tutte' ? 'tutte' : season).replace('>Stagione tutte<', '>Tutte le stagioni<').replace('In corso · dati del sito', st.cxS === ora ? 'In corso · dati del sito' : 'Dati del sito')}
+        <p class="am-note">Fonte: risultati FCI. La stagione di ciclocross va da settembre a gennaio: lo storico parte dal ${esc(storia.length ? storia[storia.length - 1].label : ora)}.</p>
       </div>`);
       document.querySelectorAll('.am-wrap .hx-seg button[data-sex]').forEach(b => { b.onclick = () => { st.sex = b.dataset.sex; st.cat = null; paint(); }; });
       document.querySelectorAll('.am-wrap .am-filter [data-cat], .am-wrap .am-scard[data-cat]').forEach(b => { b.onclick = () => { st.cat = b.dataset.cat === '' ? null : +b.dataset.cat; paint(); }; });
+      document.querySelectorAll('.am-wrap .am-filter [data-cxs]').forEach(b => { b.onclick = () => { st.cxS = b.dataset.cxs; paint(); }; });
     };
     paint();
   }

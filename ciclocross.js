@@ -78,6 +78,27 @@
     if (typeof invalidatePhotoCache === 'function') invalidatePhotoCache();
     route();
   }
+  // ── Storico: tutte le stagioni elaborate come quella a schermo (per carriera, albo d'oro, statistiche) ──
+  let _storia = null, _storiaAttesa = null;
+  const annoDi = (k) => String(k || '').slice(0, 4);           // "2025-26" -> "2025"
+  function storia() {
+    if (_storia) return Promise.resolve(_storia);
+    return _storiaAttesa || (_storiaAttesa = (async () => {
+      const dati = await Promise.all(seasons().map(k => loadSeason(k).catch(() => null)));
+      // da qui in poi nessuna attesa: build() usa le variabili del modulo, che alla fine vengono rimesse com'erano
+      const tieni = { cxData, cxRank, cxAth, cxTeams, cxGd };
+      const base = mode === 'strada' ? globalData : live;
+      const lista = [];
+      for (const d of dati) {
+        if (!d) continue;
+        cxData = d; const gd = build(base);
+        lista.push({ key: d.key, anno: annoDi(d.key), label: label(d.key), gd, rank: cxRank });
+      }
+      ({ cxData, cxRank, cxAth, cxTeams, cxGd } = tieni); syncGlobals();
+      _storia = lista; return lista;
+    })().finally(() => { _storiaAttesa = null; }));
+  }
+  const stagioneDi = (y) => (_storia || []).find(s => s.label === String(y) || s.key === String(y) || s.anno === String(y));
   // elenco di tutti i corridori del ciclocross (stagione piu' recente di ciascuno), per la ricerca
   let _cxPersone = null;
   function people() {
@@ -253,6 +274,7 @@
     if (m === 'ciclocross') {
       try { await loadRaw(); } catch (e) { console.warn('[ciclocross] dati non disponibili', e); return; }
       if (mode !== 'ciclocross') live = globalData;
+      try { await Promise.race([storia(), new Promise(r => setTimeout(r, 8000))]); } catch (e) { console.warn('[ciclocross] storico non disponibile', e); }
       globalData = build(live);
     } else {
       if (live) globalData = live;
@@ -494,9 +516,33 @@
     // Albo d'oro: il podio della stagione ciclocross scelta, nessuno storico
     sw('_alboDoroRows', (o) => async function (code, isTeam) {
       if (!isCxGd()) return o.apply(this, arguments);
-      const top = ((isTeam ? cxRank.team : cxRank.ath)[code] || []).slice(0, 3).map(x => ({ ...x }));
-      return top.length ? [{ year: cxData ? label(cxData.key) : '', isCur: !!(cxData && cxIdx && cxData.key === cxIdx.current), podium: top }] : [];
+      return (await storia()).map(s => ({ year: s.label, isCur: !!(cxIdx && s.key === cxIdx.current), podium: ((isTeam ? s.rank.team : s.rank.ath)[code] || []).slice(0, 3).map(x => ({ ...x })) })).filter(r => r.podium.length);
     });
+    // le funzioni "per stagione" dell'app (albo d'oro della gara, confronto con l'anno prima) leggono le stagioni del ciclocross
+    sw('_availableSeasonYears', (o) => function () { return isCxGd() && _storia ? _storia.map(s => s.label) : o.apply(this, arguments); });
+    sw('loadSeasonResults', (o) => async function (y) { if (!isCxGd()) return o.apply(this, arguments); await storia(); const s = stagioneDi(y); return s ? s.gd.resultsRaw : []; });
+    sw('loadSeasonAthletes', (o) => async function (y) { if (!isCxGd()) return o.apply(this, arguments); await storia(); const s = stagioneDi(y); return s ? s.gd.athletes : {}; });
+    sw('loadSeasonTeams', (o) => async function (y) { if (!isCxGd()) return o.apply(this, arguments); await storia(); const s = stagioneDi(y); return s ? s.gd.teams : {}; });
+    // campioni italiani e regionali: quando non si chiede un anno preciso, quelli di tutte le stagioni
+    const oCC = window.collectChampions;
+    if (typeof oCC === 'function' && !oCC.__cxs) {
+      const w = function (q) {
+        const out = oCC.apply(this, arguments);
+        if (!isCxGd() || (q && q.year) || !_storia) return out;
+        const inStagione = (c) => { const k = seasonOfGara(c.gara_id); if (k) c.anno = label(k); return c; };
+        out.forEach(inStagione);
+        const visti = new Set(out.map(c => c.gara_id + '|' + c.atleta_id)), prima = globalData;
+        try {
+          for (const s of _storia) {
+            if (cxData && s.key === cxData.key) continue;
+            globalData = s.gd;
+            for (const c of oCC.apply(this, arguments).map(inStagione)) { const k = c.gara_id + '|' + c.atleta_id; if (!visti.has(k)) { visti.add(k); out.push(c); } }
+          }
+        } finally { globalData = prima; }
+        return out;
+      };
+      w.__cxs = true; window.collectChampions = w;
+    }
     // Gare professionistiche (PCS, solo strada): nel ciclocross non ci sono
     if (window.ProRaces && typeof window.ProRaces.events === 'function' && !window.ProRaces.events.__cx) {
       const oe = window.ProRaces.events;
@@ -531,12 +577,13 @@
     // dopo una modifica ai campioni regionali: si rifanno punti e classifiche del ciclocross
     const rebuild = () => {
       if (!cxData) return;
+      _storia = null; storia().catch(() => {});
       if (mode === 'ciclocross') globalData = build(live); else if (cxGd) cxGd = build(globalData);
       syncGlobals();
     };
     // i selettori "Stagione" di Classifica e Risultati nel ciclocross elencano le stagioni del ciclocross
     sw('seasonSelectHtml', (o) => function (id) { return isCxGd() && cxData ? seasonSelect(id) : o.apply(this, arguments); });
-    window.CX = { rebuild, people, setSeason: setCxSeason, label: () => (isCxGd() && cxData ? label(cxData.key) : ''), seasonSelect: (id) => (isCxGd() && cxData ? seasonSelect(id) : ''), season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
+    window.CX = { rebuild, people, storia, stagioni: () => _storia || [], anno: () => (cxData ? annoDi(cxData.key) : ''), setSeason: setCxSeason, label: () => (isCxGd() && cxData ? label(cxData.key) : ''), seasonSelect: (id) => (isCxGd() && cxData ? seasonSelect(id) : ''), season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
     const oRT = window.renderTeam;
     if (typeof oRT === 'function' && !oRT.__cxpre) {
       const preT = async function (id) {
@@ -551,6 +598,10 @@
     if (typeof oRG === 'function' && !oRG.__cxpre) {
       const preG = async function (id) {
         if (await openIfCxOnly('gara', id)) return;   // setMode ridisegna la pagina
+        if (mode === 'ciclocross' && !hasRace(globalData, id)) {
+          const k = seasonOfGara(id);
+          if (k && k !== cxData.key && seasons().includes(k)) try { await useSeason(k); } catch (e) { console.warn('[ciclocross]', e); }
+        }
         return oRG.apply(this, arguments);
       };
       preG.__cxpre = true; window.renderGara = preG;

@@ -11740,15 +11740,18 @@ const ALBO_PROVE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALAT
 const _titleCase = (t) => String(t || '').toLowerCase().replace(/(^|\s)(\S)/g, (_, a, b) => a + b.toUpperCase()).replace('Valle D Aosta', "Valle d'Aosta");
 function _alboCampioniHtml(code) {
   const all = collectChampions({ catCode: code });
-  const years = [...new Set(all.map(c => c.anno))].sort((a, b) => b - a);
-  const thisYear = String(new Date().getFullYear());
+  const _cxc = globalData?.meta?.disciplina === 'ciclocross';
+  const years = [...new Set(all.map(c => c.anno))].sort((a, b) => String(b).localeCompare(String(a)));
+  const thisYear = _cxc && window.CX?.label ? window.CX.label() : String(new Date().getFullYear());
   if (!years.includes(thisYear)) years.unshift(thisYear);
   const year = years.includes(alboYear) ? alboYear : years[0];
 
   // Gare di campionato regionale presenti nei risultati, per regione e specialità.
   const racesBy = {}; // `${disc}|${regione}` → {gara_id: nome}
-  for (const r of (globalData?.resultsRaw || [])) {
-    if (!r.campionato_regionale || !String(r.data || '').startsWith(year) || getRankingFileCode(r) !== code) continue;
+  const _cxSt = _cxc ? (window.CX?.stagioni?.() || []).find(s => s.label === year) : null;
+  for (const r of ((_cxSt ? _cxSt.gd.resultsRaw : globalData?.resultsRaw) || [])) {
+    if (!r.campionato_regionale || (!_cxSt && !String(r.data || '').startsWith(year))) continue;
+    if ((_cxc ? (String(r.gara_id).match(/_((?:ELI|JUN|AL|ES1|ES2)_[MF])$/) || [])[1] : getRankingFileCode(r)) !== code) continue;
     // Se per la gara è già stato assegnato un titolo, vale per la REGIONE DEL
     // TITOLO (può non essere quella ospitante: una gara in Veneto valida come
     // campionato altoatesino) — così non risulta "da assegnare" nella regione
@@ -18085,10 +18088,11 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
   const baseName = _raceBaseName(opts.nomeGara || '');
   const _alGender = opts.gender || (/_F$/.test(String(garaId)) || /^(DONNE)/i.test(String(opts.cat || '')) ? 'F' : 'M');
   const _alBand = opts.band || _alboBandOfGara(garaId) || 'ELI';
-  const _alSeries = await _alboSeries(opts.nomeGara || '', _alGender, opts.luogo || (globalData?.calendar || []).find(c => c.id === ((globalData?.garaToCalId || {})[garaId] || toCalId(garaId)))?.luogo || '', _alBand);
+  const _cxAlbo = globalData?.meta?.disciplina === 'ciclocross';
+  const _alSeries = _cxAlbo ? null : await _alboSeries(opts.nomeGara || '', _alGender, opts.luogo || (globalData?.calendar || []).find(c => c.id === ((globalData?.garaToCalId || {})[garaId] || toCalId(garaId)))?.luogo || '', _alBand);
   if (_alSeries) {
     editions.push(..._alboEditionsFromSeries(_alSeries, new Set(editions.map(e => String(e.year)))));
-  } else if (baseName && baseName.length >= 3 && !_alboIsGeneric(_alboBase(opts.nomeGara || ''))) {
+  } else if (!_cxAlbo && baseName && baseName.length >= 3 && !_alboIsGeneric(_alboBase(opts.nomeGara || ''))) {
     try {
       // Interroga anche le varianti storiche note (vedi _RACE_BASE_ALIASES) —
       // il fallback per sottostringa lato server cerca solo il termine
@@ -18174,8 +18178,8 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
     <div class="hx-ph" style="margin-top:14px"><h2>Albo d'oro — edizioni</h2>${storiaLink}</div>
     <div class="al-list">
       ${editions.map(e => {
-        const cur = e.gara_id === garaId && (e.historic || String(e.year) === _loadedSeasonYear());
-        const onclick = e.historic
+        const cur = e.gara_id === garaId && (_cxAlbo || e.historic || String(e.year) === _loadedSeasonYear());
+        const onclick = e.historic || _cxAlbo
           ? `window.goTo('${esc(e.href || ('#/gara/' + e.gara_id))}')`
           : `window.openRaceEdition('${esc(e.gara_id)}','${e.year}')`;
         const podio = (e.podio && e.podio.length ? e.podio : [{ posizione: 1, ...e.winner }]);
@@ -18183,7 +18187,7 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
         const groups = [];
         for (const p of podio) { const k = p.catLabel || ''; let g = groups.find(x => x.k === k); if (!g) groups.push(g = { k, list: [] }); g.list.push(p); }
         const editionBase = _raceBaseName(e.nome || '');
-        const raceLabel = (editionBase && editionBase !== baseName) ? editionBase : '';
+        const raceLabel = (editionBase && editionBase.replace(/^[#^°\s]+/, '') !== baseName) ? editionBase.replace(/^[#^°\s]+/, '') : '';
         return `<div class="al-year${cur ? ' al-cur' : ''}" onclick="${onclick}" style="cursor:pointer" title="Apri l'edizione ${esc(String(e.year))}">
           <div class="al-y"><b>${esc(String(e.year))}</b>${cur ? '<small>QUESTA</small>' : ''}</div>
           <div style="min-width:0">${raceLabel ? `<div class="al-cat">${esc(raceLabel)}</div>` : ''}${groups.map(g => `${g.k ? `<div class="al-cat">${esc(g.k)}</div>` : ''}${_podRow(g.list)}`).join('')}${e.partial ? '<div class="al-cat" style="text-transform:none;letter-spacing:0">Podio incompleto nella fonte storica</div>' : ''}</div>
@@ -18237,7 +18241,7 @@ async function renderGaraStoria(baseName) {
       }
     }
   }
-  if (!_stSeries) try {
+  if (!_stSeries && globalData?.meta?.disciplina !== 'ciclocross') try {
     // Varianti storiche note — vedi nota gemella in _injectRaceAlboDoro.
     const queryTerms = [baseName, ..._raceBaseAliasSources(baseName)];
     const responses = await Promise.all(queryTerms.map(t => apiCall(`/ciclismo-results/albo-doro?q=${encodeURIComponent(t)}`).catch(() => null)));
@@ -20523,6 +20527,17 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const _cxWidget = globalData?.meta?.disciplina === 'ciclocross';   // ciclocross: ciclismo.info/PCS sono dati della strada, non si mescolano
   const ciclismoRows = _cxWidget ? [] : (ciclismoPayload?.risultati || []);
   const teamHistoryRows = (!_cxWidget && Array.isArray(pcsTeamHistory)) ? pcsTeamHistory : [];
+  const _cxStagioni = [];   // nel ciclocross: le stagioni in cui l'atleta ha risultati
+  if (_cxWidget && window.CX?.storia) {
+    const tutte = [];
+    for (const s of await window.CX.storia().catch(() => [])) {
+      const a = s.gd.athletes[atletaId];
+      if (!a || !(a.risultati || []).length) continue;
+      _cxStagioni.push({ anno: s.anno, team: a.team_attuale, categoria: a.categoria, team_id: a.team_id });
+      for (const r of a.risultati) tutte.push({ ...r, _anno: s.anno, _team: a.team_attuale });
+    }
+    if (tutte.length) nativeRisultati = tutte;
+  }
   // nessun risultato in nessuna fonte: la carriera e' zero (prima la scheda restava su "calcolo in corso")
   const _noCareer = () => {
     if (_srcErr) return;
@@ -20534,7 +20549,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const merged = [];
   for (const r of (nativeRisultati || [])) {
     if (!r.data || !r.posizione) continue;
-    merged.push({ data: r.data, anno: r.data.slice(0, 4), posizione: r.posizione, nome_gara: r.nome_gara, url: `#/gara/${r.gara_id}`, external: false, team: currentTeam, source: 'ics', mult: r.moltiplicatore || 1, tipo: r.tipo || '' });
+    merged.push({ data: r.data, anno: r._anno || r.data.slice(0, 4), posizione: r.posizione, nome_gara: r.nome_gara, url: `#/gara/${r.gara_id}`, external: false, team: r._team || currentTeam, source: 'ics', mult: r.moltiplicatore || 1, tipo: r.tipo || '' });
   }
   for (const r of ciclismoRows) {
     if (!r.data || !r.posizione) continue;
@@ -20777,7 +20792,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // l'anno in corso (stesso bug della pillola anno vuota già risolto sulla
   // pagina atleta, ma non qui — osservato dal vivo su Sensi Matteo, fermo
   // al 2019 ma con 2026 comunque in cima ai Teams).
-  const nowYear = String(_loadedSeasonYear());
+  const nowYear = String(_cxWidget && window.CX?.anno ? window.CX.anno() : _loadedSeasonYear());
   // Bug reale trovato dal vivo (Bettiol Alberto, segnalato dall'utente): la
   // riga sopra bastava un risultato PCS quest'anno (qualunque, anche solo
   // in giro da professionista) per attribuire l'anno corrente al team FCI
@@ -20791,7 +20806,8 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // vero quest'anno per usare currentTeam; un risultato solo-PCS lascia
   // l'anno libero per la squadra reale dal team_history PCS più sotto.
   const hasNativeResultNowYear = (nativeRisultati || []).some(r => r.data && r.posizione);
-  if (currentTeam && hasNativeResultNowYear) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  if (currentTeam && hasNativeResultNowYear && !_cxStagioni.length) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  for (const s of _cxStagioni) teamsByYear.set(s.anno, { team: s.team, categoria: s.categoria, tid: s.team_id });
   // Ultima spiaggia: gli anni che ciclismo.info/ICS non coprono affatto
   // (tipicamente la carriera da professionista) — PCS non conosce la
   // categoria FCI, quindi qui resta vuota.
@@ -20847,7 +20863,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   try {
     (window._athTeams = window._athTeams || {})[atletaId + '|' + (globalData?.meta?.disciplina === 'ciclocross' ? 'cx' : 'road')] = teamYears.map(y => {
       const e = teamsByYear.get(y);
-      return { y: String(y), team: e.team || '', cat: e.categoria || '', tid: (y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(e.team, currentTeamId)) : (e.pcs ? null : _resolveHistoricalTeamId(e.team, currentTeamId))) || '' };
+      return { y: String(y), team: e.team || '', cat: e.categoria || '', tid: e.tid || (y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(e.team, currentTeamId)) : (e.pcs ? null : _resolveHistoricalTeamId(e.team, currentTeamId))) || '' };
     });
     document.dispatchEvent(new CustomEvent('ics-career', { detail: { id: atletaId } }));
   } catch (_) {}

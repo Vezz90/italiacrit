@@ -731,6 +731,16 @@ app.get('/sitemap-pagine.xml', async (req, res) => {
       const d = r.data || '';
       if (!garaDate.has(r.gara_id) || d > garaDate.get(r.gara_id)) garaDate.set(r.gara_id, d);
     }
+    // ciclocross: gare di tutte le stagioni e corridori che non sono gia' in elenco
+    try {
+      const gareCx = new Map(), atletiCx = new Map();
+      for (const r of await _cxTutte()) {
+        if (!gareCx.has(r.gara_id)) gareCx.set(r.gara_id, r.data);
+        if (r.atleta_id && !(athletes?.[r.atleta_id]?.risultati || []).length && !(atletiCx.get(r.atleta_id) > r.data)) atletiCx.set(r.atleta_id, r.data);
+      }
+      for (const [gid, d] of gareCx) urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.5', changefreq: 'monthly', lastmod: d });
+      for (const [id, d] of atletiCx) urls.push({ loc: `${CANONICAL}/atleta/${encodeURIComponent(id)}`, priority: '0.5', changefreq: 'weekly', lastmod: d });
+    } catch (_) { /* senza ciclocross: resta il resto */ }
     // foto e video delle gare (sitemap immagini/video): Google non li vede nel codice della pagina, che li disegna con JavaScript
     const calRaw = await readDataJsonFromGH('calendar.json').catch(() => null);
     const mix = await _mediaIndex();
@@ -1236,6 +1246,38 @@ async function _datiGara(id, calendar, resultsRaw) {
   return { cal: cx.calendar.find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, '')), resultsRaw: cx.rows, calendar: cx.calendar };
 }
 const _isCx = (rows) => !!rows?.[0]?._cx;
+// Tutte le stagioni del ciclocross (per le pagine viste da Google e dai social: titoli, descrizioni, sitemap)
+let _cxTutteCache = { ts: 0, rows: null };
+async function _cxTutte() {
+  if (_cxTutteCache.rows && Date.now() - _cxTutteCache.ts < 3600 * 1000) return _cxTutteCache.rows;
+  const idx = await readDataJsonFromGH('ciclocross/index.json').catch(() => null);
+  const rows = []; let completo = true;
+  for (const k of (idx?.seasons || [])) {
+    const [cal, res] = await Promise.all([readDataJsonFromGH(`ciclocross/${k}/calendar.json`), readDataJsonFromGH(`ciclocross/${k}/results.json`)]).catch(() => [null, null]);
+    if (!cal || !res) { completo = false; continue; }
+    for (const r of cxLib.buildCx(cal, res).rows) rows.push(r);
+  }
+  if (rows.length && completo) _cxTutteCache = { ts: Date.now(), rows };
+  return rows;
+}
+async function _metaCxGara(id) {
+  const tutte = await _cxTutte();
+  let suoi = tutte.filter(r => r.gara_id === id);
+  if (!suoi.length) suoi = tutte.filter(r => String(r.gara_id).startsWith(id + '_'));
+  if (!suoi.length) return null;
+  const una = suoi[0].gara_id === id;
+  const podio = suoi.filter(r => r.gara_id === suoi[0].gara_id && r.posizione <= 3).sort((a, b) => a.posizione - b.posizione);
+  const cat = una ? `${suoi[0].categoria}${suoi[0].genere === 'F' ? ' donne' : ''}` : '';
+  const dLong = new Date(suoi[0].data + 'T12:00:00Z').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  const nome = suoi[0].nome_gara;
+  const desc = `Ciclocross, ${dLong}${cat ? ' — ' + cat : ''}. ${podio.map(r => `${r.posizione}° ${_titleWords(`${r.cognome} ${r.nome}`.toLowerCase())}`).join(', ')}. Ordine d'arrivo di ${nome}.`.slice(0, 300);
+  const lista = suoi.filter(r => r.gara_id === suoi[0].gara_id).sort((a, b) => a.posizione - b.posizione).slice(0, 10);
+  return {
+    title: `${nome}${cat ? ' - ' + cat : ''} | Ciclocross | ICS`, desc, canonical: `${SITE_URL}/gara/${encodeURIComponent(id)}`,
+    ogImage: `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`,
+    noscript: `<h1>${_ogHtmlEsc(nome)}</h1><p>${_ogHtmlEsc(desc)}</p><ol>${lista.map(r => `<li>${r.posizione}° ${_ogHtmlEsc(`${r.cognome} ${r.nome}`)}${r.team ? ' — ' + _ogHtmlEsc(r.team) : ''}</li>`).join('')}</ol>`,
+  };
+}
 // La stagione dell'atleta nell'ALTRA disciplina fino alla data della gara (null se non ha nulla)
 async function _disciplinaParallela(atletaId, genere, data, garaCx) {
   if (!atletaId || !data) return null;
@@ -14249,7 +14291,7 @@ async function _getHeadMetaFor(type, id) {
     ]);
     const cal = _findCalEntryForNativeGaraId(calRaw, id);
     const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
-    if (!results.length && !cal) return null;
+    if (!results.length && !cal) return _metaCxGara(id).catch(() => null);
     const canonical = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
     const media = await _mediaForIds([id, cal && cal.id]).catch(() => ({ videos: [], photos: [], ext: [] }));
     return {
@@ -14284,6 +14326,15 @@ async function _getHeadMetaFor(type, id) {
       // atleta aggiunto a mano (roster team o auto-iscrizione)
       const man = await queries.getManualAthlete(id).catch(() => null);
       if (man) ath = { cognome: _titleWords(man.cognome), nome: _titleWords(man.nome), team_attuale: man.team || '', categoria: man.categoria };
+    }
+    if (!ath) {
+      // corridore che ha risultati solo nel ciclocross
+      const suoi = (await _cxTutte().catch(() => [])).filter(r => r.atleta_id === id).sort((a, b) => String(b.data).localeCompare(String(a.data)));
+      if (suoi.length) {
+        const u = suoi[0];
+        ath = { cognome: _titleWords(String(u.cognome).toLowerCase()), nome: _titleWords(String(u.nome).toLowerCase()), team_attuale: u.team, categoria: `${u.categoria} · ciclocross` };
+        recent = suoi.slice(0, 12).map(r => ({ data: r.data, posizione: r.posizione, nome_gara: r.nome_gara, team: r.team }));
+      }
     }
     if (!ath) return null;
     const title = ath._nome || `${ath.cognome || ''} ${ath.nome || ''}`.trim() || id;
