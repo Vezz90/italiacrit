@@ -860,7 +860,7 @@ async function readDataJsonFromGH(file, { fresh = false } = {}) {
   const cached = _ghCache[file];
   if (!fresh && cached && (Date.now() - cached.ts) < GH_CACHE_TTL) return cached.data;
   try {
-    const url = `${SITE_URL}/data/${encodeURIComponent(file)}`;
+    const url = `${SITE_URL}/data/${file.split('/').map(encodeURIComponent).join('/')}`;   // i file ciclocross stanno in sottocartelle
     const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(8000) });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
@@ -1020,7 +1020,7 @@ async function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
   // stesso podio) — SOLO quelle SENZA "(NAT)" sono genuinamente
   // aggiuntive, altrimenti si conterebbe la stessa vittoria due volte.
   try {
-    const season = Number(String(uptoDate || '').slice(0, 4));
+    const season = _isCx(resultsRaw) ? 0 : Number(String(uptoDate || '').slice(0, 4));
     if (season) {
       const { data: pcsRows } = await supabase.from('pcs_results')
         .select('data, posizione, gara_name')
@@ -1182,6 +1182,54 @@ async function _resolveGaraResults(id, cal, resultsRaw, calendar) {
   return results;
 }
 
+// ── Ciclocross e disciplina parallela (articoli di gara) ─────────
+const cxLib = require('./cx');
+let _cxBuilt = null, _cxSrc = null;
+async function _cxDati() {
+  const idx = await readDataJsonFromGH('ciclocross/index.json');
+  if (!idx?.current) return null;
+  const [cal, res] = await Promise.all([readDataJsonFromGH(`ciclocross/${idx.current}/calendar.json`), readDataJsonFromGH(`ciclocross/${idx.current}/results.json`)]);
+  if (!cal || !res) return null;
+  if (_cxSrc !== res) { _cxBuilt = { ...cxLib.buildCx(cal, res), stagione: String(idx.current).replace('-', '/') }; _cxSrc = res; }
+  return _cxBuilt;
+}
+// Calendario e risultati di una gara: su strada; se la strada non la conosce, quelli del ciclocross
+async function _datiGara(id, calendar, resultsRaw) {
+  const strada = { cal: _findCalEntryForNativeGaraId(calendar, id), resultsRaw, calendar };
+  if (/^(CIC|PRO)_/.test(id) || (resultsRaw || []).some(r => r.gara_id === id)) return strada;
+  const cx = await _cxDati().catch(() => null);
+  if (!cx || !cx.rows.some(r => r.gara_id === id)) return strada;
+  return { cal: cx.calendar.find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, '')), resultsRaw: cx.rows, calendar: cx.calendar };
+}
+const _isCx = (rows) => !!rows?.[0]?._cx;
+// La stagione dell'atleta nell'ALTRA disciplina fino alla data della gara (null se non ha nulla)
+async function _disciplinaParallela(atletaId, genere, data, garaCx) {
+  if (!atletaId || !data) return null;
+  const riga = r => ({ data: r.data, posizione: Number(r.posizione) || 0, gara: r.nome_gara || r.gara_id, campionato: r.campionato_italiano ? 'campionato italiano' : r.campionato_regionale ? 'campionato regionale' : null });
+  const suo = r => r.atleta_id === atletaId && (!genere || !r.genere || r.genere === genere) && (r.data || '') <= data;
+  try {
+    if (!garaCx) {
+      const cx = await _cxDati();
+      return cx ? cxLib.riassunto('ciclocross', cx.stagione, cx.rows.filter(suo).map(riga)) : null;
+    }
+    const anno = Number(data.slice(0, 4)) - (Number(data.slice(5, 7)) < 7 ? 1 : 0);   // a gennaio la strada e' quella dell'anno prima
+    const corr = await _getResultCorrections().catch(() => ({ garaCorrections: {}, risultatoCorrections: {}, excludedIds: new Set() }));
+    const raw = await _mergeManualResultsIntoRaw(_applyResultCorrections(await readDataJsonFromGH('results_raw.json'), corr));
+    const righe = raw.filter(r => suo(r) && String(r.data).startsWith(String(anno))).map(riga);
+    const { data: pcs } = await supabase.from('pcs_results').select('data, posizione, gara_name').eq('atleta_id', atletaId).eq('season', anno).lte('data', data);
+    for (const r of (pcs || [])) if (!(r.gara_name || '').includes('(NAT)')) righe.push({ data: r.data, posizione: Number(r.posizione) || 0, gara: r.gara_name, campionato: null });
+    return cxLib.riassunto('strada', String(anno), righe);
+  } catch (e) { console.warn('[disciplina parallela]', e.message); return null; }
+}
+async function _parallelaPodio(results) {
+  const out = [];
+  for (const r of results.slice(0, 3)) {
+    const s = await _disciplinaParallela(r.atleta_id, r.genere, r.data, _isCx([r]));
+    if (s) out.push({ posizione_in_questa_gara: r.posizione, nome: `${r.cognome || ''} ${r.nome || ''}`.trim(), ...s });
+  }
+  return out;
+}
+
 async function _buildGaraNarrative(id, cal, resultsRawIn, calendar) {
   // Stesso gap già risolto per l'immagine OG (_generateGaraOgBuffer) e per il
   // testo di condivisione lato client (_mkShare in app.js): una gara i cui
@@ -1239,6 +1287,8 @@ async function _buildGaraNarrative(id, cal, resultsRawIn, calendar) {
       : await _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
     podiumLines.push(_ogPodiumLine(isTeamResult ? (third.team || third.team_id) : `${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
   }
+
+  for (const p of await _parallelaPodio(results)) podiumLines.push(cxLib.frase(p.nome, p));
 
   // Facebook (verificato con post reali pubblicati) non mostra MAI la
   // descrizione per questo tipo di condivisione — né in anteprima né nel post
@@ -1393,8 +1443,9 @@ app.get('/og/gara/:id', async (req, res) => {
   // condividendo dalla pagina di una gara già scrapata l'id nell'URL è quello
   // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
   // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
-  const cal = _findCalEntryForNativeGaraId(calRaw, id);
-  const { results, title, desc } = await _buildGaraNarrative(id, cal, resultsRaw, calRaw);
+  const dati = await _datiGara(id, calRaw, resultsRaw);
+  const cal = dati.cal;
+  const { results, title, desc } = await _buildGaraNarrative(id, cal, dati.resultsRaw, dati.calendar);
   // Inoltra la regolazione manuale foto (se presente in questo stesso URL,
   // vedi window.shareOnFacebook in app.js) all'URL dell'immagine — è questo
   // il campo che Facebook legge davvero per l'anteprima.
@@ -1531,6 +1582,7 @@ function _applyResultCorrections(resultsRaw, corr) {
 // di quella vittoria nel testo AI. Stessa identica logica di merge/dedupe
 // (per gara_id+posizione) replicata qui lato server.
 async function _mergeManualResultsIntoRaw(resultsRaw) {
+  if (_isCx(resultsRaw)) return resultsRaw;           // nel ciclocross non si mescolano le gare inserite a mano su strada
   try {
     const manualRows = await queries.getAllManualResults();
     if (!manualRows || !manualRows.length) return resultsRaw;
@@ -1615,7 +1667,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
     // di doversi fidare alla cieca di un totale che l'elenco non giustifica.
     let extraRows = [];
     try {
-      const season = Number(String(raceDate || '').slice(0, 4));
+      const season = _isCx(resultsRaw) ? 0 : Number(String(raceDate || '').slice(0, 4));
       if (season) {
         const { data: pcsRows } = await supabase.from('pcs_results')
           .select('data, posizione, gara_name')
@@ -1656,7 +1708,11 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
     stagione_team_del_vincitore = { vittorie_totali_stagione_squadra_QUESTA_INCLUSA: teamWins, podi_totali_stagione_squadra_QUESTO_INCLUSO: teamPodiums };
   }
 
+  const garaCx = _isCx(results);
+  const disciplina_parallela = await _parallelaPodio(results);
+
   const dataForPrompt = {
+    disciplina: garaCx ? 'ciclocross' : 'strada',
     gara: raceName,
     data: date,
     luogo,
@@ -1670,6 +1726,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
     stagione_vincitore,
     tutti_i_risultati_stagione_vincitore,
     stagione_team_del_vincitore,
+    disciplina_parallela,
   };
 
   try {
@@ -1688,7 +1745,7 @@ async function _buildGaraAiCaption(id, cal, resultsRawIn, calendar) {
       max_tokens: 700,
       messages: [{
         role: 'user',
-        content: `Sei il social media manager di un sito italiano di statistiche di ciclismo amatoriale (italiacyclingstats.com). Scrivi un post per Facebook/Instagram in italiano su questo risultato di ciclismo su strada, con lo stile entusiasta e narrativo tipico della Gazzetta dello Sport.
+        content: `Sei il social media manager di un sito italiano di statistiche di ciclismo amatoriale (italiacyclingstats.com). Scrivi un post per Facebook/Instagram in italiano su questo risultato di ${garaCx ? 'ciclocross' : 'ciclismo su strada'}, con lo stile entusiasta e narrativo tipico della Gazzetta dello Sport.
 
 Struttura richiesta:
 1. Un titolo ad effetto con emoji (una riga, maiuscolo o quasi, tipo titolo di giornale sportivo).
@@ -1702,6 +1759,8 @@ Stesso principio per "stagione_team_del_vincitore": se utile, puoi accennare al 
 
 Regola sui piazzamenti citati (OBBLIGATORIA): quando nel testo nomini un risultato precedente del vincitore, usa ESATTAMENTE il campo "esito" di quella riga. Scrivi "top ten", "top 10", "top five" o "podio" SOLO se l'"esito" dice proprio così; un 13° posto resta "13° posto" (o non lo citi), mai "top ten". Non arrotondare mai una posizione per farla sembrare migliore e non citare un risultato che non e' nell'elenco.
 
+Regola sulla disciplina parallela (OBBLIGATORIA se "disciplina_parallela" non è vuota): questa gara è di ${garaCx ? 'ciclocross' : 'strada'}; l'elenco riassume la stagione ${garaCx ? 'su strada' : 'di ciclocross'} dei primi tre. Dedica una o due frasi a quella del vincitore (se è presente) e, se aggiunge valore, a quella di un altro atleta sul podio, dicendo sempre chiaramente di quale disciplina e stagione si tratta. Vittorie e podi delle due discipline NON si sommano mai: "stagione_vincitore" vale solo per ${garaCx ? 'il ciclocross' : 'la strada'}. Usa solo i numeri e le gare forniti; del sito registriamo solo i primi 10 di ogni gara, quindi non parlare di gare disputate. Se l'elenco è vuoto non nominare l'altra disciplina.
+${garaCx ? 'Gara di ciclocross: la stagione è quella invernale in corso (scrivi "stagione di ciclocross"), niente km, media o volate se non presenti nei dati; usa anche l\'hashtag #Ciclocross.\n' : ''}
 Altre regole: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
 
 IMPORTANTE sul formato della risposta: rispondi SOLO con il post finale pronto da pubblicare, a partire dalla prima riga con il titolo — nient'altro. Se noti incongruenze nei dati (es. "tutti_i_risultati_stagione_vincitore" incompleto rispetto a "stagione_vincitore", squadre diverse tra compagni di podio, ecc.), risolvile SEMPRE in silenzio secondo le regole sopra (fidati dei conteggi ufficiali, cita solo ciò che è confermato dai dati) — non scrivere mai una premessa, una nota, un avviso o un commento sulla qualità/coerenza dei dati prima o dopo il post: chi legge deve vedere solo il post, non il tuo ragionamento. Il codice che elabora questa risposta si aspetta che la RIGA 1 sia il titolo del post: qualunque testo aggiuntivo prima del titolo rompe la pagina.
@@ -2010,8 +2069,7 @@ async function _fetchCalAndResultsFor(id, { fresh = false } = {}) {
     readDataJsonFromGH('calendar.json', { fresh }),
     readDataJsonFromGH('results_raw.json', { fresh }),
   ]);
-  const cal = _findCalEntryForNativeGaraId(calRaw, id);
-  return { cal, resultsRaw, calendar: calRaw };
+  return _datiGara(id, calRaw, resultsRaw);
 }
 
 // Genera (Claude) e persiste (tabella gara_narratives) il racconto di una
@@ -2057,16 +2115,20 @@ async function _sweepGaraNarratives() {
       if (!r.gara_id || !r.data || r.data > today) continue;
       if (!dateByGara.has(r.gara_id)) dateByGara.set(r.gara_id, r.data);
     }
+    const cx = await _cxDati().catch(() => null);
+    const cxIds = new Set();
+    for (const r of (cx?.rows || [])) if (r.data >= cutoffRecent && r.data <= today && !dateByGara.has(r.gara_id)) { dateByGara.set(r.gara_id, r.data); cxIds.add(r.gara_id); }
     const existing = await queries.getAllGaraNarrativeIds().catch(() => []);
     const existingMap = new Map(existing.map(r => [r.gara_id, r.generated_at]));
     const missing = [], staleRecent = [];
     for (const [gid, date] of dateByGara) {
       const gen = existingMap.get(gid);
       if (!gen) { missing.push(gid); continue; }
-      if (date >= cutoffRecent && (Date.now() - new Date(gen).getTime()) > GARA_NARRATIVE_REFRESH_MS) {
+      if (!cxIds.has(gid) && date >= cutoffRecent && (Date.now() - new Date(gen).getTime()) > GARA_NARRATIVE_REFRESH_MS) {
         staleRecent.push(gid);
       }
     }
+    missing.sort((a, b) => dateByGara.get(b).localeCompare(dateByGara.get(a)));   // prima le gare piu' recenti
     const batch = [...missing, ...staleRecent].slice(0, 5);
     for (const gid of batch) {
       _scheduleGaraNarrativeGeneration(gid);
