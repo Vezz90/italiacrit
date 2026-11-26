@@ -26,7 +26,7 @@
     const cx = typeof globalData !== 'undefined' && !!(globalData && globalData.meta && globalData.meta.disciplina === 'ciclocross');
     const _cut = cx ? s : s.replace(/\s+\d+\s*[°^º]?\s+(TROFEO|MEMORIAL|GRAN PREMIO|GP|COPPA)\b.*$/i, '').replace(/\s*[-–\/,:]+\s*$/, '');
     s = (/^(gara|prova)?\s*(nazionale|regionale|internazionale|open)?\s*(ciclocross)?$/i.test(_cut) ? s : _cut).replace(/(\d)\^/g, '$1°');
-    s = tc(s).replace(/\b(Di|Del|Della|Delle|Dei|Degli|Da|De|E|In)\b/g, m => m.toLowerCase()).replace(/\bGp\b/g, 'GP').replace(/bCxb/g, 'CX');
+    s = tc(s).replace(/\b(Di|Del|Della|Delle|Dei|Degli|Da|De|E|In)\b/g, m => m.toLowerCase()).replace(/\bGp\b/g, 'GP').replace(/\bCx\b/g, 'CX');
     return s.replace(/^(\d+)° /, '$1° ');
   }
   const bandOf = code => String(code || 'ELI_M').replace(/_[MF]$/, '').replace(/^ES\d$/, 'ES');
