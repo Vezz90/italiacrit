@@ -49,3 +49,10 @@ test('push: solo i servizi dei browser, solo https', () => {
 test('test-scrape richiede l\'amministratore', () => {
   assert.match(srvSrc, /app\.get\('\/api\/cron\/test-scrape', requireAdmin,/);
 });
+
+test('scraper del PC: solo attivita e azioni dell\'elenco', () => {
+  const { comandoValido } = require('./scraper-pc');
+  assert.ok(comandoValido('ItaliaCrit-CX-Import', 'avvia'));
+  assert.ok(comandoValido('script:sync.py', 'ferma'));
+  for (const [id, az] of [['script:sync.py', 'avvia'], ['ItaliaCrit-CX-Import', 'cancella'], ['Altro', 'avvia'], ["a'; rm -rf /", 'ferma'], ['script:../x.py', 'ferma'], [null, 'avvia']]) assert.ok(!comandoValido(id, az), `${id} ${az}`);
+});

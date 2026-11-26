@@ -14558,6 +14558,7 @@ app.post('/api/admin/foto-tag-proposte/:id/:azione', requireAdmin, async (req, r
 
 // Redazione AI privata (solo admin): bozze di articoli. Vedi server/redazione.js
 require('./redazione')(app, { requireAdmin, getSupabase: () => supabase, SITE_URL, fotoPer: _redazioneFoto });
+require('./scraper-pc')(app, { requireAdmin, getSupabase: () => supabase });
 
 // ── SPA fallback (Fase 2 SEO: URL puliti) ───────────────────────────────────
 // DEVE essere l'ultima route (registrata dopo tutte le API e dopo
