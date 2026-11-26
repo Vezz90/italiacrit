@@ -3653,20 +3653,12 @@ app.post('/api/admin/regional-champions', requireAdmin, async (req, res) => {
     if (!atleta_id || !anno || !categoria) return res.status(400).json({ error: 'atleta_id, anno e categoria sono obbligatori' });
     const DISCIPLINE = ['STRADA', 'CRONOMETRO', 'CRONOMETRO A SQUADRE', 'CRONOSCALATA', 'CICLOCROSS'];
     const disc = DISCIPLINE.includes(String(disciplina || '').toUpperCase()) ? String(disciplina).toUpperCase() : 'STRADA';
-    // Assegnato dalla pagina gara: un solo campione per gara, il nuovo
-    // sostituisce l'eventuale precedente (es. correzione di un errore).
-    // Nelle gare dilettanti Under 23 ed Elite corrono insieme e il titolo è
-    // doppio: l'unicità è per gara + fascia (UNDER23 / ELITE / nessuna).
+    // Una gara può avere PIÙ campioni (1° e 2° anno, Under 23 ed Elite, più regioni): un nuovo titolo si aggiunge
+    // agli altri. Si riscrive solo quello dello stesso atleta nella stessa gara; gli errori si tolgono con la ✕.
     const fas = ['UNDER23', 'ELITE'].includes(String(fascia || '').toUpperCase()) ? String(fascia).toUpperCase() : null;
-    // Una gara può valere come campionato di PIÙ regioni (es. disputata in
-    // Veneto e valida come campionato altoatesino): l'unicità è per gara +
-    // fascia + regione, così un titolo non sostituisce quello di un'altra regione.
     const reg = (regione || '').trim() || null;
     if (gara_id) {
-      let del = supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id);
-      del = fas ? del.eq('fascia', fas) : del.is('fascia', null);
-      del = reg ? del.eq('regione', reg) : del.is('regione', null);
-      const { error: delErr } = await del;
+      const { error: delErr } = await supabase.from('regional_champion_titles').delete().eq('gara_id', gara_id).eq('atleta_id', atleta_id);
       if (delErr) throw delErr;
     }
     const { error } = await supabase.from('regional_champion_titles')

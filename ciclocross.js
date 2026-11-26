@@ -70,11 +70,16 @@
     const calendar = [], seenCal = {};
     const isSoc = (n) => /societ/i.test(n);                       // "Campionato italiano di società": non è un titolo individuale
     const flags = (g) => ({ cr: /campionato regionale/i.test(g.nome), ci: /campionato italiano/i.test(g.nome) && !isSoc(g.nome) });
+    // Come su strada: il campionato regionale (nel nome, o perche' l'admin ci ha proclamato un campione) vale almeno x2
+    const titoli = (typeof _regionalChampionByGara !== 'undefined' && _regionalChampionByGara) || {};
+    const conTitolo = (gid) => !!(titoli[gid] && titoli[gid].length);
+    const multDi = (tipo, cr) => Math.max(MULT[tipo] || 1, cr ? 2 : 1);
     const calEntry = (g) => {
       const tipo = String(g.geo || 'Regionale').toLowerCase(), f = flags(g), calId = `${slug(g.nome)}_${g.data}`;
+      if (!f.ci && Object.keys(titoli).some(k => k.startsWith(calId + '_') && conTitolo(k))) f.cr = true;
       if (!seenCal[calId]) {
         seenCal[calId] = 1;
-        calendar.push({ id: calId, nome: g.nome, data: g.data, tipo, moltiplicatore: MULT[tipo] || 1, campionato_regionale: f.cr, campionato_italiano: f.ci,
+        calendar.push({ id: calId, nome: g.nome, data: g.data, tipo, moltiplicatore: multDi(tipo, f.cr), campionato_regionale: f.cr, campionato_italiano: f.ci,
           regione: String(g.regione || '').toUpperCase(), categoria: g.categorie_ammesse || g.classe || '', luogo: g.luogo || '', fci_id: g.fci_id });
       }
       return calId;
@@ -114,11 +119,11 @@
       const g = gare[r.gara]; if (!g) continue;
       const pos = r._pc || parseInt(r.pos, 10); if (!(pos >= 1)) continue;
       const tipo = String(g.geo || 'Regionale').toLowerCase();
-      const mult = MULT[tipo] || 1;
       const calId = `${slug(g.nome)}_${g.data}`;
       const code = r.cat;                                   // es. ES2_M
       const base = code.replace(/_[MF]$/, ''), gen = code.endsWith('_F') ? 'F' : 'M';
-      const isCR = flags(g).cr, isCI = flags(g).ci;
+      const isCI = flags(g).ci, isCR = flags(g).cr || (!isCI && conTitolo(`${calId}_${code}`));
+      const mult = multDi(tipo, isCR);
       calEntry(g);
       // "COGNOME NOME" → cognome/nome (riusa la scheda su strada se c'è)
       const known = roadAth[r.atleta_id];
@@ -447,7 +452,13 @@
       if (mode === 'strada') return !!(globalData && globalData.teams && globalData.teams[id]);
       return !!(live && live.teams && live.teams[id]);
     };
-    window.CX = { season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
+    // dopo una modifica ai campioni regionali: si rifanno punti e classifiche del ciclocross
+    const rebuild = () => {
+      if (!cxData) return;
+      if (mode === 'ciclocross') globalData = build(live); else if (cxGd) cxGd = build(globalData);
+      syncGlobals();
+    };
+    window.CX = { rebuild, season: () => (cxData && String(cxData.key).replace('-', '/')) || '', otherGd: () => (mode === 'strada' ? cxGd : live), hasCx: (id) => hasIn('atleta', id, 'ciclocross'), hasRoad: (id) => hasIn('atleta', id, 'strada'), hasCxTeam: (id) => hasInT(id, 'ciclocross'), hasRoadTeam: (id) => hasInT(id, 'strada') };
     const oRT = window.renderTeam;
     if (typeof oRT === 'function' && !oRT.__cxpre) {
       const preT = async function (id) {

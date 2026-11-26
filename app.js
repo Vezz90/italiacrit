@@ -3660,6 +3660,7 @@ async function _refreshRegionalChampions() {
   try {
     const { titles } = await apiCall('/regional-champions');
     _indexRegionalChampions(titles);
+    window.CX?.rebuild?.();   // nel ciclocross i punti si ricalcolano subito (la gara con un campione vale x2)
   } catch (_) {}
 }
 // Dalla pagina gara: l'admin proclama campione regionale un corridore della
@@ -3704,7 +3705,7 @@ async function _postRegionalChampion(garaRow, atletaId, nome, fasciaScelta) {
   const regioneGara = normalizeRegion(garaRow.regione) || String(garaRow.regione || '').toUpperCase();
   const regRisposta = window.prompt(
     `Proclamare ${nome} Campione Regionale${fasciaTxt} (${disciplina.toLowerCase()}) in questa gara?\n` +
-    `Sostituisce l'eventuale campione${fasciaTxt} della stessa regione per questa gara.${avviso}\n\n` +
+    `Si aggiunge agli altri campioni di questa gara (per toglierne uno usa la ✕ accanto al nome).${avviso}\n\n` +
     `Regione del titolo (la gara è in ${_titleCase(regioneGara)}; se vale per un'altra regione scrivila, es. BOLZANO per l'Alto Adige):`,
     regioneGara);
   if (regRisposta === null) return;
