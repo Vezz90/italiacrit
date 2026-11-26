@@ -3627,9 +3627,11 @@ function championJerseysHtml(champs) {
     const bands = c.kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
     const tip = [c.kind === 'it' ? 'Campione Italiano' : `Campione Regionale${c.regione ? ' ' + _titleCase(c.regione) : ''}`,
       _titleCase(c.disciplina).replace(' A ', ' a '), FASCIA_LABEL[c.fascia] || '', catLabel(c.categoria) || '', c.anno].filter(Boolean).join(' · ');
-    return `<span class="champ-jersey" title="${esc(tip)}"><svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff" stroke="rgba(0,0,0,.5)" stroke-width="0.9" stroke-linejoin="round"/>
-      <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${bands[0]}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${bands[1]}"/></svg></span>`;
+    const edge = c.kind === 'it' ? 'rgba(0,0,0,.6)' : '#14568F';
+    return `<span class="champ-jersey" title="${esc(tip)}"><svg width="20" height="20" viewBox="2 1 20 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(tip)}">
+      <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="#fff"/>
+      <rect x="6.1" y="9.6" width="11.8" height="3.6" fill="${bands[0]}"/><rect x="6.1" y="15" width="11.8" height="3.6" fill="${bands[1]}"/>
+      <path d="M8.3 2.6L4 4.8v4.4h2.1V21h11.8V9.2H20V4.8l-4.3-2.2-1.9 1.8h-3.6L8.3 2.6z" fill="none" stroke="${edge}" stroke-width="1.5" stroke-linejoin="round"/></svg></span>`;
   }).join('');
 }
 // La maglia di un titolo regionale assegnato dall'admin (riga di regional_champion_titles)
