@@ -3632,6 +3632,8 @@ function championJerseysHtml(champs) {
       <rect x="6.1" y="10.4" width="11.8" height="2.3" fill="${bands[0]}"/><rect x="6.1" y="14.6" width="11.8" height="2.3" fill="${bands[1]}"/></svg></span>`;
   }).join('');
 }
+// La maglia di un titolo regionale assegnato dall'admin (riga di regional_champion_titles)
+function regionalJerseyHtml(t) { return championJerseysHtml([{ ...t, kind: 'reg', disciplina: t.disciplina || 'STRADA' }]); }
 function championChipHtml({ kind, disciplina, anno, extra, title, deleteId, href, fascia }) {
   const bands = kind === 'it' ? ['#008C45', '#CD212A'] : ['#2F7FD8', '#2F7FD8'];
   const jersey = `<svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
@@ -3738,7 +3740,7 @@ window.openRegionalChampionPicker = function() {
   overlay.innerHTML = `
     <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:22px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <strong>🥇 Campione Regionale</strong>
+        <strong>${championJerseysHtml([{ kind: 'reg', disciplina: 'STRADA' }])} Campione Regionale</strong>
         <button onclick="document.getElementById('rc-picker-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
       <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px">${esc(garaRow.nome_gara || '')} — cerca l'atleta anche se non è in classifica.</div>
@@ -11765,7 +11767,7 @@ function _alboCampioniHtml(code) {
   const chipCard = (c, label) => {
     const href = c.atleta_id ? '#/atleta/' + encodeURIComponent(c.atleta_id) : (c.team_id ? '#/team/' + encodeURIComponent(c.team_id) : '#');
     const sub = [FASCIA_LABEL[c.fascia] || '', c.atleta_id ? _alTc(c.team) : ''].filter(Boolean).join(' · ');
-    return `<a class="al-rc ${c.kind === 'it' ? 'ita' : ''}" href="${href}"><span class="rn">${esc(label)}</span><b>${c.kind === 'it' ? '🇮🇹' : '🥇'} ${esc(_alTc(c.nome))}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</a>`;
+    return `<a class="al-rc ${c.kind === 'it' ? 'ita' : ''}" href="${href}"><span class="rn">${esc(label)}</span><b>${championJerseysHtml([c])} ${esc(_alTc(c.nome))}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</a>`;
   };
 
   const sections = ALBO_PROVE.filter(p => !alboProva || p === alboProva).map(p => {
@@ -26273,11 +26275,11 @@ async function renderGara(gara_id) {
       // per proclamarlo (solo nelle gare di campionato regionale).
       const _rcTitle = (_regionalChampionByGara[r.gara_id] || []).find(t => t.atleta_id === r.atleta_id);
       const _isRegChamp = !!_rcTitle;
-      const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE${FASCIA_LABEL[_rcTitle.fascia] ? ' ' + FASCIA_LABEL[_rcTitle.fascia].toUpperCase() : ''}${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
+      const _rcBadge = _isRegChamp ? `<span class="rc-row-badge" title="Campione Regionale">${regionalJerseyHtml(_rcTitle)} CAMPIONE REGIONALE${FASCIA_LABEL[_rcTitle.fascia] ? ' ' + FASCIA_LABEL[_rcTitle.fascia].toUpperCase() : ''}${_rowIsAdmin ? ` <span style="cursor:pointer;opacity:.7" onclick="event.stopPropagation();window.adminDeleteRegionalTitle(${_rcTitle.id})" title="Rimuovi">✕</span>` : ''}</span>` : '';
       // Elite e Under 23 corrono insieme ma i titoli sono due: un pulsante per ciascuno.
       const _rcFasce = /^ELI_/.test(getRankingFileCode(r) || '') ? [['UNDER23', ' U23'], ['ELITE', ' Elite']] : [['', '']];
       const _rcBtn = (_rowIsAdmin && r.atleta_id && !_isRegChamp)
-        ? _rcFasce.map(([f, txt]) => `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${escJs(r.gara_id)}','${escJs(r.atleta_id)}','${f}')" title="Proclama Campione Regionale${txt}" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">🥇 Campione reg.${txt}</button>`).join('') : '';
+        ? _rcFasce.map(([f, txt]) => `<button onclick="event.stopPropagation();window.adminSetRegionalChampion('${escJs(r.gara_id)}','${escJs(r.atleta_id)}','${f}')" title="Proclama Campione Regionale${txt}" style="margin-left:6px;background:none;border:1px dashed var(--border-subtle);border-radius:4px;cursor:pointer;font-size:.62rem;padding:1px 5px;color:var(--text-muted)">Campione reg.${txt}</button>`).join('') : '';
       // Gara promiscua: se l'atleta appartiene a un'altra fascia d'età lo si
       // segnala con le iniziali della sua categoria (il risultato conta lì).
       const _intr = _catIntruderBadge(r.atleta_id, r.gara_id);
@@ -26306,7 +26308,7 @@ async function renderGara(gara_id) {
   // sopra la tabella, linkato al profilo.
   const _champOutBanner = (_regionalChampionByGara[results[0]?.gara_id] || [])
     .filter(t => !results.some(r => r.atleta_id === t.atleta_id))
-    .map(t => `<div class="rc-out-banner">🥇 <strong>CAMPIONE REGIONALE${FASCIA_LABEL[t.fascia] ? ' ' + FASCIA_LABEL[t.fascia].toUpperCase() : ''}</strong> · <a href="#/atleta/${esc(t.atleta_id)}">${esc(t.atleta_nome || t.atleta_id)}</a>${t.regione ? ` · ${esc(t.regione)}` : ''} <span style="opacity:.7">(non in classifica)</span>${authUser()?.role === 'admin' ? ` <span style="cursor:pointer;opacity:.7" onclick="window.adminDeleteRegionalTitle(${t.id})" title="Rimuovi">✕</span>` : ''}</div>`).join('');
+    .map(t => `<div class="rc-out-banner">${regionalJerseyHtml(t)} <strong>CAMPIONE REGIONALE${FASCIA_LABEL[t.fascia] ? ' ' + FASCIA_LABEL[t.fascia].toUpperCase() : ''}</strong> · <a href="#/atleta/${esc(t.atleta_id)}">${esc(t.atleta_nome || t.atleta_id)}</a>${t.regione ? ` · ${esc(t.regione)}` : ''} <span style="opacity:.7">(non in classifica)</span>${authUser()?.role === 'admin' ? ` <span style="cursor:pointer;opacity:.7" onclick="window.adminDeleteRegionalTitle(${t.id})" title="Rimuovi">✕</span>` : ''}</div>`).join('');
 
   const _calId = (globalData.garaToCalId || {})[primaryGaraId] || (globalData.garaToCalId || {})[gara_id] || primaryGaraId;
 
@@ -31439,7 +31441,7 @@ async function renderRisultati() {
         // sotto il podio, altrimenti sulla scheda non comparirebbe affatto.
         const champExtraRows = (_regionalChampionByGara[catGaraId] || [])
           .filter(t => !top3.some(r => r.atleta_id === t.atleta_id))
-          .map(t => '<div class="rc-out-banner" style="margin:6px 0 0;font-size:.78rem">🥇 <strong>CAMPIONE REGIONALE' + (FASCIA_LABEL[t.fascia] ? ' ' + FASCIA_LABEL[t.fascia].toUpperCase() : '') + '</strong> · <a href="#/atleta/' + esc(t.atleta_id) + '">' + esc(t.atleta_nome || t.atleta_id) + '</a></div>').join('');
+          .map(t => '<div class="rc-out-banner" style="margin:6px 0 0;font-size:.78rem">' + regionalJerseyHtml(t) + ' <strong>CAMPIONE REGIONALE' + (FASCIA_LABEL[t.fascia] ? ' ' + FASCIA_LABEL[t.fascia].toUpperCase() : '') + '</strong> · <a href="#/atleta/' + esc(t.atleta_id) + '">' + esc(t.atleta_nome || t.atleta_id) + '</a></div>').join('');
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
           // rank_dopo_gara è calcolato in loadAll() per ogni risultato
@@ -31448,7 +31450,7 @@ async function renderRisultati() {
           // Campione regionale della gara (assegnato dall'admin sulla pagina gara)
           const _rcT = (_regionalChampionByGara[r.gara_id] || []).find(t => t.atleta_id === r.atleta_id);
           const rcHtml = _rcT
-            ? '<span class="rc-row-badge" title="Campione Regionale">🥇 CAMPIONE REGIONALE' + (FASCIA_LABEL[_rcT.fascia] ? ' ' + FASCIA_LABEL[_rcT.fascia].toUpperCase() : '') + '</span>' : '';
+            ? '<span class="rc-row-badge" title="Campione Regionale">' + regionalJerseyHtml(_rcT) + ' CAMPIONE REGIONALE' + (FASCIA_LABEL[_rcT.fascia] ? ' ' + FASCIA_LABEL[_rcT.fascia].toUpperCase() : '') + '</span>' : '';
           return '<div class="hero-podio-row ris-podio-row" style="animation-delay:' + (i*60) + 'ms">' +
             '<div class="hero-pos ' + pClass + '">' + r.posizione + '&#176;</div>' +
             '<div class="ris-podio-info">' +

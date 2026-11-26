@@ -49,11 +49,11 @@
     if (km > 0 && md > 0) { const s = Math.round(km / md * 3600); time = `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}′ ${String(s % 60).padStart(2, '0')}″`; }
     return sorted.map(r => {
       const gap = r.posizione === 1 ? time : (r.tempo ? '+' + String(r.tempo).replace(/^a\s*/, '').replace(/'/g, '′').replace(/"/g, '″') : 's.t.');
-      const cr = (typeof _regionalChampionByGara !== 'undefined' ? (_regionalChampionByGara[r.gara_id] || []) : []).some(t => t.atleta_id === r.atleta_id);
+      const cr = (typeof _regionalChampionByGara !== 'undefined' ? (_regionalChampionByGara[r.gara_id] || []) : []).filter(t => t.atleta_id === r.atleta_id).map(t => regionalJerseyHtml(t)).join('');
       return { pos: r.posizione, nome: tc(`${r.cognome} ${r.nome}`), id: r.atleta_id, gap, cr };
     });
   }
-  const top3Html = list => `<ol class="hx-top3">${list.map(t => `<li><i class="hx-med p${t.pos}">${t.pos}</i>${t.id ? `<a class="nm" href="/atleta/${esc(t.id)}">${esc(t.nome)}${t.cr ? ' 🥇' : ''}</a>` : `<span class="nm">${esc(t.nome)}</span>`}<span class="g">${esc(t.gap)}</span></li>`).join('')}</ol>`;
+  const top3Html = list => `<ol class="hx-top3">${list.map(t => `<li><i class="hx-med p${t.pos}">${t.pos}</i>${t.id ? (t.cr ? `<span class="hx-nm"><a class="nm" href="/atleta/${esc(t.id)}">${esc(t.nome)}</a>${t.cr}</span>` : `<a class="nm" href="/atleta/${esc(t.id)}">${esc(t.nome)}</a>`) : `<span class="nm">${esc(t.nome)}</span>`}<span class="g">${esc(t.gap)}</span></li>`).join('')}</ol>`;
 
   const shareBtn = id => id ? `<button class="rs-sh" type="button" title="Condividi risultati" aria-label="Condividi risultati" onclick="event.stopPropagation();window.quickShareGara('${esc(id)}')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>` : '';
 
