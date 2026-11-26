@@ -193,7 +193,7 @@
       live = null;
     }
     mode = m;
-    syncGlobals(); setAlboProve();
+    syncSegs(); syncGlobals(); setAlboProve();
     try { localStorage.setItem(MODE_KEY, m); } catch (e) {}
     document.body.classList.toggle('disc-cx', m === 'ciclocross');
     if (typeof invalidatePhotoCache === 'function') invalidatePhotoCache();
@@ -204,8 +204,13 @@
 
   // ── Selettore "Strada | Ciclocross" nelle pagine, prima di Uomini/Donne ──
   // Stesso componente del sito (.hx-seg): sta nella barra dei filtri, quindi si vede anche da mobile.
+  // la barra dei filtri non sempre viene ridisegnata al cambio di specialita': l'evidenziazione va riallineata
+  function syncSegs() {
+    document.querySelectorAll('.cx-seg button[data-m]').forEach(b => { const v = String(b.dataset.m === mode); if (b.getAttribute('aria-pressed') !== v) b.setAttribute('aria-pressed', v); });
+  }
   function addSegs() {
     if (!isAdmin()) return;
+    syncSegs();
     document.querySelectorAll('.hx-seg').forEach(g => {
       if (g.dataset.cx || g.classList.contains('cx-seg')) return;
       const lab = (g.getAttribute('aria-label') || '') + ' ' + g.textContent;
