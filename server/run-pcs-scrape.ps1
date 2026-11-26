@@ -10,7 +10,11 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
-$env:NODE_EXTRA_CA_CERTS = Join-Path $PSScriptRoot "norton-root.pem"
+# Certificato di Norton (che controlla le connessioni): si usa quello impostato da Norton in Windows, che resta aggiornato.
+# La copia nella cartella serve solo se manca: quando Norton cambia certificato diventa vecchia e le connessioni falliscono.
+if (-not ($env:NODE_EXTRA_CA_CERTS -and (Test-Path $env:NODE_EXTRA_CA_CERTS))) {
+    $env:NODE_EXTRA_CA_CERTS = Join-Path $PSScriptRoot "norton-root.pem"
+}
 
 $stamp   = Get-Date -Format "yyyy-MM-dd_HHmm"
 $logDir  = Join-Path $PSScriptRoot "logs"
