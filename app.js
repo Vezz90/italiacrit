@@ -17993,7 +17993,9 @@ async function _alboApplyMerges(idx, sid, s, g, band) {
   let out = s;
   for (const m of (man.merges || [])) {
     if (m.g !== g || (m.band && m.band !== band)) continue;
-    const sa = idx.index[`${m.a}|${g}|${band}`], sb = idx.index[`${m.b}|${g}|${band}`];
+    // la / lb: luogo della serie, serve per i nomi generici ("Gran Premio X"), indicizzati anche per luogo
+    const chiave = (n, l) => idx.index[`${n}|${g}|${band}${l ? '|' + l : ''}`];
+    const sa = chiave(m.a, m.la), sb = chiave(m.b, m.lb);
     if (sa !== sid && sb !== sid) continue;
     const other = sa === sid ? sb : sa;
     if (!other || other === sid) continue;
